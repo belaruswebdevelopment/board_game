@@ -1,4 +1,5 @@
 import { StackData } from "../data/StackData";
+import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
@@ -33,7 +34,8 @@ export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
             if (soloBotPublicPlayer === undefined) {
                 throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
             }
-            return !soloBotPublicPlayer.stack.length;
+            // TODO Uncomment it!!!
+            return G.heroesForSoloGameDifficultyLevel === null /*  && !soloBotPublicPlayer.stack.length */;
         }
     }
     else {
@@ -83,6 +85,7 @@ export const EndChooseDifficultySoloModeActions = (G) => {
  * @param ctx
  */
 export const OnChooseDifficultySoloModeMove = (G, ctx) => {
+    console.log(ctx.currentPlayer);
     StartOrEndActions(G, ctx);
 };
 /**
@@ -98,7 +101,7 @@ export const OnChooseDifficultySoloModeMove = (G, ctx) => {
 export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
     if (ctx.currentPlayer === `0`) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.getDifficultyLevelForSoloMode()]);
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.getHeroesForSoloMode()]);
+        DrawCurrentProfit(G, ctx);
     }
     else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer = G.publicPlayers[1];
@@ -108,8 +111,9 @@ export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
         soloBotPublicPlayer.heroes.forEach((hero) => {
             AddBuffToPlayer(G, ctx, hero.buff);
             AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+            StartAutoAction(G, ctx, hero.actions);
         });
+        G.heroesForSoloGameDifficultyLevel = null;
     }
-    DrawCurrentProfit(G, ctx);
 };
 //# sourceMappingURL=ChooseDifficultySoloModeHooks.js.map

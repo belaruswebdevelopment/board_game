@@ -1,4 +1,4 @@
-import type { PlayerCardsType } from "../typescript/interfaces";
+import type { PlayerCardTypes } from "../typescript/interfaces";
 import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -12,7 +12,7 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
  * @param potentialCardValue Потенциальное значение карты для ботов.
  * @returns
  */
-export const BlacksmithScoring = (cards: PlayerCardsType[], potentialCardValue = 0): number =>
+export const BlacksmithScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
     ArithmeticSum(3, 1, (cards.reduce(TotalRank, 0) +
         potentialCardValue));
 
@@ -27,7 +27,7 @@ export const BlacksmithScoring = (cards: PlayerCardsType[], potentialCardValue =
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns
 */
-export const ExplorerScoring = (cards: PlayerCardsType[], potentialCardValue = 0): number =>
+export const ExplorerScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
     cards.reduce(TotalPoints, 0) + potentialCardValue;
 
 /**
@@ -41,7 +41,7 @@ export const ExplorerScoring = (cards: PlayerCardsType[], potentialCardValue = 0
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns
 */
-export const HunterScoring = (cards: PlayerCardsType[], potentialCardValue = 0): number =>
+export const HunterScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
     (cards.reduce(TotalRank, 0) + potentialCardValue) ** 2;
 
 /**
@@ -55,7 +55,7 @@ export const HunterScoring = (cards: PlayerCardsType[], potentialCardValue = 0):
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns
 */
-export const MinerScoring = (cards: PlayerCardsType[], potentialCardValue = 0): number =>
+export const MinerScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
     (cards.reduce(TotalRank, 0) + (potentialCardValue ? 1 : 0)) *
     (cards.reduce(TotalPoints, 0) + potentialCardValue);
 
@@ -70,5 +70,5 @@ export const MinerScoring = (cards: PlayerCardsType[], potentialCardValue = 0): 
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns
 */
-export const WarriorScoring = (cards: PlayerCardsType[], potentialCardValue = 0): number =>
+export const WarriorScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
     cards.reduce(TotalPoints, 0) + potentialCardValue;

@@ -3,7 +3,7 @@ import { IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { BuffNames, HeroNames } from "../typescript/enums";
-import type { IMyGameState, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndef, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
@@ -18,7 +18,7 @@ import type { IMyGameState, IPublicPlayer, PublicPlayerCoinTypes } from "../type
  */
 export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
@@ -26,12 +26,12 @@ export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState, ctx: Ctx): boolean
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                 CheckPlayerHasBuff(player, BuffNames.EveryTurn));
         if (!G.solo && ulinePlayerIndex !== - 1) {
-            const ulinePlayer: IPublicPlayer | undefined = G.publicPlayers[ulinePlayerIndex];
+            const ulinePlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок с бафом '${BuffNames.EveryTurn}'.`);
             }
             if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-                const boardCoin: PublicPlayerCoinTypes | undefined = ulinePlayer.boardCoins[G.currentTavern + 1];
+                const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = ulinePlayer.boardCoins[G.currentTavern + 1];
                 if (boardCoin === undefined) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${G.currentTavern + 1}' для выкладки при наличии героя '${HeroNames.Uline}'.`);
                 }

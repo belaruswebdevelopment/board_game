@@ -1,5 +1,5 @@
 import { UpgradeCoinAction } from "../actions/CoinActions";
-import { CoinTypes } from "../typescript/enums";
+import { CoinTypeNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с улучшением монет от действий улучшающих монеты.</h3>
  * <p>Применения:</p>

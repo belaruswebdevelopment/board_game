@@ -8,7 +8,7 @@ import { suitsConfig } from "../data/SuitData";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
-import type { CampCardTypes, DiscardDeckCardTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CampCardTypes, CanBeUndef, DiscardDeckCardTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -32,7 +32,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidator
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
-            const campCard: CampCardTypes | undefined = G.camp[j];
+            const campCard: CanBeUndef<CampCardTypes> = G.camp[j];
             if (campCard === undefined) {
                 throw new Error(`В массиве карт лагеря отсутствует карта с id '${j}'.`);
             }
@@ -45,7 +45,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidator
                     );
                 }
             } else {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
@@ -56,7 +56,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidator
                 if ((ctx.phase === Phases.PickCards && ctx.activePlayers === null)
                     || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickCampCardHolda)) {
                     if (data !== undefined) {
-                        const stage: string | undefined = ctx.activePlayers?.[Number(ctx.currentPlayer)];
+                        const stage: CanBeUndef<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                         let moveName: MoveNames;
                         switch (stage) {
                             case Stages.PickCampCardHolda:
@@ -160,7 +160,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
         moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
         let suit: SuitTypes,
-            currentDistinctionSuit: string | undefined;
+            currentDistinctionSuit: CanBeUndef<string>;
         for (suit in G.distinctions) {
             if (G.distinctions[suit] !== undefined) {
                 currentDistinctionSuit = suit;
@@ -233,7 +233,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Mov
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
-        const card: DiscardDeckCardTypes | undefined = G.discardCardsDeck[j];
+        const card: CanBeUndef<DiscardDeckCardTypes> = G.discardCardsDeck[j];
         if (card === undefined) {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
@@ -242,7 +242,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Mov
             suit = card.suit;
         }
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickDiscardCard) {
-            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+            const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
@@ -300,13 +300,13 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidat
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
-                hero: IHeroCard | undefined = G.heroes[increment];
+                hero: CanBeUndef<IHeroCard> = G.heroes[increment];
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit: null | SuitTypes = hero.suit;
             if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickHero) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
@@ -369,13 +369,13 @@ export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName:
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
-            const hero: IHeroCard | undefined = G.heroesForSoloBot[j];
+            const hero: CanBeUndef<IHeroCard> = G.heroesForSoloBot[j];
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 1
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickHeroSoloBot) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
@@ -397,7 +397,7 @@ export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName:
             <table>
                 <caption>
                     <span style={Styles.HeroBack()} className="bg-top-hero-icon"></span>
-                    <span>Heroes ({G.heroes.length} cards)</span>
+                    <span>Bot heroes ({G.heroesForSoloBot.length} cards)</span>
                 </caption>
                 <tbody>
                     <tr key={`Heroes row 0`}>{boardCells}</tr>
@@ -430,15 +430,14 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
-                marketCoin: ICoin | undefined = G.marketCoinsUnique[increment];
+                marketCoin: CanBeUndef<ICoin> = G.marketCoinsUnique[increment];
             if (marketCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
             const tempCoinValue: number = marketCoin.value,
                 coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
             DrawCoin(data, boardCells, `market`, marketCoin, increment, null,
-                coinClassName, countMarketCoins[tempCoinValue],
-                MoveNames.ClickHandCoinMove, j);
+                coinClassName, countMarketCoins[tempCoinValue]);
             if (increment + 1 === G.marketCoinsUnique.length) {
                 break;
             }
@@ -475,7 +474,7 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
  */
 export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [],
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -487,11 +486,11 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
             ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.GetDifficultyLevelForSoloMode:
-            caption += `Get one card to your board.`;
+            caption += `Get difficulty level for Solo mode.`;
             DrawDifficultyLevelForSoloModeUI(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.GetHeroesForSoloMode:
-            caption += `Get one card to your board.`;
+            caption += `Get ${G.soloGameDifficultyLevel} hero${G.soloGameDifficultyLevel === 1 ? `` : `es`} to Solo Bot.`;
             DrawHeroesForSoloModeUI(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.StartOrPassEnlistmentMercenaries:
@@ -533,22 +532,22 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValida
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let t = 0; t < G.tavernsNum; t++) {
-        const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[t];
+        const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[t];
         if (currentTavernConfig === undefined) {
             throw new Error(`Отсутствует конфиг таверны с id '${t}'.`);
         }
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
-                const tavern: TavernCardTypes[] | undefined = G.taverns[t];
+                const tavern: CanBeUndef<TavernCardTypes[]> = G.taverns[t];
                 if (tavern === undefined) {
                     throw new Error(`В массиве таверн отсутствует таверна с id '${t}'.`);
                 }
-                const tavernCard: TavernCardTypes | undefined = tavern[j];
-                if (tavernCard === undefined) {
+                const tavernCard: CanBeUndef<TavernCardTypes> = tavern[j];
+                if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
                 }
-                if (tavernCard === null) {
+                if (tavernCard === undefined || tavernCard === null) {
                     if (data !== undefined) {
                         boardCells.push(
                             <td key={`${currentTavernConfig.name} ${j}`}>
@@ -561,14 +560,14 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValida
                     if (IsCardNotActionAndNotNull(tavernCard)) {
                         suit = tavernCard.suit;
                     }
-                    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
                         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                     }
                     if (t === G.currentTavern && ctx.phase === Phases.PickCards && ((ctx.activePlayers === null)
                         || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.DiscardCard))) {
                         if (data !== undefined) {
-                            const stage: string | undefined = ctx.activePlayers?.[Number(ctx.currentPlayer)];
+                            const stage: CanBeUndef<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                             let moveName: MoveNames;
                             switch (stage) {
                                 case Stages.DiscardCard:
@@ -659,7 +658,7 @@ export const DrawWinner = (G: IMyGameState, ctx: Ctx): JSX.Element => {
     if (ctx.gameover !== undefined) {
         if (G.winner !== undefined) {
             if (G.winner.length === 1) {
-                const winnerIndex: number | undefined = G.winner[0];
+                const winnerIndex: CanBeUndef<number> = G.winner[0];
                 if (winnerIndex === undefined) {
                     throw new Error(`Отсутствует индекс игрока победителя.`);
                 }
@@ -671,7 +670,7 @@ export const DrawWinner = (G: IMyGameState, ctx: Ctx): JSX.Element => {
             } else {
                 winner = "Winners: ";
                 G.winner.forEach((playerId: number, index: number): void => {
-                    const winnerPlayerI: IPublicPlayer | undefined = G.publicPlayers[playerId];
+                    const winnerPlayerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
                     if (winnerPlayerI === undefined) {
                         throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
                     }

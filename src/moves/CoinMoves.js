@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypes, Stages, SuitNames } from "../typescript/enums";
+import { CoinTypeNames, Stages, SuitNames } from "../typescript/enums";
 // TODO Check moves with solo mode!
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>

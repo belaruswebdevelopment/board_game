@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypes, Stages } from "../typescript/enums";
+import { CoinTypeNames, Stages } from "../typescript/enums";
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>

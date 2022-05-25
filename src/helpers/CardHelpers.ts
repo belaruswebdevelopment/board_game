@@ -3,7 +3,7 @@ import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import type { DeckCardTypes, IdavollDeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndef, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -23,9 +23,9 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @param card Карта.
  * @returns Добавлена ли карта на планшет игрока.
  */
-export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx,
-    card: DeckCardTypes | IMercenaryPlayerCard | IdavollDeckCardTypes): boolean => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: NonNullable<TavernCardTypes> | IMercenaryPlayerCard):
+    boolean => {
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -38,6 +38,28 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx,
     }
     AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту '${card.name}'.`);
     return false;
+};
+
+/**
+ * <h3>Добавляет взятую карту Idavoll в командную зону карт Idavoll игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при взятии карты из текущей таверны.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param card Карта.
+ */
+export const AddIdavollCardToPlayerCommandZone = (G: IMyGameState, ctx: Ctx,
+    card: MythologicalCreatureCommandZoneCardTypes): void => {
+    // if (expansions.idavoll.active && i === 1) {
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    player.mythologicalCreatureCards.push(card);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту '${card.name}' в командную зону карт Idavoll.`);
 };
 
 /**
@@ -55,9 +77,8 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx,
  * @param card Выбранная карта дворфа или улучшения монет.
  * @returns
  */
-export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes | IdavollDeckCardTypes):
-    boolean => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: NonNullable<TavernCardTypes>): boolean => {
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }

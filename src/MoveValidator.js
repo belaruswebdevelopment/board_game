@@ -6,7 +6,7 @@ import { IsCoin } from "./Coin";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { CoinTypes, MoveNames, MoveValidatorNames, Phases, PickCardValidatorNames, Stages, SuitNames } from "./typescript/enums";
+import { CoinTypeNames, MoveNames, MoveValidatorNames, Phases, PickCardValidatorNames, Stages, SuitNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit } from "./ui/ProfitUI";
@@ -40,7 +40,7 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    if (coinData.type === CoinTypes.Hand) {
+    if (coinData.type === CoinTypeNames.Hand) {
         const handCoin = handCoins[coinData.coinId];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinData.coinId}'.`);
@@ -55,7 +55,7 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
             return true;
         }
     }
-    else if (coinData.type === CoinTypes.Board) {
+    else if (coinData.type === CoinTypeNames.Board) {
         const boardCoin = boardCoins[coinData.coinId];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${coinData.coinId}'.`);
@@ -738,7 +738,7 @@ export const moveValidators = {
             return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => currentMoveArguments,
-        moveName: MoveNames.SoloBotClickHeroCardMove,
+        moveName: MoveNames.SoloBotPlaceAllCoinsMove,
         validate: () => true,
     },
     SoloBotClickHeroCardMoveValidator: {
@@ -758,7 +758,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotPlaceAllCoinsMove,
+        moveName: MoveNames.SoloBotClickHeroCardMove,
         validate: () => true,
     },
     // Solo Mode
@@ -1192,6 +1192,7 @@ export const moveBy = {
         default1: moveValidators.ClickHandCoinMoveValidator,
         default2: moveValidators.ClickBoardCoinMoveValidator,
         default3: moveValidators.BotsPlaceAllCoinsMoveValidator,
+        default4: moveValidators.SoloBotPlaceAllCoinsMoveValidator,
     },
     placeCoinsUline: {
         default1: moveValidators.ClickHandCoinUlineMoveValidator,

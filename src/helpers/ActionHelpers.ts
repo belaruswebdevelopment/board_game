@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { CreateOlwinDoubleNonPlacedCard } from "../AdditionalCard";
 import { AddDataToLog } from "../Logging";
 import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
-import type { IConfig, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, PickedCardType, SuitTypes } from "../typescript/interfaces";
+import type { CanBeUndef, IConfig, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, PickedCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
@@ -18,17 +18,17 @@ import type { IConfig, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, P
  * @param ctx
  */
 export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const config: IConfig | undefined = player.stack[0]?.config;
+    const config: CanBeUndef<IConfig> = player.stack[0]?.config;
     if (config !== undefined) {
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
         if (G.expansions.thingvellir.active) {
             if (config.drawName === DrawNames.Olwin) {
-                const pickedCard: PickedCardType = player.pickedCard;
+                const pickedCard: PickedCardTypes = player.pickedCard;
                 if (pickedCard !== null
                     && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
                     let suit: SuitTypes | null = null;

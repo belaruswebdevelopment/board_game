@@ -54,13 +54,16 @@ export const StackData = {
     }),
     getDifficultyLevelForSoloMode: () => ({
         config: {
-            drawName: DrawNames.EnlistmentMercenaries,
+            name: ConfigNames.GetDifficultyLevelForSoloMode,
+            drawName: DrawNames.GetDifficultyLevelForSoloMode,
         },
     }),
-    getHeroesForSoloMode: () => ({
+    getHeroesForSoloMode: (number) => ({
         config: {
+            name: ConfigNames.GetHeroesForSoloMode,
             stageName: Stages.ChooseHeroesForSoloMode,
             drawName: DrawNames.GetHeroesForSoloMode,
+            number,
         },
     }),
     getDistinctions: () => ({

@@ -1,7 +1,8 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
+// TODO Add Bot place all coins for human player opened in solo game
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>
@@ -62,6 +63,11 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
                 player.handCoins[i] = null;
             }
             else {
+                if (G.solo) {
+                    if (handCoin !== null) {
+                        ChangeIsOpenedCoinStatus(handCoin, true);
+                    }
+                }
                 player.boardCoins[i] = handCoin;
             }
             handCoins[coinId] = null;

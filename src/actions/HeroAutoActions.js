@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, LogTypes } from "../typescript/enums";
 import { UpgradeCoinAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -149,13 +149,13 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 if (!IsCoin(handCoin)) {
                     throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
                 }
-                type = CoinTypes.Hand;
+                type = CoinTypeNames.Hand;
             }
             else {
                 if (!IsCoin(boardCoin)) {
                     throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
                 }
-                type = CoinTypes.Board;
+                type = CoinTypeNames.Board;
             }
             UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         }
@@ -186,7 +186,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
             if (!IsCoin(boardCoin)) {
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
-            type = CoinTypes.Board;
+            type = CoinTypeNames.Board;
             UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {

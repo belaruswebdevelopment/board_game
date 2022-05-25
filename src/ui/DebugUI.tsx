@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { IDebugData, IDebugDrawData, IMyGameState, ObjectEntries } from "../typescript/interfaces";
+import type { CanBeUndef, IDebugData, IDebugDrawData, IMyGameState, ObjectEntries } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -13,7 +13,7 @@ import type { IDebugData, IDebugDrawData, IMyGameState, ObjectEntries } from "..
  * @returns Дебаг панель.
  */
 export const DrawDebugData = (G: IMyGameState, ctx: Ctx): JSX.Element | null => {
-    const debugData: IDebugData | undefined = GetDebugData(G, ctx);
+    const debugData: CanBeUndef<IDebugData> = GetDebugData(G, ctx);
     if (debugData === undefined) {
         return null;
     } else {
@@ -94,7 +94,7 @@ const DrawObjectData = (obj: IDebugDrawData): JSX.Element => {
  * @param ctx
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (G: IMyGameState, ctx: Ctx): IDebugData | undefined => {
+const GetDebugData = (G: IMyGameState, ctx: Ctx): CanBeUndef<IDebugData> => {
     if (G.debug) {
         const debugData: IDebugData = {
             G: {},

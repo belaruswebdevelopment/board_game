@@ -3,7 +3,7 @@ import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
-import type { DeckCardTypes, IdavollDeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import type { DeckCardTypes, IMyGameState, IPublicPlayer, MythologicalCreatureDeckCardTypes, PlayerCardTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт от действий сбрасывающих карты.</h3>
@@ -17,7 +17,7 @@ import type { DeckCardTypes, IdavollDeckCardTypes, IMyGameState, IPublicPlayer, 
  * @param discardedCard Сбрасываемая карта.
  */
 export const DiscardPickedCard = (G: IMyGameState, player: IPublicPlayer,
-    discardedCard: PlayerCardsType | DeckCardTypes | IdavollDeckCardTypes): void => {
+    discardedCard: PlayerCardTypes | DeckCardTypes | MythologicalCreatureDeckCardTypes): void => {
     // TODO Fix IdavollDeckCardTypes
     if (IsHeroCard(discardedCard)) {
         throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);

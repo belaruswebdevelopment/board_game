@@ -53,7 +53,7 @@ export const enum CardNames {
 /**
  * <h3>Перечисление для названия типов монет.</h3>
  */
-export const enum CoinTypes {
+export const enum CoinTypeNames {
     Hand = `Рука`,
     Board = `Стол`,
 }

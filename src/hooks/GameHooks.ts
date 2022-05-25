@@ -3,7 +3,7 @@ import { IsMercenaryCampCard } from "../Camp";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
 import { BuffNames } from "../typescript/enums";
-import type { CampDeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>
@@ -39,7 +39,7 @@ export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
             }
             let allMercenariesPlayed = true;
             for (let i = 0; i < ctx.numPlayers; i++) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }

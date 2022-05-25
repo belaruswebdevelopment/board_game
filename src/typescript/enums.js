@@ -53,11 +53,11 @@ export var CardNames;
 /**
  * <h3>Перечисление для названия типов монет.</h3>
  */
-export var CoinTypes;
-(function (CoinTypes) {
-    CoinTypes["Hand"] = "\u0420\u0443\u043A\u0430";
-    CoinTypes["Board"] = "\u0421\u0442\u043E\u043B";
-})(CoinTypes || (CoinTypes = {}));
+export var CoinTypeNames;
+(function (CoinTypeNames) {
+    CoinTypeNames["Hand"] = "\u0420\u0443\u043A\u0430";
+    CoinTypeNames["Board"] = "\u0421\u0442\u043E\u043B";
+})(CoinTypeNames || (CoinTypeNames = {}));
 /**
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */

@@ -231,11 +231,11 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
             }
-            const tavern0: TavernCardTypes[] | undefined = G.taverns[0];
+            const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
                 throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
             }
@@ -247,7 +247,7 @@ export const objectives = () => ({
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
@@ -255,7 +255,7 @@ export const objectives = () => ({
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
-                totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+                totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
@@ -271,11 +271,11 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
             }
-            const tavern0: TavernCardTypes[] | undefined = G.taverns[0];
+            const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
                 throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
             }
@@ -287,7 +287,7 @@ export const objectives = () => ({
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
@@ -295,7 +295,7 @@ export const objectives = () => ({
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
-                totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+                totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
@@ -311,11 +311,11 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
             }
-            const tavern0: TavernCardTypes[] | undefined = G.taverns[0];
+            const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
                 throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
             }
@@ -327,7 +327,7 @@ export const objectives = () => ({
             }
             const totalScore: number[] = [];
             for (let i: number = 0; i < ctx.numPlayers + Number(G.solo); i++) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
@@ -335,7 +335,7 @@ export const objectives = () => ({
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
-                totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+                totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }

@@ -1,6 +1,6 @@
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, LogTypes } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 /**
  * <h3>Сброс обменной монеты.</h3>
@@ -31,7 +31,7 @@ export const DiscardTradingCoin = (G, playerId) => {
     }
     let tradingCoinIndex = player.boardCoins.findIndex((coin) => {
         return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
-    }), type = CoinTypes.Board;
+    }), type = CoinTypeNames.Board;
     if (tradingCoinIndex === -1 && G.multiplayer) {
         tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin, index) => {
             if (coin !== null && !IsCoin(coin)) {
@@ -50,7 +50,7 @@ export const DiscardTradingCoin = (G, playerId) => {
         if (tradingCoinIndex === -1) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
         }
-        type = CoinTypes.Hand;
+        type = CoinTypeNames.Hand;
         handCoins.splice(tradingCoinIndex, 1, null);
         if (G.multiplayer) {
             player.handCoins.splice(tradingCoinIndex, 1, null);
@@ -457,7 +457,7 @@ const MixUpCoins = (G, ctx, playerId, solo = false) => {
  */
 export const MixUpCoinsInPlayerHands = (G, ctx) => {
     if (G.multiplayer) {
-        for (let p = 0; p < ctx.numPlayers; p++) {
+        for (let p = 0; p < ctx.numPlayers + Number(G.solo); p++) {
             MixUpCoins(G, ctx, p);
         }
     }

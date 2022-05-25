@@ -1,5 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { StackData } from "../data/StackData";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
 /**
@@ -21,6 +23,7 @@ export const ChooseDifficultyLevelForSoloModeMove = (G, ctx, level) => {
         return INVALID_MOVE;
     }
     G.soloGameDifficultyLevel = level;
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.getHeroesForSoloMode(level)]);
 };
 /**
  * <h3>Выбор героя для выбранного уровня сложности в режиме соло игры.</h3>
@@ -40,10 +43,21 @@ export const ChooseHeroForDifficultySoloModeMove = (G, ctx, heroId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (G.heroesForSoloGameDifficultyLevel === null) {
+        throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
+    }
     const hero = G.heroesForSoloGameDifficultyLevel.splice(heroId, 1)[0];
     if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }
     AddHeroForDifficultyToSoloBotCards(G, ctx, hero);
+    player.actionsNum--;
+    if (player.actionsNum) {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.getHeroesForSoloMode(player.actionsNum)]);
+    }
 };
 //# sourceMappingURL=GameConfigMoves.js.map

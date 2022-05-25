@@ -1,6 +1,6 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { SuitNames } from "../typescript/enums";
-import type { IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 /**
@@ -43,7 +43,7 @@ export const IdunnScoring = (G?: IMyGameState, playerId?: number): number => {
     if (playerId === undefined) {
         throw new Error(`Function param 'playerId' is undefined.`);
     }
-    const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }

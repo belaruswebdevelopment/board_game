@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { GameNames, RusCardTypes } from "./typescript/enums";
-import type { DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, SuitTypes } from "./typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -17,12 +17,12 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
     const cards: DeckCardTypes[] = [];
     let suit: SuitTypes;
     for (suit in suitsConfig) {
-        const pointValuesPlayers: INumberValues | INumberArrayValues | undefined =
+        const pointValuesPlayers: CanBeUndef<INumberValues | INumberArrayValues> =
             deckConfig.suits[suit].pointsValues()[data.players];
         if (pointValuesPlayers === undefined) {
             throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
         }
-        const points: number | number[] | undefined = pointValuesPlayers[data.tier];
+        const points: CanBeUndef<number | number[]> = pointValuesPlayers[data.tier];
         if (points === undefined) {
             throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
         }
@@ -35,7 +35,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
         for (let j = 0; j < count; j++) {
             let currentPoints: number | null;
             if (Array.isArray(points)) {
-                const cardPoints: number | undefined = points[j];
+                const cardPoints: CanBeUndef<number> = points[j];
                 if (cardPoints === undefined) {
                     throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                 }
@@ -53,15 +53,15 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
     }
     const actionCardConfig: IActionCardConfig[] = deckConfig.actions;
     for (let i = 0; i < actionCardConfig.length; i++) {
-        const currentActionCardConfig: IActionCardConfig | undefined = actionCardConfig[i];
+        const currentActionCardConfig: CanBeUndef<IActionCardConfig> = actionCardConfig[i];
         if (currentActionCardConfig === undefined) {
             throw new Error(`В массиве конфигов карт улучшения монет отсутствует значение с id '${i}'.`);
         }
-        const amountPlayersValue: INumberValues | undefined = currentActionCardConfig.amount()[data.players];
+        const amountPlayersValue: CanBeUndef<INumberValues> = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
             throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}'.`);
         }
-        const amountTierValue: number | undefined = amountPlayersValue[data.tier];
+        const amountTierValue: CanBeUndef<number> = amountPlayersValue[data.tier];
         if (amountTierValue === undefined) {
             throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
         }

@@ -4,7 +4,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
-import type { IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndef, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
@@ -80,7 +80,7 @@ export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void 
 export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length && ctx.playOrder.length === 1 && G.publicPlayersOrder[0] === ctx.playOrder[0]
         && ctx.currentPlayer === ctx.playOrder[0]) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с первым ходом с id '${ctx.currentPlayer}'.`);
         }

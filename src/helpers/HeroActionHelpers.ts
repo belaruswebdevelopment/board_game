@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { BuffNames, HeroNames } from "../typescript/enums";
-import type { IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import type { CanBeUndef, IMyGameState, IPublicPlayer, PlayerCardTypes } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
@@ -17,17 +17,17 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @param card Карта.
  * @returns Нужно ли перемещать героя Труд.
  */
-export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
+export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardTypes): boolean => {
     if (card.suit !== null) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)) {
-            const index: number = player.cards[card.suit].findIndex((card: PlayerCardsType): boolean =>
+            const index: number = player.cards[card.suit].findIndex((card: PlayerCardTypes): boolean =>
                 card.name === HeroNames.Thrud);
             if (index !== -1) {
-                const thrudCard: PlayerCardsType | undefined = player.cards[card.suit][index];
+                const thrudCard: CanBeUndef<PlayerCardTypes> = player.cards[card.suit][index];
                 if (thrudCard === undefined) {
                     throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' во фракции '${card.suit}' с id '${index}' отсутствует карта героя '${HeroNames.Thrud}' для перемещения на новое место.`);
                 }
@@ -52,7 +52,7 @@ export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardsTy
  * @param card Карта, помещающаяся на карту героя Труд.
  */
 
-export const CheckAndMoveThrudAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): void => {
+export const CheckAndMoveThrudAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardTypes): void => {
     const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeThrudHero()]);

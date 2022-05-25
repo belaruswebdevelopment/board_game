@@ -27,16 +27,18 @@ export const BuildPlayer = () => CreatePlayer({
  *
  * @param nickname Никнейм.
  * @param priority Кристалл.
+ * @param multiplayer Является ли игра мультиплеером.
+ * @param soloBot Является ли игрок соло ботом.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
+export const BuildPublicPlayer = (nickname, priority, multiplayer, soloBot) => {
     const cards = {};
     let suit;
     for (suit in suitsConfig) {
         cards[suit] = [];
     }
     let handCoins = [];
-    if (!multiplayer) {
+    if (!multiplayer && !soloBot) {
         handCoins = BuildCoins(initialPlayerCoinsConfig, {
             isInitial: true,
         });
@@ -46,7 +48,7 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
     }
     return CreatePublicPlayer({
         nickname,
-        cards: cards,
+        cards,
         handCoins,
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,
@@ -76,7 +78,7 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
             }
         }
         else {
-            if (G.solo || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+            if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
@@ -118,11 +120,12 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, heroes = [], campCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
+const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, heroes = [], campCards = [], mythologicalCreatureCards: idavollCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
     actionsNum,
     nickname,
     cards,
     campCards,
+    mythologicalCreatureCards: idavollCards,
     heroes,
     handCoins,
     boardCoins,

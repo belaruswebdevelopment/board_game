@@ -4,7 +4,7 @@ import { IsCoin } from "../Coin";
 import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
-import type { CoinType, IHeroCard, IMyGameState, IPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndef, CoinTypes, IHeroCard, IMyGameState, IPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 // TODO Add all solo bot moves!
 /**
@@ -24,13 +24,13 @@ export const SoloBotPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ct
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
+    const privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const handCoins: CoinType[] = privatePlayer.handCoins;
+    const handCoins: CoinTypes[] = privatePlayer.handCoins;
     for (let i = 0; i < handCoins.length; i++) {
-        const handCoin: PublicPlayerCoinTypes | undefined = handCoins[i];
+        const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[i];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${i}'.`);
         }
@@ -61,7 +61,7 @@ export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ct
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const hero: IHeroCard | undefined = G.heroesForSoloBot[heroId];
+    const hero: CanBeUndef<IHeroCard> = G.heroesForSoloBot[heroId];
     if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }

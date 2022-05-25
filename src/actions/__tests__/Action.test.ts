@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, RusSuitNames, Stages, SuitNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, IActionCard, IArtefactCampCard, IBuffs, ICard, IHeroCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IVariant, PlayerCardsType, SuitPropertyTypes, TavernCardTypes } from "../../typescript/interfaces";
+import type { CampDeckCardTypes, DeckCardTypes, IActionCard, IArtefactCampCard, IBuffs, ICard, IHeroCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IVariant, PlayerCardTypes, SuitPropertyTypes, TavernCardTypes } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -36,7 +36,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -91,7 +91,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -148,7 +148,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -181,7 +181,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                             {
                                 active: false,
                             } as IHeroCard,
-                        ] as PlayerCardsType[],
+                        ] as PlayerCardTypes[],
                     },
                 } as IPublicPlayer,
             },
@@ -197,8 +197,8 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             publicPlayers: {
                 0: {
                     cards: {
-                        warrior: [] as PlayerCardsType[],
-                    } as SuitPropertyTypes<PlayerCardsType[]>,
+                        warrior: [] as PlayerCardTypes[],
+                    } as SuitPropertyTypes<PlayerCardTypes[]>,
                 } as IPublicPlayer,
             },
         } as Pick<IMyGameState, `publicPlayers`>;
@@ -489,8 +489,8 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     pickedCard: null,
                     heroes: [] as IHeroCard[],
                     cards: {
-                        warrior: [] as PlayerCardsType[],
-                    } as SuitPropertyTypes<PlayerCardsType[]>,
+                        warrior: [] as PlayerCardTypes[],
+                    } as SuitPropertyTypes<PlayerCardTypes[]>,
                     buffs: [] as IBuffs,
                 } as IPublicPlayer,
             },
@@ -522,7 +522,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                                 suit: SuitNames.WARRIOR,
                             } as ICard,
                         ],
-                    } as SuitPropertyTypes<PlayerCardsType[]>,
+                    } as SuitPropertyTypes<PlayerCardTypes[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -646,8 +646,8 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                         {},
                     ],
                     cards: {
-                        warrior: [] as PlayerCardsType[],
-                    } as SuitPropertyTypes<PlayerCardsType[]>,
+                        warrior: [] as PlayerCardTypes[],
+                    } as SuitPropertyTypes<PlayerCardTypes[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -689,7 +689,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                                 suit: SuitNames.WARRIOR,
                             } as ICard,
                         ],
-                    } as SuitPropertyTypes<PlayerCardsType[]>,
+                    } as SuitPropertyTypes<PlayerCardTypes[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -1004,8 +1004,8 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                         },
                     } as IMercenaryCampCard,
                     cards: {
-                        blacksmith: [] as PlayerCardsType[],
-                        miner: [] as PlayerCardsType[],
+                        blacksmith: [] as PlayerCardTypes[],
+                        miner: [] as PlayerCardTypes[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -1069,7 +1069,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                                 },
                             },
                         ],
-                        miner: [] as PlayerCardsType[],
+                        miner: [] as PlayerCardTypes[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -1466,7 +1466,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                             },
                         },
                         cards: {
-                            explorer: [] as PlayerCardsType[],
+                            explorer: [] as PlayerCardTypes[],
                         },
                     } as IPublicPlayer,
                 },

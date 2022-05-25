@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { IsCardNotActionAndNotNull } from "../Card";
-import type { ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
+import type { CanBeUndef, ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
 /**
@@ -23,7 +23,7 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
         result: number[] =
             Array(taverns.length).fill(0).map((value: number, index: number):
                 number => {
-                const num: number | undefined = temp[index];
+                const num: CanBeUndef<number> = temp[index];
                 if (num === undefined) {
                     throw new Error(`Отсутствует значение с id '${index}'.`);
                 }
@@ -38,8 +38,8 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
     let maxIndex = 0,
         minIndex: number = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {
-        const maxCard: ICardCharacteristics | undefined = tempChars[maxIndex],
-            tempCard1: ICardCharacteristics | undefined = tempChars[i];
+        const maxCard: CanBeUndef<ICardCharacteristics> = tempChars[maxIndex],
+            tempCard1: CanBeUndef<ICardCharacteristics> = tempChars[i];
         if (maxCard === undefined) {
             throw new Error(`Отсутствует значение максимальной карты с id '${maxIndex}'.`);
         }
@@ -49,8 +49,8 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
         if (CompareCharacteristics(maxCard, tempCard1) < 0) {
             maxIndex = i;
         }
-        const minCard: ICardCharacteristics | undefined = tempChars[minIndex],
-            tempCard2: ICardCharacteristics | undefined = tempChars[tempChars.length - 1 - i];
+        const minCard: CanBeUndef<ICardCharacteristics> = tempChars[minIndex],
+            tempCard2: CanBeUndef<ICardCharacteristics> = tempChars[tempChars.length - 1 - i];
         if (minCard === undefined) {
             throw new Error(`Отсутствует значение минимальной карты с id '${minIndex}'.`);
         }
@@ -232,7 +232,7 @@ export const k_combinations = (set: number[], k: number): number[][] => {
     }
     if (k === 1) {
         for (let i = 0; i < set.length; i++) {
-            const num1: number | undefined = set[i];
+            const num1: CanBeUndef<number> = set[i];
             if (num1 === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}'.`);
             }
@@ -247,7 +247,7 @@ export const k_combinations = (set: number[], k: number): number[][] => {
         tailCombs = k_combinations(set.slice(i + 1), k - 1);
         // For each (k-1)-combination we join it with the current and store it to the set of k-combinations.
         for (let j = 0; j < tailCombs.length; j++) {
-            const num2: number[] | undefined = tailCombs[j];
+            const num2: CanBeUndef<number[]> = tailCombs[j];
             if (num2 === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}'.`);
             }
@@ -276,18 +276,18 @@ export const Permute = (permutation: number[]): number[][] => {
         k: number,
         p: number;
     while (i < length) {
-        const num: number | undefined = c[i];
+        const num: CanBeUndef<number> = c[i];
         if (num === undefined) {
             throw new Error(`Отсутствует значение '1' с id '${i}'.`);
         }
         if (num < i) {
             k = i % 2 && num;
-            const permI: number | undefined = permutation[i];
+            const permI: CanBeUndef<number> = permutation[i];
             if (permI === undefined) {
                 throw new Error(`Отсутствует значение '2' с id '${i}'.`);
             }
             p = permI;
-            const permK: number | undefined = permutation[k];
+            const permK: CanBeUndef<number> = permutation[k];
             if (permK === undefined) {
                 throw new Error(`Отсутствует значение '3' с id '${i}'.`);
             }

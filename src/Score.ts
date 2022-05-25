@@ -8,7 +8,7 @@ import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helpers/CoinHelpers";
 import { AddDataToLog } from "./Logging";
 import { BuffNames, HeroNames, LogTypes, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, IArtefact, IHeroCard, IHeroData, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IArtefact, IHeroCard, IHeroData, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -46,7 +46,7 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
  * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warriorDistinctions: number[]): number => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует ${G.solo && playerId === 0 ? `игрок` : `соло бот`} с id '${playerId}'.`);
     }
@@ -55,7 +55,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         coinsValue = 0;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за карты дворфов ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[i];
+        const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[i];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет ${G.solo && playerId === 0 ? `игрока` : `соло бота`} с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
@@ -87,11 +87,11 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         dwerg_brothers = 0;
     const dwerg_brothers_scoring: number[] = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const hero: IHeroCard | undefined = player.heroes[i];
+        const hero: CanBeUndef<IHeroCard> = player.heroes[i];
         if (hero === undefined) {
             throw new Error(`Не существует карта героя с id '${i}'.`);
         }
-        const heroData: IHeroData | undefined =
+        const heroData: CanBeUndef<IHeroData> =
             Object.values(heroesConfig).find((heroObj: IHeroData): boolean => heroObj.name === hero.name);
         if (heroData === undefined) {
             throw new Error(`Не удалось найти героя '${hero.name}'.`);
@@ -109,12 +109,12 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         }
     }
     if (G.solo && playerId === 0) {
-        const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
         }
         if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.EveryTurn)) {
-            const heroData: IHeroData | undefined =
+            const heroData: CanBeUndef<IHeroData> =
                 Object.values(heroesConfig).find((heroObj: IHeroData): boolean =>
                     heroObj.name === HeroNames.Uline);
             if (heroData === undefined) {
@@ -126,7 +126,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         }
     }
     if ((!G.solo || G.solo && playerId === 1) && dwerg_brothers) {
-        const dwerg_brother_value: number | undefined = dwerg_brothers_scoring[dwerg_brothers];
+        const dwerg_brother_value: CanBeUndef<number> = dwerg_brothers_scoring[dwerg_brothers];
         if (dwerg_brother_value === undefined) {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
         }
@@ -138,11 +138,11 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
-            const campCard: CampDeckCardTypes | undefined = player.campCards[i];
+            const campCard: CanBeUndef<CampDeckCardTypes> = player.campCards[i];
             if (campCard === undefined) {
                 throw new Error(`В массиве карт лагеря игрока отсутствует карта с id '${i}'.`);
             }
-            const artefact: IArtefact | undefined =
+            const artefact: CanBeUndef<IArtefact> =
                 Object.values(artefactsConfig).find((artefact: IArtefact): boolean =>
                     artefact.name === campCard.name);
             let currentArtefactScore = 0;
@@ -189,8 +189,8 @@ export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
     const maxScore: number = Math.max(...G.totalScore),
         maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;
     let winners = 0;
-    for (let i: number = ctx.numPlayers - 1; i >= 0; i--) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[i];
+    for (let i: number = ctx.numPlayers + Number(G.solo) - 1; i >= 0; i--) {
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }

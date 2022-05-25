@@ -61,8 +61,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         throw new Error(`В массиве колод карт отсутствует колода '2' эпохи.`);
     }
     if (deckTier2.length < G.botData.deckLength) {
-        const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring(G, index, card)));
-        const tavernCardResults = temp[cardId];
+        const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring(G, index, card))), tavernCardResults = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
         }

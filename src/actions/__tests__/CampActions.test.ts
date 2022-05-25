@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { ArtefactNames, DrawNames, LogTypes, RusCardTypes, Stages, SuitNames } from "../../typescript/enums";
-import type { DeckCardTypes, DiscardCampCardTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerCoinTypes } from "../../typescript/interfaces";
+import type { DeckCardTypes, DiscardCampCardTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardTypes, PublicPlayerCoinTypes } from "../../typescript/interfaces";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 
 describe(`Test AddCoinToPouchAction method`, (): void => {
@@ -820,7 +820,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -871,7 +871,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,

@@ -12,7 +12,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CreateHero } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CardNames, GameNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
-import type { ICard, IHeroCard, IMyGameState, IPublicPlayer, IStack, IVariant, PlayerCardsType, SuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
+import type { CanBeUndef, ICard, IHeroCard, IMyGameState, IPublicPlayer, IStack, IVariant, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -27,11 +27,11 @@ import type { ICard, IHeroCard, IMyGameState, IPublicPlayer, IStack, IVariant, P
  * @param cardId Id карты.
  */
 export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const discardedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
+    const discardedCard: CanBeUndef<PlayerCardTypes> = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
@@ -54,15 +54,15 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  * @param suit Название фракции.
  */
 export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const stack: IStack | undefined = player.stack[0];
+    const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
         throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: SuitPropertyTypes<IVariant> | undefined = stack.variants;
+    const playerVariants: CanBeUndef<SuitPropertyTypes<IVariant>> = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${CardNames.OlwinsDouble}'.`);
     }
@@ -93,15 +93,15 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
  * @param suit Название фракции.
  */
 export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
-    const stack: IStack | undefined = player.stack[0];
+    const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
         throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: SuitPropertyTypes<IVariant> | undefined = stack.variants;
+    const playerVariants: CanBeUndef<SuitPropertyTypes<IVariant>> = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Thrud}'.`);
     }
@@ -131,15 +131,15 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
  * @param suit Название фракции.
  */
 export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
-    const stack: IStack | undefined = player.stack[0];
+    const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
         throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: SuitPropertyTypes<IVariant> | undefined = stack.variants;
+    const playerVariants: CanBeUndef<SuitPropertyTypes<IVariant>> = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Ylud}'.`);
     }

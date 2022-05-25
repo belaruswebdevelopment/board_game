@@ -3,8 +3,8 @@ import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CardNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
-import type { ICard, ICoin, IMyGameState, IPlayer, IPublicPlayer } from "../typescript/interfaces";
+import { CardNames, CoinTypeNames, LogTypes, SuitNames } from "../typescript/enums";
+import type { CanBeUndef, ICard, ICoin, IMyGameState, IPlayer, IPublicPlayer } from "../typescript/interfaces";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -23,12 +23,12 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @returns
  */
 export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }
     if (G.tierToEnd !== 0) {
-        const card: ICard | undefined = G.additionalCardsDeck.find((card: ICard): boolean =>
+        const card: CanBeUndef<ICard> = G.additionalCardsDeck.find((card: ICard): boolean =>
             card.name === CardNames.ChiefBlacksmith);
         if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${CardNames.ChiefBlacksmith}'.`);
@@ -56,7 +56,7 @@ export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerI
  * @returns
  */
 export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }
@@ -82,26 +82,26 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
  */
 export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     if (G.tierToEnd !== 0) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[playerId],
-            privatePlayer: IPlayer | undefined = G.players[playerId];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId],
+            privatePlayer: CanBeUndef<IPlayer> = G.players[playerId];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
         }
         if (privatePlayer === undefined) {
             throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerId}'.`);
         }
-        const [type, tradingCoinIndex]: [CoinTypes, number] = DiscardTradingCoin(G, playerId),
+        const [type, tradingCoinIndex]: [CoinTypeNames, number] = DiscardTradingCoin(G, playerId),
             coin: ICoin = CreateCoin({
                 isOpened: true,
                 isTriggerTrading: true,
                 value: 3,
             });
-        if (type === CoinTypes.Board) {
+        if (type === CoinTypeNames.Board) {
             if (G.multiplayer) {
                 privatePlayer.boardCoins[tradingCoinIndex] = coin;
             }
             player.boardCoins[tradingCoinIndex] = coin;
-        } else if (type === CoinTypes.Hand) {
+        } else if (type === CoinTypeNames.Hand) {
             if (G.multiplayer) {
                 privatePlayer.handCoins[tradingCoinIndex] = coin;
             }
@@ -129,7 +129,7 @@ export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: n
  * @returns
  */
 export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }
@@ -163,7 +163,7 @@ export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: nu
  * @returns
  */
 export const WarriorDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }

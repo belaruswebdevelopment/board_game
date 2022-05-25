@@ -93,7 +93,7 @@ export const DrawDifficultyLevelForSoloModeUI = (G, ctx, validatorName, data, bo
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < 6; j++) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, String(j + 1), player, MoveNames.ChooseDifficultyLevelForSoloModeMove, j);
+                DrawButton(data, boardCells, String(j + 1), player, MoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
             }
             else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
                 moveMainArgs.push(j);
@@ -122,6 +122,9 @@ export const DrawHeroesForSoloModeUI = (G, ctx, validatorName, data, boardCells)
     var _a;
     const moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
+        if (G.heroesForSoloGameDifficultyLevel === null) {
+            throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
+        }
         for (let j = 0; j < G.heroesForSoloGameDifficultyLevel.length; j++) {
             const hero = G.heroesForSoloGameDifficultyLevel[j];
             if (hero === undefined) {

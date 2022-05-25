@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, Stages } from "../typescript/enums";
-import type { IHeroCard, IMyGameState, IPublicPlayer, IStack, PlayerCardsType } from "../typescript/interfaces";
+import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer, IStack, PlayerCardTypes } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**
@@ -20,16 +20,16 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * @param ctx
  */
 export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
-        const playerCards: PlayerCardsType[][] = Object.values(player.cards),
+        const playerCards: PlayerCardTypes[][] = Object.values(player.cards),
             heroesLength: number = G.solo ? player.heroes.filter((hero: IHeroCard): boolean =>
                 hero.name.startsWith(`Dwerg`)).length : player.heroes.length,
             isCanPickHero: boolean =
-                Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
+                Math.min(...playerCards.map((item: PlayerCardTypes[]): number =>
                     item.reduce(TotalRank, 0))) > heroesLength,
             isPlayerHasPickHeroActionInStack: number = player.stack.findIndex((stack: IStack): boolean =>
                 stack.config?.stageName === Stages.PickHero);

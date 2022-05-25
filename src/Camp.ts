@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { GameNames, RusCardTypes } from "./typescript/enums";
-import type { CampDeckCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, ICreateMercenaryPlayerCard, IMercenary, IMercenaryCampCard, IMercenaryPlayerCard, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IArtefact, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, ICreateMercenaryPlayerCard, IMercenary, IMercenaryCampCard, IMercenaryPlayerCard, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
@@ -36,7 +36,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
             }));
         }
     }
-    const mercenariesConfigTier: Partial<SuitPropertyTypes<IMercenary>>[] | undefined = mercenariesConfig[tier];
+    const mercenariesConfigTier: CanBeUndef<Partial<SuitPropertyTypes<IMercenary>>[]> = mercenariesConfig[tier];
     if (mercenariesConfigTier === undefined) {
         throw new Error(`Отсутствует массив значений карт наёмников в указанной эпохе - '${tier}'.`);
     }
@@ -44,7 +44,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
         let name = ``,
             path = ``,
             campMercenarySuit: SuitTypes;
-        const mercenaryData: Partial<SuitPropertyTypes<IMercenary>> | undefined = mercenariesConfigTier[i];
+        const mercenaryData: CanBeUndef<Partial<SuitPropertyTypes<IMercenary>>> = mercenariesConfigTier[i];
         if (mercenaryData === undefined) {
             throw new Error(`Отсутствует массив значений карты наёмника с id '${i}' в указанной эпохе - '${tier}'.`);
         }
@@ -52,7 +52,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
             path += campMercenarySuit + ` `;
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
             for (const campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
-                const mercenaryVariant: IMercenary | undefined = mercenaryData[campMercenarySuit];
+                const mercenaryVariant: CanBeUndef<IMercenary> = mercenaryData[campMercenarySuit];
                 if (mercenaryVariant !== undefined) {
                     if (campMercenaryCardProperty === `rank`) {
                         name += `шевронов: ${mercenaryVariant.rank}, `;

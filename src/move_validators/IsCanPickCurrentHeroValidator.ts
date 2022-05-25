@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import type { IConditions, IHeroCard, IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { CanBeUndef, IConditions, IHeroCard, IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -18,24 +18,24 @@ import type { IConditions, IHeroCard, IMyGameState, IPublicPlayer, IValidatorsCo
  */
 export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGameState, ctx: Ctx, id: number):
     boolean => {
-    const hero: IHeroCard | undefined = G.heroes[id];
+    const hero: CanBeUndef<IHeroCard> = G.heroes[id];
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const validators: IValidatorsConfig | undefined = hero.validators,
-        cardsToDiscard: PlayerCardsType[] = [];
+    const validators: CanBeUndef<IValidatorsConfig> = hero.validators,
+        cardsToDiscard: PlayerCardTypes[] = [];
     let isValidMove = false;
     if (validators?.discardCard !== undefined) {
         let suit: SuitTypes;
         for (suit in suitsConfig) {
             if (validators.discardCard.suit !== suit) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
                 const last: number = player.cards[suit].length - 1;
                 if (last >= 0) {
-                    const card: PlayerCardsType | undefined = player.cards[suit][last];
+                    const card: CanBeUndef<PlayerCardTypes> = player.cards[suit][last];
                     if (card === undefined) {
                         throw new Error(`В массиве карт фракции '${suit}' отсутствует последняя карта с id '${last}'.`);
                     }
@@ -63,18 +63,18 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
  * @returns Можно ли пикнуть конкретного героя.
  */
 export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, id: number): boolean => {
-    const hero: IHeroCard | undefined = G.heroes[id];
+    const hero: CanBeUndef<IHeroCard> = G.heroes[id];
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const conditions: IConditions | undefined = hero.validators?.conditions;
+    const conditions: CanBeUndef<IConditions> = hero.validators?.conditions;
     let isValidMove = false;
     for (const condition in conditions) {
         if (condition === `suitCountMin`) {
             let ranks = 0;
             for (const key in conditions[condition]) {
                 if (key === `suit`) {
-                    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
                         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                     }

@@ -2,7 +2,7 @@ import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CardNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
+import { CardNames, CoinTypeNames, LogTypes, SuitNames } from "../typescript/enums";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -88,13 +88,13 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
             isTriggerTrading: true,
             value: 3,
         });
-        if (type === CoinTypes.Board) {
+        if (type === CoinTypeNames.Board) {
             if (G.multiplayer) {
                 privatePlayer.boardCoins[tradingCoinIndex] = coin;
             }
             player.boardCoins[tradingCoinIndex] = coin;
         }
-        else if (type === CoinTypes.Hand) {
+        else if (type === CoinTypeNames.Hand) {
             if (G.multiplayer) {
                 privatePlayer.handCoins[tradingCoinIndex] = coin;
             }

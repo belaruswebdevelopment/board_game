@@ -3,7 +3,7 @@ import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { GameNames } from "../typescript/enums";
-import type { DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -52,7 +52,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
 export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
     tavern: TavernCardTypes[]): number => {
     if (IsCardNotActionAndNotNull(compareCard)) {
-        const deckTier1: DeckCardTypes[] | undefined = G.secret.decks[0];
+        const deckTier1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[0];
         if (deckTier1 === undefined) {
             throw new Error(`В массиве колод карт отсутствует колода '1' эпохи.`);
         }
@@ -60,19 +60,19 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
-    const deckTier2: DeckCardTypes[] | undefined = G.secret.decks[1];
+    const deckTier2: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
     if (deckTier2 === undefined) {
         throw new Error(`В массиве колод карт отсутствует колода '2' эпохи.`);
     }
     if (deckTier2.length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>
             Object.values(G.publicPlayers).map((player: IPublicPlayer, index: number): number =>
-                PotentialScoring(G, index, card)));
-        const tavernCardResults: number[] | undefined = temp[cardId];
+                PotentialScoring(G, index, card))),
+            tavernCardResults: CanBeUndef<number[]> = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
         }
-        const result: number | undefined = tavernCardResults[Number(ctx.currentPlayer)];
+        const result: CanBeUndef<number> = tavernCardResults[Number(ctx.currentPlayer)];
         if (result === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока с id '${ctx.currentPlayer}'.`);
         }
@@ -102,18 +102,18 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
  */
 export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
     let totalPoints = 0;
-    const pointsValuesPlayers: INumberValues | INumberArrayValues | undefined = suitConfig.pointsValues()[data.players];
+    const pointsValuesPlayers: CanBeUndef<INumberValues | INumberArrayValues> = suitConfig.pointsValues()[data.players];
     if (pointsValuesPlayers === undefined) {
         throw new Error(`Отсутствует массив значений карт для указанного числа игроков - '${data.players}'.`);
     }
-    const points: number | number[] | undefined = pointsValuesPlayers[data.tier];
+    const points: CanBeUndef<number | number[]> = pointsValuesPlayers[data.tier];
     if (points === undefined) {
         throw new Error(`Отсутствует массив значений карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
     }
     const count: number = Array.isArray(points) ? points.length : points;
     for (let i = 0; i < count; i++) {
         if (Array.isArray(points)) {
-            const pointsValue: number | undefined = points[i];
+            const pointsValue: CanBeUndef<number> = points[i];
             if (pointsValue === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}' в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
             }
@@ -145,8 +145,8 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTypes): number => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[playerId],
-        privatePlayer: IPlayer | undefined = G.players[playerId];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId],
+        privatePlayer: CanBeUndef<IPlayer> = G.players[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
     }
@@ -172,7 +172,7 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[i];
+        const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[i];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
@@ -183,7 +183,7 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         if (IsCoin(boardCoin)) {
             score += boardCoin.value;
         }
-        const handCoin: PublicPlayerCoinTypes | undefined = handCoins[i];
+        const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[i];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${i}'.`);
         }

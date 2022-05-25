@@ -13,7 +13,7 @@ import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IdavollDeckCardTypes, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayers, ISecret, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayers, ISecret, MythologicalCreatureDeckCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -29,7 +29,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
-        round = 0,
+        round = -1,
         soloGameDifficultyLevel = null,
         explorerDistinctionCardId = null,
         multiplayer = false,
@@ -54,13 +54,13 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         additionalCardsDeck: ICard[] = BuildAdditionalCards(),
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
-        distinctions: Partial<SuitPropertyTypes<DistinctionTypes>> = {},
+        distinctions: SuitPropertyTypes<DistinctionTypes> = {} as SuitPropertyTypes<DistinctionTypes>,
         secret: ISecret = {
             campDecks: [],
             decks: [],
             // TODO Add Idavoll deck length info on main page?
             // TODO Idavoll
-            idavollDecks: [],
+            mythologicalCreatureDecks: [],
         };
     if (solo && multiplayer) {
         throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
@@ -73,12 +73,12 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         campPicked = false,
         mustDiscardTavernCardJarnglofi = null,
         discardCampCardsDeck: CampDeckCardTypes[] = [],
-        campDeckLength: [number, number] = [0, 0];
-    let camp: CampDeckCardTypes[] = [];
+        campDeckLength: [number, number] = [0, 0],
+        camp: CampDeckCardTypes[] = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
-            let campDeck: CampDeckCardTypes[] | undefined = secret.campDecks[i];
+            let campDeck: CanBeUndef<CampDeckCardTypes[]> = secret.campDecks[i];
             if (campDeck === undefined) {
                 throw new Error(`Колода карт лагеря ${i} эпохи не может отсутствовать.`);
             }
@@ -86,11 +86,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             secret.campDecks[i] = campDeck;
             campDeckLength[i] = campDeck.length;
         }
-        const campDeck0: CampDeckCardTypes[] | undefined = secret.campDecks[0];
+        const campDeck0: CanBeUndef<CampDeckCardTypes[]> = secret.campDecks[0];
         if (campDeck0 === undefined) {
             throw new Error(`Колода карт лагеря 1 эпохи не может отсутствовать.`);
         }
-        camp = campDeck0.splice(0, campNum);
         campDeckLength[0] = campDeck0.length;
     }
     const deckLength: [number, number] = [0, 0];
@@ -99,10 +98,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             suits: suitsConfig,
             actions: actionCardsConfigArray,
         }, {
-            players: ctx.numPlayers,
+            players: ctx.numPlayers + Number(solo),
             tier: i,
         });
-        const deck: DeckCardTypes[] | undefined = secret.decks[i];
+        const deck: CanBeUndef<DeckCardTypes[]> = secret.decks[i];
         if (deck === undefined) {
             throw new Error(`Колода карт ${i} эпохи не может отсутствовать.`);
         }
@@ -118,46 +117,46 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: [IHeroCard[], IHeroCard[], IHeroCard[]] =
         BuildHeroes(heroesConfigOptions, solo),
-        taverns: (DeckCardTypes[] | IdavollDeckCardTypes[])[] = [],
+        taverns: (DeckCardTypes[] | MythologicalCreatureDeckCardTypes[])[] = [],
         tavernsNum = 3,
         currentTavern = -1,
         drawSize: number = (solo || ctx.numPlayers === 2) ? 3 : ctx.numPlayers,
-        deck0: DeckCardTypes[] | undefined = secret.decks[0];
+        deck0: CanBeUndef<DeckCardTypes[]> = secret.decks[0];
     if (deck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
     for (let i = 0; i < tavernsNum; i++) {
         if (expansions.idavoll.active && i === 1) {
-            secret.idavollDecks = ctx.random!.Shuffle(secret.idavollDecks);
-            taverns[1] = secret.idavollDecks.splice(0, drawSize);
-        } else {
-            taverns[i] = deck0.splice(0, drawSize);
+            secret.mythologicalCreatureDecks = ctx.random!.Shuffle(secret.mythologicalCreatureDecks);
         }
+        taverns[i] = [];
         deckLength[0] = deck0.length;
     }
     const players: IPlayers = {},
         publicPlayers: IPublicPlayers = {},
         publicPlayersOrder: string[] = [],
         exchangeOrder: number[] = [],
-        priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
+        priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers + Number(solo));
     for (let i = 0; i < ctx.numPlayers + Number(solo); i++) {
-        const randomPriorityIndex: number = solo ? i : Math.floor(Math.random() * priorities.length),
-            priority: IPriority | undefined = priorities.splice(randomPriorityIndex, 1)[0];
+        const randomPriorityIndex: number = solo ? 0 : Math.floor(Math.random() * priorities.length),
+            priority: CanBeUndef<IPriority> = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(solo && i === 1 ? `SoloBot` : `Dan` + i, priority, multiplayer);
+        const soloBot: boolean = solo && i === 1;
+        publicPlayers[i] =
+            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan` + i, priority, multiplayer, soloBot);
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
-            players: ctx.numPlayers,
+            players: ctx.numPlayers + Number(solo),
         }),
-        averageCards: Partial<SuitPropertyTypes<ICard>> = {};
+        averageCards: SuitPropertyTypes<ICard> = {} as SuitPropertyTypes<ICard>;
     for (suit in suitsConfig) {
         averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
-            players: ctx.numPlayers,
+            players: ctx.numPlayers + Number(solo),
             tier: 0,
         });
     }
@@ -166,19 +165,19 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (let i = 0; i < initCoinsOrder.length; i++) {
-        const coinsOrder: number[] | undefined = initCoinsOrder[i];
+        const coinsOrder: CanBeUndef<number[]> = initCoinsOrder[i];
         if (coinsOrder === undefined) {
             throw new Error(`Отсутствует порядок выкладки монет ${i}.`);
         }
         allCoinsOrder = allCoinsOrder.concat(Permute(coinsOrder));
     }
-    const cardDeck0: DeckCardTypes[] | undefined = secret.decks[0];
+    const cardDeck0: CanBeUndef<DeckCardTypes[]> = secret.decks[0];
     if (cardDeck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
     const botData: IBotData = {
         allCoinsOrder,
-        allPicks: GetAllPicks(tavernsNum, ctx.numPlayers),
+        allPicks: GetAllPicks(tavernsNum, ctx.numPlayers + Number(solo)),
         maxIter: 1000,
         deckLength: cardDeck0.length,
     };
@@ -188,7 +187,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         soloGameDifficultyLevel,
         odroerirTheMythicCauldron,
         tavernCardDiscarded2Players,
-        averageCards: averageCards as SuitPropertyTypes<ICard>,
+        averageCards,
         botData,
         odroerirTheMythicCauldronCoins,
         camp,
@@ -205,7 +204,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         additionalCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
-        distinctions: distinctions as SuitPropertyTypes<DistinctionTypes>,
+        distinctions,
         drawProfit,
         drawSize,
         exchangeOrder,

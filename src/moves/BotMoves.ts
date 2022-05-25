@@ -1,10 +1,11 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
-import type { IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndef, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
+// TODO Add Bot place all coins for human player opened in solo game
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>
@@ -25,8 +26,8 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -51,7 +52,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
                 return IsCoin(coin);
             });
         if (coinId !== -1) {
-            const handCoin: PublicPlayerCoinTypes | undefined = handCoins[coinId];
+            const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[coinId];
             if (handCoin === undefined) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinId}'.`);
             }
@@ -66,6 +67,11 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
                 player.boardCoins[i] = {};
                 player.handCoins[i] = null;
             } else {
+                if (G.solo) {
+                    if (handCoin !== null) {
+                        ChangeIsOpenedCoinStatus(handCoin, true);
+                    }
+                }
                 player.boardCoins[i] = handCoin;
             }
             handCoins[coinId] = null;

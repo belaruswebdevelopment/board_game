@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import type { IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, IMyGameState, INumberValues, PublicPlayerCoinTypes } from "./typescript/interfaces";
+import type { CanBeUndef, IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, IMyGameState, INumberValues, PublicPlayerCoinTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -17,11 +17,11 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
     ICoin[] => {
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        const config: IMarketCoinConfig | IInitialTradingCoinConfig | undefined = coinConfig[i];
+        const config: CanBeUndef<IMarketCoinConfig | IInitialTradingCoinConfig> = coinConfig[i];
         if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
         }
-        const count: number | undefined = options.players !== undefined
+        const count: CanBeUndef<number> = options.players !== undefined
             && !isInitialPlayerCoinsConfigNotMarket(config) ? config.count()[options.players] : 1;
         if (count === undefined) {
             throw new Error(`В конфиге монет для монеты с id '${i}' отсутствует количество нужных монет для количества игроков - '${options.players}'.`);
@@ -72,7 +72,7 @@ export const ChangeIsOpenedCoinStatus = (coin: ICoin, status: boolean): void => 
 export const CountMarketCoins = (G: IMyGameState): INumberValues => {
     const repeated: INumberValues = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
-        const marketCoin: ICoin | undefined = G.marketCoinsUnique[i];
+        const marketCoin: CanBeUndef<ICoin> = G.marketCoinsUnique[i];
         if (marketCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
         }

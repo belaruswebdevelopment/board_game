@@ -1,11 +1,11 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, CardNames, CoinTypes, GameNames, HeroNames, LogTypes, MoveNames, RusCardTypes, RusSuitNames, TavernNames } from "./enums";
+import { ArtefactNames, CardNames, CoinTypeNames, GameNames, HeroNames, LogTypes, MoveNames, RusCardTypes, RusSuitNames, TavernNames } from "./enums";
 
 export interface ISecret {
     readonly campDecks: CampDeckCardTypes[][];
     readonly decks: DeckCardTypes[][];
     // TODO Idavoll
-    idavollDecks: IdavollDeckCardTypes[];
+    mythologicalCreatureDecks: MythologicalCreatureDeckCardTypes[];
 }
 
 export interface IObjective {
@@ -359,11 +359,11 @@ export interface IMyGameState {
     readonly distinctions: SuitPropertyTypes<DistinctionTypes>;
     drawProfit: string;
     readonly drawSize: number;
-    exchangeOrder: (number | undefined)[];
+    exchangeOrder: CanBeUndef<number>[];
     readonly expansions: IExpansions;
     readonly heroes: IHeroCard[];
     readonly heroesForSoloBot: IHeroCard[];
-    readonly heroesForSoloGameDifficultyLevel: IHeroCard[];
+    heroesForSoloGameDifficultyLevel: IHeroCard[] | null;
     readonly log: boolean;
     readonly logData: ILogData[];
     readonly marketCoins: ICoin[];
@@ -371,7 +371,7 @@ export interface IMyGameState {
     round: number;
     readonly suitsNum: number;
     tavernCardDiscarded2Players: boolean;
-    readonly taverns: (TavernCardTypes[] | IdavollDeckCardTypes[])[];
+    readonly taverns: (TavernCardTypes[] | MythologicalCreatureDeckCardTypes[])[];
     readonly tavernsNum: number;
     tierToEnd: number;
     readonly totalScore: number[];
@@ -492,7 +492,7 @@ export interface IMoveArgumentsStage<T> {
 
 export interface IMoveCoinsArguments {
     readonly coinId: number;
-    readonly type: CoinTypes;
+    readonly type: CoinTypeNames;
 }
 
 /**
@@ -540,6 +540,7 @@ export interface IMoveByPlaceCoinsOptions {
     readonly default1: IMoveValidator;
     readonly default2: IMoveValidator;
     readonly default3: IMoveValidator;
+    readonly default4: IMoveValidator;
 }
 
 /**
@@ -710,24 +711,25 @@ export interface IBuffs {
 export interface IPublicPlayer {
     actionsNum: number;
     readonly nickname: string;
-    readonly cards: SuitPropertyTypes<PlayerCardsType[]>;
+    readonly cards: SuitPropertyTypes<PlayerCardTypes[]>;
     readonly heroes: IHeroCard[];
     readonly campCards: CampDeckCardTypes[];
+    readonly mythologicalCreatureCards: MythologicalCreatureCommandZoneCardTypes[];
     readonly handCoins: PublicPlayerCoinTypes[];
     readonly boardCoins: PublicPlayerCoinTypes[];
     stack: IStack[];
     priority: IPriority;
     readonly buffs: IBuffs[];
     selectedCoin: number | null;
-    pickedCard: PickedCardType;
+    pickedCard: PickedCardTypes;
 }
 
 /**
  * <h3>Интерфейс для приватных данных игрока.</h3>
  */
 export interface IPlayer {
-    handCoins: CoinType[];
-    readonly boardCoins: CoinType[];
+    handCoins: CoinTypes[];
+    readonly boardCoins: CoinTypes[];
 }
 
 /**
@@ -798,7 +800,7 @@ export interface ISuit {
     readonly suitColor: string;
     readonly description: string;
     readonly pointsValues: () => IPointsValues;
-    readonly scoringRule: (cards: PlayerCardsType[], potentialCardValue?: number) => number;
+    readonly scoringRule: (cards: PlayerCardTypes[], potentialCardValue?: number) => number;
     readonly distinction: IDistinction;
 }
 
@@ -834,9 +836,14 @@ export interface ITavernsConfig {
 
 // TODO Idavoll
 /**
- * <h3>Типы данных для карт Idavoll.</h3>
+ * <h3>Типы данных для дек карт Idavoll.</h3>
  */
-export type IdavollDeckCardTypes = IGodCard | IGiantCard | IValkyryCard | IMythicalAnimalCard;
+export type MythologicalCreatureDeckCardTypes = IGodCard | IGiantCard | IValkyryCard | IMythicalAnimalCard;
+
+/**
+ * <h3>Типы данных для карт Idavoll в командной зоне игрока.</h3>
+ */
+export type MythologicalCreatureCommandZoneCardTypes = IGodCard | IGiantCard | IValkyryCard;
 
 /**
  * <h3>Типы данных для лагеря.</h3>
@@ -848,9 +855,9 @@ export type CampCardTypes = CampDeckCardTypes | null;
  */
 export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
 
-export type ClosedCoinType = Record<string, never>;
+export type ClosedCoinTypes = Record<string, never>;
 
-export type PublicPlayerCoinTypes = CoinType | ClosedCoinType;
+export type PublicPlayerCoinTypes = CoinTypes | ClosedCoinTypes;
 
 /**
  * <h3>Типы данных для дек карт.</h3>
@@ -871,25 +878,25 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 /**
  * <h3>Типы данных для карт выбранных игроком.</h3>
  */
-export type PickedCardType = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard
-    | IOlwinDoubleNonPlacedCard | IdavollDeckCardTypes | null;
+export type PickedCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard
+    | IOlwinDoubleNonPlacedCard | MythologicalCreatureDeckCardTypes | null;
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
-export type PlayerCardsType = ICard | IArtefactCampCard | IHeroCard | IMercenaryPlayerCard | IMythicalAnimalCard;
+export type PlayerCardTypes = ICard | IArtefactCampCard | IHeroCard | IMercenaryPlayerCard | IMythicalAnimalCard;
 
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
-export type TavernCardTypes = DeckCardTypes | IdavollDeckCardTypes | null;
+export type TavernCardTypes = DeckCardTypes | MythologicalCreatureDeckCardTypes | null;
 
-export type AllCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard | IdavollDeckCardTypes;
+export type AllCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard | MythologicalCreatureDeckCardTypes;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
  */
-export type CoinType = ICoin | null;
+export type CoinTypes = ICoin | null;
 
 export type IActionFunctionTypes = IActionFunction | IActionFunctionWithParams;
 
@@ -925,16 +932,16 @@ export type SuitPropertyTypes<Type> = {
 /**
  * <h3>Типы данных для остаточных аргументов функций.</h3>
  */
-export type ArgsTypes = (CoinTypes | SuitTypes | number)[];
+export type ArgsTypes = (CoinTypeNames | SuitTypes | number)[];
 
-export type AutoActionArgsTypes = [number] | [number, number, CoinTypes];
+export type AutoActionArgsTypes = [number] | [number, number, CoinTypeNames];
 
 /**
  * <h3>Типы данных для преимуществ.</h3>
  */
-export type DistinctionTypes = string | null | undefined;
+export type DistinctionTypes = CanBeUndef<string | null>;
 
-export type MoveArgsTypes = number[][] | [SuitTypes] | [number] | [SuitTypes, number] | [number, CoinTypes];
+export type MoveArgsTypes = number[][] | [SuitTypes] | [number] | [SuitTypes, number] | [number, CoinTypeNames];
 
 /**
  * <h3>Тип для создания карты улучшения монеты.</h3>
@@ -1004,7 +1011,8 @@ export type IVariant = IBasicSuitableCardInfo;
 export type ICreatePublicPlayer =
     PartialBy<Omit<IPublicPlayer, `actionsNum` | `pickedCard` | `priority` | `selectedCoin` | `stack`>
         & ReadonlyBy<IPublicPlayer, `actionsNum` | `pickedCard` | `priority` | `selectedCoin` | `stack`>,
-        `actionsNum` | `heroes` | `campCards` | `stack` | `buffs` | `selectedCoin` | `pickedCard`>;
+        `actionsNum` | `heroes` | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs` | `selectedCoin`
+        | `pickedCard`>;
 
 export type ISoloGameDifficultyLevelHeroesConfig =
     Pick<IHeroConfig, `Astrid` | `Grid` | `Skaa` | `Thrud` | `Uline` | `Ylud`>;
@@ -1016,6 +1024,11 @@ export type ISoloGameHeroesForPlayerConfig = Pick<IHeroConfig, `Kraal` | `Tarah`
     | `Zoral` | `Aegur` | `Bonfur` | `Hourya` | `Idunn`>;
 
 // My Utilities types
+/**
+ * <h3>Тип для того, чтобы сделать дополнительный union тип undefined.</h3>
+ */
+export type CanBeUndef<T> = T | undefined;
+
 /**
  * <h3>Тип для того, чтобы получить типы пары [ключ, значение] у Object.entries.</h3>
  */

@@ -10,7 +10,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, LogTypes, Phases, RusCardTypes, RusSuitNames } from "../typescript/enums";
-import type { CampDeckCardTypes, DiscardDeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IVariant, PickedCardType, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, DiscardDeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IVariant, PickedCardTypes, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -26,11 +26,11 @@ import type { CampDeckCardTypes, DiscardDeckCardTypes, IMercenaryPlayerCard, IMy
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number):
     void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const discardedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
+    const discardedCard: CanBeUndef<PlayerCardTypes> = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта во фракции '${RusSuitNames[suit]}' с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
@@ -50,7 +50,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, s
  * @param cardId Id карты.
  */
 export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -73,11 +73,11 @@ export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: n
  * @param cardId Id карты.
  */
 export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const pickedCard: CampDeckCardTypes | undefined = player.campCards[cardId];
+    const pickedCard: CanBeUndef<CampDeckCardTypes> = player.campCards[cardId];
     if (pickedCard === undefined) {
         throw new Error(`В массиве карт лагеря игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
@@ -101,7 +101,7 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
  * @param suit Название фракции.
  */
 export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -123,7 +123,7 @@ export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitTyp
  * @param ctx
  */
 export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -143,11 +143,11 @@ export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void
  * @param cardId Id карты.
  */
 export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const card: DiscardDeckCardTypes | undefined = G.discardCardsDeck.splice(cardId, 1)[0];
+    const card: CanBeUndef<DiscardDeckCardTypes> = G.discardCardsDeck.splice(cardId, 1)[0];
     if (card === undefined) {
         throw new Error(`В массиве колоды сброса отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
@@ -170,15 +170,15 @@ export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
  * @param suit Название фракции.
  */
 export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const pickedCard: PickedCardType = player.pickedCard;
+    const pickedCard: PickedCardTypes = player.pickedCard;
     if (!IsMercenaryCampCard(pickedCard)) {
         throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
     }
-    const cardVariants: IVariant | undefined = pickedCard.variants[suit];
+    const cardVariants: CanBeUndef<IVariant> = pickedCard.variants[suit];
     if (cardVariants === undefined) {
         throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }

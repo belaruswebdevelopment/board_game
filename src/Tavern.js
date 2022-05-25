@@ -103,7 +103,7 @@ export const RefillTaverns = (G) => {
     for (let t = 0; t < G.tavernsNum; t++) {
         let refillDeck;
         if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
-            refillDeck = G.secret.idavollDecks.splice(0, G.drawSize);
+            refillDeck = G.secret.mythologicalCreatureDecks.splice(0, G.drawSize);
         }
         else {
             const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];

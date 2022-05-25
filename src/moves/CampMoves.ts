@@ -2,7 +2,7 @@ import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypes, Stages } from "../typescript/enums";
+import { CoinTypeNames, Stages } from "../typescript/enums";
 import type { IMyGameState } from "../typescript/interfaces";
 
 /**
@@ -109,7 +109,7 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGam
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
-    type: CoinTypes): string | void => {
+    type: CoinTypeNames): string | void => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
             coinId,

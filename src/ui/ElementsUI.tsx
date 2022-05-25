@@ -106,6 +106,9 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             case MoveNames.GetEnlistmentMercenariesMove:
                 action = data.moves.GetEnlistmentMercenariesMove!;
                 break;
+            case MoveNames.ChooseHeroForDifficultySoloModeMove:
+                action = data.moves.ChooseHeroForDifficultySoloModeMove!;
+                break;
             default:
                 throw new Error(`Нет такого мува '${moveName}'.`);
         }

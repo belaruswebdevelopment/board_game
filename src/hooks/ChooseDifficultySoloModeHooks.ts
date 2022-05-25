@@ -1,11 +1,12 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
+import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import type { IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
@@ -33,11 +34,12 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.solo) {
         if (ctx.currentPlayer === `1`) {
-            const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1];
+            const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
             if (soloBotPublicPlayer === undefined) {
                 throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
             }
-            return !soloBotPublicPlayer.stack.length;
+            // TODO Uncomment it!!!
+            return G.heroesForSoloGameDifficultyLevel === null/*  && !soloBotPublicPlayer.stack.length */;
         }
     } else {
         return true;
@@ -57,7 +59,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx)
  */
 export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (ctx.currentPlayer === `0`) {
-        const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
         }
@@ -89,6 +91,8 @@ export const EndChooseDifficultySoloModeActions = (G: IMyGameState): void => {
  * @param ctx
  */
 export const OnChooseDifficultySoloModeMove = (G: IMyGameState, ctx: Ctx): void => {
+    console.log(ctx.currentPlayer);
+
     StartOrEndActions(G, ctx);
 };
 
@@ -105,16 +109,17 @@ export const OnChooseDifficultySoloModeMove = (G: IMyGameState, ctx: Ctx): void 
 export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     if (ctx.currentPlayer === `0`) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.getDifficultyLevelForSoloMode()]);
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.getHeroesForSoloMode()]);
+        DrawCurrentProfit(G, ctx);
     } else if (ctx.currentPlayer === `1`) {
-        const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
         }
         soloBotPublicPlayer.heroes.forEach((hero: IHeroCard): void => {
             AddBuffToPlayer(G, ctx, hero.buff);
             AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+            StartAutoAction(G, ctx, hero.actions);
         });
+        G.heroesForSoloGameDifficultyLevel = null;
     }
-    DrawCurrentProfit(G, ctx);
 };

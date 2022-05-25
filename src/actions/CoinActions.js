@@ -1,7 +1,7 @@
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, LogTypes } from "../typescript/enums";
 // TODO Done it for Grid in Solo mode at the start of the game (return coin closed for player!)
 // TODO For Solo mode `When trading or exchanging coins, always select the coin with the lowest visible value to increase.`
 /**
@@ -36,7 +36,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         boardCoins = player.boardCoins;
     }
     let upgradingCoin;
-    if (type === CoinTypes.Hand) {
+    if (type === CoinTypeNames.Hand) {
         const handCoin = handCoins[upgradingCoinId];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке нет монеты с id '${upgradingCoinId}'.`);
@@ -49,7 +49,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         }
         upgradingCoin = handCoin;
     }
-    else if (type === CoinTypes.Board) {
+    else if (type === CoinTypeNames.Board) {
         const boardCoin = boardCoins[upgradingCoinId];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
@@ -106,8 +106,8 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
             ChangeIsOpenedCoinStatus(upgradedCoin, true);
         }
-        if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) && type === CoinTypes.Hand)
-            || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypes.Board
+        if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) && type === CoinTypeNames.Hand)
+            || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypeNames.Board
                 && isTrading)) {
             if (isTrading) {
                 const handCoinId = player.handCoins.indexOf(null);
@@ -126,7 +126,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
             }
             AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
         }
-        else if (type === CoinTypes.Board) {
+        else if (type === CoinTypeNames.Board) {
             if (G.multiplayer) {
                 boardCoins[upgradingCoinId] = upgradedCoin;
             }

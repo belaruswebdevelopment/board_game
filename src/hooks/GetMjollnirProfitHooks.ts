@@ -4,7 +4,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames } from "../typescript/enums";
-import type { IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
@@ -19,7 +19,7 @@ import type { IMyGameState, IPublicPlayer } from "../typescript/interfaces";
  */
 export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }

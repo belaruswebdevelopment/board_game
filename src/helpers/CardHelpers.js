@@ -36,6 +36,26 @@ export const AddCardToPlayer = (G, ctx, card) => {
     return false;
 };
 /**
+ * <h3>Добавляет взятую карту Idavoll в командную зону карт Idavoll игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при взятии карты из текущей таверны.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param card Карта.
+ */
+export const AddIdavollCardToPlayerCommandZone = (G, ctx, card) => {
+    // if (expansions.idavoll.active && i === 1) {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    player.mythologicalCreatureCards.push(card);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту '${card.name}' в командную зону карт Idavoll.`);
+};
+/**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
  * <p>Применения:</p>
  * <ol>

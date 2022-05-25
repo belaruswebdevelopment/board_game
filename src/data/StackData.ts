@@ -56,13 +56,16 @@ export const StackData = {
     }),
     getDifficultyLevelForSoloMode: (): IStack => ({
         config: {
-            drawName: DrawNames.EnlistmentMercenaries,
+            name: ConfigNames.GetDifficultyLevelForSoloMode,
+            drawName: DrawNames.GetDifficultyLevelForSoloMode,
         },
     }),
-    getHeroesForSoloMode: (): IStack => ({
+    getHeroesForSoloMode: (number: number): IStack => ({
         config: {
+            name: ConfigNames.GetHeroesForSoloMode,
             stageName: Stages.ChooseHeroesForSoloMode,
             drawName: DrawNames.GetHeroesForSoloMode,
+            number,
         },
     }),
     getDistinctions: (): IStack => ({

@@ -1,5 +1,5 @@
 import { LogTypes } from "../typescript/enums";
-import type { ILogData, IMyGameState } from "../typescript/interfaces";
+import type { CanBeUndef, ILogData, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -15,7 +15,7 @@ export const DrawLogData = (G: IMyGameState): JSX.Element | null => {
     if (G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = G.logData.length - 1; i >= 0; i--) {
-            const log: ILogData | undefined = G.logData[i];
+            const log: CanBeUndef<ILogData> = G.logData[i];
             if (log !== undefined) {
                 if (log.type === LogTypes.PRIVATE) {
                     loggingData.push(

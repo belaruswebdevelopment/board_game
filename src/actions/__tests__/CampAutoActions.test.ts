@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { ArtefactNames, BuffNames, DrawNames, LogTypes, Stages, SuitNames } from "../../typescript/enums";
-import type { CoinType, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerCoinTypes } from "../../typescript/interfaces";
+import type { CoinTypes, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardTypes, PublicPlayerCoinTypes } from "../../typescript/interfaces";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {
@@ -784,7 +784,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 0: {} as IPublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -808,7 +808,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 0: {} as IPublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -838,7 +838,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 0: {} as IPublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardsType[],
+                        warrior: [] as PlayerCardTypes[],
                     },
                 } as IPublicPlayer,
             },
@@ -1900,7 +1900,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 isTriggerTrading: false,
                                 value: 3,
                             },
-                        ] as CoinType[],
+                        ] as CoinTypes[],
                         buffs: [
                             {
                                 everyTurn: true,

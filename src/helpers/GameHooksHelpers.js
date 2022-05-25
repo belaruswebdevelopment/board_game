@@ -243,6 +243,7 @@ export const StartOrEndActions = (G, ctx) => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
+    // TODO Why i need it?!
     if (player.actionsNum) {
         player.actionsNum--;
     }

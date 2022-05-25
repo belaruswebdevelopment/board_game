@@ -7,7 +7,7 @@ import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CoinTypeNames, LogTypes, SuitNames } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction } from "./CampAutoActions";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>

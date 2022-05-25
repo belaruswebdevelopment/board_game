@@ -7,7 +7,7 @@ import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
-import type { CampDeckCardTypes, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -22,7 +22,7 @@ import type { CampDeckCardTypes, IMyGameState, INext, IPublicPlayer } from "../t
  */
 export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
@@ -30,7 +30,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
             && !player.actionsNum) {
             let allMercenariesPlayed = true;
             for (let i = 0; i < ctx.numPlayers; i++) {
-                const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
+                const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (playerI === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
@@ -59,7 +59,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
  * @returns
  */
 export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -104,7 +104,7 @@ export const EndEnlistmentMercenariesActions = (G: IMyGameState): void => {
  */
 export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -129,7 +129,7 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
  * @param ctx
  */
 export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -194,7 +194,7 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
     });
     G.publicPlayersOrder = playersIndexes;
     if (playersIndexes.length > 1) {
-        const playerIndex: string | undefined = playersIndexes[0];
+        const playerIndex: CanBeUndef<string> = playersIndexes[0];
         if (playerIndex === undefined) {
             throw new Error(`В массиве индексов игроков отсутствует индекс '0'.`);
         }

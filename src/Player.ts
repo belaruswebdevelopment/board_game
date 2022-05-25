@@ -4,7 +4,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, Phases } from "./typescript/enums";
-import type { ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardsType, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CanBeUndef, ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -31,16 +31,19 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  *
  * @param nickname Никнейм.
  * @param priority Кристалл.
+ * @param multiplayer Является ли игра мультиплеером.
+ * @param soloBot Является ли игрок соло ботом.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
-    const cards: Partial<SuitPropertyTypes<PlayerCardsType[]>> = {};
+export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean, soloBot: boolean):
+    IPublicPlayer => {
+    const cards: SuitPropertyTypes<PlayerCardTypes[]> = {} as SuitPropertyTypes<PlayerCardTypes[]>;
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         cards[suit] = [];
     }
     let handCoins: ICoin[] = [];
-    if (!multiplayer) {
+    if (!multiplayer && !soloBot) {
         handCoins = BuildCoins(initialPlayerCoinsConfig, {
             isInitial: true,
         });
@@ -49,7 +52,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
     }
     return CreatePublicPlayer({
         nickname,
-        cards: cards as SuitPropertyTypes<PlayerCardsType[]>,
+        cards,
         handCoins,
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,
@@ -70,7 +73,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
 export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[i];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
@@ -79,7 +82,7 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
-            if (G.solo || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+            if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
@@ -132,6 +135,7 @@ const CreatePublicPlayer = ({
     cards,
     heroes = [],
     campCards = [],
+    mythologicalCreatureCards: idavollCards = [],
     handCoins,
     boardCoins,
     stack = [],
@@ -144,6 +148,7 @@ const CreatePublicPlayer = ({
     nickname,
     cards,
     campCards,
+    mythologicalCreatureCards: idavollCards,
     heroes,
     handCoins,
     boardCoins,

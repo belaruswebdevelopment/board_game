@@ -12,6 +12,7 @@ import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { BuffNames, LogTypes, Phases, Stages } from "../typescript/enums";
+// TODO Solo mode: check ctx.numPlayers + Number(G.solo) for all ctx.numPlayers in all files
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
  * <p>Применения:</p>
@@ -156,7 +157,7 @@ export const EndPickCardsActions = (G, ctx) => {
     if (G.expansions.thingvellir.active) {
         G.mustDiscardTavernCardJarnglofi = null;
     }
-    if (ctx.numPlayers === 2) {
+    if ((ctx.numPlayers + Number(G.solo)) === 2) {
         G.tavernCardDiscarded2Players = false;
     }
     G.publicPlayersOrder = [];

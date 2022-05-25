@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import type { BuffTypes, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { BuffTypes, CanBeUndef, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -18,7 +18,7 @@ import type { BuffTypes, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../t
  */
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: string): void => {
     if (buff !== undefined) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
@@ -55,7 +55,7 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffTypes): 
 * @param buffName Баф.
 */
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }

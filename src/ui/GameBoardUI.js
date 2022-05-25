@@ -324,7 +324,7 @@ export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
         }
     }
     if (data !== undefined) {
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Heroes (", G.heroes.length, " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, `Heroes row 0`) })] }));
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Bot heroes (", G.heroesForSoloBot.length, " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, `Heroes row 0`) })] }));
     }
     else if (validatorName !== null) {
         return moveMainArgs;
@@ -354,7 +354,7 @@ export const DrawMarketCoins = (G, data) => {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
             const tempCoinValue = marketCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-            DrawCoin(data, boardCells, `market`, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue], MoveNames.ClickHandCoinMove, j);
+            DrawCoin(data, boardCells, `market`, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue]);
             if (increment + 1 === G.marketCoinsUnique.length) {
                 break;
             }
@@ -388,11 +388,11 @@ export const DrawProfit = (G, ctx, data) => {
             ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.GetDifficultyLevelForSoloMode:
-            caption += `Get one card to your board.`;
+            caption += `Get difficulty level for Solo mode.`;
             DrawDifficultyLevelForSoloModeUI(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.GetHeroesForSoloMode:
-            caption += `Get one card to your board.`;
+            caption += `Get ${G.soloGameDifficultyLevel} hero${G.soloGameDifficultyLevel === 1 ? `` : `es`} to Solo Bot.`;
             DrawHeroesForSoloModeUI(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.StartOrPassEnlistmentMercenaries:
@@ -434,10 +434,10 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                     throw new Error(`В массиве таверн отсутствует таверна с id '${t}'.`);
                 }
                 const tavernCard = tavern[j];
-                if (tavernCard === undefined) {
+                if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
                 }
-                if (tavernCard === null) {
+                if (tavernCard === undefined || tavernCard === null) {
                     if (data !== undefined) {
                         boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }) }, `${currentTavernConfig.name} ${j}`));
                     }

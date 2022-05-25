@@ -6,7 +6,7 @@ import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, BuffNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
-import type { IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndef, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
@@ -19,7 +19,7 @@ import type { IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinType
  * @param ctx
  */
 export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -54,7 +54,7 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
     const value: Record<string, StageArg> = {};
     let results = 0;
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[i];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
@@ -87,8 +87,8 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -121,13 +121,13 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
         let coinsValue = 0,
             stack: IStack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
-            let boardCoin: PublicPlayerCoinTypes | undefined;
+            let boardCoin: CanBeUndef<PublicPlayerCoinTypes>;
             if (G.multiplayer) {
                 boardCoin = privatePlayer.boardCoins[j];
                 if (boardCoin === undefined) {
                     throw new Error(`В массиве приватных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);
                 }
-                const publicBoardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[j];
+                const publicBoardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[j];
                 if (publicBoardCoin === undefined) {
                     throw new Error(`В массиве публичных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);
                 }

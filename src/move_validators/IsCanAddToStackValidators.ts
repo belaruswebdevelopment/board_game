@@ -1,4 +1,4 @@
-import type { CardsHasStackValidators, IMyGameState, IValidatorsConfig } from "../typescript/interfaces";
+import type { CanBeUndef, CardsHasStackValidators, IMyGameState, IValidatorsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из лагеря.</h3>
@@ -12,7 +12,7 @@ import type { CardsHasStackValidators, IMyGameState, IValidatorsConfig } from ".
  * @returns
  */
 export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStackValidators): boolean => {
-    const validators: IValidatorsConfig | undefined = card.validators;
+    const validators: CanBeUndef<IValidatorsConfig> = card.validators;
     let isValidMove = false;
     if (validators?.pickCampCardToStack !== undefined) {
         if (G.camp.length > 0) {
@@ -35,7 +35,7 @@ export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStac
  * @returns
  */
 export const IsCanPickPickDiscardCardToStack = (G: IMyGameState, card: CardsHasStackValidators): boolean => {
-    const validators: IValidatorsConfig | undefined = card.validators;
+    const validators: CanBeUndef<IValidatorsConfig> = card.validators;
     let isValidMove = false;
     if (validators?.pickDiscardCardToStack !== undefined) {
         if (G.discardCardsDeck.length > 0) {

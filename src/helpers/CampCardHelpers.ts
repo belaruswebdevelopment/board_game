@@ -3,7 +3,7 @@ import { IsArtefactCard } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Phases } from "../typescript/enums";
-import type { CampDeckCardTypes, IArtefactCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IArtefactCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 
@@ -19,7 +19,7 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  * @param card Карта.
  */
 export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -56,7 +56,7 @@ export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCar
     if (IsArtefactCard(card) && card.suit !== null) {
         throw new Error(`Не удалось добавить карту артефакта '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
     }
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -80,7 +80,7 @@ export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtef
     if (card.suit === null) {
         throw new Error(`Не удалось добавить артефакт '${card.name}' на планшет карт фракций игрока с id '${ctx.currentPlayer}' из-за отсутствия принадлежности его к конкретной фракции.`);
     }
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -107,7 +107,7 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G: IMyGameState): voi
     if (minCoinIndex === -1) {
         throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
     }
-    const coin: ICoin | undefined = G.marketCoins.splice(minCoinIndex, 1)[0];
+    const coin: CanBeUndef<ICoin> = G.marketCoins.splice(minCoinIndex, 1)[0];
     if (coin === undefined) {
         throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
     }

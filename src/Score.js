@@ -175,7 +175,7 @@ export const ScoreWinner = (G, ctx) => {
     }
     const maxScore = Math.max(...G.totalScore), maxPlayers = G.totalScore.filter((score) => score === maxScore).length;
     let winners = 0;
-    for (let i = ctx.numPlayers - 1; i >= 0; i--) {
+    for (let i = ctx.numPlayers + Number(G.solo) - 1; i >= 0; i--) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);

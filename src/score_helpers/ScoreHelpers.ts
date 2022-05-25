@@ -1,4 +1,4 @@
-import type { PlayerCardsType } from "../typescript/interfaces";
+import type { PlayerCardTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
@@ -26,7 +26,7 @@ export const ArithmeticSum = (startValue: number, step: number, ranksCount: numb
  * @param currentValue Текущее значение очков.
  * @returns Суммарное количество очков фракции.
  */
-export const TotalPoints = (accumulator: number, currentValue: PlayerCardsType): number => {
+export const TotalPoints = (accumulator: number, currentValue: PlayerCardTypes): number => {
     if (currentValue.points !== null) {
         return accumulator + currentValue.points;
     }
@@ -44,7 +44,7 @@ export const TotalPoints = (accumulator: number, currentValue: PlayerCardsType):
  * @param currentValue Текущее значение шевронов.
  * @returns Суммарное количество шевронов фракции.
  */
-export const TotalRank = (accumulator: number, currentValue: PlayerCardsType): number => {
+export const TotalRank = (accumulator: number, currentValue: PlayerCardTypes): number => {
     if (currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }

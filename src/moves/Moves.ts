@@ -7,7 +7,7 @@ import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages, SuitNames } from "../typescript/enums";
-import type { DeckCardTypes, IMyGameState, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, IMyGameState, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -27,11 +27,11 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
+    const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
     }
-    const card: TavernCardTypes | undefined = currentTavern[cardId];
+    const card: CanBeUndef<TavernCardTypes> = currentTavern[cardId];
     if (card === undefined) {
         throw new Error(`Отсутствует карта с id '${cardId}' текущей таверны с id '${G.currentTavern}'.`);
     }
@@ -61,7 +61,7 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const pickedCard: DeckCardTypes | undefined = G.explorerDistinctionCards.splice(cardId, 1)[0];
+    const pickedCard: CanBeUndef<DeckCardTypes> = G.explorerDistinctionCards.splice(cardId, 1)[0];
     if (pickedCard === undefined) {
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }

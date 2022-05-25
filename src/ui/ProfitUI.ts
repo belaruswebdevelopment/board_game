@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { IsCardNotActionAndNotNull } from "../Card";
 import { ButtonNames, MoveNames, MoveValidatorNames, Stages } from "../typescript/enums";
-import type { DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -23,7 +23,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
-        const card: DeckCardTypes | undefined = G.explorerDistinctionCards[j];
+        const card: CanBeUndef<DeckCardTypes> = G.explorerDistinctionCards[j];
         if (card === undefined) {
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
@@ -31,7 +31,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
         if (IsCardNotActionAndNotNull(card)) {
             suit = card.suit;
         }
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
@@ -64,7 +64,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
  */
 export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -96,7 +96,7 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
 export const DrawDifficultyLevelForSoloModeUI = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -104,7 +104,7 @@ export const DrawDifficultyLevelForSoloModeUI = (G: IMyGameState, ctx: Ctx, vali
         for (let j = 0; j < 6; j++) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, String(j + 1), player,
-                    MoveNames.ChooseDifficultyLevelForSoloModeMove, j);
+                    MoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
             } else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
                 moveMainArgs.push(j);
             }
@@ -133,14 +133,17 @@ export const DrawHeroesForSoloModeUI = (G: IMyGameState, ctx: Ctx, validatorName
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
+        if (G.heroesForSoloGameDifficultyLevel === null) {
+            throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
+        }
         for (let j = 0; j < G.heroesForSoloGameDifficultyLevel.length; j++) {
-            const hero: IHeroCard | undefined = G.heroesForSoloGameDifficultyLevel[j];
+            const hero: CanBeUndef<IHeroCard> = G.heroesForSoloGameDifficultyLevel[j];
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев для выбора сложности соло игры отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 0
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.ChooseHeroesForSoloMode) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }

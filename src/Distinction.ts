@@ -3,7 +3,7 @@ import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { LogTypes, SuitNames } from "./typescript/enums";
-import type { DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>
@@ -21,7 +21,7 @@ import type { DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, Suit
 export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): DistinctionTypes => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
-        const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
+        const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
         if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
@@ -33,12 +33,12 @@ export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: Sui
     }
     const maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
     if (maxPlayers.length === 1) {
-        const maxPlayerIndex: number | undefined = maxPlayers[0];
+        const maxPlayerIndex: CanBeUndef<number> = maxPlayers[0];
         if (maxPlayerIndex === undefined) {
             throw new Error(`Отсутствует игрок с максимальным количеством шевронов выбранной фракции '${suit}'.`);
         }
         const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayerIndex),
-            playerDist: IPublicPlayer | undefined = G.publicPlayers[playerDistinctionIndex];
+            playerDist: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerDistinctionIndex];
         if (playerDist === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${playerDistinctionIndex}'.`);
         }
@@ -65,7 +65,7 @@ export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: Sui
 export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): number[] => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
-        const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
+        const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
         if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
@@ -79,7 +79,7 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
     playersRanks.forEach((value: number, index: number): void => {
         if (value === max) {
             maxPlayers.push(index);
-            const playerIndex: IPublicPlayer | undefined = G.publicPlayers[index];
+            const playerIndex: CanBeUndef<IPublicPlayer> = G.publicPlayers[index];
             if (playerIndex === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок с id '${index}'.`);
             }
@@ -109,11 +109,11 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
         const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[suit] = result;
         if (suit === SuitNames.EXPLORER && result === undefined) {
-            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 throw new Error(`В массиве дек арт отсутствует дека '2' эпохи.`);
             }
-            const discardedCard: DeckCardTypes | undefined = deck1.splice(0, 1)[0];
+            const discardedCard: CanBeUndef<DeckCardTypes> = deck1.splice(0, 1)[0];
             if (discardedCard === undefined) {
                 throw new Error(`Отсутствует сбрасываемая карта из колоды '2' эпохи при отсутствии преимущества по фракции разведчиков.`);
             }

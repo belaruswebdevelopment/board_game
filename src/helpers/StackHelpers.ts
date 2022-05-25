@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { PickCardValidatorNames } from "../typescript/enums";
-import type { CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig } from "../typescript/interfaces";
+import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>
@@ -20,7 +20,7 @@ export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?:
     let isValid = false;
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
-            const validators: IValidatorsConfig | undefined = card.validators;
+            const validators: CanBeUndef<IValidatorsConfig> = card.validators;
             if (validators !== undefined) {
                 for (const validator in validators) {
                     switch (validator) {
@@ -43,12 +43,12 @@ export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?:
         }
         if (isValid) {
             for (let i: number = stack.length - 1; i >= 0; i--) {
-                const stackI: IStack | undefined = stack[i];
+                const stackI: CanBeUndef<IStack> = stack[i];
                 if (stackI === undefined) {
                     throw new Error(`В массиве стэка новых действий отсутствует действие с id '${i}'.`);
                 }
                 const playerId: number = stackI.playerId ?? Number(ctx.currentPlayer),
-                    player: IPublicPlayer | undefined = G.publicPlayers[playerId];
+                    player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
                 }

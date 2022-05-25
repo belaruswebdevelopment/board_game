@@ -1,4 +1,4 @@
-import type { ICreatePriority, IPrioritiesConfig, IPriority } from "./typescript/interfaces";
+import type { CanBeUndef, ICreatePriority, IPrioritiesConfig, IPriority } from "./typescript/interfaces";
 
 /**
  * <h3>Создание кристаллов.</h3>
@@ -32,7 +32,7 @@ export const CreatePriority = ({
  * @returns Массив базовых кристаллов.
  */
 export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriority[] => {
-    const priorityConfig: IPriority[] | undefined = prioritiesConfig[numPlayers];
+    const priorityConfig: CanBeUndef<IPriority[]> = prioritiesConfig[numPlayers];
     if (priorityConfig === undefined) {
         throw new Error(`В массиве конфига приоритетов отсутствует конфиг для количества игроков - '${numPlayers}'.`);
     }

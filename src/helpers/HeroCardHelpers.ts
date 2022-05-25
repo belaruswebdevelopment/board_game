@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import type { IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 
@@ -19,7 +19,7 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  */
 export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     if (hero.suit !== null) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
@@ -41,7 +41,7 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroC
  * @param hero Герой.
  */
 export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (G.solo && player === undefined && ctx.currentPlayer === `1`) {
         throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
     } else if (player === undefined) {
@@ -86,8 +86,8 @@ export const AddHeroToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard)
  * @param hero Карта героя.
  */
 export const AddHeroForDifficultyToSoloBotCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
-    const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1],
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1],
+        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }

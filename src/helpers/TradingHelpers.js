@@ -2,7 +2,7 @@ import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, LogTypes } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -132,7 +132,7 @@ const Trading = (G, ctx, tradingCoins) => {
             value = coinsMinValue;
             upgradingCoinId = G.tavernsNum + coinMaxIndex;
         }
-        UpgradeCoinAction(G, ctx, true, value, upgradingCoinId, CoinTypes.Board);
+        UpgradeCoinAction(G, ctx, true, value, upgradingCoinId, CoinTypeNames.Board);
     }
 };
 //# sourceMappingURL=TradingHelpers.js.map

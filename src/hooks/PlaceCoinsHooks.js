@@ -19,35 +19,26 @@ import { BuffNames } from "../typescript/enums";
  */
 export const CheckEndPlaceCoinsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        let isEveryPlayersHandCoinsEmpty = false;
-        if (G.multiplayer) {
-            isEveryPlayersHandCoinsEmpty =
-                Object.values(G.publicPlayers).map((player) => player).every((player, index) => {
-                    if (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                        const privatePlayer = G.players[index];
-                        if (privatePlayer === undefined) {
-                            throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
-                        }
-                        return privatePlayer.handCoins.every((coin) => coin === null);
+        const isEveryPlayersHandCoinsEmpty = Object.values(G.publicPlayers).map((player) => player).every((player, playerIndex) => {
+            if ((G.solo && ctx.currentPlayer === `1`)
+                || (G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+                const privatePlayer = G.players[playerIndex];
+                if (privatePlayer === undefined) {
+                    throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerIndex}'.`);
+                }
+                return privatePlayer.handCoins.every((coin) => coin === null);
+            }
+            else if ((G.solo && ctx.currentPlayer === `0`)
+                || (!G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+                return player.handCoins.every((coin, coinIndex) => {
+                    if (coin !== null && !IsCoin(coin)) {
+                        throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
                     }
-                    return true;
+                    return coin === null;
                 });
-        }
-        else {
-            isEveryPlayersHandCoinsEmpty =
-                Object.values(G.publicPlayers).map((player) => player)
-                    .every((player, playerIndex) => {
-                    if (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                        return player.handCoins.every((coin, coinIndex) => {
-                            if (coin !== null && !IsCoin(coin)) {
-                                throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
-                            }
-                            return coin === null;
-                        });
-                    }
-                    return true;
-                });
-        }
+            }
+            return true;
+        });
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
         }
@@ -113,13 +104,11 @@ export const EndPlaceCoinsActions = (G) => {
  */
 export const PreparationPhaseActions = (G, ctx) => {
     G.currentTavern = -1;
-    if (ctx.turn !== 0) {
-        ReturnCoinsToPlayerHands(G, ctx);
-        if (G.expansions.thingvellir.active) {
-            RefillEmptyCampCards(G);
-        }
-        RefillTaverns(G);
+    ReturnCoinsToPlayerHands(G, ctx);
+    if (G.expansions.thingvellir.active) {
+        RefillEmptyCampCards(G);
     }
+    RefillTaverns(G);
     MixUpCoinsInPlayerHands(G, ctx);
     CheckPlayersBasicOrder(G, ctx);
 };
