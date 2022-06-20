@@ -49,7 +49,7 @@ export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' отправил в колоду сброса карту из таверны:`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' отправил в колоду сброса карту из таверны:`);
     const isCardDiscarded = DiscardCardFromTavern(G, ctx, cardId);
     if (isCardDiscarded) {
         G.tavernCardDiscarded2Players = true;
@@ -76,11 +76,11 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
         throw new Error(`В массиве карт лагеря игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     if (!IsMercenaryCampCard(pickedCard)) {
-        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
     }
     player.pickedCard = pickedCard;
     AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
 };
 /**
  * <h3>Выбор фракции для применения финального эффекта артефакта Mjollnir.</h3>
@@ -102,7 +102,7 @@ export const GetMjollnirProfitAction = (G, ctx, suit) => {
         name: BuffNames.SuitIdForMjollnir,
     }, suit);
     DeleteBuffFromPlayer(G, ctx, BuffNames.GetMjollnirProfit);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`);
 };
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>
@@ -119,7 +119,7 @@ export const PassEnlistmentMercenariesAction = (G, ctx) => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' пасанул во время фазы '${ctx.phase}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' пасанул во время фазы '${ctx.phase}'.`);
 };
 /**
  * <h3>Действия, связанные с взятием карт из колоды сброса.</h3>
@@ -145,7 +145,7 @@ export const PickDiscardCardAction = (G, ctx, cardId) => {
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
     PickCardOrActionCardActions(G, ctx, card);
 };
 /**
@@ -166,7 +166,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
     }
     const pickedCard = player.pickedCard;
     if (!IsMercenaryCampCard(pickedCard)) {
-        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
     }
     const cardVariants = pickedCard.variants[suit];
     if (cardVariants === undefined) {
@@ -184,7 +184,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
         throw new Error(`У игрока с id '${ctx.currentPlayer}' в массиве карт лагеря отсутствует выбранная карта.`);
     }
     player.campCards.splice(cardIndex, 1);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника '${mercenaryCard.name}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника '${mercenaryCard.name}'.`);
     if (isAdded) {
         CheckAndMoveThrudAction(G, ctx, mercenaryCard);
     }

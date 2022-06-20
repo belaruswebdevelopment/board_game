@@ -43,7 +43,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -88,7 +88,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -141,7 +141,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -197,7 +197,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -251,7 +251,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -305,7 +305,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -370,7 +370,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -432,7 +432,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -487,7 +487,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -552,7 +552,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -620,7 +620,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -849,7 +849,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
             } as Ctx;
         expect((): void => {
             StartDiscardSuitCardAction(G as IMyGameState, ctx as Ctx);
-        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.WARRIOR}'.`);
+        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.Warrior}'.`);
     });
 });
 

@@ -1,9 +1,10 @@
 import type { Ctx } from "boardgame.io";
-import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
+import { CreateDwarfCard, IsDwarfCard } from "../Dwarf";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { GameNames } from "../typescript/enums";
-import type { CanBeUndef, DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, IDwarfCard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -22,7 +23,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (IsCardNotActionAndNotNull(card1) && IsCardNotActionAndNotNull(card2)) {
+    if (IsDwarfCard(card1) && IsDwarfCard(card2)) {
         if (card1.suit === card2.suit) {
             const result: number = (card1.points ?? 1) - (card2.points ?? 1);
             if (result === 0) {
@@ -51,7 +52,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  */
 export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
     tavern: TavernCardTypes[]): number => {
-    if (IsCardNotActionAndNotNull(compareCard)) {
+    if (IsDwarfCard(compareCard)) {
         const deckTier1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[0];
         if (deckTier1 === undefined) {
             throw new Error(`В массиве колод карт отсутствует колода '1' эпохи.`);
@@ -82,7 +83,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
         return result - Math.max(...temp.map((player: number[]): number =>
             Math.max(...player)));
     }
-    if (IsCardNotActionAndNotNull(compareCard)) {
+    if (IsDwarfCard(compareCard)) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
     return 0;
@@ -100,7 +101,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
  * @param data ????????????????????????????????????????????????????????????????????
  * @returns "Средняя" карта дворфа.
  */
-export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
+export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCardData): IDwarfCard => {
     let totalPoints = 0;
     const pointsValuesPlayers: CanBeUndef<INumberValues | INumberArrayValues> = suitConfig.pointsValues()[data.players];
     if (pointsValuesPlayers === undefined) {
@@ -123,7 +124,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
         }
     }
     totalPoints /= count;
-    return CreateCard({
+    return CreateDwarfCard({
         suit: suitConfig.suit,
         points: totalPoints,
         name: `Average card`,
@@ -162,13 +163,13 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
     let score = 0,
         suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
-            score += suitsConfig[suit].scoringRule(player.cards[suit], card.points ?? 1);
+        if (IsDwarfCard(card) && card.suit === suit) {
+            score += suitsConfig[suit].scoringRule(player.cards[suit], suit, card.points ?? 1);
         } else {
-            score += suitsConfig[suit].scoringRule(player.cards[suit]);
+            score += suitsConfig[suit].scoringRule(player.cards[suit], suit);
         }
     }
-    if (IsActionCard(card)) {
+    if (IsRoyalOfferingCard(card)) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

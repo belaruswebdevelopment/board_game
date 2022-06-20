@@ -1,16 +1,18 @@
-import { BuildAdditionalCards } from "./AdditionalCard";
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
-import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
-import { actionCardsConfigArray } from "./data/ActionCardData";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { initialPlayerCoinsConfig, marketCoinsConfig } from "./data/CoinData";
+import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { suitsConfig } from "./data/SuitData";
+import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
+import { BuildMythologicalCreatureCards } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
+import { BuildRoyalOfferingCards } from "./RoyalOffering";
+import { BuildSpecialCards } from "./SpecialCard";
 import { GameNames } from "./typescript/enums";
 /**
  * <h3>Инициализация игры.</h3>
@@ -31,7 +33,7 @@ export const SetupGame = (ctx) => {
         idavoll: {
             active: solo ? false : false,
         },
-    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], additionalCardsDeck = BuildAdditionalCards(), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
+    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
         campDecks: [],
         decks: [],
         // TODO Add Idavoll deck length info on main page?
@@ -45,7 +47,7 @@ export const SetupGame = (ctx) => {
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
-    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], campDeckLength = [0, 0], camp = [];
+    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
@@ -65,17 +67,15 @@ export const SetupGame = (ctx) => {
     }
     const deckLength = [0, 0];
     for (let i = 0; i < tierToEnd; i++) {
-        secret.decks[i] = BuildCards({
-            suits: suitsConfig,
-            actions: actionCardsConfigArray,
-        }, {
+        const data = {
             players: ctx.numPlayers + Number(solo),
             tier: i,
-        });
-        const deck = secret.decks[i];
+        }, dwarfDeck = BuildDwarfCards(data), royalOfferingDeck = BuildRoyalOfferingCards(data);
+        let deck = secret.decks[i];
         if (deck === undefined) {
             throw new Error(`Колода карт ${i} эпохи не может отсутствовать.`);
         }
+        deck = deck.concat(dwarfDeck, royalOfferingDeck);
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random.Shuffle(deck);
     }
@@ -90,10 +90,14 @@ export const SetupGame = (ctx) => {
     if (deck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
+    let mythologicalCreatureDeckLength = 0;
+    if (expansions.idavoll.active) {
+        secret.mythologicalCreatureDecks =
+            BuildMythologicalCreatureCards(giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig);
+        secret.mythologicalCreatureDecks = ctx.random.Shuffle(secret.mythologicalCreatureDecks);
+        mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
+    }
     for (let i = 0; i < tavernsNum; i++) {
-        if (expansions.idavoll.active && i === 1) {
-            secret.mythologicalCreatureDecks = ctx.random.Shuffle(secret.mythologicalCreatureDecks);
-        }
         taverns[i] = [];
         deckLength[0] = deck0.length;
     }
@@ -152,15 +156,18 @@ export const SetupGame = (ctx) => {
         explorerDistinctionCardId,
         deckLength,
         campDeckLength,
+        mythologicalCreatureDeckLength,
         secret,
         campNum,
         campPicked,
         mustDiscardTavernCardJarnglofi,
         currentTavern,
         debug,
-        additionalCardsDeck,
+        specialCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
+        discardMythologicalCreaturesCards,
+        discardSpecialCards,
         distinctions,
         drawProfit,
         drawSize,

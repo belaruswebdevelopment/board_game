@@ -6,11 +6,12 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsHeroCard } from "../Hero";
+import { IsGodCard } from "../MythologicalCreature";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BuffNames, CardNames, CoinTypeNames, HeroNames, MoveNames, MoveValidatorNames, Phases, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, CoinTypes, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMoveFunctionTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, IVariant, PickedCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, CoinTypes, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveFunctionTypes, MythologicalCreatureCommandZoneCardTypes, PickedCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -44,6 +45,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
             case MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetMjollnirProfitMoveValidator:
+            case MoveValidatorNames.UseGodPowerMoveValidator:
                 moveMainArgs = [];
                 break;
             case MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator:
@@ -74,6 +76,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
         }
         const pickedCard: PickedCardTypes = player.pickedCard;
         let suitTop: SuitTypes;
+        // TODO Draw Giant Capture token on suit if needed!
         for (suitTop in suitsConfig) {
             if ((!G.solo || (G.solo && p === 0)) && p === Number(ctx.currentPlayer)
                 && validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
@@ -152,7 +155,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 if (card !== undefined) {
                     isDrawRow = true;
                     if (p !== Number(ctx.currentPlayer) && stage === Stages.DiscardSuitCard
-                        && suit === SuitNames.WARRIOR && !IsHeroCard(card)) {
+                        && suit === SuitNames.Warrior && !IsHeroCard(card)) {
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit,
                                 MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
@@ -172,7 +175,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                         const configSuit: CanBeUndef<SuitTypes | null> = stack.config?.suit,
                             pickedCard: PickedCardTypes = player.pickedCard;
                         if (suit !== configSuit
-                            && !(configSuit === SuitNames.HUNTER && player.actionsNum === 1
+                            && !(configSuit === SuitNames.Hunter && player.actionsNum === 1
                                 && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
                             if (data !== undefined) {
                                 const suitArg: SuitTypes = suit;
@@ -217,10 +220,10 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                     && (((ctx.phase === Phases.EndTier || ctx.phase === Phases.EnlistmentMercenaries)
                         && ctx.activePlayers === null) || stage === Stages.PlaceThrudHero
                         || stage === Stages.PlaceOlwinCards)) {
-                    let cardVariants: CanBeUndef<IVariant> = undefined;
+                    let cardVariants: CanBeUndef<VariantType> = undefined;
                     if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
                         if (!IsMercenaryCampCard(pickedCard)) {
-                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
                         }
                         cardVariants = pickedCard.variants[suit];
                         if (cardVariants !== undefined && cardVariants.suit !== suit) {
@@ -233,7 +236,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                     }
                     if (data !== undefined) {
                         // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
-                        let action: IMoveFunctionTypes;
+                        let action: MoveFunctionTypes;
                         if ((!IsMercenaryCampCard(pickedCard) && suit !== pickedCard.suit)
                             || (IsMercenaryCampCard(pickedCard) && cardVariants !== undefined
                                 && suit === cardVariants.suit)) {
@@ -283,29 +286,31 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 j++;
             }
             // TODO Draw Idavoll cards column!
-            for (let k = 0; k < 1 + Number(G.expansions.thingvellir.active); k++) {
+            for (let k = 0; k < 1; k++) {
                 id += k + 1;
-                if (k === 0) {
-                    const playerCards: PlayerCardTypes[] = Object.values(player.cards).flat(),
-                        hero: CanBeUndef<IHeroCard> = player.heroes[i];
-                    // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (hero !== undefined && !hero.suit && !((hero.name === HeroNames.Ylud
-                        && playerCards.findIndex((card: PlayerCardTypes): boolean =>
-                            card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
-                                && playerCards.findIndex((card: PlayerCardTypes): boolean =>
-                                    card.name === HeroNames.Thrud) !== -1))) {
-                        isDrawRow = true;
-                        if (data !== undefined) {
-                            DrawCard(data, playerCells, hero, id, player, null);
-                        }
-                    } else {
-                        if (data !== undefined) {
-                            playerCells.push(
-                                <td key={`${player.nickname} hero ${i}`}></td>
-                            );
-                        }
+                const playerCards: PlayerCardTypes[] = Object.values(player.cards).flat(),
+                    hero: CanBeUndef<IHeroCard> = player.heroes[i];
+                // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
+                if (hero !== undefined && !hero.suit && !((hero.name === HeroNames.Ylud
+                    && playerCards.findIndex((card: PlayerCardTypes): boolean =>
+                        card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
+                            && playerCards.findIndex((card: PlayerCardTypes): boolean =>
+                                card.name === HeroNames.Thrud) !== -1))) {
+                    isDrawRow = true;
+                    if (data !== undefined) {
+                        DrawCard(data, playerCells, hero, id, player, null);
                     }
-                } else if (!G.solo) {
+                } else {
+                    if (data !== undefined) {
+                        playerCells.push(
+                            <td key={`${player.nickname} hero ${i}`}></td>
+                        );
+                    }
+                }
+            }
+            if (!G.solo) {
+                for (let t = 0; t < 0 + Number(G.expansions.thingvellir.active); t++) {
+                    id += t + 1;
                     const campCard: CanBeUndef<CampDeckCardTypes> = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
@@ -334,6 +339,37 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                         }
                     }
                 }
+                for (let m = 0; m < 0 + Number(G.expansions.idavoll.active); m++) {
+                    id += m + 1;
+                    const mythologicalCreatureCommandZoneCard: CanBeUndef<MythologicalCreatureCommandZoneCardTypes> =
+                        player.mythologicalCreatureCards[i];
+                    if (mythologicalCreatureCommandZoneCard !== undefined) {
+                        isDrawRow = true;
+                        if (IsGodCard(mythologicalCreatureCommandZoneCard)
+                            && Number(ctx.currentPlayer) === p) {
+                            if (data !== undefined) {
+                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player,
+                                    null, MoveNames.UseGodPowerMove, i);
+                            } else if (validatorName === MoveValidatorNames.UseGodPowerMoveValidator) {
+                                if (!Array.isArray(moveMainArgs)) {
+                                    throw new Error(`Аргумент валидатора '${validatorName}' должен быть массивом.`);
+                                }
+                                (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(i);
+                            }
+                        } else {
+                            if (data !== undefined) {
+                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player,
+                                    null);
+                            }
+                        }
+                    } else {
+                        if (data !== undefined) {
+                            playerCells.push(
+                                <td key={`${player.nickname} mythological creature command zone card ${i}`}></td>
+                            );
+                        }
+                    }
+                }
             }
             if (isDrawRow) {
                 if (data !== undefined) {
@@ -348,7 +384,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
         if (data !== undefined) {
             playersBoards.push(
                 <table className="mx-auto" key={`${player.nickname} board`}>
-                    <caption>Player {p + 1} ({player.nickname}) cards, {G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring(player)} points
+                    <caption>Player {p + 1} ({player.nickname}) cards, {G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring(G, player)} points
                     </caption>
                     <thead>
                         <tr>{playerHeaders}</tr>
@@ -537,8 +573,8 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                                 DrawCoin(data, playerCells, `hidden-coin`,
                                                     privateBoardCoin, id, player, `bg-small-coin`,
                                                     null, moveName, id, CoinTypeNames.Board);
-                                            } else if (validatorName ===
-                                                MoveValidatorNames.ClickCoinToUpgradeMoveValidator
+                                            } else if (!(G.solo && ctx.currentPlayer === `1`) &&
+                                                validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
                                                 || validatorName ===
                                                 MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                                                 (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`])
@@ -719,7 +755,8 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses,
                                 null, moveName, j, CoinTypeNames.Hand);
-                        } else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
+                        } else if ((!(G.solo && ctx.currentPlayer === `1`) &&
+                            validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator)
                             || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                             (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]).push({
                                 coinId: j,

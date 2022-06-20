@@ -1,19 +1,21 @@
 import type { Ctx } from "boardgame.io";
-import { BuildAdditionalCards } from "./AdditionalCard";
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
-import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
-import { actionCardsConfigArray } from "./data/ActionCardData";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { initialPlayerCoinsConfig, marketCoinsConfig } from "./data/CoinData";
+import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { suitsConfig } from "./data/SuitData";
+import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
+import { BuildMythologicalCreatureCards } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
+import { BuildRoyalOfferingCards } from "./RoyalOffering";
+import { BuildSpecialCards } from "./SpecialCard";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayers, ISecret, MythologicalCreatureDeckCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -51,7 +53,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         totalScore: number[] = [],
         logData: ILogData[] = [],
         odroerirTheMythicCauldronCoins: ICoin[] = [],
-        additionalCardsDeck: ICard[] = BuildAdditionalCards(),
+        specialCardsDeck: ISpecialCard[] = BuildSpecialCards(),
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
         distinctions: SuitPropertyTypes<DistinctionTypes> = {} as SuitPropertyTypes<DistinctionTypes>,
@@ -73,6 +75,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         campPicked = false,
         mustDiscardTavernCardJarnglofi = null,
         discardCampCardsDeck: CampDeckCardTypes[] = [],
+        discardMythologicalCreaturesCards: MythologicalCreatureDeckCardTypes[] = [],
+        discardSpecialCards: ISpecialCard[] = [],
         campDeckLength: [number, number] = [0, 0],
         camp: CampDeckCardTypes[] = [];
     if (expansions.thingvellir.active) {
@@ -94,17 +98,17 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const deckLength: [number, number] = [0, 0];
     for (let i = 0; i < tierToEnd; i++) {
-        secret.decks[i] = BuildCards({
-            suits: suitsConfig,
-            actions: actionCardsConfigArray,
-        }, {
+        const data: IPlayersNumberTierCardData = {
             players: ctx.numPlayers + Number(solo),
             tier: i,
-        });
-        const deck: CanBeUndef<DeckCardTypes[]> = secret.decks[i];
+        },
+            dwarfDeck: IDwarfCard[] = BuildDwarfCards(data),
+            royalOfferingDeck: IRoyalOfferingCard[] = BuildRoyalOfferingCards(data);
+        let deck: CanBeUndef<DeckCardTypes[]> = secret.decks[i];
         if (deck === undefined) {
             throw new Error(`Колода карт ${i} эпохи не может отсутствовать.`);
         }
+        deck = deck.concat(dwarfDeck, royalOfferingDeck);
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random!.Shuffle(deck);
     }
@@ -125,10 +129,14 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     if (deck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
+    let mythologicalCreatureDeckLength = 0;
+    if (expansions.idavoll.active) {
+        secret.mythologicalCreatureDecks =
+            BuildMythologicalCreatureCards(giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig);
+        secret.mythologicalCreatureDecks = ctx.random!.Shuffle(secret.mythologicalCreatureDecks);
+        mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
+    }
     for (let i = 0; i < tavernsNum; i++) {
-        if (expansions.idavoll.active && i === 1) {
-            secret.mythologicalCreatureDecks = ctx.random!.Shuffle(secret.mythologicalCreatureDecks);
-        }
         taverns[i] = [];
         deckLength[0] = deck0.length;
     }
@@ -153,7 +161,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             count: marketCoinsUnique,
             players: ctx.numPlayers + Number(solo),
         }),
-        averageCards: SuitPropertyTypes<ICard> = {} as SuitPropertyTypes<ICard>;
+        averageCards: SuitPropertyTypes<IDwarfCard> = {} as SuitPropertyTypes<IDwarfCard>;
     for (suit in suitsConfig) {
         averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
             players: ctx.numPlayers + Number(solo),
@@ -195,15 +203,18 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         explorerDistinctionCardId,
         deckLength,
         campDeckLength,
+        mythologicalCreatureDeckLength,
         secret,
         campNum,
         campPicked,
         mustDiscardTavernCardJarnglofi,
         currentTavern,
         debug,
-        additionalCardsDeck,
+        specialCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
+        discardMythologicalCreaturesCards,
+        discardSpecialCards,
         distinctions,
         drawProfit,
         drawSize,

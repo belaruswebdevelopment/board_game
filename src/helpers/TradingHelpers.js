@@ -17,13 +17,9 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @param ctx
  */
 export const ActivateTrading = (G, ctx) => {
-    // TODO For solo mode `And if the zero value coin is on the purse, the Neutral clan also increases the value of the other coin in the purse, replacing it with the higher value available in the Royal Treasure.`
-    const privatePlayer = G.players[Number(ctx.currentPlayer)], player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
-    }
-    if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const boardCoinCurrentTavern = player.boardCoins[G.currentTavern];
     if (boardCoinCurrentTavern === undefined) {
@@ -34,39 +30,60 @@ export const ActivateTrading = (G, ctx) => {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
     }
     if (IsCoin(boardCoinCurrentTavern) && boardCoinCurrentTavern.isTriggerTrading) {
-        const tradingCoins = [];
-        for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
-            if (G.multiplayer) {
-                const privateBoardCoin = privatePlayer.boardCoins[i];
-                if (privateBoardCoin === undefined) {
-                    throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${i}'.`);
-                }
-                if (!IsCoin(privateBoardCoin)) {
-                    throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' на поле не может не быть монеты с id '${i}'.`);
-                }
-                if (!privateBoardCoin.isOpened) {
-                    ChangeIsOpenedCoinStatus(privateBoardCoin, true);
-                }
-                player.boardCoins[i] = privateBoardCoin;
+        StartTrading(G, ctx);
+    }
+};
+export const StartTrading = (G, ctx, isSoloBotEndRound = false) => {
+    // TODO For solo mode check coins openings
+    const privatePlayer = G.players[isSoloBotEndRound ? 1 : Number(ctx.currentPlayer)], player = G.publicPlayers[isSoloBotEndRound ? 1 : Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    const tradingCoins = [];
+    for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
+        if (G.multiplayer) {
+            const privateBoardCoin = privatePlayer.boardCoins[i];
+            if (privateBoardCoin === undefined) {
+                throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${i}'.`);
             }
-            const boardCoin = player.boardCoins[i];
-            if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${i}'.`);
+            if (!IsCoin(privateBoardCoin)) {
+                throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' на поле не может не быть монеты с id '${i}'.`);
             }
-            if (boardCoin === null) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может не быть монеты с id '${i}'.`);
+            if (!privateBoardCoin.isOpened) {
+                ChangeIsOpenedCoinStatus(privateBoardCoin, true);
             }
-            if (!IsCoin(boardCoin)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${i}'.`);
+            player.boardCoins[i] = privateBoardCoin;
+        }
+        const boardCoin = player.boardCoins[i];
+        if (boardCoin === undefined) {
+            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${i}'.`);
+        }
+        if (boardCoin === null) {
+            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может не быть монеты с id '${i}'.`);
+        }
+        if (!IsCoin(boardCoin)) {
+            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${i}'.`);
+        }
+        if (IsCoin(boardCoin)) {
+            if (!boardCoin.isOpened) {
+                ChangeIsOpenedCoinStatus(boardCoin, true);
             }
-            if (IsCoin(boardCoin)) {
-                if (!boardCoin.isOpened) {
-                    ChangeIsOpenedCoinStatus(boardCoin, true);
+            if (!(G.solo && ctx.currentPlayer === `1` && isSoloBotEndRound)) {
+                if (boardCoin.isTriggerTrading) {
+                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть обменной монеты с id '${i}'.`);
                 }
+            }
+            if (!G.solo || (G.solo && ctx.currentPlayer === `1` && isSoloBotEndRound && !boardCoin.isTriggerTrading)) {
                 tradingCoins.push(boardCoin);
             }
         }
-        Trading(G, ctx, tradingCoins);
+    }
+    if (!isSoloBotEndRound || (G.solo && ctx.currentPlayer === `1` && tradingCoins.length === 1 && isSoloBotEndRound)) {
+        const soloBotOnlyOneCoinTrading = !G.solo || (G.solo && ctx.currentPlayer === `1` && tradingCoins.length === 1 && isSoloBotEndRound);
+        Trading(G, ctx, tradingCoins, soloBotOnlyOneCoinTrading);
     }
 };
 /**
@@ -79,58 +96,69 @@ export const ActivateTrading = (G, ctx) => {
  * @param G
  * @param ctx
  * @param tradingCoins Монеты для обмена.
+ * @param soloBotOnlyOneCoinTrading У соло бота доступна только 1 монета для обмена с рынка.
  */
-const Trading = (G, ctx, tradingCoins) => {
+const Trading = (G, ctx, tradingCoins, soloBotOnlyOneCoinTrading = false) => {
     const length = tradingCoins.length;
-    if (length !== 2) {
+    if (!soloBotOnlyOneCoinTrading && length !== 2) {
         throw new Error(`В массиве обменных монет игрока с id '${ctx.currentPlayer}' должно быть ровно '2' монеты, а не '${length}'.`);
     }
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[soloBotOnlyOneCoinTrading ? 1 : Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${soloBotOnlyOneCoinTrading ? 1 : Number(ctx.currentPlayer)}'.`);
     }
-    const coinsValues = tradingCoins.map((coin) => coin.value), coinsMaxValue = Math.max(...coinsValues), coinsMinValue = Math.min(...coinsValues);
-    let upgradingCoinId, coinMaxIndex = -1, coinMinIndex = -1, value;
-    AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока '${player.nickname}'.`);
+    const coinsValues = tradingCoins.map((coin) => coin.value), coinsMinValue = Math.min(...coinsValues), coinsMaxValue = Math.max(...coinsValues);
+    let upgradingCoinId, coinMinIndex = -1, coinMaxIndex = -1, value;
+    if (soloBotOnlyOneCoinTrading) {
+        AddDataToLog(G, LogTypes.Game, `Активирован обмен монеты с ценностью '${coinsMinValue}' соло бота с id '1'.`);
+    }
+    else {
+        AddDataToLog(G, LogTypes.Game, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} '${player.nickname}'.`);
+    }
     for (let i = 0; i < tradingCoins.length; i++) {
         const tradingCoin = tradingCoins[i];
         if (tradingCoin === undefined) {
-            throw new Error(`В массиве обменных монет игрока с id '${ctx.currentPlayer}' отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве обменных монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' отсутствует монета с id '${i}'.`);
         }
-        if (tradingCoin.value === coinsMaxValue && coinMaxIndex === -1) {
+        if (tradingCoin.value === coinsMinValue && coinMinIndex === -1) {
+            coinMinIndex = i;
+            break;
+        }
+        else if (tradingCoin.value === coinsMaxValue && coinMaxIndex === -1) {
             coinMaxIndex = i;
         }
-        else if (tradingCoin.value === coinsMinValue && coinMinIndex === -1) {
-            coinMinIndex = i;
-        }
-    }
-    if (coinMaxIndex === -1) {
-        throw new Error(`В массиве обменных монет игрока с id '${ctx.currentPlayer}' не найдена максимальная монета с значением '${coinsMaxValue}'.`);
     }
     if (coinMinIndex === -1) {
-        throw new Error(`В массиве обменных монет игрока с id '${ctx.currentPlayer}' не найдена максимальная монета с значением '${coinsMinValue}'.`);
+        throw new Error(`В массиве обменных монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' не найдена минимальная монета с значением '${coinsMinValue}'.`);
     }
-    const maxTradingCoin = tradingCoins[coinMaxIndex];
-    if (maxTradingCoin === undefined) {
-        throw new Error(`В массиве обменных монет игрока с id '${ctx.currentPlayer}' отсутствует максимальная монета с id '${coinMaxIndex}'.`);
+    if (!soloBotOnlyOneCoinTrading && coinMaxIndex === -1) {
+        throw new Error(`В массиве обменных монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' не найдена максимальная монета с значением '${coinsMaxValue}'.`);
     }
     const minTradingCoin = tradingCoins[coinMinIndex];
     if (minTradingCoin === undefined) {
-        throw new Error(`В массиве обменных монет игрока с id '${ctx.currentPlayer}' отсутствует минимальная монета с id '${coinMinIndex}'.`);
+        throw new Error(`В массиве обменных монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' отсутствует минимальная монета с id '${coinMinIndex}'.`);
     }
-    if (coinsMinValue === coinsMaxValue && (maxTradingCoin.isInitial || minTradingCoin.isInitial)) {
+    const maxTradingCoin = tradingCoins[coinMaxIndex];
+    if (!soloBotOnlyOneCoinTrading && maxTradingCoin === undefined) {
+        throw new Error(`В массиве обменных монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' отсутствует максимальная монета с id '${coinMaxIndex}'.`);
+    }
+    // TODO Check solo bot randomly picked concrete coin (or must always pick isInitial)!?
+    if (!soloBotOnlyOneCoinTrading && (coinsMinValue === coinsMaxValue &&
+        ((maxTradingCoin !== undefined && maxTradingCoin.isInitial) || minTradingCoin.isInitial))) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickConcreteCoinToUpgrade(coinsMaxValue, coinsMaxValue)]);
         DrawCurrentProfit(G, ctx);
     }
     else {
-        if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
-            value = coinsMaxValue;
+        if (soloBotOnlyOneCoinTrading || CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
             upgradingCoinId = G.tavernsNum + coinMinIndex;
-            DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
+            value = soloBotOnlyOneCoinTrading ? 1 : coinsMaxValue;
+            if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
+                DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
+            }
         }
         else {
-            value = coinsMinValue;
             upgradingCoinId = G.tavernsNum + coinMaxIndex;
+            value = coinsMinValue;
         }
         UpgradeCoinAction(G, ctx, true, value, upgradingCoinId, CoinTypeNames.Board);
     }

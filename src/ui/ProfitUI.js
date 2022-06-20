@@ -1,4 +1,4 @@
-import { IsCardNotActionAndNotNull } from "../Card";
+import { IsDwarfCard } from "../Dwarf";
 import { ButtonNames, MoveNames, MoveValidatorNames, Stages } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 /**
@@ -23,7 +23,7 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (IsCardNotActionAndNotNull(card)) {
+        if (IsDwarfCard(card)) {
             suit = card.suit;
         }
         const player = G.publicPlayers[Number(ctx.currentPlayer)];

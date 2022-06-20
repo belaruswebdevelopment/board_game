@@ -33,7 +33,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' должен выбрать нового героя.`,
                 },
             ],

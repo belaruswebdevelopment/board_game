@@ -1,7 +1,7 @@
 import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
 // TODO Check `Ylud the Unpredictable Will be positioned at the end of Age 1, before the Troop; Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
@@ -40,7 +40,7 @@ export const CheckEndEndTierPhase = (G, ctx) => {
                 }
             }
             if (nextPhase) {
-                return CheckEndGameLastActions(G);
+                return true;
             }
         }
     }

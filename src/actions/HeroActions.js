@@ -1,7 +1,7 @@
-import { CreateCard } from "../Card";
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { CreateDwarfCard } from "../Dwarf";
 import { DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
@@ -62,13 +62,14 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${CardNames.OlwinsDouble}'.`);
     }
-    const olwinDouble = CreateCard({
+    // TODO Rework it!?
+    const olwinDouble = CreateDwarfCard({
         suit,
         points: playerVariants[suit].points,
         name: CardNames.OlwinsDouble,
         game: GameNames.Thingvellir,
     });
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' добавил карту '${CardNames.OlwinsDouble}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' добавил карту '${CardNames.OlwinsDouble}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddCardToPlayer(G, ctx, olwinDouble);
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
@@ -104,12 +105,12 @@ export const PlaceThrudAction = (G, ctx, suit) => {
         suit,
         rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,
-        type: RusCardTypes.HERO,
+        type: RusCardTypes.Hero,
         name: HeroNames.Thrud,
         game: GameNames.Basic,
         description: heroesConfig.Thrud.description,
     });
-    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
 };
 /**
@@ -141,12 +142,12 @@ export const PlaceYludAction = (G, ctx, suit) => {
         suit,
         rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,
-        type: RusCardTypes.HERO,
+        type: RusCardTypes.Hero,
         name: HeroNames.Ylud,
         game: GameNames.Basic,
         description: heroesConfig.Ylud.description,
     });
-    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
     CheckAndMoveThrudAction(G, ctx, heroCard);
     if (G.tierToEnd === 0) {

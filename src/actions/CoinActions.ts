@@ -102,9 +102,9 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             }
         }
     }
-    AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
+    AddDataToLog(G, LogTypes.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
     if (upgradedCoin !== null) {
-        AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
+        AddDataToLog(G, LogTypes.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
         if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
             ChangeIsOpenedCoinStatus(upgradedCoin, true);
         }
@@ -125,13 +125,13 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
                 }
                 handCoins[upgradingCoinId] = upgradedCoin;
             }
-            AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
+            AddDataToLog(G, LogTypes.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
         } else if (type === CoinTypeNames.Board) {
             if (G.multiplayer) {
                 boardCoins[upgradingCoinId] = upgradedCoin;
             }
             player.boardCoins[upgradingCoinId] = upgradedCoin;
-            AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
+            AddDataToLog(G, LogTypes.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
         }
         if (!upgradingCoin.isInitial) {
             let returningIndex = 0;
@@ -146,9 +146,9 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
                 }
             }
             G.marketCoins.splice(returningIndex, 0, upgradingCoin);
-            AddDataToLog(G, LogTypes.GAME, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
+            AddDataToLog(G, LogTypes.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
         }
     } else {
-        AddDataToLog(G, LogTypes.PRIVATE, `На рынке монет нет доступных монет для обмена.`);
+        AddDataToLog(G, LogTypes.Private, `На рынке монет нет доступных монет для обмена.`);
     }
 };

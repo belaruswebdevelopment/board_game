@@ -25,14 +25,14 @@ export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }
     if (G.tierToEnd !== 0) {
-        const card = G.additionalCardsDeck.find((card) => card.name === CardNames.ChiefBlacksmith);
+        const card = G.specialCardsDeck.find((card) => card.name === CardNames.ChiefBlacksmith);
         if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${CardNames.ChiefBlacksmith}'.`);
         }
         player.pickedCard = card;
-        player.cards[SuitNames.BLACKSMITH].push(card);
-        G.distinctions[SuitNames.BLACKSMITH] = undefined;
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${CardNames.ChiefBlacksmith}'.`);
+        player.cards[SuitNames.Blacksmith].push(card);
+        G.distinctions[SuitNames.Blacksmith] = undefined;
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${CardNames.ChiefBlacksmith}'.`);
         CheckAndMoveThrudAction(G, ctx, card);
     }
     return 0;
@@ -57,7 +57,7 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
     }
     if (G.tierToEnd !== 0) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
     return 0;
 };
@@ -103,8 +103,8 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
         else {
             throw new Error(`Не существует типа монеты - '${type}'.`);
         }
-        G.distinctions[SuitNames.HUNTER] = undefined;
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' обменял по знаку отличия охотников свою монету с номиналом '0' на особую монету с номиналом '3'.`);
+        G.distinctions[SuitNames.Hunter] = undefined;
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' обменял по знаку отличия охотников свою монету с номиналом '0' на особую монету с номиналом '3'.`);
     }
     return 0;
 };
@@ -132,8 +132,8 @@ export const MinerDistinctionAwarding = (G, ctx, playerId) => {
             value: 6,
             isExchangeable: false,
         });
-        G.distinctions[SuitNames.MINER] = undefined;
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);
+        G.distinctions[SuitNames.Miner] = undefined;
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);
     }
     else {
         if (player.priority.value === 6) {
@@ -162,10 +162,10 @@ export const WarriorDistinctionAwarding = (G, ctx, playerId) => {
     }
     if (G.tierToEnd !== 0) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
     }
     else {
-        return GetMaxCoinValue(G, playerId);
+        return GetMaxCoinValue(player);
     }
     return 0;
 };

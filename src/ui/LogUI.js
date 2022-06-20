@@ -16,13 +16,13 @@ export const DrawLogData = (G) => {
         for (let i = G.logData.length - 1; i >= 0; i--) {
             const log = G.logData[i];
             if (log !== undefined) {
-                if (log.type === LogTypes.PRIVATE) {
+                if (log.type === LogTypes.Private) {
                     loggingData.push(_jsx("li", { className: "text-black", children: log.value }, `Log ${i}`));
                 }
-                else if (log.type === LogTypes.GAME) {
+                else if (log.type === LogTypes.Game) {
                     loggingData.push(_jsx("li", { className: "text-blue-500", children: log.value }, `Log ${i}`));
                 }
-                else if (log.type === LogTypes.PUBLIC) {
+                else if (log.type === LogTypes.Public) {
                     loggingData.push(_jsx("li", { className: "text-green-500", children: log.value }, `Log ${i}`));
                 }
                 else {

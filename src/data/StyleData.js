@@ -174,15 +174,15 @@ export const Styles = {
         else if (suit !== null) {
             // TODO Add images for different cards in same suit by unique id in card name -> use this names for keys
             switch (suit) {
-                case SuitNames.BLACKSMITH:
+                case SuitNames.Blacksmith:
                     return {
                         background: `${basicCardsPath}0.png) no-repeat 0px 0px / 288px 288px`,
                     };
-                case SuitNames.HUNTER:
+                case SuitNames.Hunter:
                     return {
                         background: `${basicCardsPath}0.png) no-repeat -128px 0px / 288px 288px`,
                     };
-                case SuitNames.MINER:
+                case SuitNames.Miner:
                     switch (points) {
                         case 0:
                             return {
@@ -197,9 +197,9 @@ export const Styles = {
                                 background: `${basicCardsPath}0.png) no-repeat -224px -48px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты во фракции ${SuitNames.MINER}.`);
+                            throw new Error(`Нет такой карты во фракции ${SuitNames.Miner}.`);
                     }
-                case SuitNames.WARRIOR:
+                case SuitNames.Warrior:
                     switch (points) {
                         case 3:
                             return {
@@ -234,9 +234,9 @@ export const Styles = {
                                 background: `${basicCardsPath}0.png) no-repeat -32px -240px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.WARRIOR}.`);
+                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.Warrior}.`);
                     }
-                case SuitNames.EXPLORER:
+                case SuitNames.Explorer:
                     switch (points) {
                         case 5:
                             return {
@@ -271,7 +271,7 @@ export const Styles = {
                                 background: `${basicCardsPath}0.png) no-repeat -96px -240px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.EXPLORER}.`);
+                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.Explorer}.`);
                     }
                 default:
                     throw new Error(`Нет такой карты.`);
@@ -303,23 +303,23 @@ export const Styles = {
     }),
     Distinctions: (distinction) => {
         switch (distinction) {
-            case SuitNames.BLACKSMITH:
+            case SuitNames.Blacksmith:
                 return {
                     background: `${distinctionsPath} no-repeat 0px -100px / 96px 150px`,
                 };
-            case SuitNames.HUNTER:
+            case SuitNames.Hunter:
                 return {
                     background: `${distinctionsPath} no-repeat -64px 0px / 96px 150px`,
                 };
-            case SuitNames.MINER:
+            case SuitNames.Miner:
                 return {
                     background: `${distinctionsPath} no-repeat 0px -50px / 96px 150px`,
                 };
-            case SuitNames.WARRIOR:
+            case SuitNames.Warrior:
                 return {
                     background: `${distinctionsPath} no-repeat -32px -50px / 96px 150px`,
                 };
-            case SuitNames.EXPLORER:
+            case SuitNames.Explorer:
                 return {
                     background: `${distinctionsPath} no-repeat 0px 0px / 96px 150px`,
                 };

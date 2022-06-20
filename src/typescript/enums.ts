@@ -21,6 +21,9 @@ export const enum ArtefactNames {
  * <h3>Перечисление для названия бафов в конфиге.</h3>
  */
 export const enum BuffNames {
+    CountDistinctionAmount = `countDistinctionAmount`,
+    CountPickedHeroAmount = `countPickedHeroAmount`,
+    DagdaDiscardOnlyOneCards = `dagdaDiscardOnlyOneCards`,
     DiscardCardEndGame = `discardCardEndGame`,
     EndTier = `endTier`,
     EveryTurn = `everyTurn`,
@@ -29,6 +32,7 @@ export const enum BuffNames {
     GoCampOneTime = `goCampOneTime`,
     MoveThrud = `moveThrud`,
     NoHero = `noHero`,
+    RatatoskFinalScoring = `ratatoskFinalScoring`,
     SuitIdForMjollnir = `suitIdForMjollnir`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeNextCoin = `upgradeNextCoin`,
@@ -114,6 +118,50 @@ export const enum GameNames {
 }
 
 /**
+ * <h3>Перечисление для названия Гигантов.</h3>
+ */
+export const enum GiantNames {
+    Gymir = `Гюмир`,
+    Hrungnir = `Грунгнир`,
+    Skymir = `Скаймир`,
+    Surt = `Сурт`,
+    Thrivaldi = `Тривальди`,
+}
+
+/**
+ * <h3>Перечисление для названия Богов.</h3>
+ */
+export const enum GodNames {
+    Freyja = `Фрейя`,
+    Frigg = `Фригг`,
+    Loki = `Локи`,
+    Odin = `Один`,
+    Thor = `Тор`,
+}
+
+/**
+ * <h3>Перечисление для названия Мифических животных.</h3>
+ */
+export const enum MythicalAnimalNames {
+    Durathor = `Дуратор`,
+    Garm = `Гарм`,
+    Hraesvelg = `Хрэсвелг`,
+    Nidhogg = `Нидхогг`,
+    Ratatosk = `Рататоск`,
+}
+
+/**
+ * <h3>Перечисление для названия Мифических животных.</h3>
+ */
+export const enum ValkyryNames {
+    Brynhildr = `Брюнхильда`,
+    Hildr = `Хильд`,
+    Olrun = `Ольрун`,
+    Sigrdrifa = `Сигрдрива`,
+    Svafa = `Свава`,
+}
+
+/**
  * <h3>Перечисление для названий героев.</h3>
  */
 export const enum HeroNames {
@@ -151,9 +199,9 @@ export const enum HeroNames {
  * <h3>Перечисление для типов логов.</h3>
  */
 export const enum LogTypes {
-    GAME = `game`,
-    PRIVATE = `private`,
-    PUBLIC = `public`,
+    Game = `game`,
+    Private = `private`,
+    Public = `public`,
 }
 
 /**
@@ -196,6 +244,8 @@ export const enum MoveNames {
     PlaceOlwinCardMove = `PlaceOlwinCardMove`,
     PlaceThrudHeroMove = `PlaceThrudHeroMove`,
     UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
+    // TODO Is it here?
+    UseGodPowerMove = `UseGodPowerMove`,
 }
 
 /**
@@ -217,12 +267,17 @@ export const enum Phases {
  * <h3>Перечисление для типов карт.</h3>
  */
 export const enum RusCardTypes {
-    ACTION = `Улучшение монеты`,
-    ARTEFACT = `Артефакт`,
-    BASIC = `Базовая`,
-    HERO = `Герой`,
-    MERCENARY = `Наёмник`,
-    MERCENARYPLAYERCARD = `Наёмник на игрока`,
+    Royal_Offering = `Королевская награда`,
+    Artefact = `Артефакт`,
+    Dwarf = `Дворф`,
+    Giant = `Гигант`,
+    God = `Бог`,
+    Hero = `Герой`,
+    Mercenary = `Наёмник`,
+    Mercenary_Player_Card = `Наёмник на столе игрока`,
+    Mythical_Animal = `Мифическое животное`,
+    Special = `Особая`,
+    Valkyry = `Валькирия`,
 }
 
 /**
@@ -266,11 +321,11 @@ export const enum Stages {
  * <h3>Перечисление для названий фракций.</h3>
  */
 export const enum SuitNames {
-    BLACKSMITH = `blacksmith`,
-    EXPLORER = `explorer`,
-    HUNTER = `hunter`,
-    MINER = `miner`,
-    WARRIOR = `warrior`,
+    Blacksmith = `blacksmith`,
+    Explorer = `explorer`,
+    Hunter = `hunter`,
+    Miner = `miner`,
+    Warrior = `warrior`,
 }
 
 /**
@@ -332,4 +387,6 @@ export const enum MoveValidatorNames {
     PlaceOlwinCardMoveValidator = `PlaceOlwinCardMoveValidator`,
     PlaceThrudHeroMoveValidator = `PlaceThrudHeroMoveValidator`,
     UpgradeCoinVidofnirVedrfolnirMoveValidator = `UpgradeCoinVidofnirVedrfolnirMoveValidator`,
+    // TODO Is it here?
+    UseGodPowerMoveValidator = `UseGodPowerMoveValidator`,
 }

@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import type { CanBeUndef, IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, IMyGameState, INumberValues, PublicPlayerCoinTypes } from "./typescript/interfaces";
+import type { CanBeUndef, CreateCoinType, IBuildCoinsOptions, ICoin, IMarketCoinConfig, IMyGameState, InitialTradingCoinConfigType, INumberValues, PublicPlayerCoinTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -13,11 +13,11 @@ import type { CanBeUndef, IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradin
  * @param options Опции создания монет.
  * @returns Массив всех монет.
  */
-export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoinConfig[], options: IBuildCoinsOptions):
+export const BuildCoins = (coinConfig: IMarketCoinConfig[] | InitialTradingCoinConfigType[], options: IBuildCoinsOptions):
     ICoin[] => {
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        const config: CanBeUndef<IMarketCoinConfig | IInitialTradingCoinConfig> = coinConfig[i];
+        const config: CanBeUndef<IMarketCoinConfig | InitialTradingCoinConfigType> = coinConfig[i];
         if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
         }
@@ -101,7 +101,7 @@ export const CreateCoin = ({
     isOpened = false,
     isTriggerTrading = false,
     value,
-}: ICreateCoin = {} as ICreateCoin): ICoin => ({
+}: CreateCoinType = {} as CreateCoinType): ICoin => ({
     isInitial,
     isOpened,
     isTriggerTrading,

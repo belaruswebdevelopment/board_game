@@ -1,13 +1,15 @@
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { IsArtefactCard, IsMercenaryCampCard, IsMercenaryPlayerCard } from "../Camp";
-import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { IsDwarfCard } from "../Dwarf";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsHeroCard } from "../Hero";
+import { IsMythicalAnimalCard } from "../MythologicalCreature";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { ArtefactNames, MoveNames } from "../typescript/enums";
-import type { AllCardTypes, ArgsTypes, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
+import type { AllCardTypes, ArgsTypes, IBackground, IMyGameState, IPublicPlayer, MoveFunctionTypes, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -25,7 +27,7 @@ import type { AllCardTypes, ArgsTypes, IBackground, IMoveFunctionTypes, IMyGameS
  */
 export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], name: string,
     player: IPublicPlayer, moveName?: MoveNames, ...args: ArgsTypes): void => {
-    let action: IMoveFunctionTypes;
+    let action: MoveFunctionTypes;
     switch (moveName) {
         case MoveNames.ChooseDifficultyLevelForSoloModeMove:
             action = data.moves.ChooseDifficultyLevelForSoloModeMove!;
@@ -70,7 +72,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
-        action: IMoveFunctionTypes;
+        action: MoveFunctionTypes;
     if (moveName !== undefined) {
         switch (moveName) {
             case MoveNames.ClickHeroCardMove:
@@ -109,6 +111,9 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             case MoveNames.ChooseHeroForDifficultySoloModeMove:
                 action = data.moves.ChooseHeroForDifficultySoloModeMove!;
                 break;
+            case MoveNames.UseGodPowerMove:
+                action = data.moves.UseGodPowerMove!;
+                break;
             default:
                 throw new Error(`Нет такого мува '${moveName}'.`);
         }
@@ -135,14 +140,13 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             tdClasses = `bg-yellow-200`;
         }
     } else {
-        if (!IsActionCard(card)) {
-            // TODO Fix for Idavoll
-            if (IsCardNotActionAndNotNull(card)) {
-                styles = Styles.Cards(card.suit, card.name, card.points);
-            }
+        // TODO Fix for Idavoll
+        if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
+            styles = Styles.Cards(card.suit, card.name, card.points);
         } else {
             styles = Styles.Cards(null, card.name, null);
         }
+        // TODO Fix classes for Idavoll
         spanClasses = `bg-card`;
     }
     if (action !== null) {
@@ -159,9 +163,10 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         } else {
             value = card.points !== null ? String(card.points) : ``;
         }
-    } else if (IsActionCard(card)) {
+    } else if (IsRoyalOfferingCard(card)) {
         value = String(card.value);
     }
+    //TODO Draw Power token on Gods if needed and Strength token on valkyries!
     playerCells.push(
         <td className={tdClasses} onClick={() => action?.(...args)}
             key={`${player?.nickname ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`}>
@@ -197,7 +202,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         span: JSX.Element | number | null = null,
         tdClasses = `bg-yellow-300`,
         spanClasses = ``,
-        action: IMoveFunctionTypes;
+        action: MoveFunctionTypes;
     if (moveName !== undefined) {
         switch (moveName) {
             case MoveNames.ClickBoardCoinMove:
@@ -303,7 +308,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  */
 export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitTypes,
     player: IPublicPlayer, moveName: MoveNames | null): void => {
-    let action: IMoveFunctionTypes;
+    let action: MoveFunctionTypes;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove!;

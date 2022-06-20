@@ -6,14 +6,14 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
-import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { ActivateTrading } from "../helpers/TradingHelpers";
+import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { BuffNames, LogTypes, Phases, Stages } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, CoinTypes, DeckCardTypes, IMyGameState, INext, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, CoinTypes, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 // TODO Solo mode: check ctx.numPlayers + Number(G.solo) for all ctx.numPlayers in all files
 /**
@@ -87,7 +87,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
  * @param ctx
  * @returns
  */
-export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
+export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): true | void => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
@@ -95,12 +95,7 @@ export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): boolean | INe
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
             && !player.actionsNum && CheckIfCurrentTavernEmpty(G)) {
-            const isLastTavern: boolean = G.tavernsNum - 1 === G.currentTavern;
-            if (isLastTavern) {
-                return AfterLastTavernEmptyActions(G, ctx);
-            } else {
-                return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
-            }
+            return true;
         }
     }
 };
@@ -116,10 +111,10 @@ export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): boolean | INe
  * @param ctx
  * @returns
  */
-export const CheckEndPickCardsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => EndTurnActions(G, ctx);
+export const CheckEndPickCardsTurn = (G: IMyGameState, ctx: Ctx): true | void => EndTurnActions(G, ctx);
 
 /**
- * <h3>Порядок обмена кристаллов при завершении фазы 'pickCards'.</h3>
+ * <h3>Действия при завершении фазы 'pickCards'.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При завершении фазы 'pickCards'.</li>
@@ -129,6 +124,9 @@ export const CheckEndPickCardsTurn = (G: IMyGameState, ctx: Ctx): boolean | void
  * @param ctx
  */
 export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
+    if (G.solo) {
+        StartTrading(G, ctx, true);
+    }
     const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
         throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
@@ -136,7 +134,7 @@ export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
     if (!CheckIfCurrentTavernEmpty(G)) {
         throw new Error(`Таверна '${currentTavernConfig.name}' не может не быть пустой в конце фазы '${Phases.PickCards}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Таверна '${currentTavernConfig.name}' пустая.`);
+    AddDataToLog(G, LogTypes.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
     const deck: CanBeUndef<DeckCardTypes[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (deck === undefined) {
         throw new Error(`Отсутствует колода карт текущей эпохи с id '${G.secret.decks.length - G.tierToEnd}'.`);

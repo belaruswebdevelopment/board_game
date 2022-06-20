@@ -25,7 +25,7 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
         player.buffs.push({
             [buff.name]: value ?? true,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
     }
 };
 
@@ -65,5 +65,5 @@ export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTy
         throw new Error(`У игрока в массиве бафов отсутствует баф '${buffName}'.`);
     }
     player.buffs.splice(buffIndex, 1);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };

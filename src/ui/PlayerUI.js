@@ -5,6 +5,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsHeroCard } from "../Hero";
+import { IsGodCard } from "../MythologicalCreature";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
@@ -36,6 +37,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
             case MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetMjollnirProfitMoveValidator:
+            case MoveValidatorNames.UseGodPowerMoveValidator:
                 moveMainArgs = [];
                 break;
             case MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator:
@@ -62,6 +64,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
         }
         const pickedCard = player.pickedCard;
         let suitTop;
+        // TODO Draw Giant Capture token on suit if needed!
         for (suitTop in suitsConfig) {
             if ((!G.solo || (G.solo && p === 0)) && p === Number(ctx.currentPlayer)
                 && validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
@@ -116,7 +119,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                 if (card !== undefined) {
                     isDrawRow = true;
                     if (p !== Number(ctx.currentPlayer) && stage === Stages.DiscardSuitCard
-                        && suit === SuitNames.WARRIOR && !IsHeroCard(card)) {
+                        && suit === SuitNames.Warrior && !IsHeroCard(card)) {
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
                         }
@@ -136,7 +139,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         }
                         const configSuit = (_b = stack.config) === null || _b === void 0 ? void 0 : _b.suit, pickedCard = player.pickedCard;
                         if (suit !== configSuit
-                            && !(configSuit === SuitNames.HUNTER && player.actionsNum === 1
+                            && !(configSuit === SuitNames.Hunter && player.actionsNum === 1
                                 && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
                             if (data !== undefined) {
                                 const suitArg = suit;
@@ -187,7 +190,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                     let cardVariants = undefined;
                     if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
                         if (!IsMercenaryCampCard(pickedCard)) {
-                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
                         }
                         cardVariants = pickedCard.variants[suit];
                         if (cardVariants !== undefined && cardVariants.suit !== suit) {
@@ -248,26 +251,27 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                 j++;
             }
             // TODO Draw Idavoll cards column!
-            for (let k = 0; k < 1 + Number(G.expansions.thingvellir.active); k++) {
+            for (let k = 0; k < 1; k++) {
                 id += k + 1;
-                if (k === 0) {
-                    const playerCards = Object.values(player.cards).flat(), hero = player.heroes[i];
-                    // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (hero !== undefined && !hero.suit && !((hero.name === HeroNames.Ylud
-                        && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
-                        && playerCards.findIndex((card) => card.name === HeroNames.Thrud) !== -1))) {
-                        isDrawRow = true;
-                        if (data !== undefined) {
-                            DrawCard(data, playerCells, hero, id, player, null);
-                        }
-                    }
-                    else {
-                        if (data !== undefined) {
-                            playerCells.push(_jsx("td", {}, `${player.nickname} hero ${i}`));
-                        }
+                const playerCards = Object.values(player.cards).flat(), hero = player.heroes[i];
+                // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
+                if (hero !== undefined && !hero.suit && !((hero.name === HeroNames.Ylud
+                    && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
+                    && playerCards.findIndex((card) => card.name === HeroNames.Thrud) !== -1))) {
+                    isDrawRow = true;
+                    if (data !== undefined) {
+                        DrawCard(data, playerCells, hero, id, player, null);
                     }
                 }
-                else if (!G.solo) {
+                else {
+                    if (data !== undefined) {
+                        playerCells.push(_jsx("td", {}, `${player.nickname} hero ${i}`));
+                    }
+                }
+            }
+            if (!G.solo) {
+                for (let t = 0; t < 0 + Number(G.expansions.thingvellir.active); t++) {
+                    id += t + 1;
                     const campCard = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
@@ -296,6 +300,35 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         }
                     }
                 }
+                for (let m = 0; m < 0 + Number(G.expansions.idavoll.active); m++) {
+                    id += m + 1;
+                    const mythologicalCreatureCommandZoneCard = player.mythologicalCreatureCards[i];
+                    if (mythologicalCreatureCommandZoneCard !== undefined) {
+                        isDrawRow = true;
+                        if (IsGodCard(mythologicalCreatureCommandZoneCard)
+                            && Number(ctx.currentPlayer) === p) {
+                            if (data !== undefined) {
+                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player, null, MoveNames.UseGodPowerMove, i);
+                            }
+                            else if (validatorName === MoveValidatorNames.UseGodPowerMoveValidator) {
+                                if (!Array.isArray(moveMainArgs)) {
+                                    throw new Error(`Аргумент валидатора '${validatorName}' должен быть массивом.`);
+                                }
+                                moveMainArgs.push(i);
+                            }
+                        }
+                        else {
+                            if (data !== undefined) {
+                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player, null);
+                            }
+                        }
+                    }
+                    else {
+                        if (data !== undefined) {
+                            playerCells.push(_jsx("td", {}, `${player.nickname} mythological creature command zone card ${i}`));
+                        }
+                    }
+                }
             }
             if (isDrawRow) {
                 if (data !== undefined) {
@@ -307,7 +340,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
             }
         }
         if (data !== undefined) {
-            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring(player), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
+            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring(G, player), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
         }
     }
     if (data !== undefined) {
@@ -470,8 +503,8 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                             if (data !== undefined) {
                                                 DrawCoin(data, playerCells, `hidden-coin`, privateBoardCoin, id, player, `bg-small-coin`, null, moveName, id, CoinTypeNames.Board);
                                             }
-                                            else if (validatorName ===
-                                                MoveValidatorNames.ClickCoinToUpgradeMoveValidator
+                                            else if (!(G.solo && ctx.currentPlayer === `1`) &&
+                                                validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
                                                 || validatorName ===
                                                     MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                                                 moveMainArgs
@@ -637,7 +670,8 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses, null, moveName, j, CoinTypeNames.Hand);
                         }
-                        else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
+                        else if ((!(G.solo && ctx.currentPlayer === `1`) &&
+                            validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator)
                             || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                             moveMainArgs.push({
                                 coinId: j,

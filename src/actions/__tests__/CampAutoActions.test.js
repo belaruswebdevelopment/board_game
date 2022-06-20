@@ -40,7 +40,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -85,7 +85,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -138,7 +138,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -194,7 +194,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -247,7 +247,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -300,7 +300,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -364,7 +364,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -425,7 +425,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -480,7 +480,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -545,7 +545,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -613,7 +613,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
@@ -833,7 +833,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
         };
         expect(() => {
             StartDiscardSuitCardAction(G, ctx);
-        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.WARRIOR}'.`);
+        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.Warrior}'.`);
     });
 });
 describe(`Test StartVidofnirVedrfolnirAction method`, () => {

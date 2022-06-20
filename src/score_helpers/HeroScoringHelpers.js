@@ -1,6 +1,33 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { SuitNames } from "../typescript/enums";
-import { TotalRank } from "./ScoreHelpers";
+import { HeroNames, RusCardTypes, SuitNames } from "../typescript/enums";
+import { GetRanksValueMultiplier } from "./ScoreHelpers";
+/**
+* <h3>Получение победных очков по героям.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>В конце игры, когда получаются победные очки по героям.</li>
+* </ol>
+*
+* @param player Игрок.
+* @param heroName Название героя.
+* @returns Количество очков по героям.
+*/
+export const HeroScoring = (player, heroName) => {
+    if (player === undefined) {
+        throw new Error(`Function param 'player' is undefined.`);
+    }
+    if (heroName === undefined) {
+        throw new Error(`Function param 'heroName' is undefined.`);
+    }
+    switch (heroName) {
+        case HeroNames.Astrid:
+            return AstridScoring(player);
+        case HeroNames.Idunn:
+            return IdunnScoring(player);
+        default:
+            throw new Error(`У карт с типом '${RusCardTypes.Hero}}' отсутствует герой с названием '${heroName}'.`);
+    }
+};
 /**
  * <h3>Получение победных очков по герою Astrid.</h3>
  * <p>Применения:</p>
@@ -8,19 +35,10 @@ import { TotalRank } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по герою Astrid.</li>
  * </ol>
  *
- * @param G
- * @param playerId Игрок.
- * @returns
+ * @param player Игрок.
+ * @returns Количество очков по герою Astrid.
  */
-export const AstridScoring = (G, playerId) => {
-    if (G === undefined) {
-        throw new Error(`Function param 'G' is undefined.`);
-    }
-    if (playerId === undefined) {
-        throw new Error(`Function param 'playerId' is undefined.`);
-    }
-    return GetMaxCoinValue(G, playerId);
-};
+export const AstridScoring = (player) => GetMaxCoinValue(player);
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>
  * <p>Применения:</p>
@@ -28,21 +46,8 @@ export const AstridScoring = (G, playerId) => {
  * <li>В конце игры, когда получаются победные очки по герою Idunn.</li>
  * </ol>
  *
- * @param G
- * @param playerId Игрок.
- * @returns
+ * @param player Игрок.
+ * @returns Количество очков по герою Idunn.
  */
-export const IdunnScoring = (G, playerId) => {
-    if (G === undefined) {
-        throw new Error(`Function param 'G' is undefined.`);
-    }
-    if (playerId === undefined) {
-        throw new Error(`Function param 'playerId' is undefined.`);
-    }
-    const player = G.publicPlayers[playerId];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
-    }
-    return player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2;
-};
+export const IdunnScoring = (player) => GetRanksValueMultiplier(player, SuitNames.Explorer, 2);
 //# sourceMappingURL=HeroScoringHelpers.js.map

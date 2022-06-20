@@ -3,11 +3,10 @@ import { IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
-import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames } from "../typescript/enums";
-import type { CanBeUndef, CoinTypes, IMyGameState, INext, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndef, CoinTypes, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
@@ -20,7 +19,7 @@ import type { CanBeUndef, CoinTypes, IMyGameState, INext, IPlayer, IPublicPlayer
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): INext | void => {
+export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty: boolean =
             Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
@@ -44,9 +43,7 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): INext | void
                     }
                     return true;
                 });
-        if (isEveryPlayersHandCoinsEmpty) {
-            return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
-        }
+        return isEveryPlayersHandCoinsEmpty;
     }
 };
 
@@ -61,7 +58,7 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): INext | void
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): true | void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {

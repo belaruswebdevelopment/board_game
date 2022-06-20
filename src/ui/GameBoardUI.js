@@ -1,10 +1,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { IsArtefactCard } from "../Camp";
-import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { IsDwarfCard } from "../Dwarf";
 import { DrawBoard } from "../helpers/DrawHelpers";
+import { IsMythicalAnimalCard } from "../MythologicalCreature";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
@@ -191,7 +193,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (!IsActionCard(card)) {
+        if (!IsRoyalOfferingCard(card)) {
             suit = card.suit;
         }
         if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickDiscardCard) {
@@ -444,7 +446,7 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                 }
                 else {
                     let suit = null;
-                    if (IsCardNotActionAndNotNull(tavernCard)) {
+                    if (IsDwarfCard(tavernCard) || IsMythicalAnimalCard(tavernCard)) {
                         suit = tavernCard.suit;
                     }
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];

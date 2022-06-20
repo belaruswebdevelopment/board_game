@@ -107,7 +107,7 @@ const AddRemainingCampCardsToDiscard = (G) => {
         campDeck.splice(0);
         G.campDeckLength[G.secret.campDecks.length - G.tierToEnd - 1] = campDeck.length;
     }
-    AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты лагеря сброшены.`);
+    AddDataToLog(G, LogTypes.Game, `Оставшиеся карты лагеря сброшены.`);
 };
 /**
  * <h3>Убирает дополнительную карту из таверны в стопку сброса при пике артефакта Jarnglofi.</h3>
@@ -133,7 +133,7 @@ export const DiscardCardFromTavernJarnglofi = (G, ctx) => {
     if (currentTavernConfig === undefined) {
         throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта '${ArtefactNames.Jarnglofi}'.`);
+    AddDataToLog(G, LogTypes.Game, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта '${ArtefactNames.Jarnglofi}'.`);
     DiscardCardFromTavern(G, ctx, cardIndex);
     G.mustDiscardTavernCardJarnglofi = false;
 };
@@ -197,7 +197,7 @@ export const RefillCamp = (G) => {
         AddCardToCamp(G, i);
     }
     G.odroerirTheMythicCauldron = true;
-    AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами новой эпохи.`);
+    AddDataToLog(G, LogTypes.Game, `Кэмп заполнен новыми картами новой эпохи.`);
 };
 /**
  * <h3>Автоматически заполняет лагерь недостающими картами текущей эпохи.</h3>
@@ -226,7 +226,7 @@ export const RefillEmptyCampCards = (G) => {
                 AddCardToCamp(G, cardIndex);
             }
         });
-        AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами.`);
+        AddDataToLog(G, LogTypes.Game, `Кэмп заполнен новыми картами.`);
     }
 };
 //# sourceMappingURL=CampHelpers.js.map

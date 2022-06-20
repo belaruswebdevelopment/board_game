@@ -1,8 +1,8 @@
 import type { Ctx } from "boardgame.io";
-import { CreateCard } from "../Card";
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { CreateDwarfCard } from "../Dwarf";
 import { DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
@@ -12,7 +12,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CreateHero } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CardNames, GameNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
-import type { CanBeUndef, ICard, IHeroCard, IMyGameState, IPublicPlayer, IStack, IVariant, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
+import type { CanBeUndef, IDwarfCard, IHeroCard, IMyGameState, IPublicPlayer, IStack, PlayerCardTypes, SuitPropertyTypes, SuitTypes, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -62,17 +62,18 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
     if (stack === undefined) {
         throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: CanBeUndef<SuitPropertyTypes<IVariant>> = stack.variants;
+    const playerVariants: CanBeUndef<SuitPropertyTypes<VariantType>> = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${CardNames.OlwinsDouble}'.`);
     }
-    const olwinDouble: ICard = CreateCard({
+    // TODO Rework it!?
+    const olwinDouble: IDwarfCard = CreateDwarfCard({
         suit,
         points: playerVariants[suit].points,
         name: CardNames.OlwinsDouble,
         game: GameNames.Thingvellir,
     });
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' добавил карту '${CardNames.OlwinsDouble}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' добавил карту '${CardNames.OlwinsDouble}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddCardToPlayer(G, ctx, olwinDouble);
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
@@ -101,7 +102,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
     if (stack === undefined) {
         throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: CanBeUndef<SuitPropertyTypes<IVariant>> = stack.variants;
+    const playerVariants: CanBeUndef<SuitPropertyTypes<VariantType>> = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Thrud}'.`);
     }
@@ -109,12 +110,12 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
         suit,
         rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,
-        type: RusCardTypes.HERO,
+        type: RusCardTypes.Hero,
         name: HeroNames.Thrud,
         game: GameNames.Basic,
         description: heroesConfig.Thrud.description,
     });
-    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
 };
 
@@ -139,7 +140,7 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): voi
     if (stack === undefined) {
         throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: CanBeUndef<SuitPropertyTypes<IVariant>> = stack.variants;
+    const playerVariants: CanBeUndef<SuitPropertyTypes<VariantType>> = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Ylud}'.`);
     }
@@ -147,12 +148,12 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): voi
         suit,
         rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,
-        type: RusCardTypes.HERO,
+        type: RusCardTypes.Hero,
         name: HeroNames.Ylud,
         game: GameNames.Basic,
         description: heroesConfig.Ylud.description,
     });
-    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
     CheckAndMoveThrudAction(G, ctx, heroCard);
     if (G.tierToEnd === 0) {

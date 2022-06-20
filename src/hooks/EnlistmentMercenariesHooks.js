@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
-import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
 /**
@@ -37,7 +37,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
                 }
             }
             if (allMercenariesPlayed) {
-                return CheckEndTierActionsOrEndGameLastActions(G);
+                return true;
             }
         }
     }

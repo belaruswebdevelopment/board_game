@@ -96,7 +96,7 @@ export const OnGetDistinctionsMove = (G, ctx) => {
  */
 export const OnGetDistinctionsTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
-    if (G.distinctions[SuitNames.EXPLORER] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+    if (G.distinctions[SuitNames.Explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         for (let j = 0; j < 3; j++) {
             const deck1 = G.secret.decks[1];
             if (deck1 === undefined) {

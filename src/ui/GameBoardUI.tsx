@@ -1,11 +1,13 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { IsArtefactCard } from "../Camp";
-import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { IsDwarfCard } from "../Dwarf";
 import { DrawBoard } from "../helpers/DrawHelpers";
+import { IsMythicalAnimalCard } from "../MythologicalCreature";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
 import type { CampCardTypes, CanBeUndef, DiscardDeckCardTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
@@ -238,7 +240,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Mov
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit: null | SuitTypes = null;
-        if (!IsActionCard(card)) {
+        if (!IsRoyalOfferingCard(card)) {
             suit = card.suit;
         }
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickDiscardCard) {
@@ -557,7 +559,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValida
                     }
                 } else {
                     let suit: SuitTypes | null = null;
-                    if (IsCardNotActionAndNotNull(tavernCard)) {
+                    if (IsDwarfCard(tavernCard) || IsMythicalAnimalCard(tavernCard)) {
                         suit = tavernCard.suit;
                     }
                     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

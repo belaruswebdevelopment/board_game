@@ -2,7 +2,8 @@ import type { Ctx, Game } from "boardgame.io";
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
-import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
+import { StartEndGameLastActions, StartEndTierPhaseOrEndGameLastActions, StartGetMjollnirProfitPhase, StartPlaceCoinsUlineOrPickCardsOrEndTierPhaseOrEndGameLastActionsPhase, StartPlaceCoinsUlineOrPickCardsPhase } from "./helpers/GameHooksHelpers";
+import { CheckBrisingamensEndGameOrder, CheckEndBrisingamensEndGamePhase, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin } from "./hooks/BrisingamensEndGameHooks";
 import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, CheckEndChooseDifficultySoloModeTurn, EndChooseDifficultySoloModeActions, OnChooseDifficultySoloModeMove, OnChooseDifficultySoloModeTurnBegin } from "./hooks/ChooseDifficultySoloModeHooks";
 import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
@@ -18,9 +19,10 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeM
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
+import { UseGodPowerMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { Phases } from "./typescript/enums";
-import type { IMyGameState, INext, IOrder } from "./typescript/interfaces";
+import type { IMyGameState, IOrder } from "./typescript/interfaces";
 
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add Log data fo Solo Bot fo all files!
@@ -45,6 +47,8 @@ const order: IOrder = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
  */
 export const BoardGame: Game<IMyGameState> = {
     name: `nidavellir`,
+    minPlayers: 1,
+    maxPlayers: 5,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
     phases: {
@@ -74,7 +78,7 @@ export const BoardGame: Game<IMyGameState> = {
         placeCoins: {
             turn: {
                 order,
-                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPlaceCoinsTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndPlaceCoinsTurn(G, ctx),
             },
             moves: {
                 ClickHandCoinMove,
@@ -82,8 +86,9 @@ export const BoardGame: Game<IMyGameState> = {
                 BotsPlaceAllCoinsMove,
                 SoloBotPlaceAllCoinsMove,
             },
+            next: (G: IMyGameState): string => StartPlaceCoinsUlineOrPickCardsPhase(G),
             onBegin: (G: IMyGameState, ctx: Ctx): void => PreparationPhaseActions(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): INext | void => CheckEndPlaceCoinsPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPlaceCoinsPhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndPlaceCoinsActions(G),
         },
         placeCoinsUline: {
@@ -158,6 +163,7 @@ export const BoardGame: Game<IMyGameState> = {
                             UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
+
                     // End
                     discardCard: {
                         moves: {
@@ -178,15 +184,19 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnPickCardsTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnPickCardsMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPickCardsTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndPickCardsTurn(G, ctx),
                 onEnd: (G: IMyGameState, ctx: Ctx): void => OnPickCardsTurnEnd(G, ctx),
             },
             moves: {
                 ClickCardMove,
                 ClickCampCardMove,
+                // TODO Check it and add to all needed phases!
+                UseGodPowerMove,
             },
+            next: (G: IMyGameState, ctx: Ctx): string | void =>
+                StartPlaceCoinsUlineOrPickCardsOrEndTierPhaseOrEndGameLastActionsPhase(G, ctx),
             onBegin: (G: IMyGameState, ctx: Ctx): void => ResolveCurrentTavernOrders(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndPickCardsPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndPickCardsPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndPickCardsActions(G, ctx),
         },
         enlistmentMercenaries: {
@@ -257,8 +267,9 @@ export const BoardGame: Game<IMyGameState> = {
                 GetEnlistmentMercenariesMove,
                 PlaceEnlistmentMercenariesMove,
             },
+            next: (G: IMyGameState): string | void => StartEndTierPhaseOrEndGameLastActions(G),
             onBegin: (G: IMyGameState): void => PrepareMercenaryPhaseOrders(G),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndEnlistmentMercenariesPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndEnlistmentMercenariesPhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndEnlistmentMercenariesActions(G),
         },
         endTier: {
@@ -326,14 +337,15 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnEndTierTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnEndTierMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndEndTierTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndEndTierTurn(G, ctx),
                 onEnd: (G: IMyGameState, ctx: Ctx): void => OnEndTierTurnEnd(G, ctx),
             },
             moves: {
                 PlaceYludHeroMove,
             },
+            next: (G: IMyGameState): string | void => StartEndGameLastActions(G),
             onBegin: (G: IMyGameState): void => CheckEndTierOrder(G),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndEndTierPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndEndTierPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndEndTierActions(G, ctx),
         },
         getDistinctions: {
@@ -406,7 +418,7 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnGetDistinctionsTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnGetDistinctionsMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckNextGetDistinctionsTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckNextGetDistinctionsTurn(G, ctx),
                 onEnd: (G: IMyGameState, ctx: Ctx): void => OnGetDistinctionsTurnEnd(G, ctx),
             },
             next: Phases.PlaceCoins,
@@ -428,8 +440,9 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
+            next: (G: IMyGameState): string | void => StartGetMjollnirProfitPhase(G),
             onBegin: (G: IMyGameState): void => CheckBrisingamensEndGameOrder(G),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => StartGetMjollnirProfitOrEndGame(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndBrisingamensEndGamePhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndBrisingamensEndGameActions(G),
         },
         getMjollnirProfit: {

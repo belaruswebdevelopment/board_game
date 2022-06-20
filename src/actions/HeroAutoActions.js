@@ -28,7 +28,7 @@ export const AddPickHeroAction = (G, ctx) => {
     else {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
     }
-    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
+    AddDataToLog(G, LogTypes.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>

@@ -61,7 +61,7 @@ export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCar
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.campCards.push(card);
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}'.`);
+    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}'.`);
 };
 
 /**
@@ -86,7 +86,7 @@ export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtef
     }
     player.cards[card.suit].push(card);
     player.pickedCard = card;
-    AddDataToLog(G, LogTypes.PRIVATE, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };
 

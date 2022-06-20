@@ -2,10 +2,10 @@ import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndef, IHeroCard, IMyGameState, INext, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
+import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
 // TODO Check `Ylud the Unpredictable Will be positioned at the end of Age 1, before the Troop; Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
 /**
@@ -19,7 +19,7 @@ import type { CanBeUndef, IHeroCard, IMyGameState, INext, IPublicPlayer, PlayerC
  * @param ctx
  * @returns
  */
-export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
+export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): true | void => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
@@ -45,7 +45,7 @@ export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext
                 }
             }
             if (nextPhase) {
-                return CheckEndGameLastActions(G);
+                return true;
             }
         }
     }
@@ -109,7 +109,7 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
  * @param ctx
  * @returns
  */
-export const CheckEndEndTierTurn = (G: IMyGameState, ctx: Ctx): boolean | void => EndTurnActions(G, ctx);
+export const CheckEndEndTierTurn = (G: IMyGameState, ctx: Ctx): true | void => EndTurnActions(G, ctx);
 
 /**
  * <h3>Действия при завершении фазы 'endTier'.</h3>

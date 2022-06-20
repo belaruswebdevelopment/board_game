@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
-import { CreateOlwinDoubleNonPlacedCard } from "../AdditionalCard";
 import { AddDataToLog } from "../Logging";
+import { CreateOlwinDoubleNonPlacedCard } from "../SpecialCard";
 import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
 import type { CanBeUndef, IConfig, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, PickedCardTypes, SuitTypes } from "../typescript/interfaces";
 
@@ -24,7 +24,7 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
     }
     const config: CanBeUndef<IConfig> = player.stack[0]?.config;
     if (config !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
         if (G.expansions.thingvellir.active) {
             if (config.drawName === DrawNames.Olwin) {
@@ -35,6 +35,7 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
                     if (`suit` in pickedCard) {
                         suit = pickedCard.suit;
                     }
+                    // TODO Think about it...
                     const olwinDouble: IOlwinDoubleNonPlacedCard = CreateOlwinDoubleNonPlacedCard({
                         suit,
                     });
@@ -71,7 +72,7 @@ const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void
         ctx.events?.setActivePlayers({
             currentPlayer: config.stageName,
         });
-        AddDataToLog(G, LogTypes.GAME, `Начало стадии '${config.stageName}'.`);
+        AddDataToLog(G, LogTypes.Game, `Начало стадии '${config.stageName}'.`);
     } else if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         ctx.events?.endStage();
     }

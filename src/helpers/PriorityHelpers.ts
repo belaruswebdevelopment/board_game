@@ -47,7 +47,7 @@ export const ChangePlayersPriorities = (G: IMyGameState): void => {
         }
     }
     if (tempPriorities.length) {
-        AddDataToLog(G, LogTypes.GAME, `Обмен кристаллами между игроками:`);
+        AddDataToLog(G, LogTypes.Game, `Обмен кристаллами между игроками:`);
         for (let i = 0; i < G.exchangeOrder.length; i++) {
             const tempPriority: CanBeUndef<IPriority> = tempPriorities[i],
                 player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
@@ -56,7 +56,7 @@ export const ChangePlayersPriorities = (G: IMyGameState): void => {
             }
             if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
                 player.priority = tempPriority;
-                AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
+                AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
             }
         }
     }

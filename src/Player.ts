@@ -4,7 +4,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, Phases } from "./typescript/enums";
-import type { CanBeUndef, ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CanBeUndef, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -37,10 +37,12 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  */
 export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean, soloBot: boolean):
     IPublicPlayer => {
-    const cards: SuitPropertyTypes<PlayerCardTypes[]> = {} as SuitPropertyTypes<PlayerCardTypes[]>;
+    const cards: SuitPropertyTypes<PlayerCardTypes[]> = {} as SuitPropertyTypes<PlayerCardTypes[]>,
+        giantTokenSuits: SuitPropertyTypes<boolean | null> = {} as SuitPropertyTypes<boolean | null>;
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         cards[suit] = [];
+        giantTokenSuits[suit] = null;
     }
     let handCoins: ICoin[] = [];
     if (!multiplayer && !soloBot) {
@@ -53,6 +55,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
     return CreatePublicPlayer({
         nickname,
         cards,
+        giantTokenSuits,
         handCoins,
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,
@@ -133,9 +136,10 @@ const CreatePublicPlayer = ({
     actionsNum = 0,
     nickname,
     cards,
+    giantTokenSuits,
     heroes = [],
     campCards = [],
-    mythologicalCreatureCards: idavollCards = [],
+    mythologicalCreatureCards = [],
     handCoins,
     boardCoins,
     stack = [],
@@ -143,12 +147,13 @@ const CreatePublicPlayer = ({
     buffs = [],
     selectedCoin = null,
     pickedCard = null,
-}: ICreatePublicPlayer = {} as ICreatePublicPlayer): IPublicPlayer => ({
+}: CreatePublicPlayerType = {} as CreatePublicPlayerType): IPublicPlayer => ({
     actionsNum,
     nickname,
     cards,
+    giantTokenSuits,
     campCards,
-    mythologicalCreatureCards: idavollCards,
+    mythologicalCreatureCards,
     heroes,
     handCoins,
     boardCoins,

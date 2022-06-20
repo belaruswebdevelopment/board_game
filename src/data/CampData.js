@@ -1,6 +1,6 @@
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
-import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, OdroerirTheMythicCauldronScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
+import { ArtefactScoring } from "../score_helpers/ArtefactScoringHelpers";
 import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
@@ -34,7 +34,7 @@ const Draupnir = {
     name: ArtefactNames.Draupnir,
     description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 6 победных очков за каждую свою монету с номиналом 15 или выше.`,
     tier: 0,
-    scoringRule: DraupnirScoring,
+    scoringRule: ArtefactScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -96,7 +96,7 @@ const Hrafnsmerki = {
     name: ArtefactNames.Hrafnsmerki,
     description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 5 победных очков за каждую свою карту наёмника.`,
     tier: 1,
-    scoringRule: HrafnsmerkiScoring,
+    scoringRule: ArtefactScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -144,7 +144,7 @@ const Mjollnir = {
     buff: {
         name: BuffNames.GetMjollnirProfit,
     },
-    scoringRule: MjollnirScoring,
+    scoringRule: ArtefactScoring,
 };
 const Odroerir_The_Mythic_Cauldron = {
     name: ArtefactNames.Odroerir_The_Mythic_Cauldron,
@@ -153,7 +153,7 @@ const Odroerir_The_Mythic_Cauldron = {
     actions: {
         name: FinishOdroerirTheMythicCauldronAction.name,
     },
-    scoringRule: OdroerirTheMythicCauldronScoring,
+    scoringRule: ArtefactScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -166,7 +166,7 @@ const Svalinn = {
     name: ArtefactNames.Svalinn,
     description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 5 победных очков за каждую свою карту героя.`,
     tier: 0,
-    scoringRule: SvalinnScoring,
+    scoringRule: ArtefactScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -179,7 +179,7 @@ const Vegvisir = {
     name: ArtefactNames.Vegvisir,
     description: `Взяв карту этого артефакта, сразу же положите её в колонку разведчиков своей армии. Если таким образом создаётся новая линия 5 шевронов, сразу же призовите нового героя. Карта Вегвисир обладает одним шевроном и прибавляет 13 победных очков к показателю храбрости разведчиков. `,
     tier: 0,
-    suit: SuitNames.EXPLORER,
+    suit: SuitNames.Explorer,
     rank: 1,
     points: 13,
     scoringRule: () => 0,
@@ -211,72 +211,72 @@ export const mercenariesConfig = [
     [
         {
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 6,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 6,
             },
             blacksmith: {
-                suit: SuitNames.BLACKSMITH,
+                suit: SuitNames.Blacksmith,
                 rank: 1,
                 points: null,
             },
         },
         {
             hunter: {
-                suit: SuitNames.HUNTER,
+                suit: SuitNames.Hunter,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 6,
             },
         },
         {
             hunter: {
-                suit: SuitNames.HUNTER,
+                suit: SuitNames.Hunter,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: SuitNames.MINER,
+                suit: SuitNames.Miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: SuitNames.BLACKSMITH,
+                suit: SuitNames.Blacksmith,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: SuitNames.MINER,
+                suit: SuitNames.Miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 11,
             },
@@ -285,72 +285,72 @@ export const mercenariesConfig = [
     [
         {
             hunter: {
-                suit: SuitNames.HUNTER,
+                suit: SuitNames.Hunter,
                 rank: 1,
                 points: null,
             },
             blacksmith: {
-                suit: SuitNames.BLACKSMITH,
+                suit: SuitNames.Blacksmith,
                 rank: 1,
                 points: null,
             },
         },
         {
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 6,
             },
             miner: {
-                suit: SuitNames.MINER,
+                suit: SuitNames.Miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: SuitNames.BLACKSMITH,
+                suit: SuitNames.Blacksmith,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 6,
             },
             hunter: {
-                suit: SuitNames.HUNTER,
+                suit: SuitNames.Hunter,
                 rank: 1,
                 points: null,
             },
         },
         {
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 8,
             },
             miner: {
-                suit: SuitNames.MINER,
+                suit: SuitNames.Miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 11,
             },

@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { IsCardNotActionAndNotNull } from "../Card";
+import { IsDwarfCard } from "../Dwarf";
 import type { CanBeUndef, ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
@@ -149,7 +149,7 @@ const GetCharacteristics = (array: number[]): ICardCharacteristics => {
  */
 const isAllCardsEqual: IHeuristic<TavernCardTypes[]> = {
     heuristic: (cards: TavernCardTypes[]): boolean => cards.every((card: TavernCardTypes): boolean =>
-    (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(cards[0]) && card.suit === cards[0].suit
+    (IsDwarfCard(card) && IsDwarfCard(cards[0]) && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };

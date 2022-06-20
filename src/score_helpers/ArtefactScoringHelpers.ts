@@ -1,9 +1,47 @@
 import { IsMercenaryPlayerCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { BuffNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, RusCardTypes } from "../typescript/enums";
 import type { CanBeUndef, IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardTypes, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
+
+/**
+* <h3>Получение победных очков по артефактам.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>В конце игры, когда получаются победные очки по артефактам.</li>
+* </ol>
+*
+* @param G
+* @param player Игрок.
+* @param artefactName Название артефакта.
+* @returns Количество очков по артефактам.
+*/
+export const ArtefactScoring = (G?: IMyGameState, player?: IPublicPlayer, artefactName?: ArtefactNames): number => {
+    if (G === undefined) {
+        throw new Error(`Function param 'G' is undefined.`);
+    }
+    if (player === undefined) {
+        throw new Error(`Function param 'player' is undefined.`);
+    }
+    if (artefactName === undefined) {
+        throw new Error(`Function param 'artefactName' is undefined.`);
+    }
+    switch (artefactName) {
+        case ArtefactNames.Draupnir:
+            return DraupnirScoring(G, player);
+        case ArtefactNames.Hrafnsmerki:
+            return HrafnsmerkiScoring(player);
+        case ArtefactNames.Mjollnir:
+            return MjollnirScoring(player);
+        case ArtefactNames.Odroerir_The_Mythic_Cauldron:
+            return OdroerirTheMythicCauldronScoring(G);
+        case ArtefactNames.Svalinn:
+            return SvalinnScoring(player);
+        default:
+            throw new Error(`У карт с типом '${RusCardTypes.Artefact}' отсутствует ${RusCardTypes.Artefact} с названием '${artefactName}'.`);
+    }
+};
 
 /**
  * <h3>Получение победных очков по артефакту Draupnir.</h3>
@@ -13,16 +51,10 @@ import { TotalRank } from "./ScoreHelpers";
  * </ol>
  *
  * @param G
- * @param playerId Игрок.
+ * @param player Игрок.
  * @returns
  */
-export const DraupnirScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
-    if (player === undefined) {
-        throw new Error(`Function param 'player' is undefined.`);
-    }
-    if (G === undefined) {
-        throw new Error(`Function param 'G' is undefined.`);
-    }
+export const DraupnirScoring = (G: IMyGameState, player: IPublicPlayer): number => {
     const basicScore: number =
         player.boardCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
             if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
@@ -42,14 +74,10 @@ export const DraupnirScoring = (G?: IMyGameState, player?: IPublicPlayer): numbe
  * <li>В конце игры, когда получаются победные очки по артефакту Hrafnsmerki.</li>
  * </ol>
  *
- * @param G
- * @param playerId Игрок.
+ * @param player Игрок.
  * @returns
  */
-export const HrafnsmerkiScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
-    if (player === undefined) {
-        throw new Error(`Function param 'player' is undefined.`);
-    }
+export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
     let score = 0,
         suit: SuitTypes;
     for (suit in player.cards) {
@@ -66,14 +94,10 @@ export const HrafnsmerkiScoring = (G?: IMyGameState, player?: IPublicPlayer): nu
  * <li>В конце игры, когда получаются победные очки по артефакту Mjollnir.</li>
  * </ol>
  *
- * @param G
- * @param playerId Игрок.
+ * @param player Игрок.
  * @returns
  */
-export const MjollnirScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
-    if (player === undefined) {
-        throw new Error(`Function param 'player' is undefined.`);
-    }
+export const MjollnirScoring = (player: IPublicPlayer): number => {
     const suit: CanBeUndef<SuitTypes> = player.buffs.find((buff: IBuffs): boolean =>
         buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
     if (suit === undefined) {
@@ -90,18 +114,9 @@ export const MjollnirScoring = (G?: IMyGameState, player?: IPublicPlayer): numbe
  * </ol>
  *
  * @param G
- * @param playerId Игрок.
  * @returns
  */
-export const OdroerirTheMythicCauldronScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
-    if (player === undefined) {
-        throw new Error(`Function param 'player' is undefined.`);
-    }
-    if (G === undefined) {
-        throw new Error(`Function param 'G' is undefined.`);
-    }
-    return GetOdroerirTheMythicCauldronCoinsValues(G);
-};
+export const OdroerirTheMythicCauldronScoring = (G: IMyGameState): number => GetOdroerirTheMythicCauldronCoinsValues(G);
 
 /**
  * <h3>Получение победных очков по артефакту Svalinn.</h3>
@@ -111,12 +126,7 @@ export const OdroerirTheMythicCauldronScoring = (G?: IMyGameState, player?: IPub
  * </ol>
  *
  * @param G
- * @param playerId Игрок.
+ * @param player Игрок.
  * @returns
  */
-export const SvalinnScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
-    if (player === undefined) {
-        throw new Error(`Function param 'player' is undefined.`);
-    }
-    return player.heroes.length * 5;
-};
+export const SvalinnScoring = (player: IPublicPlayer): number => player.heroes.length * 5;

@@ -1,6 +1,7 @@
-import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
+import { CreateDwarfCard, IsDwarfCard } from "../Dwarf";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { GameNames } from "../typescript/enums";
 // Check all types in this file!
 /**
@@ -20,7 +21,7 @@ export const CompareCards = (card1, card2) => {
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (IsCardNotActionAndNotNull(card1) && IsCardNotActionAndNotNull(card2)) {
+    if (IsDwarfCard(card1) && IsDwarfCard(card2)) {
         if (card1.suit === card2.suit) {
             const result = ((_a = card1.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
             if (result === 0) {
@@ -47,7 +48,7 @@ export const CompareCards = (card1, card2) => {
  * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
-    if (IsCardNotActionAndNotNull(compareCard)) {
+    if (IsDwarfCard(compareCard)) {
         const deckTier1 = G.secret.decks[0];
         if (deckTier1 === undefined) {
             throw new Error(`В массиве колод карт отсутствует колода '1' эпохи.`);
@@ -73,7 +74,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
         return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
-    if (IsCardNotActionAndNotNull(compareCard)) {
+    if (IsDwarfCard(compareCard)) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
     return 0;
@@ -114,7 +115,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
         }
     }
     totalPoints /= count;
-    return CreateCard({
+    return CreateDwarfCard({
         suit: suitConfig.suit,
         points: totalPoints,
         name: `Average card`,
@@ -152,14 +153,14 @@ const PotentialScoring = (G, playerId, card) => {
     }
     let score = 0, suit;
     for (suit in suitsConfig) {
-        if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
-            score += suitsConfig[suit].scoringRule(player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1);
+        if (IsDwarfCard(card) && card.suit === suit) {
+            score += suitsConfig[suit].scoringRule(player.cards[suit], suit, (_a = card.points) !== null && _a !== void 0 ? _a : 1);
         }
         else {
-            score += suitsConfig[suit].scoringRule(player.cards[suit]);
+            score += suitsConfig[suit].scoringRule(player.cards[suit], suit);
         }
     }
-    if (IsActionCard(card)) {
+    if (IsRoyalOfferingCard(card)) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

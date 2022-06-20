@@ -44,7 +44,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
     if (currentTavernConfig === undefined) {
         throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за ${G.solo ? `игры в соло режиме` : `наличия двух игроков в игре`}.`);
+    AddDataToLog(G, LogTypes.Game, `Карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за ${G.solo ? `игры в соло режиме` : `наличия двух игроков в игре`}.`);
     DiscardCardFromTavern(G, ctx, cardIndex);
 };
 /**
@@ -83,7 +83,7 @@ export const DiscardCardFromTavern = (G, ctx, discardCardIndex) => {
         if (currentTavernConfig === undefined) {
             throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
         }
-        AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
+        AddDataToLog(G, LogTypes.Game, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
         return true;
     }
     throw new Error(`Не удалось сбросить карту с id '${discardCardIndex}' из таверны.`);
@@ -104,6 +104,7 @@ export const RefillTaverns = (G) => {
         let refillDeck;
         if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
             refillDeck = G.secret.mythologicalCreatureDecks.splice(0, G.drawSize);
+            G.mythologicalCreatureDeckLength = G.secret.mythologicalCreatureDecks.length;
         }
         else {
             const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
@@ -125,9 +126,9 @@ export const RefillTaverns = (G) => {
         if (currentTavernConfig === undefined) {
             throw new Error(`Отсутствует конфиг текущей таверны с id '${t}'.`);
         }
-        AddDataToLog(G, LogTypes.GAME, `Таверна ${currentTavernConfig.name} заполнена новыми картами.`);
+        AddDataToLog(G, LogTypes.Game, `Таверна ${currentTavernConfig.name} заполнена новыми картами.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
+    AddDataToLog(G, LogTypes.Game, `Все таверны заполнены новыми картами.`);
 };
 /**
  * <h3>Конфиг таверн.</h3>

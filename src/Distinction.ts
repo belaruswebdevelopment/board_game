@@ -1,8 +1,9 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "./data/SuitData";
+import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { LogTypes, SuitNames } from "./typescript/enums";
+import { BuffNames, LogTypes, SuitNames } from "./typescript/enums";
 import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
 
 /**
@@ -42,10 +43,14 @@ export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: Sui
         if (playerDist === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${playerDistinctionIndex}'.`);
         }
-        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerDist.nickname}'.`);
+        if (G.expansions.idavoll) {
+            CheckValkyryRequirement(playerDist, playerDistinctionIndex,
+                BuffNames.CountDistinctionAmount);
+        }
+        AddDataToLog(G, LogTypes.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerDist.nickname}'.`);
         return String(playerDistinctionIndex);
     } else {
-        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции '${suitsConfig[suit].suitName}' никто не получил.`);
+        AddDataToLog(G, LogTypes.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' никто не получил.`);
         return undefined;
     }
 };
@@ -83,7 +88,7 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
             if (playerIndex === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок с id '${index}'.`);
             }
-            AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerIndex.nickname}'.`);
+            AddDataToLog(G, LogTypes.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerIndex.nickname}'.`);
         }
     });
     if (!maxPlayers.length) {
@@ -103,12 +108,12 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
  * @param ctx
  */
 export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
-    AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
+    AddDataToLog(G, LogTypes.Game, `Преимущество по фракциям в конце эпохи:`);
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[suit] = result;
-        if (suit === SuitNames.EXPLORER && result === undefined) {
+        if (suit === SuitNames.Explorer && result === undefined) {
             const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 throw new Error(`В массиве дек арт отсутствует дека '2' эпохи.`);
@@ -119,7 +124,7 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
             }
             G.deckLength[1] = deck1.length;
             G.discardCardsDeck.push(discardedCard);
-            AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: '${discardedCard.name}'.`);
+            AddDataToLog(G, LogTypes.Private, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: '${discardedCard.name}'.`);
         }
     }
 };

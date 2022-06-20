@@ -1,10 +1,11 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { BuffNames, LogTypes } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
+import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>
@@ -24,7 +25,7 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroC
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         player.cards[hero.suit].push(hero);
-        AddDataToLog(G, LogTypes.PRIVATE, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
+        AddDataToLog(G, LogTypes.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
     }
 };
 
@@ -53,7 +54,11 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
     }
     hero.active = false;
     player.heroes.push(hero);
-    AddDataToLog(G, LogTypes.PUBLIC, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
+    if (G.expansions.idavoll) {
+        CheckValkyryRequirement(player, Number(ctx.currentPlayer),
+            BuffNames.CountPickedHeroAmount);
+    }
+    AddDataToLog(G, LogTypes.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 
 /**
@@ -99,5 +104,5 @@ export const AddHeroForDifficultyToSoloBotCards = (G: IMyGameState, ctx: Ctx, he
     }
     hero.active = false;
     soloBotPublicPlayer.heroes.push(hero);
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
+    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
 };

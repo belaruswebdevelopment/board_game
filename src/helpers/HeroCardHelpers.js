@@ -1,8 +1,9 @@
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { BuffNames, LogTypes } from "../typescript/enums";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
+import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>
  * <p>Применения:</p>
@@ -21,7 +22,7 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         player.cards[hero.suit].push(hero);
-        AddDataToLog(G, LogTypes.PRIVATE, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
+        AddDataToLog(G, LogTypes.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
     }
 };
 /**
@@ -50,7 +51,10 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     }
     hero.active = false;
     player.heroes.push(hero);
-    AddDataToLog(G, LogTypes.PUBLIC, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
+    if (G.expansions.idavoll) {
+        CheckValkyryRequirement(player, Number(ctx.currentPlayer), BuffNames.CountPickedHeroAmount);
+    }
+    AddDataToLog(G, LogTypes.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 /**
  * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>
@@ -93,6 +97,6 @@ export const AddHeroForDifficultyToSoloBotCards = (G, ctx, hero) => {
     }
     hero.active = false;
     soloBotPublicPlayer.heroes.push(hero);
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
+    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
 };
 //# sourceMappingURL=HeroCardHelpers.js.map

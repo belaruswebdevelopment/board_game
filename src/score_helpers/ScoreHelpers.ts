@@ -1,4 +1,4 @@
-import type { PlayerCardTypes } from "../typescript/interfaces";
+import type { IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
@@ -14,6 +14,21 @@ import type { PlayerCardTypes } from "../typescript/interfaces";
  */
 export const ArithmeticSum = (startValue: number, step: number, ranksCount: number): number =>
     (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
+
+/**
+ * <h3>Высчитывает суммарное количество очков за карты, зависящие от множителя за количество шевронов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется при подсчёте очков за карты, зависящие от множителя за количество шевронов.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @param suit Фракция.
+ * @param multiplier Множитель.
+ * @returns Суммарное количество очков за множитель.
+ */
+export const GetRanksValueMultiplier = (player: IPublicPlayer, suit: SuitTypes, multiplier: number): number =>
+    player.cards[suit].reduce(TotalRank, 0) * multiplier;
 
 /**
  * <h3>Высчитывает суммарное количество очков фракции.</h3>

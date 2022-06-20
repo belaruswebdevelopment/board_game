@@ -2,7 +2,6 @@ import { IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
-import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames } from "../typescript/enums";
@@ -39,9 +38,7 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
             }
             return true;
         });
-        if (isEveryPlayersHandCoinsEmpty) {
-            return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
-        }
+        return isEveryPlayersHandCoinsEmpty;
     }
 };
 /**

@@ -1,7 +1,8 @@
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
-import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
+import { StartEndGameLastActions, StartEndTierPhaseOrEndGameLastActions, StartGetMjollnirProfitPhase, StartPlaceCoinsUlineOrPickCardsOrEndTierPhaseOrEndGameLastActionsPhase, StartPlaceCoinsUlineOrPickCardsPhase } from "./helpers/GameHooksHelpers";
+import { CheckBrisingamensEndGameOrder, CheckEndBrisingamensEndGamePhase, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin } from "./hooks/BrisingamensEndGameHooks";
 import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, CheckEndChooseDifficultySoloModeTurn, EndChooseDifficultySoloModeActions, OnChooseDifficultySoloModeMove, OnChooseDifficultySoloModeTurnBegin } from "./hooks/ChooseDifficultySoloModeHooks";
 import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
@@ -17,6 +18,7 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeM
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
+import { UseGodPowerMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { Phases } from "./typescript/enums";
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
@@ -41,6 +43,8 @@ const order = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
  */
 export const BoardGame = {
     name: `nidavellir`,
+    minPlayers: 1,
+    maxPlayers: 5,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
     phases: {
@@ -78,6 +82,7 @@ export const BoardGame = {
                 BotsPlaceAllCoinsMove,
                 SoloBotPlaceAllCoinsMove,
             },
+            next: (G) => StartPlaceCoinsUlineOrPickCardsPhase(G),
             onBegin: (G, ctx) => PreparationPhaseActions(G, ctx),
             endIf: (G, ctx) => CheckEndPlaceCoinsPhase(G, ctx),
             onEnd: (G) => EndPlaceCoinsActions(G),
@@ -180,7 +185,10 @@ export const BoardGame = {
             moves: {
                 ClickCardMove,
                 ClickCampCardMove,
+                // TODO Check it and add to all needed phases!
+                UseGodPowerMove,
             },
+            next: (G, ctx) => StartPlaceCoinsUlineOrPickCardsOrEndTierPhaseOrEndGameLastActionsPhase(G, ctx),
             onBegin: (G, ctx) => ResolveCurrentTavernOrders(G, ctx),
             endIf: (G, ctx) => CheckEndPickCardsPhase(G, ctx),
             onEnd: (G, ctx) => EndPickCardsActions(G, ctx),
@@ -253,6 +261,7 @@ export const BoardGame = {
                 GetEnlistmentMercenariesMove,
                 PlaceEnlistmentMercenariesMove,
             },
+            next: (G) => StartEndTierPhaseOrEndGameLastActions(G),
             onBegin: (G) => PrepareMercenaryPhaseOrders(G),
             endIf: (G, ctx) => CheckEndEnlistmentMercenariesPhase(G, ctx),
             onEnd: (G) => EndEnlistmentMercenariesActions(G),
@@ -328,6 +337,7 @@ export const BoardGame = {
             moves: {
                 PlaceYludHeroMove,
             },
+            next: (G) => StartEndGameLastActions(G),
             onBegin: (G) => CheckEndTierOrder(G),
             endIf: (G, ctx) => CheckEndEndTierPhase(G, ctx),
             onEnd: (G, ctx) => EndEndTierActions(G, ctx),
@@ -424,8 +434,9 @@ export const BoardGame = {
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
+            next: (G) => StartGetMjollnirProfitPhase(G),
             onBegin: (G) => CheckBrisingamensEndGameOrder(G),
-            endIf: (G, ctx) => StartGetMjollnirProfitOrEndGame(G, ctx),
+            endIf: (G, ctx) => CheckEndBrisingamensEndGamePhase(G, ctx),
             onEnd: (G) => EndBrisingamensEndGameActions(G),
         },
         getMjollnirProfit: {

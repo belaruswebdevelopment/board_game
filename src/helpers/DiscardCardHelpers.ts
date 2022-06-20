@@ -1,7 +1,10 @@
 import { IsArtefactCard, IsMercenaryPlayerCard } from "../Camp";
-import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
+import { IsDwarfCard } from "../Dwarf";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
+import { IsGiantCard, IsGodCard, IsMythicalAnimalCard, IsValkyryCard } from "../MythologicalCreature";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
+import { IsSpecialCard } from "../SpecialCard";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
 import type { DeckCardTypes, IMyGameState, IPublicPlayer, MythologicalCreatureDeckCardTypes, PlayerCardTypes } from "../typescript/interfaces";
 
@@ -18,15 +21,19 @@ import type { DeckCardTypes, IMyGameState, IPublicPlayer, MythologicalCreatureDe
  */
 export const DiscardPickedCard = (G: IMyGameState, player: IPublicPlayer,
     discardedCard: PlayerCardTypes | DeckCardTypes | MythologicalCreatureDeckCardTypes): void => {
-    // TODO Fix IdavollDeckCardTypes
     if (IsHeroCard(discardedCard)) {
-        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
+        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.Hero}'.`);
     }
     if (IsMercenaryPlayerCard(discardedCard) || IsArtefactCard(discardedCard)) {
         G.discardCampCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' отправил карту '${discardedCard.name}' в колоду сброса карт лагеря.`);
-    } else if (IsActionCard(discardedCard) || IsCardNotActionAndNotNull(discardedCard)) {
+    } else if (IsRoyalOfferingCard(discardedCard) || IsDwarfCard(discardedCard)) {
         G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' отправил карту '${discardedCard.name}' в колоду сброса карт.`);
+    } else if (IsGiantCard(discardedCard) || IsGodCard(discardedCard) || IsValkyryCard(discardedCard)
+        || IsMythicalAnimalCard(discardedCard)) {
+        G.discardMythologicalCreaturesCards.push(discardedCard);
+    } else if (IsSpecialCard(discardedCard)) {
+        G.discardSpecialCards.push(discardedCard);
     }
+    // TODO Add discard of Olwin's double cards!
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' отправил карту '${discardedCard.type}' '${discardedCard.name}' в колоду сброса карт.`);
 };

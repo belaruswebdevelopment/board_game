@@ -1,4 +1,4 @@
-import type { CanBeUndef, ICreatePriority, IPrioritiesConfig, IPriority } from "./typescript/interfaces";
+import type { CanBeUndef, CreatePriorityType, IPrioritiesConfig, IPriority } from "./typescript/interfaces";
 
 /**
  * <h3>Создание кристаллов.</h3>
@@ -16,7 +16,7 @@ import type { CanBeUndef, ICreatePriority, IPrioritiesConfig, IPriority } from "
 export const CreatePriority = ({
     isExchangeable = true,
     value,
-}: ICreatePriority = {} as ICreatePriority): IPriority => ({
+}: CreatePriorityType = {} as CreatePriorityType): IPriority => ({
     isExchangeable,
     value,
 });

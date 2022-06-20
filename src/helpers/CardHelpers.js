@@ -1,6 +1,8 @@
-import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
+import { IsDwarfCard } from "../Dwarf";
 import { AddDataToLog } from "../Logging";
+import { IsGiantCard, IsGodCard, IsMythicalAnimalCard, IsValkyryCard } from "../MythologicalCreature";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { LogTypes } from "../typescript/enums";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -26,13 +28,12 @@ export const AddCardToPlayer = (G, ctx, card) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.pickedCard = card;
-    // TODO Idavoll && IMythicalAnimal
-    if (IsCardNotActionAndNotNull(card)) {
+    if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
         player.cards[card.suit].push(card);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+        // TODO When you recruit a Mythical Animal, place it in your army in the matching class. Each animal has its own unique ability!
+        AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту${IsMythicalAnimalCard(card) ? ` '${card.type}'` : ``} '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
         return true;
     }
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту '${card.name}'.`);
     return false;
 };
 /**
@@ -46,14 +47,22 @@ export const AddCardToPlayer = (G, ctx, card) => {
  * @param ctx
  * @param card Карта.
  */
-export const AddIdavollCardToPlayerCommandZone = (G, ctx, card) => {
-    // if (expansions.idavoll.active && i === 1) {
+const AddMythologicalCreatureCardToPlayerCommandZone = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.mythologicalCreatureCards.push(card);
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту '${card.name}' в командную зону карт Idavoll.`);
+    if (IsGodCard(card)) {
+        card.isPowerTokenUsed = false;
+    }
+    else if (IsGiantCard(card)) {
+        player.giantTokenSuits[card.placedSuit] = true;
+    }
+    else if (IsValkyryCard(card)) {
+        card.strengthTokenNotch = 0;
+    }
+    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' в командную зону карт Idavoll.`);
 };
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
@@ -76,19 +85,21 @@ export const PickCardOrActionCardActions = (G, ctx, card) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const isAdded = AddCardToPlayer(G, ctx, card);
-    // TODO Idavoll && IMythicalAnimal
-    if (IsCardNotActionAndNotNull(card)) {
+    if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
         if (isAdded) {
             CheckAndMoveThrudAction(G, ctx, card);
         }
     }
     else {
-        if (IsActionCard(card)) {
+        if (IsRoyalOfferingCard(card)) {
+            AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
             AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
             DiscardPickedCard(G, player, card);
         }
         else {
-            // TODO Add Idavoll cards to Player's Idavoll cards Command Zone
+            if (G.expansions.idavoll.active) {
+                AddMythologicalCreatureCardToPlayerCommandZone(G, ctx, card);
+            }
         }
     }
     return isAdded;

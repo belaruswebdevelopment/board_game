@@ -32,10 +32,11 @@ export const BuildPlayer = () => CreatePlayer({
  * @returns Публичные данные игрока.
  */
 export const BuildPublicPlayer = (nickname, priority, multiplayer, soloBot) => {
-    const cards = {};
+    const cards = {}, giantTokenSuits = {};
     let suit;
     for (suit in suitsConfig) {
         cards[suit] = [];
+        giantTokenSuits[suit] = null;
     }
     let handCoins = [];
     if (!multiplayer && !soloBot) {
@@ -49,6 +50,7 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer, soloBot) => {
     return CreatePublicPlayer({
         nickname,
         cards,
+        giantTokenSuits,
         handCoins,
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,
@@ -120,12 +122,13 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, heroes = [], campCards = [], mythologicalCreatureCards: idavollCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
+const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
     actionsNum,
     nickname,
     cards,
+    giantTokenSuits,
     campCards,
-    mythologicalCreatureCards: idavollCards,
+    mythologicalCreatureCards,
     heroes,
     handCoins,
     boardCoins,

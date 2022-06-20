@@ -1,5 +1,5 @@
-import { CreateOlwinDoubleNonPlacedCard } from "../AdditionalCard";
 import { AddDataToLog } from "../Logging";
+import { CreateOlwinDoubleNonPlacedCard } from "../SpecialCard";
 import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
@@ -22,7 +22,7 @@ export const DrawCurrentProfit = (G, ctx) => {
     }
     const config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
     if (config !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
+        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
         if (G.expansions.thingvellir.active) {
             if (config.drawName === DrawNames.Olwin) {
@@ -33,6 +33,7 @@ export const DrawCurrentProfit = (G, ctx) => {
                     if (`suit` in pickedCard) {
                         suit = pickedCard.suit;
                     }
+                    // TODO Think about it...
                     const olwinDouble = CreateOlwinDoubleNonPlacedCard({
                         suit,
                     });
@@ -72,7 +73,7 @@ const StartOrEndActionStage = (G, ctx, config) => {
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
             currentPlayer: config.stageName,
         });
-        AddDataToLog(G, LogTypes.GAME, `Начало стадии '${config.stageName}'.`);
+        AddDataToLog(G, LogTypes.Game, `Начало стадии '${config.stageName}'.`);
     }
     else if (((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== undefined) {
         (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.endStage();

@@ -65,7 +65,7 @@ export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean
  * @param ctx
  * @returns
  */
-export const CheckNextGetDistinctionsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => EndTurnActions(G, ctx);
+export const CheckNextGetDistinctionsTurn = (G: IMyGameState, ctx: Ctx): true | void => EndTurnActions(G, ctx);
 
 /**
  * <h3>Действия при завершении фазы 'getDistinctions'.</h3>
@@ -109,7 +109,7 @@ export const OnGetDistinctionsMove = (G: IMyGameState, ctx: Ctx): void => {
  */
 export const OnGetDistinctionsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
-    if (G.distinctions[SuitNames.EXPLORER] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+    if (G.distinctions[SuitNames.Explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         for (let j = 0; j < 3; j++) {
             const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {

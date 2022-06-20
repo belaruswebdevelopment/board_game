@@ -1,4 +1,6 @@
+import type { IRoyalOfferingCardConfig, IRoyalOfferingCardValues } from "../typescript/interfaces";
 import { StackData } from "./StackData";
+
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
  * <p>Применения:</p>
@@ -6,10 +8,10 @@ import { StackData } from "./StackData";
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  */
-const upgradeCoinUpTo3 = {
+const upgradeCoinUpTo3: IRoyalOfferingCardConfig = {
     value: 3,
     stack: [StackData.upgradeCoin(3)],
-    amount: () => ({
+    amount: (): IRoyalOfferingCardValues => ({
         1: {
             0: 1,
             1: 0,
@@ -32,6 +34,7 @@ const upgradeCoinUpTo3 = {
         },
     }),
 };
+
 /**
  * <h3>Карта улучшения монеты на +5.</h3>
  * <p>Применения:</p>
@@ -39,10 +42,10 @@ const upgradeCoinUpTo3 = {
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  */
-const upgradeCoinUpTo5 = {
+const upgradeCoinUpTo5: IRoyalOfferingCardConfig = {
     value: 5,
     stack: [StackData.upgradeCoin(5)],
-    amount: () => ({
+    amount: (): IRoyalOfferingCardValues => ({
         1: {
             0: 0,
             1: 2,
@@ -65,6 +68,7 @@ const upgradeCoinUpTo5 = {
         },
     }),
 };
+
 /**
  * <h3>Конфиг карт улучшения монет.</h3>
  * <p>Применения:</p>
@@ -72,5 +76,4 @@ const upgradeCoinUpTo5 = {
  * <li>Происходит при создании всех карт улучшения монет в ходе инициализации игры.</li>
  * </ol>
  */
-export const actionCardsConfigArray = [upgradeCoinUpTo3, upgradeCoinUpTo5];
-//# sourceMappingURL=ActionCardData.js.map
+export const actionCardsConfigArray: IRoyalOfferingCardConfig[] = [upgradeCoinUpTo3, upgradeCoinUpTo5];

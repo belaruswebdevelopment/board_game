@@ -17,19 +17,19 @@ export const DrawLogData = (G: IMyGameState): JSX.Element | null => {
         for (let i: number = G.logData.length - 1; i >= 0; i--) {
             const log: CanBeUndef<ILogData> = G.logData[i];
             if (log !== undefined) {
-                if (log.type === LogTypes.PRIVATE) {
+                if (log.type === LogTypes.Private) {
                     loggingData.push(
                         <li key={`Log ${i}`} className="text-black">
                             {log.value}
                         </li>
                     );
-                } else if (log.type === LogTypes.GAME) {
+                } else if (log.type === LogTypes.Game) {
                     loggingData.push(
                         <li key={`Log ${i}`} className="text-blue-500">
                             {log.value}
                         </li>
                     );
-                } else if (log.type === LogTypes.PUBLIC) {
+                } else if (log.type === LogTypes.Public) {
                     loggingData.push(
                         <li key={`Log ${i}`} className="text-green-500">
                             {log.value}

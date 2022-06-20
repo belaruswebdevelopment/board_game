@@ -58,7 +58,7 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.campCards.push(card);
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}'.`);
+    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}'.`);
 };
 /**
  * <h3>Добавляет карту лагеря в конкретную фракцию игрока.</h3>
@@ -82,7 +82,7 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
     }
     player.cards[card.suit].push(card);
     player.pickedCard = card;
-    AddDataToLog(G, LogTypes.PRIVATE, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };
 /**

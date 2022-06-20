@@ -18,7 +18,7 @@ export const StackData = {
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.Bonfur,
-            suit: SuitNames.BLACKSMITH,
+            suit: SuitNames.Blacksmith,
         },
     }),
     discardCardFromBoardCrovaxTheDoppelganger: (): IStack => ({
@@ -31,7 +31,7 @@ export const StackData = {
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.Dagda,
-            suit: SuitNames.HUNTER,
+            suit: SuitNames.Hunter,
             number,
         },
     }),
@@ -120,27 +120,27 @@ export const StackData = {
     placeOlwinCards: (number?: number): IStack => ({
         variants: {
             blacksmith: {
-                suit: SuitNames.BLACKSMITH,
+                suit: SuitNames.Blacksmith,
                 rank: 1,
                 points: null,
             },
             hunter: {
-                suit: SuitNames.HUNTER,
+                suit: SuitNames.Hunter,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 0,
             },
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 0,
             },
             miner: {
-                suit: SuitNames.MINER,
+                suit: SuitNames.Miner,
                 rank: 1,
                 points: 0,
             },
@@ -154,27 +154,27 @@ export const StackData = {
     placeThrudHero: (): IStack => ({
         variants: {
             blacksmith: {
-                suit: SuitNames.BLACKSMITH,
+                suit: SuitNames.Blacksmith,
                 rank: 1,
                 points: null,
             },
             hunter: {
-                suit: SuitNames.HUNTER,
+                suit: SuitNames.Hunter,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: null,
             },
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: SuitNames.MINER,
+                suit: SuitNames.Miner,
                 rank: 1,
                 points: null,
             },
@@ -194,27 +194,27 @@ export const StackData = {
     placeYludHero: (): IStack => ({
         variants: {
             blacksmith: {
-                suit: SuitNames.BLACKSMITH,
+                suit: SuitNames.Blacksmith,
                 rank: 1,
                 points: null,
             },
             hunter: {
-                suit: SuitNames.HUNTER,
+                suit: SuitNames.Hunter,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 rank: 1,
                 points: 11,
             },
             warrior: {
-                suit: SuitNames.WARRIOR,
+                suit: SuitNames.Warrior,
                 rank: 1,
                 points: 7,
             },
             miner: {
-                suit: SuitNames.MINER,
+                suit: SuitNames.Miner,
                 rank: 1,
                 points: 1,
             },

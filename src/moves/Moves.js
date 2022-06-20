@@ -61,7 +61,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     G.explorerDistinctionCards.splice(0);
     const isAdded = PickCardOrActionCardActions(G, ctx, pickedCard);
     if (isAdded) {
-        G.distinctions[SuitNames.EXPLORER] = undefined;
+        G.distinctions[SuitNames.Explorer] = undefined;
     }
     G.explorerDistinctionCardId = cardId;
 };

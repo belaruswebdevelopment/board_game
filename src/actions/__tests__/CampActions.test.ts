@@ -105,7 +105,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
@@ -212,7 +212,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
@@ -347,7 +347,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
@@ -455,7 +455,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
@@ -597,7 +597,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             },
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
@@ -798,7 +798,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                         warrior: [
                             {
                                 name: `Test`,
-                                suit: SuitNames.WARRIOR,
+                                suit: SuitNames.Warrior,
                             },
                         ],
                     },
@@ -828,12 +828,12 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             discardCardsDeck: [
                 {
                     name: `Test`,
-                    suit: SuitNames.WARRIOR,
+                    suit: SuitNames.Warrior,
                 },
             ] as DeckCardTypes[],
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
             ],
@@ -848,7 +848,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                         warrior: [
                             {
                                 name: `Test`,
-                                suit: SuitNames.WARRIOR,
+                                suit: SuitNames.Warrior,
                                 variants: {},
                             },
                         ],
@@ -879,13 +879,13 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             discardCampCardsDeck: [
                 {
                     name: `Test`,
-                    suit: SuitNames.WARRIOR,
+                    suit: SuitNames.Warrior,
                     variants: {},
                 },
             ] as DiscardCampCardTypes[],
             logData: [
                 {
-                    type: LogTypes.GAME,
+                    type: LogTypes.Game,
                     value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
                 },
             ],
@@ -911,6 +911,6 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 DiscardSuitCardAction(G as IMyGameState, {
                     playerID: `0`,
                 } as Ctx, 0);
-            }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
+            }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypes.Hero}'.`);
         });
 });

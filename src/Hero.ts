@@ -1,6 +1,6 @@
 import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
 import { RusCardTypes } from "./typescript/enums";
-import type { ICreateHero, IHeroCard, IHeroData, IHeroTypes } from "./typescript/interfaces";
+import type { CreateHeroCardType, HeroTypes, IHeroCard, IHeroData } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -17,7 +17,7 @@ export const BuildHeroes = (configOptions: string[], solo: boolean): [IHeroCard[
     const heroes: IHeroCard[] = [],
         heroesForSoloBot: IHeroCard[] = [],
         heroesForSoloGameDifficultyLevel: IHeroCard[] = [];
-    let heroName: IHeroTypes;
+    let heroName: HeroTypes;
     for (heroName in heroesConfig) {
         const heroData: IHeroData = heroesConfig[heroName];
         if (solo || (!solo && configOptions.includes(heroData.game))) {
@@ -69,7 +69,7 @@ export const BuildHeroes = (configOptions: string[], solo: boolean): [IHeroCard[
  * @returns Герой.
  */
 export const CreateHero = ({
-    type = RusCardTypes.HERO,
+    type = RusCardTypes.Hero,
     name,
     description,
     game,
@@ -81,7 +81,7 @@ export const CreateHero = ({
     validators,
     actions,
     stack,
-}: ICreateHero = {} as ICreateHero): IHeroCard => ({
+}: CreateHeroCardType = {} as CreateHeroCardType): IHeroCard => ({
     type,
     name,
     description,

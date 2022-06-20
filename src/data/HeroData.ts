@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
-import { AstridScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
+import { HeroScoring } from "../score_helpers/HeroScoringHelpers";
 import { BuffNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
-import type { IHeroConfig, IHeroData, ISoloGameDifficultyLevelHeroesConfig, ISoloGameHeroesForBotConfig, ISoloGameHeroesForPlayerConfig } from "../typescript/interfaces";
+import type { IHeroConfig, IHeroData, SoloGameDifficultyLevelHeroesConfigType, SoloGameHeroesForBotConfigType, SoloGameHeroesForPlayerConfigType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**
@@ -15,7 +15,7 @@ const Aegur: IHeroData = {
     name: HeroNames.Aegur,
     description: `Обладает 2 шевронами.`,
     game: GameNames.Basic,
-    suit: SuitNames.BLACKSMITH,
+    suit: SuitNames.Blacksmith,
     rank: 2,
     scoringRule: (): number => 0,
 };
@@ -50,7 +50,7 @@ const Aral: IHeroData = {
     name: HeroNames.Aral,
     description: `Обладает 2 шевронами.`,
     game: GameNames.Basic,
-    suit: SuitNames.HUNTER,
+    suit: SuitNames.Hunter,
     rank: 2,
     scoringRule: (): number => 0,
 };
@@ -66,7 +66,7 @@ const Astrid: IHeroData = {
     name: HeroNames.Astrid,
     description: `Прибавьте к своему итоговому показателю храбрости номинал своей самой ценной монеты.`,
     game: GameNames.Basic,
-    scoringRule: AstridScoring,
+    scoringRule: HeroScoring,
 };
 
 /**
@@ -80,11 +80,11 @@ const Bonfur: IHeroData = {
     name: HeroNames.Bonfur,
     description: `Обладает 3 шевронами. Призвав Бонфура, сразу же поместите его карту в колонку кузнецов и отправьте в сброс одну нижнюю карту дворфа (не героя) из другой колонки своей армии по своему выбору.`,
     game: GameNames.Basic,
-    suit: SuitNames.BLACKSMITH,
+    suit: SuitNames.Blacksmith,
     rank: 3,
     validators: {
         discardCard: {
-            suit: SuitNames.BLACKSMITH,
+            suit: SuitNames.Blacksmith,
         },
     },
     stack: [StackData.discardCardFromBoardBonfur()],
@@ -123,11 +123,11 @@ const Dagda: IHeroData = {
     name: HeroNames.Dagda,
     description: `Обладает 3 шевронами. Призвав Дагду, сразу же поместите её карту в колонку охотников и отправьте в сброс по одной нижней карте дворфов (не героев) из двух других колонок своей армии по своему выбору.`,
     game: GameNames.Basic,
-    suit: SuitNames.HUNTER,
+    suit: SuitNames.Hunter,
     rank: 3,
     validators: {
         discardCard: {
-            suit: SuitNames.BLACKSMITH,
+            suit: SuitNames.Blacksmith,
             number: 2,
         },
     },
@@ -255,13 +255,13 @@ const Hourya: IHeroData = {
     name: HeroNames.Hourya,
     description: `Обладает 1 шевроном. Прибавьте 20 очков к показателю храбрости разведчиков. Чтобы призвать Хурию, игрок должен иметь в своей армии как минимум 5 шевронов в колонке разведчиков. Важно: если Труд и / или Илуд расположены в колонке разведчиков, то их шевроны учитываются для призыва Хурии.`,
     game: GameNames.Basic,
-    suit: SuitNames.EXPLORER,
+    suit: SuitNames.Explorer,
     rank: 1,
     points: 20,
     validators: {
         conditions: {
             suitCountMin: {
-                suit: SuitNames.EXPLORER,
+                suit: SuitNames.Explorer,
                 value: 5,
             },
         },
@@ -280,10 +280,10 @@ const Idunn: IHeroData = {
     name: HeroNames.Idunn,
     description: `Обладает 1 шевроном. Прибавьте 7 очков к показателю храбрости разведчиков плюс по 2 очка за каждый шеврон в колонке Разведчиков (включая её собственный).`,
     game: GameNames.Basic,
-    suit: SuitNames.EXPLORER,
+    suit: SuitNames.Explorer,
     rank: 1,
     points: 7,
-    scoringRule: IdunnScoring,
+    scoringRule: HeroScoring,
 };
 
 /**
@@ -334,7 +334,7 @@ const Kraal: IHeroData = {
     name: HeroNames.Kraal,
     description: `Обладает 2 шевронами. Прибавьте 7 и 0 очков к показателю храбрости воинов.`,
     game: GameNames.Basic,
-    suit: SuitNames.WARRIOR,
+    suit: SuitNames.Warrior,
     rank: 2,
     points: 7,
     scoringRule: (): number => 0,
@@ -351,7 +351,7 @@ const Lokdur: IHeroData = {
     name: HeroNames.Lokdur,
     description: `Обладает 1 шевроном. Прибавьте 3 к сумме очков храбрости горняков. Локдур увеличивает сумму очков храбрости горняков на 3, а сумму шевронов на 1.`,
     game: GameNames.Basic,
-    suit: SuitNames.MINER,
+    suit: SuitNames.Miner,
     rank: 1,
     points: 3,
     scoringRule: (): number => 0,
@@ -399,7 +399,7 @@ const Tarah: IHeroData = {
     name: HeroNames.Tarah,
     description: `Обладает 1 шевроном. Прибавьте 14 очков к показателю храбрости воинов.`,
     game: GameNames.Basic,
-    suit: SuitNames.WARRIOR,
+    suit: SuitNames.Warrior,
     rank: 1,
     points: 14,
     scoringRule: (): number => 0,
@@ -493,7 +493,7 @@ const Zoral: IHeroData = {
     name: HeroNames.Zoral,
     description: `Обладает 3 шевронами. Прибавьте 1, 0 и 0 к сумме очков храбрости горняков. Зорал увеличивает сумму очков храбрости горняков на 1, а сумму шевронов – на 3.`,
     game: GameNames.Basic,
-    suit: SuitNames.MINER,
+    suit: SuitNames.Miner,
     rank: 3,
     points: 1,
     scoringRule: (): number => 0,
@@ -544,7 +544,7 @@ export const heroesConfig: IHeroConfig = {
  * <li>Происходит при создании списка героев для выбора соло ботом при инициализации игры.</li>
  * </ol>
  */
-export const soloGameHeroesForBotConfig: ISoloGameHeroesForBotConfig = {
+export const soloGameHeroesForBotConfig: SoloGameHeroesForBotConfigType = {
     Dwerg_Aesir,
     Dwerg_Bergelmir,
     Dwerg_Jungir,
@@ -559,7 +559,7 @@ export const soloGameHeroesForBotConfig: ISoloGameHeroesForBotConfig = {
  * <li>Происходит при создании списка героев для выбора игроком в соло игре при инициализации игры.</li>
  * </ol>
  */
-export const soloGameHeroesForPlayerConfig: ISoloGameHeroesForPlayerConfig = {
+export const soloGameHeroesForPlayerConfig: SoloGameHeroesForPlayerConfigType = {
     Kraal,
     Tarah,
     Aral,
@@ -579,7 +579,7 @@ export const soloGameHeroesForPlayerConfig: ISoloGameHeroesForPlayerConfig = {
  * <li>Происходит при создании списка героев для выбора уровня сложности для соло бота при инициализации игры.</li>
  * </ol>
  */
-export const soloGameDifficultyLevelHeroesConfig: ISoloGameDifficultyLevelHeroesConfig = {
+export const soloGameDifficultyLevelHeroesConfig: SoloGameDifficultyLevelHeroesConfigType = {
     Astrid,
     Grid,
     Skaa,

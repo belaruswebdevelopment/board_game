@@ -1,8 +1,9 @@
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
+import { CheckIfSoloBotMustTakeCardToPickHero, CheckIfSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
 import { IsMercenaryCampCard } from "./Camp";
-import { IsCardNotActionAndNotNull } from "./Card";
 import { IsCoin } from "./Coin";
+import { IsDwarfCard } from "./Dwarf";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
@@ -241,50 +242,69 @@ export const moveValidators = {
             return DrawTaverns(G, ctx, MoveValidatorNames.ClickCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
-            const moveArguments = currentMoveArguments, uniqueArr = [], currentTavern = G.taverns[G.currentTavern];
-            if (currentTavern === undefined) {
-                throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
+            // TODO Get MythologicalCreature cards for bots...
+            const moveArguments = currentMoveArguments;
+            if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
+                const uniqueArr = [], currentTavern = G.taverns[G.currentTavern];
+                if (currentTavern === undefined) {
+                    throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
+                }
+                let flag = true;
+                for (let i = 0; i < moveArguments.length; i++) {
+                    const moveArgument = moveArguments[i];
+                    if (moveArgument === undefined) {
+                        throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
+                    }
+                    const tavernCard = currentTavern[moveArgument];
+                    if (tavernCard === undefined) {
+                        throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+                    }
+                    if (tavernCard === null) {
+                        // TODO Add Error that NULL can't be moveArguments value
+                        continue;
+                    }
+                    if (currentTavern.some((card) => CompareCards(tavernCard, card) < 0)) {
+                        continue;
+                    }
+                    const isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) < 0, isExistCardNotWorse = currentTavern.some((card) => (card !== null)
+                        && (EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) >= 0));
+                    if (isCurrentCardWorse && isExistCardNotWorse) {
+                        continue;
+                    }
+                    const uniqueArrLength = uniqueArr.length;
+                    for (let j = 0; j < uniqueArrLength; j++) {
+                        const uniqueCard = uniqueArr[j];
+                        if (uniqueCard === undefined) {
+                            throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
+                        }
+                        if (IsDwarfCard(tavernCard)
+                            && IsDwarfCard(uniqueCard)
+                            && tavernCard.suit === uniqueCard.suit
+                            && CompareCards(tavernCard, uniqueCard) === 0) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        uniqueArr.push(tavernCard);
+                        return moveArgument;
+                    }
+                    flag = true;
+                }
             }
-            let flag = true;
-            for (let i = 0; i < moveArguments.length; i++) {
-                const moveArgument = moveArguments[i];
+            else if (G.solo && ctx.currentPlayer === `1`) {
+                let moveArgument;
+                moveArgument = CheckIfSoloBotMustTakeCardToPickHero(G, moveArguments);
                 if (moveArgument === undefined) {
-                    throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
+                    moveArgument = CheckIfSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard(G, moveArguments);
                 }
-                const tavernCard = currentTavern[moveArgument];
-                if (tavernCard === undefined) {
-                    throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+                // Todo Think about picking Royal Offering if other cards not LeastPresentOnPlayerBoard...
+                if (moveArgument === undefined) {
+                    moveArgument = SoloBotMustTakeRandomCard(G, moveArguments);
                 }
-                if (tavernCard === null) {
-                    continue;
-                }
-                if (currentTavern.some((card) => CompareCards(tavernCard, card) < 0)) {
-                    continue;
-                }
-                const isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) < 0, isExistCardNotWorse = currentTavern.some((card) => (card !== null)
-                    && (EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) >= 0));
-                if (isCurrentCardWorse && isExistCardNotWorse) {
-                    continue;
-                }
-                const uniqueArrLength = uniqueArr.length;
-                for (let j = 0; j < uniqueArrLength; j++) {
-                    const uniqueCard = uniqueArr[j];
-                    if (uniqueCard === undefined) {
-                        throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
-                    }
-                    if (IsCardNotActionAndNotNull(tavernCard)
-                        && IsCardNotActionAndNotNull(uniqueCard)
-                        && tavernCard.suit === uniqueCard.suit
-                        && CompareCards(tavernCard, uniqueCard) === 0) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag) {
-                    uniqueArr.push(tavernCard);
+                if (moveArgument !== undefined) {
                     return moveArgument;
                 }
-                flag = true;
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
@@ -894,7 +914,44 @@ export const moveValidators = {
             return DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator));
         },
         getValue: (G, ctx, currentMoveArguments) => {
-            const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+            const moveArguments = currentMoveArguments;
+            let moveArgument;
+            if (G.solo && ctx.currentPlayer === `1`) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                }
+                let minValue = 0, coinId = 0;
+                for (let i = 0; i < moveArguments.length; i++) {
+                    const currentMoveArgument = moveArguments[i];
+                    if (currentMoveArgument === undefined) {
+                        throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
+                    }
+                    const boardCoin = player.boardCoins[currentMoveArgument.coinId];
+                    if (boardCoin === undefined) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${currentMoveArgument.coinId}'.`);
+                    }
+                    if (boardCoin === null) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может отсутствовать монета с id '${currentMoveArgument.coinId}'.`);
+                    }
+                    if (!IsCoin(boardCoin)) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрытой для него монета с id '${ctx.currentPlayer}'.`);
+                    }
+                    if (minValue === 0 || boardCoin.value < minValue) {
+                        minValue = boardCoin.value;
+                        coinId = i;
+                    }
+                }
+                if (minValue !== 0) {
+                    moveArgument = moveArguments[coinId];
+                }
+                else {
+                    // TODO What about only `0` coin is opened?! Must return Null and can't update coin?
+                }
+            }
+            else {
+                moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+            }
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -918,7 +975,7 @@ export const moveValidators = {
                 throw new Error(`Function param 'id' is null.`);
             }
             if (!(`coinId` in id)) {
-                throw new Error(`Function param 'id' hasn't 'coinId'.`);
+                throw new Error(`Function param 'id' hasn't field 'coinId'.`);
             }
             return CoinUpgradeValidation(G, ctx, id);
         },
@@ -1035,15 +1092,15 @@ export const moveValidators = {
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок с id '${moveArguments.playerId}'.`);
             }
-            const cardFirst = player.cards[SuitNames.WARRIOR][0];
+            const cardFirst = player.cards[SuitNames.Warrior][0];
             if (cardFirst === undefined) {
-                throw new Error(`В массиве карт игрока во фракции '${SuitNames.WARRIOR}' отсутствует первая карта.`);
+                throw new Error(`В массиве карт игрока во фракции '${SuitNames.Warrior}' отсутствует первая карта.`);
             }
             let minCardIndex = 0, minCardValue = cardFirst.points;
             moveArguments.cards.forEach((value, index) => {
-                const card = player.cards[SuitNames.WARRIOR][value];
+                const card = player.cards[SuitNames.Warrior][value];
                 if (card === undefined) {
-                    throw new Error(`В массиве карт игрока во фракции '${SuitNames.WARRIOR}' отсутствует карта ${value}.`);
+                    throw new Error(`В массиве карт игрока во фракции '${SuitNames.Warrior}' отсутствует карта ${value}.`);
                 }
                 const cardPoints = card.points;
                 if (cardPoints === null || minCardValue === null) {
@@ -1173,6 +1230,27 @@ export const moveValidators = {
             return ((_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.coinId) !== id.coinId && CoinUpgradeValidation(G, ctx, id);
         },
     },
+    // TODO Do it logic!
+    UseGodPowerMoveValidator: {
+        getRange: (G, ctx) => {
+            if (G === undefined) {
+                throw new Error(`Function param 'G' is undefined.`);
+            }
+            if (ctx === undefined) {
+                throw new Error(`Function param 'ctx' is undefined.`);
+            }
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.UseGodPowerMoveValidator, null);
+        },
+        getValue: (G, ctx, currentMoveArguments) => {
+            const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.UseGodPowerMove,
+        validate: () => true,
+    },
     // end
 };
 /**
@@ -1212,6 +1290,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         discardCard: moveValidators.DiscardCard2PlayersMoveValidator,
         placeTradingCoinsUline: moveValidators.ClickHandTradingCoinUlineMoveValidator,
@@ -1233,6 +1312,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
     },
     endTier: {
@@ -1249,6 +1329,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
     },
     getDistinctions: {
@@ -1265,6 +1346,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         pickDistinctionCard: moveValidators.ClickCardToPickDistinctionMoveValidator,
     },

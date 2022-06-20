@@ -22,6 +22,9 @@ export var ArtefactNames;
  */
 export var BuffNames;
 (function (BuffNames) {
+    BuffNames["CountDistinctionAmount"] = "countDistinctionAmount";
+    BuffNames["CountPickedHeroAmount"] = "countPickedHeroAmount";
+    BuffNames["DagdaDiscardOnlyOneCards"] = "dagdaDiscardOnlyOneCards";
     BuffNames["DiscardCardEndGame"] = "discardCardEndGame";
     BuffNames["EndTier"] = "endTier";
     BuffNames["EveryTurn"] = "everyTurn";
@@ -30,6 +33,7 @@ export var BuffNames;
     BuffNames["GoCampOneTime"] = "goCampOneTime";
     BuffNames["MoveThrud"] = "moveThrud";
     BuffNames["NoHero"] = "noHero";
+    BuffNames["RatatoskFinalScoring"] = "ratatoskFinalScoring";
     BuffNames["SuitIdForMjollnir"] = "suitIdForMjollnir";
     BuffNames["UpgradeCoin"] = "upgradeCoin";
     BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
@@ -114,6 +118,50 @@ export var GameNames;
     GameNames["Thingvellir"] = "thingvellir";
 })(GameNames || (GameNames = {}));
 /**
+ * <h3>Перечисление для названия Гигантов.</h3>
+ */
+export var GiantNames;
+(function (GiantNames) {
+    GiantNames["Gymir"] = "\u0413\u044E\u043C\u0438\u0440";
+    GiantNames["Hrungnir"] = "\u0413\u0440\u0443\u043D\u0433\u043D\u0438\u0440";
+    GiantNames["Skymir"] = "\u0421\u043A\u0430\u0439\u043C\u0438\u0440";
+    GiantNames["Surt"] = "\u0421\u0443\u0440\u0442";
+    GiantNames["Thrivaldi"] = "\u0422\u0440\u0438\u0432\u0430\u043B\u044C\u0434\u0438";
+})(GiantNames || (GiantNames = {}));
+/**
+ * <h3>Перечисление для названия Богов.</h3>
+ */
+export var GodNames;
+(function (GodNames) {
+    GodNames["Freyja"] = "\u0424\u0440\u0435\u0439\u044F";
+    GodNames["Frigg"] = "\u0424\u0440\u0438\u0433\u0433";
+    GodNames["Loki"] = "\u041B\u043E\u043A\u0438";
+    GodNames["Odin"] = "\u041E\u0434\u0438\u043D";
+    GodNames["Thor"] = "\u0422\u043E\u0440";
+})(GodNames || (GodNames = {}));
+/**
+ * <h3>Перечисление для названия Мифических животных.</h3>
+ */
+export var MythicalAnimalNames;
+(function (MythicalAnimalNames) {
+    MythicalAnimalNames["Durathor"] = "\u0414\u0443\u0440\u0430\u0442\u043E\u0440";
+    MythicalAnimalNames["Garm"] = "\u0413\u0430\u0440\u043C";
+    MythicalAnimalNames["Hraesvelg"] = "\u0425\u0440\u044D\u0441\u0432\u0435\u043B\u0433";
+    MythicalAnimalNames["Nidhogg"] = "\u041D\u0438\u0434\u0445\u043E\u0433\u0433";
+    MythicalAnimalNames["Ratatosk"] = "\u0420\u0430\u0442\u0430\u0442\u043E\u0441\u043A";
+})(MythicalAnimalNames || (MythicalAnimalNames = {}));
+/**
+ * <h3>Перечисление для названия Мифических животных.</h3>
+ */
+export var ValkyryNames;
+(function (ValkyryNames) {
+    ValkyryNames["Brynhildr"] = "\u0411\u0440\u044E\u043D\u0445\u0438\u043B\u044C\u0434\u0430";
+    ValkyryNames["Hildr"] = "\u0425\u0438\u043B\u044C\u0434";
+    ValkyryNames["Olrun"] = "\u041E\u043B\u044C\u0440\u0443\u043D";
+    ValkyryNames["Sigrdrifa"] = "\u0421\u0438\u0433\u0440\u0434\u0440\u0438\u0432\u0430";
+    ValkyryNames["Svafa"] = "\u0421\u0432\u0430\u0432\u0430";
+})(ValkyryNames || (ValkyryNames = {}));
+/**
  * <h3>Перечисление для названий героев.</h3>
  */
 export var HeroNames;
@@ -152,9 +200,9 @@ export var HeroNames;
  */
 export var LogTypes;
 (function (LogTypes) {
-    LogTypes["GAME"] = "game";
-    LogTypes["PRIVATE"] = "private";
-    LogTypes["PUBLIC"] = "public";
+    LogTypes["Game"] = "game";
+    LogTypes["Private"] = "private";
+    LogTypes["Public"] = "public";
 })(LogTypes || (LogTypes = {}));
 /**
  * <h3>Перечисление для описаний отображения действий.</h3>
@@ -197,6 +245,8 @@ export var MoveNames;
     MoveNames["PlaceOlwinCardMove"] = "PlaceOlwinCardMove";
     MoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
     MoveNames["UpgradeCoinVidofnirVedrfolnirMove"] = "UpgradeCoinVidofnirVedrfolnirMove";
+    // TODO Is it here?
+    MoveNames["UseGodPowerMove"] = "UseGodPowerMove";
 })(MoveNames || (MoveNames = {}));
 /**
  * <h3>Перечисление для фаз игры.</h3>
@@ -218,12 +268,17 @@ export var Phases;
  */
 export var RusCardTypes;
 (function (RusCardTypes) {
-    RusCardTypes["ACTION"] = "\u0423\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B";
-    RusCardTypes["ARTEFACT"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
-    RusCardTypes["BASIC"] = "\u0411\u0430\u0437\u043E\u0432\u0430\u044F";
-    RusCardTypes["HERO"] = "\u0413\u0435\u0440\u043E\u0439";
-    RusCardTypes["MERCENARY"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A";
-    RusCardTypes["MERCENARYPLAYERCARD"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A \u043D\u0430 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypes["Royal_Offering"] = "\u041A\u043E\u0440\u043E\u043B\u0435\u0432\u0441\u043A\u0430\u044F \u043D\u0430\u0433\u0440\u0430\u0434\u0430";
+    RusCardTypes["Artefact"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
+    RusCardTypes["Dwarf"] = "\u0414\u0432\u043E\u0440\u0444";
+    RusCardTypes["Giant"] = "\u0413\u0438\u0433\u0430\u043D\u0442";
+    RusCardTypes["God"] = "\u0411\u043E\u0433";
+    RusCardTypes["Hero"] = "\u0413\u0435\u0440\u043E\u0439";
+    RusCardTypes["Mercenary"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A";
+    RusCardTypes["Mercenary_Player_Card"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A \u043D\u0430 \u0441\u0442\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypes["Mythical_Animal"] = "\u041C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435";
+    RusCardTypes["Special"] = "\u041E\u0441\u043E\u0431\u0430\u044F";
+    RusCardTypes["Valkyry"] = "\u0412\u0430\u043B\u044C\u043A\u0438\u0440\u0438\u044F";
 })(RusCardTypes || (RusCardTypes = {}));
 /**
  * <h3>Перечисление для русских названий фракций.</h3>
@@ -267,11 +322,11 @@ export var Stages;
  */
 export var SuitNames;
 (function (SuitNames) {
-    SuitNames["BLACKSMITH"] = "blacksmith";
-    SuitNames["EXPLORER"] = "explorer";
-    SuitNames["HUNTER"] = "hunter";
-    SuitNames["MINER"] = "miner";
-    SuitNames["WARRIOR"] = "warrior";
+    SuitNames["Blacksmith"] = "blacksmith";
+    SuitNames["Explorer"] = "explorer";
+    SuitNames["Hunter"] = "hunter";
+    SuitNames["Miner"] = "miner";
+    SuitNames["Warrior"] = "warrior";
 })(SuitNames || (SuitNames = {}));
 /**
  * <h3>Перечисление для названия валидаторов для выбора карт.</h3>
@@ -333,5 +388,7 @@ export var MoveValidatorNames;
     MoveValidatorNames["PlaceOlwinCardMoveValidator"] = "PlaceOlwinCardMoveValidator";
     MoveValidatorNames["PlaceThrudHeroMoveValidator"] = "PlaceThrudHeroMoveValidator";
     MoveValidatorNames["UpgradeCoinVidofnirVedrfolnirMoveValidator"] = "UpgradeCoinVidofnirVedrfolnirMoveValidator";
+    // TODO Is it here?
+    MoveValidatorNames["UseGodPowerMoveValidator"] = "UseGodPowerMoveValidator";
 })(MoveValidatorNames || (MoveValidatorNames = {}));
 //# sourceMappingURL=enums.js.map

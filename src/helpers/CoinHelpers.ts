@@ -80,28 +80,23 @@ export const DiscardTradingCoin = (G: IMyGameState, playerId: number): [CoinType
  * <li>В конце игры, если получено преимущество по фракции воинов.</li>
  * </ol>
  *
- * @param playerId Id игрока.
+ * @param player Игрок.
  * @returns Максимальная монета игрока.
  */
-export const GetMaxCoinValue = (G: IMyGameState, playerId: number): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
-    }
-    return Math.max(...player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
+export const GetMaxCoinValue = (player: IPublicPlayer): number =>
+    Math.max(...player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
         IsCoin(coin)).map((coin: PublicPlayerCoinTypes, index: number): number => {
             if (coin === null) {
-                throw new Error(`В массиве монет игрока с id '${playerId}' на поле отсутствует монета с id '${index}'.`);
+                throw new Error(`В массиве монет игрока '${player.nickname}' на поле отсутствует монета с id '${index}'.`);
             }
             if (coin !== null && !IsCoin(coin)) {
-                throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть закрыта монета с id '${index}'.`);
+                throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть закрыта монета с id '${index}'.`);
             }
             if (coin !== null && IsCoin(coin) && !coin.isOpened) {
-                throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть ранее не открыта монета с id '${index}'.`);
+                throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
             }
             return coin.value;
         }));
-};
 
 /**
  * <h3>Открывает закрытые монеты на столе игроков.</h3>
@@ -377,7 +372,7 @@ export const ReturnCoinsToPlayerHands = (G: IMyGameState, ctx: Ctx): void => {
             }
         }
     }
-    AddDataToLog(G, LogTypes.GAME, `Все монеты вернулись в руки игроков.`);
+    AddDataToLog(G, LogTypes.Game, `Все монеты вернулись в руки игроков.`);
 };
 
 /**

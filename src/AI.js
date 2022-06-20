@@ -1,5 +1,5 @@
 import { CompareCards } from "./bot_logic/BotCardLogic";
-import { IsCardNotActionAndNotNull } from "./Card";
+import { IsDwarfCard } from "./Dwarf";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
@@ -23,6 +23,7 @@ export const enumerate = (G, ctx) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     if (ctx.phase !== null) {
+        // TODO Add MythologicalCreature moves
         const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
         let activeStageOfCurrentPlayer = currentStage !== undefined ? currentStage : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
@@ -166,7 +167,7 @@ export const iterations = (G, ctx) => {
         if (tavernNotNullCard === undefined) {
             throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '1'.`);
         }
-        if (currentTavern.every((card) => card === null || (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(tavernNotNullCard)
+        if (currentTavern.every((card) => card === null || (IsDwarfCard(card) && IsDwarfCard(tavernNotNullCard)
             && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))) {
             return 1;
         }
@@ -187,7 +188,7 @@ export const iterations = (G, ctx) => {
                 throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
             }
             if (deck0.length > 18) {
-                if (IsCardNotActionAndNotNull(tavernCard)) {
+                if (IsDwarfCard(tavernCard)) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card) => card !== null
                             && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
@@ -372,7 +373,7 @@ export const objectives = () => ({
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
-                totalScore.push(CurrentScoring(player));
+                totalScore.push(CurrentScoring(G, player));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
@@ -413,7 +414,7 @@ export const objectives = () => ({
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
-                totalScore.push(CurrentScoring(player));
+                totalScore.push(CurrentScoring(G, player));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {

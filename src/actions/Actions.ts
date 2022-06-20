@@ -10,7 +10,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, LogTypes, Phases, RusCardTypes, RusSuitNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, DiscardDeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IVariant, PickedCardTypes, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, DiscardDeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, PickedCardTypes, PlayerCardTypes, SuitTypes, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -54,7 +54,7 @@ export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: n
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' отправил в колоду сброса карту из таверны:`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' отправил в колоду сброса карту из таверны:`);
     const isCardDiscarded: boolean = DiscardCardFromTavern(G, ctx, cardId);
     if (isCardDiscarded) {
         G.tavernCardDiscarded2Players = true;
@@ -82,11 +82,11 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
         throw new Error(`В массиве карт лагеря игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     if (!IsMercenaryCampCard(pickedCard)) {
-        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
     }
     player.pickedCard = pickedCard;
     AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
 };
 
 /**
@@ -109,7 +109,7 @@ export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitTyp
         name: BuffNames.SuitIdForMjollnir,
     }, suit);
     DeleteBuffFromPlayer(G, ctx, BuffNames.GetMjollnirProfit);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`);
 };
 
 /**
@@ -127,7 +127,7 @@ export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' пасанул во время фазы '${ctx.phase}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' пасанул во время фазы '${ctx.phase}'.`);
 };
 
 /**
@@ -154,7 +154,7 @@ export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
     PickCardOrActionCardActions(G, ctx, card);
 };
 
@@ -176,9 +176,9 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
     }
     const pickedCard: PickedCardTypes = player.pickedCard;
     if (!IsMercenaryCampCard(pickedCard)) {
-        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
     }
-    const cardVariants: CanBeUndef<IVariant> = pickedCard.variants[suit];
+    const cardVariants: CanBeUndef<VariantType> = pickedCard.variants[suit];
     if (cardVariants === undefined) {
         throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }
@@ -197,7 +197,7 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
         throw new Error(`У игрока с id '${ctx.currentPlayer}' в массиве карт лагеря отсутствует выбранная карта.`);
     }
     player.campCards.splice(cardIndex, 1);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника '${mercenaryCard.name}'.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника '${mercenaryCard.name}'.`);
     if (isAdded) {
         CheckAndMoveThrudAction(G, ctx, mercenaryCard);
     }

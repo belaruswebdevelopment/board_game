@@ -122,11 +122,11 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     // todo Move to distinction phase hook?
     if (Object.values(G.distinctions).length) {
         // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionWarrior: boolean = G.distinctions[SuitNames.WARRIOR] !== undefined;
+        const isDistinctionWarrior: boolean = G.distinctions[SuitNames.Warrior] !== undefined;
         if (isDistinctionWarrior) {
-            G.distinctions[SuitNames.WARRIOR] = undefined;
-        } else if (!isDistinctionWarrior && G.distinctions[SuitNames.EXPLORER] !== undefined) {
-            G.distinctions[SuitNames.EXPLORER] = undefined;
+            G.distinctions[SuitNames.Warrior] = undefined;
+        } else if (!isDistinctionWarrior && G.distinctions[SuitNames.Explorer] !== undefined) {
+            G.distinctions[SuitNames.Explorer] = undefined;
         }
     }
     UpgradeCoinActions(G, ctx, coinId, type);

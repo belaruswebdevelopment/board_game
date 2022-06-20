@@ -4,10 +4,10 @@ import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
-import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -20,7 +20,7 @@ import type { CampDeckCardTypes, CanBeUndef, IMyGameState, INext, IPublicPlayer 
  * @param ctx
  * @returns
  */
-export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
+export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): true | void => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
@@ -41,7 +41,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
                 }
             }
             if (allMercenariesPlayed) {
-                return CheckEndTierActionsOrEndGameLastActions(G);
+                return true;
             }
         }
     }

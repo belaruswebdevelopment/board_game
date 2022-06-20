@@ -1,11 +1,13 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { IsArtefactCard, IsMercenaryCampCard, IsMercenaryPlayerCard } from "../Camp";
-import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { IsDwarfCard } from "../Dwarf";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsHeroCard } from "../Hero";
+import { IsMythicalAnimalCard } from "../MythologicalCreature";
+import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { ArtefactNames, MoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -94,6 +96,9 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             case MoveNames.ChooseHeroForDifficultySoloModeMove:
                 action = data.moves.ChooseHeroForDifficultySoloModeMove;
                 break;
+            case MoveNames.UseGodPowerMove:
+                action = data.moves.UseGodPowerMove;
+                break;
             default:
                 throw new Error(`Нет такого мува '${moveName}'.`);
         }
@@ -124,15 +129,14 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         }
     }
     else {
-        if (!IsActionCard(card)) {
-            // TODO Fix for Idavoll
-            if (IsCardNotActionAndNotNull(card)) {
-                styles = Styles.Cards(card.suit, card.name, card.points);
-            }
+        // TODO Fix for Idavoll
+        if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
+            styles = Styles.Cards(card.suit, card.name, card.points);
         }
         else {
             styles = Styles.Cards(null, card.name, null);
         }
+        // TODO Fix classes for Idavoll
         spanClasses = `bg-card`;
     }
     if (action !== null) {
@@ -150,9 +154,10 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             value = card.points !== null ? String(card.points) : ``;
         }
     }
-    else if (IsActionCard(card)) {
+    else if (IsRoyalOfferingCard(card)) {
         value = String(card.value);
     }
+    //TODO Draw Power token on Gods if needed and Strength token on valkyries!
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
 };
 /**

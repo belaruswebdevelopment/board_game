@@ -90,7 +90,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param stack Действия.
  * @returns Карта лагеря артефакт.
  */
-export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game = GameNames.Thingvellir, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
+export const CreateArtefactCampCard = ({ type = RusCardTypes.Artefact, tier, path, name, description, game = GameNames.Thingvellir, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
     type,
     tier,
     path,
@@ -120,7 +120,7 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, pat
  * @param variants Варианты расположения карты наёмника.
  * @returns Карта лагеря наёмник.
  */
-export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, path, name, game = GameNames.Thingvellir, variants, } = {}) => ({
+export const CreateMercenaryCampCard = ({ type = RusCardTypes.Mercenary, tier, path, name, game = GameNames.Thingvellir, variants, } = {}) => ({
     type,
     tier,
     path,
@@ -128,6 +128,7 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
     game,
     variants,
 });
+// TODO Rework it!?
 /**
  * <h3>Создание карты наёмника в руке игрока.</h3>
  * <p>Применения:</p>
@@ -146,7 +147,7 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
  * @param variants Варианты расположения карты наёмника.
  * @returns Карта наёмника в руке игрока.
  */
-export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.MERCENARYPLAYERCARD, suit, rank = 1, points, name, game = GameNames.Thingvellir, tier, path, variants, } = {}) => ({
+export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.Mercenary_Player_Card, suit, rank = 1, points, name, game = GameNames.Thingvellir, tier, path, variants, } = {}) => ({
     type,
     suit,
     rank,

@@ -58,7 +58,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
     }
     player.boardCoins[tempId] = handCoin;
     handCoins[coinId] = null;
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' положил монету ценностью '${handCoin.value}' в свой кошель.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' положил монету ценностью '${handCoin.value}' в свой кошель.`);
     StartVidofnirVedrfolnirAction(G, ctx);
 };
 /**
@@ -77,7 +77,7 @@ export const DiscardSuitCardAction = (G, ctx, cardId) => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.playerID}'.`);
     }
-    const discardedCard = player.cards[SuitNames.WARRIOR].splice(cardId, 1)[0];
+    const discardedCard = player.cards[SuitNames.Warrior].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }

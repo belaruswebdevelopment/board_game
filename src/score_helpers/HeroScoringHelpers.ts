@@ -1,7 +1,35 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { SuitNames } from "../typescript/enums";
-import type { CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
-import { TotalRank } from "./ScoreHelpers";
+import { HeroNames, RusCardTypes, SuitNames } from "../typescript/enums";
+import type { IPublicPlayer } from "../typescript/interfaces";
+import { GetRanksValueMultiplier } from "./ScoreHelpers";
+
+/**
+* <h3>Получение победных очков по героям.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>В конце игры, когда получаются победные очки по героям.</li>
+* </ol>
+*
+* @param player Игрок.
+* @param heroName Название героя.
+* @returns Количество очков по героям.
+*/
+export const HeroScoring = (player?: IPublicPlayer, heroName?: HeroNames): number => {
+    if (player === undefined) {
+        throw new Error(`Function param 'player' is undefined.`);
+    }
+    if (heroName === undefined) {
+        throw new Error(`Function param 'heroName' is undefined.`);
+    }
+    switch (heroName) {
+        case HeroNames.Astrid:
+            return AstridScoring(player);
+        case HeroNames.Idunn:
+            return IdunnScoring(player);
+        default:
+            throw new Error(`У карт с типом '${RusCardTypes.Hero}}' отсутствует герой с названием '${heroName}'.`);
+    }
+};
 
 /**
  * <h3>Получение победных очков по герою Astrid.</h3>
@@ -10,20 +38,10 @@ import { TotalRank } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по герою Astrid.</li>
  * </ol>
  *
- * @param G
- * @param playerId Игрок.
- * @returns
+ * @param player Игрок.
+ * @returns Количество очков по герою Astrid.
  */
-export const AstridScoring = (G?: IMyGameState, playerId?: number): number => {
-    if (G === undefined) {
-        throw new Error(`Function param 'G' is undefined.`);
-    }
-    if (playerId === undefined) {
-        throw new Error(`Function param 'playerId' is undefined.`);
-    }
-    return GetMaxCoinValue(G, playerId);
-
-};
+export const AstridScoring = (player: IPublicPlayer): number => GetMaxCoinValue(player);
 
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>
@@ -32,21 +50,8 @@ export const AstridScoring = (G?: IMyGameState, playerId?: number): number => {
  * <li>В конце игры, когда получаются победные очки по герою Idunn.</li>
  * </ol>
  *
- * @param G
- * @param playerId Игрок.
- * @returns
+ * @param player Игрок.
+ * @returns Количество очков по герою Idunn.
  */
-export const IdunnScoring = (G?: IMyGameState, playerId?: number): number => {
-    if (G === undefined) {
-        throw new Error(`Function param 'G' is undefined.`);
-    }
-    if (playerId === undefined) {
-        throw new Error(`Function param 'playerId' is undefined.`);
-    }
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
-    }
-    return player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2;
-
-};
+export const IdunnScoring = (player: IPublicPlayer): number =>
+    GetRanksValueMultiplier(player, SuitNames.Explorer, 2);

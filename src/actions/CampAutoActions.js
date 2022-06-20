@@ -21,7 +21,7 @@ export const DiscardTradingCoinAction = (G, ctx) => {
         throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.currentPlayer}'.`);
     }
     DiscardTradingCoin(G, Number(ctx.currentPlayer));
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
+    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
 /**
  * <h3>Действия, связанные с завершением выкладки монет на артефакт Odroerir The Mythic Cauldron.</h3>
@@ -54,7 +54,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
-        if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.WARRIOR].length) {
+        if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.Warrior].length) {
             value[i] = {
                 stage: Stages.DiscardSuitCard,
             };
@@ -63,7 +63,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
         }
     }
     if (!results) {
-        throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.WARRIOR}'.`);
+        throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.Warrior}'.`);
     }
     (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
         value,
