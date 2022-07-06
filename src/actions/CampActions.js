@@ -60,6 +60,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
     player.boardCoins[tempId] = handCoin;
     handCoins[coinId] = null;
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' положил монету ценностью '${handCoin.value}' в свой кошель.`);
+    // TODO Check New AddCoinToPouchAction here not in StartVidofnirVedrfolnirAction?
     StartVidofnirVedrfolnirAction(G, ctx);
 };
 /**

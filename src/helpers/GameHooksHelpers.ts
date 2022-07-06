@@ -293,10 +293,6 @@ export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
-    // TODO Why i need it?!
-    if (player.actionsNum) {
-        player.actionsNum--;
-    }
     if (ctx.activePlayers === null || ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         player.stack.shift();
         if ((player.stack[0]?.priority === undefined)

@@ -131,7 +131,10 @@ const Dagda: IHeroData = {
             number: 2,
         },
     },
-    stack: [StackData.discardCardFromBoardDagda()],
+    stack: [
+        StackData.discardCardFromBoardDagda(),
+        StackData.discardCardFromBoardDagda(),
+    ],
     scoringRule: (): number => 0,
 };
 

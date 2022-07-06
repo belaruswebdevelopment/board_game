@@ -123,7 +123,10 @@ const Dagda = {
             number: 2,
         },
     },
-    stack: [StackData.discardCardFromBoardDagda()],
+    stack: [
+        StackData.discardCardFromBoardDagda(),
+        StackData.discardCardFromBoardDagda(),
+    ],
     scoringRule: () => 0,
 };
 /**

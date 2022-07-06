@@ -57,7 +57,6 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
                 player.pickedCard = null;
             }
         }
-        player.actionsNum = stack.number ?? 1;
         if (stack.name !== undefined) {
             G.drawProfit = stack.name;
         } else {

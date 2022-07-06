@@ -482,7 +482,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
-                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: null,
                     heroes: [] as IHeroCard[],
@@ -506,7 +505,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         expect(G).toEqual({
             publicPlayers: {
                 0: {
-                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: {
                         name: `Test`,
@@ -541,7 +539,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
-                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: null,
                     stack: [
@@ -571,7 +568,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         expect(G).toEqual({
             publicPlayers: {
                 0: {
-                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: {
                         stack: [
@@ -630,7 +626,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
-                    actionsNum: 2,
                     nickname: `Dan`,
                     heroes: [] as IHeroCard[],
                     pickedCard: null,
@@ -657,7 +652,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         expect(G).toEqual({
             publicPlayers: {
                 0: {
-                    actionsNum: 2,
                     nickname: `Dan`,
                     heroes: [] as IHeroCard[],
                     pickedCard: {
@@ -820,7 +814,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
-                    actionsNum: 1,
                     nickname: `Dan`,
                     heroes: [
                         {
@@ -861,7 +854,6 @@ describe(`Test PickDiscardCardAction method`, (): void => {
         expect(G).toEqual({
             publicPlayers: {
                 0: {
-                    actionsNum: 1,
                     nickname: `Dan`,
                     heroes: [
                         {

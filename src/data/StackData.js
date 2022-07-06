@@ -1,9 +1,8 @@
 import { ConfigNames, DrawNames, StageNames, SuitNames } from "../typescript/enums";
 // TODO Add type!
 export const StackData = {
-    addCoinToPouch: (number) => ({
+    addCoinToPouch: () => ({
         stageName: StageNames.AddCoinToPouch,
-        number,
         drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
     brisingamensEndGameAction: () => ({
@@ -18,11 +17,10 @@ export const StackData = {
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (number = 2) => ({
+    discardCardFromBoardDagda: () => ({
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.Dagda,
         suit: SuitNames.Hunter,
-        number,
     }),
     discardSuitCard: (playerId) => ({
         playerId,
@@ -41,11 +39,10 @@ export const StackData = {
         name: ConfigNames.GetDifficultyLevelForSoloMode,
         drawName: DrawNames.GetDifficultyLevelForSoloMode,
     }),
-    getHeroesForSoloMode: (number) => ({
+    getHeroesForSoloMode: () => ({
         name: ConfigNames.GetHeroesForSoloMode,
         stageName: StageNames.ChooseHeroesForSoloMode,
         drawName: DrawNames.GetHeroesForSoloMode,
-        number,
     }),
     getDistinctions: () => ({
         drawName: DrawNames.GetMjollnirProfit,
@@ -70,10 +67,9 @@ export const StackData = {
         stageName: StageNames.PickDiscardCard,
         drawName: DrawNames.Andumia,
     }),
-    pickDiscardCardBrisingamens: (number = 2, priority) => ({
+    pickDiscardCardBrisingamens: (priority) => ({
         stageName: StageNames.PickDiscardCard,
         drawName: DrawNames.Brisingamens,
-        number,
         priority,
     }),
     pickDistinctionCard: () => ({
@@ -85,7 +81,7 @@ export const StackData = {
         stageName: StageNames.PickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
-    placeOlwinCards: (number = 2, suit, priority) => ({
+    placeOlwinCards: (suit, priority) => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.Blacksmith,
@@ -115,7 +111,6 @@ export const StackData = {
         },
         stageName: StageNames.PlaceOlwinCards,
         drawName: DrawNames.PlaceOlwinDouble,
-        number,
         suit,
         priority,
     }),
@@ -151,10 +146,9 @@ export const StackData = {
         drawName: DrawNames.PlaceThrudHero,
         priority: 2,
     }),
-    placeTradingCoinsUline: (number) => ({
+    placeTradingCoinsUline: () => ({
         stageName: StageNames.PlaceTradingCoinsUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
-        number,
     }),
     placeYludHero: () => ({
         // TODO Move such logic for all heroes (Thrud, Ylud, Olwin) to Hero card variants

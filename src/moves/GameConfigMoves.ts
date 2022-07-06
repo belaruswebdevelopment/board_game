@@ -3,7 +3,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, StageNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
@@ -28,7 +28,7 @@ export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyG
         return INVALID_MOVE;
     }
     G.soloGameDifficultyLevel = level;
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.getHeroesForSoloMode(level)]);
+    AddActionsToStack(G, ctx, [StackData.getHeroesForSoloMode()]);
 };
 
 /**
@@ -59,11 +59,14 @@ export const ChooseHeroForDifficultySoloModeMove: Move<IMyGameState> = (G: IMyGa
     }
     const hero: CanBeUndef<IHeroCard> = G.heroesForSoloGameDifficultyLevel.splice(heroId, 1)[0];
     if (hero === undefined) {
-        throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
+        throw new Error(`Не существует выбранная карта героя с id '${heroId}'.`);
     }
     AddHeroForDifficultyToSoloBotCards(G, ctx, hero);
-    player.actionsNum--;
-    if (player.actionsNum) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.getHeroesForSoloMode(player.actionsNum)]);
+    if (G.soloGameDifficultyLevel === null || G.soloGameDifficultyLevel === 0) {
+        throw new Error(`Не может не быть возможности выбора героя для выбранного уровня сложности в режиме соло игры.`);
+    }
+    G.soloGameDifficultyLevel--;
+    if (G.soloGameDifficultyLevel) {
+        AddActionsToStack(G, ctx, [StackData.getHeroesForSoloMode()]);
     }
 };

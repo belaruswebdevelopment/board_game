@@ -118,7 +118,6 @@ const CreatePlayer = ({
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param actionsNum Количество действий.
  * @param nickname Никнейм.
  * @param cards Массив карт.
  * @param heroes Массив героев.
@@ -133,7 +132,6 @@ const CreatePlayer = ({
  * @returns Публичные данные игрока.
  */
 const CreatePublicPlayer = ({
-    actionsNum = 0,
     nickname,
     cards,
     giantTokenSuits,
@@ -148,7 +146,6 @@ const CreatePublicPlayer = ({
     selectedCoin = null,
     pickedCard = null,
 }: CreatePublicPlayerType = {} as CreatePublicPlayerType): IPublicPlayer => ({
-    actionsNum,
     nickname,
     cards,
     giantTokenSuits,

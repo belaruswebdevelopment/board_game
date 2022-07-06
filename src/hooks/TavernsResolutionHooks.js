@@ -57,9 +57,11 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
                         }
                         return IsCoin(coin);
                     }).length;
-                    player.actionsNum =
-                        G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
-                    AddActionsToStack(G, ctx, [StackData.placeTradingCoinsUline(player.actionsNum)]);
+                    const actionsNum = G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
+                    if (actionsNum > handCoinsLength) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
+                    }
+                    AddActionsToStack(G, ctx, [StackData.placeTradingCoinsUline()]);
                     DrawCurrentProfit(G, ctx);
                 }
             }
@@ -188,6 +190,7 @@ export const OnTavernsResolutionMove = (G, ctx) => {
         else {
             if (!G.solo
                 && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== StageNames.PlaceTradingCoinsUline) {
+                // TODO Need it every time or 1 time add 0-2 AddCoinsToPouch actions to stack
                 CheckAndStartUlineActionsOrContinue(G, ctx);
             }
             if (!player.stack.length) {

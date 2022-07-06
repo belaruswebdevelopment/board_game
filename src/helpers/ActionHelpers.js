@@ -16,7 +16,6 @@ import { CardNames, DrawNames, ErrorNames, HeroNames, LogTypeNames } from "../ty
  * @param ctx
  */
 export const DrawCurrentProfit = (G, ctx) => {
-    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -58,7 +57,6 @@ export const DrawCurrentProfit = (G, ctx) => {
                 player.pickedCard = null;
             }
         }
-        player.actionsNum = (_a = stack.number) !== null && _a !== void 0 ? _a : 1;
         if (stack.name !== undefined) {
             G.drawProfit = stack.name;
         }

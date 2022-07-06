@@ -65,10 +65,12 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
                             }
                             return IsCoin(coin);
                         }).length;
-                    player.actionsNum =
+                    const actionsNum: number =
                         G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
-                    AddActionsToStack(G, ctx,
-                        [StackData.placeTradingCoinsUline(player.actionsNum)]);
+                    if (actionsNum > handCoinsLength) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
+                    }
+                    AddActionsToStack(G, ctx, [StackData.placeTradingCoinsUline()]);
                     DrawCurrentProfit(G, ctx);
                 }
             }
@@ -91,7 +93,8 @@ export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): true 
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
             && CheckIfCurrentTavernEmpty(G, ctx)) {
@@ -204,6 +207,7 @@ export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
         } else {
             if (!G.solo
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] !== StageNames.PlaceTradingCoinsUline) {
+                // TODO Need it every time or 1 time add 0-2 AddCoinsToPouch actions to stack
                 CheckAndStartUlineActionsOrContinue(G, ctx);
             }
             if (!player.stack.length) {

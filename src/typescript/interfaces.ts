@@ -731,29 +731,29 @@ export interface IMoveValidator {
 
 // TODO Rework it?!
 export interface IStackData {
-    readonly addCoinToPouch: (number: number) => IStack;
+    readonly addCoinToPouch: () => IStack;
     readonly brisingamensEndGameAction: () => IStack;
     readonly discardCardFromBoardBonfur: () => IStack;
     readonly discardCardFromBoardCrovaxTheDoppelganger: () => IStack;
-    readonly discardCardFromBoardDagda: (number?: number) => IStack;
+    readonly discardCardFromBoardDagda: () => IStack;
     readonly discardSuitCard: (playerId: number) => IStack;
     readonly discardSuitCardHofud: () => IStack;
     readonly discardTavernCard: () => IStack;
     readonly enlistmentMercenaries: () => IStack;
     readonly getDifficultyLevelForSoloMode: () => IStack;
-    readonly getHeroesForSoloMode: (number: number) => IStack;
+    readonly getHeroesForSoloMode: () => IStack;
     readonly getDistinctions: () => IStack;
     readonly getMjollnirProfit: () => IStack;
     readonly pickCampCardHolda: () => IStack;
     readonly pickCard: () => IStack;
     readonly pickConcreteCoinToUpgrade: (coinValue: number, value: number) => IStack;
     readonly pickDiscardCardAndumia: () => IStack;
-    readonly pickDiscardCardBrisingamens: (number?: number, priority?: number) => IStack;
+    readonly pickDiscardCardBrisingamens: (priority?: number) => IStack;
     readonly pickDistinctionCard: () => IStack;
     readonly pickDistinctionCardSoloBot: () => IStack;
-    readonly placeOlwinCards: (number?: number, suit?: SuitTypes, priority?: number) => IStack;
+    readonly placeOlwinCards: (suit?: SuitTypes, priority?: number) => IStack;
     readonly placeThrudHero: () => IStack;
-    readonly placeTradingCoinsUline: (number?: number) => IStack;
+    readonly placeTradingCoinsUline: () => IStack;
     readonly placeYludHero: () => IStack;
     readonly pickHero: () => IStack;
     readonly pickHeroSoloBot: () => IStack;
@@ -854,7 +854,6 @@ export interface IBuffs {
  * <h3>Интерфейс для публичных данных игрока.</h3>
  */
 export interface IPublicPlayer {
-    actionsNum: number;
     readonly nickname: string;
     readonly cards: SuitPropertyTypes<PlayerCardTypes[]>;
     readonly heroes: IHeroCard[];
@@ -1215,10 +1214,9 @@ export type StrengthTokenNotchPointsType = [number, number, number, number, numb
  * <h3>Тип для создания публичных данных игрока.</h3>
  */
 export type CreatePublicPlayerType =
-    PartialBy<Omit<IPublicPlayer, `actionsNum` | `pickedCard` | `priority` | `selectedCoin` | `stack`>
-        & ReadonlyBy<IPublicPlayer, `actionsNum` | `pickedCard` | `priority` | `selectedCoin` | `stack`>,
-        `actionsNum` | `heroes` | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs` | `selectedCoin`
-        | `pickedCard`>;
+    PartialBy<Omit<IPublicPlayer, `pickedCard` | `priority` | `selectedCoin` | `stack`>
+        & ReadonlyBy<IPublicPlayer, `pickedCard` | `priority` | `selectedCoin` | `stack`>,
+        `heroes` | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs` | `selectedCoin` | `pickedCard`>;
 
 export type SoloGameDifficultyLevelHeroesConfigType =
     Pick<IHeroConfig, `Astrid` | `Grid` | `Skaa` | `Thrud` | `Uline` | `Ylud`>;

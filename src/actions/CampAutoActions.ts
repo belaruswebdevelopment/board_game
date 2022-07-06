@@ -114,9 +114,7 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
             }).length,
         everyTurnBuff: boolean = CheckPlayerHasBuff(player, BuffNames.EveryTurn);
     if (!G.solo && everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
-        const addCoinsToPouchNumber: number =
-            noCoinsOnPouchNumber <= handCoinsNumber ? noCoinsOnPouchNumber : handCoinsNumber;
-        AddActionsToStack(G, ctx, [StackData.addCoinToPouch(addCoinsToPouchNumber)]);
+        AddActionsToStack(G, ctx, [StackData.addCoinToPouch()]);
     } else if (!G.solo && !everyTurnBuff
         || ((everyTurnBuff && (!noCoinsOnPouchNumber || (noCoinsOnPouchNumber === 1 && !handCoinsNumber))))) {
         let coinsValue = 0,

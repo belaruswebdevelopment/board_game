@@ -8,7 +8,7 @@ import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
 import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CardNames, ErrorNames, GameNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
@@ -35,9 +35,6 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     }
     player.pickedCard = discardedCard;
     DiscardPickedCard(G, discardedCard);
-    if (player.actionsNum === 2) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda(1)]);
-    }
 };
 /**
  * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
@@ -51,6 +48,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param suit Название фракции дворфов.
  */
 export const PlaceOlwinCardsAction = (G, ctx, suit) => {
+    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -72,8 +70,8 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
     });
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' добавил карту '${CardNames.OlwinsDouble}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddCardToPlayer(G, ctx, olwinDouble);
-    if (player.actionsNum === 2) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards(1, suit, 3)]);
+    if (((_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.suit) === undefined) {
+        AddActionsToStack(G, ctx, [StackData.placeOlwinCards(suit, 3)]);
     }
     CheckAndMoveThrudAction(G, ctx, olwinDouble);
 };

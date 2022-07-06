@@ -109,7 +109,6 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param actionsNum Количество действий.
  * @param nickname Никнейм.
  * @param cards Массив карт.
  * @param heroes Массив героев.
@@ -123,8 +122,7 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
-    actionsNum,
+const CreatePublicPlayer = ({ nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
     nickname,
     cards,
     giantTokenSuits,

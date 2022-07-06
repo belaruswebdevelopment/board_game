@@ -9,7 +9,7 @@ import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
 import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CardNames, ErrorNames, GameNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
@@ -38,9 +38,6 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
     }
     player.pickedCard = discardedCard;
     DiscardPickedCard(G, discardedCard);
-    if (player.actionsNum === 2) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda(1)]);
-    }
 };
 
 /**
@@ -76,8 +73,8 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
     });
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' добавил карту '${CardNames.OlwinsDouble}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddCardToPlayer(G, ctx, olwinDouble);
-    if (player.actionsNum === 2) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards(1, suit, 3)]);
+    if (player.stack[0]?.suit === undefined) {
+        AddActionsToStack(G, ctx, [StackData.placeOlwinCards(suit, 3)]);
     }
     CheckAndMoveThrudAction(G, ctx, olwinDouble);
 };

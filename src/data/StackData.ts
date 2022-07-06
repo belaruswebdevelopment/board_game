@@ -3,9 +3,8 @@ import type { IStack, IStackData, SuitTypes } from "../typescript/interfaces";
 
 // TODO Add type!
 export const StackData: IStackData = {
-    addCoinToPouch: (number: number): IStack => ({
+    addCoinToPouch: (): IStack => ({
         stageName: StageNames.AddCoinToPouch,
-        number,
         drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
     brisingamensEndGameAction: (): IStack => ({
@@ -20,11 +19,10 @@ export const StackData: IStackData = {
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (number = 2): IStack => ({
+    discardCardFromBoardDagda: (): IStack => ({
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.Dagda,
         suit: SuitNames.Hunter,
-        number,
     }),
     discardSuitCard: (playerId: number): IStack => ({
         playerId,
@@ -43,11 +41,10 @@ export const StackData: IStackData = {
         name: ConfigNames.GetDifficultyLevelForSoloMode,
         drawName: DrawNames.GetDifficultyLevelForSoloMode,
     }),
-    getHeroesForSoloMode: (number: number): IStack => ({
+    getHeroesForSoloMode: (): IStack => ({
         name: ConfigNames.GetHeroesForSoloMode,
         stageName: StageNames.ChooseHeroesForSoloMode,
         drawName: DrawNames.GetHeroesForSoloMode,
-        number,
     }),
     getDistinctions: (): IStack => ({
         drawName: DrawNames.GetMjollnirProfit,
@@ -72,10 +69,9 @@ export const StackData: IStackData = {
         stageName: StageNames.PickDiscardCard,
         drawName: DrawNames.Andumia,
     }),
-    pickDiscardCardBrisingamens: (number = 2, priority?: number): IStack => ({
+    pickDiscardCardBrisingamens: (priority?: number): IStack => ({
         stageName: StageNames.PickDiscardCard,
         drawName: DrawNames.Brisingamens,
-        number,
         priority,
     }),
     pickDistinctionCard: (): IStack => ({
@@ -87,7 +83,7 @@ export const StackData: IStackData = {
         stageName: StageNames.PickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
-    placeOlwinCards: (number = 2, suit?: SuitTypes, priority?: number): IStack => ({
+    placeOlwinCards: (suit?: SuitTypes, priority?: number): IStack => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.Blacksmith,
@@ -117,7 +113,6 @@ export const StackData: IStackData = {
         },
         stageName: StageNames.PlaceOlwinCards,
         drawName: DrawNames.PlaceOlwinDouble,
-        number,
         suit,
         priority,
     }),
@@ -153,10 +148,9 @@ export const StackData: IStackData = {
         drawName: DrawNames.PlaceThrudHero,
         priority: 2,
     }),
-    placeTradingCoinsUline: (number?: number): IStack => ({
+    placeTradingCoinsUline: (): IStack => ({
         stageName: StageNames.PlaceTradingCoinsUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
-        number,
     }),
     placeYludHero: (): IStack => ({
         // TODO Move such logic for all heroes (Thrud, Ylud, Olwin) to Hero card variants

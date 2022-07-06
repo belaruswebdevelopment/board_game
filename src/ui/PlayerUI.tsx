@@ -176,8 +176,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                         const stackSuit: CanBeUndef<SuitTypes | null> = stack.suit,
                             pickedCard: PickedCardTypes = player.pickedCard;
                         if (suit !== stackSuit
-                            && !(stackSuit === SuitNames.Hunter && player.actionsNum === 1
-                                && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
+                            && !(pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
                             if (data !== undefined) {
                                 const suitArg: SuitTypes = suit;
                                 DrawCard(data, playerCells, card, id, player, suit,

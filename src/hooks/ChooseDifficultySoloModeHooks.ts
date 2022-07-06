@@ -62,7 +62,7 @@ export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx):
         if (soloBotPublicPlayer === undefined) {
             throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
         }
-        return G.soloGameDifficultyLevel !== null && G.soloGameDifficultyLevel === soloBotPublicPlayer.heroes.length;
+        return G.soloGameDifficultyLevel !== null && G.soloGameDifficultyLevel === 0;
     }
 };
 
