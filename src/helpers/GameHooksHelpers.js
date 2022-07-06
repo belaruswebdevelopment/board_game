@@ -219,7 +219,7 @@ export const EndTurnActions = (G, ctx) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    if (!player.stack.length && !player.actionsNum) {
+    if (!player.stack.length) {
         return true;
     }
 };

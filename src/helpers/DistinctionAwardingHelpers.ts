@@ -8,7 +8,7 @@ import { CardNames, CoinTypeNames, ErrorNames, LogTypeNames, SuitNames } from ".
 import type { CanBeUndef, ICoin, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStack } from "./StackHelpers";
 
 /**
  * <h3>Получение преимущества по фракции кузнецов.</h3>
@@ -63,9 +63,9 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
     }
     if (G.tierToEnd !== 0) {
         if (G.solo && ctx.currentPlayer === `1`) {
-            AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
+            AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
         } else {
-            AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
+            AddActionsToStack(G, ctx, [StackData.pickDistinctionCard()]);
         }
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
@@ -173,7 +173,7 @@ export const WarriorDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: 
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
+        AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
     } else {
         return GetMaxCoinValue(player);

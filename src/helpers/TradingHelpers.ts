@@ -8,7 +8,7 @@ import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescrip
 import type { CanBeUndef, CoinTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStack } from "./StackHelpers";
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -174,7 +174,7 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[], soloBotOnlyOn
     // TODO Check solo bot randomly picked concrete coin (or must always pick isInitial)!?
     if (!soloBotOnlyOneCoinTrading && (coinsMinValue === coinsMaxValue &&
         ((maxTradingCoin !== undefined && maxTradingCoin.isInitial) || minTradingCoin.isInitial))) {
-        AddActionsToStackAfterCurrent(G, ctx,
+        AddActionsToStack(G, ctx,
             [StackData.pickConcreteCoinToUpgrade(coinsMaxValue, coinsMaxValue)]);
         DrawCurrentProfit(G, ctx);
     } else {

@@ -2,7 +2,7 @@ import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
@@ -37,8 +37,7 @@ export const CheckEndBrisingamensEndGamePhase = (G, ctx) => {
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с первым ходом с id '${ctx.currentPlayer}'.`);
         }
-        if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
-            && !player.actionsNum) {
+        if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length) {
             const buffIndex = Object.values(G.publicPlayers).findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
             if (buffIndex !== -1) {
                 return true;
@@ -82,7 +81,7 @@ export const OnBrisingamensEndGameMove = (G, ctx) => {
  * @param ctx
  */
 export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.brisingamensEndGameAction()]);
+    AddActionsToStack(G, ctx, [StackData.brisingamensEndGameAction()]);
     DrawCurrentProfit(G, ctx);
 };
 //# sourceMappingURL=BrisingamensEndGameHooks.js.map

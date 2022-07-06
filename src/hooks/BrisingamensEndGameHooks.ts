@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
@@ -43,8 +43,7 @@ export const CheckEndBrisingamensEndGamePhase = (G: IMyGameState, ctx: Ctx): tru
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с первым ходом с id '${ctx.currentPlayer}'.`);
         }
-        if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
-            && !player.actionsNum) {
+        if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length) {
             const buffIndex: number =
                 Object.values(G.publicPlayers).findIndex((playerB: IPublicPlayer): boolean =>
                     CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
@@ -93,6 +92,6 @@ export const OnBrisingamensEndGameMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.brisingamensEndGameAction()]);
+    AddActionsToStack(G, ctx, [StackData.brisingamensEndGameAction()]);
     DrawCurrentProfit(G, ctx);
 };

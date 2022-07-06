@@ -16,8 +16,7 @@ import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IV
  * @param stack Стэк действий.
  * @param card Карта.
  */
-export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?: IStack[], card?: CardsHasStack):
-    void => {
+export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], card?: CardsHasStack): void => {
     let isValid = false;
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
@@ -43,7 +42,7 @@ export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?:
             isValid = true;
         }
         if (isValid) {
-            for (let i: number = stack.length - 1; i >= 0; i--) {
+            for (let i = 0; i < stack.length; i++) {
                 const stackI: CanBeUndef<IStack> = stack[i];
                 if (stackI === undefined) {
                     throw new Error(`В массиве стэка новых действий отсутствует действие с id '${i}'.`);

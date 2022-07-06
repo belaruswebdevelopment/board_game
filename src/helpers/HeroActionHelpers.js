@@ -2,7 +2,7 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStack } from "./StackHelpers";
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
  * <p>Применения:</p>
@@ -51,7 +51,7 @@ export const CheckAndMoveThrud = (G, ctx, card) => {
 export const CheckAndMoveThrudAction = (G, ctx, card) => {
     const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeThrudHero()]);
+        AddActionsToStack(G, ctx, [StackData.placeThrudHero()]);
     }
 };
 //# sourceMappingURL=HeroActionHelpers.js.map

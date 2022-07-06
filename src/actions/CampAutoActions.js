@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 /**
@@ -59,7 +59,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
             value[i] = {
                 stage: StageNames.DiscardSuitCard,
             };
-            AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
+            AddActionsToStack(G, ctx, [StackData.discardSuitCard(i)]);
             results++;
         }
     }
@@ -105,7 +105,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     }).length, everyTurnBuff = CheckPlayerHasBuff(player, BuffNames.EveryTurn);
     if (!G.solo && everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
         const addCoinsToPouchNumber = noCoinsOnPouchNumber <= handCoinsNumber ? noCoinsOnPouchNumber : handCoinsNumber;
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(addCoinsToPouchNumber)]);
+        AddActionsToStack(G, ctx, [StackData.addCoinToPouch(addCoinsToPouchNumber)]);
     }
     else if (!G.solo && !everyTurnBuff
         || ((everyTurnBuff && (!noCoinsOnPouchNumber || (noCoinsOnPouchNumber === 1 && !handCoinsNumber))))) {
@@ -153,7 +153,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         else {
             throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '${coinsValue}' монет(ы).`);
         }
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStack(G, ctx, stack);
     }
     else {
         throw new Error(`При наличии бафа '${BuffNames.EveryTurn}' всегда должно быть действие добавления монет в кошель, если обе ячейки для монет пустые.`);

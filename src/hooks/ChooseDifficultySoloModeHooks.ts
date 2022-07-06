@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { HeroNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
@@ -105,7 +105,7 @@ export const OnChooseDifficultySoloModeMove = (G: IMyGameState, ctx: Ctx): void 
  */
 export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     if (ctx.currentPlayer === `0`) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.getDifficultyLevelForSoloMode()]);
+        AddActionsToStack(G, ctx, [StackData.getDifficultyLevelForSoloMode()]);
         DrawCurrentProfit(G, ctx);
     } else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
@@ -115,7 +115,7 @@ export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): 
         soloBotPublicPlayer.heroes.forEach((hero: IHeroCard): void => {
             AddBuffToPlayer(G, ctx, hero.buff);
             if (hero.name !== HeroNames.Thrud && hero.name !== HeroNames.Ylud) {
-                AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+                AddActionsToStack(G, ctx, hero.stack, hero);
                 DrawCurrentProfit(G, ctx);
             }
         });

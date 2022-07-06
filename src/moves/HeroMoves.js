@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardCardsFromPlayerBoardAction, PlaceOlwinCardsAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { StageNames } from "../typescript/enums";
 /**
@@ -27,7 +27,7 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }
     AddHeroToPlayerCards(G, ctx, hero);
-    AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+    AddActionsToStack(G, ctx, hero.stack, hero);
     StartAutoAction(G, ctx, hero.actions);
 };
 /**

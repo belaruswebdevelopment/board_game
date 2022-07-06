@@ -101,53 +101,52 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             }
         }
     }
+    if (upgradedCoin === null) {
+        throw new Error(`На рынке монет нет доступных монет для обмена.`);
+    }
     AddDataToLog(G, LogTypeNames.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
-    if (upgradedCoin !== null) {
-        AddDataToLog(G, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
-        if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
-            ChangeIsOpenedCoinStatus(upgradedCoin, true);
-        }
-        if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2))
-            && type === CoinTypeNames.Hand) || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
-                && type === CoinTypeNames.Board && isTrading)) {
-            if (isTrading) {
-                const handCoinId: number = player.handCoins.indexOf(null);
-                if (G.multiplayer) {
-                    boardCoins[upgradingCoinId] = null;
-                    player.handCoins[handCoinId] = upgradedCoin;
-                }
-                player.boardCoins[upgradingCoinId] = null;
-                handCoins[handCoinId] = upgradedCoin;
-            } else {
-                if (G.multiplayer) {
-                    player.handCoins[upgradingCoinId] = upgradedCoin;
-                }
-                handCoins[upgradingCoinId] = upgradedCoin;
-            }
-            AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
-        } else if (type === CoinTypeNames.Board) {
+    AddDataToLog(G, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
+    if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
+        ChangeIsOpenedCoinStatus(upgradedCoin, true);
+    }
+    if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2))
+        && type === CoinTypeNames.Hand) || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
+            && type === CoinTypeNames.Board && isTrading)) {
+        if (isTrading) {
+            const handCoinId: number = player.handCoins.indexOf(null);
             if (G.multiplayer) {
-                boardCoins[upgradingCoinId] = upgradedCoin;
+                boardCoins[upgradingCoinId] = null;
+                player.handCoins[handCoinId] = upgradedCoin;
             }
-            player.boardCoins[upgradingCoinId] = upgradedCoin;
-            AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
-        }
-        if (!upgradingCoin.isInitial) {
-            let returningIndex = 0;
-            for (let i = 0; i < G.marketCoins.length; i++) {
-                returningIndex = i;
-                const marketCoinReturn: CanBeUndef<ICoin> = G.marketCoins[i];
-                if (marketCoinReturn === undefined) {
-                    throw new Error(`В массиве монет рынка отсутствует монета ${i}.`);
-                }
-                if (marketCoinReturn.value > upgradingCoin.value) {
-                    break;
-                }
+            player.boardCoins[upgradingCoinId] = null;
+            handCoins[handCoinId] = upgradedCoin;
+        } else {
+            if (G.multiplayer) {
+                player.handCoins[upgradingCoinId] = upgradedCoin;
             }
-            G.marketCoins.splice(returningIndex, 0, upgradingCoin);
-            AddDataToLog(G, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
+            handCoins[upgradingCoinId] = upgradedCoin;
         }
-    } else {
-        AddDataToLog(G, LogTypeNames.Private, `На рынке монет нет доступных монет для обмена.`);
+        AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
+    } else if (type === CoinTypeNames.Board) {
+        if (G.multiplayer) {
+            boardCoins[upgradingCoinId] = upgradedCoin;
+        }
+        player.boardCoins[upgradingCoinId] = upgradedCoin;
+        AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
+    }
+    if (!upgradingCoin.isInitial) {
+        let returningIndex = 0;
+        for (let i = 0; i < G.marketCoins.length; i++) {
+            returningIndex = i;
+            const marketCoinReturn: CanBeUndef<ICoin> = G.marketCoins[i];
+            if (marketCoinReturn === undefined) {
+                throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
+            }
+            if (marketCoinReturn.value > upgradingCoin.value) {
+                break;
+            }
+        }
+        G.marketCoins.splice(returningIndex, 0, upgradingCoin);
+        AddDataToLog(G, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
     }
 };

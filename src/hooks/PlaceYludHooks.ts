@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
@@ -29,7 +29,7 @@ export const CheckEndPlaceYludPhase = (G: IMyGameState, ctx: Ctx): true | void =
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (!player.stack.length && !player.actionsNum) {
+        if (!player.stack.length) {
             const yludIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                     CheckPlayerHasBuff(player, BuffNames.EndTier));
@@ -164,7 +164,7 @@ export const OnPlaceYludMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const OnPlaceYludTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeYludHero()]);
+    AddActionsToStack(G, ctx, [StackData.placeYludHero()]);
     DrawCurrentProfit(G, ctx);
 };
 

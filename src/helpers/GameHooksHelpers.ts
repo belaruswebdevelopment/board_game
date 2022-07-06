@@ -237,7 +237,7 @@ export const EndTurnActions = (G: IMyGameState, ctx: Ctx): true | void => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    if (!player.stack.length && !player.actionsNum) {
+    if (!player.stack.length) {
         return true;
     }
 };

@@ -22,7 +22,10 @@ const Brisingamens: IArtefact = {
     validators: {
         pickDiscardCardToStack: {},
     },
-    stack: [StackData.pickDiscardCardBrisingamens()],
+    stack: [
+        StackData.pickDiscardCardBrisingamens(),
+        StackData.pickDiscardCardBrisingamens(3),
+    ],
     scoringRule: (): number => 0,
 };
 

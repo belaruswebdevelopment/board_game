@@ -6,7 +6,7 @@ import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer, PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames } from "../typescript/enums";
@@ -55,7 +55,9 @@ export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
     if (!isCardDiscarded) {
         throw new Error(`Не удалось сбросить карту с id '${cardId}' из текущей таверны с id '${G.currentTavern}'.`);
     }
-    G.tavernCardDiscarded2Players = true;
+    if (ctx.numPlayers === 2) {
+        G.tavernCardDiscarded2Players = true;
+    }
 };
 /**
  * <h3>Игрок выбирает наёмника для вербовки.</h3>
@@ -81,7 +83,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
         throw new Error(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
     }
     player.pickedCard = pickedCard;
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
+    AddActionsToStack(G, ctx, [StackData.placeEnlistmentMercenaries()]);
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
 };
 /**
@@ -143,9 +145,6 @@ export const PickDiscardCardAction = (G, ctx, cardId) => {
     const card = G.discardCardsDeck.splice(cardId, 1)[0];
     if (card === undefined) {
         throw new Error(`В массиве колоды сброса отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
-    }
-    if (player.actionsNum === 2) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens(1, 3)]);
     }
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
     PickCardOrActionCardActions(G, ctx, card);

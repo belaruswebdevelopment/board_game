@@ -2,7 +2,7 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
 import { ErrorNames, SuitNames } from "../typescript/enums";
 /**
@@ -39,8 +39,7 @@ export const CheckEndTroopEvaluationPhase = (G, ctx) => {
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
-            && !player.actionsNum) {
+        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             return Object.values(G.distinctions).every((distinction) => distinction === undefined);
         }
     }
@@ -96,7 +95,7 @@ export const OnTroopEvaluationMove = (G, ctx) => {
  * @param ctx
  */
 export const OnTroopEvaluationTurnBegin = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
+    AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.Explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         for (let j = 0; j < 3; j++) {
             const deck1 = G.secret.decks[1];

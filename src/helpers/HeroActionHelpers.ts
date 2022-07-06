@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer, PlayerCardTypes } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStack } from "./StackHelpers";
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
@@ -57,6 +57,6 @@ export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardTyp
 export const CheckAndMoveThrudAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardTypes): void => {
     const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeThrudHero()]);
+        AddActionsToStack(G, ctx, [StackData.placeThrudHero()]);
     }
 };

@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -23,8 +23,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
-            && !player.actionsNum) {
+        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             let allMercenariesPlayed = true;
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const playerI = G.publicPlayers[i];
@@ -103,7 +102,7 @@ export const OnEnlistmentMercenariesMove = (G, ctx) => {
     if (!player.stack.length) {
         const mercenariesCount = player.campCards.filter((card) => IsMercenaryCampCard(card)).length;
         if (mercenariesCount) {
-            AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
+            AddActionsToStack(G, ctx, [StackData.enlistmentMercenaries()]);
             DrawCurrentProfit(G, ctx);
         }
     }
@@ -131,7 +130,7 @@ export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
         else {
             stack = [StackData.enlistmentMercenaries()];
         }
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStack(G, ctx, stack);
         DrawCurrentProfit(G, ctx);
     }
 };

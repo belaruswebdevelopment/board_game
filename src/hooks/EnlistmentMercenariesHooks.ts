@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
@@ -26,8 +26,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
-            && !player.actionsNum) {
+        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             let allMercenariesPlayed = true;
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
@@ -114,7 +113,7 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
         const mercenariesCount: number =
             player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card)).length;
         if (mercenariesCount) {
-            AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
+            AddActionsToStack(G, ctx, [StackData.enlistmentMercenaries()]);
             DrawCurrentProfit(G, ctx);
         }
     }
@@ -142,7 +141,7 @@ export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): voi
         } else {
             stack = [StackData.enlistmentMercenaries()];
         }
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStack(G, ctx, stack);
         DrawCurrentProfit(G, ctx);
     }
 };

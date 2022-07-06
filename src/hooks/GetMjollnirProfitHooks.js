@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
@@ -22,7 +22,7 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (!player.stack.length && !player.actionsNum) {
+        if (!player.stack.length) {
             return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
         }
     }
@@ -67,7 +67,7 @@ export const OnGetMjollnirProfitMove = (G, ctx) => {
  * @param ctx
  */
 export const OnGetMjollnirProfitTurnBegin = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.getMjollnirProfit()]);
+    AddActionsToStack(G, ctx, [StackData.getMjollnirProfit()]);
     DrawCurrentProfit(G, ctx);
 };
 /**

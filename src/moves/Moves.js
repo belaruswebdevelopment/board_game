@@ -4,7 +4,7 @@ import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, StageNames, SuitNames } from "../typescript/enums";
 /**
@@ -239,6 +239,6 @@ export const StartEnlistmentMercenariesMove = (G, ctx) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
+    AddActionsToStack(G, ctx, [StackData.enlistmentMercenaries()]);
 };
 //# sourceMappingURL=Moves.js.map

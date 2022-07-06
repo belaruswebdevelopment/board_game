@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
 import type { AutoActionArgsTypes, CanBeUndef, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
@@ -27,9 +27,9 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
         throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
     if (G.solo && ctx.currentPlayer === `1`) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHeroSoloBot()]);
+        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
     } else {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
+        AddActionsToStack(G, ctx, [StackData.pickHero()]);
     }
     AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
@@ -173,7 +173,7 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
             }
             UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStackAfterCurrent(G, ctx,
+            AddActionsToStack(G, ctx,
                 [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
             DrawCurrentProfit(G, ctx);
         } else if (upgradingCoinsValue <= 0) {
@@ -210,7 +210,7 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
             type = CoinTypeNames.Board;
             UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStackAfterCurrent(G, ctx,
+            AddActionsToStack(G, ctx,
                 [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
             DrawCurrentProfit(G, ctx);
         } else if (upgradingCoinsValue <= 0) {

@@ -6,7 +6,7 @@ import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction } from "./CampAutoActions";
@@ -108,7 +108,7 @@ export const PickCampCardAction = (G, ctx, cardId) => {
     G.camp.splice(cardId, 1, null);
     AddCampCardToCards(G, ctx, campCard);
     if (IsArtefactCard(campCard)) {
-        AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+        AddActionsToStack(G, ctx, campCard.stack, campCard);
         StartAutoAction(G, ctx, campCard.actions);
     }
     if (G.odroerirTheMythicCauldron) {
@@ -130,7 +130,7 @@ export const PickCampCardAction = (G, ctx, cardId) => {
 export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type) => {
     const value = UpgradeCoinActions(G, ctx, coinId, type);
     if (value === 3) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
+        AddActionsToStack(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
     }
 };
 //# sourceMappingURL=CampActions.js.map

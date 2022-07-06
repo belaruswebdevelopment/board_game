@@ -8,7 +8,7 @@ import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStack } from "./StackHelpers";
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
  * <p>Применения:</p>
@@ -95,7 +95,7 @@ export const PickCardOrActionCardActions = (G, ctx, card) => {
     else {
         if (IsRoyalOfferingCard(card)) {
             AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
-            AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
+            AddActionsToStack(G, ctx, card.stack, card);
             DiscardPickedCard(G, card);
         }
         else {

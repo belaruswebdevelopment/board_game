@@ -13,7 +13,7 @@ import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
  * @param stack Стэк действий.
  * @param card Карта.
  */
-export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
+export const AddActionsToStack = (G, ctx, stack, card) => {
     var _a, _b;
     let isValid = false;
     if (stack !== undefined) {
@@ -42,7 +42,7 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
             isValid = true;
         }
         if (isValid) {
-            for (let i = stack.length - 1; i >= 0; i--) {
+            for (let i = 0; i < stack.length; i++) {
                 const stackI = stack[i];
                 if (stackI === undefined) {
                     throw new Error(`В массиве стэка новых действий отсутствует действие с id '${i}'.`);

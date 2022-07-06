@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -26,7 +26,7 @@ export const CheckEndPlaceYludPhase = (G, ctx) => {
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (!player.stack.length && !player.actionsNum) {
+        if (!player.stack.length) {
             const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
             if (G.tierToEnd !== 0 && yludIndex === -1) {
                 throw new Error(`У игрока отсутствует обязательная карта героя '${HeroNames.Ylud}'.`);
@@ -147,7 +147,7 @@ export const OnPlaceYludMove = (G, ctx) => {
  * @param ctx
  */
 export const OnPlaceYludTurnBegin = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeYludHero()]);
+    AddActionsToStack(G, ctx, [StackData.placeYludHero()]);
     DrawCurrentProfit(G, ctx);
 };
 /**

@@ -8,7 +8,7 @@ import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
@@ -59,7 +59,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
                     }).length;
                     player.actionsNum =
                         G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
-                    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeTradingCoinsUline(player.actionsNum)]);
+                    AddActionsToStack(G, ctx, [StackData.placeTradingCoinsUline(player.actionsNum)]);
                     DrawCurrentProfit(G, ctx);
                 }
             }
@@ -84,7 +84,7 @@ export const CheckEndTavernsResolutionPhase = (G, ctx) => {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
-            && !player.actionsNum && CheckIfCurrentTavernEmpty(G, ctx)) {
+            && CheckIfCurrentTavernEmpty(G, ctx)) {
             return true;
         }
     }
@@ -182,7 +182,7 @@ export const OnTavernsResolutionMove = (G, ctx) => {
     if (!player.stack.length) {
         if (!G.solo && ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty(G, ctx) && !G.tavernCardDiscarded2Players) {
-            AddActionsToStackAfterCurrent(G, ctx, [StackData.discardTavernCard()]);
+            AddActionsToStack(G, ctx, [StackData.discardTavernCard()]);
             DrawCurrentProfit(G, ctx);
         }
         else {
@@ -190,7 +190,7 @@ export const OnTavernsResolutionMove = (G, ctx) => {
                 && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== StageNames.PlaceTradingCoinsUline) {
                 CheckAndStartUlineActionsOrContinue(G, ctx);
             }
-            if (!player.actionsNum) {
+            if (!player.stack.length) {
                 // TODO For solo mode `And if the zero value coin is on the purse, the Neutral clan also increases the value of the other coin in the purse, replacing it with the higher value available in the Royal Treasure.`
                 ActivateTrading(G, ctx);
             }
@@ -208,7 +208,7 @@ export const OnTavernsResolutionMove = (G, ctx) => {
  * @param ctx
  */
 export const OnTavernsResolutionTurnBegin = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
+    AddActionsToStack(G, ctx, [StackData.pickCard()]);
 };
 /**
  * <h3>Действия при завершении хода в фазе 'Посещение таверн'.</h3>
