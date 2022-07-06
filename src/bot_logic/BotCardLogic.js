@@ -155,7 +155,8 @@ const PotentialScoring = (G, playerId, card) => {
     let score = 0, suit;
     for (suit in suitsConfig) {
         if (IsDwarfCard(card) && card.suit === suit) {
-            score += suitsConfig[suit].scoringRule(player.cards[suit], suit, (_a = card.points) !== null && _a !== void 0 ? _a : 1);
+            score +=
+                suitsConfig[suit].scoringRule(player.cards[suit], suit, (_a = card.points) !== null && _a !== void 0 ? _a : 1);
         }
         else {
             score += suitsConfig[suit].scoringRule(player.cards[suit], suit);

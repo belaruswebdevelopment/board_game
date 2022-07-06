@@ -13,7 +13,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, StageNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, CoinTypes, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
@@ -41,39 +41,32 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
     } else {
         handCoins = player.handCoins;
     }
-    const ulinePlayerIndex: number =
-        Object.values(G.publicPlayers).findIndex((findPlayer: IPublicPlayer): boolean =>
-            CheckPlayerHasBuff(findPlayer, BuffNames.EveryTurn));
-    if (!G.solo && ulinePlayerIndex !== -1) {
-        if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[G.currentTavern];
-            if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета на месте текущей таверны с id '${G.currentTavern}'.`);
-            }
-            if (boardCoin !== null && (!IsCoin(boardCoin) || !boardCoin.isOpened)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета на месте текущей таверны с id '${G.currentTavern}'.`);
-            }
-            if (boardCoin?.isTriggerTrading) {
-                const tradingCoinPlacesLength: number =
-                    player.boardCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean =>
-                        index >= G.tavernsNum && coin === null).length;
-                if (tradingCoinPlacesLength > 0) {
-                    const handCoinsLength: number =
-                        handCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
-                            if (coin !== null && !IsCoin(coin)) {
-                                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${index}'.`);
-                            }
-                            return IsCoin(coin);
-                        }).length;
-                    const actionsNum: number =
-                        G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
-                    if (actionsNum > handCoinsLength) {
-                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
+    const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[G.currentTavern];
+    if (boardCoin === undefined) {
+        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета на месте текущей таверны с id '${G.currentTavern}'.`);
+    }
+    if (boardCoin !== null && (!IsCoin(boardCoin) || !boardCoin.isOpened)) {
+        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета на месте текущей таверны с id '${G.currentTavern}'.`);
+    }
+    if (boardCoin?.isTriggerTrading) {
+        const tradingCoinPlacesLength: number =
+            player.boardCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean =>
+                index >= G.tavernsNum && coin === null).length;
+        if (tradingCoinPlacesLength > 0) {
+            const handCoinsLength: number =
+                handCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
+                    if (coin !== null && !IsCoin(coin)) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${index}'.`);
                     }
-                    AddActionsToStack(G, ctx, [StackData.placeTradingCoinsUline()]);
-                    DrawCurrentProfit(G, ctx);
-                }
+                    return IsCoin(coin);
+                }).length;
+            const actionsNum: number =
+                G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
+            if (actionsNum > handCoinsLength) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
             }
+            AddActionsToStack(G, ctx, [StackData.placeTradingCoinsUline()]);
+            DrawCurrentProfit(G, ctx);
         }
     }
 };
@@ -205,8 +198,7 @@ export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
             AddActionsToStack(G, ctx, [StackData.discardTavernCard()]);
             DrawCurrentProfit(G, ctx);
         } else {
-            if (!G.solo
-                && ctx.activePlayers?.[Number(ctx.currentPlayer)] !== StageNames.PlaceTradingCoinsUline) {
+            if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 // TODO Need it every time or 1 time add 0-2 AddCoinsToPouch actions to stack
                 CheckAndStartUlineActionsOrContinue(G, ctx);
             }

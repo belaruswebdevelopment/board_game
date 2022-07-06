@@ -27,7 +27,8 @@ export const CheckEndPlaceYludPhase = (G: IMyGameState, ctx: Ctx): true | void =
         }
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                ctx.currentPlayer);
         }
         if (!player.stack.length) {
             const yludIndex: number =

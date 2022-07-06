@@ -23,7 +23,8 @@ export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boole
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                ctx.currentPlayer);
         }
         if (!player.stack.length) {
             return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);

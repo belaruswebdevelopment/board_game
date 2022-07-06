@@ -6,7 +6,7 @@ const App = Client({
     // debug: false,
     game: BoardGame,
     board: GameBoard,
-    numPlayers: 2,
+    numPlayers: 5,
 });
 
 export default App;

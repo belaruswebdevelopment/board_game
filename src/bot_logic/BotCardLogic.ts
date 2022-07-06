@@ -165,7 +165,8 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         suit: SuitTypes;
     for (suit in suitsConfig) {
         if (IsDwarfCard(card) && card.suit === suit) {
-            score += suitsConfig[suit].scoringRule(player.cards[suit], suit, card.points ?? 1);
+            score +=
+                suitsConfig[suit].scoringRule(player.cards[suit], suit, card.points ?? 1);
         } else {
             score += suitsConfig[suit].scoringRule(player.cards[suit], suit);
         }

@@ -22,7 +22,8 @@ export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardTyp
     if (card.suit !== null) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                ctx.currentPlayer);
         }
         if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)
             && GetBuffValue(G, ctx, BuffNames.MoveThrud) === card.suit) {

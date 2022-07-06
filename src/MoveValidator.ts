@@ -236,7 +236,8 @@ export const moveValidators: IMoveValidators = {
             }
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    ctx.currentPlayer);
             }
             return G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                 || (!G.campPicked && player.buffs.find((buff: IBuffs): boolean =>
@@ -557,7 +558,8 @@ export const moveValidators: IMoveValidators = {
             for (let j = 0; j < moveArguments.length; j++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                        ctx.currentPlayer);
                 }
                 const moveArgumentI: CanBeUndef<SuitTypes> = moveArguments[j];
                 if (moveArgumentI === undefined) {
@@ -592,7 +594,8 @@ export const moveValidators: IMoveValidators = {
             }
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    ctx.currentPlayer);
             }
             const mercenariesCount = player.campCards.filter((card: CampDeckCardTypes): boolean =>
                 IsMercenaryCampCard(card)).length;
@@ -690,7 +693,8 @@ export const moveValidators: IMoveValidators = {
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
                 privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    ctx.currentPlayer);
             }
             if (privatePlayer === undefined) {
                 throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -1381,7 +1385,8 @@ export const moveValidators: IMoveValidators = {
             }
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    ctx.currentPlayer);
             }
             return player.stack[0]?.coinId !== id.coinId && CoinUpgradeValidation(G, ctx, id);
         },

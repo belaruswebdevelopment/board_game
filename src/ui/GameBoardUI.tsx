@@ -248,7 +248,8 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Mov
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickDiscardCard) {
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    ctx.currentPlayer);
             }
             if (data !== undefined) {
                 DrawCard(data, boardCells, card, j, player, suit,
