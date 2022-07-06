@@ -1,4 +1,4 @@
-import { LogTypes } from "./typescript/enums";
+import { LogTypeNames } from "./typescript/enums";
 /**
  * <h3>Логирует данные.</h3>
  * <p>Применения:</p>

@@ -1,5 +1,5 @@
 import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -53,7 +53,7 @@ export const BuildHeroes = (configOptions, solo) => {
  * @param name Название.
  * @param description Описание.
  * @param game Игра/дополнение.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param active Взят ли герой.
@@ -63,7 +63,7 @@ export const BuildHeroes = (configOptions, solo) => {
  * @param stack Действия.
  * @returns Герой.
  */
-export const CreateHero = ({ type = RusCardTypes.Hero, name, description, game, suit = null, rank = null, points = null, active = true, buff, validators, actions, stack, } = {}) => ({
+export const CreateHero = ({ type = RusCardTypeNames.Hero, name, description, game, suit = null, rank = null, points = null, active = true, buff, validators, actions, stack, } = {}) => ({
     type,
     name,
     description,
@@ -78,6 +78,34 @@ export const CreateHero = ({ type = RusCardTypes.Hero, name, description, game, 
     stack,
 });
 /**
+ * <h3>Создание карты героя на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при размещении карты героя на поле игрока.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param suit Название фракции дворфов.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param name Название.
+ * @param game Игра/дополнение.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @param variants Варианты расположения карты героя на поле игрока.
+ * @returns Карта героя на поле игрока.
+ */
+export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, game, suit = null, rank = null, points = null, active = false, } = {}) => ({
+    type,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    active,
+});
+/**
  * <h3>Проверка, является ли объект картой героя.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -87,5 +115,17 @@ export const CreateHero = ({ type = RusCardTypes.Hero, name, description, game, 
  * @param card Карта.
  * @returns Является ли объект картой героя.
  */
-export const IsHeroCard = (card) => card !== null && card.active !== undefined;
+export const IsHeroCard = (card) => card !== null && card.active !== undefined && (`validators` in card);
+/**
+* <h3>Проверка, является ли объект картой героя на поле игрока.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>При проверках в функциях.</li>
+* </ol>
+*
+* @param card Карта.
+* @returns Является ли объект картой героя на поле игрока.
+*/
+export const IsHeroPlayerCard = (card) => card !== null
+    && card.active !== undefined && !(`validators` in card);
 //# sourceMappingURL=Hero.js.map

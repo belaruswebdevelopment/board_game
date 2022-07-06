@@ -8,7 +8,7 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 * </ol>
 *
 * @param player Игрок.
-* @param heroName Название фракции.
+* @param heroName Название фракции дворфов.
 * @returns Количество очков по фракциям дворфов.
 */
 export const SuitScoring = (cards, suit, potentialCardValue = 0, additionalScoring = false) => {

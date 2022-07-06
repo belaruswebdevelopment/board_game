@@ -1,7 +1,9 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
+import { ThrowMyError } from "../Error";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
+import { ErrorNames } from "../typescript/enums";
 import type { CanBeUndef, IConditions, IHeroCard, IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -31,7 +33,8 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
             if (validators.discardCard.suit !== suit) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                        ctx.currentPlayer);
                 }
                 const last: number = player.cards[suit].length - 1;
                 if (last >= 0) {
@@ -76,7 +79,8 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
                 if (key === `suit`) {
                     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                            ctx.currentPlayer);
                     }
                     ranks = player.cards[conditions[condition][key]].reduce(TotalRank, 0);
                 } else if (key === `value`) {

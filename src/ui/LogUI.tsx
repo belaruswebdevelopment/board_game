@@ -1,4 +1,4 @@
-import { LogTypes } from "../typescript/enums";
+import { LogTypeNames } from "../typescript/enums";
 import type { CanBeUndef, ILogData, IMyGameState } from "../typescript/interfaces";
 
 /**
@@ -17,19 +17,19 @@ export const DrawLogData = (G: IMyGameState): JSX.Element | null => {
         for (let i: number = G.logData.length - 1; i >= 0; i--) {
             const log: CanBeUndef<ILogData> = G.logData[i];
             if (log !== undefined) {
-                if (log.type === LogTypes.Private) {
+                if (log.type === LogTypeNames.Private) {
                     loggingData.push(
                         <li key={`Log ${i}`} className="text-black">
                             {log.value}
                         </li>
                     );
-                } else if (log.type === LogTypes.Game) {
+                } else if (log.type === LogTypeNames.Game) {
                     loggingData.push(
                         <li key={`Log ${i}`} className="text-blue-500">
                             {log.value}
                         </li>
                     );
-                } else if (log.type === LogTypes.Public) {
+                } else if (log.type === LogTypeNames.Public) {
                     loggingData.push(
                         <li key={`Log ${i}`} className="text-green-500">
                             {log.value}

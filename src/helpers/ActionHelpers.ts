@@ -1,8 +1,9 @@
 import type { Ctx } from "boardgame.io";
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { CreateOlwinDoubleNonPlacedCard } from "../SpecialCard";
-import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
-import type { CanBeUndef, IConfig, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, PickedCardTypes, SuitTypes } from "../typescript/interfaces";
+import { CreateOlwinDoubleNonPlacedCard, CreateThrudNonPlacedCard } from "../SpecialCard";
+import { CardNames, DrawNames, ErrorNames, HeroNames, LogTypeNames } from "../typescript/enums";
+import type { CanBeUndef, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, IStack, IThrudNonPlacedCard, PickedCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
@@ -20,34 +21,45 @@ import type { CanBeUndef, IConfig, IMyGameState, IOlwinDoubleNonPlacedCard, IPub
 export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const config: CanBeUndef<IConfig> = player.stack[0]?.config;
-    if (config !== undefined) {
-        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
-        StartOrEndActionStage(G, ctx, config);
-        if (G.expansions.thingvellir.active) {
-            if (config.drawName === DrawNames.Olwin) {
-                const pickedCard: PickedCardTypes = player.pickedCard;
+    const stack: CanBeUndef<IStack> = player.stack[0];
+    if (stack !== undefined) {
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
+        StartOrEndActionStage(G, ctx, stack);
+        const pickedCard: PickedCardTypes = player.pickedCard;
+        if (stack.drawName === DrawNames.PlaceThrudHero && pickedCard !== null
+            && pickedCard.name !== HeroNames.Thrud) {
+            // TODO Think about it...
+            const thrud: IThrudNonPlacedCard = CreateThrudNonPlacedCard();
+            player.pickedCard = thrud;
+        } else if (G.expansions.thingvellir.active) {
+            if (stack.drawName === DrawNames.PlaceOlwinDouble) {
+                let suit: SuitTypes | null | undefined;
                 if (pickedCard !== null
                     && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
-                    let suit: SuitTypes | null = null;
-                    if (`suit` in pickedCard) {
-                        suit = pickedCard.suit;
+                    if (!("suit" in pickedCard)) {
+                        throw new Error(`У выбранной карты отсутствует обязательный параметр 'suit'.`);
                     }
-                    // TODO Think about it...
-                    const olwinDouble: IOlwinDoubleNonPlacedCard = CreateOlwinDoubleNonPlacedCard({
-                        suit,
-                    });
-                    player.pickedCard = olwinDouble;
+                    suit = pickedCard.suit;
+                } else {
+                    suit = stack.suit;
+                    if (suit === undefined) {
+                        throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'suit'.`);
+                    }
                 }
-            } else if (config.drawName === DrawNames.EnlistmentMercenaries) {
+                // TODO Think about it...
+                const olwinDouble: IOlwinDoubleNonPlacedCard = CreateOlwinDoubleNonPlacedCard({
+                    suit,
+                });
+                player.pickedCard = olwinDouble;
+            } else if (stack.drawName === DrawNames.EnlistmentMercenaries) {
                 player.pickedCard = null;
             }
         }
-        player.actionsNum = config.number ?? 1;
-        if (config.name !== undefined) {
-            G.drawProfit = config.name;
+        player.actionsNum = stack.number ?? 1;
+        if (stack.name !== undefined) {
+            G.drawProfit = stack.name;
         } else {
             G.drawProfit = ``;
         }
@@ -65,14 +77,14 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param stack Стек действий героя.
  */
-const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
-    if (config.stageName !== undefined) {
+const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, stack: IStack): void => {
+    if (stack.stageName !== undefined) {
         ctx.events?.setActivePlayers({
-            currentPlayer: config.stageName,
+            currentPlayer: stack.stageName,
         });
-        AddDataToLog(G, LogTypes.Game, `Начало стадии '${config.stageName}'.`);
+        AddDataToLog(G, LogTypeNames.Game, `Начало стадии '${stack.stageName}'.`);
     } else if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         ctx.events?.endStage();
     }

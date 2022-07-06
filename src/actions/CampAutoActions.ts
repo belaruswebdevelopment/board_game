@@ -1,11 +1,12 @@
 import type { Ctx, StageArg } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, BuffNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
@@ -21,10 +22,10 @@ import type { CanBeUndef, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPl
 export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     DiscardTradingCoin(G, Number(ctx.currentPlayer));
-    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
+    AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
 
 /**
@@ -56,11 +57,11 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.Warrior].length) {
             value[i] = {
-                stage: Stages.DiscardSuitCard,
+                stage: StageNames.DiscardSuitCard,
             };
             AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
             results++;
@@ -90,7 +91,7 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);

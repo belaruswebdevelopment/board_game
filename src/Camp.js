@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { GameNames, RusCardTypes } from "./typescript/enums";
+import { GameNames, RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
  * <p>Применения:</p>
@@ -81,7 +81,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param name Название.
  * @param description Описание.
  * @param game Игра/дополнение.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param buff Баф.
@@ -90,7 +90,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param stack Действия.
  * @returns Карта лагеря артефакт.
  */
-export const CreateArtefactCampCard = ({ type = RusCardTypes.Artefact, tier, path, name, description, game = GameNames.Thingvellir, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
+export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact, tier, path, name, description, game = GameNames.Thingvellir, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
     type,
     tier,
     path,
@@ -117,10 +117,13 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.Artefact, tier, pat
  * @param path URL путь.
  * @param name Название.
  * @param game Игра/дополнение.
- * @param variants Варианты расположения карты наёмника.
+ * @param variants Варианты расположения карты наёмника на поле игрока.
+ * @param suit Название фракции дворфов.
+ * @param rank Шевроны.
+ * @param points Очки.
  * @returns Карта лагеря наёмник.
  */
-export const CreateMercenaryCampCard = ({ type = RusCardTypes.Mercenary, tier, path, name, game = GameNames.Thingvellir, variants, } = {}) => ({
+export const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary, tier, path, name, game = GameNames.Thingvellir, variants, } = {}) => ({
     type,
     tier,
     path,
@@ -128,26 +131,25 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.Mercenary, tier, p
     game,
     variants,
 });
-// TODO Rework it!?
 /**
- * <h3>Создание карты наёмника в руке игрока.</h3>
+ * <h3>Создание карты наёмника на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при выкладке карты наёмника в руку игрока.</li>
+ * <li>Происходит при размещении карты наёмника на поле игрока.</li>
  * </ol>
  *
  * @param type Тип.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
  * @param game Игра/дополнение.
  * @param tier Эпоха.
  * @param path URL путь.
- * @param variants Варианты расположения карты наёмника.
- * @returns Карта наёмника в руке игрока.
+ * @param variants Варианты расположения карты наёмника на поле игрока.
+ * @returns Карта наёмника на поле игрока.
  */
-export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.Mercenary_Player_Card, suit, rank = 1, points, name, game = GameNames.Thingvellir, tier, path, variants, } = {}) => ({
+export const CreateMercenaryPlayerCard = ({ type = RusCardTypeNames.Mercenary_Player_Card, suit, rank = 1, points, name, game = GameNames.Thingvellir, tier, path, } = {}) => ({
     type,
     suit,
     rank,
@@ -156,7 +158,6 @@ export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.Mercenary_Player
     game,
     tier,
     path,
-    variants,
 });
 /**
  * <h3>Проверка, является ли объект картой лагеря артефакта.</h3>
@@ -193,5 +194,6 @@ export const IsMercenaryCampCard = (card) => card !== null
  * @returns Является ли объект картой наёмника на поле игрока.
  */
 export const IsMercenaryPlayerCard = (card) => card !== null
-    && card.variants !== undefined && card.suit !== undefined;
+    && card.path !== undefined && card.suit !== undefined
+    && !(`validators` in card);
 //# sourceMappingURL=Camp.js.map

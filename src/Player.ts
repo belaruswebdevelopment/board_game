@@ -2,8 +2,9 @@ import type { Ctx } from "boardgame.io";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
+import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { BuffNames, Phases } from "./typescript/enums";
+import { BuffNames, ErrorNames, PhaseNames } from "./typescript/enums";
 import type { CanBeUndef, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
@@ -35,8 +36,7 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @param soloBot Является ли игрок соло ботом.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean, soloBot: boolean):
-    IPublicPlayer => {
+export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
     const cards: SuitPropertyTypes<PlayerCardTypes[]> = {} as SuitPropertyTypes<PlayerCardTypes[]>,
         giantTokenSuits: SuitPropertyTypes<boolean | null> = {} as SuitPropertyTypes<boolean | null>;
     let suit: SuitTypes;
@@ -45,12 +45,12 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
         giantTokenSuits[suit] = null;
     }
     let handCoins: ICoin[] = [];
-    if (!multiplayer && !soloBot) {
+    if (multiplayer) {
+        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
+    } else {
         handCoins = BuildCoins(initialPlayerCoinsConfig, {
             isInitial: true,
         });
-    } else {
-        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
     }
     return CreatePublicPlayer({
         nickname,
@@ -75,12 +75,12 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
 */
 export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
-    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
-        if (ctx.phase !== Phases.PlaceCoinsUline) {
+        if (ctx.phase !== PhaseNames.BidUline) {
             if (G.solo || (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));
             }

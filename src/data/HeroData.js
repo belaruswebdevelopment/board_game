@@ -119,11 +119,11 @@ const Dagda = {
     rank: 3,
     validators: {
         discardCard: {
-            suit: SuitNames.Blacksmith,
+            suit: SuitNames.Hunter,
             number: 2,
         },
     },
-    stack: [StackData.discardCardFromBoardDagda(2)],
+    stack: [StackData.discardCardFromBoardDagda()],
     scoringRule: () => 0,
 };
 /**
@@ -347,7 +347,7 @@ const Olwin = {
     description: `Прибавьте 9 победных очков к итоговому показателю храбрости. Как только вы призвали Ольвюна, сразу же возьмите две карты «Двойник Ольвюна» и положите их в две разные колонки своей армии. В результате размещения Двойников Ольвюна могут возникнуть новые линии 5 шевронов, в этом случае игрок может призвать новых героев. Призрачные двойники обладают значением храбрости 0, но могут стать дворфами любого воинского класса. Они могут быть отправлены в сброс эффектами карт «Дагда», «Бонфур», «Брисингамен» и «Хёфуд». Двойники Ольвюна не являются героями. Если карта «Двойник Ольвюна» единственная в колонке, то положите на неё жетон воинского класса для напоминания о воинском классе колонки.`,
     game: GameNames.Thingvellir,
     points: 9,
-    stack: [StackData.placeOlwinCards(2)],
+    stack: [StackData.placeOlwinCards()],
     scoringRule: () => 9,
 };
 /**
@@ -380,7 +380,7 @@ const Tarah = {
     points: 14,
     scoringRule: () => 0,
 };
-// TODO For SOlo Game `She is the most formidable opponent since she will always be present in your army to try to complete the guard lines and recruit the Dwerg brothers.During the countdown, she returns to the Command Zone and adds 13 points to the Final Bravery Value.`
+// TODO For Solo Game `She is the most formidable opponent since she will always be present in your army to try to complete the guard lines and recruit the Dwerg brothers.During the countdown, she returns to the Command Zone and adds 13 points to the Final Bravery Value.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -419,7 +419,6 @@ const Uline = {
     },
     scoringRule: () => 9,
 };
-// TODO For Solo Game `Will be positioned at the end of Age 1, before the Troop Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>

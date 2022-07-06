@@ -92,20 +92,44 @@ export const enum DrawNames {
     GetMjollnirProfit = `Get Mjollnir profit`,
     Hofud = `Hofud`,
     Holda = `Holda`,
-    Olwin = `Olwin`,
+    PlaceOlwinDouble = `Place Olwin Double`,
     PickCard = `Pick card or camp card`,
     PickCardByExplorerDistinction = `Pick card by Explorer distinction`,
+    PickCardByExplorerDistinctionSoloBot = `Pick card by Explorer distinction Solo Bot`,
     PickConcreteCoinToUpgrade = `Pick concrete coin to upgrade`,
     PickHero = `Pick hero card`,
     PickHeroSoloBot = `Pick hero card Solo Bot`,
     PlaceEnlistmentMercenaries = `Place Enlistment Mercenaries`,
     PlaceTradingCoinsUline = `Place Trading Coins Uline`,
+    PlaceYludHero = `Place Ylud`,
     StartOrPassEnlistmentMercenaries = `Start or Pass Enlistment Mercenaries`,
-    Thrud = `Thrud`,
+    PlaceThrudHero = `Place Thrud Hero`,
     UpgradeCoin = `Upgrade coin`,
     UpgradeCoinVidofnirVedrfolnir = `Upgrade coin Vidofnir Vedrfolnir`,
     UpgradeCoinWarriorDistinction = `Upgrade coin Warrior distinction`,
-    Ylud = `Ylud`,
+}
+
+export const enum ErrorNames {
+    CurrentTierDeckIsUndefined = `CurrentTierDeckIsUndefined`,
+    CurrentPublicPlayerIsUndefined = `CurrentPublicPlayerIsUndefined`,
+    CurrentSuitDistinctionPlayerIndexIsUndefined = `CurrentSuitDistinctionPlayerIndexIsUndefined`,
+    CurrentTavernConfigIsUndefined = `CurrentTavernConfigIsUndefined`,
+    CurrentTavernIsUndefined = `CurrentTavernIsUndefined`,
+    DeckIsUndefined = `DeckIsUndefined`,
+    DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined =
+    `DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined`,
+    DoNotDiscardCardFromCurrentTavernIfNoCardInTavern = `DoNotDiscardCardFromCurrentTavernIfNoCardInTavern`,
+    DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame = `DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame`,
+    NoCardsToDiscardWhenNoWinnerInExplorerDistinction = `NoCardsToDiscardWhenNoWinnerInExplorerDistinction`,
+    OnlyInSoloOrTwoPlayersGame = `OnlyInSoloOrTwoPlayersGame`,
+    PlayersCurrentSuitCardsMustHaveCardsForDistinction = `PlayersCurrentSuitCardsMustHaveCardsForDistinction`,
+    PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount =
+    `PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount`,
+    PublicPlayerWithCurrentIdIsUndefined = `PublicPlayerWithCurrentIdIsUndefined`,
+    SuitDistinctionMustBePresent = `SuitDistinctionMustBePresent`,
+    TavernCanNotBeRefilledBecauseNotEnoughCards = `TavernCanNotBeRefilledBecauseNotEnoughCards`,
+    TavernConfigWithCurrentIdIsUndefined = `TavernConfigWithCurrentIdIsUndefined`,
+    TavernWithCurrentIdIsUndefined = `TavernWithCurrentIdIsUndefined`,
 }
 
 /**
@@ -198,7 +222,7 @@ export const enum HeroNames {
 /**
  * <h3>Перечисление для типов логов.</h3>
  */
-export const enum LogTypes {
+export const enum LogTypeNames {
     Game = `game`,
     Private = `private`,
     Public = `public`,
@@ -251,30 +275,46 @@ export const enum MoveNames {
 /**
  * <h3>Перечисление для фаз игры.</h3>
  */
-export const enum Phases {
+export const enum PhaseNames {
     BrisingamensEndGame = `brisingamensEndGame`,
     ChooseDifficultySoloMode = `chooseDifficultySoloMode`,
-    EndTier = `endTier`,
+    PlaceYlud = `placeYlud`,
     EnlistmentMercenaries = `enlistmentMercenaries`,
-    GetDistinctions = `getDistinctions`,
+    TroopEvaluation = `troopEvaluation`,
     GetMjollnirProfit = `getMjollnirProfit`,
-    PickCards = `pickCards`,
-    PlaceCoins = `placeCoins`,
-    PlaceCoinsUline = `placeCoinsUline`,
+    TavernsResolution = `tavernsResolution`,
+    Bids = `bids`,
+    BidUline = `bidUline`,
 }
 
 /**
- * <h3>Перечисление для типов карт.</h3>
+ * <h3>Перечисление для фаз игры на русском.</h3>
  */
-export const enum RusCardTypes {
+export enum RusPhaseNames {
+    brisingamensEndGame = `brisingamensEndGame`,
+    chooseDifficultySoloMode = `Выбор сложности соло режима`,
+    placeYlud = `Поместить Илуд`,
+    enlistmentMercenaries = `enlistmentMercenaries`,
+    troopEvaluation = `Смотр войск`,
+    getMjollnirProfit = `getMjollnirProfit`,
+    tavernsResolution = `Посещение таверн`,
+    bids = `Ставки`,
+    bidUline = `Ставки Улина`,
+}
+
+/**
+ * <h3>Перечисление для типов карт на русском.</h3>
+ */
+export const enum RusCardTypeNames {
     Royal_Offering = `Королевская награда`,
     Artefact = `Артефакт`,
     Dwarf = `Дворф`,
     Giant = `Гигант`,
     God = `Бог`,
     Hero = `Герой`,
+    Hero_Player_Card = `Герой на поле игрока`,
     Mercenary = `Наёмник`,
-    Mercenary_Player_Card = `Наёмник на столе игрока`,
+    Mercenary_Player_Card = `Наёмник на поле игрока`,
     Mythical_Animal = `Мифическое животное`,
     Special = `Особая`,
     Valkyry = `Валькирия`,
@@ -294,7 +334,7 @@ export enum RusSuitNames {
 /**
  * <h3>Перечисление для стадий игры.</h3>
  */
-export const enum Stages {
+export const enum StageNames {
     AddCoinToPouch = `addCoinToPouch`,
     Default1 = `default1`,
     Default2 = `default2`,
@@ -307,8 +347,10 @@ export const enum Stages {
     PickConcreteCoinToUpgrade = `pickConcreteCoinToUpgrade`,
     PickDiscardCard = `pickDiscardCard`,
     PickDistinctionCard = `pickDistinctionCard`,
+    PickDistinctionCardSoloBot = `pickDistinctionCardSoloBot`,
     PickHero = `pickHero`,
     PickHeroSoloBot = `pickHeroSoloBot`,
+    PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
     PlaceOlwinCards = `placeOlwinCards`,
     PlaceTradingCoinsUline = `placeTradingCoinsUline`,
     PlaceThrudHero = `placeThrudHero`,

@@ -1,6 +1,7 @@
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { CreateOlwinDoubleNonPlacedCard } from "../SpecialCard";
-import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
+import { CreateOlwinDoubleNonPlacedCard, CreateThrudNonPlacedCard } from "../SpecialCard";
+import { CardNames, DrawNames, ErrorNames, HeroNames, LogTypeNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
  * <p>Применения:</p>
@@ -15,38 +16,51 @@ import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
  * @param ctx
  */
 export const DrawCurrentProfit = (G, ctx) => {
-    var _a, _b;
+    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
-    if (config !== undefined) {
-        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
-        StartOrEndActionStage(G, ctx, config);
-        if (G.expansions.thingvellir.active) {
-            if (config.drawName === DrawNames.Olwin) {
-                const pickedCard = player.pickedCard;
+    const stack = player.stack[0];
+    if (stack !== undefined) {
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
+        StartOrEndActionStage(G, ctx, stack);
+        const pickedCard = player.pickedCard;
+        if (stack.drawName === DrawNames.PlaceThrudHero && pickedCard !== null
+            && pickedCard.name !== HeroNames.Thrud) {
+            // TODO Think about it...
+            const thrud = CreateThrudNonPlacedCard();
+            player.pickedCard = thrud;
+        }
+        else if (G.expansions.thingvellir.active) {
+            if (stack.drawName === DrawNames.PlaceOlwinDouble) {
+                let suit;
                 if (pickedCard !== null
                     && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
-                    let suit = null;
-                    if (`suit` in pickedCard) {
-                        suit = pickedCard.suit;
+                    if (!("suit" in pickedCard)) {
+                        throw new Error(`У выбранной карты отсутствует обязательный параметр 'suit'.`);
                     }
-                    // TODO Think about it...
-                    const olwinDouble = CreateOlwinDoubleNonPlacedCard({
-                        suit,
-                    });
-                    player.pickedCard = olwinDouble;
+                    suit = pickedCard.suit;
                 }
+                else {
+                    suit = stack.suit;
+                    if (suit === undefined) {
+                        throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'suit'.`);
+                    }
+                }
+                // TODO Think about it...
+                const olwinDouble = CreateOlwinDoubleNonPlacedCard({
+                    suit,
+                });
+                player.pickedCard = olwinDouble;
             }
-            else if (config.drawName === DrawNames.EnlistmentMercenaries) {
+            else if (stack.drawName === DrawNames.EnlistmentMercenaries) {
                 player.pickedCard = null;
             }
         }
-        player.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
-        if (config.name !== undefined) {
-            G.drawProfit = config.name;
+        player.actionsNum = (_a = stack.number) !== null && _a !== void 0 ? _a : 1;
+        if (stack.name !== undefined) {
+            G.drawProfit = stack.name;
         }
         else {
             G.drawProfit = ``;
@@ -65,15 +79,15 @@ export const DrawCurrentProfit = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param stack Стек действий героя.
  */
-const StartOrEndActionStage = (G, ctx, config) => {
+const StartOrEndActionStage = (G, ctx, stack) => {
     var _a, _b, _c;
-    if (config.stageName !== undefined) {
+    if (stack.stageName !== undefined) {
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
-            currentPlayer: config.stageName,
+            currentPlayer: stack.stageName,
         });
-        AddDataToLog(G, LogTypes.Game, `Начало стадии '${config.stageName}'.`);
+        AddDataToLog(G, LogTypeNames.Game, `Начало стадии '${stack.stageName}'.`);
     }
     else if (((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== undefined) {
         (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.endStage();

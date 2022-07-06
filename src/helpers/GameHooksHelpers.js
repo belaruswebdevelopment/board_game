@@ -1,6 +1,7 @@
 import { IsMercenaryCampCard } from "../Camp";
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, HeroNames, LogTypes, Phases } from "../typescript/enums";
+import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";
@@ -16,20 +17,21 @@ import { CheckPickHero } from "./HeroHelpers";
  * @returns
  */
 export const AfterLastTavernEmptyActions = (G, ctx) => {
-    const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
-    if (deck === undefined) {
-        throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
+    const isLastRound = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
+        ((G.round === 2 || G.round === 5) ? true : false), currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
+    if (currentDeck === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.CurrentTierDeckIsUndefined);
     }
-    if (deck.length === 0) {
+    if (currentDeck.length === 0) {
         if (G.expansions.thingvellir.active) {
             return CheckEnlistmentMercenaries(G, ctx);
         }
         else {
-            return StartEndTierPhaseOrEndGameLastActions(G);
+            return StartEndTierPhaseOrEndGameLastActions(G, ctx);
         }
     }
     else {
-        return Phases.PlaceCoins;
+        return PhaseNames.Bids;
     }
 };
 /**
@@ -45,46 +47,46 @@ export const AfterLastTavernEmptyActions = (G, ctx) => {
 export const StartGetMjollnirProfitPhase = (G) => {
     const buffIndex = Object.values(G.publicPlayers).findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
     if (buffIndex !== -1) {
-        return Phases.GetMjollnirProfit;
+        return PhaseNames.GetMjollnirProfit;
     }
 };
 /**
- * <h3>Проверяет необходимость начала фазы 'placeCoinsUline' или фазы 'pickCards'.</h3>
+ * <h3>Проверяет необходимость начала фазы 'Ставки Улина' или фазы 'Посещение таверн'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При действиях, после которых может начаться фаза 'placeCoinsUline' или фаза 'pickCards'.</li>
+ * <li>При действиях, после которых может начаться фаза 'Ставки Улина' или фаза 'Посещение таверн'.</li>
  * </ol>
  *
  * @param G
  * @returns
  */
-export const StartPlaceCoinsUlineOrPickCardsPhase = (G) => {
+export const StartBidUlineOrTavernsResolutionPhase = (G) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
     if (!G.solo && ulinePlayerIndex !== -1) {
-        return Phases.PlaceCoinsUline;
+        return PhaseNames.BidUline;
     }
     else {
-        return Phases.PickCards;
+        return PhaseNames.TavernsResolution;
     }
 };
 /**
- * <h3>Проверяет необходимость начала фазы 'placeCoinsUline' или фазы 'pickCards' или фазы 'EndTier' или фазы конца игры.</h3>
+ * <h3>Проверяет необходимость начала фазы 'Ставки Улина' или фазы 'Посещение таверн' или фазы 'EndTier' или фазы конца игры.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При действиях, после которых может начаться фаза 'placeCoinsUline' или фаза 'pickCards' или фаза 'EndTier' или фазы конца игры.</li>
+ * <li>При действиях, после которых может начаться фаза 'Ставки Улина' или фаза 'Посещение таверн' или фаза 'EndTier' или фазы конца игры.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @returns
  */
-export const StartPlaceCoinsUlineOrPickCardsOrEndTierPhaseOrEndGameLastActionsPhase = (G, ctx) => {
+export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase = (G, ctx) => {
     const isLastTavern = G.tavernsNum - 1 === G.currentTavern;
     if (isLastTavern) {
         return AfterLastTavernEmptyActions(G, ctx);
     }
     else {
-        return StartPlaceCoinsUlineOrPickCardsPhase(G);
+        return StartBidUlineOrTavernsResolutionPhase(G);
     }
 };
 /**
@@ -95,34 +97,35 @@ export const StartPlaceCoinsUlineOrPickCardsOrEndTierPhaseOrEndGameLastActionsPh
  * </ol>
  *
  * @param G
- * @returns
+ * @param ctx
+ * @returns Название новой фазы игры.
  */
-export const StartEndGameLastActions = (G) => {
+export const StartEndGameLastActions = (G, ctx) => {
     const deck1 = G.secret.decks[0], deck2 = G.secret.decks[1];
     if (deck1 === undefined) {
-        throw new Error(`Отсутствует колода карт '1' эпохи.`);
+        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
     }
     if (deck2 === undefined) {
-        throw new Error(`Отсутствует колода карт '2' эпохи.`);
+        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
     }
     if (!deck1.length && deck2.length) {
-        return Phases.GetDistinctions;
+        return PhaseNames.TroopEvaluation;
     }
     else {
         if (G.expansions.thingvellir.active) {
             const brisingamensBuffIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
-                return Phases.BrisingamensEndGame;
+                return PhaseNames.BrisingamensEndGame;
             }
             const mjollnirBuffIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
-                return Phases.GetMjollnirProfit;
+                return PhaseNames.GetMjollnirProfit;
             }
         }
     }
 };
 /**
-* <h3>Проверка начала фазы 'endTier' или фазы конца игры.</h3>
+* <h3>Проверка начала фазы 'Поместить Труд' или фазы конца игры.</h3>
 * <p>Применения:</p>
 * <ol>
 * <li>После завершения всех карт в деке каждой эпохи.</li>
@@ -130,15 +133,16 @@ export const StartEndGameLastActions = (G) => {
 * </ol>
 *
 * @param G
+* @param ctx
 * @returns
 */
-export const StartEndTierPhaseOrEndGameLastActions = (G) => {
+export const StartEndTierPhaseOrEndGameLastActions = (G, ctx) => {
     const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
-        return Phases.EndTier;
+        return PhaseNames.PlaceYlud;
     }
     else {
-        return StartEndGameLastActions(G);
+        return StartEndGameLastActions(G, ctx);
     }
 };
 /**
@@ -156,7 +160,7 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
             count = true;
@@ -164,10 +168,10 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
         }
     }
     if (count) {
-        return Phases.EnlistmentMercenaries;
+        return PhaseNames.EnlistmentMercenaries;
     }
     else {
-        return StartEndTierPhaseOrEndGameLastActions(G);
+        return StartEndTierPhaseOrEndGameLastActions(G, ctx);
     }
 };
 /**
@@ -183,7 +187,7 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
 export const ClearPlayerPickedCard = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.pickedCard = null;
 };
@@ -213,7 +217,7 @@ export const EndGame = (ctx) => {
 export const EndTurnActions = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length && !player.actionsNum) {
         return true;
@@ -227,13 +231,14 @@ export const EndTurnActions = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @param ctx
  */
-export const RemoveThrudFromPlayerBoardAfterGameEnd = (G) => {
+export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     const thrudPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.MoveThrud));
     if (thrudPlayerIndex !== -1) {
         const player = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${thrudPlayerIndex}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, thrudPlayerIndex);
         }
         const playerCards = Object.values(player.cards).flat(), thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
@@ -242,7 +247,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G) => {
                 throw new Error(`У игрока с id '${thrudPlayerIndex}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
             }
             player.cards[thrud.suit].splice(thrudIndex, 1);
-            AddDataToLog(G, LogTypes.Game, `Герой '${HeroNames.Thrud}' игрока '${player.nickname}' уходит с игрового поля.`);
+            AddDataToLog(G, LogTypeNames.Game, `Герой '${HeroNames.Thrud}' игрока '${player.nickname}' уходит с игрового поля.`);
         }
     }
 };
@@ -257,7 +262,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G) => {
  * @param ctx
  */
 export const StartOrEndActions = (G, ctx) => {
-    var _a;
+    var _a, _b, _c, _d;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
@@ -268,7 +273,10 @@ export const StartOrEndActions = (G, ctx) => {
     }
     if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== undefined) {
         player.stack.shift();
-        CheckPickHero(G, ctx);
+        if ((((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.priority) === undefined)
+            || (((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.priority) !== undefined && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.priority) > 1)) {
+            CheckPickHero(G, ctx);
+        }
         DrawCurrentProfit(G, ctx);
     }
 };

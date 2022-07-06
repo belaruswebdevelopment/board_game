@@ -1,13 +1,13 @@
 import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { BuffNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { BuffNames, ErrorNames } from "../typescript/enums";
+import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -24,7 +24,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
             && !player.actionsNum) {
@@ -32,7 +32,8 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (playerI === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                        i);
                 }
                 allMercenariesPlayed = playerI.campCards.filter((card: CampDeckCardTypes): boolean =>
                     IsMercenaryCampCard(card)).length === 0;
@@ -61,7 +62,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
 export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
         return EndTurnActions(G, ctx);
@@ -79,14 +80,15 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
  * </ol>
  *
  * @param G
+ * @param ctx
  */
-export const EndEnlistmentMercenariesActions = (G: IMyGameState): void => {
+export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                 CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex === -1) {
-            RemoveThrudFromPlayerBoardAfterGameEnd(G);
+            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }
     }
     G.publicPlayersOrder = [];
@@ -106,7 +108,7 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
     StartOrEndActions(G, ctx);
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length) {
         const mercenariesCount: number =
@@ -131,10 +133,16 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
 export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length) {
-        AddEnlistmentMercenariesActionsToStack(G, ctx);
+        let stack: IStack[];
+        if (ctx.playOrderPos === 0) {
+            stack = [StackData.startOrPassEnlistmentMercenaries()];
+        } else {
+            stack = [StackData.enlistmentMercenaries()];
+        }
+        AddActionsToStackAfterCurrent(G, ctx, stack);
         DrawCurrentProfit(G, ctx);
     }
 };

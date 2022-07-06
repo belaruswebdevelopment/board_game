@@ -1,8 +1,9 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypeNames, Stages, SuitNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, StageNames, SuitNames } from "../typescript/enums";
 // TODO Check moves with solo mode!
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
@@ -18,13 +19,13 @@ import { CoinTypeNames, Stages, SuitNames } from "../typescript/enums";
  */
 export const ClickBoardCoinMove = (G, ctx, coinId) => {
     // TODO Add Place coins async
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default2, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -107,7 +108,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeCoin, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.UpgradeCoin, {
         coinId,
         type,
     });
@@ -141,7 +142,7 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
  * @returns
  */
 export const ClickConcreteCoinToUpgradeMove = (G, ctx, coinId, type) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickConcreteCoinToUpgrade, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickConcreteCoinToUpgrade, {
         coinId,
         type,
     });
@@ -163,13 +164,13 @@ export const ClickConcreteCoinToUpgradeMove = (G, ctx, coinId, type) => {
  * @returns
  */
 export const ClickHandCoinMove = (G, ctx, coinId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.selectedCoin = coinId;
 };
@@ -186,13 +187,13 @@ export const ClickHandCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickHandCoinUlineMove = (G, ctx, coinId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -245,13 +246,13 @@ export const ClickHandCoinUlineMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickHandTradingCoinUlineMove = (G, ctx, coinId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceTradingCoinsUline, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceTradingCoinsUline, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);

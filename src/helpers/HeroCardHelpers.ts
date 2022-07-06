@@ -1,8 +1,10 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
+import { ThrowMyError } from "../Error";
+import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, LogTypes } from "../typescript/enums";
-import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
+import type { CanBeUndef, IHeroCard, IHeroPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -18,14 +20,26 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * @param ctx
  * @param hero Герой.
  */
-export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
+export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard | IHeroPlayerCard): void => {
     if (hero.suit !== null) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        player.cards[hero.suit].push(hero);
-        AddDataToLog(G, LogTypes.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
+        const heroCard: IHeroPlayerCard = CreateHeroPlayerCard({
+            suit: hero.suit,
+            rank: hero.rank,
+            points: hero.points,
+            type: RusCardTypeNames.Hero_Player_Card,
+            name: hero.name,
+            game: hero.game,
+            description: hero.description,
+        });
+        player.cards[hero.suit].push(heroCard);
+        AddDataToLog(G, LogTypeNames.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
+        if (heroCard.name !== HeroNames.Thrud) {
+            CheckAndMoveThrudAction(G, ctx, heroCard);
+        }
     }
 };
 
@@ -46,7 +60,7 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
     if (G.solo && player === undefined && ctx.currentPlayer === `1`) {
         throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
     } else if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.pickedCard = hero;
     if (!hero.active) {
@@ -58,7 +72,7 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
         CheckValkyryRequirement(player, Number(ctx.currentPlayer),
             BuffNames.CountPickedHeroAmount);
     }
-    AddDataToLog(G, LogTypes.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 
 /**
@@ -76,7 +90,6 @@ export const AddHeroToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard)
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
     AddHeroCardToPlayerCards(G, ctx, hero);
     AddBuffToPlayer(G, ctx, hero.buff);
-    CheckAndMoveThrudAction(G, ctx, hero);
 };
 
 /**
@@ -94,7 +107,7 @@ export const AddHeroForDifficultyToSoloBotCards = (G: IMyGameState, ctx: Ctx, he
     const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1],
         player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (soloBotPublicPlayer === undefined) {
         throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
@@ -104,5 +117,5 @@ export const AddHeroForDifficultyToSoloBotCards = (G: IMyGameState, ctx: Ctx, he
     }
     hero.active = false;
     soloBotPublicPlayer.heroes.push(hero);
-    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
+    AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
 };

@@ -35,7 +35,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         soloGameDifficultyLevel = null,
         explorerDistinctionCardId = null,
         multiplayer = false,
-        solo = ctx.numPlayers === 1,
+        // TODO Rework it!
+        solo = ctx.numPlayers === 2,
         odroerirTheMythicCauldron = false,
         log = true,
         debug = false,
@@ -61,7 +62,6 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             campDecks: [],
             decks: [],
             // TODO Add Idavoll deck length info on main page?
-            // TODO Idavoll
             mythologicalCreatureDecks: [],
         };
     if (solo && multiplayer) {
@@ -78,7 +78,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         discardMythologicalCreaturesCards: MythologicalCreatureDeckCardTypes[] = [],
         discardSpecialCards: ISpecialCard[] = [],
         campDeckLength: [number, number] = [0, 0],
-        camp: CampDeckCardTypes[] = [];
+        camp: CampDeckCardTypes[] = Array(campNum).fill(null);
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
@@ -98,8 +98,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const deckLength: [number, number] = [0, 0];
     for (let i = 0; i < tierToEnd; i++) {
+        secret.decks[i] = [];
         const data: IPlayersNumberTierCardData = {
-            players: ctx.numPlayers + Number(solo),
+            players: ctx.numPlayers,
             tier: i,
         },
             dwarfDeck: IDwarfCard[] = BuildDwarfCards(data),
@@ -124,7 +125,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         taverns: (DeckCardTypes[] | MythologicalCreatureDeckCardTypes[])[] = [],
         tavernsNum = 3,
         currentTavern = -1,
-        drawSize: number = (solo || ctx.numPlayers === 2) ? 3 : ctx.numPlayers,
+        drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers,
         deck0: CanBeUndef<DeckCardTypes[]> = secret.decks[0];
     if (deck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
@@ -144,8 +145,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         publicPlayers: IPublicPlayers = {},
         publicPlayersOrder: string[] = [],
         exchangeOrder: number[] = [],
-        priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers + Number(solo));
-    for (let i = 0; i < ctx.numPlayers + Number(solo); i++) {
+        priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, solo);
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex: number = solo ? 0 : Math.floor(Math.random() * priorities.length),
             priority: CanBeUndef<IPriority> = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
@@ -154,17 +155,17 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         players[i] = BuildPlayer();
         const soloBot: boolean = solo && i === 1;
         publicPlayers[i] =
-            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan` + i, priority, multiplayer, soloBot);
+            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan` + i, priority, multiplayer);
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
-            players: ctx.numPlayers + Number(solo),
+            players: ctx.numPlayers,
         }),
         averageCards: SuitPropertyTypes<IDwarfCard> = {} as SuitPropertyTypes<IDwarfCard>;
     for (suit in suitsConfig) {
         averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
-            players: ctx.numPlayers + Number(solo),
+            players: ctx.numPlayers,
             tier: 0,
         });
     }
@@ -185,7 +186,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const botData: IBotData = {
         allCoinsOrder,
-        allPicks: GetAllPicks(tavernsNum, ctx.numPlayers + Number(solo)),
+        allPicks: GetAllPicks(tavernsNum, ctx.numPlayers),
         maxIter: 1000,
         deckLength: cardDeck0.length,
     };

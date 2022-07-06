@@ -1,8 +1,9 @@
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
+import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { BuffNames, Phases } from "./typescript/enums";
+import { BuffNames, ErrorNames, PhaseNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
  * <p>Применения:</p>
@@ -31,7 +32,7 @@ export const BuildPlayer = () => CreatePlayer({
  * @param soloBot Является ли игрок соло ботом.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname, priority, multiplayer, soloBot) => {
+export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
     const cards = {}, giantTokenSuits = {};
     let suit;
     for (suit in suitsConfig) {
@@ -39,13 +40,13 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer, soloBot) => {
         giantTokenSuits[suit] = null;
     }
     let handCoins = [];
-    if (!multiplayer && !soloBot) {
+    if (multiplayer) {
+        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
+    }
+    else {
         handCoins = BuildCoins(initialPlayerCoinsConfig, {
             isInitial: true,
         });
-    }
-    else {
-        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
     }
     return CreatePublicPlayer({
         nickname,
@@ -69,12 +70,12 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer, soloBot) => {
 */
 export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
-    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
-        if (ctx.phase !== Phases.PlaceCoinsUline) {
+        if (ctx.phase !== PhaseNames.BidUline) {
             if (G.solo || (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));
             }

@@ -1,9 +1,8 @@
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypeNames, LogTypes } from "../typescript/enums";
-// TODO Done it for Grid in Solo mode at the start of the game (return coin closed for player!)
-// TODO For Solo mode `When trading or exchanging coins, always select the coin with the lowest visible value to increase.`
+import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
  * <p>Применения:</p>
@@ -21,7 +20,7 @@ import { BuffNames, CoinTypeNames, LogTypes } from "../typescript/enums";
 export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, type) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -100,15 +99,15 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
             }
         }
     }
-    AddDataToLog(G, LogTypes.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
+    AddDataToLog(G, LogTypeNames.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
     if (upgradedCoin !== null) {
-        AddDataToLog(G, LogTypes.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
+        AddDataToLog(G, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
         if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
             ChangeIsOpenedCoinStatus(upgradedCoin, true);
         }
-        if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) && type === CoinTypeNames.Hand)
-            || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypeNames.Board
-                && isTrading)) {
+        if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2))
+            && type === CoinTypeNames.Hand) || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
+            && type === CoinTypeNames.Board && isTrading)) {
             if (isTrading) {
                 const handCoinId = player.handCoins.indexOf(null);
                 if (G.multiplayer) {
@@ -124,14 +123,14 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
                 }
                 handCoins[upgradingCoinId] = upgradedCoin;
             }
-            AddDataToLog(G, LogTypes.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
+            AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
         }
         else if (type === CoinTypeNames.Board) {
             if (G.multiplayer) {
                 boardCoins[upgradingCoinId] = upgradedCoin;
             }
             player.boardCoins[upgradingCoinId] = upgradedCoin;
-            AddDataToLog(G, LogTypes.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
+            AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
         }
         if (!upgradingCoin.isInitial) {
             let returningIndex = 0;
@@ -146,11 +145,11 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
                 }
             }
             G.marketCoins.splice(returningIndex, 0, upgradingCoin);
-            AddDataToLog(G, LogTypes.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
+            AddDataToLog(G, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
         }
     }
     else {
-        AddDataToLog(G, LogTypes.Private, `На рынке монет нет доступных монет для обмена.`);
+        AddDataToLog(G, LogTypeNames.Private, `На рынке монет нет доступных монет для обмена.`);
     }
 };
 //# sourceMappingURL=CoinActions.js.map

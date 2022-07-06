@@ -2,8 +2,9 @@ import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { CreateDwarfCard, IsDwarfCard } from "../Dwarf";
+import { ThrowMyError } from "../Error";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { GameNames } from "../typescript/enums";
+import { ErrorNames, GameNames } from "../typescript/enums";
 import type { CanBeUndef, DeckCardTypes, IDwarfCard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
@@ -55,7 +56,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     if (IsDwarfCard(compareCard)) {
         const deckTier1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[0];
         if (deckTier1 === undefined) {
-            throw new Error(`В массиве колод карт отсутствует колода '1' эпохи.`);
+            return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
         }
         if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
@@ -63,7 +64,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     }
     const deckTier2: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
     if (deckTier2 === undefined) {
-        throw new Error(`В массиве колод карт отсутствует колода '2' эпохи.`);
+        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
     }
     if (deckTier2.length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>

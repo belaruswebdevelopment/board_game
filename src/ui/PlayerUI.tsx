@@ -4,13 +4,14 @@ import { IsMercenaryCampCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsHeroCard } from "../Hero";
 import { IsGodCard } from "../MythologicalCreature";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BuffNames, CardNames, CoinTypeNames, HeroNames, MoveNames, MoveValidatorNames, Phases, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
+import { BuffNames, CardNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, CoinTypes, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveFunctionTypes, MythologicalCreatureCommandZoneCardTypes, PickedCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
@@ -65,14 +66,14 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 throw new Error(`Не существует валидатора '${validatorName}'.`);
         }
     }
-    for (let p = 0; p < ctx.numPlayers + Number(G.solo); p++) {
+    for (let p = 0; p < ctx.numPlayers; p++) {
         const playerRows: JSX.Element[] = [],
             playerHeaders: JSX.Element[] = [],
             playerHeadersCount: JSX.Element[] = [],
             player: CanBeUndef<IPublicPlayer> = G.publicPlayers[p],
             stage: CanBeUndef<string> = ctx.activePlayers?.[p];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${p}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
         }
         const pickedCard: PickedCardTypes = player.pickedCard;
         let suitTop: SuitTypes;
@@ -89,7 +90,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 }
             }
             if ((!G.solo || (G.solo && p === 0)) && p === Number(ctx.currentPlayer)
-                && ctx.phase === Phases.GetMjollnirProfit) {
+                && ctx.phase === PhaseNames.GetMjollnirProfit) {
                 if (data !== undefined) {
                     const suitArg: SuitTypes = suitTop;
                     DrawSuit(data, playerHeaders, suitArg, player, MoveNames.GetMjollnirProfitMove);
@@ -154,7 +155,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                     last: number = player.cards[suit].length - 1;
                 if (card !== undefined) {
                     isDrawRow = true;
-                    if (p !== Number(ctx.currentPlayer) && stage === Stages.DiscardSuitCard
+                    if (p !== Number(ctx.currentPlayer) && stage === StageNames.DiscardSuitCard
                         && suit === SuitNames.Warrior && !IsHeroCard(card)) {
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit,
@@ -167,15 +168,15 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                             moveMainArgs.cards.push(i);
                         }
                     } else if (p === Number(ctx.currentPlayer) && last === i
-                        && stage === Stages.DiscardBoardCard && !IsHeroCard(card)) {
+                        && stage === StageNames.DiscardBoardCard && !IsHeroCard(card)) {
                         const stack: CanBeUndef<IStack> = player.stack[0];
                         if (stack === undefined) {
                             throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
                         }
-                        const configSuit: CanBeUndef<SuitTypes | null> = stack.config?.suit,
+                        const stackSuit: CanBeUndef<SuitTypes | null> = stack.suit,
                             pickedCard: PickedCardTypes = player.pickedCard;
-                        if (suit !== configSuit
-                            && !(configSuit === SuitNames.Hunter && player.actionsNum === 1
+                        if (suit !== stackSuit
+                            && !(stackSuit === SuitNames.Hunter && player.actionsNum === 1
                                 && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
                             if (data !== undefined) {
                                 const suitArg: SuitTypes = suit;
@@ -195,7 +196,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                             }
                         }
                     } else if (p === Number(ctx.currentPlayer)
-                        && ctx.phase === Phases.BrisingamensEndGame && !IsHeroCard(card)) {
+                        && ctx.phase === PhaseNames.BrisingamensEndGame && !IsHeroCard(card)) {
                         if (data !== undefined) {
                             const suitArg: SuitTypes = suit;
                             DrawCard(data, playerCells, card, id, player, suit,
@@ -217,29 +218,32 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                         }
                     }
                 } else if (p === Number(ctx.currentPlayer) && (last + 1) === i && pickedCard !== null
-                    && (((ctx.phase === Phases.EndTier || ctx.phase === Phases.EnlistmentMercenaries)
-                        && ctx.activePlayers === null) || stage === Stages.PlaceThrudHero
-                        || stage === Stages.PlaceOlwinCards)) {
+                    && (((ctx.phase === PhaseNames.PlaceYlud || ctx.phase === PhaseNames.EnlistmentMercenaries)
+                        && (ctx.activePlayers === null || ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
+                            StageNames.PlaceEnlistmentMercenaries)) || stage === StageNames.PlaceThrudHero
+                        || stage === StageNames.PlaceOlwinCards)) {
                     let cardVariants: CanBeUndef<VariantType> = undefined;
-                    if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
+                    if (ctx.phase === PhaseNames.EnlistmentMercenaries
+                        && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
+                        StageNames.PlaceEnlistmentMercenaries) {
                         if (!IsMercenaryCampCard(pickedCard)) {
-                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
+                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
                         }
                         cardVariants = pickedCard.variants[suit];
                         if (cardVariants !== undefined && cardVariants.suit !== suit) {
                             throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
                         }
-                    } else {
-                        if (!("suit" in pickedCard)) {
-                            throw new Error(`У выбранной карты отсутствует обязательный параметр 'suit'.`);
-                        }
                     }
                     if (data !== undefined) {
                         // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
+                        // TODO Can Ylud be placed in old place because of "suit !== pickedCard.suit"? Thrud can be placed same suit in solo game!
                         let action: MoveFunctionTypes;
-                        if ((!IsMercenaryCampCard(pickedCard) && suit !== pickedCard.suit)
-                            || (IsMercenaryCampCard(pickedCard) && cardVariants !== undefined
-                                && suit === cardVariants.suit)) {
+                        // TODO Check Thrud moving
+                        if ((!IsMercenaryCampCard(pickedCard)
+                            && (G.solo || (!G.solo && (pickedCard.name !== CardNames.OlwinsDouble
+                                || (pickedCard.name === CardNames.OlwinsDouble && "suit" in pickedCard
+                                    && suit !== pickedCard.suit))))) || (IsMercenaryCampCard(pickedCard)
+                                        && cardVariants !== undefined && suit === cardVariants.suit)) {
                             switch (pickedCard.name) {
                                 case HeroNames.Thrud:
                                     action = data.moves.PlaceThrudHeroMove!;
@@ -251,7 +255,9 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                                     action = data.moves.PlaceOlwinCardMove!;
                                     break;
                                 default:
-                                    if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
+                                    if (ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
+                                        StageNames.PlaceEnlistmentMercenaries
+                                        && Number(ctx.currentPlayer) === p) {
                                         action = data.moves.PlaceEnlistmentMercenariesMove!;
                                         break;
                                     } else {
@@ -314,7 +320,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                     const campCard: CanBeUndef<CampDeckCardTypes> = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
-                        if (IsMercenaryCampCard(campCard) && ctx.phase === Phases.EnlistmentMercenaries
+                        if (IsMercenaryCampCard(campCard) && ctx.phase === PhaseNames.EnlistmentMercenaries
                             && ctx.activePlayers === null && Number(ctx.currentPlayer) === p
                             && pickedCard === null) {
                             if (data !== undefined) {
@@ -404,6 +410,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
     }
 };
 
+// TODO Check all solo bot coins opened during Troop Evaluation phase to upgrade coin!
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
  * <p>Применения:</p>
@@ -423,18 +430,18 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
     const playersBoardsCoins: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] = [];
     let moveName: CanBeUndef<MoveNames>;
-    for (let p = 0; p < ctx.numPlayers + Number(G.solo); p++) {
+    for (let p = 0; p < ctx.numPlayers; p++) {
         const stage: CanBeUndef<string> = ctx.activePlayers?.[p];
         switch (ctx.phase) {
-            case Phases.PlaceCoins:
+            case PhaseNames.Bids:
                 moveName = MoveNames.ClickBoardCoinMove;
                 break;
             default:
-                if (stage === Stages.UpgradeCoin) {
+                if (stage === StageNames.UpgradeCoin) {
                     moveName = MoveNames.ClickCoinToUpgradeMove;
-                } else if (stage === Stages.PickConcreteCoinToUpgrade) {
+                } else if (stage === StageNames.PickConcreteCoinToUpgrade) {
                     moveName = MoveNames.ClickConcreteCoinToUpgradeMove;
-                } else if (stage === Stages.UpgradeVidofnirVedrfolnirCoin) {
+                } else if (stage === StageNames.UpgradeVidofnirVedrfolnirCoin) {
                     moveName = MoveNames.UpgradeCoinVidofnirVedrfolnirMove;
                 } else {
                     moveName = undefined;
@@ -444,7 +451,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[p],
             privatePlayer: CanBeUndef<IPlayer> = G.players[p];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${p}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
         }
         const playerRows: JSX.Element[] = [],
             playerHeaders: JSX.Element[] = [],
@@ -456,7 +463,8 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                     if (i === 0) {
                         const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[t];
                         if (currentTavernConfig === undefined) {
-                            throw new Error(`Отсутствует конфиг таверны с id '${t}'.`);
+                            return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined,
+                                t);
                         }
                         playerHeaders.push(
                             <th key={`Tavern ${currentTavernConfig.name}`}>
@@ -497,7 +505,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                         throw new Error(`В массиве монет игрока на столе отсутствует монета с id '${id}'.`);
                     }
                     if (publicBoardCoin !== null) {
-                        if (ctx.phase === Phases.PlaceCoins && Number(ctx.currentPlayer) === p
+                        if (ctx.phase === PhaseNames.Bids && Number(ctx.currentPlayer) === p
                             && ((G.multiplayer && privateBoardCoin !== undefined)
                                 || (!G.multiplayer && publicBoardCoin !== undefined))) {
                             if (data !== undefined) {
@@ -516,11 +524,11 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                 (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(id);
                             }
                         } else if (Number(ctx.currentPlayer) === p && IsCoin(publicBoardCoin)
-                            && !publicBoardCoin.isTriggerTrading && ((stage === Stages.UpgradeCoin)
-                                || (stage === Stages.PickConcreteCoinToUpgrade
-                                    && player.stack[0]?.config?.coinValue === publicBoardCoin.value)
-                                || (stage === Stages.UpgradeVidofnirVedrfolnirCoin
-                                    && player.stack[0]?.config?.coinId !== id && id >= G.tavernsNum))) {
+                            && !publicBoardCoin.isTriggerTrading && ((stage === StageNames.UpgradeCoin)
+                                || (stage === StageNames.PickConcreteCoinToUpgrade
+                                    && player.stack[0]?.coinValue === publicBoardCoin.value)
+                                || (stage === StageNames.UpgradeVidofnirVedrfolnirCoin
+                                    && player.stack[0]?.coinId !== id && id >= G.tavernsNum))) {
                             if (data !== undefined) {
                                 if (G.multiplayer && !publicBoardCoin.isOpened) {
                                     throw new Error(`В массиве монет игрока на столе не может быть закрыта ранее открытая монета с id '${id}'.`);
@@ -538,7 +546,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                             }
                         } else {
                             if (G.winner.length || (G.solo && p === 0)
-                                || (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern >= t)) {
+                                || (ctx.phase !== PhaseNames.Bids && i === 0 && G.currentTavern >= t)) {
                                 if (data !== undefined) {
                                     if (!IsCoin(publicBoardCoin)) {
                                         throw new Error(`Монета с id '${id}' на столе текущего игрока не может быть закрытой для него.`);
@@ -555,7 +563,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                             throw new Error(`В массиве монет игрока на столе не может быть закрыта для других игроков ранее открытая монета с id '${id}'.`);
                                         }
                                         if (data !== undefined) {
-                                            if (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern < t) {
+                                            if (ctx.phase !== PhaseNames.Bids && i === 0 && G.currentTavern < t) {
                                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id,
                                                     player);
                                             } else {
@@ -565,9 +573,9 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                         }
                                     } else {
                                         if (Number(ctx.currentPlayer) === p && IsCoin(privateBoardCoin)
-                                            && !privateBoardCoin.isTriggerTrading && ((stage === Stages.UpgradeCoin)
-                                                || (stage === Stages.PickConcreteCoinToUpgrade
-                                                    && player.stack[0]?.config?.coinValue ===
+                                            && !privateBoardCoin.isTriggerTrading && ((stage === StageNames.UpgradeCoin)
+                                                || (stage === StageNames.PickConcreteCoinToUpgrade
+                                                    && player.stack[0]?.coinValue ===
                                                     privateBoardCoin.value))) {
                                             if (data !== undefined) {
                                                 DrawCoin(data, playerCells, `hidden-coin`,
@@ -607,7 +615,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                             }
                         }
                     } else {
-                        if (ctx.phase === Phases.PlaceCoins && player.selectedCoin !== null
+                        if (ctx.phase === PhaseNames.Bids && player.selectedCoin !== null
                             && ((!G.multiplayer && (Number(ctx.currentPlayer) === p))
                                 || (G.multiplayer && (Number(ctx.currentPlayer) === p)))) {
                             if (data !== undefined) {
@@ -688,23 +696,23 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
     const playersHandsCoins: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] = [];
     let moveName: CanBeUndef<MoveNames>;
-    for (let p = 0; p < ctx.numPlayers + Number(G.solo); p++) {
+    for (let p = 0; p < ctx.numPlayers; p++) {
         const stage: CanBeUndef<string> = ctx.activePlayers?.[p];
         switch (ctx.phase) {
-            case Phases.PlaceCoins:
+            case PhaseNames.Bids:
                 moveName = MoveNames.ClickHandCoinMove;
                 break;
-            case Phases.PlaceCoinsUline:
+            case PhaseNames.BidUline:
                 moveName = MoveNames.ClickHandCoinUlineMove;
                 break;
             default:
-                if (stage === Stages.UpgradeCoin) {
+                if (stage === StageNames.UpgradeCoin) {
                     moveName = MoveNames.ClickCoinToUpgradeMove;
-                } else if (stage === Stages.PlaceTradingCoinsUline) {
+                } else if (stage === StageNames.PlaceTradingCoinsUline) {
                     moveName = MoveNames.ClickHandTradingCoinUlineMove;
-                } else if (stage === Stages.PickConcreteCoinToUpgrade) {
+                } else if (stage === StageNames.PickConcreteCoinToUpgrade) {
                     moveName = MoveNames.ClickConcreteCoinToUpgradeMove;
-                } else if (stage === Stages.AddCoinToPouch) {
+                } else if (stage === StageNames.AddCoinToPouch) {
                     moveName = MoveNames.AddCoinToPouchMove;
                 } else {
                     moveName = undefined;
@@ -715,7 +723,7 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
             privatePlayer: CanBeUndef<IPlayer> = G.players[p],
             playerCells: JSX.Element[] = [];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${p}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
         }
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < 5; j++) {
@@ -725,7 +733,8 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                     throw new Error(`В массиве монет игрока в руке отсутствует монета с id '${j}'.`);
                 }
                 if ((G.multiplayer && privateHandCoin !== undefined && IsCoin(privateHandCoin))
-                    || (!G.multiplayer && (!G.solo || G.solo && p === 0) && Number(ctx.currentPlayer) === p
+                    || (!G.multiplayer && ((!G.solo && Number(ctx.currentPlayer) === p)
+                        || (G.solo && (p === 0 || ctx.phase === PhaseNames.ChooseDifficultySoloMode)))
                         && IsCoin(publicHandCoin))) {
                     let coinClasses = `border-2`;
                     if (player.selectedCoin === j) {
@@ -736,8 +745,9 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                         throw new Error(`В массиве монет игрока в руке должна быть открыта монета с id '${j}'.`);
                     }
                     if (Number(ctx.currentPlayer) === p
-                        && (ctx.phase === Phases.PlaceCoins || ctx.phase === Phases.PlaceCoinsUline
-                            || (stage === Stages.PlaceTradingCoinsUline) || (!G.solo && stage === Stages.AddCoinToPouch
+                        && (ctx.phase === PhaseNames.Bids || ctx.phase === PhaseNames.BidUline
+                            || (stage === StageNames.PlaceTradingCoinsUline)
+                            || (!G.solo && stage === StageNames.AddCoinToPouch
                                 && CheckPlayerHasBuff(player, BuffNames.EveryTurn)))) {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses,
@@ -748,15 +758,16 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                             || validatorName === MoveValidatorNames.AddCoinToPouchMoveValidator) {
                             (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(j);
                         }
-                    } else if (!G.solo && Number(ctx.currentPlayer) === p
-                        && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
-                        && (stage === Stages.UpgradeCoin || (stage === Stages.PickConcreteCoinToUpgrade
-                            && player.stack[0]?.config?.coinValue === handCoin.value))) {
+                    } else if (((!G.solo && Number(ctx.currentPlayer) === p
+                        && CheckPlayerHasBuff(player, BuffNames.EveryTurn))
+                        || (G.solo && Number(ctx.currentPlayer) === p && ctx.currentPlayer === `1`
+                            && ctx.phase === PhaseNames.ChooseDifficultySoloMode))
+                        && (stage === StageNames.UpgradeCoin || (stage === StageNames.PickConcreteCoinToUpgrade
+                            && player.stack[0]?.coinValue === handCoin.value))) {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses,
                                 null, moveName, j, CoinTypeNames.Hand);
-                        } else if ((!(G.solo && ctx.currentPlayer === `1`) &&
-                            validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator)
+                        } else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
                             || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                             (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]).push({
                                 coinId: j,
@@ -776,14 +787,17 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                     }
                 } else {
                     // TODO Add Throw errors to all UI files
-                    if (!G.multiplayer && ((!G.solo && IsCoin(publicHandCoin) && !publicHandCoin.isOpened)
-                        || (G.solo && p === 1))) {
+                    if (!G.multiplayer && !G.solo && IsCoin(publicHandCoin) && !publicHandCoin.isOpened) {
                         if (data !== undefined) {
                             const handCoin: PublicPlayerCoinTypes = privateHandCoin ?? publicHandCoin;
-                            if (!IsCoin(handCoin)) {
-                                throw new Error(`В массиве монет игрока в руке должна быть открыта для текущего игрока монета с id '${j}'.`);
+                            if (!G.multiplayer && !G.solo && !IsCoin(handCoin)) {
+                                throw new Error(`В массиве монет игрока в руке должна быть открыта для текущего игрока с id '${p}' монета с id '${j}'.`);
                             }
                             DrawCoin(data, playerCells, `back`, handCoin, j, player);
+                        }
+                    } else if (G.solo && p === 1 && !IsCoin(publicHandCoin) && publicHandCoin !== null) {
+                        if (data !== undefined) {
+                            DrawCoin(data, playerCells, `back`, publicHandCoin, j, player);
                         } else if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator) {
                             (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(j);
                         }

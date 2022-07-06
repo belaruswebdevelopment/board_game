@@ -1,5 +1,7 @@
+import type { Ctx } from "boardgame.io";
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { ErrorNames, LogTypeNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPriority, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -10,16 +12,17 @@ import type { CanBeUndef, IMyGameState, IPriority, IPublicPlayer } from "../type
  * </ol>
  *
  * @param G
+ * @param ctx
  * @param playerId Id выбранного игрока.
  * @returns Имеет ли игрок наименьший кристалл.
  */
-export const HasLowestPriority = (G: IMyGameState, playerId: number): boolean => {
+export const HasLowestPriority = (G: IMyGameState, ctx: Ctx, playerId: number): boolean => {
     const tempPriorities: number[] =
         Object.values(G.publicPlayers).map((player: IPublicPlayer): number => player.priority.value),
         minPriority: number = Math.min(...tempPriorities),
         player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     const priority: IPriority = player.priority;
     return priority.value === minPriority;
@@ -33,30 +36,32 @@ export const HasLowestPriority = (G: IMyGameState, playerId: number): boolean =>
  * </ol>
  *
  * @param G
+ * @param ctx
  */
-export const ChangePlayersPriorities = (G: IMyGameState): void => {
+export const ChangePlayersPriorities = (G: IMyGameState, ctx: Ctx): void => {
     const tempPriorities: CanBeUndef<IPriority>[] = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder: CanBeUndef<number> = G.exchangeOrder[i];
         if (exchangeOrder !== undefined) {
             const exchangePlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[exchangeOrder];
             if (exchangePlayer === undefined) {
-                throw new Error(`В массиве игроков отсутствует игрок с id '${exchangeOrder}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    exchangeOrder);
             }
             tempPriorities[i] = exchangePlayer.priority;
         }
     }
     if (tempPriorities.length) {
-        AddDataToLog(G, LogTypes.Game, `Обмен кристаллами между игроками:`);
+        AddDataToLog(G, LogTypeNames.Game, `Обмен кристаллами между игроками:`);
         for (let i = 0; i < G.exchangeOrder.length; i++) {
             const tempPriority: CanBeUndef<IPriority> = tempPriorities[i],
                 player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
             }
             if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
                 player.priority = tempPriority;
-                AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
+                AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
             }
         }
     }

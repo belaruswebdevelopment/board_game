@@ -1,10 +1,12 @@
 import type { Ctx } from "boardgame.io";
+import { IsMercenaryPlayerCard } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { IsDwarfCard } from "../Dwarf";
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { IsGiantCard, IsGodCard, IsMythicalAnimalCard, IsValkyryCard } from "../MythologicalCreature";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { LogTypes } from "../typescript/enums";
+import { ErrorNames, LogTypeNames } from "../typescript/enums";
 import type { CanBeUndef, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -29,13 +31,13 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: NonNullable<Tav
     boolean => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.pickedCard = card;
-    if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
+    if (IsDwarfCard(card) || IsMythicalAnimalCard(card) || IsMercenaryPlayerCard(card)) {
         player.cards[card.suit].push(card);
         // TODO When you recruit a Mythical Animal, place it in your army in the matching class. Each animal has its own unique ability!
-        AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту${IsMythicalAnimalCard(card) ? ` '${card.type}'` : ``} '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+        AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
         return true;
     }
     return false;
@@ -56,7 +58,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
     card: MythologicalCreatureCommandZoneCardTypes): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.mythologicalCreatureCards.push(card);
     if (IsGodCard(card)) {
@@ -66,7 +68,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
     } else if (IsValkyryCard(card)) {
         card.strengthTokenNotch = 0;
     }
-    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' в командную зону карт Idavoll.`);
+    AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' в командную зону карт Idavoll.`);
 };
 
 /**
@@ -87,7 +89,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
 export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: NonNullable<TavernCardTypes>): boolean => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const isAdded: boolean = AddCardToPlayer(G, ctx, card);
     if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
@@ -96,9 +98,9 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Non
         }
     } else {
         if (IsRoyalOfferingCard(card)) {
-            AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
+            AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
             AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-            DiscardPickedCard(G, player, card);
+            DiscardPickedCard(G, card);
         } else {
             if (G.expansions.idavoll.active) {
                 AddMythologicalCreatureCardToPlayerCommandZone(G, ctx, card);

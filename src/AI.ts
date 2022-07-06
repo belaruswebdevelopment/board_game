@@ -1,9 +1,10 @@
 import type { Ctx } from "boardgame.io";
 import { CompareCards } from "./bot_logic/BotCardLogic";
 import { IsDwarfCard } from "./Dwarf";
+import { ThrowMyError } from "./Error";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
+import { ConfigNames, ErrorNames, MoveNames, PhaseNames, StageNames } from "./typescript/enums";
 import type { CanBeUndef, DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsTypes, MoveValidatorGetRangeTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
@@ -23,24 +24,26 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
         player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     let playerId: CanBeUndef<number>;
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (ctx.phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage: CanBeUndef<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
-        let activeStageOfCurrentPlayer: Stages | `default` =
-            currentStage !== undefined ? currentStage as Stages : `default`;
+        let activeStageOfCurrentPlayer: StageNames | `default` =
+            currentStage !== undefined ? currentStage as StageNames : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
-            if (ctx.phase === Phases.PlaceCoins) {
+            if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
+                activeStageOfCurrentPlayer = StageNames.Default1;
+            } else if (ctx.phase === PhaseNames.Bids) {
                 if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
-                    activeStageOfCurrentPlayer = Stages.Default3;
+                    activeStageOfCurrentPlayer = StageNames.Default3;
                 } else if (G.solo && ctx.currentPlayer === `1`) {
-                    activeStageOfCurrentPlayer = Stages.Default4;
+                    activeStageOfCurrentPlayer = StageNames.Default4;
                 }
-            } else if (ctx.phase === Phases.PlaceCoinsUline) {
+            } else if (ctx.phase === PhaseNames.BidUline) {
                 // TODO Add BotPlaceCoinUline and others moves only for bots?!
-                activeStageOfCurrentPlayer = Stages.Default1;
-            } else if (ctx.phase === Phases.PickCards) {
+                activeStageOfCurrentPlayer = StageNames.Default1;
+            } else if (ctx.phase === PhaseNames.TavernsResolution) {
                 if (ctx.activePlayers === null) {
                     let pickCardOrCampCard = `card`;
                     if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
@@ -49,41 +52,38 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                         pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                     }
                     if (pickCardOrCampCard === `card`) {
-                        activeStageOfCurrentPlayer = Stages.Default1;
+                        activeStageOfCurrentPlayer = StageNames.Default1;
                     } else {
-                        activeStageOfCurrentPlayer = Stages.Default2;
+                        activeStageOfCurrentPlayer = StageNames.Default2;
                     }
                 }
-            } else if (ctx.phase === Phases.EnlistmentMercenaries) {
+            } else if (ctx.phase === PhaseNames.EnlistmentMercenaries) {
                 if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
                     if (G.publicPlayersOrder.length === 1 || Math.floor(Math.random() * 2) === 0) {
-                        activeStageOfCurrentPlayer = Stages.Default1;
+                        activeStageOfCurrentPlayer = StageNames.Default1;
                     } else {
-                        activeStageOfCurrentPlayer = Stages.Default2;
+                        activeStageOfCurrentPlayer = StageNames.Default2;
                     }
                 } else if (G.drawProfit === ``) {
-                    if (player.pickedCard === null) {
-                        activeStageOfCurrentPlayer = Stages.Default3;
-                    } else {
-                        activeStageOfCurrentPlayer = Stages.Default4;
-                    }
+                    activeStageOfCurrentPlayer = StageNames.Default3;
                 }
-            } else if (ctx.phase === Phases.EndTier) {
-                activeStageOfCurrentPlayer = Stages.Default1;
-            } else if (ctx.phase === Phases.GetDistinctions) {
-                activeStageOfCurrentPlayer = Stages.Default1;
-            } else if (ctx.phase === Phases.BrisingamensEndGame) {
-                activeStageOfCurrentPlayer = Stages.Default1;
-            } else if (ctx.phase === Phases.GetMjollnirProfit) {
-                activeStageOfCurrentPlayer = Stages.Default1;
+            } else if (ctx.phase === PhaseNames.PlaceYlud) {
+                activeStageOfCurrentPlayer = StageNames.Default1;
+            } else if (ctx.phase === PhaseNames.TroopEvaluation) {
+                activeStageOfCurrentPlayer = StageNames.Default1;
+            } else if (ctx.phase === PhaseNames.BrisingamensEndGame) {
+                activeStageOfCurrentPlayer = StageNames.Default1;
+            } else if (ctx.phase === PhaseNames.GetMjollnirProfit) {
+                activeStageOfCurrentPlayer = StageNames.Default1;
             }
             if (ctx.activePlayers !== null) {
-                activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
+                activeStageOfCurrentPlayer = StageNames.DiscardSuitCard;
                 // TODO Bot can't do async turns...?
                 for (let p = 0; p < ctx.numPlayers; p++) {
                     const playerP: CanBeUndef<IPublicPlayer> = G.publicPlayers[p];
                     if (playerP === undefined) {
-                        throw new Error(`В массиве игроков отсутствует игрок с id '${p}'.`);
+                        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                            p);
                     }
                     if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
                         playerId = p;
@@ -97,7 +97,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator: IMoveValidator | null =
-            GetValidator(ctx.phase as Phases, activeStageOfCurrentPlayer);
+            GetValidator(ctx.phase as PhaseNames, activeStageOfCurrentPlayer);
         if (validator !== null) {
             const moveName: MoveNames = validator.moveName,
                 moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
@@ -146,10 +146,10 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
 */
 export const iterations = (G: IMyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
-    if (ctx.phase === Phases.PickCards) {
+    if (ctx.phase === PhaseNames.TavernsResolution) {
         const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
         if (currentTavern === undefined) {
-            throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
         }
         if (currentTavern.filter((card: TavernCardTypes): boolean => card !== null).length === 1) {
             return 1;
@@ -181,7 +181,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
             }
             const deck0 = G.secret.decks[0];
             if (deck0 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
             }
             if (deck0.length > 18) {
                 if (IsDwarfCard(tavernCard)) {
@@ -215,15 +215,16 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
  */
 export const objectives = (): IObjectives => ({
     isEarlyGame: {
-        checker: (G: IMyGameState): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             const deck0: CanBeUndef<DeckCardTypes[]> = G.secret.decks[0];
             if (deck0 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
             }
             return deck0.length > 0;
         },
         weight: -100.0,
     },
+    // TODO Move same logic in one func?!
     /* isWeaker: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
@@ -231,11 +232,11 @@ export const objectives = (): IObjectives => ({
             }
             const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
             const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
-                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+                return ThrowError(G, ctx, Errors.TavernWithCurrentIdIsUndefined, 0);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -244,10 +245,10 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
                 totalScore.push(CurrentScoring(player));
             }
@@ -271,11 +272,11 @@ export const objectives = (): IObjectives => ({
             }
             const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
             const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
-                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+                return ThrowError(G, ctx, Errors.TavernWithCurrentIdIsUndefined, 0);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -284,10 +285,10 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
                 totalScore.push(CurrentScoring(player));
             }
@@ -311,11 +312,11 @@ export const objectives = (): IObjectives => ({
             }
             const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
             const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
-                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+                return ThrowError(G, ctx, Errors.TavernWithCurrentIdIsUndefined, 0);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -324,10 +325,10 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i: number = 0; i < ctx.numPlayers + Number(G.solo); i++) {
+            for (let i: number = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
                 totalScore.push(CurrentScoring(player));
             }
@@ -347,16 +348,16 @@ export const objectives = (): IObjectives => ({
     }, */
     isFirst: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PickCards) {
+            if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
             const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
             const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
-                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+                return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -365,10 +366,11 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                        i);
                 }
                 totalScore.push(CurrentScoring(G, player));
             }
@@ -390,16 +392,16 @@ export const objectives = (): IObjectives => ({
     },
     isStronger: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PickCards) {
+            if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
             const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '2' эпохи.`);
+                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
             const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
             if (tavern0 === undefined) {
-                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+                return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -408,10 +410,11 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                        i);
                 }
                 totalScore.push(CurrentScoring(G, player));
             }
@@ -448,11 +451,11 @@ export const objectives = (): IObjectives => ({
 export const playoutDepth = (G: IMyGameState, ctx: Ctx): number => {
     const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
     if (deck1 === undefined) {
-        throw new Error(`В массиве дек карт отсутствует дека '2' эпохи.`);
+        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
     }
     const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
     if (tavern0 === undefined) {
-        throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+        return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
     }
     if (deck1.length < G.botData.deckLength) {
         return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;

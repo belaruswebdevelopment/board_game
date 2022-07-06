@@ -5,7 +5,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IsDwarfCard } from "../Dwarf";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { IsHeroCard } from "../Hero";
+import { IsHeroCard, IsHeroPlayerCard } from "../Hero";
 import { IsMythicalAnimalCard } from "../MythologicalCreature";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { ArtefactNames, MoveNames } from "../typescript/enums";
@@ -63,7 +63,7 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param card Карта.
  * @param id Id карты.
  * @param player Игрок.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param moveName Название действия.
  * @param args Аргументы действия.
  */
@@ -114,6 +114,9 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             case MoveNames.UseGodPowerMove:
                 action = data.moves.UseGodPowerMove!;
                 break;
+            case MoveNames.SoloBotClickHeroCardMove:
+                action = data.moves.SoloBotClickHeroCardMove!;
+                break;
             default:
                 throw new Error(`Нет такого мува '${moveName}'.`);
         }
@@ -123,7 +126,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     if (suit !== null) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (IsHeroCard(card)) {
+    if (IsHeroCard(card) || IsHeroPlayerCard(card)) {
         styles = Styles.Heroes(card.game, card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;

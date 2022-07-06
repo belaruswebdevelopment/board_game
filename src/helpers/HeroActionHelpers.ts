@@ -1,8 +1,9 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
-import { BuffNames, HeroNames } from "../typescript/enums";
+import { ThrowMyError } from "../Error";
+import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer, PlayerCardTypes } from "../typescript/interfaces";
-import { CheckPlayerHasBuff } from "./BuffHelpers";
+import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
@@ -21,9 +22,10 @@ export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardTyp
     if (card.suit !== null) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)) {
+        if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)
+            && GetBuffValue(G, ctx, BuffNames.MoveThrud) === card.suit) {
             const index: number = player.cards[card.suit].findIndex((card: PlayerCardTypes): boolean =>
                 card.name === HeroNames.Thrud);
             if (index !== -1) {

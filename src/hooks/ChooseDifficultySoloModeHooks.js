@@ -1,10 +1,10 @@
 import { StackData } from "../data/StackData";
-import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
+import { HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
  * <p>Применения:</p>
@@ -34,8 +34,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
             if (soloBotPublicPlayer === undefined) {
                 throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
             }
-            // TODO Uncomment it!!!
-            return G.heroesForSoloGameDifficultyLevel === null /*  && !soloBotPublicPlayer.stack.length */;
+            return G.heroesForSoloGameDifficultyLevel === null && !soloBotPublicPlayer.stack.length;
         }
     }
     else {
@@ -85,7 +84,6 @@ export const EndChooseDifficultySoloModeActions = (G) => {
  * @param ctx
  */
 export const OnChooseDifficultySoloModeMove = (G, ctx) => {
-    console.log(ctx.currentPlayer);
     StartOrEndActions(G, ctx);
 };
 /**
@@ -110,8 +108,10 @@ export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
         }
         soloBotPublicPlayer.heroes.forEach((hero) => {
             AddBuffToPlayer(G, ctx, hero.buff);
-            AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
-            StartAutoAction(G, ctx, hero.actions);
+            if (hero.name !== HeroNames.Thrud && hero.name !== HeroNames.Ylud) {
+                AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+                DrawCurrentProfit(G, ctx);
+            }
         });
         G.heroesForSoloGameDifficultyLevel = null;
     }

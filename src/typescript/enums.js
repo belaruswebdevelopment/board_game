@@ -93,21 +93,43 @@ export var DrawNames;
     DrawNames["GetMjollnirProfit"] = "Get Mjollnir profit";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";
-    DrawNames["Olwin"] = "Olwin";
+    DrawNames["PlaceOlwinDouble"] = "Place Olwin Double";
     DrawNames["PickCard"] = "Pick card or camp card";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
+    DrawNames["PickCardByExplorerDistinctionSoloBot"] = "Pick card by Explorer distinction Solo Bot";
     DrawNames["PickConcreteCoinToUpgrade"] = "Pick concrete coin to upgrade";
     DrawNames["PickHero"] = "Pick hero card";
     DrawNames["PickHeroSoloBot"] = "Pick hero card Solo Bot";
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
     DrawNames["PlaceTradingCoinsUline"] = "Place Trading Coins Uline";
+    DrawNames["PlaceYludHero"] = "Place Ylud";
     DrawNames["StartOrPassEnlistmentMercenaries"] = "Start or Pass Enlistment Mercenaries";
-    DrawNames["Thrud"] = "Thrud";
+    DrawNames["PlaceThrudHero"] = "Place Thrud Hero";
     DrawNames["UpgradeCoin"] = "Upgrade coin";
     DrawNames["UpgradeCoinVidofnirVedrfolnir"] = "Upgrade coin Vidofnir Vedrfolnir";
     DrawNames["UpgradeCoinWarriorDistinction"] = "Upgrade coin Warrior distinction";
-    DrawNames["Ylud"] = "Ylud";
 })(DrawNames || (DrawNames = {}));
+export var ErrorNames;
+(function (ErrorNames) {
+    ErrorNames["CurrentTierDeckIsUndefined"] = "CurrentTierDeckIsUndefined";
+    ErrorNames["CurrentPublicPlayerIsUndefined"] = "CurrentPublicPlayerIsUndefined";
+    ErrorNames["CurrentSuitDistinctionPlayerIndexIsUndefined"] = "CurrentSuitDistinctionPlayerIndexIsUndefined";
+    ErrorNames["CurrentTavernConfigIsUndefined"] = "CurrentTavernConfigIsUndefined";
+    ErrorNames["CurrentTavernIsUndefined"] = "CurrentTavernIsUndefined";
+    ErrorNames["DeckIsUndefined"] = "DeckIsUndefined";
+    ErrorNames["DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined"] = "DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined";
+    ErrorNames["DoNotDiscardCardFromCurrentTavernIfNoCardInTavern"] = "DoNotDiscardCardFromCurrentTavernIfNoCardInTavern";
+    ErrorNames["DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame"] = "DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame";
+    ErrorNames["NoCardsToDiscardWhenNoWinnerInExplorerDistinction"] = "NoCardsToDiscardWhenNoWinnerInExplorerDistinction";
+    ErrorNames["OnlyInSoloOrTwoPlayersGame"] = "OnlyInSoloOrTwoPlayersGame";
+    ErrorNames["PlayersCurrentSuitCardsMustHaveCardsForDistinction"] = "PlayersCurrentSuitCardsMustHaveCardsForDistinction";
+    ErrorNames["PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount"] = "PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount";
+    ErrorNames["PublicPlayerWithCurrentIdIsUndefined"] = "PublicPlayerWithCurrentIdIsUndefined";
+    ErrorNames["SuitDistinctionMustBePresent"] = "SuitDistinctionMustBePresent";
+    ErrorNames["TavernCanNotBeRefilledBecauseNotEnoughCards"] = "TavernCanNotBeRefilledBecauseNotEnoughCards";
+    ErrorNames["TavernConfigWithCurrentIdIsUndefined"] = "TavernConfigWithCurrentIdIsUndefined";
+    ErrorNames["TavernWithCurrentIdIsUndefined"] = "TavernWithCurrentIdIsUndefined";
+})(ErrorNames || (ErrorNames = {}));
 /**
  * <h3>Перечисление для названия игры и дополнений.</h3>
  */
@@ -198,12 +220,12 @@ export var HeroNames;
 /**
  * <h3>Перечисление для типов логов.</h3>
  */
-export var LogTypes;
-(function (LogTypes) {
-    LogTypes["Game"] = "game";
-    LogTypes["Private"] = "private";
-    LogTypes["Public"] = "public";
-})(LogTypes || (LogTypes = {}));
+export var LogTypeNames;
+(function (LogTypeNames) {
+    LogTypeNames["Game"] = "game";
+    LogTypeNames["Private"] = "private";
+    LogTypeNames["Public"] = "public";
+})(LogTypeNames || (LogTypeNames = {}));
 /**
  * <h3>Перечисление для описаний отображения действий.</h3>
  */
@@ -251,35 +273,51 @@ export var MoveNames;
 /**
  * <h3>Перечисление для фаз игры.</h3>
  */
-export var Phases;
-(function (Phases) {
-    Phases["BrisingamensEndGame"] = "brisingamensEndGame";
-    Phases["ChooseDifficultySoloMode"] = "chooseDifficultySoloMode";
-    Phases["EndTier"] = "endTier";
-    Phases["EnlistmentMercenaries"] = "enlistmentMercenaries";
-    Phases["GetDistinctions"] = "getDistinctions";
-    Phases["GetMjollnirProfit"] = "getMjollnirProfit";
-    Phases["PickCards"] = "pickCards";
-    Phases["PlaceCoins"] = "placeCoins";
-    Phases["PlaceCoinsUline"] = "placeCoinsUline";
-})(Phases || (Phases = {}));
+export var PhaseNames;
+(function (PhaseNames) {
+    PhaseNames["BrisingamensEndGame"] = "brisingamensEndGame";
+    PhaseNames["ChooseDifficultySoloMode"] = "chooseDifficultySoloMode";
+    PhaseNames["PlaceYlud"] = "placeYlud";
+    PhaseNames["EnlistmentMercenaries"] = "enlistmentMercenaries";
+    PhaseNames["TroopEvaluation"] = "troopEvaluation";
+    PhaseNames["GetMjollnirProfit"] = "getMjollnirProfit";
+    PhaseNames["TavernsResolution"] = "tavernsResolution";
+    PhaseNames["Bids"] = "bids";
+    PhaseNames["BidUline"] = "bidUline";
+})(PhaseNames || (PhaseNames = {}));
 /**
- * <h3>Перечисление для типов карт.</h3>
+ * <h3>Перечисление для фаз игры на русском.</h3>
  */
-export var RusCardTypes;
-(function (RusCardTypes) {
-    RusCardTypes["Royal_Offering"] = "\u041A\u043E\u0440\u043E\u043B\u0435\u0432\u0441\u043A\u0430\u044F \u043D\u0430\u0433\u0440\u0430\u0434\u0430";
-    RusCardTypes["Artefact"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
-    RusCardTypes["Dwarf"] = "\u0414\u0432\u043E\u0440\u0444";
-    RusCardTypes["Giant"] = "\u0413\u0438\u0433\u0430\u043D\u0442";
-    RusCardTypes["God"] = "\u0411\u043E\u0433";
-    RusCardTypes["Hero"] = "\u0413\u0435\u0440\u043E\u0439";
-    RusCardTypes["Mercenary"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A";
-    RusCardTypes["Mercenary_Player_Card"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A \u043D\u0430 \u0441\u0442\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
-    RusCardTypes["Mythical_Animal"] = "\u041C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435";
-    RusCardTypes["Special"] = "\u041E\u0441\u043E\u0431\u0430\u044F";
-    RusCardTypes["Valkyry"] = "\u0412\u0430\u043B\u044C\u043A\u0438\u0440\u0438\u044F";
-})(RusCardTypes || (RusCardTypes = {}));
+export var RusPhaseNames;
+(function (RusPhaseNames) {
+    RusPhaseNames["brisingamensEndGame"] = "brisingamensEndGame";
+    RusPhaseNames["chooseDifficultySoloMode"] = "\u0412\u044B\u0431\u043E\u0440 \u0441\u043B\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u043E\u043B\u043E \u0440\u0435\u0436\u0438\u043C\u0430";
+    RusPhaseNames["placeYlud"] = "\u041F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0418\u043B\u0443\u0434";
+    RusPhaseNames["enlistmentMercenaries"] = "enlistmentMercenaries";
+    RusPhaseNames["troopEvaluation"] = "\u0421\u043C\u043E\u0442\u0440 \u0432\u043E\u0439\u0441\u043A";
+    RusPhaseNames["getMjollnirProfit"] = "getMjollnirProfit";
+    RusPhaseNames["tavernsResolution"] = "\u041F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435 \u0442\u0430\u0432\u0435\u0440\u043D";
+    RusPhaseNames["bids"] = "\u0421\u0442\u0430\u0432\u043A\u0438";
+    RusPhaseNames["bidUline"] = "\u0421\u0442\u0430\u0432\u043A\u0438 \u0423\u043B\u0438\u043D\u0430";
+})(RusPhaseNames || (RusPhaseNames = {}));
+/**
+ * <h3>Перечисление для типов карт на русском.</h3>
+ */
+export var RusCardTypeNames;
+(function (RusCardTypeNames) {
+    RusCardTypeNames["Royal_Offering"] = "\u041A\u043E\u0440\u043E\u043B\u0435\u0432\u0441\u043A\u0430\u044F \u043D\u0430\u0433\u0440\u0430\u0434\u0430";
+    RusCardTypeNames["Artefact"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
+    RusCardTypeNames["Dwarf"] = "\u0414\u0432\u043E\u0440\u0444";
+    RusCardTypeNames["Giant"] = "\u0413\u0438\u0433\u0430\u043D\u0442";
+    RusCardTypeNames["God"] = "\u0411\u043E\u0433";
+    RusCardTypeNames["Hero"] = "\u0413\u0435\u0440\u043E\u0439";
+    RusCardTypeNames["Hero_Player_Card"] = "\u0413\u0435\u0440\u043E\u0439 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypeNames["Mercenary"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A";
+    RusCardTypeNames["Mercenary_Player_Card"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypeNames["Mythical_Animal"] = "\u041C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435";
+    RusCardTypeNames["Special"] = "\u041E\u0441\u043E\u0431\u0430\u044F";
+    RusCardTypeNames["Valkyry"] = "\u0412\u0430\u043B\u044C\u043A\u0438\u0440\u0438\u044F";
+})(RusCardTypeNames || (RusCardTypeNames = {}));
 /**
  * <h3>Перечисление для русских названий фракций.</h3>
  */
@@ -294,29 +332,31 @@ export var RusSuitNames;
 /**
  * <h3>Перечисление для стадий игры.</h3>
  */
-export var Stages;
-(function (Stages) {
-    Stages["AddCoinToPouch"] = "addCoinToPouch";
-    Stages["Default1"] = "default1";
-    Stages["Default2"] = "default2";
-    Stages["Default3"] = "default3";
-    Stages["Default4"] = "default4";
-    Stages["DiscardCard"] = "discardCard";
-    Stages["DiscardBoardCard"] = "discardBoardCard";
-    Stages["DiscardSuitCard"] = "discardSuitCard";
-    Stages["PickCampCardHolda"] = "pickCampCardHolda";
-    Stages["PickConcreteCoinToUpgrade"] = "pickConcreteCoinToUpgrade";
-    Stages["PickDiscardCard"] = "pickDiscardCard";
-    Stages["PickDistinctionCard"] = "pickDistinctionCard";
-    Stages["PickHero"] = "pickHero";
-    Stages["PickHeroSoloBot"] = "pickHeroSoloBot";
-    Stages["PlaceOlwinCards"] = "placeOlwinCards";
-    Stages["PlaceTradingCoinsUline"] = "placeTradingCoinsUline";
-    Stages["PlaceThrudHero"] = "placeThrudHero";
-    Stages["ChooseHeroesForSoloMode"] = "chooseHeroesForSoloMode";
-    Stages["UpgradeCoin"] = "upgradeCoin";
-    Stages["UpgradeVidofnirVedrfolnirCoin"] = "upgradeVidofnirVedrfolnirCoin";
-})(Stages || (Stages = {}));
+export var StageNames;
+(function (StageNames) {
+    StageNames["AddCoinToPouch"] = "addCoinToPouch";
+    StageNames["Default1"] = "default1";
+    StageNames["Default2"] = "default2";
+    StageNames["Default3"] = "default3";
+    StageNames["Default4"] = "default4";
+    StageNames["DiscardCard"] = "discardCard";
+    StageNames["DiscardBoardCard"] = "discardBoardCard";
+    StageNames["DiscardSuitCard"] = "discardSuitCard";
+    StageNames["PickCampCardHolda"] = "pickCampCardHolda";
+    StageNames["PickConcreteCoinToUpgrade"] = "pickConcreteCoinToUpgrade";
+    StageNames["PickDiscardCard"] = "pickDiscardCard";
+    StageNames["PickDistinctionCard"] = "pickDistinctionCard";
+    StageNames["PickDistinctionCardSoloBot"] = "pickDistinctionCardSoloBot";
+    StageNames["PickHero"] = "pickHero";
+    StageNames["PickHeroSoloBot"] = "pickHeroSoloBot";
+    StageNames["PlaceEnlistmentMercenaries"] = "placeEnlistmentMercenaries";
+    StageNames["PlaceOlwinCards"] = "placeOlwinCards";
+    StageNames["PlaceTradingCoinsUline"] = "placeTradingCoinsUline";
+    StageNames["PlaceThrudHero"] = "placeThrudHero";
+    StageNames["ChooseHeroesForSoloMode"] = "chooseHeroesForSoloMode";
+    StageNames["UpgradeCoin"] = "upgradeCoin";
+    StageNames["UpgradeVidofnirVedrfolnirCoin"] = "upgradeVidofnirVedrfolnirCoin";
+})(StageNames || (StageNames = {}));
 /**
  * <h3>Перечисление для названий фракций.</h3>
  */

@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, CardNames, CoinTypeNames, GameNames, GiantNames, GodNames, HeroNames, LogTypes, MoveNames, MythicalAnimalNames, RusCardTypes, RusSuitNames, TavernNames, ValkyryNames } from "./enums";
+import { ArtefactNames, CardNames, CoinTypeNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MythicalAnimalNames, RusCardTypeNames, RusSuitNames, TavernNames, ValkyryNames } from "./enums";
 
 export interface ISecret {
     readonly campDecks: CampDeckCardTypes[][];
@@ -55,7 +55,7 @@ export interface IDeckConfig {
 export interface IGodCard {
     readonly name: GodNames;
     readonly points: number;
-    readonly type: RusCardTypes.God;
+    readonly type: RusCardTypeNames.God;
     isPowerTokenUsed: boolean | null;
 }
 
@@ -64,7 +64,7 @@ export interface IGodCard {
  */
 export interface IGiantCard {
     readonly name: GiantNames;
-    readonly type: RusCardTypes.Giant;
+    readonly type: RusCardTypeNames.Giant;
     readonly placedSuit: SuitTypes;
     capturedCard: IDwarfCard | null;
 }
@@ -74,7 +74,7 @@ export interface IGiantCard {
  */
 export interface IValkyryCard {
     readonly name: ValkyryNames;
-    readonly type: RusCardTypes.Valkyry;
+    readonly type: RusCardTypeNames.Valkyry;
     strengthTokenNotch: number | null;
 }
 
@@ -83,14 +83,14 @@ export interface IValkyryCard {
  */
 export interface IMythicalAnimalCard extends IBasicSuitableCardInfo {
     readonly name: MythicalAnimalNames;
-    readonly type: RusCardTypes.Mythical_Animal;
+    readonly type: RusCardTypeNames.Mythical_Animal;
 }
 
 /**
  * <h3>Интерфейс для особой карты.</h3>
  */
 export interface ISpecialCard extends IBasicSuitableCardInfo {
-    readonly type: RusCardTypes.Special;
+    readonly type: RusCardTypeNames.Special;
     readonly name: CardNames.ChiefBlacksmith;
     readonly game: GameNames.Basic;
 }
@@ -101,7 +101,7 @@ export interface ISpecialCard extends IBasicSuitableCardInfo {
 export interface IRoyalOfferingCard {
     readonly name: string;
     readonly stack: IStack[];
-    readonly type: RusCardTypes.Royal_Offering;
+    readonly type: RusCardTypeNames.Royal_Offering;
     readonly value: number;
 }
 
@@ -192,26 +192,20 @@ export interface IAction {
 }
 
 /**
- * <h3>Интерфейс для конфига у карт.</h3>
+ * <h3>Интерфейс для стэка у карт.</h3>
  */
-export interface IConfig {
+export interface IStack {
+    priority?: number;
+    readonly variants?: SuitPropertyTypes<VariantType>;
+    readonly playerId?: number;
     readonly number?: number;
     readonly coinId?: number;
     readonly coinValue?: number;
-    readonly suit?: SuitTypes | null;
+    readonly suit?: SuitTypes;
     readonly value?: number;
     readonly drawName?: string;
     readonly stageName?: string;
     readonly name?: string;
-}
-
-/**
- * <h3>Интерфейс для стэка у карт.</h3>
- */
-export interface IStack {
-    readonly variants?: SuitPropertyTypes<VariantType>;
-    readonly config?: IConfig;
-    readonly playerId?: number;
 }
 
 /**
@@ -262,7 +256,7 @@ export interface IArtefact extends PartialBy<Omit<IArtefactCampCard, `game` | `t
  */
 export interface IArtefactCampCard extends IBasicSuitableNullableCardInfo, ICampCardInfo, ISecondaryCardInfo,
     ICardWithActionInfo {
-    readonly type: RusCardTypes.Artefact;
+    readonly type: RusCardTypeNames.Artefact;
     readonly name: ArtefactNames;
 }
 
@@ -319,7 +313,7 @@ export interface ICardWithActionInfo {
 export interface IMercenaryCampCard extends ICampCardInfo, ISecondaryCardInfo {
     // TODO Rework all cards name in Enums
     readonly name: string;
-    readonly type: RusCardTypes.Mercenary;
+    readonly type: RusCardTypeNames.Mercenary;
     readonly variants: Partial<SuitPropertyTypes<VariantType>>;
 }
 
@@ -328,8 +322,7 @@ export interface IMercenaryCampCard extends ICampCardInfo, ISecondaryCardInfo {
  */
 export interface IMercenaryPlayerCard extends MercenaryType, ICampCardInfo, ISecondaryCardInfo {
     readonly name: string;
-    readonly type: RusCardTypes.Mercenary_Player_Card;
-    readonly variants: Partial<SuitPropertyTypes<VariantType>>;
+    readonly type: RusCardTypeNames.Mercenary_Player_Card;
 }
 
 /**
@@ -348,15 +341,22 @@ export interface ISpecialCardsConfig {
  */
 export interface IDwarfCard extends IBasicSuitableCardInfo, ISecondaryCardInfo {
     readonly name: string;
-    readonly type: RusCardTypes.Dwarf;
+    readonly type: RusCardTypeNames.Dwarf;
 }
 
 /**
- * <h3>Интерфейс для карты Двойник Ольвюна.</h3>
+ * <h3>Интерфейс для фейковой карты Двойник Ольвюна.</h3>
  */
 export interface IOlwinDoubleNonPlacedCard {
     readonly name: CardNames.OlwinsDouble;
     readonly suit: SuitTypes | null;
+}
+
+/**
+ * <h3>Интерфейс для фейковой карты Труд.</h3>
+ */
+export interface IThrudNonPlacedCard {
+    readonly name: HeroNames.Thrud;
 }
 
 /**
@@ -413,7 +413,7 @@ export interface IExpansions {
  * <h3>Интерфейс для логирования данных.</h3>
  */
 export interface ILogData {
-    readonly type: LogTypes;
+    readonly type: LogTypeNames;
     readonly value: string;
 }
 
@@ -460,7 +460,7 @@ export interface IMyGameState {
     round: number;
     readonly suitsNum: number;
     tavernCardDiscarded2Players: boolean;
-    readonly taverns: (TavernCardTypes[] | MythologicalCreatureDeckCardTypes[])[];
+    readonly taverns: TavernCardTypes[][];
     readonly tavernsNum: number;
     tierToEnd: number;
     readonly totalScore: number[];
@@ -499,9 +499,19 @@ export interface IResolveBoardCoins {
  */
 export interface IHeroCard extends IBasicSuitableNullableCardInfo, Pick<ISecondaryCardInfo, `game`>,
     ICardWithActionInfo {
-    readonly type: RusCardTypes.Hero;
+    readonly type: RusCardTypeNames.Hero;
     readonly name: HeroNames;
     active: boolean;
+}
+
+/**
+ * <h3>Интерфейс для героя на поле игрока.</h3>
+ */
+export interface IHeroPlayerCard extends IBasicSuitableNullableCardInfo, Pick<ISecondaryCardInfo, `game`>,
+    Pick<ICardWithActionInfo, `description`> {
+    readonly type: RusCardTypeNames.Hero_Player_Card;
+    readonly name: HeroNames;
+    readonly active: false;
 }
 
 /**
@@ -607,12 +617,12 @@ export interface IMoveCardIdPlayerIdArguments {
  */
 export interface IMoveBy {
     readonly chooseDifficultySoloMode: IMoveByChooseDifficultySoloModeOptions;
-    readonly placeCoins: IMoveByPlaceCoinsOptions;
-    readonly placeCoinsUline: IMoveByPlaceCoinsUlineOptions;
-    readonly pickCards: IMoveByPickCardsOptions;
+    readonly bids: IMoveByPlaceCoinsOptions;
+    readonly bidUline: IMoveByPlaceCoinsUlineOptions;
+    readonly tavernsResolution: IMoveByPickCardsOptions;
     readonly enlistmentMercenaries: IMoveByEnlistmentMercenariesOptions;
-    readonly endTier: IMoveByEndTierOptions;
-    readonly getDistinctions: IMoveByGetDistinctionsOptions;
+    readonly placeYlud: IMoveByEndTierOptions;
+    readonly troopEvaluation: IMoveByGetDistinctionsOptions;
     readonly brisingamensEndGame: IMoveByBrisingamensEndGameOptions;
     readonly getMjollnirProfit: IMoveByGetMjollnirProfitOptions;
 }
@@ -620,6 +630,7 @@ export interface IMoveBy {
 export interface IMoveByChooseDifficultySoloModeOptions {
     readonly default1: IMoveValidator;
     readonly chooseHeroesForSoloMode: IMoveValidator;
+    readonly upgradeCoin: IMoveValidator;
 }
 
 /**
@@ -637,6 +648,10 @@ export interface IMoveByPlaceCoinsOptions {
  */
 export interface IMoveByPlaceCoinsUlineOptions {
     readonly default1: IMoveValidator;
+}
+
+export interface IMoveBySoloBotOptions {
+    readonly pickHeroSoloBot: IMoveValidator;
 }
 
 interface IMoveByCommonOptions {
@@ -657,7 +672,7 @@ interface IMoveByCommonOptions {
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByPickCardsOptions extends IMoveByCommonOptions {
+export interface IMoveByPickCardsOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions {
     readonly default1: IMoveValidator;
     readonly default2: IMoveValidator;
     readonly discardCard: IMoveValidator;
@@ -671,7 +686,7 @@ export interface IMoveByEnlistmentMercenariesOptions extends IMoveByCommonOption
     readonly default1: IMoveValidator;
     readonly default2: IMoveValidator;
     readonly default3: IMoveValidator;
-    readonly default4: IMoveValidator;
+    readonly placeEnlistmentMercenaries: IMoveValidator;
 }
 
 /**
@@ -684,7 +699,7 @@ export interface IMoveByEndTierOptions extends IMoveByCommonOptions {
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByGetDistinctionsOptions extends IMoveByCommonOptions {
+export interface IMoveByGetDistinctionsOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions {
     readonly default1: IMoveValidator;
     readonly pickDistinctionCard: IMoveValidator;
 }
@@ -712,6 +727,41 @@ export interface IMoveValidator {
         ValidMoveIdParamTypes;
     readonly moveName: MoveNames;
     readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean;
+}
+
+// TODO Rework it?!
+export interface IStackData {
+    readonly addCoinToPouch: (number: number) => IStack;
+    readonly brisingamensEndGameAction: () => IStack;
+    readonly discardCardFromBoardBonfur: () => IStack;
+    readonly discardCardFromBoardCrovaxTheDoppelganger: () => IStack;
+    readonly discardCardFromBoardDagda: (number?: number) => IStack;
+    readonly discardSuitCard: (playerId: number) => IStack;
+    readonly discardSuitCardHofud: () => IStack;
+    readonly discardTavernCard: () => IStack;
+    readonly enlistmentMercenaries: () => IStack;
+    readonly getDifficultyLevelForSoloMode: () => IStack;
+    readonly getHeroesForSoloMode: (number: number) => IStack;
+    readonly getDistinctions: () => IStack;
+    readonly getMjollnirProfit: () => IStack;
+    readonly pickCampCardHolda: () => IStack;
+    readonly pickCard: () => IStack;
+    readonly pickConcreteCoinToUpgrade: (coinValue: number, value: number) => IStack;
+    readonly pickDiscardCardAndumia: () => IStack;
+    readonly pickDiscardCardBrisingamens: (number?: number, priority?: number) => IStack;
+    readonly pickDistinctionCard: () => IStack;
+    readonly pickDistinctionCardSoloBot: () => IStack;
+    readonly placeOlwinCards: (number?: number, suit?: SuitTypes, priority?: number) => IStack;
+    readonly placeThrudHero: () => IStack;
+    readonly placeTradingCoinsUline: (number?: number) => IStack;
+    readonly placeYludHero: () => IStack;
+    readonly pickHero: () => IStack;
+    readonly pickHeroSoloBot: () => IStack;
+    readonly placeEnlistmentMercenaries: () => IStack;
+    readonly startOrPassEnlistmentMercenaries: () => IStack;
+    readonly upgradeCoin: (value: number) => IStack;
+    readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number) => IStack;
+    readonly upgradeCoinWarriorDistinction: () => IStack;
 }
 
 /**
@@ -975,22 +1025,23 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 /**
  * <h3>Типы данных для карт выбранных игроком.</h3>
  */
-export type PickedCardTypes = PlayerCardTypes | IRoyalOfferingCard | IMercenaryCampCard
-    | IOlwinDoubleNonPlacedCard | MythologicalCreatureCommandZoneCardTypes | null;
+export type PickedCardTypes = PlayerCardTypes | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard
+    | IOlwinDoubleNonPlacedCard | IThrudNonPlacedCard | MythologicalCreatureCommandZoneCardTypes | null;
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
 export type PlayerCardTypes =
-    IDwarfCard | ISpecialCard | IArtefactCampCard | IHeroCard | IMercenaryPlayerCard | IMythicalAnimalCard;
+    IDwarfCard | ISpecialCard | IArtefactCampCard | IHeroPlayerCard | IMercenaryPlayerCard | IMythicalAnimalCard;
 
+// TODO (DeckCardTypes | null)[] and (MythologicalCreatureDeckCardTypes | null)[]
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
 export type TavernCardTypes = DeckCardTypes | MythologicalCreatureDeckCardTypes | null;
 
-export type AllCardTypes = PlayerCardTypes | IRoyalOfferingCard | IMercenaryCampCard |
-    MythologicalCreatureDeckCardTypes;
+export type AllCardTypes =
+    PlayerCardTypes | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard | MythologicalCreatureDeckCardTypes;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
@@ -1047,6 +1098,8 @@ export type AutoActionArgsTypes = [number] | [number, number, CoinTypeNames];
  * <h3>Типы данных для преимуществ.</h3>
  */
 export type DistinctionTypes = CanBeUndef<string | null>;
+
+export type ErrorArgsTypes = (string | number)[];
 
 export type MoveArgsTypes = number[][] | [SuitTypes] | [number] | [SuitTypes, number] | [number, CoinTypeNames];
 
@@ -1109,14 +1162,24 @@ export type CreateHeroCardType = PartialBy<Omit<IHeroCard, `active`>
     & ReadonlyBy<IHeroCard, `active`>, `type` | `suit` | `rank` | `points` | `active`>;
 
 /**
+ * <h3>Тип для создания героя на поле игрока.</h3>
+ */
+export type CreateHeroPlayerCardType = PartialBy<IHeroPlayerCard, `type` | `suit` | `rank` | `points` | `active`>;
+
+/**
 * <h3>Тип для создания особой карты.</h3>
 */
 export type CreateSpecialCardType = PartialBy<ISpecialCard, `type` | `game`>;
 
 /**
- * <h3>Тип для создания карты Двойник Ольвюна.</h3>
+ * <h3>Тип для создания фейковой карты Двойник Ольвюна.</h3>
  */
 export type CreateOlwinDoubleNonPlacedCardType = PartialBy<IOlwinDoubleNonPlacedCard, `name`>;
+
+/**
+ * <h3>Тип для создания фейковой карты Двойник Ольвюна.</h3>
+ */
+export type CreateThrudNonPlacedCardType = PartialBy<IThrudNonPlacedCard, `name`>;
 
 /**
  * <h3>Тип для создания монеты.</h3>

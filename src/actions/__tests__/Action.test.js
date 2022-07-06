@@ -1,5 +1,5 @@
 import { suitsConfig } from "../../data/SuitData";
-import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, RusSuitNames, Stages, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     it(`should remove non-hero discarded card from player's cards to cards discard`, () => {
@@ -46,11 +46,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             ],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
                 },
             ],
@@ -102,11 +102,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             ],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' отправил карту '${ArtefactNames.Brisingamens}' в колоду сброса карт лагеря.`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
                 },
             ],
@@ -121,7 +121,6 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         warrior: [
                             {
                                 name: `Test`,
-                                variants: {},
                                 suit: SuitNames.Warrior,
                             },
                         ],
@@ -152,17 +151,16 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             discardCampCardsDeck: [
                 {
                     name: `Test`,
-                    variants: {},
                     suit: SuitNames.Warrior,
                 },
             ],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
                 },
             ],
@@ -186,7 +184,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             DiscardAnyCardFromPlayerBoardAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.Warrior, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypes.Hero}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero}'.`);
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, () => {
         const G = {
@@ -248,15 +246,15 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             tavernCardDiscarded2Players: true,
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' отправил в колоду сброса карту из таверны:`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Карта 'Test' из таверны ${TavernNames.LaughingGoblin} убрана в сброс.`,
                 },
             ],
@@ -324,7 +322,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
         };
         GetEnlistmentMercenariesAction(G, {
             currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
+            phase: PhaseNames.EnlistmentMercenaries,
         }, 0);
         expect(G).toEqual({
             publicPlayers: {
@@ -354,7 +352,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' во время фазы 'enlistmentMercenaries' выбрал наёмника 'Test'.`,
                 },
             ],
@@ -371,7 +369,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
         expect(() => {
             GetEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
-                phase: Phases.EnlistmentMercenaries,
+                phase: PhaseNames.EnlistmentMercenaries,
             }, 0);
         }).toThrowError(`В массиве карт лагеря игрока с id '0' отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
@@ -389,9 +387,9 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
         expect(() => {
             GetEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
-                phase: Phases.EnlistmentMercenaries,
+                phase: PhaseNames.EnlistmentMercenaries,
             }, 0);
-        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
+        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
     });
 });
 describe(`Test GetMjollnirProfitAction method`, () => {
@@ -425,15 +423,15 @@ describe(`Test GetMjollnirProfitAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' получил баф '${BuffNames.SuitIdForMjollnir}'.`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' потерял баф '${BuffNames.GetMjollnirProfit}'.`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' выбрал фракцию '${suitsConfig[SuitNames.Hunter].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`,
                 },
             ],
@@ -452,7 +450,7 @@ describe(`Test PassEnlistmentMercenariesAction method`, () => {
         };
         PassEnlistmentMercenariesAction(G, {
             currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
+            phase: PhaseNames.EnlistmentMercenaries,
         });
         expect(G).toEqual({
             publicPlayers: {
@@ -462,8 +460,8 @@ describe(`Test PassEnlistmentMercenariesAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.Game,
-                    value: `Игрок 'Dan' пасанул во время фазы '${Phases.EnlistmentMercenaries}'.`,
+                    type: LogTypeNames.Game,
+                    value: `Игрок 'Dan' пасанул во время фазы '${PhaseNames.EnlistmentMercenaries}'.`,
                 },
             ],
         });
@@ -519,11 +517,11 @@ describe(`Test PickDiscardCardAction method`, () => {
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
-                    type: LogTypes.Public,
+                    type: LogTypeNames.Public,
                     value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.Warrior].suitName}'.`,
                 },
             ],
@@ -545,11 +543,9 @@ describe(`Test PickDiscardCardAction method`, () => {
                 {
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.UpgradeCoin,
-                                value: 5,
-                                drawName: DrawNames.UpgradeCoin,
-                            },
+                            stageName: StageNames.UpgradeCoin,
+                            value: 5,
+                            drawName: DrawNames.UpgradeCoin,
                         }
                     ],
                     name: `Test`,
@@ -569,11 +565,9 @@ describe(`Test PickDiscardCardAction method`, () => {
                     pickedCard: {
                         stack: [
                             {
-                                config: {
-                                    stageName: Stages.UpgradeCoin,
-                                    value: 5,
-                                    drawName: DrawNames.UpgradeCoin,
-                                },
+                                stageName: StageNames.UpgradeCoin,
+                                value: 5,
+                                drawName: DrawNames.UpgradeCoin,
                             }
                         ],
                         name: `Test`,
@@ -583,7 +577,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                         {},
                         {
                             config: {
-                                stageName: Stages.UpgradeCoin,
+                                stageName: StageNames.UpgradeCoin,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
                             },
@@ -595,11 +589,9 @@ describe(`Test PickDiscardCardAction method`, () => {
                 {
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.UpgradeCoin,
-                                value: 5,
-                                drawName: DrawNames.UpgradeCoin,
-                            },
+                            stageName: StageNames.UpgradeCoin,
+                            value: 5,
+                            drawName: DrawNames.UpgradeCoin,
                         }
                     ],
                     name: `Test`,
@@ -608,15 +600,15 @@ describe(`Test PickDiscardCardAction method`, () => {
             ],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
-                    type: LogTypes.Public,
+                    type: LogTypeNames.Public,
                     value: `Игрок 'Dan' выбрал карту 'Test'.`,
                 },
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: "Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.",
                 },
             ],
@@ -664,7 +656,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                         {},
                         {
                             config: {
-                                stageName: Stages.PickDiscardCard,
+                                stageName: StageNames.PickDiscardCard,
                                 drawName: DrawNames.Brisingamens,
                                 number: undefined,
                             },
@@ -684,11 +676,11 @@ describe(`Test PickDiscardCardAction method`, () => {
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
-                    type: LogTypes.Public,
+                    type: LogTypeNames.Public,
                     value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.Warrior].suitName}'.`,
                 },
             ],
@@ -900,8 +892,8 @@ describe(`Test PickDiscardCardAction method`, () => {
                                 },
                             },
                             config: {
-                                stageName: Stages.PlaceThrudHero,
-                                drawName: DrawNames.Thrud,
+                                stageName: StageNames.PlaceThrudHero,
+                                drawName: DrawNames.PlaceThrudHero,
                             },
                         },
                     ],
@@ -923,11 +915,11 @@ describe(`Test PickDiscardCardAction method`, () => {
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
-                    type: LogTypes.Public,
+                    type: LogTypeNames.Public,
                     value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.Hunter].suitName}'.`,
                 },
             ],
@@ -1001,7 +993,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
         };
         PlaceEnlistmentMercenariesAction(G, {
             currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
+            phase: PhaseNames.EnlistmentMercenaries,
         }, SuitNames.Blacksmith);
         expect(G).toEqual({
             publicPlayers: {
@@ -1010,7 +1002,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     campCards: [],
                     heroes: [],
                     pickedCard: {
-                        type: RusCardTypes.Mercenary_Player_Card,
+                        type: RusCardTypeNames.Mercenary_Player_Card,
                         suit: SuitNames.Blacksmith,
                         rank: 1,
                         points: null,
@@ -1018,23 +1010,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                         tier: 0,
                         path: ``,
                         game: GameNames.Thingvellir,
-                        variants: {
-                            warrior: {
-                                suit: SuitNames.Warrior,
-                                rank: 1,
-                                points: 6,
-                            },
-                            blacksmith: {
-                                suit: SuitNames.Blacksmith,
-                                rank: 1,
-                                points: null,
-                            },
-                        },
                     },
                     cards: {
                         blacksmith: [
                             {
-                                type: RusCardTypes.Mercenary_Player_Card,
+                                type: RusCardTypeNames.Mercenary_Player_Card,
                                 suit: SuitNames.Blacksmith,
                                 rank: 1,
                                 points: null,
@@ -1042,18 +1022,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 tier: 0,
                                 path: ``,
                                 game: GameNames.Thingvellir,
-                                variants: {
-                                    warrior: {
-                                        suit: SuitNames.Warrior,
-                                        rank: 1,
-                                        points: 6,
-                                    },
-                                    blacksmith: {
-                                        suit: SuitNames.Blacksmith,
-                                        rank: 1,
-                                        points: null,
-                                    },
-                                },
                             },
                         ],
                         miner: [],
@@ -1063,12 +1031,12 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.Public,
+                    type: LogTypeNames.Public,
                     value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.Blacksmith].suitName}'.`,
                 },
                 {
-                    type: LogTypes.Game,
-                    value: `Игрок 'Dan' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
+                    type: LogTypeNames.Game,
+                    value: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
             ],
         });
@@ -1315,7 +1283,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
         };
         PlaceEnlistmentMercenariesAction(G, {
             currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
+            phase: PhaseNames.EnlistmentMercenaries,
         }, SuitNames.Warrior);
         expect(G).toEqual({
             publicPlayers: {
@@ -1357,15 +1325,15 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 },
                             },
                             config: {
-                                stageName: Stages.PlaceThrudHero,
-                                drawName: DrawNames.Thrud,
+                                stageName: StageNames.PlaceThrudHero,
+                                drawName: DrawNames.PlaceThrudHero,
                             },
                         },
                     ],
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.Mercenary_Player_Card,
+                                type: RusCardTypeNames.Mercenary_Player_Card,
                                 suit: SuitNames.Warrior,
                                 rank: 1,
                                 points: 6,
@@ -1397,12 +1365,12 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             },
             logData: [
                 {
-                    type: LogTypes.Public,
+                    type: LogTypeNames.Public,
                     value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.Warrior].suitName}'.`,
                 },
                 {
-                    type: LogTypes.Game,
-                    value: `Игрок 'Dan' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
+                    type: LogTypeNames.Game,
+                    value: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
             ],
         });
@@ -1419,7 +1387,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             PlaceEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.Blacksmith);
-        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypes.Mercenary}'.`);
+        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
     });
     it(`shouldn't get mercenary card which not exists in player's camp cards to place and must throw Error`, () => {
         const G = {

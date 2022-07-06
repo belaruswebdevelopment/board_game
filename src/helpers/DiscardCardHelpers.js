@@ -1,11 +1,10 @@
 import { IsArtefactCard, IsMercenaryPlayerCard } from "../Camp";
 import { IsDwarfCard } from "../Dwarf";
-import { IsHeroCard } from "../Hero";
-import { AddDataToLog } from "../Logging";
+import { IsHeroPlayerCard } from "../Hero";
 import { IsGiantCard, IsGodCard, IsMythicalAnimalCard, IsValkyryCard } from "../MythologicalCreature";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { IsSpecialCard } from "../SpecialCard";
-import { LogTypes, RusCardTypes } from "../typescript/enums";
+import { RusCardTypeNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с сбросом карт от действий сбрасывающих карты.</h3>
  * <p>Применения:</p>
@@ -17,9 +16,9 @@ import { LogTypes, RusCardTypes } from "../typescript/enums";
  * @param player Игрок.
  * @param discardedCard Сбрасываемая карта.
  */
-export const DiscardPickedCard = (G, player, discardedCard) => {
-    if (IsHeroCard(discardedCard)) {
-        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.Hero}'.`);
+export const DiscardPickedCard = (G, discardedCard) => {
+    if (IsHeroPlayerCard(discardedCard)) {
+        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
     }
     if (IsMercenaryPlayerCard(discardedCard) || IsArtefactCard(discardedCard)) {
         G.discardCampCardsDeck.push(discardedCard);
@@ -35,6 +34,5 @@ export const DiscardPickedCard = (G, player, discardedCard) => {
         G.discardSpecialCards.push(discardedCard);
     }
     // TODO Add discard of Olwin's double cards!
-    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' отправил карту '${discardedCard.type}' '${discardedCard.name}' в колоду сброса карт.`);
 };
 //# sourceMappingURL=DiscardCardHelpers.js.map

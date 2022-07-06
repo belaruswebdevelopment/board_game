@@ -3,10 +3,11 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { ThrowMyError } from "../Error";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages, SuitNames } from "../typescript/enums";
+import { ErrorNames, StageNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndef, DeckCardTypes, IMyGameState, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 /**
@@ -23,13 +24,13 @@ import type { CanBeUndef, DeckCardTypes, IMyGameState, SuitTypes, TavernCardType
  */
 export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, cardId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
-        throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
     }
     const card: CanBeUndef<TavernCardTypes> = currentTavern[cardId];
     if (card === undefined) {
@@ -57,7 +58,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
 export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickDistinctionCard, cardId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickDistinctionCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -88,7 +89,7 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
 export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, suit);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -104,14 +105,14 @@ export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ct
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
 export const DiscardCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes,
     cardId: number): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, {
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, {
             suit,
             cardId,
         });
@@ -136,7 +137,7 @@ export const DiscardCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameSta
 export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardCard, cardId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -158,7 +159,7 @@ export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx
 export const GetEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default3, cardId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default3, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -174,13 +175,13 @@ export const GetEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @returns
  */
 export const GetMjollnirProfitMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, suit);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -200,7 +201,7 @@ export const GetMjollnirProfitMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
  */
 export const PassEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default2);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -222,7 +223,7 @@ export const PassEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameStat
  */
 export const PickDiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickDiscardCard, cardId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickDiscardCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -238,13 +239,13 @@ export const PickDiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ct
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @returns
  */
 export const PlaceEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes):
     string | void => {
-    const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default4, suit);
+    const isValidMove: boolean = ctx.playerID === ctx.currentPlayer
+        && IsValidMove(G, ctx, StageNames.PlaceEnlistmentMercenaries, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -264,7 +265,7 @@ export const PlaceEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameSta
  */
 export const StartEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

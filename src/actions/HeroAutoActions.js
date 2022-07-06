@@ -1,11 +1,12 @@
 import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypeNames, LogTypes } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
 import { UpgradeCoinAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -28,7 +29,7 @@ export const AddPickHeroAction = (G, ctx) => {
     else {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
     }
-    AddDataToLog(G, LogTypes.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
+    AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>
@@ -43,11 +44,11 @@ export const AddPickHeroAction = (G, ctx) => {
 export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         if (i > G.currentTavern) {
-            ReturnCoinToPlayerHands(G, Number(ctx.currentPlayer), i, false);
+            ReturnCoinToPlayerHands(G, ctx, Number(ctx.currentPlayer), i, false);
         }
     }
 };
@@ -70,7 +71,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     }
     const currentPlayer = G.solo ? 1 : Number(ctx.currentPlayer), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${currentPlayer}'.`);

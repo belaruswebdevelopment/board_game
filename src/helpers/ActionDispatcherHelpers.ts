@@ -56,8 +56,6 @@ const ActionDispatcherSwitcher = (actionName: string): ActionFunctionTypes => {
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action?: IAction): void => {
     if (action !== undefined) {
-        console.log(action.name);
-
         const actionDispatcher: ActionFunctionTypes = ActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
             actionDispatcher?.(G, ctx, ...action.params);

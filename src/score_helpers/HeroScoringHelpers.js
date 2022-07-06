@@ -1,5 +1,5 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { HeroNames, RusCardTypes, SuitNames } from "../typescript/enums";
+import { HeroNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 /**
 * <h3>Получение победных очков по героям.</h3>
@@ -25,7 +25,7 @@ export const HeroScoring = (player, heroName) => {
         case HeroNames.Idunn:
             return IdunnScoring(player);
         default:
-            throw new Error(`У карт с типом '${RusCardTypes.Hero}}' отсутствует герой с названием '${heroName}'.`);
+            throw new Error(`У карт с типом '${RusCardTypeNames.Hero}}' отсутствует герой с названием '${heroName}'.`);
     }
 };
 /**

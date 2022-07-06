@@ -1,26 +1,28 @@
 import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { BuffNames, HeroNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
- * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
+ * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При каждой выкладке монеты на стол игрока в фазе 'placeCoinsUline'.</li>
+ * <li>При каждой выкладке монеты на стол игрока в фазе 'Ставки Улина'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                ctx.currentPlayer);
         }
         const ulinePlayerIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
@@ -45,26 +47,26 @@ export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState, ctx: Ctx): boolean
 };
 
 /**
- * <h3>Проверяет порядок хода при начале фазы 'placeCoinsUline'.</h3>
+ * <h3>Проверяет порядок хода при начале фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При начале фазы 'placeCoinsUline'.</li>
+ * <li>При начале фазы 'Ставки Улина'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
-export const CheckUlinePlaceCoinsOrder = (G: IMyGameState, ctx: Ctx): void => CheckPlayersBasicOrder(G, ctx);
+export const CheckBidUlineOrder = (G: IMyGameState, ctx: Ctx): void => CheckPlayersBasicOrder(G, ctx);
 
 /**
- * <h3>Действия при завершении фазы 'placeCoinsUline'.</h3>
+ * <h3>Действия при завершении фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При завершении фазы 'placeCoinsUline'.</li>
+ * <li>При завершении фазы 'Ставки Улина'.</li>
  * </ol>
  *
  * @param G
  */
-export const EndPlaceCoinsUlineActions = (G: IMyGameState): void => {
+export const EndBidUlineActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
 };

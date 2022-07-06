@@ -2,7 +2,7 @@ import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypeNames, Stages } from "../typescript/enums";
+import { CoinTypeNames, StageNames } from "../typescript/enums";
 import type { IMyGameState } from "../typescript/interfaces";
 
 /**
@@ -19,7 +19,7 @@ import type { IMyGameState } from "../typescript/interfaces";
  */
 export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.AddCoinToPouch, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -41,7 +41,7 @@ export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
 export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickCampCardHolda, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -62,7 +62,7 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  */
 export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default2, cardId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -85,7 +85,7 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
 export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardSuitCard, {
+        ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardSuitCard, {
             playerId: Number(ctx.playerID),
             cardId,
         });
@@ -111,7 +111,7 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGam
 export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.UpgradeVidofnirVedrfolnirCoin, {
             coinId,
             type,
         });

@@ -1,4 +1,4 @@
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты Мифических существ.</h3>
  * <p>Применения:</p>
@@ -59,7 +59,7 @@ export const BuildMythologicalCreatureCards = (giantConfig, godConfig, mythicalA
  * @param capturedCard Захваченная карта.
  * @returns Карта Гиганта.
  */
-export const CreateGiantCard = ({ type = RusCardTypes.Giant, name, placedSuit, capturedCard = null, } = {}) => ({
+export const CreateGiantCard = ({ type = RusCardTypeNames.Giant, name, placedSuit, capturedCard = null, } = {}) => ({
     type,
     name,
     placedSuit,
@@ -78,7 +78,7 @@ export const CreateGiantCard = ({ type = RusCardTypes.Giant, name, placedSuit, c
  * @param godPower Сила Бога.
  * @returns Карта Бога.
  */
-export const CreateGodCard = ({ type = RusCardTypes.God, name, points, isPowerTokenUsed = null, } = {}) => ({
+export const CreateGodCard = ({ type = RusCardTypeNames.God, name, points, isPowerTokenUsed = null, } = {}) => ({
     type,
     name,
     points,
@@ -93,13 +93,13 @@ export const CreateGodCard = ({ type = RusCardTypes.God, name, points, isPowerTo
  *
  * @param type Тип.
  * @param name Название.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param ability Способность Мифического животного.
  * @returns Карта Мифического животного.
  */
-export const CreateMythicalAnimalCard = ({ type = RusCardTypes.Mythical_Animal, name, suit, rank = 1, points = null, } = {}) => ({
+export const CreateMythicalAnimalCard = ({ type = RusCardTypeNames.Mythical_Animal, name, suit, rank = 1, points = null, } = {}) => ({
     type,
     name,
     suit,
@@ -120,7 +120,7 @@ export const CreateMythicalAnimalCard = ({ type = RusCardTypes.Mythical_Animal, 
  * @param finalPoints Финальные очки.
  * @returns Карта Валькирии.
  */
-export const CreateValkyryCard = ({ type = RusCardTypes.Valkyry, name, strengthTokenNotch = null, } = {}) => ({
+export const CreateValkyryCard = ({ type = RusCardTypeNames.Valkyry, name, strengthTokenNotch = null, } = {}) => ({
     type,
     name,
     strengthTokenNotch,

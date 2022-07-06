@@ -1,8 +1,9 @@
 import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
-import { BuffNames } from "../typescript/enums";
+import { BuffNames, ErrorNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -41,7 +42,8 @@ export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                        i);
                 }
                 allMercenariesPlayed = player.campCards.filter((card: CampDeckCardTypes): boolean =>
                     IsMercenaryCampCard(card)).length === 0;

@@ -29,10 +29,11 @@ export const CreatePriority = ({
  * </ol>
  *
  * @param numPlayers Количество игроков.
+ * @param solo Является ли режим игры соло игрой.
  * @returns Массив базовых кристаллов.
  */
-export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriority[] => {
-    const priorityConfig: CanBeUndef<IPriority[]> = prioritiesConfig[numPlayers];
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number, solo: boolean): IPriority[] => {
+    const priorityConfig: CanBeUndef<IPriority[]> = prioritiesConfig[solo ? 1 : numPlayers];
     if (priorityConfig === undefined) {
         throw new Error(`В массиве конфига приоритетов отсутствует конфиг для количества игроков - '${numPlayers}'.`);
     }
@@ -80,7 +81,7 @@ const priorities: IPriority[] = [
  * </ol>
  */
 export const prioritiesConfig: IPrioritiesConfig = {
-    1: priorities.slice(0, 1),
+    1: priorities.slice(0, 2),
     2: priorities.slice(-2),
     3: priorities.slice(-3),
     4: priorities.slice(-4),

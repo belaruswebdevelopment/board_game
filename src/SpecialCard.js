@@ -1,5 +1,5 @@
 import { specialCardsConfig } from "./data/SpecialCardData";
-import { CardNames, GameNames, RusCardTypes } from "./typescript/enums";
+import { CardNames, GameNames, HeroNames, RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создание особых карт.</h3>
  * <p>Применения:</p>
@@ -41,6 +41,19 @@ export const CreateOlwinDoubleNonPlacedCard = ({ name = CardNames.OlwinsDouble, 
     suit,
 });
 /**
+ * <h3>Создание фейковой карты 'Труд'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании фейковой карты 'Труд' при необходимости отрисовки выкладки карты на стол игрока.</li>
+ * </ol>
+ *
+ * @param name Название.
+ * @returns
+ */
+export const CreateThrudNonPlacedCard = ({ name = HeroNames.Thrud, } = {}) => ({
+    name,
+});
+/**
  * <h3>Создание особой карты.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -48,14 +61,14 @@ export const CreateOlwinDoubleNonPlacedCard = ({ name = CardNames.OlwinsDouble, 
  * </ol>
  *
  * @param type Тип.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
  * @param game Игра/дополнение.
  * @returns Карта дворфа.
  */
-const CreateSpecialCard = ({ type = RusCardTypes.Special, suit, rank, points, name, game = GameNames.Basic, } = {}) => ({
+const CreateSpecialCard = ({ type = RusCardTypeNames.Special, suit, rank, points, name, game = GameNames.Basic, } = {}) => ({
     type,
     suit,
     rank,

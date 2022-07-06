@@ -1,23 +1,24 @@
 import { IsCoin } from "../Coin";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { BuffNames, HeroNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 /**
- * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
+ * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При каждой выкладке монеты на стол игрока в фазе 'placeCoinsUline'.</li>
+ * <li>При каждой выкладке монеты на стол игрока в фазе 'Ставки Улина'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceCoinsUlinePhase = (G, ctx) => {
+export const CheckEndBidUlinePhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
         if (!G.solo && ulinePlayerIndex !== -1) {
@@ -39,26 +40,26 @@ export const CheckEndPlaceCoinsUlinePhase = (G, ctx) => {
     }
 };
 /**
- * <h3>Проверяет порядок хода при начале фазы 'placeCoinsUline'.</h3>
+ * <h3>Проверяет порядок хода при начале фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При начале фазы 'placeCoinsUline'.</li>
+ * <li>При начале фазы 'Ставки Улина'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
-export const CheckUlinePlaceCoinsOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
+export const CheckBidUlineOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
 /**
- * <h3>Действия при завершении фазы 'placeCoinsUline'.</h3>
+ * <h3>Действия при завершении фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При завершении фазы 'placeCoinsUline'.</li>
+ * <li>При завершении фазы 'Ставки Улина'.</li>
  * </ol>
  *
  * @param G
  */
-export const EndPlaceCoinsUlineActions = (G) => {
+export const EndBidUlineActions = (G) => {
     G.publicPlayersOrder = [];
 };
-//# sourceMappingURL=PlaceCoinsUlineHooks.js.map
+//# sourceMappingURL=BidUlineHooks.js.map

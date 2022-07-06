@@ -1,6 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/CoinActions";
-import { CoinTypeNames } from "../typescript/enums";
+import { ThrowMyError } from "../Error";
+import { CoinTypeNames, ErrorNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
@@ -19,13 +20,13 @@ import type { CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescr
 export const UpgradeCoinActions = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypeNames): number => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
         throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const value: CanBeUndef<number> = stack.config?.value;
+    const value: CanBeUndef<number> = stack.value;
     if (value === undefined) {
         throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }

@@ -52,7 +52,6 @@ const ActionDispatcherSwitcher = (actionName) => {
  */
 export const StartAutoAction = (G, ctx, action) => {
     if (action !== undefined) {
-        console.log(action.name);
         const actionDispatcher = ActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
             actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, ...action.params);

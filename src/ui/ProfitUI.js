@@ -1,5 +1,6 @@
 import { IsDwarfCard } from "../Dwarf";
-import { ButtonNames, MoveNames, MoveValidatorNames, Stages } from "../typescript/enums";
+import { ThrowMyError } from "../Error";
+import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, StageNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 /**
  * <h3>Отрисовка поля для получения профита по фракции разведчиков.</h3>
@@ -28,7 +29,7 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
         }
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (data !== undefined && boardCells !== undefined) {
             DrawCard(data, boardCells, card, j, player, suit, MoveNames.ClickCardToPickDistinctionMove, j);
@@ -60,7 +61,7 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
 export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
@@ -88,7 +89,7 @@ export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
 export const DrawDifficultyLevelForSoloModeUI = (G, ctx, validatorName, data, boardCells) => {
     const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < 6; j++) {
@@ -131,10 +132,10 @@ export const DrawHeroesForSoloModeUI = (G, ctx, validatorName, data, boardCells)
                 throw new Error(`В массиве карт героев для выбора сложности соло игры отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 0
-                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.ChooseHeroesForSoloMode) {
+                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.ChooseHeroesForSoloMode) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null, MoveNames.ChooseHeroForDifficultySoloModeMove, j);

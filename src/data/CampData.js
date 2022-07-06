@@ -20,7 +20,7 @@ const Brisingamens = {
     validators: {
         pickDiscardCardToStack: {},
     },
-    stack: [StackData.pickDiscardCardBrisingamens(2)],
+    stack: [StackData.pickDiscardCardBrisingamens()],
     scoringRule: () => 0,
 };
 /**

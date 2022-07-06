@@ -1,24 +1,9 @@
 import type { Ctx } from "boardgame.io";
-import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
-import { ArtefactNames, LogTypes } from "../typescript/enums";
-import type { CampCardTypes, CampDeckCardTypes, CanBeUndef, IMyGameState, IStack, ITavernInConfig, TavernCardTypes } from "../typescript/interfaces";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
-
-/**
- * <h3>Добавляет действия в стэк при старте хода в фазе 'brisingamensEndGame'.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При старте хода в фазе 'brisingamensEndGame'.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const AddBrisingamensEndGameActionsToStack = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.brisingamensEndGameAction()]);
-};
+import { ArtefactNames, ErrorNames, LogTypeNames } from "../typescript/enums";
+import type { CampCardTypes, CampDeckCardTypes, CanBeUndef, IMyGameState, ITavernInConfig } from "../typescript/interfaces";
 
 /**
 * <h3>Заполняет лагерь новой картой из карт лагерь деки текущей эпохи.</h3>
@@ -42,40 +27,6 @@ const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
     }
     G.campDeckLength[G.secret.campDecks.length - G.tierToEnd] = campDeck.length;
     G.camp.splice(cardIndex, 1, newCampCard);
-};
-
-/**
- * <h3>Добавляет действия в стэк при старте хода в фазе 'enlistmentMercenaries'.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При старте хода в фазе 'enlistmentMercenaries'.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const AddEnlistmentMercenariesActionsToStack = (G: IMyGameState, ctx: Ctx): void => {
-    let stack: IStack[];
-    if (ctx.playOrderPos === 0) {
-        stack = [StackData.startOrPassEnlistmentMercenaries()];
-    } else {
-        stack = [StackData.enlistmentMercenaries()];
-    }
-    AddActionsToStackAfterCurrent(G, ctx, stack);
-};
-
-/**
- * <h3>Добавляет действия в стэк при старте фазы 'getMjollnirProfit'.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При старте хода в фазе 'getMjollnirProfit'.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const AddGetMjollnirProfitActionsToStack = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.getMjollnirProfit()]);
 };
 
 /**
@@ -113,14 +64,14 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
         campDeck.splice(0);
         G.campDeckLength[G.secret.campDecks.length - G.tierToEnd - 1] = campDeck.length;
     }
-    AddDataToLog(G, LogTypes.Game, `Оставшиеся карты лагеря сброшены.`);
+    AddDataToLog(G, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
 };
 
 /**
- * <h3>Убирает дополнительную карту из таверны в стопку сброса при пике артефакта Jarnglofi.</h3>
+ * <h3>Убирает одну лишнюю карту из таверны в стопку сброса, если какой-то игрок выбрал в лагере артефакт Jarnglofi и если сброшенная обменная монета была выложена на месте одной из таверн.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При пике артефакта Jarnglofi.</li>
+ * <li>При выборе каким-то игроком в лагере артефакта Jarnglofi, если сброшенная обменная монета была выложена на месте одной из таверн.</li>
  * </ol>
  *
  * @param G
@@ -128,25 +79,20 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void => {
-    const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
-    if (currentTavern === undefined) {
-        throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
-    }
-    const cardIndex: number = currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null);
-    if (cardIndex === -1) {
-        throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' при пике артефакта '${ArtefactNames.Jarnglofi}'.`);
-    }
     const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
-        throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined, G.currentTavern);
     }
-    AddDataToLog(G, LogTypes.Game, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта '${ArtefactNames.Jarnglofi}'.`);
-    DiscardCardFromTavern(G, ctx, cardIndex);
+    AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
+    const isCardDiscarded: boolean = DiscardCardFromTavern(G, ctx);
+    if (!isCardDiscarded) {
+        throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${G.currentTavern}' при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
+    }
     G.mustDiscardTavernCardJarnglofi = false;
 };
 
 /**
- * <h3>Автоматически убирает оставшуюся карту таверны в колоду сброса при выборе карты из лагеря.</h3>
+ * <h3>Автоматически сбрасывает лишнюю карту таверны в колоду сброса, если первый игрок выбрал карту из лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Проверяется после каждого выбора карты из таверны, если последний игрок в текущей таверне уже выбрал карту.</li>
@@ -157,18 +103,15 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void 
  */
 export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => {
     if (G.campPicked) {
-        const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
-        if (currentTavern === undefined) {
-            throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
+        const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[G.currentTavern];
+        if (currentTavernConfig === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined,
+                G.currentTavern);
         }
-        const discardCardIndex: number =
-            currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null);
-        let isCardDiscarded = false;
-        if (discardCardIndex !== -1) {
-            isCardDiscarded = DiscardCardFromTavern(G, ctx, discardCardIndex);
-        }
+        AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
+        const isCardDiscarded: boolean = DiscardCardFromTavern(G, ctx);
         if (!isCardDiscarded) {
-            throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' после выбора карты лагеря в конце пиков из таверны.`);
+            throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${G.currentTavern}' после выбора карты лагеря в конце выбора карт из таверны.`);
         }
         G.campPicked = false;
     }
@@ -208,7 +151,7 @@ export const RefillCamp = (G: IMyGameState): void => {
         AddCardToCamp(G, i);
     }
     G.odroerirTheMythicCauldron = true;
-    AddDataToLog(G, LogTypes.Game, `Кэмп заполнен новыми картами новой эпохи.`);
+    AddDataToLog(G, LogTypeNames.Game, `Кэмп заполнен новыми картами новой эпохи.`);
 };
 
 /**
@@ -241,6 +184,6 @@ export const RefillEmptyCampCards = (G: IMyGameState): void => {
                 AddCardToCamp(G, cardIndex);
             }
         });
-        AddDataToLog(G, LogTypes.Game, `Кэмп заполнен новыми картами.`);
+        AddDataToLog(G, LogTypeNames.Game, `Кэмп заполнен новыми картами.`);
     }
 };

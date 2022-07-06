@@ -1,8 +1,10 @@
+import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { BuffNames } from "../typescript/enums";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { BuffNames, ErrorNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
  * <p>Применения:</p>
@@ -18,7 +20,7 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (!player.stack.length && !player.actionsNum) {
             return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
@@ -65,7 +67,7 @@ export const OnGetMjollnirProfitMove = (G, ctx) => {
  * @param ctx
  */
 export const OnGetMjollnirProfitTurnBegin = (G, ctx) => {
-    AddGetMjollnirProfitActionsToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.getMjollnirProfit()]);
     DrawCurrentProfit(G, ctx);
 };
 /**

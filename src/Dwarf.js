@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { GameNames, RusCardTypes } from "./typescript/enums";
+import { GameNames, RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты дворфов.</h3>
  * <p>Применения:</p>
@@ -59,7 +59,7 @@ export const BuildDwarfCards = (data) => {
  * </ol>
  *
  * @param type Тип.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
@@ -67,7 +67,7 @@ export const BuildDwarfCards = (data) => {
  * @param tier Эпоха.
  * @returns Карта дворфа.
  */
-export const CreateDwarfCard = ({ type = RusCardTypes.Dwarf, suit, rank = 1, points, name, game, tier = 0, } = {}) => ({
+export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf, suit, rank = 1, points, name, game, tier = 0, } = {}) => ({
     type,
     suit,
     rank,

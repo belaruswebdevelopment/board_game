@@ -1,9 +1,11 @@
 import type { Ctx } from "boardgame.io";
+import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { BuffNames } from "../typescript/enums";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { BuffNames, ErrorNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -21,7 +23,7 @@ export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boole
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (!player.stack.length && !player.actionsNum) {
             return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
@@ -73,7 +75,7 @@ export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddGetMjollnirProfitActionsToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.getMjollnirProfit()]);
     DrawCurrentProfit(G, ctx);
 };
 

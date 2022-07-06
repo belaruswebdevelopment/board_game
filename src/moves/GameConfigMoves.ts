@@ -1,10 +1,11 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
+import { ErrorNames, StageNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -22,7 +23,7 @@ import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../type
 export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, level: number):
     string | void => {
     const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, Stages.Default1, level);
+        && IsValidMove(G, ctx, StageNames.Default1, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -45,13 +46,13 @@ export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyG
 export const ChooseHeroForDifficultySoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
     string | void => {
     const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, Stages.ChooseHeroesForSoloMode, heroId);
+        && IsValidMove(G, ctx, StageNames.ChooseHeroesForSoloMode, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (G.heroesForSoloGameDifficultyLevel === null) {
         throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);

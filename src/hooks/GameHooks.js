@@ -1,7 +1,8 @@
 import { IsMercenaryCampCard } from "../Camp";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
-import { BuffNames } from "../typescript/enums";
+import { BuffNames, ErrorNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>
  * <p>Применения:</p>
@@ -32,7 +33,7 @@ export const CheckEndGame = (G, ctx) => {
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
                 allMercenariesPlayed = player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
                 if (!allMercenariesPlayed) {

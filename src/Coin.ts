@@ -13,8 +13,8 @@ import type { CanBeUndef, CreateCoinType, IBuildCoinsOptions, ICoin, IMarketCoin
  * @param options Опции создания монет.
  * @returns Массив всех монет.
  */
-export const BuildCoins = (coinConfig: IMarketCoinConfig[] | InitialTradingCoinConfigType[], options: IBuildCoinsOptions):
-    ICoin[] => {
+export const BuildCoins = (coinConfig: IMarketCoinConfig[] | InitialTradingCoinConfigType[],
+    options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
         const config: CanBeUndef<IMarketCoinConfig | InitialTradingCoinConfigType> = coinConfig[i];

@@ -2,13 +2,14 @@ import type { Ctx } from "boardgame.io";
 import { IsArtefactCard } from "../Camp";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CoinTypeNames, LogTypes, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
 import type { CampCardTypes, CanBeUndef, IMyGameState, IPlayer, IPublicPlayer, PlayerCardTypes, PublicPlayerCoinTypes } from "../typescript/interfaces";
 import { StartVidofnirVedrfolnirAction } from "./CampAutoActions";
 
@@ -27,7 +28,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -63,7 +64,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
     }
     player.boardCoins[tempId] = handCoin;
     handCoins[coinId] = null;
-    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' положил монету ценностью '${handCoin.value}' в свой кошель.`);
+    AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' положил монету ценностью '${handCoin.value}' в свой кошель.`);
     StartVidofnirVedrfolnirAction(G, ctx);
 };
 
@@ -81,14 +82,15 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
 export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.playerID)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.playerID}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+            ctx.playerID!);
     }
     const discardedCard: CanBeUndef<PlayerCardTypes> =
         player.cards[SuitNames.Warrior].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
-    DiscardPickedCard(G, player, discardedCard);
+    DiscardPickedCard(G, discardedCard);
     player.stack = [];
 };
 

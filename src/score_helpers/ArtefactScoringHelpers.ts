@@ -1,7 +1,7 @@
 import { IsMercenaryPlayerCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { ArtefactNames, BuffNames, RusCardTypes } from "../typescript/enums";
+import { ArtefactNames, BuffNames, RusCardTypeNames } from "../typescript/enums";
 import type { CanBeUndef, IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardTypes, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
@@ -39,7 +39,7 @@ export const ArtefactScoring = (G?: IMyGameState, player?: IPublicPlayer, artefa
         case ArtefactNames.Svalinn:
             return SvalinnScoring(player);
         default:
-            throw new Error(`У карт с типом '${RusCardTypes.Artefact}' отсутствует ${RusCardTypes.Artefact} с названием '${artefactName}'.`);
+            throw new Error(`У карт с типом '${RusCardTypeNames.Artefact}' отсутствует ${RusCardTypeNames.Artefact} с названием '${artefactName}'.`);
     }
 };
 

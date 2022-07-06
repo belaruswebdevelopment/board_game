@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { LogTypes } from "../typescript/enums";
+import { LogTypeNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка лог панели.</h3>
  * <p>Применения:</p>
@@ -16,13 +16,13 @@ export const DrawLogData = (G) => {
         for (let i = G.logData.length - 1; i >= 0; i--) {
             const log = G.logData[i];
             if (log !== undefined) {
-                if (log.type === LogTypes.Private) {
+                if (log.type === LogTypeNames.Private) {
                     loggingData.push(_jsx("li", { className: "text-black", children: log.value }, `Log ${i}`));
                 }
-                else if (log.type === LogTypes.Game) {
+                else if (log.type === LogTypeNames.Game) {
                     loggingData.push(_jsx("li", { className: "text-blue-500", children: log.value }, `Log ${i}`));
                 }
-                else if (log.type === LogTypes.Public) {
+                else if (log.type === LogTypeNames.Public) {
                     loggingData.push(_jsx("li", { className: "text-green-500", children: log.value }, `Log ${i}`));
                 }
                 else {

@@ -1,6 +1,8 @@
 import { suitsConfig } from "../data/SuitData";
+import { ThrowMyError } from "../Error";
+import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, LogTypes } from "../typescript/enums";
+import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -19,10 +21,22 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
     if (hero.suit !== null) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        player.cards[hero.suit].push(hero);
-        AddDataToLog(G, LogTypes.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
+        const heroCard = CreateHeroPlayerCard({
+            suit: hero.suit,
+            rank: hero.rank,
+            points: hero.points,
+            type: RusCardTypeNames.Hero_Player_Card,
+            name: hero.name,
+            game: hero.game,
+            description: hero.description,
+        });
+        player.cards[hero.suit].push(heroCard);
+        AddDataToLog(G, LogTypeNames.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
+        if (heroCard.name !== HeroNames.Thrud) {
+            CheckAndMoveThrudAction(G, ctx, heroCard);
+        }
     }
 };
 /**
@@ -43,7 +57,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
         throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
     }
     else if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.pickedCard = hero;
     if (!hero.active) {
@@ -54,7 +68,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     if (G.expansions.idavoll) {
         CheckValkyryRequirement(player, Number(ctx.currentPlayer), BuffNames.CountPickedHeroAmount);
     }
-    AddDataToLog(G, LogTypes.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 /**
  * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>
@@ -71,7 +85,6 @@ export const AddHeroToPlayerCards = (G, ctx, hero) => {
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
     AddHeroCardToPlayerCards(G, ctx, hero);
     AddBuffToPlayer(G, ctx, hero.buff);
-    CheckAndMoveThrudAction(G, ctx, hero);
 };
 /**
  * <h3>Действия, связанные с добавлением героев в массив карт соло бота.</li>
@@ -87,7 +100,7 @@ export const AddHeroToPlayerCards = (G, ctx, hero) => {
 export const AddHeroForDifficultyToSoloBotCards = (G, ctx, hero) => {
     const soloBotPublicPlayer = G.publicPlayers[1], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (soloBotPublicPlayer === undefined) {
         throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
@@ -97,6 +110,6 @@ export const AddHeroForDifficultyToSoloBotCards = (G, ctx, hero) => {
     }
     hero.active = false;
     soloBotPublicPlayer.heroes.push(hero);
-    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
+    AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
 };
 //# sourceMappingURL=HeroCardHelpers.js.map

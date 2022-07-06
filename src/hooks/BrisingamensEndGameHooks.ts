@@ -1,8 +1,9 @@
 import type { Ctx } from "boardgame.io";
+import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
@@ -92,6 +93,6 @@ export const OnBrisingamensEndGameMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddBrisingamensEndGameActionsToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.brisingamensEndGameAction()]);
     DrawCurrentProfit(G, ctx);
 };

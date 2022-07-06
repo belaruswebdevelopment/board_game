@@ -1,9 +1,10 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
+import { ErrorNames, StageNames } from "../typescript/enums";
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
  * <p>Применения:</p>
@@ -18,7 +19,7 @@ import { Stages } from "../typescript/enums";
  */
 export const ChooseDifficultyLevelForSoloModeMove = (G, ctx, level) => {
     const isValidMove = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, Stages.Default1, level);
+        && IsValidMove(G, ctx, StageNames.Default1, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -39,13 +40,13 @@ export const ChooseDifficultyLevelForSoloModeMove = (G, ctx, level) => {
  */
 export const ChooseHeroForDifficultySoloModeMove = (G, ctx, heroId) => {
     const isValidMove = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, Stages.ChooseHeroesForSoloMode, heroId);
+        && IsValidMove(G, ctx, StageNames.ChooseHeroesForSoloMode, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (G.heroesForSoloGameDifficultyLevel === null) {
         throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);

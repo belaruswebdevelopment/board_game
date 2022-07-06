@@ -1,5 +1,5 @@
 import { actionCardsConfigArray } from "./data/RoyalOfferingCardData";
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты королевских наград.</h3>
  * <p>Применения:</p>
@@ -16,21 +16,21 @@ export const BuildRoyalOfferingCards = (data) => {
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
         const currentActionCardConfig = actionCardsConfigArray[i];
         if (currentActionCardConfig === undefined) {
-            throw new Error(`В массиве конфигов карт '${RusCardTypes.Royal_Offering}' отсутствует значение с id '${i}'.`);
+            throw new Error(`В массиве конфигов карт '${RusCardTypeNames.Royal_Offering}' отсутствует значение с id '${i}'.`);
         }
         const amountPlayersValue = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypes.Royal_Offering}' для указанного числа игроков - '${data.players}'.`);
+            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering}' для указанного числа игроков - '${data.players}'.`);
         }
         const amountTierValue = amountPlayersValue[data.tier];
         if (amountTierValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypes.Royal_Offering}' для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
+            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering}' для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
         }
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateRoyalOfferingCard({
                 value: currentActionCardConfig.value,
                 stack: currentActionCardConfig.stack,
-                name: `'${RusCardTypes.Royal_Offering}' на +${currentActionCardConfig.value}`,
+                name: `'${RusCardTypeNames.Royal_Offering}' на +${currentActionCardConfig.value}`,
             }));
         }
     }
@@ -53,7 +53,7 @@ export const BuildRoyalOfferingCards = (data) => {
  * @param name Название.
  * @returns Карта королевской награды.
  */
-const CreateRoyalOfferingCard = ({ type = RusCardTypes.Royal_Offering, value, stack, name, } = {}) => ({
+const CreateRoyalOfferingCard = ({ type = RusCardTypeNames.Royal_Offering, value, stack, name, } = {}) => ({
     type,
     value,
     stack,

@@ -1,121 +1,91 @@
-import { ConfigNames, DrawNames, Stages, SuitNames } from "../typescript/enums";
+import { ConfigNames, DrawNames, StageNames, SuitNames } from "../typescript/enums";
+// TODO Add type!
 export const StackData = {
     addCoinToPouch: (number) => ({
-        config: {
-            stageName: Stages.AddCoinToPouch,
-            number,
-            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-        },
+        stageName: StageNames.AddCoinToPouch,
+        number,
+        drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
     brisingamensEndGameAction: () => ({
-        config: {
-            drawName: DrawNames.BrisingamensEndGame,
-        },
+        drawName: DrawNames.BrisingamensEndGame,
     }),
     discardCardFromBoardBonfur: () => ({
-        config: {
-            stageName: Stages.DiscardBoardCard,
-            drawName: DrawNames.Bonfur,
-            suit: SuitNames.Blacksmith,
-        },
+        stageName: StageNames.DiscardBoardCard,
+        drawName: DrawNames.Bonfur,
+        suit: SuitNames.Blacksmith,
     }),
     discardCardFromBoardCrovaxTheDoppelganger: () => ({
-        config: {
-            stageName: Stages.DiscardBoardCard,
-            drawName: DrawNames.CrovaxTheDoppelganger,
-        },
+        stageName: StageNames.DiscardBoardCard,
+        drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (number) => ({
-        config: {
-            stageName: Stages.DiscardBoardCard,
-            drawName: DrawNames.Dagda,
-            suit: SuitNames.Hunter,
-            number,
-        },
+    discardCardFromBoardDagda: (number = 2) => ({
+        stageName: StageNames.DiscardBoardCard,
+        drawName: DrawNames.Dagda,
+        suit: SuitNames.Hunter,
+        number,
     }),
     discardSuitCard: (playerId) => ({
         playerId,
     }),
     discardSuitCardHofud: () => ({
-        config: {
-            drawName: DrawNames.Hofud,
-        },
+        drawName: DrawNames.Hofud,
     }),
     discardTavernCard: () => ({
-        config: {
-            stageName: Stages.DiscardCard,
-            drawName: DrawNames.DiscardTavernCard,
-        },
+        stageName: StageNames.DiscardCard,
+        drawName: DrawNames.DiscardTavernCard,
     }),
     enlistmentMercenaries: () => ({
-        config: {
-            drawName: DrawNames.EnlistmentMercenaries,
-        },
+        drawName: DrawNames.EnlistmentMercenaries,
     }),
     getDifficultyLevelForSoloMode: () => ({
-        config: {
-            name: ConfigNames.GetDifficultyLevelForSoloMode,
-            drawName: DrawNames.GetDifficultyLevelForSoloMode,
-        },
+        name: ConfigNames.GetDifficultyLevelForSoloMode,
+        drawName: DrawNames.GetDifficultyLevelForSoloMode,
     }),
     getHeroesForSoloMode: (number) => ({
-        config: {
-            name: ConfigNames.GetHeroesForSoloMode,
-            stageName: Stages.ChooseHeroesForSoloMode,
-            drawName: DrawNames.GetHeroesForSoloMode,
-            number,
-        },
+        name: ConfigNames.GetHeroesForSoloMode,
+        stageName: StageNames.ChooseHeroesForSoloMode,
+        drawName: DrawNames.GetHeroesForSoloMode,
+        number,
     }),
     getDistinctions: () => ({
-        config: {
-            drawName: DrawNames.GetMjollnirProfit,
-        },
+        drawName: DrawNames.GetMjollnirProfit,
     }),
     getMjollnirProfit: () => ({
-        config: {
-            drawName: DrawNames.Mjollnir,
-        },
+        drawName: DrawNames.Mjollnir,
     }),
     pickCampCardHolda: () => ({
-        config: {
-            stageName: Stages.PickCampCardHolda,
-            drawName: DrawNames.Holda,
-        },
+        stageName: StageNames.PickCampCardHolda,
+        drawName: DrawNames.Holda,
     }),
     pickCard: () => ({
-        config: {
-            drawName: DrawNames.PickCard,
-        },
+        drawName: DrawNames.PickCard,
     }),
     pickConcreteCoinToUpgrade: (coinValue, value) => ({
-        config: {
-            stageName: Stages.PickConcreteCoinToUpgrade,
-            drawName: DrawNames.PickConcreteCoinToUpgrade,
-            coinValue,
-            value,
-        },
+        stageName: StageNames.PickConcreteCoinToUpgrade,
+        drawName: DrawNames.PickConcreteCoinToUpgrade,
+        coinValue,
+        value,
     }),
     pickDiscardCardAndumia: () => ({
-        config: {
-            stageName: Stages.PickDiscardCard,
-            drawName: DrawNames.Andumia,
-        },
+        stageName: StageNames.PickDiscardCard,
+        drawName: DrawNames.Andumia,
     }),
-    pickDiscardCardBrisingamens: (number) => ({
-        config: {
-            stageName: Stages.PickDiscardCard,
-            drawName: DrawNames.Brisingamens,
-            number,
-        },
+    pickDiscardCardBrisingamens: (number = 2, priority) => ({
+        stageName: StageNames.PickDiscardCard,
+        drawName: DrawNames.Brisingamens,
+        number,
+        priority,
     }),
     pickDistinctionCard: () => ({
-        config: {
-            name: ConfigNames.ExplorerDistinction,
-            stageName: Stages.PickDistinctionCard,
-            drawName: DrawNames.PickCardByExplorerDistinction,
-        },
+        name: ConfigNames.ExplorerDistinction,
+        stageName: StageNames.PickDistinctionCard,
+        drawName: DrawNames.PickCardByExplorerDistinction,
     }),
-    placeOlwinCards: (number) => ({
+    pickDistinctionCardSoloBot: () => ({
+        stageName: StageNames.PickDistinctionCardSoloBot,
+        drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
+    }),
+    placeOlwinCards: (number = 2, suit, priority) => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.Blacksmith,
@@ -143,11 +113,11 @@ export const StackData = {
                 points: 0,
             },
         },
-        config: {
-            stageName: Stages.PlaceOlwinCards,
-            drawName: DrawNames.Olwin,
-            number,
-        },
+        stageName: StageNames.PlaceOlwinCards,
+        drawName: DrawNames.PlaceOlwinDouble,
+        number,
+        suit,
+        priority,
     }),
     placeThrudHero: () => ({
         variants: {
@@ -177,19 +147,17 @@ export const StackData = {
                 points: null,
             },
         },
-        config: {
-            stageName: Stages.PlaceThrudHero,
-            drawName: DrawNames.Thrud,
-        },
+        stageName: StageNames.PlaceThrudHero,
+        drawName: DrawNames.PlaceThrudHero,
+        priority: 2,
     }),
     placeTradingCoinsUline: (number) => ({
-        config: {
-            stageName: Stages.PlaceTradingCoinsUline,
-            drawName: DrawNames.PlaceTradingCoinsUline,
-            number,
-        },
+        stageName: StageNames.PlaceTradingCoinsUline,
+        drawName: DrawNames.PlaceTradingCoinsUline,
+        number,
     }),
     placeYludHero: () => ({
+        // TODO Move such logic for all heroes (Thrud, Ylud, Olwin) to Hero card variants
         variants: {
             blacksmith: {
                 suit: SuitNames.Blacksmith,
@@ -217,54 +185,40 @@ export const StackData = {
                 points: 1,
             },
         },
-        config: {
-            drawName: DrawNames.Ylud,
-        },
+        drawName: DrawNames.PlaceYludHero,
     }),
     pickHero: () => ({
-        config: {
-            stageName: Stages.PickHero,
-            drawName: DrawNames.PickHero,
-        },
+        stageName: StageNames.PickHero,
+        drawName: DrawNames.PickHero,
+        priority: 1,
     }),
     pickHeroSoloBot: () => ({
-        config: {
-            stageName: Stages.PickHeroSoloBot,
-            drawName: DrawNames.PickHeroSoloBot,
-        },
+        stageName: StageNames.PickHeroSoloBot,
+        drawName: DrawNames.PickHeroSoloBot,
     }),
     placeEnlistmentMercenaries: () => ({
-        config: {
-            drawName: DrawNames.PlaceEnlistmentMercenaries,
-        },
+        stageName: StageNames.PlaceEnlistmentMercenaries,
+        drawName: DrawNames.PlaceEnlistmentMercenaries,
     }),
     startOrPassEnlistmentMercenaries: () => ({
-        config: {
-            name: ConfigNames.StartOrPassEnlistmentMercenaries,
-            drawName: DrawNames.StartOrPassEnlistmentMercenaries,
-        },
+        name: ConfigNames.StartOrPassEnlistmentMercenaries,
+        drawName: DrawNames.StartOrPassEnlistmentMercenaries,
     }),
     upgradeCoin: (value) => ({
-        config: {
-            stageName: Stages.UpgradeCoin,
-            value,
-            drawName: DrawNames.UpgradeCoin,
-        },
+        stageName: StageNames.UpgradeCoin,
+        value,
+        drawName: DrawNames.UpgradeCoin,
     }),
     upgradeCoinVidofnirVedrfolnir: (value, coinId) => ({
-        config: {
-            coinId,
-            stageName: Stages.UpgradeVidofnirVedrfolnirCoin,
-            value,
-            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
-        },
+        coinId,
+        stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+        value,
+        drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
     }),
     upgradeCoinWarriorDistinction: () => ({
-        config: {
-            stageName: Stages.UpgradeCoin,
-            value: 5,
-            drawName: DrawNames.UpgradeCoinWarriorDistinction,
-        },
+        stageName: StageNames.UpgradeCoin,
+        value: 5,
+        drawName: DrawNames.UpgradeCoinWarriorDistinction,
     }),
 };
 //# sourceMappingURL=StackData.js.map

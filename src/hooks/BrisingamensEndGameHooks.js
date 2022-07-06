@@ -1,7 +1,8 @@
+import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
@@ -81,7 +82,7 @@ export const OnBrisingamensEndGameMove = (G, ctx) => {
  * @param ctx
  */
 export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
-    AddBrisingamensEndGameActionsToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.brisingamensEndGameAction()]);
     DrawCurrentProfit(G, ctx);
 };
 //# sourceMappingURL=BrisingamensEndGameHooks.js.map

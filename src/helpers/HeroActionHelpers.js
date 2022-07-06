@@ -1,6 +1,7 @@
 import { StackData } from "../data/StackData";
-import { BuffNames, HeroNames } from "../typescript/enums";
-import { CheckPlayerHasBuff } from "./BuffHelpers";
+import { ThrowMyError } from "../Error";
+import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
+import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
@@ -18,9 +19,10 @@ export const CheckAndMoveThrud = (G, ctx, card) => {
     if (card.suit !== null) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
-        if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)) {
+        if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)
+            && GetBuffValue(G, ctx, BuffNames.MoveThrud) === card.suit) {
             const index = player.cards[card.suit].findIndex((card) => card.name === HeroNames.Thrud);
             if (index !== -1) {
                 const thrudCard = player.cards[card.suit][index];

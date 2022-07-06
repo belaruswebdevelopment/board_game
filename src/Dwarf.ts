@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { GameNames, RusCardTypes } from "./typescript/enums";
+import { GameNames, RusCardTypeNames } from "./typescript/enums";
 import type { CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArrayValues, INumberValues, IPlayersNumberTierCardData, SuitTypes } from "./typescript/interfaces";
 
 /**
@@ -61,7 +61,7 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
  * </ol>
  *
  * @param type Тип.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
@@ -70,7 +70,7 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
  * @returns Карта дворфа.
  */
 export const CreateDwarfCard = ({
-    type = RusCardTypes.Dwarf,
+    type = RusCardTypeNames.Dwarf,
     suit,
     rank = 1,
     points,

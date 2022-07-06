@@ -1,8 +1,9 @@
 import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CardNames, CoinTypeNames, LogTypes, SuitNames } from "../typescript/enums";
+import { CardNames, CoinTypeNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -22,7 +23,7 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
         const card = G.specialCardsDeck.find((card) => card.name === CardNames.ChiefBlacksmith);
@@ -32,7 +33,7 @@ export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
         player.pickedCard = card;
         player.cards[SuitNames.Blacksmith].push(card);
         G.distinctions[SuitNames.Blacksmith] = undefined;
-        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${CardNames.ChiefBlacksmith}'.`);
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${CardNames.ChiefBlacksmith}'.`);
         CheckAndMoveThrudAction(G, ctx, card);
     }
     return 0;
@@ -53,11 +54,16 @@ export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
 export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
-        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
+        if (G.solo && ctx.currentPlayer === `1`) {
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
+        }
+        else {
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
     return 0;
 };
@@ -78,7 +84,7 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
     if (G.tierToEnd !== 0) {
         const player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
         }
         if (privatePlayer === undefined) {
             throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerId}'.`);
@@ -104,7 +110,7 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
             throw new Error(`Не существует типа монеты - '${type}'.`);
         }
         G.distinctions[SuitNames.Hunter] = undefined;
-        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' обменял по знаку отличия охотников свою монету с номиналом '0' на особую монету с номиналом '3'.`);
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия охотников свою монету с номиналом '0' на особую монету с номиналом '3'.`);
     }
     return 0;
 };
@@ -124,7 +130,7 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
 export const MinerDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
         const currentPriorityValue = player.priority.value;
@@ -133,7 +139,7 @@ export const MinerDistinctionAwarding = (G, ctx, playerId) => {
             isExchangeable: false,
         });
         G.distinctions[SuitNames.Miner] = undefined;
-        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);
     }
     else {
         if (player.priority.value === 6) {
@@ -158,11 +164,11 @@ export const MinerDistinctionAwarding = (G, ctx, playerId) => {
 export const WarriorDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
-        AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
     }
     else {
         return GetMaxCoinValue(player);

@@ -1,4 +1,4 @@
-import { ArtefactNames, DrawNames, LogTypes, RusCardTypes, Stages, SuitNames } from "../../typescript/enums";
+import { ArtefactNames, DrawNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 describe(`Test AddCoinToPouchAction method`, () => {
     it(`should add first coin isOpened=false to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, () => {
@@ -36,11 +36,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 2,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 2,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
@@ -84,25 +82,21 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 2,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 2,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 1,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 1,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
@@ -143,11 +137,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 2,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 2,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
@@ -191,25 +183,21 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 2,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 2,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 1,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 1,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
@@ -262,11 +250,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 2,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 2,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
@@ -326,25 +312,21 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 2,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 2,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 1,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 1,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
@@ -385,11 +367,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 1,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 1,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
@@ -433,26 +413,22 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 1,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 1,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            config: {
-                                coinId: undefined,
-                                stageName: Stages.UpgradeVidofnirVedrfolnirCoin,
-                                value: 3,
-                                drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
-                            },
+                            coinId: undefined,
+                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            value: 3,
+                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
                 },
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
@@ -510,11 +486,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 1,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 1,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
                 },
@@ -575,26 +549,22 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.AddCoinToPouch,
-                                number: 1,
-                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            },
+                            stageName: StageNames.AddCoinToPouch,
+                            number: 1,
+                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            config: {
-                                coinId: undefined,
-                                stageName: Stages.UpgradeVidofnirVedrfolnirCoin,
-                                value: 3,
-                                drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
-                            },
+                            coinId: undefined,
+                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            value: 3,
+                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
                 },
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
@@ -823,7 +793,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             ],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
             ],
@@ -839,7 +809,6 @@ describe(`Test DiscardSuitCardAction method`, () => {
                             {
                                 name: `Test`,
                                 suit: SuitNames.Warrior,
-                                variants: {},
                             },
                         ],
                     },
@@ -870,12 +839,11 @@ describe(`Test DiscardSuitCardAction method`, () => {
                 {
                     name: `Test`,
                     suit: SuitNames.Warrior,
-                    variants: {},
                 },
             ],
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
                 },
             ],
@@ -900,7 +868,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             DiscardSuitCardAction(G, {
                 playerID: `0`,
             }, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypes.Hero}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero}'.`);
     });
 });
 //# sourceMappingURL=CampActions.test.js.map

@@ -1,14 +1,16 @@
 import type { Ctx } from "boardgame.io";
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
-import { CheckIfSoloBotMustTakeCardToPickHero, CheckIfSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
+import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
 import { IsMercenaryCampCard } from "./Camp";
 import { IsCoin } from "./Coin";
 import { IsDwarfCard } from "./Dwarf";
+import { ThrowMyError } from "./Error";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
+import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { CoinTypeNames, MoveNames, MoveValidatorNames, Phases, PickCardValidatorNames, Stages, SuitNames } from "./typescript/enums";
+import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickCardValidatorNames, StageNames, SuitNames } from "./typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
@@ -31,7 +33,7 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -93,8 +95,8 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
  * @param id Данные для валидации.
  * @returns Валидный ли мув.
  */
-export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: Stages, id?: ValidMoveIdParamTypes): boolean => {
-    const validator: IMoveValidator | null = GetValidator(ctx.phase as Phases, stage);
+export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageNames, id?: ValidMoveIdParamTypes): boolean => {
+    const validator: IMoveValidator | null = GetValidator(ctx.phase as PhaseNames, stage);
     let isValid = false;
     if (validator !== null) {
         if (typeof id === `number`) {
@@ -134,34 +136,34 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: Stages, id?: Valid
  * @param stage Стадия игры.
  * @returns
  */
-export const GetValidator = (phase: Phases, stage: Stages): IMoveValidator | null => {
+export const GetValidator = (phase: PhaseNames, stage: StageNames): IMoveValidator | null => {
     let validator: IMoveValidator | null;
     switch (phase) {
-        case Phases.ChooseDifficultySoloMode:
+        case PhaseNames.ChooseDifficultySoloMode:
             validator = moveBy[phase][stage as keyof IMoveByChooseDifficultySoloModeOptions];
             break;
-        case Phases.PlaceCoins:
+        case PhaseNames.Bids:
             validator = moveBy[phase][stage as keyof IMoveByPlaceCoinsOptions];
             break;
-        case Phases.PlaceCoinsUline:
+        case PhaseNames.BidUline:
             validator = moveBy[phase][stage as keyof IMoveByPlaceCoinsUlineOptions];
             break;
-        case Phases.PickCards:
+        case PhaseNames.TavernsResolution:
             validator = moveBy[phase][stage as keyof IMoveByPickCardsOptions];
             break;
-        case Phases.EnlistmentMercenaries:
+        case PhaseNames.EnlistmentMercenaries:
             validator = moveBy[phase][stage as keyof IMoveByEnlistmentMercenariesOptions];
             break;
-        case Phases.EndTier:
+        case PhaseNames.PlaceYlud:
             validator = moveBy[phase][stage as keyof IMoveByEndTierOptions];
             break;
-        case Phases.GetDistinctions:
+        case PhaseNames.TroopEvaluation:
             validator = moveBy[phase][stage as keyof IMoveByGetDistinctionsOptions];
             break;
-        case Phases.BrisingamensEndGame:
+        case PhaseNames.BrisingamensEndGame:
             validator = moveBy[phase][stage as keyof IMoveByBrisingamensEndGameOptions];
             break;
-        case Phases.GetMjollnirProfit:
+        case PhaseNames.GetMjollnirProfit:
             validator = moveBy[phase][stage as keyof IMoveByGetMjollnirProfitOptions];
             break;
         default:
@@ -170,7 +172,7 @@ export const GetValidator = (phase: Phases, stage: Stages): IMoveValidator | nul
     return validator;
 };
 
-// TODO MOVE ALL SAME VALIDATING LOGIC FROM GET RANGE/GET VALUE TO VALIDATE!
+// TODO MOVE ALL SAME VALIDATING LOGIC FROM GET RANGE/GET VALUE TO VALIDATE! And not same in another functions too to reduce logic here!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -234,7 +236,7 @@ export const moveValidators: IMoveValidators = {
             }
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
             return G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                 || (!G.campPicked && player.buffs.find((buff: IBuffs): boolean =>
@@ -260,7 +262,8 @@ export const moveValidators: IMoveValidators = {
                 const uniqueArr: (DeckCardTypes | MythologicalCreatureDeckCardTypes)[] = [],
                     currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
                 if (currentTavern === undefined) {
-                    throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined,
+                        G.currentTavern);
                 }
                 let flag = true;
                 for (let i = 0; i < moveArguments.length; i++) {
@@ -273,8 +276,7 @@ export const moveValidators: IMoveValidators = {
                         throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
                     }
                     if (tavernCard === null) {
-                        // TODO Add Error that NULL can't be moveArguments value
-                        continue;
+                        throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${moveArgument}'.`);
                     }
                     if (currentTavern.some((card: TavernCardTypes): boolean =>
                         CompareCards(tavernCard, card) < 0)) {
@@ -311,9 +313,9 @@ export const moveValidators: IMoveValidators = {
                 }
             } else if (G.solo && ctx.currentPlayer === `1`) {
                 let moveArgument: CanBeUndef<number>;
-                moveArgument = CheckIfSoloBotMustTakeCardToPickHero(G, moveArguments);
+                moveArgument = CheckSoloBotMustTakeCardToPickHero(G, ctx, moveArguments);
                 if (moveArgument === undefined) {
-                    moveArgument = CheckIfSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard(G, moveArguments);
+                    moveArgument = CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard(G, ctx, moveArguments);
                 }
                 // Todo Think about picking Royal Offering if other cards not LeastPresentOnPlayerBoard...
                 if (moveArgument === undefined) {
@@ -342,6 +344,7 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
+            // TODO Add for SOlo Bot!
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
                 moveArgument: CanBeUndef<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
@@ -554,7 +557,7 @@ export const moveValidators: IMoveValidators = {
             for (let j = 0; j < moveArguments.length; j++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 const moveArgumentI: CanBeUndef<SuitTypes> = moveArguments[j];
                 if (moveArgumentI === undefined) {
@@ -589,7 +592,7 @@ export const moveValidators: IMoveValidators = {
             }
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
             const mercenariesCount = player.campCards.filter((card: CampDeckCardTypes): boolean =>
                 IsMercenaryCampCard(card)).length;
@@ -634,6 +637,7 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
+            // TODO Add for SOlo Bot!
             const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
                 moveArgument: CanBeUndef<SuitTypes> =
                     moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -662,7 +666,7 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
             const allCoinsOrder: IMoveArgumentsStage<number[][]>[`args`] = currentMoveArguments as number[][],
-                hasLowestPriority: boolean = HasLowestPriority(G, Number(ctx.currentPlayer));
+                hasLowestPriority: boolean = HasLowestPriority(G, ctx, Number(ctx.currentPlayer));
             let resultsForCoins: number[] = CheckHeuristicsForCoinsPlacement(G, ctx);
             if (hasLowestPriority) {
                 resultsForCoins = resultsForCoins.map((num: number, index: number): number =>
@@ -686,7 +690,7 @@ export const moveValidators: IMoveValidators = {
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
                 privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
             if (privatePlayer === undefined) {
                 throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -1023,35 +1027,28 @@ export const moveValidators: IMoveValidators = {
             if (G.solo && ctx.currentPlayer === `1`) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                        ctx.currentPlayer);
                 }
-                let minValue = 0,
-                    coinId = 0;
-                for (let i = 0; i < moveArguments.length; i++) {
-                    const currentMoveArgument: IMoveCoinsArguments | undefined = moveArguments[i];
-                    if (currentMoveArgument === undefined) {
-                        throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
-                    }
-                    const boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[currentMoveArgument.coinId];
-                    if (boardCoin === undefined) {
-                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${currentMoveArgument.coinId}'.`);
-                    }
-                    if (boardCoin === null) {
-                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может отсутствовать монета с id '${currentMoveArgument.coinId}'.`);
-                    }
-                    if (!IsCoin(boardCoin)) {
-                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрытой для него монета с id '${ctx.currentPlayer}'.`);
-                    }
-                    if (minValue === 0 || boardCoin.value < minValue) {
-                        minValue = boardCoin.value;
-                        coinId = i;
-                    }
-                }
-                if (minValue !== 0) {
-                    moveArgument = moveArguments[coinId];
+                let type: CoinTypeNames,
+                    coins: PublicPlayerCoinTypes[];
+                if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
+                    type = CoinTypeNames.Hand;
+                    coins = player.handCoins;
+
                 } else {
-                    // TODO What about only `0` coin is opened?! Must return Null and can't update coin?
+                    type = CoinTypeNames.Board;
+                    coins = player.boardCoins;
                 }
+                const minValue: number = CheckMinCoinVisibleValueForSoloBot(G, ctx, moveArguments, type);
+                if (minValue === 0) {
+                    throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть минимальная монета для улучшения с значением '${minValue}'.`);
+                }
+                const coinId: number = CheckMinCoinVisibleIndexForSoloBot(coins, minValue);
+                if (coinId === -1) {
+                    throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не найдена минимальная монета с значением '${minValue}'.`);
+                }
+                moveArgument = moveArguments[coinId];
             } else {
                 moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
             }
@@ -1208,7 +1205,8 @@ export const moveValidators: IMoveValidators = {
                 currentMoveArguments as IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`],
                 player: CanBeUndef<IPublicPlayer> = G.publicPlayers[moveArguments.playerId];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует игрок с id '${moveArguments.playerId}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    moveArguments.playerId);
             }
             const cardFirst: CanBeUndef<PlayerCardTypes> = player.cards[SuitNames.Warrior][0];
             if (cardFirst === undefined) {
@@ -1304,9 +1302,31 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
-            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
-                moveArgument: CanBeUndef<SuitTypes> =
-                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
+            // TODO Same logic for Ylud placement!
+            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
+            let moveArgument: CanBeUndef<SuitTypes>;
+            if (G.solo && ctx.currentPlayer === `1`) {
+                const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
+                if (soloBotPublicPlayer === undefined) {
+                    throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+                }
+                const suit: SuitTypes | undefined = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
+                if (suit === undefined) {
+                    const [suits]: [SuitTypes[], number] =
+                        CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
+                    if (suits.length === 0) {
+                        throw new Error(`Не может не быть фракций с минимальным количеством карт.`);
+                    } else if (suits.length === 1) {
+                        moveArgument = suits[0];
+                    } else {
+                        // TODO Move Thrud in most left suit from `suits`
+                    }
+                } else {
+                    moveArgument = suit;
+                }
+            } else {
+                moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+            }
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -1361,9 +1381,9 @@ export const moveValidators: IMoveValidators = {
             }
             const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
-            return player.stack[0]?.config?.coinId !== id.coinId && CoinUpgradeValidation(G, ctx, id);
+            return player.stack[0]?.coinId !== id.coinId && CoinUpgradeValidation(G, ctx, id);
         },
     },
     // TODO Do it logic!
@@ -1405,17 +1425,20 @@ export const moveBy: IMoveBy = {
     chooseDifficultySoloMode: {
         default1: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
         chooseHeroesForSoloMode: moveValidators.ChooseHeroesForSoloModeMoveValidator,
+        upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
     },
-    placeCoins: {
+    bids: {
         default1: moveValidators.ClickHandCoinMoveValidator,
         default2: moveValidators.ClickBoardCoinMoveValidator,
+        // Bots
         default3: moveValidators.BotsPlaceAllCoinsMoveValidator,
+        // Solo Bot
         default4: moveValidators.SoloBotPlaceAllCoinsMoveValidator,
     },
-    placeCoinsUline: {
+    bidUline: {
         default1: moveValidators.ClickHandCoinUlineMoveValidator,
     },
-    pickCards: {
+    tavernsResolution: {
         default1: moveValidators.ClickCardMoveValidator,
         default2: moveValidators.ClickCampCardMoveValidator,
         // start
@@ -1434,12 +1457,14 @@ export const moveBy: IMoveBy = {
         // end
         discardCard: moveValidators.DiscardCard2PlayersMoveValidator,
         placeTradingCoinsUline: moveValidators.ClickHandTradingCoinUlineMoveValidator,
+        // Solo Bot
+        pickHeroSoloBot: moveValidators.SoloBotClickHeroCardMoveValidator,
     },
     enlistmentMercenaries: {
         default1: moveValidators.StartEnlistmentMercenariesMoveValidator,
         default2: moveValidators.PassEnlistmentMercenariesMoveValidator,
         default3: moveValidators.GetEnlistmentMercenariesMoveValidator,
-        default4: moveValidators.PlaceEnlistmentMercenariesMoveValidator,
+        placeEnlistmentMercenaries: moveValidators.PlaceEnlistmentMercenariesMoveValidator,
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
@@ -1455,7 +1480,7 @@ export const moveBy: IMoveBy = {
         useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
     },
-    endTier: {
+    placeYlud: {
         default1: moveValidators.PlaceYludHeroMoveValidator,
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
@@ -1472,7 +1497,7 @@ export const moveBy: IMoveBy = {
         useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
     },
-    getDistinctions: {
+    troopEvaluation: {
         default1: moveValidators.ClickDistinctionCardMoveValidator,
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
@@ -1489,6 +1514,8 @@ export const moveBy: IMoveBy = {
         useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         pickDistinctionCard: moveValidators.ClickCardToPickDistinctionMoveValidator,
+        // Solo Bot
+        pickHeroSoloBot: moveValidators.SoloBotClickHeroCardMoveValidator,
     },
     brisingamensEndGame: {
         default1: moveValidators.DiscardCardFromPlayerBoardMoveValidator,

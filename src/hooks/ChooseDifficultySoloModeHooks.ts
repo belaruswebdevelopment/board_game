@@ -1,11 +1,11 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
-import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
+import { HeroNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -38,8 +38,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx)
             if (soloBotPublicPlayer === undefined) {
                 throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
             }
-            // TODO Uncomment it!!!
-            return G.heroesForSoloGameDifficultyLevel === null/*  && !soloBotPublicPlayer.stack.length */;
+            return G.heroesForSoloGameDifficultyLevel === null && !soloBotPublicPlayer.stack.length;
         }
     } else {
         return true;
@@ -91,8 +90,6 @@ export const EndChooseDifficultySoloModeActions = (G: IMyGameState): void => {
  * @param ctx
  */
 export const OnChooseDifficultySoloModeMove = (G: IMyGameState, ctx: Ctx): void => {
-    console.log(ctx.currentPlayer);
-
     StartOrEndActions(G, ctx);
 };
 
@@ -117,8 +114,10 @@ export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): 
         }
         soloBotPublicPlayer.heroes.forEach((hero: IHeroCard): void => {
             AddBuffToPlayer(G, ctx, hero.buff);
-            AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
-            StartAutoAction(G, ctx, hero.actions);
+            if (hero.name !== HeroNames.Thrud && hero.name !== HeroNames.Ylud) {
+                AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+                DrawCurrentProfit(G, ctx);
+            }
         });
         G.heroesForSoloGameDifficultyLevel = null;
     }

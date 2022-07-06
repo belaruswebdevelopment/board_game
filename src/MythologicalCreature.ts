@@ -1,4 +1,4 @@
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypeNames } from "./typescript/enums";
 import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardType, CreateValkyryCardType, GiantTypes, GodTypes, IGiantCard, IGiantConfig, IGiantData, IGodCard, IGodConfig, IGodData, IMythicalAnimalCard, IMythicalAnimalConfig, IMythicalAnimalData, IValkyryCard, IValkyryConfig, IValkyryData, MythicalAnimalTypes, MythologicalCreatureDeckCardTypes, ValkyryTypes } from "./typescript/interfaces";
 
 /**
@@ -65,7 +65,7 @@ export const BuildMythologicalCreatureCards = (giantConfig: IGiantConfig, godCon
  * @returns Карта Гиганта.
  */
 export const CreateGiantCard = ({
-    type = RusCardTypes.Giant,
+    type = RusCardTypeNames.Giant,
     name,
     placedSuit,
     capturedCard = null,
@@ -90,7 +90,7 @@ export const CreateGiantCard = ({
  * @returns Карта Бога.
  */
 export const CreateGodCard = ({
-    type = RusCardTypes.God,
+    type = RusCardTypeNames.God,
     name,
     points,
     isPowerTokenUsed = null,
@@ -110,14 +110,14 @@ export const CreateGodCard = ({
  *
  * @param type Тип.
  * @param name Название.
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
  * @param ability Способность Мифического животного.
  * @returns Карта Мифического животного.
  */
 export const CreateMythicalAnimalCard = ({
-    type = RusCardTypes.Mythical_Animal,
+    type = RusCardTypeNames.Mythical_Animal,
     name,
     suit,
     rank = 1,
@@ -145,7 +145,7 @@ export const CreateMythicalAnimalCard = ({
  * @returns Карта Валькирии.
  */
 export const CreateValkyryCard = ({
-    type = RusCardTypes.Valkyry,
+    type = RusCardTypeNames.Valkyry,
     name,
     strengthTokenNotch = null,
 }: CreateValkyryCardType = {} as CreateValkyryCardType): IValkyryCard => ({

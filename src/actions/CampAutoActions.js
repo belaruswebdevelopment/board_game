@@ -1,10 +1,11 @@
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, BuffNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
@@ -18,10 +19,10 @@ import { ArtefactNames, BuffNames, LogTypes, Stages, SuitNames } from "../typesc
 export const DiscardTradingCoinAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     DiscardTradingCoin(G, Number(ctx.currentPlayer));
-    AddDataToLog(G, LogTypes.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
+    AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
 /**
  * <h3>Действия, связанные с завершением выкладки монет на артефакт Odroerir The Mythic Cauldron.</h3>
@@ -52,11 +53,11 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.Warrior].length) {
             value[i] = {
-                stage: Stages.DiscardSuitCard,
+                stage: StageNames.DiscardSuitCard,
             };
             AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
             results++;
@@ -84,7 +85,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);

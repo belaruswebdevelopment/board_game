@@ -1,4 +1,4 @@
-import { ArtefactNames, CardNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CardNames, GameNames, HeroNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Путь к базовым картам.</h3>
  */
@@ -279,11 +279,11 @@ export const Styles = {
         }
         else {
             switch (name) {
-                case `улучшение монеты на +3`:
+                case `'${RusCardTypeNames.Royal_Offering}' на +3`:
                     return {
                         background: `${basicCardsPath}0.png) no-repeat -128px -240px / 288px 288px`,
                     };
-                case `улучшение монеты на +5`:
+                case `'${RusCardTypeNames.Royal_Offering}' на +5`:
                     return {
                         background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
                     };

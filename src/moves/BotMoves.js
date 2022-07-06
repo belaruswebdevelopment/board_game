@@ -1,7 +1,8 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
+import { ErrorNames, StageNames } from "../typescript/enums";
 // TODO Add Bot place all coins for human player opened in solo game
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -17,13 +18,13 @@ import { Stages } from "../typescript/enums";
  */
 export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     // TODO Check it bot can't play in multiplayer now...
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default3, coinsOrder);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default3, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);

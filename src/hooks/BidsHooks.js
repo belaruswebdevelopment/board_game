@@ -1,33 +1,36 @@
 import { IsCoin } from "../Coin";
+import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
-import { BuffNames } from "../typescript/enums";
+import { BuffNames, ErrorNames } from "../typescript/enums";
 /**
- * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
+ * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При каждом действии с монетой в фазе 'placeCoins'.</li>
+ * <li>При каждом действии с монетой в фазе 'Ставки'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceCoinsPhase = (G, ctx) => {
+export const CheckEndBidsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty = Object.values(G.publicPlayers).map((player) => player).every((player, playerIndex) => {
-            if ((G.solo && ctx.currentPlayer === `1`)
+            if ((G.solo && playerIndex === 1)
                 || (G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 const privatePlayer = G.players[playerIndex];
                 if (privatePlayer === undefined) {
                     throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerIndex}'.`);
                 }
-                return privatePlayer.handCoins.every((coin) => coin === null);
+                return privatePlayer.handCoins.every((coin) => {
+                    return coin === null;
+                });
             }
-            else if ((G.solo && ctx.currentPlayer === `0`)
+            else if ((G.solo && playerIndex === 0)
                 || (!G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 return player.handCoins.every((coin, coinIndex) => {
                     if (coin !== null && !IsCoin(coin)) {
@@ -42,26 +45,26 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
     }
 };
 /**
- * <h3>Проверяет необходимость завершения хода в фазе 'placeCoins'.</h3>
+ * <h3>Проверяет необходимость завершения хода в фазе 'Ставки'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При каждом действии с монеткой в фазе 'placeCoins'.</li>
+ * <li>При каждом действии с монеткой в фазе 'Ставки'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceCoinsTurn = (G, ctx) => {
+export const CheckEndBidsTurn = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
-    if (G.multiplayer) {
+    if ((G.solo && ctx.currentPlayer === `1`) || G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -78,22 +81,22 @@ export const CheckEndPlaceCoinsTurn = (G, ctx) => {
     }
 };
 /**
- * <h3>Действия при завершении фазы 'placeCoins'.</h3>
+ * <h3>Действия при завершении фазы 'Ставки'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При завершении фазы 'placeCoins'.</li>
+ * <li>При завершении фазы 'Ставки'.</li>
  * </ol>
  *
  * @param G
  */
-export const EndPlaceCoinsActions = (G) => {
+export const EndBidsActions = (G) => {
     G.publicPlayersOrder = [];
 };
 /**
- * <h3>Действия при начале фазы 'placeCoins'.</h3>
+ * <h3>Действия при начале фазы 'Ставки'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При начале фазы 'placeCoins'.</li>
+ * <li>При начале фазы 'Ставки'.</li>
  * </ol>
  *
  * @param G
@@ -105,8 +108,8 @@ export const PreparationPhaseActions = (G, ctx) => {
     if (G.expansions.thingvellir.active) {
         RefillEmptyCampCards(G);
     }
-    RefillTaverns(G);
+    RefillTaverns(G, ctx);
     MixUpCoinsInPlayerHands(G, ctx);
     CheckPlayersBasicOrder(G, ctx);
 };
-//# sourceMappingURL=PlaceCoinsHooks.js.map
+//# sourceMappingURL=BidsHooks.js.map

@@ -1,7 +1,8 @@
 import { IsArtefactCard } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
+import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, LogTypes, Phases } from "../typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 /**
@@ -18,9 +19,9 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 export const AddCampCardToCards = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
+    if (ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null
         && (ctx.currentPlayer === G.publicPlayersOrder[0] || CheckPlayerHasBuff(player, BuffNames.GoCamp))) {
         G.campPicked = true;
     }
@@ -55,10 +56,10 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.campCards.push(card);
-    AddDataToLog(G, LogTypes.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}'.`);
 };
 /**
  * <h3>Добавляет карту лагеря в конкретную фракцию игрока.</h3>
@@ -78,11 +79,11 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.cards[card.suit].push(card);
     player.pickedCard = card;
-    AddDataToLog(G, LogTypes.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+    AddDataToLog(G, LogTypeNames.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };
 /**

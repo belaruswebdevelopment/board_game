@@ -4,11 +4,12 @@ import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IsDwarfCard } from "../Dwarf";
+import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { IsMythicalAnimalCard } from "../MythologicalCreature";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
+import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusPhaseNames, StageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -42,19 +43,19 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
             else {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 let suit = null;
                 if (IsArtefactCard(campCard)) {
                     suit = campCard.suit;
                 }
-                if ((ctx.phase === Phases.PickCards && ctx.activePlayers === null)
-                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickCampCardHolda)) {
+                if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
+                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickCampCardHolda)) {
                     if (data !== undefined) {
                         const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                         let moveName;
                         switch (stage) {
-                            case Stages.PickCampCardHolda:
+                            case StageNames.PickCampCardHolda:
                                 moveName = MoveNames.ClickCampCardHoldaMove;
                                 break;
                             case undefined:
@@ -107,7 +108,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
  */
 export const DrawCurrentPhaseStage = (ctx) => {
     var _a, _b, _c;
-    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_a = ctx.phase) !== null && _a !== void 0 ? _a : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: (_c = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== null && _c !== void 0 ? _c : `none` }), ")"] }));
+    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_a = RusPhaseNames[ctx.phase]) !== null && _a !== void 0 ? _a : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: (_c = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== null && _c !== void 0 ? _c : `none` }), ")"] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
@@ -144,7 +145,7 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
             }
         }
         for (suit in suitsConfig) {
-            if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
+            if (ctx.phase === PhaseNames.TroopEvaluation && ctx.activePlayers === null
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
                     const suitArg = suit;
@@ -196,10 +197,10 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
         if (!IsRoyalOfferingCard(card)) {
             suit = card.suit;
         }
-        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickDiscardCard) {
+        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickDiscardCard) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
             if (data !== undefined) {
                 DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove, j);
@@ -248,10 +249,10 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit = hero.suit;
-            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickHero) {
+            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickHero) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined) {
                     DrawCard(data, boardCells, hero, increment, player, suit, MoveNames.ClickHeroCardMove, increment);
@@ -306,10 +307,10 @@ export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 1
-                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickHeroSoloBot) {
+                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickHeroSoloBot) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null, MoveNames.SoloBotClickHeroCardMove, j);
@@ -380,7 +381,7 @@ export const DrawMarketCoins = (G, data) => {
 export const DrawProfit = (G, ctx, data) => {
     const boardCells = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const option = G.drawProfit;
     let caption = ``;
@@ -426,14 +427,14 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
     for (let t = 0; t < G.tavernsNum; t++) {
         const currentTavernConfig = tavernsConfig[t];
         if (currentTavernConfig === undefined) {
-            throw new Error(`Отсутствует конфиг таверны с id '${t}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined, t);
         }
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
             for (let j = 0; j < G.drawSize; j++) {
                 const tavern = G.taverns[t];
                 if (tavern === undefined) {
-                    throw new Error(`В массиве таверн отсутствует таверна с id '${t}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, t);
                 }
                 const tavernCard = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
@@ -451,15 +452,16 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                     }
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                     }
-                    if (t === G.currentTavern && ctx.phase === Phases.PickCards && ((ctx.activePlayers === null)
-                        || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.DiscardCard))) {
+                    if (t === G.currentTavern && ctx.phase === PhaseNames.TavernsResolution
+                        && ((ctx.activePlayers === null)
+                            || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.DiscardCard))) {
                         if (data !== undefined) {
                             const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                             let moveName;
                             switch (stage) {
-                                case Stages.DiscardCard:
+                                case StageNames.DiscardCard:
                                     moveName = MoveNames.DiscardCard2PlayersMove;
                                     break;
                                 case undefined:

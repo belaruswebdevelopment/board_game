@@ -1,26 +1,30 @@
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { BuffNames, HeroNames } from "../typescript/enums";
-// TODO Check `Ylud the Unpredictable Will be positioned at the end of Age 1, before the Troop; Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
+import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
 /**
- * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
+ * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При каждом действии с монеткой в фазе 'placeCoins'.</li>
+ * <li>При каждом действии с монеткой в фазе 'Ставки'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @returns
  */
-export const CheckEndEndTierPhase = (G, ctx) => {
+export const CheckEndPlaceYludPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
+        if (G.solo && G.tierToEnd === 0) {
+            // TODO Check it!
+            return true;
+        }
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (!player.stack.length && !player.actionsNum) {
             const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
@@ -46,15 +50,16 @@ export const CheckEndEndTierPhase = (G, ctx) => {
     }
 };
 /**
- * <h3>Проверяет порядок хода при начале фазы 'endTier'.</h3>
+ * <h3>Проверяет порядок хода при начале фазы 'Поместить Труд'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При начале фазы 'endTier'.</li>
+ * <li>При начале фазы 'Поместить Труд'.</li>
  * </ol>
  *
  * @param G
+ * @param ctx
  */
-export const CheckEndTierOrder = (G) => {
+export const CheckPlaceYludOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex === -1) {
@@ -62,7 +67,7 @@ export const CheckEndTierOrder = (G) => {
     }
     const player = G.publicPlayers[yludIndex];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${yludIndex}' с обязательным бафом '${BuffNames.EndTier}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, yludIndex);
     }
     const yludHeroCard = player.heroes.find((hero) => hero.name === HeroNames.Ylud);
     if (yludHeroCard === undefined) {
@@ -86,76 +91,76 @@ export const CheckEndTierOrder = (G) => {
     G.publicPlayersOrder.push(String(yludIndex));
 };
 /**
- * <h3>Проверяет необходимость завершения хода в фазе 'endTier'.</h3>
+ * <h3>Проверяет необходимость завершения хода в фазе 'Поместить Труд'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При каждом действии в фазе 'endTier'.</li>
+ * <li>При каждом действии в фазе 'Поместить Труд'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @returns
  */
-export const CheckEndEndTierTurn = (G, ctx) => EndTurnActions(G, ctx);
+export const CheckEndPlaceYludTurn = (G, ctx) => EndTurnActions(G, ctx);
 /**
- * <h3>Действия при завершении фазы 'endTier'.</h3>
+ * <h3>Действия при завершении фазы 'Поместить Труд'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При завершении фазы 'endTier'.</li>
+ * <li>При завершении фазы 'Поместить Труд'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
-export const EndEndTierActions = (G, ctx) => {
+export const EndPlaceYludActions = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.pickedCard = null;
     if (G.tierToEnd === 0) {
-        RemoveThrudFromPlayerBoardAfterGameEnd(G);
+        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
     }
     G.publicPlayersOrder = [];
 };
 /**
- * <h3>Действия при завершении мува в фазе 'endTier'.</h3>
+ * <h3>Действия при завершении мува в фазе 'Поместить Труд'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При завершении мува в фазе 'endTier'.</li>
+ * <li>При завершении мува в фазе 'Поместить Труд'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
-export const OnEndTierMove = (G, ctx) => {
+export const OnPlaceYludMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
 };
 /**
- * <h3>Действия при начале хода в фазе 'endTier'.</h3>
+ * <h3>Действия при начале хода в фазе 'Поместить Труд'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При начале хода в фазе 'endTier'.</li>
+ * <li>При начале хода в фазе 'Поместить Труд'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
-export const OnEndTierTurnBegin = (G, ctx) => {
+export const OnPlaceYludTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.placeYludHero()]);
     DrawCurrentProfit(G, ctx);
 };
 /**
- * <h3>Действия при завершении хода в фазе 'endTier'.</h3>
+ * <h3>Действия при завершении хода в фазе 'Поместить Труд'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При завершении хода в фазе 'endTier'.</li>
+ * <li>При завершении хода в фазе 'Поместить Труд'.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
-export const OnEndTierTurnEnd = (G, ctx) => {
+export const OnPlaceYludTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);
 };
-//# sourceMappingURL=EndTierHooks.js.map
+//# sourceMappingURL=PlaceYludHooks.js.map

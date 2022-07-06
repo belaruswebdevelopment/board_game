@@ -5,7 +5,7 @@ import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
+import { StageNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -22,7 +22,7 @@ import type { CanBeUndef, IHeroCard, IMyGameState, SuitTypes } from "../typescri
  */
 export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickHero, heroId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickHero, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -44,14 +44,14 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  * @returns
  */
 export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number):
     string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardBoardCard, {
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardBoardCard, {
             suit,
             cardId,
         });
@@ -70,12 +70,12 @@ export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, s
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @returns
  */
 export const PlaceOlwinCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceOlwinCards, suit);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceOlwinCards, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -91,12 +91,12 @@ export const PlaceOlwinCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @returns
  */
 export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceThrudHero, suit);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceThrudHero, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -112,12 +112,12 @@ export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
+ * @param suit Название фракции дворфов.
  * @returns
  */
 export const PlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): string | void => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, suit);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

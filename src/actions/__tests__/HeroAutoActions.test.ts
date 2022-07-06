@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { DrawNames, LogTypes, Stages } from "../../typescript/enums";
+import { DrawNames, LogTypeNames, StageNames } from "../../typescript/enums";
 import type { IMyGameState, IPlayer, IPublicPlayer, IStack } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
@@ -23,17 +23,15 @@ describe(`Test AddPickHeroAction method`, (): void => {
                     nickname: `Dan`,
                     stack: [
                         {
-                            config: {
-                                stageName: Stages.PickHero,
-                                drawName: DrawNames.PickHero,
-                            },
-                        }
+                            stageName: StageNames.PickHero,
+                            drawName: DrawNames.PickHero,
+                        },
                     ],
                 } as IPublicPlayer,
             },
             logData: [
                 {
-                    type: LogTypes.Game,
+                    type: LogTypeNames.Game,
                     value: `Игрок 'Dan' должен выбрать нового героя.`,
                 },
             ],

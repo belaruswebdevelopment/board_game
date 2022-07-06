@@ -5,7 +5,7 @@ const App = Client({
     // debug: false,
     game: BoardGame,
     board: GameBoard,
-    numPlayers: 1,
+    numPlayers: 2,
 });
 export default App;
 /*import React from "react";
