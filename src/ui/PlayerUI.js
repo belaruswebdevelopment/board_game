@@ -5,12 +5,12 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { IsHeroCard } from "../Hero";
+import { IsHeroPlayerCard } from "../Hero";
 import { IsGodCard } from "../MythologicalCreature";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BuffNames, CardNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, StageNames, SuitNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 // TODO Check Solo Bot & multiplayer actions!
 // TODO Move strings coins names to enum!
@@ -27,14 +27,14 @@ import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
  * @returns Игровые поля для планшета всех карт игрока.
  */
 export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const playersBoards = [];
     let moveMainArgs;
     if (validatorName !== null) {
         switch (validatorName) {
             case MoveValidatorNames.PlaceThrudHeroMoveValidator:
             case MoveValidatorNames.PlaceYludHeroMoveValidator:
-            case MoveValidatorNames.PlaceOlwinCardMoveValidator:
+            case MoveValidatorNames.PlaceMultiSuitCardMoveValidator:
             case MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetMjollnirProfitMoveValidator:
@@ -63,7 +63,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
         }
-        const pickedCard = player.pickedCard;
+        const stack = player.stack[0];
         let suitTop;
         // TODO Draw Giant Capture token on suit if needed!
         for (suitTop in suitsConfig) {
@@ -120,7 +120,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                 if (card !== undefined) {
                     isDrawRow = true;
                     if (p !== Number(ctx.currentPlayer) && stage === StageNames.DiscardSuitCard
-                        && suit === SuitNames.Warrior && !IsHeroCard(card)) {
+                        && suit === SuitNames.Warrior && !IsHeroPlayerCard(card)) {
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
                         }
@@ -133,14 +133,13 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         }
                     }
                     else if (p === Number(ctx.currentPlayer) && last === i
-                        && stage === StageNames.DiscardBoardCard && !IsHeroCard(card)) {
-                        const stack = player.stack[0];
+                        && stage === StageNames.DiscardBoardCard && !IsHeroPlayerCard(card)) {
+                        // TODO Does it need more then 1 checking?
                         if (stack === undefined) {
                             throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
                         }
-                        const stackSuit = stack.suit, pickedCard = player.pickedCard;
-                        if (suit !== stackSuit
-                            && !(pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
+                        const stackSuit = stack.suit;
+                        if (suit !== stackSuit && suit !== stack.pickedSuit) {
                             if (data !== undefined) {
                                 const suitArg = suit;
                                 DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardMove, suitArg, last);
@@ -160,7 +159,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         }
                     }
                     else if (p === Number(ctx.currentPlayer)
-                        && ctx.phase === PhaseNames.BrisingamensEndGame && !IsHeroCard(card)) {
+                        && ctx.phase === PhaseNames.BrisingamensEndGame && !IsHeroPlayerCard(card)) {
                         if (data !== undefined) {
                             const suitArg = suit;
                             DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suitArg, i);
@@ -183,19 +182,20 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         }
                     }
                 }
-                else if (p === Number(ctx.currentPlayer) && (last + 1) === i && pickedCard !== null
-                    && (((ctx.phase === PhaseNames.PlaceYlud || ctx.phase === PhaseNames.EnlistmentMercenaries)
-                        && (ctx.activePlayers === null || ((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) ===
-                            StageNames.PlaceEnlistmentMercenaries)) || stage === StageNames.PlaceThrudHero
-                        || stage === StageNames.PlaceOlwinCards)) {
-                    let cardVariants = undefined;
+                else if (p === Number(ctx.currentPlayer) && (last + 1) === i
+                    && ((((ctx.phase === PhaseNames.PlaceYlud && ctx.activePlayers === null)
+                        || ctx.phase === PhaseNames.EnlistmentMercenaries
+                            && ((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) ===
+                                StageNames.PlaceEnlistmentMercenaries)) || stage === StageNames.PlaceThrudHero
+                        || stage === StageNames.PlaceMultiSuitsCards)) {
+                    if (stack === undefined) {
+                        throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
+                    }
+                    let cardVariants;
                     if (ctx.phase === PhaseNames.EnlistmentMercenaries
                         && ((_c = ctx.activePlayers) === null || _c === void 0 ? void 0 : _c[Number(ctx.currentPlayer)]) ===
                             StageNames.PlaceEnlistmentMercenaries) {
-                        if (!IsMercenaryCampCard(pickedCard)) {
-                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
-                        }
-                        cardVariants = pickedCard.variants[suit];
+                        cardVariants = (_d = stack.card) === null || _d === void 0 ? void 0 : _d.variants[suit];
                         if (cardVariants !== undefined && cardVariants.suit !== suit) {
                             throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
                         }
@@ -205,23 +205,22 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         // TODO Can Ylud be placed in old place because of "suit !== pickedCard.suit"? Thrud can be placed same suit in solo game!
                         let action;
                         // TODO Check Thrud moving
-                        if ((!IsMercenaryCampCard(pickedCard)
-                            && (G.solo || (!G.solo && (pickedCard.name !== CardNames.OlwinsDouble
-                                || (pickedCard.name === CardNames.OlwinsDouble && "suit" in pickedCard
-                                    && suit !== pickedCard.suit))))) || (IsMercenaryCampCard(pickedCard)
-                            && cardVariants !== undefined && suit === cardVariants.suit)) {
-                            switch (pickedCard.name) {
+                        if ((G.solo || (!G.solo && (stack.name !== MultiSuitCardNames.OlwinsDouble
+                            || (stack.name === MultiSuitCardNames.OlwinsDouble && suit !== stack.pickedSuit))))
+                            || (cardVariants !== undefined && suit === cardVariants.suit)) {
+                            switch (stack.name) {
                                 case HeroNames.Thrud:
                                     action = data.moves.PlaceThrudHeroMove;
                                     break;
                                 case HeroNames.Ylud:
                                     action = data.moves.PlaceYludHeroMove;
                                     break;
-                                case CardNames.OlwinsDouble:
-                                    action = data.moves.PlaceOlwinCardMove;
+                                case MultiSuitCardNames.OlwinsDouble:
+                                case MultiSuitCardNames.Gullinbursti:
+                                    action = data.moves.PlaceMultiSuitCardMove;
                                     break;
                                 default:
-                                    if (((_d = ctx.activePlayers) === null || _d === void 0 ? void 0 : _d[Number(ctx.currentPlayer)]) ===
+                                    if (((_e = ctx.activePlayers) === null || _e === void 0 ? void 0 : _e[Number(ctx.currentPlayer)]) ===
                                         StageNames.PlaceEnlistmentMercenaries
                                         && Number(ctx.currentPlayer) === p) {
                                         action = data.moves.PlaceEnlistmentMercenariesMove;
@@ -233,7 +232,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                             }
                             isDrawRow = true;
                             const suitArg = suit;
-                            playerCells.push(_jsx("td", { onClick: () => action === null || action === void 0 ? void 0 : action(suitArg), className: "cursor-pointer" }, `${player.nickname} place card ${pickedCard.name} to ${suit}`));
+                            playerCells.push(_jsx("td", { onClick: () => action === null || action === void 0 ? void 0 : action(suitArg), className: "cursor-pointer" }, `${player.nickname} place card ${stack.name} to ${suit}`));
                         }
                         else {
                             playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
@@ -241,7 +240,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                     }
                     else if (validatorName === MoveValidatorNames.PlaceThrudHeroMoveValidator
                         || validatorName === MoveValidatorNames.PlaceYludHeroMoveValidator
-                        || validatorName === MoveValidatorNames.PlaceOlwinCardMoveValidator
+                        || validatorName === MoveValidatorNames.PlaceMultiSuitCardMoveValidator
                         || (validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
                             && cardVariants !== undefined && suit === cardVariants.suit)) {
                         moveMainArgs.push(suit);
@@ -254,7 +253,6 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                 }
                 j++;
             }
-            // TODO Draw Idavoll cards column!
             for (let k = 0; k < 1; k++) {
                 id += k + 1;
                 const playerCards = Object.values(player.cards).flat(), hero = player.heroes[i];
@@ -280,8 +278,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                     if (campCard !== undefined) {
                         isDrawRow = true;
                         if (IsMercenaryCampCard(campCard) && ctx.phase === PhaseNames.EnlistmentMercenaries
-                            && ctx.activePlayers === null && Number(ctx.currentPlayer) === p
-                            && pickedCard === null) {
+                            && ctx.activePlayers === null && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
                                 DrawCard(data, playerCells, campCard, id, player, null, MoveNames.GetEnlistmentMercenariesMove, i);
                             }

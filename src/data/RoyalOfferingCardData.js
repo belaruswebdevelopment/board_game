@@ -1,3 +1,4 @@
+import { RoyalOfferingNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
@@ -7,6 +8,7 @@ import { StackData } from "./StackData";
  * </ol>
  */
 const upgradeCoinUpTo3 = {
+    name: RoyalOfferingNames.PlusThree,
     value: 3,
     stack: [StackData.upgradeCoin(3)],
     amount: () => ({
@@ -40,6 +42,7 @@ const upgradeCoinUpTo3 = {
  * </ol>
  */
 const upgradeCoinUpTo5 = {
+    name: RoyalOfferingNames.PlusFive,
     value: 5,
     stack: [StackData.upgradeCoin(5)],
     amount: () => ({

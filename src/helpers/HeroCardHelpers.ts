@@ -21,7 +21,7 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * @param hero Герой.
  */
 export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard | IHeroPlayerCard): void => {
-    if (hero.suit !== null) {
+    if (hero.suit !== null && hero.rank !== null) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -33,7 +33,6 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroC
             points: hero.points,
             type: RusCardTypeNames.Hero_Player_Card,
             name: hero.name,
-            game: hero.game,
             description: hero.description,
         });
         player.cards[hero.suit].push(heroCard);
@@ -63,7 +62,6 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
     } else if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    player.pickedCard = hero;
     if (!hero.active) {
         throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${G.solo && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
     }

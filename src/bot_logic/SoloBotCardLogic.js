@@ -64,11 +64,10 @@ export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
             if (IsRoyalOfferingCard(tavernCard)) {
                 continue;
             }
-            // TODO Fix it
-            if (`suit` in tavernCard && tavernCard.suit === suit) {
+            if (tavernCard.suit === suit) {
                 availableMoveArguments.push(moveArgument);
             }
-            else if (`suit` in tavernCard && tavernCard.suit === thrudSuit) {
+            else if (tavernCard.suit === thrudSuit) {
                 availableThrudArguments.push(moveArgument);
             }
         }
@@ -114,11 +113,10 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) 
         if (IsRoyalOfferingCard(tavernCard)) {
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта обмена монет с id '${moveArgument}'.`);
         }
-        // TODO Fix it
-        if (`points` in tavernCard && tavernCard.points === null) {
+        if (tavernCard.points === null) {
             return SoloBotMustTakeRandomCard(G, moveArguments);
         }
-        else if (`points` in tavernCard && tavernCard.points !== null) {
+        else if (tavernCard.points !== null) {
             if (tavernCard.points > maxValue) {
                 maxValue = tavernCard.points;
                 index = i;
@@ -162,9 +160,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
         if (IsRoyalOfferingCard(tavernCard)) {
             continue;
         }
-        // TODO Fix it
-        if (`suit` in tavernCard && tavernCard.suit !== null
-            && availableSuitArguments.includes(tavernCard.suit)) {
+        if (availableSuitArguments.includes(tavernCard.suit)) {
             if (IsDwarfCard(tavernCard)) {
                 leastPresentArguments.push(i);
                 if (tavernCard.points === null || tavernCard.suit === SuitNames.Miner) {

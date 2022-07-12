@@ -47,13 +47,20 @@ export var ButtonNames;
     ButtonNames["Pass"] = "\u041F\u0430\u0441";
 })(ButtonNames || (ButtonNames = {}));
 /**
- * <h3>Перечисление для названия дополнительных карт.</h3>
+ * <h3>Перечисление для названия мультифракционных карт.</h3>
  */
-export var CardNames;
-(function (CardNames) {
-    CardNames["ChiefBlacksmith"] = "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u043A\u0443\u0437\u043D\u0435\u0446";
-    CardNames["OlwinsDouble"] = "\u0414\u0432\u043E\u0439\u043D\u0438\u043A \u041E\u043B\u044C\u0432\u044E\u043D\u0430";
-})(CardNames || (CardNames = {}));
+export var MultiSuitCardNames;
+(function (MultiSuitCardNames) {
+    MultiSuitCardNames["Gullinbursti"] = "\u0413\u0443\u043B\u043B\u0438\u043D\u0431\u0443\u0440\u0441\u0442\u0438";
+    MultiSuitCardNames["OlwinsDouble"] = "\u0414\u0432\u043E\u0439\u043D\u0438\u043A \u041E\u043B\u044C\u0432\u044E\u043D\u0430";
+})(MultiSuitCardNames || (MultiSuitCardNames = {}));
+/**
+ * <h3>Перечисление для названия особых карт.</h3>
+ */
+export var SpecialCardNames;
+(function (SpecialCardNames) {
+    SpecialCardNames["ChiefBlacksmith"] = "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u043A\u0443\u0437\u043D\u0435\u0446";
+})(SpecialCardNames || (SpecialCardNames = {}));
 /**
  * <h3>Перечисление для названия типов монет.</h3>
  */
@@ -93,7 +100,7 @@ export var DrawNames;
     DrawNames["GetMjollnirProfit"] = "Get Mjollnir profit";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";
-    DrawNames["PlaceOlwinDouble"] = "Place Olwin Double";
+    DrawNames["PlaceMultiSuitsCards"] = "Place multi suits cards";
     DrawNames["PickCard"] = "Pick card or camp card";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
     DrawNames["PickCardByExplorerDistinctionSoloBot"] = "Pick card by Explorer distinction Solo Bot";
@@ -264,7 +271,7 @@ export var MoveNames;
     MoveNames["DiscardSuitCardFromPlayerBoardMove"] = "DiscardSuitCardFromPlayerBoardMove";
     MoveNames["ClickConcreteCoinToUpgradeMove"] = "ClickConcreteCoinToUpgradeMove";
     MoveNames["PickDiscardCardMove"] = "PickDiscardCardMove";
-    MoveNames["PlaceOlwinCardMove"] = "PlaceOlwinCardMove";
+    MoveNames["PlaceMultiSuitCardMove"] = "PlaceMultiSuitCardMove";
     MoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
     MoveNames["UpgradeCoinVidofnirVedrfolnirMove"] = "UpgradeCoinVidofnirVedrfolnirMove";
     // TODO Is it here?
@@ -300,23 +307,26 @@ export var RusPhaseNames;
     RusPhaseNames["bids"] = "\u0421\u0442\u0430\u0432\u043A\u0438";
     RusPhaseNames["bidUline"] = "\u0421\u0442\u0430\u0432\u043A\u0438 \u0423\u043B\u0438\u043D\u0430";
 })(RusPhaseNames || (RusPhaseNames = {}));
+// TODO Add `card` to = card description `Карта 'Королевская награда'`?
 /**
  * <h3>Перечисление для типов карт на русском.</h3>
  */
 export var RusCardTypeNames;
 (function (RusCardTypeNames) {
-    RusCardTypeNames["Royal_Offering"] = "\u041A\u043E\u0440\u043E\u043B\u0435\u0432\u0441\u043A\u0430\u044F \u043D\u0430\u0433\u0440\u0430\u0434\u0430";
-    RusCardTypeNames["Artefact"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
-    RusCardTypeNames["Dwarf"] = "\u0414\u0432\u043E\u0440\u0444";
-    RusCardTypeNames["Giant"] = "\u0413\u0438\u0433\u0430\u043D\u0442";
-    RusCardTypeNames["God"] = "\u0411\u043E\u0433";
-    RusCardTypeNames["Hero"] = "\u0413\u0435\u0440\u043E\u0439";
+    RusCardTypeNames["Royal_Offering_Card"] = "\u041A\u043E\u0440\u043E\u043B\u0435\u0432\u0441\u043A\u0430\u044F \u043D\u0430\u0433\u0440\u0430\u0434\u0430";
+    RusCardTypeNames["Artefact_Card"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
+    RusCardTypeNames["Dwarf_Card"] = "\u0414\u0432\u043E\u0440\u0444";
+    RusCardTypeNames["Giant_Card"] = "\u0413\u0438\u0433\u0430\u043D\u0442";
+    RusCardTypeNames["God_Card"] = "\u0411\u043E\u0433";
+    RusCardTypeNames["Hero_Card"] = "\u0413\u0435\u0440\u043E\u0439";
     RusCardTypeNames["Hero_Player_Card"] = "\u0413\u0435\u0440\u043E\u0439 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
-    RusCardTypeNames["Mercenary"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A";
+    RusCardTypeNames["Mercenary_Card"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A";
     RusCardTypeNames["Mercenary_Player_Card"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
-    RusCardTypeNames["Mythical_Animal"] = "\u041C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435";
-    RusCardTypeNames["Special"] = "\u041E\u0441\u043E\u0431\u0430\u044F";
-    RusCardTypeNames["Valkyry"] = "\u0412\u0430\u043B\u044C\u043A\u0438\u0440\u0438\u044F";
+    RusCardTypeNames["Multi_Suit_Card"] = "\u041C\u0443\u043B\u044C\u0442\u0438\u0444\u0440\u0430\u043A\u0446\u0438\u043E\u043D\u043D\u0430\u044F";
+    RusCardTypeNames["Multi_Suit_Player_Card"] = "\u041C\u0443\u043B\u044C\u0442\u0438\u0444\u0440\u0430\u043A\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u0430 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypeNames["Mythical_Animal_Card"] = "\u041C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435";
+    RusCardTypeNames["Special_Card"] = "\u041E\u0441\u043E\u0431\u0430\u044F";
+    RusCardTypeNames["Valkyry_Card"] = "\u0412\u0430\u043B\u044C\u043A\u0438\u0440\u0438\u044F";
 })(RusCardTypeNames || (RusCardTypeNames = {}));
 /**
  * <h3>Перечисление для русских названий фракций.</h3>
@@ -350,7 +360,7 @@ export var StageNames;
     StageNames["PickHero"] = "pickHero";
     StageNames["PickHeroSoloBot"] = "pickHeroSoloBot";
     StageNames["PlaceEnlistmentMercenaries"] = "placeEnlistmentMercenaries";
-    StageNames["PlaceOlwinCards"] = "placeOlwinCards";
+    StageNames["PlaceMultiSuitsCards"] = "placeMultiSuitsCards";
     StageNames["PlaceTradingCoinsUline"] = "placeTradingCoinsUline";
     StageNames["PlaceThrudHero"] = "placeThrudHero";
     StageNames["ChooseHeroesForSoloMode"] = "chooseHeroesForSoloMode";
@@ -378,6 +388,14 @@ export var PickCardValidatorNames;
     PickCardValidatorNames["PickDiscardCardToStack"] = "pickDiscardCardToStack";
     PickCardValidatorNames["PickCampCardToStack"] = "pickCampCardToStack";
 })(PickCardValidatorNames || (PickCardValidatorNames = {}));
+/**
+ * <h3>Перечисление для названия карт 'Королевская награда'.</h3>
+ */
+export var RoyalOfferingNames;
+(function (RoyalOfferingNames) {
+    RoyalOfferingNames["PlusThree"] = "+3";
+    RoyalOfferingNames["PlusFive"] = "+5";
+})(RoyalOfferingNames || (RoyalOfferingNames = {}));
 /**
  * <h3>Перечисление для названия таверн.</h3>
  */
@@ -425,7 +443,7 @@ export var MoveValidatorNames;
     MoveValidatorNames["DiscardCardMoveValidator"] = "DiscardCardMoveValidator";
     MoveValidatorNames["DiscardSuitCardFromPlayerBoardMoveValidator"] = "DiscardSuitCardFromPlayerBoardMoveValidator";
     MoveValidatorNames["PickDiscardCardMoveValidator"] = "PickDiscardCardMoveValidator";
-    MoveValidatorNames["PlaceOlwinCardMoveValidator"] = "PlaceOlwinCardMoveValidator";
+    MoveValidatorNames["PlaceMultiSuitCardMoveValidator"] = "PlaceMultiSuitCardMoveValidator";
     MoveValidatorNames["PlaceThrudHeroMoveValidator"] = "PlaceThrudHeroMoveValidator";
     MoveValidatorNames["UpgradeCoinVidofnirVedrfolnirMoveValidator"] = "UpgradeCoinVidofnirVedrfolnirMoveValidator";
     // TODO Is it here?

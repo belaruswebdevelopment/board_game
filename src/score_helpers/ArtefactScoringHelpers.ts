@@ -39,7 +39,7 @@ export const ArtefactScoring = (G?: IMyGameState, player?: IPublicPlayer, artefa
         case ArtefactNames.Svalinn:
             return SvalinnScoring(player);
         default:
-            throw new Error(`У карт с типом '${RusCardTypeNames.Artefact}' отсутствует ${RusCardTypeNames.Artefact} с названием '${artefactName}'.`);
+            throw new Error(`У карт с типом '${RusCardTypeNames.Artefact_Card}' отсутствует ${RusCardTypeNames.Artefact_Card} с названием '${artefactName}'.`);
     }
 };
 

@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
-import { GameNames, RusCardTypeNames } from "./typescript/enums";
-import type { CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArrayValues, INumberValues, IPlayersNumberTierCardData, SuitTypes } from "./typescript/interfaces";
+import { RusCardTypeNames } from "./typescript/enums";
+import type { CanBeNull, CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArrayValues, INumberValues, IPlayersNumberTierCardData, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -32,7 +32,7 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
             count = points;
         }
         for (let j = 0; j < count; j++) {
-            let currentPoints: number | null;
+            let currentPoints: CanBeNull<number>;
             if (Array.isArray(points)) {
                 const cardPoints: CanBeUndef<number> = points[j];
                 if (cardPoints === undefined) {
@@ -46,7 +46,6 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
                 suit: suitsConfig[suit].suit,
                 points: currentPoints,
                 name: `(фракция: ${suitsConfig[suitsConfig[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
-                game: GameNames.Basic,
             }));
         }
     }
@@ -65,17 +64,15 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
- * @param game Игра/дополнение.
  * @param tier Эпоха.
  * @returns Карта дворфа.
  */
 export const CreateDwarfCard = ({
-    type = RusCardTypeNames.Dwarf,
+    type = RusCardTypeNames.Dwarf_Card,
     suit,
     rank = 1,
     points,
     name,
-    game,
     tier = 0,
 }: CreateDwarfCardType = {} as CreateDwarfCardType): IDwarfCard => ({
     type,
@@ -83,7 +80,6 @@ export const CreateDwarfCard = ({
     rank,
     points,
     name,
-    game,
     tier,
 });
 
@@ -97,6 +93,6 @@ export const CreateDwarfCard = ({
  * @param card Карта.
  * @returns Является ли объект картой дворфа.
  */
-export const IsDwarfCard = (card: unknown): card is IDwarfCard =>
-    card !== null && (card as IDwarfCard).suit !== undefined && (card as IDwarfCard).tier !== undefined
+export const IsDwarfCard = (card: unknown): card is IDwarfCard => card !== null
+    && (card as IDwarfCard).suit !== undefined && (card as IDwarfCard).tier !== undefined
     && !(`description` in (card as IDwarfCard));

@@ -86,7 +86,6 @@ export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtef
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.cards[card.suit].push(card);
-    player.pickedCard = card;
     AddDataToLog(G, LogTypeNames.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };

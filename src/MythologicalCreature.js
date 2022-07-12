@@ -59,7 +59,7 @@ export const BuildMythologicalCreatureCards = (giantConfig, godConfig, mythicalA
  * @param capturedCard Захваченная карта.
  * @returns Карта Гиганта.
  */
-export const CreateGiantCard = ({ type = RusCardTypeNames.Giant, name, placedSuit, capturedCard = null, } = {}) => ({
+export const CreateGiantCard = ({ type = RusCardTypeNames.Giant_Card, name, placedSuit, capturedCard = null, } = {}) => ({
     type,
     name,
     placedSuit,
@@ -78,7 +78,7 @@ export const CreateGiantCard = ({ type = RusCardTypeNames.Giant, name, placedSui
  * @param godPower Сила Бога.
  * @returns Карта Бога.
  */
-export const CreateGodCard = ({ type = RusCardTypeNames.God, name, points, isPowerTokenUsed = null, } = {}) => ({
+export const CreateGodCard = ({ type = RusCardTypeNames.God_Card, name, points, isPowerTokenUsed = null, } = {}) => ({
     type,
     name,
     points,
@@ -99,7 +99,7 @@ export const CreateGodCard = ({ type = RusCardTypeNames.God, name, points, isPow
  * @param ability Способность Мифического животного.
  * @returns Карта Мифического животного.
  */
-export const CreateMythicalAnimalCard = ({ type = RusCardTypeNames.Mythical_Animal, name, suit, rank = 1, points = null, } = {}) => ({
+export const CreateMythicalAnimalCard = ({ type = RusCardTypeNames.Mythical_Animal_Card, name, suit, rank = 1, points = null, } = {}) => ({
     type,
     name,
     suit,
@@ -120,7 +120,7 @@ export const CreateMythicalAnimalCard = ({ type = RusCardTypeNames.Mythical_Anim
  * @param finalPoints Финальные очки.
  * @returns Карта Валькирии.
  */
-export const CreateValkyryCard = ({ type = RusCardTypeNames.Valkyry, name, strengthTokenNotch = null, } = {}) => ({
+export const CreateValkyryCard = ({ type = RusCardTypeNames.Valkyry_Card, name, strengthTokenNotch = null, } = {}) => ({
     type,
     name,
     strengthTokenNotch,

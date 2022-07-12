@@ -2,11 +2,13 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, StageNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -36,7 +38,15 @@ export const ClickCardMove = (G, ctx, cardId) => {
         throw new Error(`Не существует кликнутая карта с id '${cardId}'.`);
     }
     currentTavern.splice(cardId, 1, null);
-    PickCardOrActionCardActions(G, ctx, card);
+    const isAdded = PickCardOrActionCardActions(G, ctx, card);
+    // TODO Rework it!?
+    if (isAdded && `suit` in card) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+    }
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
@@ -61,7 +71,12 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     }
     G.explorerDistinctionCards.splice(0);
     const isAdded = PickCardOrActionCardActions(G, ctx, pickedCard);
-    if (isAdded) {
+    if (isAdded && IsDwarfCard(pickedCard)) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
         G.distinctions[SuitNames.Explorer] = undefined;
     }
     G.explorerDistinctionCardId = cardId;

@@ -1,6 +1,6 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
-import { IsHeroCard } from "../Hero";
+import { IsHeroPlayerCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames } from "../typescript/enums";
 /**
@@ -37,7 +37,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
                     if (card === undefined) {
                         throw new Error(`В массиве карт фракции '${suit}' отсутствует последняя карта с id '${last}'.`);
                     }
-                    if (!IsHeroCard(card)) {
+                    if (!IsHeroPlayerCard(card)) {
                         cardsToDiscard.push(card);
                     }
                 }

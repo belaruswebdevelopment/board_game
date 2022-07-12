@@ -8,10 +8,9 @@ import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { IsMythicalAnimalCard } from "../MythologicalCreature";
-import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusPhaseNames, StageNames } from "../typescript/enums";
-import type { CampCardTypes, CanBeUndef, DiscardDeckCardTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CampCardTypes, CanBeNull, CanBeUndef, DiscardDeckCardTypes, DrawProfitTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -29,7 +28,7 @@ import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDist
  * @param data Глобальные параметры.
  * @returns Поле лагеря | данные для списка доступных аргументов мува.
  */
-export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
@@ -53,7 +52,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidator
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
-                let suit: SuitTypes | null = null;
+                let suit: CanBeNull<SuitTypes> = null;
                 if (IsArtefactCard(campCard)) {
                     suit = campCard.suit;
                 }
@@ -158,7 +157,7 @@ export const DrawCurrentPlayerTurn = (ctx: Ctx): JSX.Element => (
  * @param data Глобальные параметры.
  * @returns Поле преимуществ в конце эпохи.
  */
-export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<SuitTypes[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
@@ -232,7 +231,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
  * @param data Глобальные параметры.
  * @returns Поле колоды сброса карт.
  */
-export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
@@ -242,7 +241,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Mov
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit: null | SuitTypes = null;
-        if (!IsRoyalOfferingCard(card)) {
+        if (IsDwarfCard(card)) {
             suit = card.suit;
         }
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickDiscardCard) {
@@ -296,7 +295,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Mov
  * @param data Глобальные параметры.
  * @returns Поле героев.
  */
-export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardRows: JSX.Element[] = [],
         drawData: IDrawBoardOptions = DrawBoard(G.heroes.length),
@@ -369,7 +368,7 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidat
  * @param data Глобальные параметры.
  * @returns Поле героев для соло бота.
  */
-export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
@@ -485,7 +484,7 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const option: string = G.drawProfit;
+    const option: DrawProfitTypes = G.drawProfit;
     let caption = ``;
     switch (option) {
         case ConfigNames.ExplorerDistinction:
@@ -534,7 +533,7 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
  * @param gridClass Класс для отрисовки таверны.
  * @returns Поле таверн.
  */
-export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, gridClass?: string): JSX.Element[] | IMoveArgumentsStage<number[]>[`args`] => {
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
@@ -563,7 +562,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValida
                         );
                     }
                 } else {
-                    let suit: SuitTypes | null = null;
+                    let suit: CanBeNull<SuitTypes> = null;
                     if (IsDwarfCard(tavernCard) || IsMythicalAnimalCard(tavernCard)) {
                         suit = tavernCard.suit;
                     }

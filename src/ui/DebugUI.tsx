@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { CanBeUndef, IDebugData, IDebugDrawData, IMyGameState, ObjectEntries } from "../typescript/interfaces";
+import type { CanBeNull, CanBeUndef, DebugDrawDataType, IDebugData, IMyGameState, ObjectEntries } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -12,7 +12,7 @@ import type { CanBeUndef, IDebugData, IDebugDrawData, IMyGameState, ObjectEntrie
  * @param ctx
  * @returns Дебаг панель.
  */
-export const DrawDebugData = (G: IMyGameState, ctx: Ctx): JSX.Element | null => {
+export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNull<JSX.Element> => {
     const debugData: CanBeUndef<IDebugData> = GetDebugData(G, ctx);
     if (debugData === undefined) {
         return null;
@@ -36,7 +36,7 @@ export const DrawDebugData = (G: IMyGameState, ctx: Ctx): JSX.Element | null => 
  * @param obj Информация.
  * @returns
  */
-const DrawObjectData = (obj: IDebugDrawData): JSX.Element => {
+const DrawObjectData = (obj: DebugDrawDataType<IDebugData | IDebugData[keyof IDebugData]>): JSX.Element => {
     const values: JSX.Element[] = [];
     for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
@@ -69,7 +69,7 @@ const DrawObjectData = (obj: IDebugDrawData): JSX.Element => {
             values.push(
                 <li key={key}>
                     <b><span className="text-pink-500">{key}</span>:</b> <span
-                        className="text-purple-500">{value}</span>
+                        className="text-purple-500">{value as string}</span>
                 </li>
             );
         }

@@ -24,7 +24,7 @@ export const ValkyryScoring = (strengthTokenNotch, valkyryName) => {
         case ValkyryNames.Svafa:
             return SvafaScoring(strengthTokenNotch);
         default:
-            throw new Error(`У мифических существ типа '${RusCardTypeNames.Valkyry}}' отсутствует существо с названием '${valkyryName}'.`);
+            throw new Error(`У мифических существ типа '${RusCardTypeNames.Valkyry_Card}}' отсутствует существо с названием '${valkyryName}'.`);
     }
 };
 /**
@@ -41,7 +41,7 @@ export const BrynhildrScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 3, 6, 10, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -59,7 +59,7 @@ export const HildrScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 8, 16, 0], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -77,7 +77,7 @@ export const OlrunScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 3, 6, 10, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -95,7 +95,7 @@ export const SigrdrifaScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 0, 8, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -113,7 +113,7 @@ export const SvafaScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 4, 8, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -136,7 +136,7 @@ export const MythicalAnimalScoring = (player, mythicalAnimalName) => {
         case MythicalAnimalNames.Nidhogg:
             return NidhoggScoring(player);
         default:
-            throw new Error(`У карт с типом '${RusCardTypeNames.Mythical_Animal}' отсутствует ${RusCardTypeNames.Mythical_Animal} с названием '${mythicalAnimalName}'.`);
+            throw new Error(`У карт с типом '${RusCardTypeNames.Mythical_Animal_Card}' отсутствует ${RusCardTypeNames.Mythical_Animal_Card} с названием '${mythicalAnimalName}'.`);
     }
 };
 /**
@@ -185,7 +185,7 @@ export const GiantScoring = (player, giantName) => {
         case GiantNames.Surt:
             return SurtScoring(player);
         default:
-            throw new Error(`У карт с типом '${RusCardTypeNames.Giant}' отсутствует ${RusCardTypeNames.Giant} с названием '${giantName}'.`);
+            throw new Error(`У карт с типом '${RusCardTypeNames.Giant_Card}' отсутствует ${RusCardTypeNames.Giant_Card} с названием '${giantName}'.`);
     }
 };
 /**

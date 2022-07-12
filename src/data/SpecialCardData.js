@@ -1,4 +1,4 @@
-import { CardNames, SuitNames } from "../typescript/enums";
+import { SpecialCardNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Данные о особой карте.</h3>
  * <p>Применения:</p>
@@ -7,7 +7,7 @@ import { CardNames, SuitNames } from "../typescript/enums";
  * </ol>
  */
 const ChiefBlacksmith = {
-    name: CardNames.ChiefBlacksmith,
+    name: SpecialCardNames.ChiefBlacksmith,
     suit: SuitNames.Blacksmith,
     rank: 2,
     points: null,

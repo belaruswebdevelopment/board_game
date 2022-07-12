@@ -16,21 +16,21 @@ export const BuildRoyalOfferingCards = (data) => {
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
         const currentActionCardConfig = actionCardsConfigArray[i];
         if (currentActionCardConfig === undefined) {
-            throw new Error(`В массиве конфигов карт '${RusCardTypeNames.Royal_Offering}' отсутствует значение с id '${i}'.`);
+            throw new Error(`В массиве конфигов карт '${RusCardTypeNames.Royal_Offering_Card}' отсутствует значение с id '${i}'.`);
         }
         const amountPlayersValue = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering}' для указанного числа игроков - '${data.players}'.`);
+            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}'.`);
         }
         const amountTierValue = amountPlayersValue[data.tier];
         if (amountTierValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering}' для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
+            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
         }
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateRoyalOfferingCard({
                 value: currentActionCardConfig.value,
                 stack: currentActionCardConfig.stack,
-                name: `'${RusCardTypeNames.Royal_Offering}' на +${currentActionCardConfig.value}`,
+                name: currentActionCardConfig.name,
             }));
         }
     }
@@ -53,7 +53,7 @@ export const BuildRoyalOfferingCards = (data) => {
  * @param name Название.
  * @returns Карта королевской награды.
  */
-const CreateRoyalOfferingCard = ({ type = RusCardTypeNames.Royal_Offering, value, stack, name, } = {}) => ({
+const CreateRoyalOfferingCard = ({ type = RusCardTypeNames.Royal_Offering_Card, value, stack, name, } = {}) => ({
     type,
     value,
     stack,

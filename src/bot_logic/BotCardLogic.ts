@@ -4,7 +4,7 @@ import { suitsConfig } from "../data/SuitData";
 import { CreateDwarfCard, IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { ErrorNames, GameNames } from "../typescript/enums";
+import { ErrorNames } from "../typescript/enums";
 import type { CanBeUndef, DeckCardTypes, IDwarfCard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
@@ -129,7 +129,6 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCa
         suit: suitConfig.suit,
         points: totalPoints,
         name: `Average card`,
-        game: GameNames.Basic,
     });
 };
 

@@ -3,7 +3,8 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CardNames, CoinTypeNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
+import { AddCardToPlayer } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -26,14 +27,13 @@ export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        const card = G.specialCardsDeck.find((card) => card.name === CardNames.ChiefBlacksmith);
+        const card = G.specialCardsDeck.find((card) => card.name === SpecialCardNames.ChiefBlacksmith);
         if (card === undefined) {
-            throw new Error(`В игре отсутствует обязательная карта '${CardNames.ChiefBlacksmith}'.`);
+            throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
         }
-        player.pickedCard = card;
-        player.cards[SuitNames.Blacksmith].push(card);
+        AddCardToPlayer(G, ctx, card);
         G.distinctions[SuitNames.Blacksmith] = undefined;
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${CardNames.ChiefBlacksmith}'.`);
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${card.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.Blacksmith}'.`);
         CheckAndMoveThrudAction(G, ctx, card);
     }
     return 0;

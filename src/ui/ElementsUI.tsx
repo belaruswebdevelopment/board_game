@@ -9,7 +9,7 @@ import { IsHeroCard, IsHeroPlayerCard } from "../Hero";
 import { IsMythicalAnimalCard } from "../MythologicalCreature";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { ArtefactNames, MoveNames } from "../typescript/enums";
-import type { AllCardTypes, ArgsTypes, IBackground, IMyGameState, IPublicPlayer, MoveFunctionTypes, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
+import type { AllCardTypes, ArgsTypes, CanBeNull, IBackground, IMyGameState, IPublicPlayer, MoveFunctionTypes, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -68,7 +68,7 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardTypes, id: number,
-    player: IPublicPlayer | null, suit: SuitTypes | null, moveName?: MoveNames, ...args: ArgsTypes): void => {
+    player: CanBeNull<IPublicPlayer>, suit: CanBeNull<SuitTypes>, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
@@ -127,7 +127,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         tdClasses = suitsConfig[suit].suitColor;
     }
     if (IsHeroCard(card) || IsHeroPlayerCard(card)) {
-        styles = Styles.Heroes(card.game, card.name);
+        styles = Styles.Heroes(card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
         } else {
@@ -199,10 +199,10 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param args Аргументы действия.
  */
 export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string,
-    coin: PublicPlayerCoinTypes, id: number, player: IPublicPlayer | null, coinClasses?: string | null,
-    additionalParam?: number | null, moveName?: MoveNames, ...args: ArgsTypes): void => {
+    coin: PublicPlayerCoinTypes, id: number, player: CanBeNull<IPublicPlayer>, coinClasses?: CanBeNull<string>,
+    additionalParam?: CanBeNull<number>, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
-        span: JSX.Element | number | null = null,
+        span: CanBeNull<JSX.Element | number> = null,
         tdClasses = `bg-yellow-300`,
         spanClasses = ``,
         action: MoveFunctionTypes;
@@ -310,7 +310,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param moveName Название действия.
  */
 export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitTypes,
-    player: IPublicPlayer, moveName: MoveNames | null): void => {
+    player: IPublicPlayer, moveName: CanBeNull<MoveNames>): void => {
     let action: MoveFunctionTypes;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
@@ -322,8 +322,8 @@ export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Elem
         case MoveNames.PlaceYludHeroMove:
             action = data.moves.PlaceYludHeroMove!;
             break;
-        case MoveNames.PlaceOlwinCardMove:
-            action = data.moves.PlaceOlwinCardMove!;
+        case MoveNames.PlaceMultiSuitCardMove:
+            action = data.moves.PlaceMultiSuitCardMove!;
             break;
         case MoveNames.PlaceEnlistmentMercenariesMove:
             action = data.moves.PlaceEnlistmentMercenariesMove!;

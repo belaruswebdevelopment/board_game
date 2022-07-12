@@ -1,2 +1,2 @@
-import { ArtefactNames, CardNames, CoinTypeNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MythicalAnimalNames, RusCardTypeNames, RusSuitNames, TavernNames, ValkyryNames } from "./enums";
+import { ArtefactNames, CoinTypeNames, ConfigNames, DrawNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, TavernNames, ValkyryNames } from "./enums";
 //# sourceMappingURL=interfaces.js.map

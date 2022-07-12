@@ -1,6 +1,6 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { HeroScoring } from "../score_helpers/HeroScoringHelpers";
-import { BuffNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
+import { BuffNames, GameNames, HeroNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
 import type { IHeroConfig, IHeroData, SoloGameDifficultyLevelHeroesConfigType, SoloGameHeroesForBotConfigType, SoloGameHeroesForPlayerConfigType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -131,10 +131,7 @@ const Dagda: IHeroData = {
             number: 2,
         },
     },
-    stack: [
-        StackData.discardCardFromBoardDagda(),
-        StackData.discardCardFromBoardDagda(),
-    ],
+    stack: [StackData.discardCardFromBoardDagda()],
     scoringRule: (): number => 0,
 };
 
@@ -372,7 +369,7 @@ const Olwin: IHeroData = {
     description: `Прибавьте 9 победных очков к итоговому показателю храбрости. Как только вы призвали Ольвюна, сразу же возьмите две карты «Двойник Ольвюна» и положите их в две разные колонки своей армии. В результате размещения Двойников Ольвюна могут возникнуть новые линии 5 шевронов, в этом случае игрок может призвать новых героев. Призрачные двойники обладают значением храбрости 0, но могут стать дворфами любого воинского класса. Они могут быть отправлены в сброс эффектами карт «Дагда», «Бонфур», «Брисингамен» и «Хёфуд». Двойники Ольвюна не являются героями. Если карта «Двойник Ольвюна» единственная в колонке, то положите на неё жетон воинского класса для напоминания о воинском классе колонки.`,
     game: GameNames.Thingvellir,
     points: 9,
-    stack: [StackData.placeOlwinCards()],
+    stack: [StackData.placeMultiSuitsCards(MultiSuitCardNames.OlwinsDouble)],
     scoringRule: (): number => 9,
 };
 

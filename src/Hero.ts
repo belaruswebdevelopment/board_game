@@ -1,5 +1,5 @@
 import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { RusCardTypeNames } from "./typescript/enums";
+import { GameNames, RusCardTypeNames } from "./typescript/enums";
 import type { CreateHeroCardType, CreateHeroPlayerCardType, HeroTypes, IHeroCard, IHeroData, IHeroPlayerCard } from "./typescript/interfaces";
 
 /**
@@ -13,7 +13,7 @@ import type { CreateHeroCardType, CreateHeroPlayerCardType, HeroTypes, IHeroCard
  * @param solo Является ли режим игры соло игрой.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions: string[], solo: boolean): [IHeroCard[], IHeroCard[], IHeroCard[]] => {
+export const BuildHeroes = (configOptions: GameNames[], solo: boolean): [IHeroCard[], IHeroCard[], IHeroCard[]] => {
     const heroes: IHeroCard[] = [],
         heroesForSoloBot: IHeroCard[] = [],
         heroesForSoloGameDifficultyLevel: IHeroCard[] = [];
@@ -24,7 +24,6 @@ export const BuildHeroes = (configOptions: string[], solo: boolean): [IHeroCard[
             const hero: IHeroCard = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
-                game: heroData.game,
                 suit: heroData.suit,
                 rank: heroData.rank,
                 points: heroData.points,
@@ -57,7 +56,6 @@ export const BuildHeroes = (configOptions: string[], solo: boolean): [IHeroCard[
  * @param type Тип.
  * @param name Название.
  * @param description Описание.
- * @param game Игра/дополнение.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
@@ -69,10 +67,9 @@ export const BuildHeroes = (configOptions: string[], solo: boolean): [IHeroCard[
  * @returns Герой.
  */
 export const CreateHero = ({
-    type = RusCardTypeNames.Hero,
+    type = RusCardTypeNames.Hero_Card,
     name,
     description,
-    game,
     suit = null,
     rank = null,
     points = null,
@@ -85,7 +82,6 @@ export const CreateHero = ({
     type,
     name,
     description,
-    game,
     suit,
     rank,
     points,
@@ -108,7 +104,6 @@ export const CreateHero = ({
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
- * @param game Игра/дополнение.
  * @param tier Эпоха.
  * @param path URL путь.
  * @param variants Варианты расположения карты героя на поле игрока.
@@ -118,16 +113,14 @@ export const CreateHeroPlayerCard = ({
     type = RusCardTypeNames.Hero_Player_Card,
     name,
     description,
-    game,
-    suit = null,
-    rank = null,
-    points = null,
+    suit,
+    rank,
+    points,
     active = false,
 }: CreateHeroPlayerCardType = {} as CreateHeroPlayerCardType): IHeroPlayerCard => ({
     type,
     name,
     description,
-    game,
     suit,
     rank,
     points,

@@ -170,9 +170,6 @@ const Garm = {
     suit: SuitNames.Explorer,
     scoringRule: MythicalAnimalScoring,
 };
-// TODO Special MythicalAnimal card?!
-// const Gullinbursti: ? = {
-// };
 /**
  * <h3>Данные об Мифическом животном.</h3>
  * <p>Применения:</p>

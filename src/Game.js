@@ -16,7 +16,7 @@ import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
 import { AddCoinToPouchMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
 import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove } from "./moves/CoinMoves";
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
-import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
+import { ClickHeroCardMove, DiscardCardMove, PlaceMultiSuitCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { UseGodPowerMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
@@ -144,9 +144,9 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeOlwinCards: {
+                    placeMultiSuitsCards: {
                         moves: {
-                            PlaceOlwinCardMove,
+                            PlaceMultiSuitCardMove,
                         },
                     },
                     placeThrudHero: {
@@ -233,9 +233,9 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeOlwinCards: {
+                    placeMultiSuitsCards: {
                         moves: {
-                            PlaceOlwinCardMove,
+                            PlaceMultiSuitCardMove,
                         },
                     },
                     placeThrudHero: {
@@ -310,9 +310,9 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeOlwinCards: {
+                    placeMultiSuitsCards: {
                         moves: {
-                            PlaceOlwinCardMove,
+                            PlaceMultiSuitCardMove,
                         },
                     },
                     placeThrudHero: {
@@ -386,9 +386,9 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeOlwinCards: {
+                    placeMultiSuitsCards: {
                         moves: {
-                            PlaceOlwinCardMove,
+                            PlaceMultiSuitCardMove,
                         },
                     },
                     placeThrudHero: {

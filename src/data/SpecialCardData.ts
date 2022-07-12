@@ -1,4 +1,4 @@
-import { CardNames, SuitNames } from "../typescript/enums";
+import { SpecialCardNames, SuitNames } from "../typescript/enums";
 import type { ISpecialCardsConfig, SpecialCardDataType } from "../typescript/interfaces";
 
 /**
@@ -9,7 +9,7 @@ import type { ISpecialCardsConfig, SpecialCardDataType } from "../typescript/int
  * </ol>
  */
 const ChiefBlacksmith: SpecialCardDataType = {
-    name: CardNames.ChiefBlacksmith,
+    name: SpecialCardNames.ChiefBlacksmith,
     suit: SuitNames.Blacksmith,
     rank: 2,
     points: null,

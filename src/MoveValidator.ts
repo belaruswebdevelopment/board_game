@@ -11,7 +11,7 @@ import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot 
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickCardValidatorNames, StageNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit } from "./ui/ProfitUI";
@@ -96,7 +96,7 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
  * @returns Валидный ли мув.
  */
 export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageNames, id?: ValidMoveIdParamTypes): boolean => {
-    const validator: IMoveValidator | null = GetValidator(ctx.phase as PhaseNames, stage);
+    const validator: CanBeNull<IMoveValidator> = GetValidator(ctx.phase as PhaseNames, stage);
     let isValid = false;
     if (validator !== null) {
         if (typeof id === `number`) {
@@ -136,8 +136,8 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageNames, id?: V
  * @param stage Стадия игры.
  * @returns
  */
-export const GetValidator = (phase: PhaseNames, stage: StageNames): IMoveValidator | null => {
-    let validator: IMoveValidator | null;
+export const GetValidator = (phase: PhaseNames, stage: StageNames): CanBeNull<IMoveValidator> => {
+    let validator: CanBeNull<IMoveValidator>;
     switch (phase) {
         case PhaseNames.ChooseDifficultySoloMode:
             validator = moveBy[phase][stage as keyof IMoveByChooseDifficultySoloModeOptions];
@@ -1217,13 +1217,13 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`В массиве карт игрока во фракции '${SuitNames.Warrior}' отсутствует первая карта.`);
             }
             let minCardIndex = 0,
-                minCardValue: number | null = cardFirst.points;
+                minCardValue: CanBeNull<number> = cardFirst.points;
             moveArguments.cards.forEach((value: number, index: number): void => {
                 const card: CanBeUndef<PlayerCardTypes> = player.cards[SuitNames.Warrior][value];
                 if (card === undefined) {
                     throw new Error(`В массиве карт игрока во фракции '${SuitNames.Warrior}' отсутствует карта ${value}.`);
                 }
-                const cardPoints: number | null = card.points;
+                const cardPoints: CanBeNull<number> = card.points;
                 if (cardPoints === null || minCardValue === null) {
                     throw new Error(`Фракция должна иметь параметр 'points'.`);
                 }
@@ -1268,7 +1268,7 @@ export const moveValidators: IMoveValidators = {
         moveName: MoveNames.PickDiscardCardMove,
         validate: (): boolean => true,
     },
-    PlaceOlwinCardMoveValidator: {
+    PlaceMultiSuitCardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
@@ -1276,7 +1276,7 @@ export const moveValidators: IMoveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceOlwinCardMoveValidator,
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceMultiSuitCardMoveValidator,
                 null) as IMoveArgumentsStage<SuitTypes[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
@@ -1289,7 +1289,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceOlwinCardMove,
+        moveName: MoveNames.PlaceMultiSuitCardMove,
         validate: (): boolean => true,
     },
     PlaceThrudHeroMoveValidator: {
@@ -1454,7 +1454,7 @@ export const moveBy: IMoveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
@@ -1478,7 +1478,7 @@ export const moveBy: IMoveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
@@ -1495,7 +1495,7 @@ export const moveBy: IMoveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
@@ -1512,7 +1512,7 @@ export const moveBy: IMoveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,

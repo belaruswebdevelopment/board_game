@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { CreateDwarfCard, IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { ErrorNames, GameNames } from "../typescript/enums";
+import { ErrorNames } from "../typescript/enums";
 // Check all types in this file!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -120,7 +120,6 @@ export const GetAverageSuitCard = (suitConfig, data) => {
         suit: suitConfig.suit,
         points: totalPoints,
         name: `Average card`,
-        game: GameNames.Basic,
     });
 };
 /**

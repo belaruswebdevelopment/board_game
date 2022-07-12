@@ -119,10 +119,9 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param priority Кристалл.
  * @param buffs Бафы.
  * @param selectedCoin Выбранная монета.
- * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
+const CreatePublicPlayer = ({ nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, } = {}) => ({
     nickname,
     cards,
     giantTokenSuits,
@@ -135,6 +134,5 @@ const CreatePublicPlayer = ({ nickname, cards, giantTokenSuits, heroes = [], cam
     priority,
     buffs,
     selectedCoin,
-    pickedCard,
 });
 //# sourceMappingURL=Player.js.map

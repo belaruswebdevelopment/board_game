@@ -3,7 +3,7 @@ import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, StageNames } from "../typescript/enums";
-import type { CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
+import type { CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -20,7 +20,7 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  * @param boardCells Ячейки для отрисовки.
  * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
  */
-export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
@@ -28,7 +28,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
         if (card === undefined) {
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
-        let suit: SuitTypes | null = null;
+        let suit: CanBeNull<SuitTypes> = null;
         if (IsDwarfCard(card)) {
             suit = card.suit;
         }
@@ -95,8 +95,9 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле для выбора уровня сложности соло игры.
  */
-export const DrawDifficultyLevelForSoloModeUI = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
-    data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
+export const DrawDifficultyLevelForSoloModeUI = (G: IMyGameState, ctx: Ctx,
+    validatorName: CanBeNull<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
+    IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
         player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -131,7 +132,7 @@ export const DrawDifficultyLevelForSoloModeUI = (G: IMyGameState, ctx: Ctx, vali
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле героев для выбора сложности соло игры.
  */
-export const DrawHeroesForSoloModeUI = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawHeroesForSoloModeUI = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {

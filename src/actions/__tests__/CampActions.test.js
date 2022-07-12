@@ -868,7 +868,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             DiscardSuitCardAction(G, {
                 playerID: `0`,
             }, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
     });
 });
 //# sourceMappingURL=CampActions.test.js.map

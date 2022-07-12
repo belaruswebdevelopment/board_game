@@ -6,13 +6,13 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { IsHeroCard } from "../Hero";
+import { IsHeroPlayerCard } from "../Hero";
 import { IsGodCard } from "../MythologicalCreature";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BuffNames, CardNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, CoinTypes, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveFunctionTypes, MythologicalCreatureCommandZoneCardTypes, PickedCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, VariantType } from "../typescript/interfaces";
+import { BuffNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, StageNames, SuitNames } from "../typescript/enums";
+import type { CampDeckCardTypes, CanBeNull, CanBeUndef, CoinTypes, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveFunctionTypes, MythologicalCreatureCommandZoneCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -29,8 +29,8 @@ import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
  * @param data Глобальные параметры.
  * @returns Игровые поля для планшета всех карт игрока.
  */
-export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
-    playerId: number | null, data?: BoardProps<IMyGameState>): JSX.Element[]
+export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+    playerId: CanBeNull<number>, data?: BoardProps<IMyGameState>): JSX.Element[]
     | (IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<SuitTypes[]>[`args`]
         | IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`]
         | IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`]) => {
@@ -42,7 +42,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
         switch (validatorName) {
             case MoveValidatorNames.PlaceThrudHeroMoveValidator:
             case MoveValidatorNames.PlaceYludHeroMoveValidator:
-            case MoveValidatorNames.PlaceOlwinCardMoveValidator:
+            case MoveValidatorNames.PlaceMultiSuitCardMoveValidator:
             case MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetMjollnirProfitMoveValidator:
@@ -75,7 +75,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
         }
-        const pickedCard: PickedCardTypes = player.pickedCard;
+        const stack: CanBeUndef<IStack> = player.stack[0];
         let suitTop: SuitTypes;
         // TODO Draw Giant Capture token on suit if needed!
         for (suitTop in suitsConfig) {
@@ -156,7 +156,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 if (card !== undefined) {
                     isDrawRow = true;
                     if (p !== Number(ctx.currentPlayer) && stage === StageNames.DiscardSuitCard
-                        && suit === SuitNames.Warrior && !IsHeroCard(card)) {
+                        && suit === SuitNames.Warrior && !IsHeroPlayerCard(card)) {
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit,
                                 MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
@@ -168,15 +168,13 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                             moveMainArgs.cards.push(i);
                         }
                     } else if (p === Number(ctx.currentPlayer) && last === i
-                        && stage === StageNames.DiscardBoardCard && !IsHeroCard(card)) {
-                        const stack: CanBeUndef<IStack> = player.stack[0];
+                        && stage === StageNames.DiscardBoardCard && !IsHeroPlayerCard(card)) {
+                        // TODO Does it need more then 1 checking?
                         if (stack === undefined) {
                             throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
                         }
-                        const stackSuit: CanBeUndef<SuitTypes | null> = stack.suit,
-                            pickedCard: PickedCardTypes = player.pickedCard;
-                        if (suit !== stackSuit
-                            && !(pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
+                        const stackSuit: CanBeUndef<CanBeNull<SuitTypes>> = stack.suit;
+                        if (suit !== stackSuit && suit !== stack.pickedSuit) {
                             if (data !== undefined) {
                                 const suitArg: SuitTypes = suit;
                                 DrawCard(data, playerCells, card, id, player, suit,
@@ -195,7 +193,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                             }
                         }
                     } else if (p === Number(ctx.currentPlayer)
-                        && ctx.phase === PhaseNames.BrisingamensEndGame && !IsHeroCard(card)) {
+                        && ctx.phase === PhaseNames.BrisingamensEndGame && !IsHeroPlayerCard(card)) {
                         if (data !== undefined) {
                             const suitArg: SuitTypes = suit;
                             DrawCard(data, playerCells, card, id, player, suit,
@@ -216,19 +214,20 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                             DrawCard(data, playerCells, card, id, player, suit);
                         }
                     }
-                } else if (p === Number(ctx.currentPlayer) && (last + 1) === i && pickedCard !== null
-                    && (((ctx.phase === PhaseNames.PlaceYlud || ctx.phase === PhaseNames.EnlistmentMercenaries)
-                        && (ctx.activePlayers === null || ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
-                            StageNames.PlaceEnlistmentMercenaries)) || stage === StageNames.PlaceThrudHero
-                        || stage === StageNames.PlaceOlwinCards)) {
-                    let cardVariants: CanBeUndef<VariantType> = undefined;
+                } else if (p === Number(ctx.currentPlayer) && (last + 1) === i
+                    && ((((ctx.phase === PhaseNames.PlaceYlud && ctx.activePlayers === null)
+                        || ctx.phase === PhaseNames.EnlistmentMercenaries
+                        && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
+                        StageNames.PlaceEnlistmentMercenaries)) || stage === StageNames.PlaceThrudHero
+                        || stage === StageNames.PlaceMultiSuitsCards)) {
+                    if (stack === undefined) {
+                        throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
+                    }
+                    let cardVariants: CanBeUndef<VariantType>;
                     if (ctx.phase === PhaseNames.EnlistmentMercenaries
                         && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
                         StageNames.PlaceEnlistmentMercenaries) {
-                        if (!IsMercenaryCampCard(pickedCard)) {
-                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
-                        }
-                        cardVariants = pickedCard.variants[suit];
+                        cardVariants = stack.card?.variants[suit];
                         if (cardVariants !== undefined && cardVariants.suit !== suit) {
                             throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
                         }
@@ -238,20 +237,19 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                         // TODO Can Ylud be placed in old place because of "suit !== pickedCard.suit"? Thrud can be placed same suit in solo game!
                         let action: MoveFunctionTypes;
                         // TODO Check Thrud moving
-                        if ((!IsMercenaryCampCard(pickedCard)
-                            && (G.solo || (!G.solo && (pickedCard.name !== CardNames.OlwinsDouble
-                                || (pickedCard.name === CardNames.OlwinsDouble && "suit" in pickedCard
-                                    && suit !== pickedCard.suit))))) || (IsMercenaryCampCard(pickedCard)
-                                        && cardVariants !== undefined && suit === cardVariants.suit)) {
-                            switch (pickedCard.name) {
+                        if ((G.solo || (!G.solo && (stack.name !== MultiSuitCardNames.OlwinsDouble
+                            || (stack.name === MultiSuitCardNames.OlwinsDouble && suit !== stack.pickedSuit))))
+                            || (cardVariants !== undefined && suit === cardVariants.suit)) {
+                            switch (stack.name) {
                                 case HeroNames.Thrud:
                                     action = data.moves.PlaceThrudHeroMove!;
                                     break;
                                 case HeroNames.Ylud:
                                     action = data.moves.PlaceYludHeroMove!;
                                     break;
-                                case CardNames.OlwinsDouble:
-                                    action = data.moves.PlaceOlwinCardMove!;
+                                case MultiSuitCardNames.OlwinsDouble:
+                                case MultiSuitCardNames.Gullinbursti:
+                                    action = data.moves.PlaceMultiSuitCardMove!;
                                     break;
                                 default:
                                     if (ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
@@ -267,7 +265,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                             const suitArg: SuitTypes = suit;
                             playerCells.push(
                                 <td onClick={() => action?.(suitArg)} className="cursor-pointer"
-                                    key={`${player.nickname} place card ${pickedCard.name} to ${suit}`}></td>
+                                    key={`${player.nickname} place card ${stack.name} to ${suit}`}></td>
                             );
                         } else {
                             playerCells.push(
@@ -276,7 +274,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                         }
                     } else if (validatorName === MoveValidatorNames.PlaceThrudHeroMoveValidator
                         || validatorName === MoveValidatorNames.PlaceYludHeroMoveValidator
-                        || validatorName === MoveValidatorNames.PlaceOlwinCardMoveValidator
+                        || validatorName === MoveValidatorNames.PlaceMultiSuitCardMoveValidator
                         || (validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
                             && cardVariants !== undefined && suit === cardVariants.suit)) {
                         (moveMainArgs as IMoveArgumentsStage<SuitTypes[]>[`args`]).push(suit);
@@ -290,7 +288,6 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 }
                 j++;
             }
-            // TODO Draw Idavoll cards column!
             for (let k = 0; k < 1; k++) {
                 id += k + 1;
                 const playerCards: PlayerCardTypes[] = Object.values(player.cards).flat(),
@@ -320,8 +317,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                     if (campCard !== undefined) {
                         isDrawRow = true;
                         if (IsMercenaryCampCard(campCard) && ctx.phase === PhaseNames.EnlistmentMercenaries
-                            && ctx.activePlayers === null && Number(ctx.currentPlayer) === p
-                            && pickedCard === null) {
+                            && ctx.activePlayers === null && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
                                 DrawCard(data, playerCells, campCard, id, player, null,
                                     MoveNames.GetEnlistmentMercenariesMove, i);
@@ -423,7 +419,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
  * @param data Глобальные параметры.
  * @returns Игровые поля для пользовательских монет на столе | данные для списка доступных аргументов мува.
  */
-export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element[]
     | (IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]) => {
     const playersBoardsCoins: JSX.Element[] = [],
@@ -689,7 +685,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
  * @param data Глобальные параметры.
  * @returns Игровые поля для пользовательских монет в руке.
  */
-export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element[]
     | (IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]) => {
     const playersHandsCoins: JSX.Element[] = [],

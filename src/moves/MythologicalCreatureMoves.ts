@@ -26,7 +26,7 @@ export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, c
     if (card === undefined) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта с id '${cardId}'.`);
     } else if (!IsGodCard(card)) {
-        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God}', а не с типом '${card.type}'.`);
+        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God_Card}', а не с типом '${card.type}'.`);
     }
     const godCard: CanBeUndef<IGodData> =
         Object.values(godConfig).find((god: IGodData): boolean => god.name === card.name);

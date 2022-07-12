@@ -1,7 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { CreateOlwinDoubleNonPlacedCard, CreateThrudNonPlacedCard } from "../SpecialCard";
-import { CardNames, DrawNames, ErrorNames, HeroNames, LogTypeNames } from "../typescript/enums";
+import { ErrorNames, LogTypeNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
  * <p>Применения:</p>
@@ -24,41 +23,8 @@ export const DrawCurrentProfit = (G, ctx) => {
     if (stack !== undefined) {
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
         StartOrEndActionStage(G, ctx, stack);
-        const pickedCard = player.pickedCard;
-        if (stack.drawName === DrawNames.PlaceThrudHero && pickedCard !== null
-            && pickedCard.name !== HeroNames.Thrud) {
-            // TODO Think about it...
-            const thrud = CreateThrudNonPlacedCard();
-            player.pickedCard = thrud;
-        }
-        else if (G.expansions.thingvellir.active) {
-            if (stack.drawName === DrawNames.PlaceOlwinDouble) {
-                let suit;
-                if (pickedCard !== null
-                    && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
-                    if (!("suit" in pickedCard)) {
-                        throw new Error(`У выбранной карты отсутствует обязательный параметр 'suit'.`);
-                    }
-                    suit = pickedCard.suit;
-                }
-                else {
-                    suit = stack.suit;
-                    if (suit === undefined) {
-                        throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'suit'.`);
-                    }
-                }
-                // TODO Think about it...
-                const olwinDouble = CreateOlwinDoubleNonPlacedCard({
-                    suit,
-                });
-                player.pickedCard = olwinDouble;
-            }
-            else if (stack.drawName === DrawNames.EnlistmentMercenaries) {
-                player.pickedCard = null;
-            }
-        }
-        if (stack.name !== undefined) {
-            G.drawProfit = stack.name;
+        if (stack.configName !== undefined) {
+            G.drawProfit = stack.configName;
         }
         else {
             G.drawProfit = ``;

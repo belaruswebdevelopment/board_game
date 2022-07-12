@@ -9,13 +9,14 @@ import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./d
 import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
+import { BuildMultiSuitCards } from "./MultiSuitCard";
 import { BuildMythologicalCreatureCards } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -55,6 +56,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         logData: ILogData[] = [],
         odroerirTheMythicCauldronCoins: ICoin[] = [],
         specialCardsDeck: ISpecialCard[] = BuildSpecialCards(),
+        configOptions: GameNames[] = [GameNames.Basic],
+        multiCardsDeck: IMultiSuitCard[] = BuildMultiSuitCards(configOptions),
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
         distinctions: SuitPropertyTypes<DistinctionTypes> = {} as SuitPropertyTypes<DistinctionTypes>,
@@ -76,6 +79,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         mustDiscardTavernCardJarnglofi = null,
         discardCampCardsDeck: CampDeckCardTypes[] = [],
         discardMythologicalCreaturesCards: MythologicalCreatureDeckCardTypes[] = [],
+        discardMultiCards: IMultiSuitPlayerCard[] = [],
         discardSpecialCards: ISpecialCard[] = [],
         campDeckLength: [number, number] = [0, 0],
         camp: CampDeckCardTypes[] = Array(campNum).fill(null);
@@ -113,15 +117,14 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random!.Shuffle(deck);
     }
-    const heroesConfigOptions: string[] = [GameNames.Basic];
     let expansion: ExpansionTypes;
     for (expansion in expansions) {
         if (expansions[expansion].active) {
-            heroesConfigOptions.push(expansion);
+            configOptions.push(expansion as GameNames);
         }
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: [IHeroCard[], IHeroCard[], IHeroCard[]] =
-        BuildHeroes(heroesConfigOptions, solo),
+        BuildHeroes(configOptions, solo),
         taverns: (DeckCardTypes[] | MythologicalCreatureDeckCardTypes[])[] = [],
         tavernsNum = 3,
         currentTavern = -1,
@@ -211,10 +214,12 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         mustDiscardTavernCardJarnglofi,
         currentTavern,
         debug,
+        multiCardsDeck,
         specialCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
         discardMythologicalCreaturesCards,
+        discardMultiCards,
         discardSpecialCards,
         distinctions,
         drawProfit,

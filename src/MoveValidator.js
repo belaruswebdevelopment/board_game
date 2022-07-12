@@ -1138,7 +1138,7 @@ export const moveValidators = {
         moveName: MoveNames.PickDiscardCardMove,
         validate: () => true,
     },
-    PlaceOlwinCardMoveValidator: {
+    PlaceMultiSuitCardMoveValidator: {
         getRange: (G, ctx) => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
@@ -1146,7 +1146,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceOlwinCardMoveValidator, null);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceMultiSuitCardMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -1155,7 +1155,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceOlwinCardMove,
+        moveName: MoveNames.PlaceMultiSuitCardMove,
         validate: () => true,
     },
     PlaceThrudHeroMoveValidator: {
@@ -1310,7 +1310,7 @@ export const moveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
@@ -1334,7 +1334,7 @@ export const moveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
@@ -1351,7 +1351,7 @@ export const moveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
@@ -1368,7 +1368,7 @@ export const moveBy = {
         pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
-        placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
+        placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,

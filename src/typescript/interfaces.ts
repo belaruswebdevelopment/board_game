@@ -1,10 +1,9 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, CardNames, CoinTypeNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MythicalAnimalNames, RusCardTypeNames, RusSuitNames, TavernNames, ValkyryNames } from "./enums";
+import { ArtefactNames, CoinTypeNames, ConfigNames, DrawNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, TavernNames, ValkyryNames } from "./enums";
 
 export interface ISecret {
     readonly campDecks: CampDeckCardTypes[][];
     readonly decks: DeckCardTypes[][];
-    // TODO Idavoll
     mythologicalCreatureDecks: MythologicalCreatureDeckCardTypes[];
 }
 
@@ -20,14 +19,8 @@ export interface IObjectives {
 }
 
 export interface IDebugData {
-    readonly G: Partial<Record<keyof IMyGameState, unknown>>;
+    readonly G: Partial<Record<keyof IMyGameState, IMyGameState[keyof IMyGameState]>>;
     readonly ctx: Record<string, unknown>;
-}
-
-export interface IDebugDrawData {
-    // TODO Rework 'any'?
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    readonly [key: string]: any,
 }
 
 export interface ICardCharacteristics {
@@ -40,14 +33,6 @@ export interface IHeuristic<T> {
     readonly weight: number;
 }
 
-/**
- * <h3>Интерфейс для конфига дек.</h3>
- */
-export interface IDeckConfig {
-    readonly suits: ISuitConfig;
-    readonly actions: IRoyalOfferingCardConfig[];
-}
-
 // TODO Idavoll IGodCard | IGiantCard | IValkyryCard | IMythicalAnimalCard
 /**
  * <h3>Интерфейс для карты Idavoll.</h3>
@@ -55,8 +40,8 @@ export interface IDeckConfig {
 export interface IGodCard {
     readonly name: GodNames;
     readonly points: number;
-    readonly type: RusCardTypeNames.God;
-    isPowerTokenUsed: boolean | null;
+    readonly type: RusCardTypeNames.God_Card;
+    isPowerTokenUsed: CanBeNull<boolean>;
 }
 
 /**
@@ -64,9 +49,9 @@ export interface IGodCard {
  */
 export interface IGiantCard {
     readonly name: GiantNames;
-    readonly type: RusCardTypeNames.Giant;
+    readonly type: RusCardTypeNames.Giant_Card;
     readonly placedSuit: SuitTypes;
-    capturedCard: IDwarfCard | null;
+    capturedCard: CanBeNull<IDwarfCard>;
 }
 
 /**
@@ -74,8 +59,8 @@ export interface IGiantCard {
  */
 export interface IValkyryCard {
     readonly name: ValkyryNames;
-    readonly type: RusCardTypeNames.Valkyry;
-    strengthTokenNotch: number | null;
+    readonly type: RusCardTypeNames.Valkyry_Card;
+    strengthTokenNotch: CanBeNull<number>;
 }
 
 /**
@@ -83,25 +68,29 @@ export interface IValkyryCard {
  */
 export interface IMythicalAnimalCard extends IBasicSuitableCardInfo {
     readonly name: MythicalAnimalNames;
-    readonly type: RusCardTypeNames.Mythical_Animal;
+    readonly type: RusCardTypeNames.Mythical_Animal_Card;
 }
 
 /**
  * <h3>Интерфейс для особой карты.</h3>
  */
 export interface ISpecialCard extends IBasicSuitableCardInfo {
-    readonly type: RusCardTypeNames.Special;
-    readonly name: CardNames.ChiefBlacksmith;
-    readonly game: GameNames.Basic;
+    readonly type: RusCardTypeNames.Special_Card;
+    readonly name: SpecialCardNames.ChiefBlacksmith;
+}
+
+export interface IMultiSuitCard {
+    readonly type: RusCardTypeNames.Multi_Suit_Card;
+    readonly name: MultiSuitCardNames;
 }
 
 /**
  * <h3>Интерфейс для карты улучшения монеты.</h3>
  */
 export interface IRoyalOfferingCard {
-    readonly name: string;
+    readonly name: RoyalOfferingNames;
     readonly stack: IStack[];
-    readonly type: RusCardTypeNames.Royal_Offering;
+    readonly type: RusCardTypeNames.Royal_Offering_Card;
     readonly value: number;
 }
 
@@ -172,7 +161,7 @@ export interface IValkyryConfig {
 /**
  * <h3>Интерфейс для конфига карт королевских наград.</h3>
  */
-export interface IRoyalOfferingCardConfig extends Pick<IRoyalOfferingCard, `stack` | `value`> {
+export interface IRoyalOfferingCardConfig extends Pick<IRoyalOfferingCard, `stack` | `value` | `name`> {
     readonly amount: () => IRoyalOfferingCardValues;
 }
 
@@ -196,16 +185,18 @@ export interface IAction {
  */
 export interface IStack {
     priority?: number;
-    readonly variants?: SuitPropertyTypes<VariantType>;
     readonly playerId?: number;
     readonly number?: number;
     readonly coinId?: number;
     readonly coinValue?: number;
     readonly suit?: SuitTypes;
+    readonly pickedSuit?: SuitTypes;
     readonly value?: number;
-    readonly drawName?: string;
-    readonly stageName?: string;
-    readonly name?: string;
+    readonly configName?: ConfigNames;
+    readonly drawName?: DrawNames;
+    readonly stageName?: StageNames;
+    readonly name?: StackNamesTypes;
+    readonly card?: IMercenaryCampCard;
 }
 
 /**
@@ -239,14 +230,14 @@ export interface IBotData {
  * <h3>Интерфейс для возможных мувов у ботов.</h3>
  */
 export interface IMoves {
-    readonly move: string;
+    readonly move: MoveNames;
     readonly args: MoveArgsTypes;
 }
 
 /**
  * <h3>Интерфейс для данных карт лагеря артефакт.</h3>
  */
-export interface IArtefact extends PartialBy<Omit<IArtefactCampCard, `game` | `type` | `path`>, `suit` | `rank`
+export interface IArtefact extends PartialBy<Omit<IArtefactCampCard, `type` | `path`>, `suit` | `rank`
     | `points`> {
     readonly scoringRule: (G?: IMyGameState, player?: IPublicPlayer, artefactName?: ArtefactNames) => number;
 }
@@ -256,7 +247,7 @@ export interface IArtefact extends PartialBy<Omit<IArtefactCampCard, `game` | `t
  */
 export interface IArtefactCampCard extends IBasicSuitableNullableCardInfo, ICampCardInfo, ISecondaryCardInfo,
     ICardWithActionInfo {
-    readonly type: RusCardTypeNames.Artefact;
+    readonly type: RusCardTypeNames.Artefact_Card;
     readonly name: ArtefactNames;
 }
 
@@ -280,9 +271,9 @@ export interface IArtefactConfig {
 }
 
 export interface IBasicSuitableNullableCardInfo {
-    readonly suit: SuitTypes | null;
-    readonly rank: number | null;
-    readonly points: number | null;
+    readonly suit: CanBeNull<SuitTypes>;
+    readonly rank: CanBeNull<number>;
+    readonly points: CanBeNull<number>;
 }
 
 export interface IBasicSuitableCardInfo extends Pick<IBasicSuitableNullableCardInfo, `points`> {
@@ -296,6 +287,9 @@ export interface ICampCardInfo {
 
 export interface ISecondaryCardInfo {
     readonly tier: number;
+}
+
+export interface IExpansionCardInfo {
     readonly game: GameNames;
 }
 
@@ -313,7 +307,7 @@ export interface ICardWithActionInfo {
 export interface IMercenaryCampCard extends ICampCardInfo, ISecondaryCardInfo {
     // TODO Rework all cards name in Enums
     readonly name: string;
-    readonly type: RusCardTypeNames.Mercenary;
+    readonly type: RusCardTypeNames.Mercenary_Card;
     readonly variants: Partial<SuitPropertyTypes<VariantType>>;
 }
 
@@ -321,6 +315,7 @@ export interface IMercenaryCampCard extends ICampCardInfo, ISecondaryCardInfo {
  * <h3>Интерфейс для карты наёмника на столе игрока.</h3>
  */
 export interface IMercenaryPlayerCard extends MercenaryType, ICampCardInfo, ISecondaryCardInfo {
+    // TODO Rework all cards name in Enums
     readonly name: string;
     readonly type: RusCardTypeNames.Mercenary_Player_Card;
 }
@@ -336,27 +331,18 @@ export interface ISpecialCardsConfig {
     readonly ChiefBlacksmith: SpecialCardDataType;
 }
 
+export interface IMultiCardsConfig {
+    readonly Gullinbursti: MultiSuitCardDataType;
+    readonly OlwinsDouble: MultiSuitCardDataType;
+}
+
 /**
  * <h3>Интерфейс для карты дворфа.</h3>
  */
 export interface IDwarfCard extends IBasicSuitableCardInfo, ISecondaryCardInfo {
+    // TODO Rework all cards name in Enums
     readonly name: string;
-    readonly type: RusCardTypeNames.Dwarf;
-}
-
-/**
- * <h3>Интерфейс для фейковой карты Двойник Ольвюна.</h3>
- */
-export interface IOlwinDoubleNonPlacedCard {
-    readonly name: CardNames.OlwinsDouble;
-    readonly suit: SuitTypes | null;
-}
-
-/**
- * <h3>Интерфейс для фейковой карты Труд.</h3>
- */
-export interface IThrudNonPlacedCard {
-    readonly name: HeroNames.Thrud;
+    readonly type: RusCardTypeNames.Dwarf_Card;
 }
 
 /**
@@ -423,7 +409,7 @@ export interface ILogData {
 export interface IMyGameState {
     readonly multiplayer: boolean;
     readonly solo: boolean;
-    soloGameDifficultyLevel: number | null;
+    soloGameDifficultyLevel: CanBeNull<number>;
     odroerirTheMythicCauldron: boolean;
     readonly odroerirTheMythicCauldronCoins: ICoin[];
     readonly averageCards: SuitPropertyTypes<IDwarfCard>;
@@ -431,28 +417,30 @@ export interface IMyGameState {
     readonly deckLength: [number, number];
     readonly campDeckLength: [number, number];
     mythologicalCreatureDeckLength: number;
-    explorerDistinctionCardId: number | null,
+    explorerDistinctionCardId: CanBeNull<number>,
     readonly explorerDistinctionCards: DeckCardTypes[];
     readonly camp: CampCardTypes[];
     readonly secret: ISecret;
     readonly campNum: number;
-    mustDiscardTavernCardJarnglofi: boolean | null;
+    mustDiscardTavernCardJarnglofi: CanBeNull<boolean>;
     campPicked: boolean;
     currentTavern: number;
     readonly debug: boolean;
+    readonly multiCardsDeck: IMultiSuitCard[];
     readonly specialCardsDeck: ISpecialCard[];
     readonly discardCampCardsDeck: DiscardCampCardTypes[];
     readonly discardCardsDeck: DiscardDeckCardTypes[];
     readonly discardMythologicalCreaturesCards: MythologicalCreatureDeckCardTypes[];
+    readonly discardMultiCards: IMultiSuitPlayerCard[];
     readonly discardSpecialCards: ISpecialCard[];
     readonly distinctions: SuitPropertyTypes<DistinctionTypes>;
-    drawProfit: string;
+    drawProfit: DrawProfitTypes;
     readonly drawSize: number;
     exchangeOrder: CanBeUndef<number>[];
     readonly expansions: IExpansions;
     readonly heroes: IHeroCard[];
     readonly heroesForSoloBot: IHeroCard[];
-    heroesForSoloGameDifficultyLevel: IHeroCard[] | null;
+    heroesForSoloGameDifficultyLevel: CanBeNull<IHeroCard[]>;
     readonly log: boolean;
     readonly logData: ILogData[];
     readonly marketCoins: ICoin[];
@@ -468,13 +456,6 @@ export interface IMyGameState {
     readonly publicPlayers: IPublicPlayers;
     publicPlayersOrder: string[];
     readonly winner: number[];
-}
-
-/**
- * <h3>Интерфейс для следующей фазы.</h3>
- */
-export interface INext {
-    readonly next: string;
 }
 
 /**
@@ -495,11 +476,18 @@ export interface IResolveBoardCoins {
 }
 
 /**
+ * <h3>Интерфейс для мультифракционной карты на поле игрока.</h3>
+ */
+export interface IMultiSuitPlayerCard extends IBasicSuitableCardInfo {
+    readonly type: RusCardTypeNames.Multi_Suit_Player_Card;
+    readonly name: MultiSuitCardNames;
+}
+
+/**
  * <h3>Интерфейс для героя.</h3>
  */
-export interface IHeroCard extends IBasicSuitableNullableCardInfo, Pick<ISecondaryCardInfo, `game`>,
-    ICardWithActionInfo {
-    readonly type: RusCardTypeNames.Hero;
+export interface IHeroCard extends IBasicSuitableNullableCardInfo, ICardWithActionInfo {
+    readonly type: RusCardTypeNames.Hero_Card;
     readonly name: HeroNames;
     active: boolean;
 }
@@ -507,8 +495,7 @@ export interface IHeroCard extends IBasicSuitableNullableCardInfo, Pick<ISeconda
 /**
  * <h3>Интерфейс для героя на поле игрока.</h3>
  */
-export interface IHeroPlayerCard extends IBasicSuitableNullableCardInfo, Pick<ISecondaryCardInfo, `game`>,
-    Pick<ICardWithActionInfo, `description`> {
+export interface IHeroPlayerCard extends IBasicSuitableCardInfo, Pick<ICardWithActionInfo, `description`> {
     readonly type: RusCardTypeNames.Hero_Player_Card;
     readonly name: HeroNames;
     readonly active: false;
@@ -517,7 +504,8 @@ export interface IHeroPlayerCard extends IBasicSuitableNullableCardInfo, Pick<IS
 /**
  * <h3>Интерфейс для данных карты героя.</h3>
  */
-export interface IHeroData extends PartialBy<Omit<IHeroCard, `type` | `active`>, `suit` | `rank` | `points`> {
+export interface IHeroData extends PartialBy<Omit<IHeroCard, `type` | `active`>, `suit` | `rank` | `points`>,
+    IExpansionCardInfo {
     readonly scoringRule: (player?: IPublicPlayer, heroName?: HeroNames) => number;
 }
 
@@ -571,7 +559,7 @@ export interface IConditions {
 }
 
 interface IDiscardCard {
-    readonly suit: SuitTypes | null;
+    readonly suit: CanBeNull<SuitTypes>;
     readonly number?: number;
 }
 
@@ -662,7 +650,7 @@ interface IMoveByCommonOptions {
     readonly pickConcreteCoinToUpgrade: IMoveValidator;
     readonly pickDiscardCard: IMoveValidator;
     readonly pickHero: IMoveValidator;
-    readonly placeOlwinCards: IMoveValidator;
+    readonly placeMultiSuitsCards: IMoveValidator;
     readonly placeThrudHero: IMoveValidator;
     readonly upgradeCoin: IMoveValidator;
     readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator;
@@ -735,7 +723,7 @@ export interface IStackData {
     readonly brisingamensEndGameAction: () => IStack;
     readonly discardCardFromBoardBonfur: () => IStack;
     readonly discardCardFromBoardCrovaxTheDoppelganger: () => IStack;
-    readonly discardCardFromBoardDagda: () => IStack;
+    readonly discardCardFromBoardDagda: (pickedSuit?: SuitTypes) => IStack;
     readonly discardSuitCard: (playerId: number) => IStack;
     readonly discardSuitCardHofud: () => IStack;
     readonly discardTavernCard: () => IStack;
@@ -751,13 +739,13 @@ export interface IStackData {
     readonly pickDiscardCardBrisingamens: (priority?: number) => IStack;
     readonly pickDistinctionCard: () => IStack;
     readonly pickDistinctionCardSoloBot: () => IStack;
-    readonly placeOlwinCards: (suit?: SuitTypes, priority?: number) => IStack;
+    readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: number) => IStack;
     readonly placeThrudHero: () => IStack;
     readonly placeTradingCoinsUline: () => IStack;
     readonly placeYludHero: () => IStack;
     readonly pickHero: () => IStack;
     readonly pickHeroSoloBot: () => IStack;
-    readonly placeEnlistmentMercenaries: () => IStack;
+    readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
     readonly startOrPassEnlistmentMercenaries: () => IStack;
     readonly upgradeCoin: (value: number) => IStack;
     readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number) => IStack;
@@ -801,7 +789,7 @@ export interface IMoveValidators {
     readonly DiscardCardMoveValidator: IMoveValidator;
     readonly DiscardSuitCardFromPlayerBoardMoveValidator: IMoveValidator;
     readonly PickDiscardCardMoveValidator: IMoveValidator;
-    readonly PlaceOlwinCardMoveValidator: IMoveValidator;
+    readonly PlaceMultiSuitCardMoveValidator: IMoveValidator;
     readonly PlaceThrudHeroMoveValidator: IMoveValidator;
     readonly UpgradeCoinVidofnirVedrfolnirMoveValidator: IMoveValidator;
     readonly UseGodPowerMoveValidator: IMoveValidator;
@@ -861,12 +849,11 @@ export interface IPublicPlayer {
     readonly mythologicalCreatureCards: MythologicalCreatureCommandZoneCardTypes[];
     readonly handCoins: PublicPlayerCoinTypes[];
     readonly boardCoins: PublicPlayerCoinTypes[];
-    readonly giantTokenSuits: SuitPropertyTypes<boolean | null>;
+    readonly giantTokenSuits: SuitPropertyTypes<CanBeNull<boolean>>;
     stack: IStack[];
     priority: IPriority;
     readonly buffs: IBuffs[];
-    selectedCoin: number | null;
-    pickedCard: PickedCardTypes;
+    selectedCoin: CanBeNull<number>;
 }
 
 /**
@@ -921,14 +908,14 @@ export interface IStyles {
     readonly CampBack: (tier: number) => IBackground;
     readonly CampCards: (tier: number, cardPath: string) => IBackground;
     readonly CardBack: (tier: number) => IBackground;
-    readonly Cards: (suit: SuitTypes | null, name: string, points: number | null) => IBackground;
+    readonly Cards: (suit: CanBeNull<SuitTypes>, name: string, points: CanBeNull<number>) => IBackground;
     readonly Coin: (value: number, initial: boolean) => IBackground;
     readonly CoinSmall: (value: number, initial: boolean) => IBackground;
     readonly CoinBack: () => IBackground;
     readonly Distinctions: (distinction: SuitTypes) => IBackground;
     readonly DistinctionsBack: () => IBackground;
     readonly Exchange: () => IBackground;
-    readonly Heroes: (game: GameNames, heroName: HeroNames) => IBackground;
+    readonly Heroes: (heroName: HeroNames) => IBackground;
     readonly HeroBack: () => IBackground;
     readonly Priorities: (priority: number) => IBackground;
     readonly Priority: () => IBackground;
@@ -980,6 +967,13 @@ export interface ITavernsConfig {
     readonly [index: number]: ITavernInConfig;
 }
 
+export type DebugDrawDataType<T> = {
+    readonly [K in keyof T]: T[K];
+};
+
+// TODO Rework to + Enlistment mercenaries names - string
+export type StackNamesTypes = HeroNames | MultiSuitCardNames | string;
+
 // TODO Idavoll
 /**
  * <h3>Типы данных для дек карт Idavoll.</h3>
@@ -994,7 +988,7 @@ export type MythologicalCreatureCommandZoneCardTypes = IGodCard | IGiantCard | I
 /**
  * <h3>Типы данных для лагеря.</h3>
  */
-export type CampCardTypes = CampDeckCardTypes | null;
+export type CampCardTypes = CanBeNull<CampDeckCardTypes>;
 
 /**
  * <h3>Типы данных для карт колоды лагеря.</h3>
@@ -1022,22 +1016,18 @@ export type CardsHasStack = IHeroCard | IArtefactCampCard | IRoyalOfferingCard;
 export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 
 /**
- * <h3>Типы данных для карт выбранных игроком.</h3>
- */
-export type PickedCardTypes = PlayerCardTypes | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard
-    | IOlwinDoubleNonPlacedCard | IThrudNonPlacedCard | MythologicalCreatureCommandZoneCardTypes | null;
-
-/**
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
-export type PlayerCardTypes =
-    IDwarfCard | ISpecialCard | IArtefactCampCard | IHeroPlayerCard | IMercenaryPlayerCard | IMythicalAnimalCard;
+export type PlayerCardTypes = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactCampCard | IHeroPlayerCard
+    | IMercenaryPlayerCard | IMythicalAnimalCard;
 
 // TODO (DeckCardTypes | null)[] and (MythologicalCreatureDeckCardTypes | null)[]
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
-export type TavernCardTypes = DeckCardTypes | MythologicalCreatureDeckCardTypes | null;
+export type TavernCardTypes = CanBeNull<DeckCardTypes | MythologicalCreatureDeckCardTypes>;
+
+export type CanBeInTavernCardTypes = CanBeNull<DeckCardTypes | MythicalAnimalTypes>;
 
 export type AllCardTypes =
     PlayerCardTypes | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard | MythologicalCreatureDeckCardTypes;
@@ -1045,11 +1035,13 @@ export type AllCardTypes =
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
  */
-export type CoinTypes = ICoin | null;
+export type CoinTypes = CanBeNull<ICoin>;
+
+export type DrawProfitTypes = ConfigNames | ``;
 
 export type ActionFunctionTypes = IActionFunction | IActionFunctionWithParams;
 
-export type MoveFunctionTypes = IMoveFunction | null;
+export type MoveFunctionTypes = CanBeNull<IMoveFunction>;
 
 export type BuffTypes = keyof IBuffs;
 
@@ -1067,6 +1059,8 @@ export type ValkyryTypes = keyof IValkyryConfig;
 
 export type SpecialCardTypes = keyof ISpecialCardsConfig;
 
+export type MultiSuitCardTypes = keyof IMultiCardsConfig;
+
 export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`]
     | IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`]
     | IMoveArgumentsStage<number[][]>[`args`]
@@ -1075,8 +1069,8 @@ export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<Partial<SuitPropert
     | IMoveArgumentsStage<number[]>[`args`]
     | IMoveArgumentsStage<SuitTypes[]>[`args`];
 
-export type ValidMoveIdParamTypes = number | SuitTypes | number[] | IMoveSuitCardCurrentId
-    | IMoveCardPlayerCurrentId | IMoveCoinsArguments | null;
+export type ValidMoveIdParamTypes = CanBeNull<number | SuitTypes | number[] | IMoveSuitCardCurrentId
+    | IMoveCardPlayerCurrentId | IMoveCoinsArguments>;
 
 export type SuitTypes = keyof ISuitConfig;
 
@@ -1096,7 +1090,7 @@ export type AutoActionArgsTypes = [number] | [number, number, CoinTypeNames];
 /**
  * <h3>Типы данных для преимуществ.</h3>
  */
-export type DistinctionTypes = CanBeUndef<string | null>;
+export type DistinctionTypes = CanBeUndef<CanBeNull<string>>;
 
 export type ErrorArgsTypes = (string | number)[];
 
@@ -1110,22 +1104,27 @@ export type CreateRoyalOfferingCardType = PartialBy<IRoyalOfferingCard, `type`>;
 /**
  * <h3>Тип для создания карты лагеря артефакта.</h3>
  */
-export type CreateArtefactCampCardType = PartialBy<IArtefactCampCard, `game` | `points` | `rank` | `suit` | `type`>;
+export type CreateArtefactCampCardType = PartialBy<IArtefactCampCard, `points` | `rank` | `suit` | `type`>;
 
 /**
  * <h3>Тип для создания карты лагеря наёмника.</h3>
  */
-export type CreateMercenaryCampCardType = PartialBy<IMercenaryCampCard, `game` | `type`>;
+export type CreateMercenaryCampCardType = PartialBy<IMercenaryCampCard, `type`>;
 
 /**
  * <h3>Тип для создания карты наёмника на столе игрока.</h3>
  */
-export type CreateMercenaryPlayerCardType = PartialBy<IMercenaryPlayerCard, `game` | `rank` | `type`>;
+export type CreateMercenaryPlayerCardType = PartialBy<IMercenaryPlayerCard, `rank` | `type`>;
 
 /**
  * <h3>Тип для создания карты дворфа.</h3>
  */
 export type CreateDwarfCardType = PartialBy<IDwarfCard, `rank` | `type` | `tier`>;
+
+export type DiscardCardTypes = PlayerCardTypes | DeckCardTypes | MythologicalCreatureDeckCardTypes;
+
+export type AddCardToPlayerTypes =
+    NonNullable<TavernCardTypes> | IMercenaryPlayerCard | ISpecialCard | IMultiSuitPlayerCard;
 
 // TODO FIX ME!!
 /**
@@ -1163,22 +1162,22 @@ export type CreateHeroCardType = PartialBy<Omit<IHeroCard, `active`>
 /**
  * <h3>Тип для создания героя на поле игрока.</h3>
  */
-export type CreateHeroPlayerCardType = PartialBy<IHeroPlayerCard, `type` | `suit` | `rank` | `points` | `active`>;
+export type CreateHeroPlayerCardType = PartialBy<IHeroPlayerCard, `type` | `active`>;
+
+/**
+ * <h3>Тип для создания героя на поле игрока.</h3>
+ */
+export type CreateMultiSuitPlayerCardType = PartialBy<IMultiSuitPlayerCard, `type`>;
 
 /**
 * <h3>Тип для создания особой карты.</h3>
 */
-export type CreateSpecialCardType = PartialBy<ISpecialCard, `type` | `game`>;
+export type CreateSpecialCardType = PartialBy<ISpecialCard, `type`>;
 
 /**
- * <h3>Тип для создания фейковой карты Двойник Ольвюна.</h3>
- */
-export type CreateOlwinDoubleNonPlacedCardType = PartialBy<IOlwinDoubleNonPlacedCard, `name`>;
-
-/**
- * <h3>Тип для создания фейковой карты Двойник Ольвюна.</h3>
- */
-export type CreateThrudNonPlacedCardType = PartialBy<IThrudNonPlacedCard, `name`>;
+* <h3>Тип для создания мультифракционной карты.</h3>
+*/
+export type CreateMultiSuitCardType = PartialBy<IMultiSuitCard, `type`>;
 
 /**
  * <h3>Тип для создания монеты.</h3>
@@ -1201,22 +1200,24 @@ export type CreatePriorityType = PartialBy<IPriority, `isExchangeable`>;
  */
 export type MercenaryType = IBasicSuitableCardInfo;
 
-export type SpecialCardDataType = Omit<ISpecialCard, `type` | `game`>;
+export type SpecialCardDataType = Omit<ISpecialCard, `type`>;
+
+export type MultiSuitCardDataType = Omit<IMultiSuitCard, `type`> & IExpansionCardInfo;
 
 /**
  * <h3>Тип для варианта карты героя.</h3>
  */
 export type VariantType = IBasicSuitableCardInfo;
 
+// TODO Fix it!
 export type StrengthTokenNotchPointsType = [number, number, number, number, number?];
 
 /**
  * <h3>Тип для создания публичных данных игрока.</h3>
  */
-export type CreatePublicPlayerType =
-    PartialBy<Omit<IPublicPlayer, `pickedCard` | `priority` | `selectedCoin` | `stack`>
-        & ReadonlyBy<IPublicPlayer, `pickedCard` | `priority` | `selectedCoin` | `stack`>,
-        `heroes` | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs` | `selectedCoin` | `pickedCard`>;
+export type CreatePublicPlayerType = PartialBy<Omit<IPublicPlayer, `pickedCard` | `priority` | `selectedCoin` | `stack`>
+    & ReadonlyBy<IPublicPlayer, `priority` | `selectedCoin` | `stack`>,
+    `heroes` | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs` | `selectedCoin`>;
 
 export type SoloGameDifficultyLevelHeroesConfigType =
     Pick<IHeroConfig, `Astrid` | `Grid` | `Skaa` | `Thrud` | `Uline` | `Ylud`>;
@@ -1232,6 +1233,11 @@ export type SoloGameHeroesForPlayerConfigType = Pick<IHeroConfig, `Kraal` | `Tar
  * <h3>Тип для того, чтобы сделать дополнительный union тип undefined.</h3>
  */
 export type CanBeUndef<T> = T | undefined;
+
+/**
+ * <h3>Тип для того, чтобы сделать дополнительный union тип null.</h3>
+ */
+export type CanBeNull<T> = T | null;
 
 /**
  * <h3>Тип для того, чтобы получить типы пары [ключ, значение] у Object.entries.</h3>

@@ -73,7 +73,6 @@ export const CheckPlaceYludOrder = (G, ctx) => {
     if (yludHeroCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}'.`);
     }
-    player.pickedCard = yludHeroCard;
     if (G.tierToEnd === 0) {
         const cards = Object.values(player.cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);
         if (index !== -1) {
@@ -117,7 +116,6 @@ export const EndPlaceYludActions = (G, ctx) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    player.pickedCard = null;
     if (G.tierToEnd === 0) {
         RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
     }

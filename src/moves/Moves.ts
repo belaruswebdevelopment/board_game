@@ -3,12 +3,14 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndef, DeckCardTypes, IMyGameState, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import { ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndef, DeckCardTypes, IMyGameState, IPublicPlayer, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -40,7 +42,16 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
         throw new Error(`Не существует кликнутая карта с id '${cardId}'.`);
     }
     currentTavern.splice(cardId, 1, null);
-    PickCardOrActionCardActions(G, ctx, card);
+    const isAdded: boolean = PickCardOrActionCardActions(G, ctx, card);
+    // TODO Rework it!?
+    if (isAdded && `suit` in card) {
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                ctx.currentPlayer);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+    }
 };
 
 /**
@@ -68,7 +79,13 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
     }
     G.explorerDistinctionCards.splice(0);
     const isAdded: boolean = PickCardOrActionCardActions(G, ctx, pickedCard);
-    if (isAdded) {
+    if (isAdded && IsDwarfCard(pickedCard)) {
+        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                ctx.currentPlayer);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
         G.distinctions[SuitNames.Explorer] = undefined;
     }
     G.explorerDistinctionCardId = cardId;

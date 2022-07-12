@@ -24,7 +24,7 @@ export const UseGodPowerMove = (G, ctx, cardId) => {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта с id '${cardId}'.`);
     }
     else if (!IsGodCard(card)) {
-        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God}', а не с типом '${card.type}'.`);
+        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God_Card}', а не с типом '${card.type}'.`);
     }
     const godCard = Object.values(godConfig).find((god) => god.name === card.name);
     if (godCard === undefined) {

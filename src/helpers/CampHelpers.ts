@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardTypes, CampDeckCardTypes, CanBeUndef, IMyGameState, ITavernInConfig } from "../typescript/interfaces";
+import type { CampCardTypes, CampDeckCardTypes, CanBeNull, CanBeUndef, IMyGameState, ITavernInConfig } from "../typescript/interfaces";
 
 /**
 * <h3>Заполняет лагерь новой картой из карт лагерь деки текущей эпохи.</h3>
@@ -164,8 +164,8 @@ export const RefillCamp = (G: IMyGameState): void => {
  * @param G
  */
 export const RefillEmptyCampCards = (G: IMyGameState): void => {
-    const emptyCampCards: (number | null)[] =
-        G.camp.map((card: CampCardTypes, index: number): number | null => {
+    const emptyCampCards: (CanBeNull<number>)[] =
+        G.camp.map((card: CampCardTypes, index: number): CanBeNull<number> => {
             if (card === null) {
                 return index;
             }
@@ -178,7 +178,7 @@ export const RefillEmptyCampCards = (G: IMyGameState): void => {
     }
     let isEmptyCurrentTierCampDeck: boolean = campDeck.length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
-        emptyCampCards.forEach((cardIndex: number | null): void => {
+        emptyCampCards.forEach((cardIndex: CanBeNull<number>): void => {
             isEmptyCurrentTierCampDeck = campDeck.length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
                 AddCardToCamp(G, cardIndex);

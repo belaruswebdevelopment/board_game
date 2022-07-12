@@ -1,11 +1,6 @@
-import { IsMercenaryPlayerCard } from "../Camp";
-import { suitsConfig } from "../data/SuitData";
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { IsGiantCard, IsGodCard, IsMythicalAnimalCard, IsValkyryCard } from "../MythologicalCreature";
-import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { ErrorNames, LogTypeNames } from "../typescript/enums";
+import { ErrorNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -29,14 +24,16 @@ export const AddCardToPlayer = (G, ctx, card) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    player.pickedCard = card;
-    if (IsDwarfCard(card) || IsMythicalAnimalCard(card) || IsMercenaryPlayerCard(card)) {
-        player.cards[card.suit].push(card);
-        // TODO When you recruit a Mythical Animal, place it in your army in the matching class. Each animal has its own unique ability!
-        AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
-        return true;
+    switch (card.type) {
+        case RusCardTypeNames.Dwarf_Card:
+        case RusCardTypeNames.Mercenary_Player_Card:
+        case RusCardTypeNames.Mythical_Animal_Card:
+        case RusCardTypeNames.Special_Card:
+        case RusCardTypeNames.Multi_Suit_Player_Card:
+            return true;
+        default:
+            return false;
     }
-    return false;
 };
 /**
  * <h3>Добавляет взятую карту Idavoll в командную зону карт Idavoll игрока.</h3>
@@ -55,14 +52,18 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G, ctx, card) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.mythologicalCreatureCards.push(card);
-    if (IsGodCard(card)) {
-        card.isPowerTokenUsed = false;
-    }
-    else if (IsGiantCard(card)) {
-        player.giantTokenSuits[card.placedSuit] = true;
-    }
-    else if (IsValkyryCard(card)) {
-        card.strengthTokenNotch = 0;
+    switch (card.type) {
+        case RusCardTypeNames.God_Card:
+            card.isPowerTokenUsed = false;
+            break;
+        case RusCardTypeNames.Giant_Card:
+            player.giantTokenSuits[card.placedSuit] = true;
+            break;
+        case RusCardTypeNames.Valkyry_Card:
+            card.strengthTokenNotch = 0;
+            break;
+        default:
+            throw new Error(`Добавленная в командную зону для карт мифических существ карта не может быть с недопустимым типом.`);
     }
     AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' в командную зону карт Idavoll.`);
 };
@@ -87,22 +88,27 @@ export const PickCardOrActionCardActions = (G, ctx, card) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const isAdded = AddCardToPlayer(G, ctx, card);
-    if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
-        if (isAdded) {
-            CheckAndMoveThrudAction(G, ctx, card);
-        }
-    }
-    else {
-        if (IsRoyalOfferingCard(card)) {
+    switch (card.type) {
+        case RusCardTypeNames.Dwarf_Card:
+        case RusCardTypeNames.Mythical_Animal_Card:
+            if (isAdded) {
+                CheckAndMoveThrudAction(G, ctx, card);
+            }
+            break;
+        case RusCardTypeNames.Royal_Offering_Card:
             AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
             AddActionsToStack(G, ctx, card.stack, card);
             DiscardPickedCard(G, card);
-        }
-        else {
+            break;
+        case RusCardTypeNames.God_Card:
+        case RusCardTypeNames.Giant_Card:
+        case RusCardTypeNames.Valkyry_Card:
             if (G.expansions.idavoll.active) {
                 AddMythologicalCreatureCardToPlayerCommandZone(G, ctx, card);
             }
-        }
+            break;
+        default:
+            throw new Error(`Добавленная на поле игрока карта не может быть с недопустимым типом.`);
     }
     return isAdded;
 };

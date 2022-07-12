@@ -1,5 +1,5 @@
-import { ConfigNames, DrawNames, StageNames, SuitNames } from "../typescript/enums";
-import type { IStack, IStackData, SuitTypes } from "../typescript/interfaces";
+import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
+import type { IMercenaryCampCard, IStack, IStackData, SuitTypes } from "../typescript/interfaces";
 
 // TODO Add type!
 export const StackData: IStackData = {
@@ -19,10 +19,12 @@ export const StackData: IStackData = {
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (): IStack => ({
+    discardCardFromBoardDagda: (pickedSuit?: SuitTypes): IStack => ({
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.Dagda,
         suit: SuitNames.Hunter,
+        pickedSuit,
+        name: HeroNames.Dagda,
     }),
     discardSuitCard: (playerId: number): IStack => ({
         playerId,
@@ -38,11 +40,11 @@ export const StackData: IStackData = {
         drawName: DrawNames.EnlistmentMercenaries,
     }),
     getDifficultyLevelForSoloMode: (): IStack => ({
-        name: ConfigNames.GetDifficultyLevelForSoloMode,
+        configName: ConfigNames.GetDifficultyLevelForSoloMode,
         drawName: DrawNames.GetDifficultyLevelForSoloMode,
     }),
     getHeroesForSoloMode: (): IStack => ({
-        name: ConfigNames.GetHeroesForSoloMode,
+        configName: ConfigNames.GetHeroesForSoloMode,
         stageName: StageNames.ChooseHeroesForSoloMode,
         drawName: DrawNames.GetHeroesForSoloMode,
     }),
@@ -75,7 +77,7 @@ export const StackData: IStackData = {
         priority,
     }),
     pickDistinctionCard: (): IStack => ({
-        name: ConfigNames.ExplorerDistinction,
+        configName: ConfigNames.ExplorerDistinction,
         stageName: StageNames.PickDistinctionCard,
         drawName: DrawNames.PickCardByExplorerDistinction,
     }),
@@ -83,105 +85,26 @@ export const StackData: IStackData = {
         stageName: StageNames.PickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
-    placeOlwinCards: (suit?: SuitTypes, priority?: number): IStack => ({
-        variants: {
-            blacksmith: {
-                suit: SuitNames.Blacksmith,
-                rank: 1,
-                points: null,
-            },
-            hunter: {
-                suit: SuitNames.Hunter,
-                rank: 1,
-                points: null,
-            },
-            explorer: {
-                suit: SuitNames.Explorer,
-                rank: 1,
-                points: 0,
-            },
-            warrior: {
-                suit: SuitNames.Warrior,
-                rank: 1,
-                points: 0,
-            },
-            miner: {
-                suit: SuitNames.Miner,
-                rank: 1,
-                points: 0,
-            },
-        },
-        stageName: StageNames.PlaceOlwinCards,
-        drawName: DrawNames.PlaceOlwinDouble,
-        suit,
+    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: number): IStack => ({
+        stageName: StageNames.PlaceMultiSuitsCards,
+        drawName: DrawNames.PlaceMultiSuitsCards,
+        pickedSuit,
         priority,
+        name,
     }),
     placeThrudHero: (): IStack => ({
-        variants: {
-            blacksmith: {
-                suit: SuitNames.Blacksmith,
-                rank: 1,
-                points: null,
-            },
-            hunter: {
-                suit: SuitNames.Hunter,
-                rank: 1,
-                points: null,
-            },
-            explorer: {
-                suit: SuitNames.Explorer,
-                rank: 1,
-                points: null,
-            },
-            warrior: {
-                suit: SuitNames.Warrior,
-                rank: 1,
-                points: null,
-            },
-            miner: {
-                suit: SuitNames.Miner,
-                rank: 1,
-                points: null,
-            },
-        },
         stageName: StageNames.PlaceThrudHero,
         drawName: DrawNames.PlaceThrudHero,
         priority: 2,
+        name: HeroNames.Thrud,
     }),
     placeTradingCoinsUline: (): IStack => ({
         stageName: StageNames.PlaceTradingCoinsUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
     }),
     placeYludHero: (): IStack => ({
-        // TODO Move such logic for all heroes (Thrud, Ylud, Olwin) to Hero card variants
-        variants: {
-            blacksmith: {
-                suit: SuitNames.Blacksmith,
-                rank: 1,
-                points: null,
-            },
-            hunter: {
-                suit: SuitNames.Hunter,
-                rank: 1,
-                points: null,
-            },
-            explorer: {
-                suit: SuitNames.Explorer,
-                rank: 1,
-                points: 11,
-            },
-            warrior: {
-                suit: SuitNames.Warrior,
-                rank: 1,
-                points: 7,
-            },
-            miner: {
-                suit: SuitNames.Miner,
-                rank: 1,
-                points: 1,
-            },
-        },
         drawName: DrawNames.PlaceYludHero,
+        name: HeroNames.Ylud,
     }),
     pickHero: (): IStack => ({
         stageName: StageNames.PickHero,
@@ -192,12 +115,13 @@ export const StackData: IStackData = {
         stageName: StageNames.PickHeroSoloBot,
         drawName: DrawNames.PickHeroSoloBot,
     }),
-    placeEnlistmentMercenaries: (): IStack => ({
+    placeEnlistmentMercenaries: (card: IMercenaryCampCard): IStack => ({
         stageName: StageNames.PlaceEnlistmentMercenaries,
         drawName: DrawNames.PlaceEnlistmentMercenaries,
+        card,
     }),
     startOrPassEnlistmentMercenaries: (): IStack => ({
-        name: ConfigNames.StartOrPassEnlistmentMercenaries,
+        configName: ConfigNames.StartOrPassEnlistmentMercenaries,
         drawName: DrawNames.StartOrPassEnlistmentMercenaries,
     }),
     upgradeCoin: (value: number): IStack => ({

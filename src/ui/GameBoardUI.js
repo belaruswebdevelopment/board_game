@@ -7,7 +7,6 @@ import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { IsMythicalAnimalCard } from "../MythologicalCreature";
-import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusPhaseNames, StageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
@@ -194,7 +193,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (!IsRoyalOfferingCard(card)) {
+        if (IsDwarfCard(card)) {
             suit = card.suit;
         }
         if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickDiscardCard) {

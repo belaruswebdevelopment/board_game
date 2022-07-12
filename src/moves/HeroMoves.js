@@ -1,5 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardCardsFromPlayerBoardAction, PlaceOlwinCardsAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
+import { DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
@@ -65,12 +65,12 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceOlwinCardMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceOlwinCards, suit);
+export const PlaceMultiSuitCardMove = (G, ctx, suit) => {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceMultiSuitsCards, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceOlwinCardsAction(G, ctx, suit);
+    PlaceMultiSuitCardAction(G, ctx, suit);
 };
 /**
  * <h3>Расположение героя на планшет игрока.</h3>

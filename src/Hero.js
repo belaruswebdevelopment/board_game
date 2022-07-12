@@ -1,5 +1,5 @@
 import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { RusCardTypeNames } from "./typescript/enums";
+import { GameNames, RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -20,7 +20,6 @@ export const BuildHeroes = (configOptions, solo) => {
             const hero = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
-                game: heroData.game,
                 suit: heroData.suit,
                 rank: heroData.rank,
                 points: heroData.points,
@@ -52,7 +51,6 @@ export const BuildHeroes = (configOptions, solo) => {
  * @param type Тип.
  * @param name Название.
  * @param description Описание.
- * @param game Игра/дополнение.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
@@ -63,11 +61,10 @@ export const BuildHeroes = (configOptions, solo) => {
  * @param stack Действия.
  * @returns Герой.
  */
-export const CreateHero = ({ type = RusCardTypeNames.Hero, name, description, game, suit = null, rank = null, points = null, active = true, buff, validators, actions, stack, } = {}) => ({
+export const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, validators, actions, stack, } = {}) => ({
     type,
     name,
     description,
-    game,
     suit,
     rank,
     points,
@@ -89,17 +86,15 @@ export const CreateHero = ({ type = RusCardTypeNames.Hero, name, description, ga
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
- * @param game Игра/дополнение.
  * @param tier Эпоха.
  * @param path URL путь.
  * @param variants Варианты расположения карты героя на поле игрока.
  * @returns Карта героя на поле игрока.
  */
-export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, game, suit = null, rank = null, points = null, active = false, } = {}) => ({
+export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, suit, rank, points, active = false, } = {}) => ({
     type,
     name,
     description,
-    game,
     suit,
     rank,
     points,

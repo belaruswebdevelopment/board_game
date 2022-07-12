@@ -23,16 +23,16 @@ export const CheckValkyryRequirement = (player: IPublicPlayer, playerId: number,
             //     valkyryName = ValkyryNames.Svafa;
             //     break;
             default:
-                throw new Error(`Нет такого бафа '${buffName}' у мифических существ типа '${RusCardTypeNames.Valkyry}}'.`);
+                throw new Error(`Нет такого бафа '${buffName}' у мифических существ типа '${RusCardTypeNames.Valkyry_Card}}'.`);
         }
         const valkyryCard: IValkyryCard | undefined =
             player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardTypes):
                 boolean => card.name === valkyryName) as IValkyryCard | undefined;
         if (valkyryCard === undefined) {
-            throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' не удалось найти карту типа '${RusCardTypeNames.Valkyry}' с названием '${valkyryName}'.`);
+            throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryName}'.`);
         }
         if (valkyryCard.strengthTokenNotch === null) {
-            throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' у карты типа '${RusCardTypeNames.Valkyry}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);
+            throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);
         }
         valkyryCard.strengthTokenNotch += 1;
     }

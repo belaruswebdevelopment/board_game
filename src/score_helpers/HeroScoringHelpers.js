@@ -25,7 +25,7 @@ export const HeroScoring = (player, heroName) => {
         case HeroNames.Idunn:
             return IdunnScoring(player);
         default:
-            throw new Error(`У карт с типом '${RusCardTypeNames.Hero}}' отсутствует герой с названием '${heroName}'.`);
+            throw new Error(`У карт с типом '${RusCardTypeNames.Hero_Card}}' отсутствует герой с названием '${heroName}'.`);
     }
 };
 /**

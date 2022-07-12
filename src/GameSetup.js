@@ -8,6 +8,7 @@ import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./d
 import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
+import { BuildMultiSuitCards } from "./MultiSuitCard";
 import { BuildMythologicalCreatureCards } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
@@ -35,7 +36,7 @@ export const SetupGame = (ctx) => {
         idavoll: {
             active: solo ? false : false,
         },
-    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
+    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [GameNames.Basic], multiCardsDeck = BuildMultiSuitCards(configOptions), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
         campDecks: [],
         decks: [],
         // TODO Add Idavoll deck length info on main page?
@@ -48,7 +49,7 @@ export const SetupGame = (ctx) => {
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
-    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null);
+    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null);
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
@@ -81,14 +82,13 @@ export const SetupGame = (ctx) => {
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random.Shuffle(deck);
     }
-    const heroesConfigOptions = [GameNames.Basic];
     let expansion;
     for (expansion in expansions) {
         if (expansions[expansion].active) {
-            heroesConfigOptions.push(expansion);
+            configOptions.push(expansion);
         }
     }
-    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(heroesConfigOptions, solo), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, deck0 = secret.decks[0];
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(configOptions, solo), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, deck0 = secret.decks[0];
     if (deck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
@@ -165,10 +165,12 @@ export const SetupGame = (ctx) => {
         mustDiscardTavernCardJarnglofi,
         currentTavern,
         debug,
+        multiCardsDeck,
         specialCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
         discardMythologicalCreaturesCards,
+        discardMultiCards,
         discardSpecialCards,
         distinctions,
         drawProfit,

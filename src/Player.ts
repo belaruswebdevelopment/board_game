@@ -5,7 +5,7 @@ import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, ErrorNames, PhaseNames } from "./typescript/enums";
-import type { CanBeUndef, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CanBeNull, CanBeUndef, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -38,7 +38,7 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  */
 export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
     const cards: SuitPropertyTypes<PlayerCardTypes[]> = {} as SuitPropertyTypes<PlayerCardTypes[]>,
-        giantTokenSuits: SuitPropertyTypes<boolean | null> = {} as SuitPropertyTypes<boolean | null>;
+        giantTokenSuits: SuitPropertyTypes<CanBeNull<boolean>> = {} as SuitPropertyTypes<CanBeNull<boolean>>;
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         cards[suit] = [];
@@ -128,7 +128,6 @@ const CreatePlayer = ({
  * @param priority Кристалл.
  * @param buffs Бафы.
  * @param selectedCoin Выбранная монета.
- * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
 const CreatePublicPlayer = ({
@@ -144,7 +143,6 @@ const CreatePublicPlayer = ({
     priority,
     buffs = [],
     selectedCoin = null,
-    pickedCard = null,
 }: CreatePublicPlayerType = {} as CreatePublicPlayerType): IPublicPlayer => ({
     nickname,
     cards,
@@ -158,5 +156,4 @@ const CreatePublicPlayer = ({
     priority,
     buffs,
     selectedCoin,
-    pickedCard,
 });

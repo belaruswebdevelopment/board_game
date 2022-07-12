@@ -113,7 +113,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         tdClasses = suitsConfig[suit].suitColor;
     }
     if (IsHeroCard(card) || IsHeroPlayerCard(card)) {
-        styles = Styles.Heroes(card.game, card.name);
+        styles = Styles.Heroes(card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
         }
@@ -293,8 +293,8 @@ export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
         case MoveNames.PlaceYludHeroMove:
             action = data.moves.PlaceYludHeroMove;
             break;
-        case MoveNames.PlaceOlwinCardMove:
-            action = data.moves.PlaceOlwinCardMove;
+        case MoveNames.PlaceMultiSuitCardMove:
+            action = data.moves.PlaceMultiSuitCardMove;
             break;
         case MoveNames.PlaceEnlistmentMercenariesMove:
             action = data.moves.PlaceEnlistmentMercenariesMove;

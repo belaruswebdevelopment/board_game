@@ -1,3 +1,4 @@
+import { RoyalOfferingNames } from "../typescript/enums";
 import type { IRoyalOfferingCardConfig, IRoyalOfferingCardValues } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -9,6 +10,7 @@ import { StackData } from "./StackData";
  * </ol>
  */
 const upgradeCoinUpTo3: IRoyalOfferingCardConfig = {
+    name: RoyalOfferingNames.PlusThree,
     value: 3,
     stack: [StackData.upgradeCoin(3)],
     amount: (): IRoyalOfferingCardValues => ({
@@ -43,6 +45,7 @@ const upgradeCoinUpTo3: IRoyalOfferingCardConfig = {
  * </ol>
  */
 const upgradeCoinUpTo5: IRoyalOfferingCardConfig = {
+    name: RoyalOfferingNames.PlusFive,
     value: 5,
     stack: [StackData.upgradeCoin(5)],
     amount: (): IRoyalOfferingCardValues => ({

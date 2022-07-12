@@ -47,11 +47,18 @@ export const enum ButtonNames {
 }
 
 /**
- * <h3>Перечисление для названия дополнительных карт.</h3>
+ * <h3>Перечисление для названия мультифракционных карт.</h3>
  */
-export const enum CardNames {
-    ChiefBlacksmith = `Главный кузнец`,
+export const enum MultiSuitCardNames {
+    Gullinbursti = `Гуллинбурсти`,
     OlwinsDouble = `Двойник Ольвюна`,
+}
+
+/**
+ * <h3>Перечисление для названия особых карт.</h3>
+ */
+export const enum SpecialCardNames {
+    ChiefBlacksmith = `Главный кузнец`,
 }
 
 /**
@@ -92,7 +99,7 @@ export const enum DrawNames {
     GetMjollnirProfit = `Get Mjollnir profit`,
     Hofud = `Hofud`,
     Holda = `Holda`,
-    PlaceOlwinDouble = `Place Olwin Double`,
+    PlaceMultiSuitsCards = `Place multi suits cards`,
     PickCard = `Pick card or camp card`,
     PickCardByExplorerDistinction = `Pick card by Explorer distinction`,
     PickCardByExplorerDistinctionSoloBot = `Pick card by Explorer distinction Solo Bot`,
@@ -265,7 +272,7 @@ export const enum MoveNames {
     DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
     ClickConcreteCoinToUpgradeMove = `ClickConcreteCoinToUpgradeMove`,
     PickDiscardCardMove = `PickDiscardCardMove`,
-    PlaceOlwinCardMove = `PlaceOlwinCardMove`,
+    PlaceMultiSuitCardMove = `PlaceMultiSuitCardMove`,
     PlaceThrudHeroMove = `PlaceThrudHeroMove`,
     UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
     // TODO Is it here?
@@ -302,22 +309,25 @@ export enum RusPhaseNames {
     bidUline = `Ставки Улина`,
 }
 
+// TODO Add `card` to = card description `Карта 'Королевская награда'`?
 /**
  * <h3>Перечисление для типов карт на русском.</h3>
  */
 export const enum RusCardTypeNames {
-    Royal_Offering = `Королевская награда`,
-    Artefact = `Артефакт`,
-    Dwarf = `Дворф`,
-    Giant = `Гигант`,
-    God = `Бог`,
-    Hero = `Герой`,
+    Royal_Offering_Card = `Королевская награда`,
+    Artefact_Card = `Артефакт`,
+    Dwarf_Card = `Дворф`,
+    Giant_Card = `Гигант`,
+    God_Card = `Бог`,
+    Hero_Card = `Герой`,
     Hero_Player_Card = `Герой на поле игрока`,
-    Mercenary = `Наёмник`,
+    Mercenary_Card = `Наёмник`,
     Mercenary_Player_Card = `Наёмник на поле игрока`,
-    Mythical_Animal = `Мифическое животное`,
-    Special = `Особая`,
-    Valkyry = `Валькирия`,
+    Multi_Suit_Card = `Мультифракционная`,
+    Multi_Suit_Player_Card = `Мультифракционная карта на поле игрока`,
+    Mythical_Animal_Card = `Мифическое животное`,
+    Special_Card = `Особая`,
+    Valkyry_Card = `Валькирия`,
 }
 
 /**
@@ -351,7 +361,7 @@ export const enum StageNames {
     PickHero = `pickHero`,
     PickHeroSoloBot = `pickHeroSoloBot`,
     PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
-    PlaceOlwinCards = `placeOlwinCards`,
+    PlaceMultiSuitsCards = `placeMultiSuitsCards`,
     PlaceTradingCoinsUline = `placeTradingCoinsUline`,
     PlaceThrudHero = `placeThrudHero`,
     ChooseHeroesForSoloMode = `chooseHeroesForSoloMode`,
@@ -378,6 +388,14 @@ export const enum PickCardValidatorNames {
     DiscardCard = `discardCard`,
     PickDiscardCardToStack = `pickDiscardCardToStack`,
     PickCampCardToStack = `pickCampCardToStack`,
+}
+
+/**
+ * <h3>Перечисление для названия карт 'Королевская награда'.</h3>
+ */
+export const enum RoyalOfferingNames {
+    PlusThree = `+3`,
+    PlusFive = `+5`,
 }
 
 /**
@@ -426,7 +444,7 @@ export const enum MoveValidatorNames {
     DiscardCardMoveValidator = `DiscardCardMoveValidator`,
     DiscardSuitCardFromPlayerBoardMoveValidator = `DiscardSuitCardFromPlayerBoardMoveValidator`,
     PickDiscardCardMoveValidator = `PickDiscardCardMoveValidator`,
-    PlaceOlwinCardMoveValidator = `PlaceOlwinCardMoveValidator`,
+    PlaceMultiSuitCardMoveValidator = `PlaceMultiSuitCardMoveValidator`,
     PlaceThrudHeroMoveValidator = `PlaceThrudHeroMoveValidator`,
     UpgradeCoinVidofnirVedrfolnirMoveValidator = `UpgradeCoinVidofnirVedrfolnirMoveValidator`,
     // TODO Is it here?

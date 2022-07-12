@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { GameNames, RusCardTypeNames } from "./typescript/enums";
+import { RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты дворфов.</h3>
  * <p>Применения:</p>
@@ -45,7 +45,6 @@ export const BuildDwarfCards = (data) => {
                 suit: suitsConfig[suit].suit,
                 points: currentPoints,
                 name: `(фракция: ${suitsConfig[suitsConfig[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
-                game: GameNames.Basic,
             }));
         }
     }
@@ -63,17 +62,15 @@ export const BuildDwarfCards = (data) => {
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
- * @param game Игра/дополнение.
  * @param tier Эпоха.
  * @returns Карта дворфа.
  */
-export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf, suit, rank = 1, points, name, game, tier = 0, } = {}) => ({
+export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, suit, rank = 1, points, name, tier = 0, } = {}) => ({
     type,
     suit,
     rank,
     points,
     name,
-    game,
     tier,
 });
 /**
@@ -86,6 +83,7 @@ export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf, suit, rank = 1,
  * @param card Карта.
  * @returns Является ли объект картой дворфа.
  */
-export const IsDwarfCard = (card) => card !== null && card.suit !== undefined && card.tier !== undefined
+export const IsDwarfCard = (card) => card !== null
+    && card.suit !== undefined && card.tier !== undefined
     && !(`description` in card);
 //# sourceMappingURL=Dwarf.js.map

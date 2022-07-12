@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
+import type { CanBeNull, CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -83,7 +83,6 @@ export const CheckPlaceYludOrder = (G: IMyGameState, ctx: Ctx): void => {
     if (yludHeroCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}'.`);
     }
-    player.pickedCard = yludHeroCard;
     if (G.tierToEnd === 0) {
         const cards: PlayerCardTypes[] = Object.values(player.cards).flat(),
             index: number =
@@ -93,7 +92,7 @@ export const CheckPlaceYludOrder = (G: IMyGameState, ctx: Ctx): void => {
             if (yludCard === undefined) {
                 throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}' с id '${index}'.`);
             }
-            const suit: SuitTypes | null = yludCard.suit;
+            const suit: CanBeNull<SuitTypes> = yludCard.suit;
             if (suit !== null) {
                 const yludCardIndex: number =
                     player.cards[suit].findIndex((card: PlayerCardTypes): boolean =>
@@ -133,7 +132,6 @@ export const EndPlaceYludActions = (G: IMyGameState, ctx: Ctx): void => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    player.pickedCard = null;
     if (G.tierToEnd === 0) {
         RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
     }

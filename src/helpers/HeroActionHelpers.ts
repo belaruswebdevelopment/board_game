@@ -34,7 +34,6 @@ export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardTyp
                 if (thrudCard === undefined) {
                     throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' во фракции '${card.suit}' с id '${index}' отсутствует карта героя '${HeroNames.Thrud}' для перемещения на новое место.`);
                 }
-                player.pickedCard = thrudCard;
                 player.cards[card.suit].splice(index, 1);
             }
             return index !== -1;

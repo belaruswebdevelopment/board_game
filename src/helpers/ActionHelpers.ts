@@ -1,9 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { CreateOlwinDoubleNonPlacedCard, CreateThrudNonPlacedCard } from "../SpecialCard";
-import { CardNames, DrawNames, ErrorNames, HeroNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndef, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, IStack, IThrudNonPlacedCard, PickedCardTypes, SuitTypes } from "../typescript/interfaces";
+import { ErrorNames, LogTypeNames } from "../typescript/enums";
+import type { CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
@@ -27,38 +26,8 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
     if (stack !== undefined) {
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
         StartOrEndActionStage(G, ctx, stack);
-        const pickedCard: PickedCardTypes = player.pickedCard;
-        if (stack.drawName === DrawNames.PlaceThrudHero && pickedCard !== null
-            && pickedCard.name !== HeroNames.Thrud) {
-            // TODO Think about it...
-            const thrud: IThrudNonPlacedCard = CreateThrudNonPlacedCard();
-            player.pickedCard = thrud;
-        } else if (G.expansions.thingvellir.active) {
-            if (stack.drawName === DrawNames.PlaceOlwinDouble) {
-                let suit: SuitTypes | null | undefined;
-                if (pickedCard !== null
-                    && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
-                    if (!("suit" in pickedCard)) {
-                        throw new Error(`У выбранной карты отсутствует обязательный параметр 'suit'.`);
-                    }
-                    suit = pickedCard.suit;
-                } else {
-                    suit = stack.suit;
-                    if (suit === undefined) {
-                        throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'suit'.`);
-                    }
-                }
-                // TODO Think about it...
-                const olwinDouble: IOlwinDoubleNonPlacedCard = CreateOlwinDoubleNonPlacedCard({
-                    suit,
-                });
-                player.pickedCard = olwinDouble;
-            } else if (stack.drawName === DrawNames.EnlistmentMercenaries) {
-                player.pickedCard = null;
-            }
-        }
-        if (stack.name !== undefined) {
-            G.drawProfit = stack.name;
+        if (stack.configName !== undefined) {
+            G.drawProfit = stack.configName;
         } else {
             G.drawProfit = ``;
         }

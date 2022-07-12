@@ -879,6 +879,6 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 DiscardSuitCardAction(G as IMyGameState, {
                     playerID: `0`,
                 } as Ctx, 0);
-            }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero}'.`);
+            }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
         });
 });

@@ -1,5 +1,5 @@
 import { suitsConfig } from "../../data/SuitData";
-import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     it(`should remove non-hero discarded card from player's cards to cards discard`, () => {
@@ -184,7 +184,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             DiscardAnyCardFromPlayerBoardAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.Warrior, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, () => {
         const G = {
@@ -312,7 +312,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                             variants: {},
                         },
                     ],
-                    pickedCard: null,
                     stack: [
                         {},
                     ],
@@ -335,11 +334,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                             variants: {},
                         },
                     ],
-                    pickedCard: {
-                        name: `Test`,
-                        tier: 0,
-                        variants: {},
-                    },
                     stack: [
                         {},
                         {
@@ -380,7 +374,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                     campCards: [
                         {},
                     ],
-                    pickedCard: null,
                 },
             },
         };
@@ -389,7 +382,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                 currentPlayer: `0`,
                 phase: PhaseNames.EnlistmentMercenaries,
             }, 0);
-        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
+        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary_Card}'.`);
     });
 });
 describe(`Test GetMjollnirProfitAction method`, () => {
@@ -473,7 +466,6 @@ describe(`Test PickDiscardCardAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    pickedCard: null,
                     heroes: [],
                     cards: {
                         warrior: [],
@@ -496,10 +488,6 @@ describe(`Test PickDiscardCardAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    pickedCard: {
-                        name: `Test`,
-                        suit: SuitNames.Warrior,
-                    },
                     heroes: [],
                     cards: {
                         warrior: [
@@ -530,7 +518,6 @@ describe(`Test PickDiscardCardAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    pickedCard: null,
                     stack: [
                         {},
                     ],
@@ -545,7 +532,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                             drawName: DrawNames.UpgradeCoin,
                         }
                     ],
-                    name: `Test`,
+                    name: RoyalOfferingNames.PlusFive,
                     value: 5,
                 },
             ],
@@ -558,17 +545,6 @@ describe(`Test PickDiscardCardAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    pickedCard: {
-                        stack: [
-                            {
-                                stageName: StageNames.UpgradeCoin,
-                                value: 5,
-                                drawName: DrawNames.UpgradeCoin,
-                            }
-                        ],
-                        name: `Test`,
-                        value: 5,
-                    },
                     stack: [
                         {},
                         {
@@ -590,7 +566,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                             drawName: DrawNames.UpgradeCoin,
                         }
                     ],
-                    name: `Test`,
+                    name: RoyalOfferingNames.PlusFive,
                     value: 5,
                 },
             ],
@@ -616,7 +592,6 @@ describe(`Test PickDiscardCardAction method`, () => {
                 0: {
                     nickname: `Dan`,
                     heroes: [],
-                    pickedCard: null,
                     stack: [
                         {},
                     ],
@@ -642,10 +617,6 @@ describe(`Test PickDiscardCardAction method`, () => {
                 0: {
                     nickname: `Dan`,
                     heroes: [],
-                    pickedCard: {
-                        name: `Test`,
-                        suit: SuitNames.Warrior,
-                    },
                     stack: [
                         {},
                         {
@@ -809,7 +780,6 @@ describe(`Test PickDiscardCardAction method`, () => {
                             name: HeroNames.Thrud,
                         },
                     ],
-                    pickedCard: null,
                     stack: [
                         {},
                     ],
@@ -849,14 +819,10 @@ describe(`Test PickDiscardCardAction method`, () => {
                             name: HeroNames.Thrud,
                         },
                     ],
-                    pickedCard: {
-                        suit: SuitNames.Hunter,
-                        name: HeroNames.Thrud,
-                    },
                     stack: [
                         {},
                         {
-                            variants: {
+                            mercenaryVariants: {
                                 blacksmith: {
                                     suit: SuitNames.Blacksmith,
                                     rank: 1,
@@ -957,23 +923,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                         },
                     ],
                     heroes: [],
-                    pickedCard: {
-                        tier: 0,
-                        path: ``,
-                        name: `Test`,
-                        variants: {
-                            warrior: {
-                                suit: SuitNames.Warrior,
-                                rank: 1,
-                                points: 6,
-                            },
-                            blacksmith: {
-                                suit: SuitNames.Blacksmith,
-                                rank: 1,
-                                points: null,
-                            },
-                        },
-                    },
                     cards: {
                         blacksmith: [],
                         miner: [],
@@ -993,16 +942,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     nickname: `Dan`,
                     campCards: [],
                     heroes: [],
-                    pickedCard: {
-                        type: RusCardTypeNames.Mercenary_Player_Card,
-                        suit: SuitNames.Blacksmith,
-                        rank: 1,
-                        points: null,
-                        name: `Test`,
-                        tier: 0,
-                        path: ``,
-                        game: GameNames.Thingvellir,
-                    },
                     cards: {
                         blacksmith: [
                             {
@@ -1013,7 +952,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 name: `Test`,
                                 tier: 0,
                                 path: ``,
-                                game: GameNames.Thingvellir,
                             },
                         ],
                         miner: [],
@@ -1236,23 +1174,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                             },
                         },
                     ],
-                    pickedCard: {
-                        tier: 0,
-                        path: ``,
-                        name: `Test`,
-                        variants: {
-                            warrior: {
-                                suit: SuitNames.Warrior,
-                                rank: 1,
-                                points: 6,
-                            },
-                            explorer: {
-                                suit: SuitNames.Explorer,
-                                rank: 1,
-                                points: 8,
-                            },
-                        },
-                    },
                     stack: [
                         {},
                     ],
@@ -1282,14 +1203,10 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                 0: {
                     nickname: `Dan`,
                     campCards: [],
-                    pickedCard: {
-                        suit: SuitNames.Warrior,
-                        name: HeroNames.Thrud,
-                    },
                     stack: [
                         {},
                         {
-                            variants: {
+                            mercenaryVariants: {
                                 blacksmith: {
                                     suit: SuitNames.Blacksmith,
                                     rank: 1,
@@ -1370,16 +1287,14 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     it(`shouldn't get non-mercenary card from player's camp cards to place and must throw Error`, () => {
         const G = {
             publicPlayers: {
-                0: {
-                    pickedCard: {},
-                },
+                0: {},
             },
         };
         expect(() => {
             PlaceEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.Blacksmith);
-        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary}'.`);
+        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary_Card}'.`);
     });
     it(`shouldn't get mercenary card which not exists in player's camp cards to place and must throw Error`, () => {
         const G = {
@@ -1393,23 +1308,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                             variants: {},
                         },
                     ],
-                    pickedCard: {
-                        tier: 0,
-                        path: ``,
-                        name: `Test`,
-                        variants: {
-                            warrior: {
-                                suit: SuitNames.Warrior,
-                                rank: 1,
-                                points: 6,
-                            },
-                            explorer: {
-                                suit: SuitNames.Explorer,
-                                rank: 1,
-                                points: 8,
-                            },
-                        },
-                    },
                     cards: {
                         explorer: [],
                     },
@@ -1426,12 +1324,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     it(`shouldn't use non-existing suit in picked mercenary card and must throw Error`, () => {
         const G = {
             publicPlayers: {
-                0: {
-                    pickedCard: {
-                        tier: 0,
-                        variants: {},
-                    },
-                },
+                0: {},
             },
         };
         expect(() => {
