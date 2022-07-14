@@ -9,7 +9,7 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickCardValidatorNames, StageNames, SuitNames } from "./typescript/enums";
+import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, StageNames, SuitNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit } from "./ui/ProfitUI";
@@ -165,7 +165,10 @@ export const GetValidator = (phase, stage) => {
             validator = moveBy[phase][stage];
             break;
         default:
+            // eslint-disable-next-line no-case-declarations
+            const _exhaustiveCheck = phase;
             throw new Error(`Нет такого валидатора.`);
+            return _exhaustiveCheck;
     }
     return validator;
 };
@@ -1010,19 +1013,19 @@ export const moveValidators = {
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${id}'.`);
             }
-            const validators = hero.validators;
+            const validators = hero.pickValidators;
             if (validators !== undefined) {
-                for (const validator in validators) {
+                let validator;
+                for (validator in validators) {
                     switch (validator) {
-                        case PickCardValidatorNames.Conditions:
+                        case PickHeroCardValidatorNames.Conditions:
                             isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
                             break;
-                        case PickCardValidatorNames.DiscardCard:
+                        case PickHeroCardValidatorNames.DiscardCard:
                             isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
                             break;
                         default:
-                            isValid = true;
-                            break;
+                            throw new Error(`Отсутствует валидатор ${validator} для выбора карт героя.`);
                     }
                 }
             }

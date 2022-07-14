@@ -184,7 +184,6 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
         suit,
         points: cardVariants.points,
         name: mercenaryCard.name,
-        tier: mercenaryCard.tier,
         path: mercenaryCard.path,
     }), isAdded = AddCardToPlayer(G, ctx, mercenaryPlayerCard), cardIndex = player.campCards.findIndex((card) => card.name === mercenaryCard.name);
     if (cardIndex === -1) {

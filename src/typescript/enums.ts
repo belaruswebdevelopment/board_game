@@ -381,11 +381,17 @@ export const enum SuitNames {
 }
 
 /**
- * <h3>Перечисление для названия валидаторов для выбора карт.</h3>
+ * <h3>Перечисление для названия валидаторов для выбора карты героя.</h3>
  */
-export const enum PickCardValidatorNames {
+export const enum PickHeroCardValidatorNames {
     Conditions = `conditions`,
     DiscardCard = `discardCard`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов для выбора карты при выборе героя.</h3>
+ */
+export const enum PickCardValidatorNames {
     PickDiscardCardToStack = `pickDiscardCardToStack`,
     PickCampCardToStack = `pickCampCardToStack`,
 }

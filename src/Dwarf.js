@@ -62,17 +62,16 @@ export const BuildDwarfCards = (data) => {
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
- * @param tier Эпоха.
  * @returns Карта дворфа.
  */
-export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, suit, rank = 1, points, name, tier = 0, } = {}) => ({
+export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, suit, rank = 1, points, name, } = {}) => ({
     type,
     suit,
     rank,
     points,
     name,
-    tier,
 });
+// Todo Fix Add !(...) for IsMultiSuitPlayerCard && IsMythicalAnimalCard && IsSpecialCard
 /**
  * <h3>Проверка, является ли объект картой дворфа.</h3>
  * <p>Применения:</p>
@@ -84,6 +83,6 @@ export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, suit, rank
  * @returns Является ли объект картой дворфа.
  */
 export const IsDwarfCard = (card) => card !== null
-    && card.suit !== undefined && card.tier !== undefined
-    && !(`description` in card);
+    && card.suit !== undefined && !(`description` in card)
+    && !(`path` in card);
 //# sourceMappingURL=Dwarf.js.map

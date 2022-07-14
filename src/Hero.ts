@@ -100,13 +100,11 @@ export const CreateHero = ({
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
+ * @param description Описание.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
- * @param tier Эпоха.
- * @param path URL путь.
- * @param variants Варианты расположения карты героя на поле игрока.
  * @returns Карта героя на поле игрока.
  */
 export const CreateHeroPlayerCard = ({
@@ -116,7 +114,6 @@ export const CreateHeroPlayerCard = ({
     suit,
     rank,
     points,
-    active = false,
 }: CreateHeroPlayerCardType = {} as CreateHeroPlayerCardType): IHeroPlayerCard => ({
     type,
     name,
@@ -124,7 +121,6 @@ export const CreateHeroPlayerCard = ({
     suit,
     rank,
     points,
-    active,
 });
 
 /**
@@ -151,4 +147,4 @@ export const IsHeroCard = (card: unknown): card is IHeroCard =>
 * @returns Является ли объект картой героя на поле игрока.
 */
 export const IsHeroPlayerCard = (card: unknown): card is IHeroPlayerCard => card !== null
-    && (card as IHeroPlayerCard).active !== undefined && !(`validators` in (card as IHeroPlayerCard));
+    && (card as IHeroPlayerCard).description !== undefined && !(`validators` in (card as IHeroPlayerCard));

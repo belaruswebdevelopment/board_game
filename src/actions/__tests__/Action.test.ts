@@ -69,7 +69,6 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                             {
                                 name: ArtefactNames.Brisingamens,
                                 description: `Test`,
-                                tier: 0,
                             } as IArtefactCampCard,
                         ],
                     },
@@ -100,7 +99,6 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 {
                     name: ArtefactNames.Brisingamens,
                     description: `Test`,
-                    tier: 0,
                 } as IArtefactCampCard,
             ],
             logData: [
@@ -176,9 +174,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     cards: {
                         warrior: [
-                            {
-                                active: false,
-                            } as IHeroPlayerCard,
+                            {},
                         ] as PlayerCardTypes[],
                     },
                 } as IPublicPlayer,
@@ -315,7 +311,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                     campCards: [
                         {
                             name: `Test`,
-                            tier: 0,
                             variants: {},
                         },
                     ],
@@ -337,7 +332,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                     campCards: [
                         {
                             name: `Test`,
-                            tier: 0,
                             variants: {},
                         },
                     ],
@@ -918,7 +912,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            tier: 0,
                             path: ``,
                             name: `Test`,
                             variants: {
@@ -963,7 +956,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                                 rank: 1,
                                 points: null,
                                 name: `Test`,
-                                tier: 0,
                                 path: ``,
                             },
                         ],
@@ -1170,7 +1162,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            tier: 0,
                             path: ``,
                             name: `Test`,
                             variants: {
@@ -1318,7 +1309,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                         nickname: `Dan`,
                         campCards: [
                             {
-                                tier: 0,
                                 name: ``,
                                 variants: {},
                             } as IMercenaryCampCard,

@@ -53,7 +53,10 @@ export const ThrowMyError = (G, ctx, error, ...errorArgs) => {
             //+
             throw new Error(`В массиве таверн отсутствует таверна с id '${errorArgs[0]}'.`);
         default:
+            // eslint-disable-next-line no-case-declarations
+            const _exhaustiveCheck = error;
             throw new Error(`У ошибок отсутствует название '${error}'.`);
+            return _exhaustiveCheck;
     }
 };
 //# sourceMappingURL=Error.js.map

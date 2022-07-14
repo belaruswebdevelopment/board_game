@@ -856,9 +856,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                 0: {
                     cards: {
                         warrior: [
-                            {
-                                active: false,
-                            },
+                            {},
                         ],
                     },
                 },

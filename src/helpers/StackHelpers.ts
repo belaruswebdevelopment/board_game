@@ -2,13 +2,13 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig } from "../typescript/interfaces";
+import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig, ValidatorConfigTypes } from "../typescript/interfaces";
 
 /**
- * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>
+ * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Выполняется при необходимости добавить действия в стэк действий после текущего.</li>
+ * <li>Выполняется при необходимости добавить действия в стек действий после текущего.</li>
  * </ol>
  *
  * @param G
@@ -22,7 +22,8 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
         if (card !== undefined && `validators` in card) {
             const validators: CanBeUndef<IValidatorsConfig> = card.validators;
             if (validators !== undefined) {
-                for (const validator in validators) {
+                let validator: ValidatorConfigTypes;
+                for (validator in validators) {
                     switch (validator) {
                         case PickCardValidatorNames.PickDiscardCardToStack:
                             isValid = IsCanPickPickDiscardCardToStack(G, card);
@@ -31,8 +32,7 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
                             isValid = IsCanPickPickCampCardToStack(G, card);
                             break;
                         default:
-                            isValid = true;
-                            break;
+                            throw new Error(`Отсутствует валидатор ${validator} для выбора карты.`);
                     }
                 }
             } else {
@@ -45,7 +45,7 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
             for (let i = 0; i < stack.length; i++) {
                 const stackI: CanBeUndef<IStack> = stack[i];
                 if (stackI === undefined) {
-                    throw new Error(`В массиве стэка новых действий отсутствует действие с id '${i}'.`);
+                    throw new Error(`В массиве стека новых действий отсутствует действие с id '${i}'.`);
                 }
                 stackI.priority = stackI.priority ?? 0;
                 const playerId: number = stackI.playerId ?? Number(ctx.currentPlayer),

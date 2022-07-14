@@ -64,7 +64,6 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
- * @param tier Эпоха.
  * @returns Карта дворфа.
  */
 export const CreateDwarfCard = ({
@@ -73,16 +72,15 @@ export const CreateDwarfCard = ({
     rank = 1,
     points,
     name,
-    tier = 0,
 }: CreateDwarfCardType = {} as CreateDwarfCardType): IDwarfCard => ({
     type,
     suit,
     rank,
     points,
     name,
-    tier,
 });
 
+// Todo Fix Add !(...) for IsMultiSuitPlayerCard && IsMythicalAnimalCard && IsSpecialCard
 /**
  * <h3>Проверка, является ли объект картой дворфа.</h3>
  * <p>Применения:</p>
@@ -94,5 +92,5 @@ export const CreateDwarfCard = ({
  * @returns Является ли объект картой дворфа.
  */
 export const IsDwarfCard = (card: unknown): card is IDwarfCard => card !== null
-    && (card as IDwarfCard).suit !== undefined && (card as IDwarfCard).tier !== undefined
-    && !(`description` in (card as IDwarfCard));
+    && (card as IDwarfCard).suit !== undefined && !(`description` in (card as IDwarfCard))
+    && !(`path` in (card as IDwarfCard));

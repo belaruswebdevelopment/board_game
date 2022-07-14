@@ -33,9 +33,26 @@ export interface IHeuristic<T> {
     readonly weight: number;
 }
 
-// TODO Idavoll IGodCard | IGiantCard | IValkyryCard | IMythicalAnimalCard
 /**
- * <h3>Интерфейс для карты Idavoll.</h3>
+ * <h3>Интерфейс для конфига карты Бога.</h3>
+ */
+export interface IGodConfig {
+    readonly Freyja: IGodData;
+    readonly Frigg: IGodData;
+    readonly Loki: IGodData;
+    readonly Odin: IGodData;
+    readonly Thor: IGodData;
+}
+
+/**
+ * <h3>Интерфейс для данных карты Бога.</h3>
+ */
+export interface IGodData extends Omit<IGodCard, `type` | `isPowerTokenUsed`> {
+    readonly godPower: () => void;
+}
+
+/**
+ * <h3>Интерфейс для карты Бога.</h3>
  */
 export interface IGodCard {
     readonly name: GodNames;
@@ -45,7 +62,26 @@ export interface IGodCard {
 }
 
 /**
- * <h3>Интерфейс для карты Idavoll.</h3>
+ * <h3>Интерфейс для конфига карты Гиганта.</h3>
+ */
+export interface IGiantConfig {
+    readonly Gymir: IGiantData;
+    readonly Hrungnir: IGiantData;
+    readonly Skymir: IGiantData;
+    readonly Surt: IGiantData;
+    readonly Thrivaldi: IGiantData;
+}
+
+/**
+ * <h3>Интерфейс для данных карты Гиганта.</h3>
+ */
+export interface IGiantData extends Omit<IGiantCard, `type` | `capturedCard`> {
+    readonly actions?: IAction;
+    readonly scoringRule: (player?: IPublicPlayer, giantName?: GiantNames) => number;
+}
+
+/**
+ * <h3>Интерфейс для карты Гиганта.</h3>
  */
 export interface IGiantCard {
     readonly name: GiantNames;
@@ -55,7 +91,54 @@ export interface IGiantCard {
 }
 
 /**
- * <h3>Интерфейс для карты Idavoll.</h3>
+ * <h3>Интерфейс для конфига карты Мистическое животное.</h3>
+ */
+export interface IMythicalAnimalConfig {
+    readonly Durathor: IMythicalAnimalData;
+    readonly Garm: IMythicalAnimalData;
+    readonly Hraesvelg: IMythicalAnimalData;
+    readonly Nidhogg: IMythicalAnimalData;
+    readonly Ratatosk: IMythicalAnimalData;
+}
+
+/**
+ * <h3>Интерфейс для данных карты Мистическое животное.</h3>
+ */
+export interface IMythicalAnimalData extends PartialBy<Omit<IMythicalAnimalCard, `type`>, `rank` | `points`> {
+    readonly buff?: IBuff;
+    readonly scoringRule?: (player: IPublicPlayer, mythicalAnimalName: MythicalAnimalNames) => number;
+    readonly ability?: () => void;
+}
+
+/**
+ * <h3>Интерфейс для карты Мистическое животное.</h3>
+ */
+export interface IMythicalAnimalCard extends IBasicSuitableCardInfo {
+    readonly name: MythicalAnimalNames;
+    readonly type: RusCardTypeNames.Mythical_Animal_Card;
+}
+
+/**
+ * <h3>Интерфейс для конфига карты Валькирия.</h3>
+ */
+export interface IValkyryConfig {
+    readonly Brynhildr: IValkyryData;
+    readonly Hildr: IValkyryData;
+    readonly Olrun: IValkyryData;
+    readonly Sigrdrifa: IValkyryData;
+    readonly Svafa: IValkyryData;
+}
+
+/**
+ * <h3>Интерфейс для данных карты Валькирия.</h3>
+ */
+export interface IValkyryData extends Omit<IValkyryCard, `type` | `strengthTokenNotch`> {
+    readonly buff: IBuff;
+    readonly scoringRule: (strengthTokenNotch: number, valkyryName: ValkyryNames) => number;
+}
+
+/**
+ * <h3>Интерфейс для карты Валькирия.</h3>
  */
 export interface IValkyryCard {
     readonly name: ValkyryNames;
@@ -64,11 +147,10 @@ export interface IValkyryCard {
 }
 
 /**
- * <h3>Интерфейс для карты Idavoll.</h3>
+ * <h3>Интерфейс для конфига особой карты.</h3>
  */
-export interface IMythicalAnimalCard extends IBasicSuitableCardInfo {
-    readonly name: MythicalAnimalNames;
-    readonly type: RusCardTypeNames.Mythical_Animal_Card;
+export interface ISpecialCardsConfig {
+    readonly ChiefBlacksmith: SpecialCardDataType;
 }
 
 /**
@@ -79,9 +161,35 @@ export interface ISpecialCard extends IBasicSuitableCardInfo {
     readonly name: SpecialCardNames.ChiefBlacksmith;
 }
 
+/**
+ * <h3>Интерфейс для конфига мультифракционной карты.</h3>
+ */
+export interface IMultiCardsConfig {
+    readonly Gullinbursti: MultiSuitCardDataType;
+    readonly OlwinsDouble: MultiSuitCardDataType;
+}
+
+/**
+ * <h3>Интерфейс для мультифракционной карты.</h3>
+ */
 export interface IMultiSuitCard {
     readonly type: RusCardTypeNames.Multi_Suit_Card;
     readonly name: MultiSuitCardNames;
+}
+
+/**
+ * <h3>Интерфейс для мультифракционной карты на поле игрока.</h3>
+ */
+export interface IMultiSuitPlayerCard extends IBasicSuitableCardInfo {
+    readonly type: RusCardTypeNames.Multi_Suit_Player_Card;
+    readonly name: MultiSuitCardNames;
+}
+
+/**
+ * <h3>Интерфейс для конфига карт королевских наград.</h3>
+ */
+export interface IRoyalOfferingCardConfig extends Pick<IRoyalOfferingCard, `stack` | `value` | `name`> {
+    readonly amount: () => IRoyalOfferingCardValues;
 }
 
 /**
@@ -95,81 +203,133 @@ export interface IRoyalOfferingCard {
 }
 
 /**
- * <h3>Интерфейс для данных карты Гиганта.</h3>
- */
-export interface IGiantData extends Omit<IGiantCard, `type` | `capturedCard`> {
-    readonly actions?: IAction;
-    readonly scoringRule: (player?: IPublicPlayer, giantName?: GiantNames) => number;
-}
-
-/**
- * <h3>Интерфейс для данных карты Бога.</h3>
- */
-export interface IGodData extends Omit<IGodCard, `type` | `isPowerTokenUsed`> {
-    readonly godPower: () => void;
-}
-
-/**
- * <h3>Интерфейс для данных карты Бога.</h3>
- */
-export interface IMythicalAnimalData extends PartialBy<Omit<IMythicalAnimalCard, `type`>, `rank` | `points`> {
-    readonly buff?: IBuff;
-    readonly scoringRule?: (player: IPublicPlayer, mythicalAnimalName: MythicalAnimalNames) => number;
-    readonly ability?: () => void;
-}
-
-/**
- * <h3>Интерфейс для данных карты Валькирии.</h3>
- */
-export interface IValkyryData extends Omit<IValkyryCard, `type` | `strengthTokenNotch`> {
-    readonly buff: IBuff;
-    readonly scoringRule: (strengthTokenNotch: number, valkyryName: ValkyryNames) => number;
-}
-
-export interface IGiantConfig {
-    readonly Gymir: IGiantData;
-    readonly Hrungnir: IGiantData;
-    readonly Skymir: IGiantData;
-    readonly Surt: IGiantData;
-    readonly Thrivaldi: IGiantData;
-}
-
-export interface IGodConfig {
-    readonly Freyja: IGodData;
-    readonly Frigg: IGodData;
-    readonly Loki: IGodData;
-    readonly Odin: IGodData;
-    readonly Thor: IGodData;
-}
-
-export interface IMythicalAnimalConfig {
-    readonly Durathor: IMythicalAnimalData;
-    readonly Garm: IMythicalAnimalData;
-    readonly Hraesvelg: IMythicalAnimalData;
-    readonly Nidhogg: IMythicalAnimalData;
-    readonly Ratatosk: IMythicalAnimalData;
-}
-
-export interface IValkyryConfig {
-    readonly Brynhildr: IValkyryData;
-    readonly Hildr: IValkyryData;
-    readonly Olrun: IValkyryData;
-    readonly Sigrdrifa: IValkyryData;
-    readonly Svafa: IValkyryData;
-}
-
-/**
- * <h3>Интерфейс для конфига карт королевских наград.</h3>
- */
-export interface IRoyalOfferingCardConfig extends Pick<IRoyalOfferingCard, `stack` | `value` | `name`> {
-    readonly amount: () => IRoyalOfferingCardValues;
-}
-
-/**
  * <h3>Интерфейс для значения на которое обновляется монета.</h3>
  */
 export interface IRoyalOfferingCardValues {
     readonly [index: number]: INumberValues;
+}
+
+/**
+ * <h3>Интерфейс для конфига данных карт лагеря артефакт.</h3>
+ */
+export interface IArtefactConfig {
+    readonly Brisingamens: IArtefactData;
+    readonly Draupnir: IArtefactData;
+    readonly Fafnir_Baleygr: IArtefactData;
+    readonly Gjallarhorn: IArtefactData;
+    readonly Hofud: IArtefactData;
+    readonly Hrafnsmerki: IArtefactData;
+    readonly Jarnglofi: IArtefactData;
+    readonly Megingjord: IArtefactData;
+    readonly Mjollnir: IArtefactData;
+    readonly Odroerir_The_Mythic_Cauldron: IArtefactData;
+    readonly Svalinn: IArtefactData;
+    readonly Vegvisir: IArtefactData;
+    readonly Vidofnir_Vedrfolnir: IArtefactData;
+}
+
+/**
+ * <h3>Интерфейс для данных карт лагеря артефакт.</h3>
+ */
+export interface IArtefactData extends ISecondaryCardInfo,
+    PartialBy<Omit<IArtefactCampCard, `type` | `path`>, `suit` | `rank` | `points`> {
+    readonly scoringRule: (G?: IMyGameState, player?: IPublicPlayer, artefactName?: ArtefactNames) => number;
+}
+
+/**
+ * <h3>Интерфейс для карты лагеря артефакта.</h3>
+ */
+export interface IArtefactCampCard extends IBasicSuitableNullableCardInfo, ICampCardInfo,
+    ICardWithActionInfo {
+    readonly type: RusCardTypeNames.Artefact_Card;
+    readonly name: ArtefactNames;
+}
+
+/**
+ * <h3>Интерфейс для карты лагеря наёмника.</h3>
+ */
+export interface IMercenaryCampCard extends ICampCardInfo {
+    // TODO Rework all cards name in Enums
+    readonly name: string;
+    readonly type: RusCardTypeNames.Mercenary_Card;
+    readonly variants: Partial<SuitPropertyTypes<VariantType>>;
+}
+
+/**
+ * <h3>Интерфейс для карты наёмника на столе игрока.</h3>
+ */
+export interface IMercenaryPlayerCard extends MercenaryType, ICampCardInfo {
+    // TODO Rework all cards name in Enums
+    readonly name: string;
+    readonly type: RusCardTypeNames.Mercenary_Player_Card;
+}
+
+/**
+ * <h3>Интерфейс для конфига карт героев.</h3>
+ */
+export interface IHeroConfig {
+    readonly Kraal: IHeroData;
+    readonly Tarah: IHeroData;
+    readonly Aral: IHeroData;
+    readonly Dagda: IHeroData;
+    readonly Lokdur: IHeroData;
+    readonly Zoral: IHeroData;
+    readonly Aegur: IHeroData;
+    readonly Bonfur: IHeroData;
+    readonly Hourya: IHeroData;
+    readonly Idunn: IHeroData;
+    readonly Astrid: IHeroData;
+    readonly Dwerg_Aesir: IHeroData;
+    readonly Dwerg_Bergelmir: IHeroData;
+    readonly Dwerg_Jungir: IHeroData;
+    readonly Dwerg_Sigmir: IHeroData;
+    readonly Dwerg_Ymir: IHeroData;
+    readonly Grid: IHeroData;
+    readonly Skaa: IHeroData;
+    readonly Thrud: IHeroData;
+    readonly Uline: IHeroData;
+    readonly Ylud: IHeroData;
+    readonly Jarika: IHeroData;
+    readonly Crovax_The_Doppelganger: IHeroData;
+    readonly Andumia: IHeroData;
+    readonly Holda: IHeroData;
+    readonly Khrad: IHeroData;
+    readonly Olwin: IHeroData;
+    readonly Zolkur: IHeroData;
+}
+
+/**
+ * <h3>Интерфейс для данных карты героя.</h3>
+ */
+export interface IHeroData extends PartialBy<Omit<IHeroCard, `type` | `active`>, `suit` | `rank` | `points`>,
+    IExpansionCardInfo {
+    readonly scoringRule: (player?: IPublicPlayer, heroName?: HeroNames) => number;
+}
+
+/**
+ * <h3>Интерфейс для карты героя.</h3>
+ */
+export interface IHeroCard extends IBasicSuitableNullableCardInfo, ICardWithActionInfo {
+    readonly type: RusCardTypeNames.Hero_Card;
+    readonly name: HeroNames;
+    active: boolean;
+}
+
+/**
+ * <h3>Интерфейс для карты героя на поле игрока.</h3>
+ */
+export interface IHeroPlayerCard extends IBasicSuitableCardInfo, Pick<ICardWithActionInfo, `description`> {
+    readonly type: RusCardTypeNames.Hero_Player_Card;
+    readonly name: HeroNames;
+}
+
+/**
+ * <h3>Интерфейс для карты дворфа.</h3>
+ */
+export interface IDwarfCard extends IBasicSuitableCardInfo {
+    // TODO Rework all cards name in Enums
+    readonly name: string;
+    readonly type: RusCardTypeNames.Dwarf_Card;
 }
 
 /**
@@ -181,7 +341,44 @@ export interface IAction {
 }
 
 /**
- * <h3>Интерфейс для стэка у карт.</h3>
+ * <h3>Интерфейс для данных стека у карт.</h3>
+ */
+export interface IStackData {
+    readonly addCoinToPouch: () => IStack;
+    readonly brisingamensEndGameAction: () => IStack;
+    readonly discardCardFromBoardBonfur: () => IStack;
+    readonly discardCardFromBoardCrovaxTheDoppelganger: () => IStack;
+    readonly discardCardFromBoardDagda: (pickedSuit?: SuitTypes) => IStack;
+    readonly discardSuitCard: (playerId: number) => IStack;
+    readonly discardSuitCardHofud: () => IStack;
+    readonly discardTavernCard: () => IStack;
+    readonly enlistmentMercenaries: () => IStack;
+    readonly getDifficultyLevelForSoloMode: () => IStack;
+    readonly getHeroesForSoloMode: () => IStack;
+    readonly getDistinctions: () => IStack;
+    readonly getMjollnirProfit: () => IStack;
+    readonly pickCampCardHolda: () => IStack;
+    readonly pickCard: () => IStack;
+    readonly pickConcreteCoinToUpgrade: (coinValue: number, value: number) => IStack;
+    readonly pickDiscardCardAndumia: () => IStack;
+    readonly pickDiscardCardBrisingamens: (priority?: number) => IStack;
+    readonly pickDistinctionCard: () => IStack;
+    readonly pickDistinctionCardSoloBot: () => IStack;
+    readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: number) => IStack;
+    readonly placeThrudHero: () => IStack;
+    readonly placeTradingCoinsUline: () => IStack;
+    readonly placeYludHero: () => IStack;
+    readonly pickHero: () => IStack;
+    readonly pickHeroSoloBot: () => IStack;
+    readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
+    readonly startOrPassEnlistmentMercenaries: () => IStack;
+    readonly upgradeCoin: (value: number) => IStack;
+    readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number) => IStack;
+    readonly upgradeCoinWarriorDistinction: () => IStack;
+}
+
+/**
+ * <h3>Интерфейс для стека у карт.</h3>
  */
 export interface IStack {
     priority?: number;
@@ -226,50 +423,6 @@ export interface IBotData {
     readonly deckLength: number;
 }
 
-/**
- * <h3>Интерфейс для возможных мувов у ботов.</h3>
- */
-export interface IMoves {
-    readonly move: MoveNames;
-    readonly args: MoveArgsTypes;
-}
-
-/**
- * <h3>Интерфейс для данных карт лагеря артефакт.</h3>
- */
-export interface IArtefact extends PartialBy<Omit<IArtefactCampCard, `type` | `path`>, `suit` | `rank`
-    | `points`> {
-    readonly scoringRule: (G?: IMyGameState, player?: IPublicPlayer, artefactName?: ArtefactNames) => number;
-}
-
-/**
- * <h3>Интерфейс для карты лагеря артефакта.</h3>
- */
-export interface IArtefactCampCard extends IBasicSuitableNullableCardInfo, ICampCardInfo, ISecondaryCardInfo,
-    ICardWithActionInfo {
-    readonly type: RusCardTypeNames.Artefact_Card;
-    readonly name: ArtefactNames;
-}
-
-/**
- * <h3>Интерфейс для конфига данных карт лагеря артефакт.</h3>
- */
-export interface IArtefactConfig {
-    readonly Brisingamens: IArtefact;
-    readonly Draupnir: IArtefact;
-    readonly Fafnir_Baleygr: IArtefact;
-    readonly Gjallarhorn: IArtefact;
-    readonly Hofud: IArtefact;
-    readonly Hrafnsmerki: IArtefact;
-    readonly Jarnglofi: IArtefact;
-    readonly Megingjord: IArtefact;
-    readonly Mjollnir: IArtefact;
-    readonly Odroerir_The_Mythic_Cauldron: IArtefact;
-    readonly Svalinn: IArtefact;
-    readonly Vegvisir: IArtefact;
-    readonly Vidofnir_Vedrfolnir: IArtefact;
-}
-
 export interface IBasicSuitableNullableCardInfo {
     readonly suit: CanBeNull<SuitTypes>;
     readonly rank: CanBeNull<number>;
@@ -296,28 +449,10 @@ export interface IExpansionCardInfo {
 export interface ICardWithActionInfo {
     readonly description: string;
     readonly buff?: IBuff;
+    readonly pickValidators?: IPickValidatorsConfig;
     readonly validators?: IValidatorsConfig;
     readonly actions?: IAction;
     readonly stack?: IStack[];
-}
-
-/**
- * <h3>Интерфейс для карты лагеря наёмника.</h3>
- */
-export interface IMercenaryCampCard extends ICampCardInfo, ISecondaryCardInfo {
-    // TODO Rework all cards name in Enums
-    readonly name: string;
-    readonly type: RusCardTypeNames.Mercenary_Card;
-    readonly variants: Partial<SuitPropertyTypes<VariantType>>;
-}
-
-/**
- * <h3>Интерфейс для карты наёмника на столе игрока.</h3>
- */
-export interface IMercenaryPlayerCard extends MercenaryType, ICampCardInfo, ISecondaryCardInfo {
-    // TODO Rework all cards name in Enums
-    readonly name: string;
-    readonly type: RusCardTypeNames.Mercenary_Player_Card;
 }
 
 /**
@@ -325,24 +460,6 @@ export interface IMercenaryPlayerCard extends MercenaryType, ICampCardInfo, ISec
  */
 export interface IBuff {
     readonly name: BuffTypes;
-}
-
-export interface ISpecialCardsConfig {
-    readonly ChiefBlacksmith: SpecialCardDataType;
-}
-
-export interface IMultiCardsConfig {
-    readonly Gullinbursti: MultiSuitCardDataType;
-    readonly OlwinsDouble: MultiSuitCardDataType;
-}
-
-/**
- * <h3>Интерфейс для карты дворфа.</h3>
- */
-export interface IDwarfCard extends IBasicSuitableCardInfo, ISecondaryCardInfo {
-    // TODO Rework all cards name in Enums
-    readonly name: string;
-    readonly type: RusCardTypeNames.Dwarf_Card;
 }
 
 /**
@@ -476,74 +593,6 @@ export interface IResolveBoardCoins {
 }
 
 /**
- * <h3>Интерфейс для мультифракционной карты на поле игрока.</h3>
- */
-export interface IMultiSuitPlayerCard extends IBasicSuitableCardInfo {
-    readonly type: RusCardTypeNames.Multi_Suit_Player_Card;
-    readonly name: MultiSuitCardNames;
-}
-
-/**
- * <h3>Интерфейс для героя.</h3>
- */
-export interface IHeroCard extends IBasicSuitableNullableCardInfo, ICardWithActionInfo {
-    readonly type: RusCardTypeNames.Hero_Card;
-    readonly name: HeroNames;
-    active: boolean;
-}
-
-/**
- * <h3>Интерфейс для героя на поле игрока.</h3>
- */
-export interface IHeroPlayerCard extends IBasicSuitableCardInfo, Pick<ICardWithActionInfo, `description`> {
-    readonly type: RusCardTypeNames.Hero_Player_Card;
-    readonly name: HeroNames;
-    readonly active: false;
-}
-
-/**
- * <h3>Интерфейс для данных карты героя.</h3>
- */
-export interface IHeroData extends PartialBy<Omit<IHeroCard, `type` | `active`>, `suit` | `rank` | `points`>,
-    IExpansionCardInfo {
-    readonly scoringRule: (player?: IPublicPlayer, heroName?: HeroNames) => number;
-}
-
-/**
- * <h3>Интерфейс для конфига карт героев.</h3>
- */
-export interface IHeroConfig {
-    readonly Kraal: IHeroData;
-    readonly Tarah: IHeroData;
-    readonly Aral: IHeroData;
-    readonly Dagda: IHeroData;
-    readonly Lokdur: IHeroData;
-    readonly Zoral: IHeroData;
-    readonly Aegur: IHeroData;
-    readonly Bonfur: IHeroData;
-    readonly Hourya: IHeroData;
-    readonly Idunn: IHeroData;
-    readonly Astrid: IHeroData;
-    readonly Dwerg_Aesir: IHeroData;
-    readonly Dwerg_Bergelmir: IHeroData;
-    readonly Dwerg_Jungir: IHeroData;
-    readonly Dwerg_Sigmir: IHeroData;
-    readonly Dwerg_Ymir: IHeroData;
-    readonly Grid: IHeroData;
-    readonly Skaa: IHeroData;
-    readonly Thrud: IHeroData;
-    readonly Uline: IHeroData;
-    readonly Ylud: IHeroData;
-    readonly Jarika: IHeroData;
-    readonly Crovax_The_Doppelganger: IHeroData;
-    readonly Andumia: IHeroData;
-    readonly Holda: IHeroData;
-    readonly Khrad: IHeroData;
-    readonly Olwin: IHeroData;
-    readonly Zolkur: IHeroData;
-}
-
-/**
  * <h3>Интерфейс для условия карты героя.</h3>
  */
 interface ICondition {
@@ -564,13 +613,11 @@ interface IDiscardCard {
 }
 
 /**
- * <h3>Интерфейс для конфига валидаторов героев.</h3>
+ * <h3>Интерфейс для возможных мувов у ботов.</h3>
  */
-export interface IValidatorsConfig {
-    readonly conditions?: IConditions;
-    readonly discardCard?: IDiscardCard;
-    readonly pickCampCardToStack?: Record<string, never>;
-    readonly pickDiscardCardToStack?: Record<string, never>;
+export interface IMoves {
+    readonly move: MoveNames;
+    readonly args: MoveArgsTypes;
 }
 
 export interface IMoveArgumentsStage<T> {
@@ -717,41 +764,6 @@ export interface IMoveValidator {
     readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean;
 }
 
-// TODO Rework it?!
-export interface IStackData {
-    readonly addCoinToPouch: () => IStack;
-    readonly brisingamensEndGameAction: () => IStack;
-    readonly discardCardFromBoardBonfur: () => IStack;
-    readonly discardCardFromBoardCrovaxTheDoppelganger: () => IStack;
-    readonly discardCardFromBoardDagda: (pickedSuit?: SuitTypes) => IStack;
-    readonly discardSuitCard: (playerId: number) => IStack;
-    readonly discardSuitCardHofud: () => IStack;
-    readonly discardTavernCard: () => IStack;
-    readonly enlistmentMercenaries: () => IStack;
-    readonly getDifficultyLevelForSoloMode: () => IStack;
-    readonly getHeroesForSoloMode: () => IStack;
-    readonly getDistinctions: () => IStack;
-    readonly getMjollnirProfit: () => IStack;
-    readonly pickCampCardHolda: () => IStack;
-    readonly pickCard: () => IStack;
-    readonly pickConcreteCoinToUpgrade: (coinValue: number, value: number) => IStack;
-    readonly pickDiscardCardAndumia: () => IStack;
-    readonly pickDiscardCardBrisingamens: (priority?: number) => IStack;
-    readonly pickDistinctionCard: () => IStack;
-    readonly pickDistinctionCardSoloBot: () => IStack;
-    readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: number) => IStack;
-    readonly placeThrudHero: () => IStack;
-    readonly placeTradingCoinsUline: () => IStack;
-    readonly placeYludHero: () => IStack;
-    readonly pickHero: () => IStack;
-    readonly pickHeroSoloBot: () => IStack;
-    readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
-    readonly startOrPassEnlistmentMercenaries: () => IStack;
-    readonly upgradeCoin: (value: number) => IStack;
-    readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number) => IStack;
-    readonly upgradeCoinWarriorDistinction: () => IStack;
-}
-
 /**
  * <h3>Интерфейс для объекта валидаторов мувов.</h3>
  */
@@ -794,6 +806,22 @@ export interface IMoveValidators {
     readonly UpgradeCoinVidofnirVedrfolnirMoveValidator: IMoveValidator;
     readonly UseGodPowerMoveValidator: IMoveValidator;
     // end
+}
+
+/**
+ * <h3>Интерфейс для конфига валидаторов карт.</h3>
+ */
+export interface IValidatorsConfig {
+    readonly pickCampCardToStack?: Record<string, never>;
+    readonly pickDiscardCardToStack?: Record<string, never>;
+}
+
+/**
+ * <h3>Интерфейс для конфига валидаторов выбора карт.</h3>
+ */
+export interface IPickValidatorsConfig {
+    readonly conditions?: IConditions;
+    readonly discardCard?: IDiscardCard;
 }
 
 /**
@@ -906,7 +934,7 @@ export interface IBackground {
 export interface IStyles {
     readonly Camp: () => IBackground;
     readonly CampBack: (tier: number) => IBackground;
-    readonly CampCards: (tier: number, cardPath: string) => IBackground;
+    readonly CampCards: (cardPath: string) => IBackground;
     readonly CardBack: (tier: number) => IBackground;
     readonly Cards: (suit: CanBeNull<SuitTypes>, name: string, points: CanBeNull<number>) => IBackground;
     readonly Coin: (value: number, initial: boolean) => IBackground;
@@ -1021,12 +1049,13 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 export type PlayerCardTypes = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactCampCard | IHeroPlayerCard
     | IMercenaryPlayerCard | IMythicalAnimalCard;
 
-// TODO (DeckCardTypes | null)[] and (MythologicalCreatureDeckCardTypes | null)[]
+// TODO (DeckCardTypes | null)[] and (MythologicalCreatureDeckCardTypes | null)[]?
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
 export type TavernCardTypes = CanBeNull<DeckCardTypes | MythologicalCreatureDeckCardTypes>;
 
+// TODO Delete it?!
 export type CanBeInTavernCardTypes = CanBeNull<DeckCardTypes | MythicalAnimalTypes>;
 
 export type AllCardTypes =
@@ -1042,6 +1071,16 @@ export type DrawProfitTypes = ConfigNames | ``;
 export type ActionFunctionTypes = IActionFunction | IActionFunctionWithParams;
 
 export type MoveFunctionTypes = CanBeNull<IMoveFunction>;
+
+export type ConditionTypes = keyof ICondition;
+
+export type ConditionsTypes = keyof IConditions;
+
+export type BasicSuitableNullableCardInfoTypes = keyof IBasicSuitableNullableCardInfo;
+
+export type PickValidatorConfigTypes = keyof IPickValidatorsConfig;
+
+export type ValidatorConfigTypes = keyof IValidatorsConfig;
 
 export type BuffTypes = keyof IBuffs;
 
@@ -1119,7 +1158,7 @@ export type CreateMercenaryPlayerCardType = PartialBy<IMercenaryPlayerCard, `ran
 /**
  * <h3>Тип для создания карты дворфа.</h3>
  */
-export type CreateDwarfCardType = PartialBy<IDwarfCard, `rank` | `type` | `tier`>;
+export type CreateDwarfCardType = PartialBy<IDwarfCard, `rank` | `type`>;
 
 export type DiscardCardTypes = PlayerCardTypes | DeckCardTypes | MythologicalCreatureDeckCardTypes;
 
@@ -1162,7 +1201,7 @@ export type CreateHeroCardType = PartialBy<Omit<IHeroCard, `active`>
 /**
  * <h3>Тип для создания героя на поле игрока.</h3>
  */
-export type CreateHeroPlayerCardType = PartialBy<IHeroPlayerCard, `type` | `active`>;
+export type CreateHeroPlayerCardType = PartialBy<IHeroPlayerCard, `type`>;
 
 /**
  * <h3>Тип для создания героя на поле игрока.</h3>

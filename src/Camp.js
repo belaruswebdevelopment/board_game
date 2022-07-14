@@ -19,7 +19,6 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
         const artefactData = artefactConfig[artefactName];
         if (artefactData.tier === tier) {
             campCards.push(CreateArtefactCampCard({
-                tier,
                 path: artefactData.name,
                 name: artefactData.name,
                 description: artefactData.description,
@@ -46,7 +45,8 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
         for (campMercenarySuit in mercenaryData) {
             path += campMercenarySuit + ` `;
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
-            for (const campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
+            let campMercenaryCardProperty;
+            for (campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
                 const mercenaryVariant = mercenaryData[campMercenarySuit];
                 if (mercenaryVariant !== undefined) {
                     if (campMercenaryCardProperty === `rank`) {
@@ -60,7 +60,6 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             }
         }
         campCards.push(CreateMercenaryCampCard({
-            tier,
             path: path.trim(),
             name: name.trim(),
             variants: mercenaryData,
@@ -68,6 +67,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     }
     return campCards;
 };
+// TODO Create artefact_player_card
 /**
  * <h3>Создание карты артефакта для лагеря.</h3>
  * <p>Применения:</p>
@@ -76,7 +76,6 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * </ol>
  *
  * @param type Тип.
- * @param tier Эпоха.
  * @param path URL путь.
  * @param name Название.
  * @param description Описание.
@@ -89,9 +88,8 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param stack Действия.
  * @returns Карта лагеря артефакт.
  */
-export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, tier, path, name, description, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
+export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, path, name, description, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
     type,
-    tier,
     path,
     name,
     description,
@@ -111,7 +109,6 @@ export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, 
  * </ol>
  *
  * @param type Тип.
- * @param tier Эпоха.
  * @param path URL путь.
  * @param name Название.
  * @param variants Варианты расположения карты наёмника на поле игрока.
@@ -120,9 +117,8 @@ export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, 
  * @param points Очки.
  * @returns Карта лагеря наёмник.
  */
-export const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, tier, path, name, variants, } = {}) => ({
+export const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, path, name, variants, } = {}) => ({
     type,
-    tier,
     path,
     name,
     variants,
@@ -139,20 +135,19 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
- * @param tier Эпоха.
  * @param path URL путь.
  * @param variants Варианты расположения карты наёмника на поле игрока.
  * @returns Карта наёмника на поле игрока.
  */
-export const CreateMercenaryPlayerCard = ({ type = RusCardTypeNames.Mercenary_Player_Card, suit, rank = 1, points, name, tier, path, } = {}) => ({
+export const CreateMercenaryPlayerCard = ({ type = RusCardTypeNames.Mercenary_Player_Card, suit, rank = 1, points, name, path, } = {}) => ({
     type,
     suit,
     rank,
     points,
     name,
-    tier,
     path,
 });
+// TODO Rethink all Is...
 /**
  * <h3>Проверка, является ли объект картой лагеря артефакта.</h3>
  * <p>Применения:</p>
@@ -164,7 +159,7 @@ export const CreateMercenaryPlayerCard = ({ type = RusCardTypeNames.Mercenary_Pl
  * @returns Является ли объект картой лагеря артефакта.
  */
 export const IsArtefactCard = (card) => card !== null
-    && card.description !== undefined && card.tier !== undefined;
+    && card.path !== undefined && card.validators !== undefined;
 /**
  * <h3>Проверка, является ли объект картой лагеря наёмника.</h3>
  * <p>Применения:</p>
@@ -176,7 +171,7 @@ export const IsArtefactCard = (card) => card !== null
  * @returns Является ли объект картой лагеря наёмника.
  */
 export const IsMercenaryCampCard = (card) => card !== null
-    && card.variants !== undefined && card.tier !== undefined;
+    && card.path !== undefined && card.variants !== undefined;
 /**
  * <h3>Проверка, является ли объект картой наёмника на поле игрока.</h3>
  * <p>Применения:</p>

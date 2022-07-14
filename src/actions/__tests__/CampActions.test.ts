@@ -867,9 +867,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                     0: {
                         cards: {
                             warrior: [
-                                {
-                                    active: false,
-                                },
+                                {},
                             ],
                         },
                     } as IPublicPlayer,

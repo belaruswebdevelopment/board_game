@@ -2,10 +2,10 @@ import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
 /**
- * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>
+ * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Выполняется при необходимости добавить действия в стэк действий после текущего.</li>
+ * <li>Выполняется при необходимости добавить действия в стек действий после текущего.</li>
  * </ol>
  *
  * @param G
@@ -20,7 +20,8 @@ export const AddActionsToStack = (G, ctx, stack, card) => {
         if (card !== undefined && `validators` in card) {
             const validators = card.validators;
             if (validators !== undefined) {
-                for (const validator in validators) {
+                let validator;
+                for (validator in validators) {
                     switch (validator) {
                         case PickCardValidatorNames.PickDiscardCardToStack:
                             isValid = IsCanPickPickDiscardCardToStack(G, card);
@@ -29,8 +30,7 @@ export const AddActionsToStack = (G, ctx, stack, card) => {
                             isValid = IsCanPickPickCampCardToStack(G, card);
                             break;
                         default:
-                            isValid = true;
-                            break;
+                            throw new Error(`Отсутствует валидатор ${validator} для выбора карты.`);
                     }
                 }
             }
@@ -45,7 +45,7 @@ export const AddActionsToStack = (G, ctx, stack, card) => {
             for (let i = 0; i < stack.length; i++) {
                 const stackI = stack[i];
                 if (stackI === undefined) {
-                    throw new Error(`В массиве стэка новых действий отсутствует действие с id '${i}'.`);
+                    throw new Error(`В массиве стека новых действий отсутствует действие с id '${i}'.`);
                 }
                 stackI.priority = (_a = stackI.priority) !== null && _a !== void 0 ? _a : 0;
                 const playerId = (_b = stackI.playerId) !== null && _b !== void 0 ? _b : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];

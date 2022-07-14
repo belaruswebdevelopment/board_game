@@ -82,7 +82,7 @@ const Bonfur: IHeroData = {
     game: GameNames.Basic,
     suit: SuitNames.Blacksmith,
     rank: 3,
-    validators: {
+    pickValidators: {
         discardCard: {
             suit: SuitNames.Blacksmith,
         },
@@ -103,7 +103,7 @@ const Crovax_The_Doppelganger: IHeroData = {
     description: `Кровакс — нейтральный герой, добавляющий 25 очков к итоговому показателю храбрости. Поместите его в свою командную зону и немедленно сбросьте последнюю карту дворфа из выбранной вами колонки. Это та же сила, что и у Бонфура, поэтому все правила, применимые к Бонфуру, применимы и к Кроваксу.`,
     game: GameNames.Thingvellir,
     points: 25,
-    validators: {
+    pickValidators: {
         discardCard: {
             suit: null,
         },
@@ -125,7 +125,7 @@ const Dagda: IHeroData = {
     game: GameNames.Basic,
     suit: SuitNames.Hunter,
     rank: 3,
-    validators: {
+    pickValidators: {
         discardCard: {
             suit: SuitNames.Hunter,
             number: 2,
@@ -258,7 +258,7 @@ const Hourya: IHeroData = {
     suit: SuitNames.Explorer,
     rank: 1,
     points: 20,
-    validators: {
+    pickValidators: {
         conditions: {
             suitCountMin: {
                 suit: SuitNames.Explorer,

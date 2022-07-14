@@ -44,6 +44,7 @@ const CreateSpecialCard = ({ type = RusCardTypeNames.Special_Card, suit, rank, p
     points,
     name,
 });
+// TODO Fix it!
 /**
  * <h3>Проверка, является ли объект особой картой.</h3>
  * <p>Применения:</p>
@@ -55,6 +56,5 @@ const CreateSpecialCard = ({ type = RusCardTypeNames.Special_Card, suit, rank, p
  * @returns Является ли объект особой картой.
  */
 export const IsSpecialCard = (card) => card !== null
-    && card.suit !== undefined && !(`tier` in card)
-    && !(`description` in card);
+    && card.suit !== undefined && !(`description` in card);
 //# sourceMappingURL=SpecialCard.js.map

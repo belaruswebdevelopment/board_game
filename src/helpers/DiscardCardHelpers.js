@@ -35,7 +35,10 @@ export const DiscardPickedCard = (G, discardedCard) => {
         case RusCardTypeNames.Hero_Player_Card:
             throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
         default:
+            // eslint-disable-next-line no-case-declarations
+            const _exhaustiveCheck = discardedCard;
             throw new Error(`Сброшенная карта не может быть с недопустимым для сброса типом.`);
+            return _exhaustiveCheck;
     }
 };
 //# sourceMappingURL=DiscardCardHelpers.js.map

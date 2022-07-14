@@ -82,23 +82,20 @@ export const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, descriptio
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
+ * @param description Описание.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
- * @param tier Эпоха.
- * @param path URL путь.
- * @param variants Варианты расположения карты героя на поле игрока.
  * @returns Карта героя на поле игрока.
  */
-export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, suit, rank, points, active = false, } = {}) => ({
+export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, suit, rank, points, } = {}) => ({
     type,
     name,
     description,
     suit,
     rank,
     points,
-    active,
 });
 /**
  * <h3>Проверка, является ли объект картой героя.</h3>
@@ -122,5 +119,5 @@ export const IsHeroCard = (card) => card !== null && card.active !== undefined &
 * @returns Является ли объект картой героя на поле игрока.
 */
 export const IsHeroPlayerCard = (card) => card !== null
-    && card.active !== undefined && !(`validators` in card);
+    && card.description !== undefined && !(`validators` in card);
 //# sourceMappingURL=Hero.js.map

@@ -35,6 +35,12 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: AddCardToPlayer
         case RusCardTypeNames.Multi_Suit_Player_Card:
             return true;
         default:
+            if (`suit` in card) {
+                // eslint-disable-next-line no-case-declarations
+                const _exhaustiveCheck: never = card;
+                throw new Error(`Карта имеющая принадлежность к фракции должна быть добавлена на стол игрока.`);
+                return _exhaustiveCheck;
+            }
             return false;
     }
 };
@@ -68,7 +74,10 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
             card.strengthTokenNotch = 0;
             break;
         default:
+            // eslint-disable-next-line no-case-declarations
+            const _exhaustiveCheck: never = card;
             throw new Error(`Добавленная в командную зону для карт мифических существ карта не может быть с недопустимым типом.`);
+            return _exhaustiveCheck;
     }
     AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' в командную зону карт Idavoll.`);
 };
@@ -114,7 +123,10 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Non
             }
             break;
         default:
+            // eslint-disable-next-line no-case-declarations
+            const _exhaustiveCheck: never = card;
             throw new Error(`Добавленная на поле игрока карта не может быть с недопустимым типом.`);
+            return _exhaustiveCheck;
     }
     return isAdded;
 };

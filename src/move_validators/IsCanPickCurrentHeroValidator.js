@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { IsHeroPlayerCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ErrorNames } from "../typescript/enums";
+import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
  * <p>Применения:</p>
@@ -21,7 +21,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const validators = hero.validators, cardsToDiscard = [];
+    const validators = hero.pickValidators, cardsToDiscard = [];
     let isValidMove = false;
     if ((validators === null || validators === void 0 ? void 0 : validators.discardCard) !== undefined) {
         let suit;
@@ -65,12 +65,15 @@ export const IsCanPickHeroWithConditionsValidator = (G, ctx, id) => {
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const conditions = (_a = hero.validators) === null || _a === void 0 ? void 0 : _a.conditions;
-    let isValidMove = false;
-    for (const condition in conditions) {
+    const conditions = (_a = hero.pickValidators) === null || _a === void 0 ? void 0 : _a.conditions;
+    if (conditions === undefined) {
+        throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.Conditions}'.`);
+    }
+    let isValidMove = false, condition;
+    for (condition in conditions) {
         if (condition === `suitCountMin`) {
-            let ranks = 0;
-            for (const key in conditions[condition]) {
+            let ranks = 0, key;
+            for (key in conditions[condition]) {
                 if (key === `suit`) {
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {

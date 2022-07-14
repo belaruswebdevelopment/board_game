@@ -194,7 +194,6 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
         suit,
         points: cardVariants.points,
         name: mercenaryCard.name,
-        tier: mercenaryCard.tier,
         path: mercenaryCard.path,
     }),
         isAdded: boolean = AddCardToPlayer(G, ctx, mercenaryPlayerCard),

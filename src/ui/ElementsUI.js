@@ -1,14 +1,10 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { IsArtefactCard, IsMercenaryCampCard, IsMercenaryPlayerCard } from "../Camp";
+import { IsArtefactCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { IsDwarfCard } from "../Dwarf";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { IsHeroCard, IsHeroPlayerCard } from "../Hero";
-import { IsMythicalAnimalCard } from "../MythologicalCreature";
-import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { ArtefactNames, MoveNames } from "../typescript/enums";
+import { ArtefactNames, MoveNames, RusCardTypeNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -36,7 +32,7 @@ export const DrawButton = (data, boardCells, name, player, moveName, ...args) =>
             action = data.moves.PassEnlistmentMercenariesMove;
             break;
         default:
-            throw new Error(`Нет такого мува.`);
+            throw new Error(`Нет такого мува '${moveName}'.`);
     }
     boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${name}`));
 };
@@ -57,7 +53,13 @@ export const DrawButton = (data, boardCells, name, player, moveName, ...args) =>
  * @param args Аргументы действия.
  */
 export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ...args) => {
-    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action;
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, value = ``, action;
+    if (`description` in card) {
+        description = card.description;
+    }
+    if (suit !== null) {
+        tdClasses = suitsConfig[suit].suitColor;
+    }
     if (moveName !== undefined) {
         switch (moveName) {
             case MoveNames.ClickHeroCardMove:
@@ -105,49 +107,58 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             default:
                 throw new Error(`Нет такого мува '${moveName}'.`);
         }
+        tdClasses += ` cursor-pointer`;
     }
     else {
         action = null;
     }
-    if (suit !== null) {
-        tdClasses = suitsConfig[suit].suitColor;
-    }
-    if (IsHeroCard(card) || IsHeroPlayerCard(card)) {
-        styles = Styles.Heroes(card.name);
-        if (player === null && `active` in card && !card.active) {
-            spanClasses = `bg-hero-inactive`;
-        }
-        else {
-            spanClasses = `bg-hero`;
-        }
-        if (suit === null) {
-            tdClasses = `bg-gray-600`;
-        }
-    }
-    else if (IsMercenaryCampCard(card) || IsArtefactCard(card) || IsMercenaryPlayerCard(card)) {
-        styles = Styles.CampCards(card.tier, card.path);
-        spanClasses = `bg-camp`;
-        if (suit === null) {
-            tdClasses = `bg-yellow-200`;
-        }
-    }
-    else {
-        // TODO Fix for Idavoll
-        if (IsDwarfCard(card) || IsMythicalAnimalCard(card)) {
-            styles = Styles.Cards(card.suit, card.name, card.points);
-        }
-        else {
-            styles = Styles.Cards(null, card.name, null);
-        }
-        // TODO Fix classes for Idavoll
-        spanClasses = `bg-card`;
-    }
-    if (action !== null) {
-        tdClasses += ` cursor-pointer`;
-    }
-    let description = ``, value = ``;
-    if (`description` in card) {
-        description = card.description;
+    switch (card.type) {
+        case RusCardTypeNames.Hero_Card:
+        case RusCardTypeNames.Hero_Player_Card:
+            styles = Styles.Heroes(card.name);
+            if (player === null && `active` in card && !card.active) {
+                spanClasses = `bg-hero-inactive`;
+            }
+            else {
+                spanClasses = `bg-hero`;
+            }
+            if (suit === null) {
+                tdClasses = ` bg-gray-600`;
+            }
+            break;
+        case RusCardTypeNames.Mercenary_Player_Card:
+        case RusCardTypeNames.Mercenary_Card:
+        case RusCardTypeNames.Artefact_Card:
+            styles = Styles.CampCards(card.path);
+            spanClasses = `bg-camp`;
+            if (suit === null) {
+                tdClasses = ` bg-yellow-200`;
+            }
+            break;
+        case RusCardTypeNames.Dwarf_Card:
+        case RusCardTypeNames.Special_Card:
+        case RusCardTypeNames.Multi_Suit_Player_Card:
+        case RusCardTypeNames.Mythical_Animal_Card:
+        case RusCardTypeNames.Royal_Offering_Card:
+            spanClasses = `bg-card`;
+            if (`suit` in card) {
+                styles = Styles.Cards(card.suit, card.name, card.points);
+            }
+            else {
+                styles = Styles.Cards(null, card.name, null);
+                value = String(card.value);
+            }
+            break;
+        case RusCardTypeNames.God_Card:
+        case RusCardTypeNames.Giant_Card:
+        case RusCardTypeNames.Valkyry_Card:
+            // TODO Fix classes for Idavoll
+            break;
+        default:
+            // eslint-disable-next-line no-case-declarations
+            const _exhaustiveCheck = card;
+            throw new Error(`Добавленная на поле игрока карта не может быть с недопустимым типом.`);
+            return _exhaustiveCheck;
     }
     if (`points` in card) {
         if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
@@ -156,9 +167,6 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         else {
             value = card.points !== null ? String(card.points) : ``;
         }
-    }
-    else if (IsRoyalOfferingCard(card)) {
-        value = String(card.value);
     }
     //TODO Draw Power token on Gods if needed and Strength token on valkyries!
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
@@ -210,7 +218,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
                 action = data.moves.UpgradeCoinVidofnirVedrfolnirMove;
                 break;
             default:
-                throw new Error(`Нет такого мува.`);
+                throw new Error(`Нет такого мува '${moveName}'.`);
         }
     }
     else {

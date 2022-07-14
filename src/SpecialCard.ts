@@ -54,6 +54,7 @@ const CreateSpecialCard = ({
     name,
 });
 
+// TODO Fix it!
 /**
  * <h3>Проверка, является ли объект особой картой.</h3>
  * <p>Применения:</p>
@@ -65,5 +66,4 @@ const CreateSpecialCard = ({
  * @returns Является ли объект особой картой.
  */
 export const IsSpecialCard = (card: unknown): card is ISpecialCard => card !== null
-    && (card as ISpecialCard).suit !== undefined && !(`tier` in (card as ISpecialCard))
-    && !(`description` in (card as ISpecialCard));
+    && (card as ISpecialCard).suit !== undefined && !(`description` in (card as ISpecialCard));

@@ -11,7 +11,7 @@ import { AddDataToLog } from "./Logging";
 import { IsGiantCard, IsGodCard, IsMythicalAnimalCard, IsValkyryCard } from "./MythologicalCreature";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IArtefact, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -151,8 +151,8 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
             if (campCard === undefined) {
                 throw new Error(`В массиве карт лагеря игрока отсутствует карта с id '${i}'.`);
             }
-            const artefact: CanBeUndef<IArtefact> =
-                Object.values(artefactsConfig).find((artefact: IArtefact): boolean =>
+            const artefact: CanBeUndef<IArtefactData> =
+                Object.values(artefactsConfig).find((artefact: IArtefactData): boolean =>
                     artefact.name === campCard.name);
             let currentArtefactScore = 0;
             if (artefact === undefined) {

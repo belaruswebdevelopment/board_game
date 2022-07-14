@@ -66,7 +66,6 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             {
                                 name: ArtefactNames.Brisingamens,
                                 description: `Test`,
-                                tier: 0,
                             },
                         ],
                     },
@@ -97,7 +96,6 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                 {
                     name: ArtefactNames.Brisingamens,
                     description: `Test`,
-                    tier: 0,
                 },
             ],
             logData: [
@@ -172,9 +170,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                 0: {
                     cards: {
                         warrior: [
-                            {
-                                active: false,
-                            },
+                            {},
                         ],
                     },
                 },
@@ -308,7 +304,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                     campCards: [
                         {
                             name: `Test`,
-                            tier: 0,
                             variants: {},
                         },
                     ],
@@ -330,7 +325,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                     campCards: [
                         {
                             name: `Test`,
-                            tier: 0,
                             variants: {},
                         },
                     ],
@@ -905,7 +899,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            tier: 0,
                             path: ``,
                             name: `Test`,
                             variants: {
@@ -950,7 +943,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 rank: 1,
                                 points: null,
                                 name: `Test`,
-                                tier: 0,
                                 path: ``,
                             },
                         ],
@@ -1157,7 +1149,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            tier: 0,
                             path: ``,
                             name: `Test`,
                             variants: {
@@ -1303,7 +1294,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            tier: 0,
                             name: ``,
                             variants: {},
                         },

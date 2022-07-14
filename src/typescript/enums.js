@@ -379,12 +379,18 @@ export var SuitNames;
     SuitNames["Warrior"] = "warrior";
 })(SuitNames || (SuitNames = {}));
 /**
- * <h3>Перечисление для названия валидаторов для выбора карт.</h3>
+ * <h3>Перечисление для названия валидаторов для выбора карты героя.</h3>
+ */
+export var PickHeroCardValidatorNames;
+(function (PickHeroCardValidatorNames) {
+    PickHeroCardValidatorNames["Conditions"] = "conditions";
+    PickHeroCardValidatorNames["DiscardCard"] = "discardCard";
+})(PickHeroCardValidatorNames || (PickHeroCardValidatorNames = {}));
+/**
+ * <h3>Перечисление для названия валидаторов для выбора карты при выборе героя.</h3>
  */
 export var PickCardValidatorNames;
 (function (PickCardValidatorNames) {
-    PickCardValidatorNames["Conditions"] = "conditions";
-    PickCardValidatorNames["DiscardCard"] = "discardCard";
     PickCardValidatorNames["PickDiscardCardToStack"] = "pickDiscardCardToStack";
     PickCardValidatorNames["PickCampCardToStack"] = "pickCampCardToStack";
 })(PickCardValidatorNames || (PickCardValidatorNames = {}));

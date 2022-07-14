@@ -3,8 +3,8 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { IsHeroPlayerCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ErrorNames } from "../typescript/enums";
-import type { CanBeUndef, IConditions, IHeroCard, IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
+import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
+import type { CanBeUndef, ConditionsTypes, ConditionTypes, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -24,7 +24,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const validators: CanBeUndef<IValidatorsConfig> = hero.validators,
+    const validators: CanBeUndef<IPickValidatorsConfig> = hero.pickValidators,
         cardsToDiscard: PlayerCardTypes[] = [];
     let isValidMove = false;
     if (validators?.discardCard !== undefined) {
@@ -70,12 +70,17 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const conditions: CanBeUndef<IConditions> = hero.validators?.conditions;
-    let isValidMove = false;
-    for (const condition in conditions) {
+    const conditions: CanBeUndef<IConditions> = hero.pickValidators?.conditions;
+    if (conditions === undefined) {
+        throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.Conditions}'.`);
+    }
+    let isValidMove = false,
+        condition: ConditionsTypes;
+    for (condition in conditions) {
         if (condition === `suitCountMin`) {
-            let ranks = 0;
-            for (const key in conditions[condition]) {
+            let ranks = 0,
+                key: ConditionTypes;
+            for (key in conditions[condition]) {
                 if (key === `suit`) {
                     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {

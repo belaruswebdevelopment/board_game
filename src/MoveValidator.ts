@@ -10,8 +10,8 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickCardValidatorNames, StageNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, StageNames, SuitNames } from "./typescript/enums";
+import type { CampDeckCardTypes, CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PickValidatorConfigTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit } from "./ui/ProfitUI";
@@ -167,7 +167,10 @@ export const GetValidator = (phase: PhaseNames, stage: StageNames): CanBeNull<IM
             validator = moveBy[phase][stage as keyof IMoveByGetMjollnirProfitOptions];
             break;
         default:
+            // eslint-disable-next-line no-case-declarations
+            const _exhaustiveCheck: never = phase;
             throw new Error(`Нет такого валидатора.`);
+            return _exhaustiveCheck;
     }
     return validator;
 };
@@ -1123,19 +1126,19 @@ export const moveValidators: IMoveValidators = {
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${id}'.`);
             }
-            const validators: CanBeUndef<IValidatorsConfig> = hero.validators;
+            const validators: CanBeUndef<IPickValidatorsConfig> = hero.pickValidators;
             if (validators !== undefined) {
-                for (const validator in validators) {
+                let validator: PickValidatorConfigTypes;
+                for (validator in validators) {
                     switch (validator) {
-                        case PickCardValidatorNames.Conditions:
+                        case PickHeroCardValidatorNames.Conditions:
                             isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
                             break;
-                        case PickCardValidatorNames.DiscardCard:
+                        case PickHeroCardValidatorNames.DiscardCard:
                             isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
                             break;
                         default:
-                            isValid = true;
-                            break;
+                            throw new Error(`Отсутствует валидатор ${validator} для выбора карт героя.`);
                     }
                 }
             } else {

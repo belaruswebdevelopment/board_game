@@ -47,119 +47,107 @@ export const Styles: IStyles = {
     CampBack: (tier: number): IBackground => ({
         background: `url(/img/cards/camp/CampBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    CampCards: (tier: number, cardPath: string): IBackground => {
-        if (tier === 0) {
-            switch (cardPath) {
-                case ArtefactNames.Draupnir:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat 0px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Fafnir_Baleygr:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -32px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Svalinn:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -64px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Megingjord:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -96px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Vegvisir:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat 0px -48px / 128px 144px`,
-                    };
-                case ArtefactNames.Vidofnir_Vedrfolnir:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -32px -48px / 128px 144px`,
-                    };
-                case `hunter explorer 6`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -64px -48px / 128px 144px`,
-                    };
-                case `hunter miner 1`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -96px -48px / 128px 144px`,
-                    };
-                case `blacksmith miner 1`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat 0px -96px / 128px 144px`,
-                    };
-                case `warrior 6 blacksmith`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -32px -96px / 128px 144px`,
-                    };
-                case `warrior 6 explorer 8`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -64px -96px / 128px 144px`,
-                    };
-                case `warrior 9 explorer 11`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
-                    };
-                default:
-                    throw new Error(`Нет такой карты '${cardPath}' лагеря в '1' эпохе.`);
-            }
-        } else if (tier === 1) {
-            switch (cardPath) {
-                case ArtefactNames.Mjollnir:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat 0px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Hofud:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -32px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Brisingamens:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -64px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Hrafnsmerki:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -96px 0px / 128px 144px`,
-                    };
-                case ArtefactNames.Gjallarhorn:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat 0px -48px / 128px 144px`,
-                    };
-                case ArtefactNames.Jarnglofi:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -32px -48px / 128px 144px`,
-                    };
-                case ArtefactNames.Odroerir_The_Mythic_Cauldron:
-                    return {
-                        background: `${promosPath} no-repeat -39px -4px / 76px 58px`,
-                    };
-                case `hunter blacksmith`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -64px -48px / 128px 144px`,
-                    };
-                case `warrior 9 explorer 11`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -96px -48px / 128px 144px`,
-                    };
-                case `blacksmith explorer 8`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat 0px -96px / 128px 144px`,
-                    };
-                case `warrior 6 miner 1`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -32px -96px / 128px 144px`,
-                    };
-                case `explorer 8 miner 1`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -64px -96px / 128px 144px`,
-                    };
-                case `warrior 6 hunter`:
-                    return {
-                        background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
-                    };
-                default:
-                    throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
-            }
+    CampCards: (cardPath: string): IBackground => {
+        switch (cardPath) {
+            case ArtefactNames.Draupnir:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat 0px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Fafnir_Baleygr:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -32px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Svalinn:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -64px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Megingjord:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -96px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Vegvisir:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat 0px -48px / 128px 144px`,
+                };
+            case ArtefactNames.Vidofnir_Vedrfolnir:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -32px -48px / 128px 144px`,
+                };
+            case `hunter explorer 6`:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -64px -48px / 128px 144px`,
+                };
+            case `hunter miner 1`:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -96px -48px / 128px 144px`,
+                };
+            case `blacksmith miner 1`:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat 0px -96px / 128px 144px`,
+                };
+            case `warrior 6 blacksmith`:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -32px -96px / 128px 144px`,
+                };
+            case `warrior 6 explorer 8`:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -64px -96px / 128px 144px`,
+                };
+            case `warrior 9 explorer 11`:
+                return {
+                    background: `${campCardsPath}0.png) no-repeat -96px -96px / 128px 144px`,
+                };
+            case ArtefactNames.Mjollnir:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat 0px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Hofud:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -32px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Brisingamens:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -64px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Hrafnsmerki:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -96px 0px / 128px 144px`,
+                };
+            case ArtefactNames.Gjallarhorn:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat 0px -48px / 128px 144px`,
+                };
+            case ArtefactNames.Jarnglofi:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -32px -48px / 128px 144px`,
+                };
+            case ArtefactNames.Odroerir_The_Mythic_Cauldron:
+                return {
+                    background: `${promosPath} no-repeat -39px -4px / 76px 58px`,
+                };
+            case `hunter blacksmith`:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -64px -48px / 128px 144px`,
+                };
+            case `blacksmith explorer 8`:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat 0px -96px / 128px 144px`,
+                };
+            case `warrior 6 miner 1`:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -32px -96px / 128px 144px`,
+                };
+            case `explorer 8 miner 1`:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -64px -96px / 128px 144px`,
+                };
+            case `warrior 6 hunter`:
+                return {
+                    background: `${campCardsPath}1.png) no-repeat -96px -96px / 128px 144px`,
+                };
+            default:
+                throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
         }
-        throw new Error(`Нет такой карты лагеря.`);
     },
     CardBack: (tier: number): IBackground => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
