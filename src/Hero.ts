@@ -61,7 +61,8 @@ export const BuildHeroes = (configOptions: GameNames[], solo: boolean): [IHeroCa
  * @param points Очки.
  * @param active Взят ли герой.
  * @param buff Баф.
- * @param validators Валидаторы.
+ * @param pickValidators Валидаторы выбора карты.
+ * @param validators Валидаторы карты.
  * @param actions Действия.
  * @param stack Действия.
  * @returns Герой.
@@ -75,6 +76,7 @@ export const CreateHero = ({
     points = null,
     active = true,
     buff,
+    pickValidators,
     validators,
     actions,
     stack,
@@ -87,6 +89,7 @@ export const CreateHero = ({
     points,
     active,
     buff,
+    pickValidators,
     validators,
     actions,
     stack,

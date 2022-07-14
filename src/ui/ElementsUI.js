@@ -129,10 +129,15 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         case RusCardTypeNames.Mercenary_Player_Card:
         case RusCardTypeNames.Mercenary_Card:
         case RusCardTypeNames.Artefact_Card:
+        case RusCardTypeNames.Artefact_Player_Card:
             styles = Styles.CampCards(card.path);
             spanClasses = `bg-camp`;
             if (suit === null) {
                 tdClasses = ` bg-yellow-200`;
+                // TODO Rework it?
+                if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
+                    value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
+                }
             }
             break;
         case RusCardTypeNames.Dwarf_Card:
@@ -153,6 +158,8 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         case RusCardTypeNames.Giant_Card:
         case RusCardTypeNames.Valkyry_Card:
             // TODO Fix classes for Idavoll
+            // spanClasses = `bg-card`;
+            // styles = Styles.Cards(card.name);
             break;
         default:
             // eslint-disable-next-line no-case-declarations
@@ -161,12 +168,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             return _exhaustiveCheck;
     }
     if (`points` in card) {
-        if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
-            value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
-        }
-        else {
-            value = card.points !== null ? String(card.points) : ``;
-        }
+        value = card.points !== null ? String(card.points) : ``;
     }
     //TODO Draw Power token on Gods if needed and Strength token on valkyries!
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));

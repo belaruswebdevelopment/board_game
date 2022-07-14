@@ -1,4 +1,4 @@
-import { IsArtefactCard } from "../Camp";
+import { IsArtefactCard, IsArtefactPlayerCard } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
@@ -28,7 +28,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
     if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (IsArtefactCard(card) && card.suit !== null) {
+    if (IsArtefactPlayerCard(card) && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudAction(G, ctx, card);
     }
@@ -51,7 +51,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
  * @param card Карта лагеря.
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
-    if (IsArtefactCard(card) && card.suit !== null) {
+    if (IsArtefactPlayerCard(card) && card.suit !== null) {
         throw new Error(`Не удалось добавить карту артефакта '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

@@ -56,12 +56,13 @@ export const BuildHeroes = (configOptions, solo) => {
  * @param points Очки.
  * @param active Взят ли герой.
  * @param buff Баф.
- * @param validators Валидаторы.
+ * @param pickValidators Валидаторы выбора карты.
+ * @param validators Валидаторы карты.
  * @param actions Действия.
  * @param stack Действия.
  * @returns Герой.
  */
-export const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, validators, actions, stack, } = {}) => ({
+export const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, } = {}) => ({
     type,
     name,
     description,
@@ -70,6 +71,7 @@ export const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, descriptio
     points,
     active,
     buff,
+    pickValidators,
     validators,
     actions,
     stack,

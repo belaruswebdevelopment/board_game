@@ -144,10 +144,15 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         case RusCardTypeNames.Mercenary_Player_Card:
         case RusCardTypeNames.Mercenary_Card:
         case RusCardTypeNames.Artefact_Card:
+        case RusCardTypeNames.Artefact_Player_Card:
             styles = Styles.CampCards(card.path);
             spanClasses = `bg-camp`;
             if (suit === null) {
                 tdClasses = ` bg-yellow-200`;
+                // TODO Rework it?
+                if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
+                    value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
+                }
             }
             break;
         case RusCardTypeNames.Dwarf_Card:
@@ -167,6 +172,8 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         case RusCardTypeNames.Giant_Card:
         case RusCardTypeNames.Valkyry_Card:
             // TODO Fix classes for Idavoll
+            // spanClasses = `bg-card`;
+            // styles = Styles.Cards(card.name);
             break;
         default:
             // eslint-disable-next-line no-case-declarations
@@ -175,11 +182,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             return _exhaustiveCheck;
     }
     if (`points` in card) {
-        if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
-            value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
-        } else {
-            value = card.points !== null ? String(card.points) : ``;
-        }
+        value = card.points !== null ? String(card.points) : ``;
     }
     //TODO Draw Power token on Gods if needed and Strength token on valkyries!
     playerCells.push(

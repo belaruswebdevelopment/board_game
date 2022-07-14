@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { ArtefactTypes, BasicSuitableNullableCardInfoTypes, CampDeckCardTypes, CanBeUndef, CreateArtefactCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCardType, IArtefactCampCard, IArtefactConfig, IArtefactData, IMercenaryCampCard, IMercenaryPlayerCard, MercenaryType, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { ArtefactTypes, BasicSuitableNullableCardInfoTypes, CampDeckCardTypes, CanBeUndef, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCardType, IArtefactCampCard, IArtefactConfig, IArtefactData, IArtefactPlayerCampCard, IMercenaryCampCard, IMercenaryPlayerCard, MercenaryType, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
@@ -21,18 +21,27 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
     for (artefactName in artefactConfig) {
         const artefactData: IArtefactData = artefactConfig[artefactName];
         if (artefactData.tier === tier) {
-            campCards.push(CreateArtefactCampCard({
-                path: artefactData.name,
-                name: artefactData.name,
-                description: artefactData.description,
-                suit: artefactData.suit,
-                rank: artefactData.rank,
-                points: artefactData.points,
-                buff: artefactData.buff,
-                validators: artefactData.validators,
-                actions: artefactData.actions,
-                stack: artefactData.stack,
-            }));
+            if (artefactData.suit !== undefined && artefactData.rank !== undefined
+                && artefactData.points !== undefined) {
+                campCards.push(CreateArtefactPlayerCampCard({
+                    path: artefactData.name,
+                    name: artefactData.name,
+                    description: artefactData.description,
+                    suit: artefactData.suit,
+                    rank: artefactData.rank,
+                    points: artefactData.points,
+                }));
+            } else {
+                campCards.push(CreateArtefactCampCard({
+                    path: artefactData.name,
+                    name: artefactData.name,
+                    description: artefactData.description,
+                    buff: artefactData.buff,
+                    validators: artefactData.validators,
+                    actions: artefactData.actions,
+                    stack: artefactData.stack,
+                }));
+            }
         }
     }
     const mercenariesConfigTier: CanBeUndef<Partial<SuitPropertyTypes<MercenaryType>>[]> = mercenariesConfig[tier];
@@ -73,9 +82,45 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
     return campCards;
 };
 
-// TODO Create artefact_player_card
 /**
  * <h3>Создание карты артефакта для лагеря.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех карт артефактов лагеря во время инициализации игры.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param path URL путь.
+ * @param name Название.
+ * @param description Описание.
+ * @param buff Баф.
+ * @param validators Валидаторы карты.
+ * @param actions Действия.
+ * @param stack Действия.
+ * @returns Карта лагеря артефакт.
+ */
+const CreateArtefactCampCard = ({
+    type = RusCardTypeNames.Artefact_Card,
+    path,
+    name,
+    description,
+    buff,
+    validators,
+    actions,
+    stack,
+}: CreateArtefactCampCardType = {} as CreateArtefactCampCardType): IArtefactCampCard => ({
+    type,
+    path,
+    name,
+    description,
+    buff,
+    validators,
+    actions,
+    stack,
+});
+
+/**
+ * <h3>Создание карты артефакта на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при создании всех карт артефактов лагеря во время инициализации игры.</li>
@@ -88,25 +133,17 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param buff Баф.
- * @param validators Валидаторы.
- * @param actions Действия.
- * @param stack Действия.
  * @returns Карта лагеря артефакт.
  */
-export const CreateArtefactCampCard = ({
-    type = RusCardTypeNames.Artefact_Card,
+const CreateArtefactPlayerCampCard = ({
+    type = RusCardTypeNames.Artefact_Player_Card,
     path,
     name,
     description,
-    suit = null,
-    rank = null,
+    suit,
+    rank,
     points = null,
-    buff,
-    validators,
-    actions,
-    stack,
-}: CreateArtefactCampCardType = {} as CreateArtefactCampCardType): IArtefactCampCard => ({
+}: CreateArtefactPlayerCampCardType = {} as CreateArtefactPlayerCampCardType): IArtefactPlayerCampCard => ({
     type,
     path,
     name,
@@ -114,10 +151,6 @@ export const CreateArtefactCampCard = ({
     suit,
     rank,
     points,
-    buff,
-    validators,
-    actions,
-    stack,
 });
 
 /**
@@ -136,7 +169,7 @@ export const CreateArtefactCampCard = ({
  * @param points Очки.
  * @returns Карта лагеря наёмник.
  */
-export const CreateMercenaryCampCard = ({
+const CreateMercenaryCampCard = ({
     type = RusCardTypeNames.Mercenary_Card,
     path,
     name,
@@ -193,6 +226,20 @@ export const CreateMercenaryPlayerCard = ({
  */
 export const IsArtefactCard = (card: unknown): card is IArtefactCampCard => card !== null
     && (card as IArtefactCampCard).path !== undefined && (card as IArtefactCampCard).validators !== undefined;
+
+// TODO Fix it!
+/**
+* <h3>Проверка, является ли объект картой лагеря артефакта на поле игрока.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>При проверках в функциях.</li>
+* </ol>
+*
+* @param card Карта.
+* @returns Является ли объект картой лагеря артефакта на поле игрока.
+*/
+export const IsArtefactPlayerCard = (card: unknown): card is IArtefactPlayerCampCard =>
+    card !== null && (card as IArtefactPlayerCampCard).path !== undefined;
 
 /**
  * <h3>Проверка, является ли объект картой лагеря наёмника.</h3>

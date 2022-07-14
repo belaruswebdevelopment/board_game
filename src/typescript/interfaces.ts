@@ -232,16 +232,25 @@ export interface IArtefactConfig {
  * <h3>Интерфейс для данных карт лагеря артефакт.</h3>
  */
 export interface IArtefactData extends ISecondaryCardInfo,
-    PartialBy<Omit<IArtefactCampCard, `type` | `path`>, `suit` | `rank` | `points`> {
+    Omit<IArtefactCampCard, `type` | `path`>,
+    PartialBy<Omit<IArtefactPlayerCampCard, `type` | `path`>, `suit` | `rank` | `points`> {
     readonly scoringRule: (G?: IMyGameState, player?: IPublicPlayer, artefactName?: ArtefactNames) => number;
 }
 
 /**
  * <h3>Интерфейс для карты лагеря артефакта.</h3>
  */
-export interface IArtefactCampCard extends IBasicSuitableNullableCardInfo, ICampCardInfo,
-    ICardWithActionInfo {
+export interface IArtefactCampCard extends ICampCardInfo, ICardWithActionInfo {
     readonly type: RusCardTypeNames.Artefact_Card;
+    readonly name: ArtefactNames;
+}
+
+/**
+ * <h3>Интерфейс для карты лагеря артефакта.</h3>
+ */
+export interface IArtefactPlayerCampCard extends IBasicSuitableCardInfo, ICampCardInfo,
+    Pick<ICardWithActionInfo, `description`> {
+    readonly type: RusCardTypeNames.Artefact_Player_Card;
     readonly name: ArtefactNames;
 }
 
@@ -312,6 +321,7 @@ export interface IHeroData extends PartialBy<Omit<IHeroCard, `type` | `active`>,
 export interface IHeroCard extends IBasicSuitableNullableCardInfo, ICardWithActionInfo {
     readonly type: RusCardTypeNames.Hero_Card;
     readonly name: HeroNames;
+    readonly pickValidators?: IPickValidatorsConfig;
     active: boolean;
 }
 
@@ -449,7 +459,6 @@ export interface IExpansionCardInfo {
 export interface ICardWithActionInfo {
     readonly description: string;
     readonly buff?: IBuff;
-    readonly pickValidators?: IPickValidatorsConfig;
     readonly validators?: IValidatorsConfig;
     readonly actions?: IAction;
     readonly stack?: IStack[];
@@ -1021,7 +1030,7 @@ export type CampCardTypes = CanBeNull<CampDeckCardTypes>;
 /**
  * <h3>Типы данных для карт колоды лагеря.</h3>
  */
-export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
+export type CampDeckCardTypes = IArtefactCampCard | IArtefactPlayerCampCard | IMercenaryCampCard;
 
 export type ClosedCoinTypes = Record<string, never>;
 
@@ -1046,8 +1055,8 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
-export type PlayerCardTypes = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactCampCard | IHeroPlayerCard
-    | IMercenaryPlayerCard | IMythicalAnimalCard;
+export type PlayerCardTypes = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard
+    | IHeroPlayerCard | IMercenaryPlayerCard | IMythicalAnimalCard;
 
 // TODO (DeckCardTypes | null)[] and (MythologicalCreatureDeckCardTypes | null)[]?
 /**
@@ -1058,8 +1067,8 @@ export type TavernCardTypes = CanBeNull<DeckCardTypes | MythologicalCreatureDeck
 // TODO Delete it?!
 export type CanBeInTavernCardTypes = CanBeNull<DeckCardTypes | MythicalAnimalTypes>;
 
-export type AllCardTypes =
-    PlayerCardTypes | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard | MythologicalCreatureDeckCardTypes;
+export type AllCardTypes = PlayerCardTypes | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard
+    | IArtefactCampCard | MythologicalCreatureDeckCardTypes;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
@@ -1143,7 +1152,12 @@ export type CreateRoyalOfferingCardType = PartialBy<IRoyalOfferingCard, `type`>;
 /**
  * <h3>Тип для создания карты лагеря артефакта.</h3>
  */
-export type CreateArtefactCampCardType = PartialBy<IArtefactCampCard, `points` | `rank` | `suit` | `type`>;
+export type CreateArtefactCampCardType = PartialBy<IArtefactCampCard, `type`>;
+
+/**
+ * <h3>Тип для создания карты лагеря артефакта.</h3>
+ */
+export type CreateArtefactPlayerCampCardType = PartialBy<IArtefactPlayerCampCard, `type`>;
 
 /**
  * <h3>Тип для создания карты лагеря наёмника.</h3>
@@ -1160,7 +1174,8 @@ export type CreateMercenaryPlayerCardType = PartialBy<IMercenaryPlayerCard, `ran
  */
 export type CreateDwarfCardType = PartialBy<IDwarfCard, `rank` | `type`>;
 
-export type DiscardCardTypes = PlayerCardTypes | DeckCardTypes | MythologicalCreatureDeckCardTypes;
+export type DiscardCardTypes =
+    PlayerCardTypes | IRoyalOfferingCard | IArtefactCampCard | MythologicalCreatureDeckCardTypes;
 
 export type AddCardToPlayerTypes =
     NonNullable<TavernCardTypes> | IMercenaryPlayerCard | ISpecialCard | IMultiSuitPlayerCard;

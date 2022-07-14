@@ -18,18 +18,28 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     for (artefactName in artefactConfig) {
         const artefactData = artefactConfig[artefactName];
         if (artefactData.tier === tier) {
-            campCards.push(CreateArtefactCampCard({
-                path: artefactData.name,
-                name: artefactData.name,
-                description: artefactData.description,
-                suit: artefactData.suit,
-                rank: artefactData.rank,
-                points: artefactData.points,
-                buff: artefactData.buff,
-                validators: artefactData.validators,
-                actions: artefactData.actions,
-                stack: artefactData.stack,
-            }));
+            if (artefactData.suit !== undefined && artefactData.rank !== undefined
+                && artefactData.points !== undefined) {
+                campCards.push(CreateArtefactPlayerCampCard({
+                    path: artefactData.name,
+                    name: artefactData.name,
+                    description: artefactData.description,
+                    suit: artefactData.suit,
+                    rank: artefactData.rank,
+                    points: artefactData.points,
+                }));
+            }
+            else {
+                campCards.push(CreateArtefactCampCard({
+                    path: artefactData.name,
+                    name: artefactData.name,
+                    description: artefactData.description,
+                    buff: artefactData.buff,
+                    validators: artefactData.validators,
+                    actions: artefactData.actions,
+                    stack: artefactData.stack,
+                }));
+            }
         }
     }
     const mercenariesConfigTier = mercenariesConfig[tier];
@@ -67,9 +77,35 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     }
     return campCards;
 };
-// TODO Create artefact_player_card
 /**
  * <h3>Создание карты артефакта для лагеря.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех карт артефактов лагеря во время инициализации игры.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param path URL путь.
+ * @param name Название.
+ * @param description Описание.
+ * @param buff Баф.
+ * @param validators Валидаторы карты.
+ * @param actions Действия.
+ * @param stack Действия.
+ * @returns Карта лагеря артефакт.
+ */
+const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, path, name, description, buff, validators, actions, stack, } = {}) => ({
+    type,
+    path,
+    name,
+    description,
+    buff,
+    validators,
+    actions,
+    stack,
+});
+/**
+ * <h3>Создание карты артефакта на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при создании всех карт артефактов лагеря во время инициализации игры.</li>
@@ -82,13 +118,9 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param buff Баф.
- * @param validators Валидаторы.
- * @param actions Действия.
- * @param stack Действия.
  * @returns Карта лагеря артефакт.
  */
-export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, path, name, description, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
+const CreateArtefactPlayerCampCard = ({ type = RusCardTypeNames.Artefact_Player_Card, path, name, description, suit, rank, points = null, } = {}) => ({
     type,
     path,
     name,
@@ -96,10 +128,6 @@ export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, 
     suit,
     rank,
     points,
-    buff,
-    validators,
-    actions,
-    stack,
 });
 /**
  * <h3>Создание карты наёмника для лагеря.</h3>
@@ -117,7 +145,7 @@ export const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, 
  * @param points Очки.
  * @returns Карта лагеря наёмник.
  */
-export const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, path, name, variants, } = {}) => ({
+const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, path, name, variants, } = {}) => ({
     type,
     path,
     name,
@@ -160,6 +188,18 @@ export const CreateMercenaryPlayerCard = ({ type = RusCardTypeNames.Mercenary_Pl
  */
 export const IsArtefactCard = (card) => card !== null
     && card.path !== undefined && card.validators !== undefined;
+// TODO Fix it!
+/**
+* <h3>Проверка, является ли объект картой лагеря артефакта на поле игрока.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>При проверках в функциях.</li>
+* </ol>
+*
+* @param card Карта.
+* @returns Является ли объект картой лагеря артефакта на поле игрока.
+*/
+export const IsArtefactPlayerCard = (card) => card !== null && card.path !== undefined;
 /**
  * <h3>Проверка, является ли объект картой лагеря наёмника.</h3>
  * <p>Применения:</p>

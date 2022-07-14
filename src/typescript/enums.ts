@@ -316,6 +316,7 @@ export enum RusPhaseNames {
 export const enum RusCardTypeNames {
     Royal_Offering_Card = `Королевская награда`,
     Artefact_Card = `Артефакт`,
+    Artefact_Player_Card = `Артефакт на поле игрока`,
     Dwarf_Card = `Дворф`,
     Giant_Card = `Гигант`,
     God_Card = `Бог`,

@@ -315,6 +315,7 @@ export var RusCardTypeNames;
 (function (RusCardTypeNames) {
     RusCardTypeNames["Royal_Offering_Card"] = "\u041A\u043E\u0440\u043E\u043B\u0435\u0432\u0441\u043A\u0430\u044F \u043D\u0430\u0433\u0440\u0430\u0434\u0430";
     RusCardTypeNames["Artefact_Card"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
+    RusCardTypeNames["Artefact_Player_Card"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
     RusCardTypeNames["Dwarf_Card"] = "\u0414\u0432\u043E\u0440\u0444";
     RusCardTypeNames["Giant_Card"] = "\u0413\u0438\u0433\u0430\u043D\u0442";
     RusCardTypeNames["God_Card"] = "\u0411\u043E\u0433";

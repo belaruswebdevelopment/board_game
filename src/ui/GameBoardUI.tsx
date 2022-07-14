@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
-import { IsArtefactCard } from "../Camp";
+import { IsArtefactPlayerCard } from "../Camp";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -53,7 +53,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<Mov
                         ctx.currentPlayer);
                 }
                 let suit: CanBeNull<SuitTypes> = null;
-                if (IsArtefactCard(campCard)) {
+                if (IsArtefactPlayerCard(campCard)) {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)

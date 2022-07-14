@@ -14,6 +14,7 @@ export const DiscardPickedCard = (G, discardedCard) => {
     switch (discardedCard.type) {
         case RusCardTypeNames.Mercenary_Player_Card:
         case RusCardTypeNames.Artefact_Card:
+        case RusCardTypeNames.Artefact_Player_Card:
             G.discardCampCardsDeck.push(discardedCard);
             break;
         case RusCardTypeNames.Dwarf_Card:

@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { IsArtefactCard } from "../Camp";
+import { IsArtefactPlayerCard } from "../Camp";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -45,7 +45,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 let suit = null;
-                if (IsArtefactCard(campCard)) {
+                if (IsArtefactPlayerCard(campCard)) {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
