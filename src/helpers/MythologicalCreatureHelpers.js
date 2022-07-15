@@ -1,7 +1,6 @@
 import { BuffNames, RusCardTypeNames, ValkyryNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 export const CheckValkyryRequirement = (player, playerId, buffName) => {
-    // TODO Add Logging!?
     if (CheckPlayerHasBuff(player, buffName)) {
         let valkyryName;
         switch (buffName) {

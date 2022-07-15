@@ -18,6 +18,7 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
         const gridClasses = `col-span-4 justify-self-center`,
             gridColClasses = `h-full flex flex-col justify-evenly`,
             classes = `col-span-3 text-center underline border`,
+            playerClasses = `flex flex-col gap-1`,
             tierCardsUI: JSX.Element = DrawTierCards(this.props.G),
             currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this.props.ctx),
             currentPhaseStageUI: JSX.Element = DrawCurrentPhaseStage(this.props.ctx),
@@ -81,10 +82,10 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                         {drawDistinctionProfitUI}
                     </div>
                     {tavernsUI}
-                    <div className="col-span-full flex flex-col gap-1">
-                        <div className="flex flex-col lg:flex-row gap-1">{playersBoardsCoinsUI}</div>
-                        <div className="flex flex-col lg:flex-row gap-1">{playersHandsCoinsUI}</div>
-                        <div className="flex items-start flex-col lg:flex-row gap-1">{playersBoardsUI}</div>
+                    <div className={`${playerClasses} col-span-full`}>
+                        <div className={`${playerClasses} lg:flex-row`}>{playersBoardsCoinsUI}</div>
+                        <div className={`${playerClasses} lg:flex-row`}>{playersHandsCoinsUI}</div>
+                        <div className={`${playerClasses} items-start lg:flex-row`}>{playersBoardsUI}</div>
                     </div>
                 </div>
                 {logUI}

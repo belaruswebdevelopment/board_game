@@ -53,17 +53,3 @@ const CreateSpecialCard = ({
     points,
     name,
 });
-
-// TODO Fix it!
-/**
- * <h3>Проверка, является ли объект особой картой.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект особой картой.
- */
-export const IsSpecialCard = (card: unknown): card is ISpecialCard => card !== null
-    && (card as ISpecialCard).suit !== undefined && !(`description` in (card as ISpecialCard));

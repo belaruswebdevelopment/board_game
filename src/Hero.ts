@@ -127,19 +127,6 @@ export const CreateHeroPlayerCard = ({
 });
 
 /**
- * <h3>Проверка, является ли объект картой героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой героя.
- */
-export const IsHeroCard = (card: unknown): card is IHeroCard =>
-    card !== null && (card as IHeroCard).active !== undefined && (`validators` in (card as IHeroCard));
-
-/**
 * <h3>Проверка, является ли объект картой героя на поле игрока.</h3>
 * <p>Применения:</p>
 * <ol>

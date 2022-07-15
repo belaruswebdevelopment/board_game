@@ -84,7 +84,6 @@ export const GetBuffValue = (G, ctx, buffName) => {
     if (buff === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует баф '${buffName}'.`);
     }
-    // TODO Move to BuffValueTypes
     const buffValue = buff[buffName];
     if (buffValue === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует значение у бафа '${buffName}'.`);

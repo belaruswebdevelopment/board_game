@@ -182,7 +182,6 @@ export const GetValidator = (phase, stage) => {
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators = {
-    // TODO Add validators for solo bot moves!
     ClickBoardCoinMoveValidator: {
         getRange: (G, ctx) => {
             if (G === undefined) {
@@ -326,7 +325,7 @@ export const moveValidators = {
             return ExplorerDistinctionProfit(G, ctx, MoveValidatorNames.ClickCardToPickDistinctionMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
-            // TODO Add for SOlo Bot!
+            // TODO Add for Solo Bot!
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
@@ -580,7 +579,7 @@ export const moveValidators = {
             return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceYludHeroMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
-            // TODO Add for SOlo Bot!
+            // TODO Add for Solo Bot!
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);

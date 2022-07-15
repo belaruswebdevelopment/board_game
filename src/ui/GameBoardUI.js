@@ -148,7 +148,7 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
                     const suitArg = suit;
-                    boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
+                    boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
                 else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
                     moveMainArgs.push(suit);
@@ -156,7 +156,7 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
             }
             else {
                 if (data !== undefined) {
-                    boardCells.push(_jsx("td", { className: "bg-green-500", title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
+                    boardCells.push(_jsx("td", { className: "bg-green-500", title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
             }
         }
@@ -441,7 +441,7 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                 }
                 if (tavernCard === undefined || tavernCard === null) {
                     if (data !== undefined) {
-                        boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }) }, `${currentTavernConfig.name} ${j}`));
+                        boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Tavern(t), className: "bg-tavern-icon" }) }, `${currentTavernConfig.name} ${j}`));
                     }
                 }
                 else {
@@ -489,7 +489,7 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                 }
             }
             if (data !== undefined) {
-                tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Taverns(t), className: "bg-top-tavern-icon" }), _jsx("b", { children: currentTavernConfig.name })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }, `Tavern ${currentTavernConfig.name} board`));
+                tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Tavern(t), className: "bg-top-tavern-icon" }), _jsx("b", { children: currentTavernConfig.name })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }, `Tavern ${currentTavernConfig.name} board`));
             }
         }
     }

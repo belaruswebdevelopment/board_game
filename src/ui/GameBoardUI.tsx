@@ -179,7 +179,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
                         <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
                             onClick={() => data.moves.ClickDistinctionCardMove?.(suitArg)}
                             title={suitsConfig[suit].distinction.description}>
-                            <span style={Styles.Distinctions(suit)}
+                            <span style={Styles.Distinction(suit)}
                                 className="bg-suit-distinction"></span>
                         </td>
                     );
@@ -191,7 +191,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
                     boardCells.push(
                         <td className="bg-green-500" key={`Distinction ${suit} card`}
                             title={suitsConfig[suit].distinction.description}>
-                            <span style={Styles.Distinctions(suit)}
+                            <span style={Styles.Distinction(suit)}
                                 className="bg-suit-distinction"></span>
                         </td>
                     );
@@ -240,7 +240,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Can
         if (card === undefined) {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
-        let suit: null | SuitTypes = null;
+        let suit: CanBeNull<SuitTypes> = null;
         if (IsDwarfCard(card)) {
             suit = card.suit;
         }
@@ -308,7 +308,7 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<M
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
-            const suit: null | SuitTypes = hero.suit;
+            const suit: CanBeNull<SuitTypes> = hero.suit;
             if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickHero) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
@@ -557,7 +557,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<
                     if (data !== undefined) {
                         boardCells.push(
                             <td key={`${currentTavernConfig.name} ${j}`}>
-                                <span style={Styles.Taverns(t)} className="bg-tavern-icon"></span>
+                                <span style={Styles.Tavern(t)} className="bg-tavern-icon"></span>
                             </td>
                         );
                     }
@@ -609,7 +609,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<
                     <table className={`${gridClass} justify-self-center`}
                         key={`Tavern ${currentTavernConfig.name} board`}>
                         <caption className="whitespace-nowrap">
-                            <span style={Styles.Taverns(t)} className="bg-top-tavern-icon"></span>
+                            <span style={Styles.Tavern(t)} className="bg-top-tavern-icon"></span>
                             <b>{currentTavernConfig.name}</b>
                         </caption>
                         <tbody>

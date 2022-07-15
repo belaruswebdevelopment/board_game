@@ -195,7 +195,6 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 ClickCardMove,
                 ClickCampCardMove,
-                // TODO Check it and add to all needed phases!
                 UseGodPowerMove,
             },
             next: (G: IMyGameState, ctx: Ctx): string | void =>

@@ -1,5 +1,5 @@
-import { ArtefactNames, HeroNames, MultiSuitCardNames, RusCardTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNull, IBackground, IStyles, SuitTypes } from "../typescript/interfaces";
+import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, RusCardTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
+import type { CanBeNull, IBackground, IStyles, MythologicalCreatureNameTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -47,7 +47,7 @@ export const Styles: IStyles = {
     CampBack: (tier: number): IBackground => ({
         background: `url(/img/cards/camp/CampBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    CampCards: (cardPath: string): IBackground => {
+    CampCard: (cardPath: string): IBackground => {
         switch (cardPath) {
             case ArtefactNames.Draupnir:
                 return {
@@ -152,7 +152,7 @@ export const Styles: IStyles = {
     CardBack: (tier: number): IBackground => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    Cards: (suit: CanBeNull<SuitTypes>, name: string, points: CanBeNull<number>): IBackground => {
+    Card: (suit: SuitTypes, name: string, points: CanBeNull<number>): IBackground => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             switch (name) {
                 case SpecialCardNames.ChiefBlacksmith:
@@ -169,9 +169,9 @@ export const Styles: IStyles = {
                 //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
                 //     };
                 default:
-                    throw new Error(`Нет такой карты '${name}' среди дополнительных карт.`);
+                    throw new Error(`Нет такой карты '${name}' среди специальных карт.`);
             }
-        } else if (suit !== null) {
+        } else {
             // TODO Add images for different cards in same suit by unique id in card name -> use this names for keys
             switch (suit) {
                 case SuitNames.Blacksmith:
@@ -276,19 +276,6 @@ export const Styles: IStyles = {
                 default:
                     throw new Error(`Нет такой карты.`);
             }
-        } else {
-            switch (name) {
-                case `'${RusCardTypeNames.Royal_Offering_Card}' на +3`:
-                    return {
-                        background: `${basicCardsPath}0.png) no-repeat -128px -240px / 288px 288px`,
-                    };
-                case `'${RusCardTypeNames.Royal_Offering_Card}' на +5`:
-                    return {
-                        background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
-                    };
-                default:
-                    throw new Error(`Нет такой карты '${name}' улучшения монеты.`);
-            }
         }
     },
     Coin: (value: number, initial: boolean): IBackground => ({
@@ -300,7 +287,7 @@ export const Styles: IStyles = {
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinctions: (distinction: string): IBackground => {
+    Distinction: (distinction: string): IBackground => {
         switch (distinction) {
             case SuitNames.Blacksmith:
                 return {
@@ -332,7 +319,7 @@ export const Styles: IStyles = {
     Exchange: (): IBackground => ({
         background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
     }),
-    Heroes: (heroName: string): IBackground => {
+    Hero: (heroName: string): IBackground => {
         switch (heroName) {
             case HeroNames.Bonfur:
                 return {
@@ -453,16 +440,121 @@ export const Styles: IStyles = {
     HeroBack: (): IBackground => ({
         background: `url(/img/cards/heroes/HeroBack.png) no-repeat 6px 3px / 12px 18px`,
     }),
+    MythologicalCreature: (name: MythologicalCreatureNameTypes): IBackground => {
+        switch (name) {
+            // case GiantNames.Gymir:
+            //     return {
+            //         background: `${distinctionsPath} no-repeat -32px -0px / 96px 150px`,
+            //     };
+            // case GiantNames.Hrungnir:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case GiantNames.Skymir:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case GiantNames.Surt:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case GiantNames.Thrivaldi:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case GodNames.Freyja:
+            //     return {
+            //         background: `${distinctionsPath} no-repeat -32px -0px / 96px 150px`,
+            //     };
+            // case GodNames.Frigg:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case GodNames.Loki:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case GodNames.Odin:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case GodNames.Thor:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case MythicalAnimalNames.Durathor:
+            //     return {
+            //         background: `${distinctionsPath} no-repeat -32px -0px / 96px 150px`,
+            //     };
+            // case MythicalAnimalNames.Garm:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case MythicalAnimalNames.Hraesvelg:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case MythicalAnimalNames.Nidhogg:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case MythicalAnimalNames.Ratatosk:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case ValkyryNames.Brynhildr:
+            //     return {
+            //         background: `${distinctionsPath} no-repeat -32px -0px / 96px 150px`,
+            //     };
+            // case ValkyryNames.Hildr:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case ValkyryNames.Olrun:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case ValkyryNames.Sigrdrifa:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // case ValkyryNames.Svafa:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            // TODO Add Gullinbursti or to Card. ?
+            // case MultiCardNames.Gullinbursti:
+            //     return {
+            //         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
+            //     };
+            default:
+                throw new Error(`Нет такой карты '${name}' среди карт мифических существ.`);
+        }
+    },
     Priorities: (priority: number): IBackground => ({
         background: `url(/img/priorities/Priority${priority}.png) no-repeat 0px 0px / 28px 38px`,
     }),
     Priority: (): IBackground => ({
         background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
     }),
-    Suits: (suit: SuitTypes): IBackground => ({
+    RoyalOffering: (name: RoyalOfferingNames): IBackground => {
+        switch (name) {
+            case `'${RusCardTypeNames.Royal_Offering_Card}' на +3`:
+                return {
+                    background: `${basicCardsPath}0.png) no-repeat -128px -240px / 288px 288px`,
+                };
+            case `'${RusCardTypeNames.Royal_Offering_Card}' на +5`:
+                return {
+                    background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
+                };
+            default:
+                throw new Error(`Нет такой карты '${name}' улучшения монеты.`);
+        }
+    },
+    Suit: (suit: SuitTypes): IBackground => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
-    Taverns: (tavernId: number): IBackground => {
+    Tavern: (tavernId: number): IBackground => {
         switch (tavernId) {
             case 0:
                 return {

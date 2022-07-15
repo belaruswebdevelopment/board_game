@@ -8,7 +8,7 @@ import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, SuitNames } from "../typescript/enums";
 import type { CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
 
-export const CheckSoloBotCanPickHero = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): SuitTypes | undefined => {
+export const CheckSoloBotCanPickHero = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): CanBeUndef<SuitTypes> => {
     const playerCards: PlayerCardTypes[][] = Object.values(player.cards),
         heroesLength: number = player.heroes.filter((hero: IHeroCard): boolean =>
             hero.name.startsWith(`Dwerg`)).length,
@@ -57,7 +57,7 @@ export const CheckSuitsLeastPresentOnPlayerBoard = (G: IMyGameState, ctx: Ctx, p
 };
 
 export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
-    moveArguments: IMoveArgumentsStage<number[]>[`args`]): number | undefined => {
+    moveArguments: IMoveArgumentsStage<number[]>[`args`]): CanBeUndef<number> => {
     const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
         throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
@@ -66,7 +66,7 @@ export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
     if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud)) {
         thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud) as SuitTypes;
     }
-    const suit: SuitTypes | undefined = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer),
+    const suit: CanBeUndef<SuitTypes> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer),
         availableMoveArguments: IMoveArgumentsStage<number[]>[`args`] = [],
         availableThrudArguments: IMoveArgumentsStage<number[]>[`args`] = [];
     if (suit !== undefined) {
@@ -157,7 +157,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G: IMyGameState, ctx: C
 };
 
 export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IMyGameState, ctx: Ctx,
-    moveArguments: IMoveArgumentsStage<number[]>[`args`]): number | undefined => {
+    moveArguments: IMoveArgumentsStage<number[]>[`args`]): CanBeUndef<number> => {
     // TODO Least present only if arguments < suit count => < 5(1,2,3,4) or all 5 too (if all suit cards equal count)!?
     const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {

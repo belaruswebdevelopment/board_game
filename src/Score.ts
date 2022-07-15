@@ -217,7 +217,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
             Object.values(player.cards).flat().filter((card: PlayerCardTypes): boolean =>
                 IsMythicalAnimalCard(card)) as IMythicalAnimalCard[];
         for (let m = 0; m < cards.length; m++) {
-            const playerMythicalAnimalCard: IMythicalAnimalCard | undefined = cards[m];
+            const playerMythicalAnimalCard: CanBeUndef<IMythicalAnimalCard> = cards[m];
             if (playerMythicalAnimalCard === undefined) {
                 throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' отсутствует карта с id '${m}'.`);
             }

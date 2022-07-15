@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { BuffTypes, CanBeUndef, IBuff, IBuffs, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
+import type { BuffTypes, BuffValueTypes, CanBeUndef, IBuff, IBuffs, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -91,13 +91,12 @@ export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): tr
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const buff: IBuffs | undefined =
+    const buff: CanBeUndef<IBuffs> =
         player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined);
     if (buff === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует баф '${buffName}'.`);
     }
-    // TODO Move to BuffValueTypes
-    const buffValue: true | SuitTypes | undefined = buff[buffName];
+    const buffValue: BuffValueTypes = buff[buffName];
     if (buffValue === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует значение у бафа '${buffName}'.`);
     }

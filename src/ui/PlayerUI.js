@@ -204,7 +204,6 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
                         // TODO Can Ylud be placed in old place because of "suit !== pickedCard.suit"? Thrud can be placed same suit in solo game!
                         let action;
-                        // TODO Check Thrud moving
                         if ((G.solo || (!G.solo && (stack.name !== MultiSuitCardNames.OlwinsDouble
                             || (stack.name === MultiSuitCardNames.OlwinsDouble && suit !== stack.pickedSuit))))
                             || (cardVariants !== undefined && suit === cardVariants.suit)) {
@@ -407,7 +406,7 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                         if (currentTavernConfig === undefined) {
                             return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined, t);
                         }
-                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
+                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: Styles.Tavern(t), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
                     }
                     else {
                         if (t === G.tavernsNum - 1) {

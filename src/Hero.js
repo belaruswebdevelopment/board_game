@@ -100,17 +100,6 @@ export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card,
     points,
 });
 /**
- * <h3>Проверка, является ли объект картой героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой героя.
- */
-export const IsHeroCard = (card) => card !== null && card.active !== undefined && (`validators` in card);
-/**
 * <h3>Проверка, является ли объект картой героя на поле игрока.</h3>
 * <p>Применения:</p>
 * <ol>

@@ -88,7 +88,7 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
 const FindLastIndex = <T>(array: Array<T>, predicate: (value: T, index: number, obj: T[]) => boolean): number => {
     let l: number = array.length;
     while (l--) {
-        const element: T | undefined = array[l];
+        const element: CanBeUndef<T> = array[l];
         if (element === undefined) {
             throw new Error(`В массиве отсутствует элемент с id ${l}.`);
         }

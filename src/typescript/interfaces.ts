@@ -943,21 +943,23 @@ export interface IBackground {
 export interface IStyles {
     readonly Camp: () => IBackground;
     readonly CampBack: (tier: number) => IBackground;
-    readonly CampCards: (cardPath: string) => IBackground;
+    readonly CampCard: (cardPath: string) => IBackground;
     readonly CardBack: (tier: number) => IBackground;
-    readonly Cards: (suit: CanBeNull<SuitTypes>, name: string, points: CanBeNull<number>) => IBackground;
+    readonly Card: (suit: SuitTypes, name: string, points: CanBeNull<number>) => IBackground;
     readonly Coin: (value: number, initial: boolean) => IBackground;
     readonly CoinSmall: (value: number, initial: boolean) => IBackground;
     readonly CoinBack: () => IBackground;
-    readonly Distinctions: (distinction: SuitTypes) => IBackground;
+    readonly Distinction: (distinction: SuitTypes) => IBackground;
     readonly DistinctionsBack: () => IBackground;
     readonly Exchange: () => IBackground;
-    readonly Heroes: (heroName: HeroNames) => IBackground;
+    readonly Hero: (heroName: HeroNames) => IBackground;
     readonly HeroBack: () => IBackground;
+    readonly MythologicalCreature: (name: MythologicalCreatureNameTypes) => IBackground;
     readonly Priorities: (priority: number) => IBackground;
     readonly Priority: () => IBackground;
-    readonly Suits: (suit: SuitTypes) => IBackground;
-    readonly Taverns: (tavernId: number) => IBackground;
+    readonly RoyalOffering: (name: RoyalOfferingNames) => IBackground;
+    readonly Suit: (suit: SuitTypes) => IBackground;
+    readonly Tavern: (tavernId: number) => IBackground;
 }
 
 /**
@@ -1007,6 +1009,8 @@ export interface ITavernsConfig {
 export type DebugDrawDataType<T> = {
     readonly [K in keyof T]: T[K];
 };
+
+export type BuffValueTypes = CanBeUndef<SuitTypes | true>;
 
 // TODO Rework to + Enlistment mercenaries names - string
 export type StackNamesTypes = HeroNames | MultiSuitCardNames | string;
@@ -1058,7 +1062,7 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 export type PlayerCardTypes = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard
     | IHeroPlayerCard | IMercenaryPlayerCard | IMythicalAnimalCard;
 
-// TODO (DeckCardTypes | null)[] and (MythologicalCreatureDeckCardTypes | null)[]?
+// TODO CanBeUndef<DeckCardTypes>[] and CanBeUndef<MythologicalCreatureDeckCardTypes>[]?
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
@@ -1127,6 +1131,8 @@ export type ExpansionTypes = keyof IExpansions;
 export type SuitPropertyTypes<Type> = {
     [Property in SuitTypes]: Type;
 };
+
+export type MythologicalCreatureNameTypes = GiantNames | GodNames | MythicalAnimalNames | ValkyryNames;
 
 /**
  * <h3>Типы данных для остаточных аргументов функций.</h3>

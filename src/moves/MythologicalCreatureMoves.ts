@@ -22,7 +22,7 @@ export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, c
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const card: MythologicalCreatureCommandZoneCardTypes | undefined = player.mythologicalCreatureCards[cardId];
+    const card: CanBeUndef<MythologicalCreatureCommandZoneCardTypes> = player.mythologicalCreatureCards[cardId];
     if (card === undefined) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта с id '${cardId}'.`);
     } else if (!IsGodCard(card)) {

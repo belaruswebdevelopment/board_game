@@ -26,11 +26,11 @@ export const CheckMinCoinVisibleValueForSoloBot = (G: IMyGameState, ctx: Ctx,
     }
     let minValue = 0;
     for (let i = 0; i < moveArguments.length; i++) {
-        const currentMoveArgument: IMoveCoinsArguments | undefined = moveArguments[i];
+        const currentMoveArgument: CanBeUndef<IMoveCoinsArguments> = moveArguments[i];
         if (currentMoveArgument === undefined) {
             throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
         }
-        let coin: PublicPlayerCoinTypes | undefined;
+        let coin: CanBeUndef<PublicPlayerCoinTypes>;
         if (type === CoinTypeNames.Board) {
             coin = player.boardCoins[currentMoveArgument.coinId];
         } else if (type === CoinTypeNames.Hand) {

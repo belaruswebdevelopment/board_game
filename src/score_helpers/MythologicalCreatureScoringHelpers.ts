@@ -1,6 +1,6 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { GiantNames, MythicalAnimalNames, RusCardTypeNames, SuitNames, ValkyryNames } from "../typescript/enums";
-import type { IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndef, IPublicPlayer } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -44,7 +44,7 @@ export const BrynhildrScoring = (strengthTokenNotch: number): number => {
     const strengthTokenNotchPoints = [0, 3, 6, 10, 16],
         strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
-        value: number | undefined = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
+        value: CanBeUndef<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
         throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
@@ -65,7 +65,7 @@ export const HildrScoring = (strengthTokenNotch: number): number => {
     const strengthTokenNotchPoints = [0, 8, 16, 0],
         strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
-        value: number | undefined = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
+        value: CanBeUndef<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
         throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
@@ -86,7 +86,7 @@ export const OlrunScoring = (strengthTokenNotch: number): number => {
     const strengthTokenNotchPoints = [0, 3, 6, 10, 16],
         strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
-        value: number | undefined = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
+        value: CanBeUndef<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
         throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
@@ -107,7 +107,7 @@ export const SigrdrifaScoring = (strengthTokenNotch: number): number => {
     const strengthTokenNotchPoints = [0, 0, 8, 16],
         strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
-        value: number | undefined = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
+        value: CanBeUndef<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
         throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
@@ -128,7 +128,7 @@ export const SvafaScoring = (strengthTokenNotch: number): number => {
     const strengthTokenNotchPoints = [0, 4, 8, 16],
         strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
-        value: number | undefined = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
+        value: CanBeUndef<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
         throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }

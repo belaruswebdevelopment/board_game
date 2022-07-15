@@ -190,7 +190,6 @@ export const BoardGame = {
             moves: {
                 ClickCardMove,
                 ClickCampCardMove,
-                // TODO Check it and add to all needed phases!
                 UseGodPowerMove,
             },
             next: (G, ctx) => StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase(G, ctx),

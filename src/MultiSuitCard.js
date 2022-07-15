@@ -59,31 +59,4 @@ export const CreateMultiSuitPlayerCard = ({ type = RusCardTypeNames.Multi_Suit_P
     rank,
     points,
 });
-// TODO Add !(...) for IsMythicalAnimalCard
-/**
- * <h3>Проверка, является ли объект мультифракционной картой.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект мультифракционной картой.
- */
-export const IsMultiSuitCard = (card) => card !== null
-    && !(`points` in card) && !(`value` in card)
-    && !(`placedSuit` in card) && !(`strengthTokenNotch` in card);
-// TODO Fix it!
-/**
-* <h3>Проверка, является ли объект мультифракционной картой на поле игрока.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>При проверках в функциях.</li>
-* </ol>
-*
-* @param card Карта.
-* @returns Является ли объект мультифракционной картой на поле игрока.
-*/
-export const IsMultiSuitPlayerCard = (card) => card !== null
-    && card.suit !== undefined;
 //# sourceMappingURL=MultiSuitCard.js.map

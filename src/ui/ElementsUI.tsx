@@ -131,7 +131,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     switch (card.type) {
         case RusCardTypeNames.Hero_Card:
         case RusCardTypeNames.Hero_Player_Card:
-            styles = Styles.Heroes(card.name);
+            styles = Styles.Hero(card.name);
             if (player === null && `active` in card && !card.active) {
                 spanClasses = `bg-hero-inactive`;
             } else {
@@ -145,7 +145,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         case RusCardTypeNames.Mercenary_Card:
         case RusCardTypeNames.Artefact_Card:
         case RusCardTypeNames.Artefact_Player_Card:
-            styles = Styles.CampCards(card.path);
+            styles = Styles.CampCard(card.path);
             spanClasses = `bg-camp`;
             if (suit === null) {
                 tdClasses = ` bg-yellow-200`;
@@ -158,22 +158,20 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         case RusCardTypeNames.Dwarf_Card:
         case RusCardTypeNames.Special_Card:
         case RusCardTypeNames.Multi_Suit_Player_Card:
-        case RusCardTypeNames.Mythical_Animal_Card:
-        case RusCardTypeNames.Royal_Offering_Card:
             spanClasses = `bg-card`;
-            if (`suit` in card) {
-                styles = Styles.Cards(card.suit, card.name, card.points);
-            } else {
-                styles = Styles.Cards(null, card.name, null);
-                value = String(card.value);
-            }
+            styles = Styles.Card(card.suit, card.name, card.points);
             break;
-        case RusCardTypeNames.God_Card:
+        case RusCardTypeNames.Royal_Offering_Card:
+            spanClasses = `bg-royal-offering`;
+            styles = Styles.RoyalOffering(card.name);
+            value = String(card.value);
+            break;
         case RusCardTypeNames.Giant_Card:
+        case RusCardTypeNames.God_Card:
+        case RusCardTypeNames.Mythical_Animal_Card:
         case RusCardTypeNames.Valkyry_Card:
-            // TODO Fix classes for Idavoll
-            // spanClasses = `bg-card`;
-            // styles = Styles.Cards(card.name);
+            spanClasses = `bg-mythological-creature`;
+            styles = Styles.MythologicalCreature(card.name);
             break;
         default:
             // eslint-disable-next-line no-case-declarations
@@ -296,7 +294,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
                 span = (<span style={Styles.Exchange()} className="bg-small-market-coin"></span>);
             } else if (type === `back-tavern-icon`) {
                 if (additionalParam !== null && additionalParam !== undefined) {
-                    span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon"></span>);
+                    span = (<span style={Styles.Tavern(additionalParam)} className="bg-tavern-icon"></span>);
                 }
             }
         }
@@ -355,7 +353,7 @@ export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Elem
         <th className={`${suitsConfig[suit].suitColor}${className}`}
             key={`${player.nickname} ${suitsConfig[suit].suitName}`}
             onClick={() => action?.(suit)}>
-            <span style={Styles.Suits(suit)} className="bg-suit-icon"></span>
+            <span style={Styles.Suit(suit)} className="bg-suit-icon"></span>
         </th>
     );
 };

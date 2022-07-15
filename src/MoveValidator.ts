@@ -185,7 +185,6 @@ export const GetValidator = (phase: PhaseNames, stage: StageNames): CanBeNull<IM
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators: IMoveValidators = {
-    // TODO Add validators for solo bot moves!
     ClickBoardCoinMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G === undefined) {
@@ -348,7 +347,7 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            // TODO Add for SOlo Bot!
+            // TODO Add for Solo Bot!
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
                 moveArgument: CanBeUndef<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
@@ -643,7 +642,7 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            // TODO Add for SOlo Bot!
+            // TODO Add for Solo Bot!
             const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
                 moveArgument: CanBeUndef<SuitTypes> =
                     moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -1317,7 +1316,7 @@ export const moveValidators: IMoveValidators = {
                 if (soloBotPublicPlayer === undefined) {
                     throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
                 }
-                const suit: SuitTypes | undefined = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
+                const suit: CanBeUndef<SuitTypes> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
                 if (suit === undefined) {
                     const [suits]: [SuitTypes[], number] =
                         CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
