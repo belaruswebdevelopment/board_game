@@ -1,5 +1,5 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
-// TODO Add type!
+// TODO Move all value into 3 | 5 ...
 export const StackData = {
     addCoinToPouch: () => ({
         stageName: StageNames.AddCoinToPouch,
@@ -118,6 +118,14 @@ export const StackData = {
         drawName: DrawNames.PlaceEnlistmentMercenaries,
         card,
     }),
+    startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray, coinId, priority) => ({
+        configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+        stageName: StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+        drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
+        valueArray,
+        coinId,
+        priority,
+    }),
     startOrPassEnlistmentMercenaries: () => ({
         configName: ConfigNames.StartOrPassEnlistmentMercenaries,
         drawName: DrawNames.StartOrPassEnlistmentMercenaries,
@@ -127,11 +135,12 @@ export const StackData = {
         value,
         drawName: DrawNames.UpgradeCoin,
     }),
-    upgradeCoinVidofnirVedrfolnir: (value, coinId) => ({
+    upgradeCoinVidofnirVedrfolnir: (value, coinId, priority) => ({
         coinId,
         stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
         value,
         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
+        priority,
     }),
     upgradeCoinWarriorDistinction: () => ({
         stageName: StageNames.UpgradeCoin,

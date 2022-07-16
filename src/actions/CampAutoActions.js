@@ -97,17 +97,23 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     else {
         handCoins = player.handCoins;
     }
-    const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter((coin, index) => {
-        if (coin !== null && !IsCoin(coin)) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+        const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter((coin, index) => {
+            if (coin !== null && !IsCoin(coin)) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+            }
+            return IsCoin(coin);
+        }).length;
+        if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
+            for (let i = 0; i < noCoinsOnPouchNumber; i++) {
+                AddActionsToStack(G, ctx, [StackData.addCoinToPouch()]);
+            }
         }
-        return IsCoin(coin);
-    }).length, everyTurnBuff = CheckPlayerHasBuff(player, BuffNames.EveryTurn);
-    if (!G.solo && everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
-        AddActionsToStack(G, ctx, [StackData.addCoinToPouch()]);
+        else {
+            throw new Error(`При наличии бафа '${BuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
+        }
     }
-    else if (!G.solo && !everyTurnBuff
-        || ((everyTurnBuff && (!noCoinsOnPouchNumber || (noCoinsOnPouchNumber === 1 && !handCoinsNumber))))) {
+    else {
         let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
             let boardCoin;
@@ -144,18 +150,15 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
             }
         }
         if (coinsValue === 1) {
-            stack = [StackData.upgradeCoinVidofnirVedrfolnir(5)];
+            stack = [StackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([5])];
         }
         else if (coinsValue === 2) {
-            stack = [StackData.upgradeCoinVidofnirVedrfolnir(3)];
+            stack = [StackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([2, 3])];
         }
         else {
             throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '${coinsValue}' монет(ы).`);
         }
         AddActionsToStack(G, ctx, stack);
-    }
-    else {
-        throw new Error(`При наличии бафа '${BuffNames.EveryTurn}' всегда должно быть действие добавления монет в кошель, если обе ячейки для монет пустые.`);
     }
 };
 //# sourceMappingURL=CampAutoActions.js.map

@@ -1,9 +1,9 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
 import { CoinTypeNames, StageNames } from "../typescript/enums";
-import type { IMyGameState } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueTypes, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
@@ -24,6 +24,28 @@ export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
         return INVALID_MOVE;
     }
     AddCoinToPouchAction(G, ctx, coinId);
+};
+
+/**
+ * <h3>Выбор значения улучшения монеты при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При клике по конкретному значению обмена монеты.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param value Значение улучшения монеты.
+ * @returns
+ */
+export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
+    value: BasicVidofnirVedrfolnirUpgradeValueTypes): string | void => {
+    const isValidMove: boolean = ctx.playerID === ctx.currentPlayer
+        && IsValidMove(G, ctx, StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, value);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    ChooseCoinValueForVidofnirVedrfolnirUpgradeAction(G, ctx, value);
 };
 
 /**

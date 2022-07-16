@@ -180,7 +180,7 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
     }
     const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
+        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
     const mercenaryCard: CanBeUndef<IMercenaryCampCard> = stack.card;
     if (mercenaryCard === undefined) {

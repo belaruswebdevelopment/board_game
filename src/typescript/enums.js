@@ -74,6 +74,7 @@ export var CoinTypeNames;
  */
 export var ConfigNames;
 (function (ConfigNames) {
+    ConfigNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "chooseCoinValueForVidofnirVedrfolnirUpgrade";
     ConfigNames["ExplorerDistinction"] = "explorerDistinction";
     ConfigNames["GetDifficultyLevelForSoloMode"] = "getDifficultyLevelForSoloMode";
     ConfigNames["GetHeroesForSoloMode"] = "getHeroesForSoloMode";
@@ -110,6 +111,7 @@ export var DrawNames;
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
     DrawNames["PlaceTradingCoinsUline"] = "Place Trading Coins Uline";
     DrawNames["PlaceYludHero"] = "Place Ylud";
+    DrawNames["StartChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "Start choose coin value for Vidofnir Vedrfolnir upgrade";
     DrawNames["StartOrPassEnlistmentMercenaries"] = "Start or Pass Enlistment Mercenaries";
     DrawNames["PlaceThrudHero"] = "Place Thrud Hero";
     DrawNames["UpgradeCoin"] = "Upgrade coin";
@@ -264,6 +266,7 @@ export var MoveNames;
     MoveNames["ChooseHeroForDifficultySoloModeMove"] = "ChooseHeroForDifficultySoloModeMove";
     // start
     MoveNames["AddCoinToPouchMove"] = "AddCoinToPouchMove";
+    MoveNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMove"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMove";
     MoveNames["ClickCampCardHoldaMove"] = "ClickCampCardHoldaMove";
     MoveNames["ClickCoinToUpgradeMove"] = "ClickCoinToUpgradeMove";
     MoveNames["ClickHeroCardMove"] = "ClickHeroCardMove";
@@ -346,6 +349,7 @@ export var RusSuitNames;
 export var StageNames;
 (function (StageNames) {
     StageNames["AddCoinToPouch"] = "addCoinToPouch";
+    StageNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "chooseCoinValueForVidofnirVedrfolnirUpgrade";
     StageNames["Default1"] = "default1";
     StageNames["Default2"] = "default2";
     StageNames["Default3"] = "default3";
@@ -443,6 +447,7 @@ export var MoveValidatorNames;
     MoveValidatorNames["ChooseHeroesForSoloModeMoveValidator"] = "ChooseHeroesForSoloModeMoveValidator";
     // start
     MoveValidatorNames["AddCoinToPouchMoveValidator"] = "AddCoinToPouchMoveValidator";
+    MoveValidatorNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator";
     MoveValidatorNames["ClickCampCardHoldaMoveValidator"] = "ClickCampCardHoldaMoveValidator";
     MoveValidatorNames["ClickCoinToUpgradeMoveValidator"] = "ClickCoinToUpgradeMoveValidator";
     MoveValidatorNames["ClickConcreteCoinToUpgradeMoveValidator"] = "ClickConcreteCoinToUpgradeMoveValidator";

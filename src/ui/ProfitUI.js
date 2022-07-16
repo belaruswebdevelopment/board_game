@@ -3,6 +3,82 @@ import { ThrowMyError } from "../Error";
 import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, StageNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 /**
+ * <h3>Отрисовка для выбора уровня сложности соло игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Поле для выбора уровня сложности соло игры.
+ */
+export const ChooseDifficultyLevelForSoloModeProfit = (G, ctx, validatorName, data, boardCells) => {
+    const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+    }
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < 6; j++) {
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, String(j + 1), player, MoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
+            }
+            else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
+                moveMainArgs.push(j);
+            }
+        }
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
+};
+/**
+ * <h3>Отрисовка поля для выбора значения улучшения монеты по артефакту 'Vidofnir Vedrfolnir'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Игровое поле для отрисовки выбора значения улучшения монеты по артефакту 'Vidofnir Vedrfolnir'.
+ */
+export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G, ctx, validatorName, data, boardCells) => {
+    const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+    }
+    const stack = player.stack[0];
+    if (stack === undefined) {
+        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+    }
+    const values = stack.valueArray;
+    if (values === undefined) {
+        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр 'valueArray'.`);
+    }
+    for (let j = 0; j < values.length; j++) {
+        // TODO Move it to type in all places!
+        const value = values[j];
+        if (value === undefined) {
+            throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' в параметре 'valueArray' отсутствует значение параметра  id '${j}'.`);
+        }
+        if (data !== undefined && boardCells !== undefined) {
+            DrawButton(data, boardCells, ButtonNames.Start, player, MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
+        }
+        else if (validatorName === MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
+            moveMainArgs.push(value);
+        }
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
+};
+/**
  * <h3>Отрисовка поля для получения профита по фракции разведчиков.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -46,66 +122,6 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
     }
 };
 /**
- * <h3>Отрисовка поля для старта фазы 'enlistmentMercenaries'.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрисовка игрового поля.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param data Глобальные параметры.
- * @param boardCells Ячейки для отрисовки.
- * @returns Игровое поле для отрисовки старта фазы 'enlistmentMercenaries'.
- */
-export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
-    }
-    for (let j = 0; j < 2; j++) {
-        if (j === 0) {
-            DrawButton(data, boardCells, ButtonNames.Start, player, MoveNames.StartEnlistmentMercenariesMove);
-        }
-        else if (G.publicPlayersOrder.length > 1) {
-            DrawButton(data, boardCells, ButtonNames.Pass, player, MoveNames.PassEnlistmentMercenariesMove);
-        }
-    }
-};
-/**
- * <h3>Отрисовка для выбора уровня сложности соло игры.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрисовка игрового поля.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param validatorName Название валидатора.
- * @param data Глобальные параметры.
- * @param boardCells Ячейки для отрисовки.
- * @returns Поле для выбора уровня сложности соло игры.
- */
-export const DrawDifficultyLevelForSoloModeUI = (G, ctx, validatorName, data, boardCells) => {
-    const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
-    }
-    for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < 6; j++) {
-            if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, String(j + 1), player, MoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
-            }
-            else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
-                moveMainArgs.push(j);
-            }
-        }
-    }
-    if (validatorName !== null) {
-        return moveMainArgs;
-    }
-};
-/**
  * <h3>Отрисовка всех героев для выбора сложности соло игры.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -119,7 +135,7 @@ export const DrawDifficultyLevelForSoloModeUI = (G, ctx, validatorName, data, bo
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле героев для выбора сложности соло игры.
  */
-export const DrawHeroesForSoloModeUI = (G, ctx, validatorName, data, boardCells) => {
+export const PickHeroesForSoloModeProfit = (G, ctx, validatorName, data, boardCells) => {
     var _a;
     const moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
@@ -148,6 +164,33 @@ export const DrawHeroesForSoloModeUI = (G, ctx, validatorName, data, boardCells)
     }
     if (validatorName !== null) {
         return moveMainArgs;
+    }
+};
+/**
+ * <h3>Отрисовка поля для старта фазы 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Игровое поле для отрисовки старта фазы 'enlistmentMercenaries'.
+ */
+export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+    }
+    for (let j = 0; j < 2; j++) {
+        if (j === 0) {
+            DrawButton(data, boardCells, ButtonNames.Start, player, MoveNames.StartEnlistmentMercenariesMove);
+        }
+        else if (G.publicPlayersOrder.length > 1) {
+            DrawButton(data, boardCells, ButtonNames.Pass, player, MoveNames.PassEnlistmentMercenariesMove);
+        }
     }
 };
 //# sourceMappingURL=ProfitUI.js.map

@@ -1,5 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
 import { CoinTypeNames, StageNames } from "../typescript/enums";
 /**
@@ -20,6 +20,26 @@ export const AddCoinToPouchMove = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
     AddCoinToPouchAction(G, ctx, coinId);
+};
+/**
+ * <h3>Выбор значения улучшения монеты при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При клике по конкретному значению обмена монеты.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param value Значение улучшения монеты.
+ * @returns
+ */
+export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = (G, ctx, value) => {
+    const isValidMove = ctx.playerID === ctx.currentPlayer
+        && IsValidMove(G, ctx, StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, value);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    ChooseCoinValueForVidofnirVedrfolnirUpgradeAction(G, ctx, value);
 };
 /**
  * <h3>Выбор карты из лагеря по действию персонажа Хольда.</h3>

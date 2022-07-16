@@ -1,7 +1,7 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
-import type { IMercenaryCampCard, IStack, IStackData, SuitTypes } from "../typescript/interfaces";
+import type { IMercenaryCampCard, IStack, IStackData, SuitTypes, VidofnirVedrfolnirUpgradeValueTypes } from "../typescript/interfaces";
 
-// TODO Add type!
+// TODO Move all value into 3 | 5 ...
 export const StackData: IStackData = {
     addCoinToPouch: (): IStack => ({
         stageName: StageNames.AddCoinToPouch,
@@ -85,7 +85,7 @@ export const StackData: IStackData = {
         stageName: StageNames.PickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
-    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: number): IStack => ({
+    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: 3): IStack => ({
         stageName: StageNames.PlaceMultiSuitsCards,
         drawName: DrawNames.PlaceMultiSuitsCards,
         pickedSuit,
@@ -120,6 +120,15 @@ export const StackData: IStackData = {
         drawName: DrawNames.PlaceEnlistmentMercenaries,
         card,
     }),
+    startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueTypes,
+        coinId?: number, priority?: 3): IStack => ({
+            configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+            stageName: StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+            drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
+            valueArray,
+            coinId,
+            priority,
+        }),
     startOrPassEnlistmentMercenaries: (): IStack => ({
         configName: ConfigNames.StartOrPassEnlistmentMercenaries,
         drawName: DrawNames.StartOrPassEnlistmentMercenaries,
@@ -129,11 +138,12 @@ export const StackData: IStackData = {
         value,
         drawName: DrawNames.UpgradeCoin,
     }),
-    upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number): IStack => ({
+    upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3): IStack => ({
         coinId,
         stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
         value,
         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
+        priority,
     }),
     upgradeCoinWarriorDistinction: (): IStack => ({
         stageName: StageNames.UpgradeCoin,

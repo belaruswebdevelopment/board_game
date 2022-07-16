@@ -14,7 +14,7 @@ import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, P
 import type { CampDeckCardTypes, CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PickValidatorConfigTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit } from "./ui/ProfitUI";
+import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -876,7 +876,7 @@ export const moveValidators: IMoveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DrawDifficultyLevelForSoloModeUI(G, ctx,
+            return ChooseDifficultyLevelForSoloModeProfit(G, ctx,
                 MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) as
                 IMoveArgumentsStage<number[]>[`args`];
         },
@@ -900,7 +900,7 @@ export const moveValidators: IMoveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DrawHeroesForSoloModeUI(G, ctx,
+            return PickHeroesForSoloModeProfit(G, ctx,
                 MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator) as
                 IMoveArgumentsStage<number[]>[`args`];
         },
@@ -938,6 +938,29 @@ export const moveValidators: IMoveValidators = {
             return moveArgument;
         },
         moveName: MoveNames.AddCoinToPouchMove,
+        validate: (): boolean => true,
+    },
+    ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
+            if (G === undefined) {
+                throw new Error(`Function param 'G' is undefined.`);
+            }
+            if (ctx === undefined) {
+                throw new Error(`Function param 'ctx' is undefined.`);
+            }
+            return ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit(G, ctx,
+                MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) as
+                IMoveArgumentsStage<number[]>[`args`];
+        },
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes): number => {
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
+                moveArgument: CanBeUndef<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
         validate: (): boolean => true,
     },
     ClickCampCardHoldaMoveValidator: {
@@ -1450,6 +1473,8 @@ export const moveBy: IMoveBy = {
         default2: moveValidators.ClickCampCardMoveValidator,
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        chooseCoinValueForVidofnirVedrfolnirUpgrade:
+            moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
@@ -1474,6 +1499,8 @@ export const moveBy: IMoveBy = {
         placeEnlistmentMercenaries: moveValidators.PlaceEnlistmentMercenariesMoveValidator,
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        chooseCoinValueForVidofnirVedrfolnirUpgrade:
+            moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
@@ -1491,6 +1518,8 @@ export const moveBy: IMoveBy = {
         default1: moveValidators.PlaceYludHeroMoveValidator,
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        chooseCoinValueForVidofnirVedrfolnirUpgrade:
+            moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
@@ -1508,6 +1537,8 @@ export const moveBy: IMoveBy = {
         default1: moveValidators.ClickDistinctionCardMoveValidator,
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        chooseCoinValueForVidofnirVedrfolnirUpgrade:
+            moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,

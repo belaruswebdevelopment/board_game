@@ -25,6 +25,9 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
     player: IPublicPlayer, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let action: MoveFunctionTypes;
     switch (moveName) {
+        case MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
+            action = data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove!;
+            break;
         case MoveNames.ChooseDifficultyLevelForSoloModeMove:
             action = data.moves.ChooseDifficultyLevelForSoloModeMove!;
             break;

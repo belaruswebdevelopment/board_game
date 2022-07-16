@@ -12,7 +12,7 @@ import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusPhaseNames, StageNames } from "../typescript/enums";
 import type { CampCardTypes, CanBeNull, CanBeUndef, DiscardDeckCardTypes, DrawProfitTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
-import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
 // TODO Check Solo Bot & multiplayer actions!
 /**
@@ -487,17 +487,21 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
     const option: DrawProfitTypes = G.drawProfit;
     let caption = ``;
     switch (option) {
+        case ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade:
+            caption += `Get value of coin upgrade.`;
+            ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit(G, ctx, null, data, boardCells);
+            break;
         case ConfigNames.ExplorerDistinction:
             caption += `Get one card to your board.`;
             ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.GetDifficultyLevelForSoloMode:
             caption += `Get difficulty level for Solo mode.`;
-            DrawDifficultyLevelForSoloModeUI(G, ctx, null, data, boardCells);
+            ChooseDifficultyLevelForSoloModeProfit(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.GetHeroesForSoloMode:
             caption += `Get ${G.soloGameDifficultyLevel} hero${G.soloGameDifficultyLevel === 1 ? `` : `es`} to Solo Bot.`;
-            DrawHeroesForSoloModeUI(G, ctx, null, data, boardCells);
+            PickHeroesForSoloModeProfit(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.StartOrPassEnlistmentMercenaries:
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;

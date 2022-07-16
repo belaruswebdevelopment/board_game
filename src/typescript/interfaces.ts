@@ -374,16 +374,18 @@ export interface IStackData {
     readonly pickDiscardCardBrisingamens: (priority?: number) => IStack;
     readonly pickDistinctionCard: () => IStack;
     readonly pickDistinctionCardSoloBot: () => IStack;
-    readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: number) => IStack;
+    readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: 3) => IStack;
     readonly placeThrudHero: () => IStack;
     readonly placeTradingCoinsUline: () => IStack;
     readonly placeYludHero: () => IStack;
     readonly pickHero: () => IStack;
     readonly pickHeroSoloBot: () => IStack;
     readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
+    readonly startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueTypes,
+        coinId?: number, priority?: 3) => IStack;
     readonly startOrPassEnlistmentMercenaries: () => IStack;
     readonly upgradeCoin: (value: number) => IStack;
-    readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number) => IStack;
+    readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3) => IStack;
     readonly upgradeCoinWarriorDistinction: () => IStack;
 }
 
@@ -399,6 +401,7 @@ export interface IStack {
     readonly suit?: SuitTypes;
     readonly pickedSuit?: SuitTypes;
     readonly value?: number;
+    readonly valueArray?: VidofnirVedrfolnirUpgradeValueTypes;
     readonly configName?: ConfigNames;
     readonly drawName?: DrawNames;
     readonly stageName?: StageNames;
@@ -700,6 +703,7 @@ export interface IMoveBySoloBotOptions {
 
 interface IMoveByCommonOptions {
     readonly addCoinToPouch: IMoveValidator;
+    readonly chooseCoinValueForVidofnirVedrfolnirUpgrade: IMoveValidator;
     readonly discardBoardCard: IMoveValidator;
     readonly discardSuitCard: IMoveValidator;
     readonly pickCampCardHolda: IMoveValidator;
@@ -803,6 +807,7 @@ export interface IMoveValidators {
     readonly ChooseHeroesForSoloModeMoveValidator: IMoveValidator;
     // start
     readonly AddCoinToPouchMoveValidator: IMoveValidator;
+    readonly ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: IMoveValidator;
     readonly ClickCampCardHoldaMoveValidator: IMoveValidator;
     readonly PickConcreteCoinToUpgradeMoveValidator: IMoveValidator;
     readonly ClickCoinToUpgradeMoveValidator: IMoveValidator;
@@ -1009,6 +1014,11 @@ export interface ITavernsConfig {
 export type DebugDrawDataType<T> = {
     readonly [K in keyof T]: T[K];
 };
+
+export type BasicVidofnirVedrfolnirUpgradeValueTypes = 2 | 3 | 5;
+
+export type VidofnirVedrfolnirUpgradeValueTypes = [BasicVidofnirVedrfolnirUpgradeValueTypes]
+    | [BasicVidofnirVedrfolnirUpgradeValueTypes, 2 | 3];
 
 export type BuffValueTypes = CanBeUndef<SuitTypes | true>;
 

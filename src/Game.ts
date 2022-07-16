@@ -14,7 +14,7 @@ import { CheckEndPlaceYludPhase, CheckEndPlaceYludTurn, CheckPlaceYludOrder, End
 import { CheckEndTavernsResolutionPhase, CheckEndTavernsResolutionTurn, EndTavernsResolutionActions, OnTavernsResolutionMove, OnTavernsResolutionTurnBegin, OnTavernsResolutionTurnEnd, ResolveCurrentTavernOrders } from "./hooks/TavernsResolutionHooks";
 import { CheckAndResolveTroopEvaluationOrders, CheckEndTroopEvaluationPhase, CheckEndTroopEvaluationTurn, EndTroopEvaluationPhaseActions, OnTroopEvaluationMove, OnTroopEvaluationTurnBegin, OnTroopEvaluationTurnEnd } from "./hooks/TroopEvaluationHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
-import { AddCoinToPouchMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
+import { AddCoinToPouchMove, ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
 import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove } from "./moves/CoinMoves";
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceMultiSuitCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
@@ -118,6 +118,11 @@ export const BoardGame: Game<IMyGameState> = {
                             AddCoinToPouchMove,
                         },
                     },
+                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                        moves: {
+                            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
+                        },
+                    },
                     discardBoardCard: {
                         moves: {
                             DiscardCardMove,
@@ -213,6 +218,11 @@ export const BoardGame: Game<IMyGameState> = {
                             AddCoinToPouchMove,
                         },
                     },
+                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                        moves: {
+                            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
+                        },
+                    },
                     discardBoardCard: {
                         moves: {
                             DiscardCardMove,
@@ -290,6 +300,11 @@ export const BoardGame: Game<IMyGameState> = {
                             AddCoinToPouchMove,
                         },
                     },
+                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                        moves: {
+                            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
+                        },
+                    },
                     discardBoardCard: {
                         moves: {
                             DiscardCardMove,
@@ -364,6 +379,11 @@ export const BoardGame: Game<IMyGameState> = {
                     addCoinToPouch: {
                         moves: {
                             AddCoinToPouchMove,
+                        },
+                    },
+                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                        moves: {
+                            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
                         },
                     },
                     discardBoardCard: {

@@ -73,6 +73,7 @@ export const enum CoinTypeNames {
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */
 export const enum ConfigNames {
+    ChooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
     ExplorerDistinction = `explorerDistinction`,
     GetDifficultyLevelForSoloMode = `getDifficultyLevelForSoloMode`,
     GetHeroesForSoloMode = `getHeroesForSoloMode`,
@@ -109,6 +110,7 @@ export const enum DrawNames {
     PlaceEnlistmentMercenaries = `Place Enlistment Mercenaries`,
     PlaceTradingCoinsUline = `Place Trading Coins Uline`,
     PlaceYludHero = `Place Ylud`,
+    StartChooseCoinValueForVidofnirVedrfolnirUpgrade = `Start choose coin value for Vidofnir Vedrfolnir upgrade`,
     StartOrPassEnlistmentMercenaries = `Start or Pass Enlistment Mercenaries`,
     PlaceThrudHero = `Place Thrud Hero`,
     UpgradeCoin = `Upgrade coin`,
@@ -265,6 +267,7 @@ export const enum MoveNames {
     ChooseHeroForDifficultySoloModeMove = `ChooseHeroForDifficultySoloModeMove`,
     // start
     AddCoinToPouchMove = `AddCoinToPouchMove`,
+    ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = `ChooseCoinValueForVidofnirVedrfolnirUpgradeMove`,
     ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
     ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
     ClickHeroCardMove = `ClickHeroCardMove`,
@@ -347,6 +350,7 @@ export enum RusSuitNames {
  */
 export const enum StageNames {
     AddCoinToPouch = `addCoinToPouch`,
+    ChooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
     Default1 = `default1`,
     Default2 = `default2`,
     Default3 = `default3`,
@@ -444,6 +448,8 @@ export const enum MoveValidatorNames {
     ChooseHeroesForSoloModeMoveValidator = `ChooseHeroesForSoloModeMoveValidator`,
     // start
     AddCoinToPouchMoveValidator = `AddCoinToPouchMoveValidator`,
+    ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator =
+    `ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator`,
     ClickCampCardHoldaMoveValidator = `ClickCampCardHoldaMoveValidator`,
     ClickCoinToUpgradeMoveValidator = `ClickCoinToUpgradeMoveValidator`,
     ClickConcreteCoinToUpgradeMoveValidator = `ClickConcreteCoinToUpgradeMoveValidator`,

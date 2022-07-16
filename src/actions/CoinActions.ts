@@ -16,7 +16,7 @@ import type { CanBeUndef, CoinTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer
  * @param G
  * @param ctx
  * @param isTrading Является ли монета обменной.
- * @param value Значение увеличения монеты.
+ * @param value Значение улучшения монеты.
  * @param upgradingCoinId Id обменной монеты.
  * @param type Тип обменной монеты.
  */
