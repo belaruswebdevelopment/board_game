@@ -53,7 +53,7 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
 export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (G.solo && player === undefined && ctx.currentPlayer === `1`) {
-        throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
     else if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -101,7 +101,7 @@ export const AddHeroForDifficultyToSoloBotCards = (G, ctx, hero) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (soloBotPublicPlayer === undefined) {
-        throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
     if (!hero.active) {
         throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран каким-то игроком.`);

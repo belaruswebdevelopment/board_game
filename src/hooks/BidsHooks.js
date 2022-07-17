@@ -24,7 +24,7 @@ export const CheckEndBidsPhase = (G, ctx) => {
                 || (G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 const privatePlayer = G.players[playerIndex];
                 if (privatePlayer === undefined) {
-                    throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerIndex}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerIndex);
                 }
                 return privatePlayer.handCoins.every((coin) => {
                     return coin === null;
@@ -61,7 +61,7 @@ export const CheckEndBidsTurn = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
     if ((G.solo && ctx.currentPlayer === `1`) || G.multiplayer) {

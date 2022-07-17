@@ -60,7 +60,7 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTy
     }
     const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
     const playerVariants: SuitPropertyTypes<VariantType> = {
         blacksmith: {
@@ -128,7 +128,7 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTy
 export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
@@ -162,11 +162,11 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
 export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
     const playerVariants: SuitPropertyTypes<VariantType> = {
         blacksmith: {

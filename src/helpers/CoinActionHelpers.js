@@ -21,7 +21,7 @@ export const UpgradeCoinActions = (G, ctx, coinId, type) => {
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
     const value = stack.value;
     if (value === undefined) {

@@ -69,7 +69,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     if (deckTier2.length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>
             Object.values(G.publicPlayers).map((player: IPublicPlayer, index: number): number =>
-                PotentialScoring(G, index, card))),
+                PotentialScoring(G, ctx, index, card))),
             tavernCardResults: CanBeUndef<number[]> = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
@@ -141,18 +141,20 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCa
  *
  * @TODO Саше: сделать описание функции и параметров.
  * @param G
+ * @param ctx
  * @param player Игрок.
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTypes): number => {
+const PotentialScoring = (G: IMyGameState, ctx: Ctx, playerId: number, card: TavernCardTypes): number => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId],
         privatePlayer: CanBeUndef<IPlayer> = G.players[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
+            playerId);
     }
     let handCoins: PublicPlayerCoinTypes[];
     if (G.multiplayer) {

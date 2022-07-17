@@ -56,10 +56,10 @@ export const StartTrading = (G: IMyGameState, ctx: Ctx, isSoloBotEndRound = fals
         privatePlayer: CanBeUndef<IPlayer> = G.players[index],
         player: CanBeUndef<IPublicPlayer> = G.publicPlayers[index];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, index);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, index);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, index);
     }
     const tradingCoins: ICoin[] = [];
     for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
@@ -129,7 +129,7 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[], soloBotOnlyOn
     }
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[index];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${index}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, index);
     }
     const coinsValues: number[] = tradingCoins.map((coin: ICoin): number => coin.value),
         coinsMinValue: number = Math.min(...coinsValues),

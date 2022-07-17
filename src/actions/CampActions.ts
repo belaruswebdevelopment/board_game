@@ -30,7 +30,8 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined,
+            ctx.currentPlayer);
     }
     const tempId: number =
         player.boardCoins.findIndex((coin: PublicPlayerCoinTypes, index: number): boolean =>
@@ -85,7 +86,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G: IMyGameStat
     }
     const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
     AddActionsToStack(G, ctx,
         [StackData.upgradeCoinVidofnirVedrfolnir(value, stack.coinId,
@@ -172,7 +173,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, c
     }
     const stack: CanBeUndef<IStack> = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
     const value: number = UpgradeCoinActions(G, ctx, coinId, type);
     if (value !== 5 && stack.priority === 0) {

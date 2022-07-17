@@ -136,7 +136,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                         && stage === StageNames.DiscardBoardCard && !IsHeroPlayerCard(card)) {
                         // TODO Does it need more then 1 checking?
                         if (stack === undefined) {
-                            throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
+                            return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
                         }
                         const stackSuit = stack.suit;
                         if (suit !== stackSuit && suit !== stack.pickedSuit) {
@@ -189,7 +189,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                                 StageNames.PlaceEnlistmentMercenaries)) || stage === StageNames.PlaceThrudHero
                         || stage === StageNames.PlaceMultiSuitsCards)) {
                     if (stack === undefined) {
-                        throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
+                        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
                     }
                     let cardVariants;
                     if (ctx.phase === PhaseNames.EnlistmentMercenaries

@@ -52,7 +52,7 @@ export const SoloBotPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     const handCoins = privatePlayer.handCoins;
     for (let i = 0; i < handCoins.length; i++) {

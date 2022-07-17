@@ -30,7 +30,8 @@ export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): boolean | void
         if (!G.solo && ulinePlayerIndex !== - 1) {
             const ulinePlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
-                throw new Error(`В массиве игроков отсутствует игрок с бафом '${BuffNames.EveryTurn}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    ulinePlayerIndex);
             }
             if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
                 const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = ulinePlayer.boardCoins[G.currentTavern + 1];

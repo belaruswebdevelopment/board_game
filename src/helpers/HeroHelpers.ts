@@ -1,7 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
+import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, StageNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, StageNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer, IStack, PlayerCardTypes } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
@@ -22,7 +23,7 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
 export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
         const playerCards: PlayerCardTypes[][] = Object.values(player.cards),

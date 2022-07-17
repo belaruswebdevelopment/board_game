@@ -55,7 +55,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G, ctx, valida
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
     const values = stack.valueArray;
     if (values === undefined) {

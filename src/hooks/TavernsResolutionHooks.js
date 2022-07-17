@@ -29,7 +29,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
     if (G.multiplayer) {
@@ -256,7 +256,7 @@ export const ResolveCurrentTavernOrders = (G, ctx) => {
         if (G.multiplayer || (G.solo && index === 1)) {
             const privatePlayer = G.players[index];
             if (privatePlayer === undefined) {
-                throw new Error(`В массиве приватных игроков отсутствует игрок с id '${index}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, index);
             }
             const privateBoardCoin = privatePlayer.boardCoins[G.currentTavern];
             if (privateBoardCoin === undefined) {

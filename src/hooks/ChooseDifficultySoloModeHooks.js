@@ -1,10 +1,11 @@
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { HeroNames } from "../typescript/enums";
+import { ErrorNames, HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
  * <p>Применения:</p>
@@ -32,7 +33,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
         if (ctx.currentPlayer === `1`) {
             const soloBotPublicPlayer = G.publicPlayers[1];
             if (soloBotPublicPlayer === undefined) {
-                throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
             }
             return G.heroesForSoloGameDifficultyLevel === null && !soloBotPublicPlayer.stack.length;
         }
@@ -56,7 +57,7 @@ export const CheckEndChooseDifficultySoloModeTurn = (G, ctx) => {
     if (ctx.currentPlayer === `0`) {
         const soloBotPublicPlayer = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
-            throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         return G.soloGameDifficultyLevel !== null && G.soloGameDifficultyLevel === 0;
     }
@@ -104,7 +105,7 @@ export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
     else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
-            throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         soloBotPublicPlayer.heroes.forEach((hero) => {
             AddBuffToPlayer(G, ctx, hero.buff);

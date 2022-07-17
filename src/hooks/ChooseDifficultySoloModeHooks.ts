@@ -1,11 +1,12 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { HeroNames } from "../typescript/enums";
+import { ErrorNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -36,7 +37,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx)
         if (ctx.currentPlayer === `1`) {
             const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
             if (soloBotPublicPlayer === undefined) {
-                throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
             }
             return G.heroesForSoloGameDifficultyLevel === null && !soloBotPublicPlayer.stack.length;
         }
@@ -60,7 +61,7 @@ export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx):
     if (ctx.currentPlayer === `0`) {
         const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
-            throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         return G.soloGameDifficultyLevel !== null && G.soloGameDifficultyLevel === 0;
     }
@@ -110,7 +111,7 @@ export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): 
     } else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
-            throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         soloBotPublicPlayer.heroes.forEach((hero: IHeroCard): void => {
             AddBuffToPlayer(G, ctx, hero.buff);

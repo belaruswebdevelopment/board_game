@@ -93,9 +93,10 @@ export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: n
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
         }
         if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerId}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
+                playerId);
         }
-        const [type, tradingCoinIndex]: [CoinTypeNames, number] = DiscardTradingCoin(G, playerId),
+        const [type, tradingCoinIndex]: [CoinTypeNames, number] = DiscardTradingCoin(G, ctx, playerId),
             coin: ICoin = CreateCoin({
                 isOpened: true,
                 isTriggerTrading: true,

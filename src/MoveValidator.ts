@@ -36,7 +36,8 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined,
+            ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinTypes[],
         boardCoins: PublicPlayerCoinTypes[];
@@ -699,7 +700,8 @@ export const moveValidators: IMoveValidators = {
                     ctx.currentPlayer);
             }
             if (privatePlayer === undefined) {
-                throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined,
+                    ctx.currentPlayer);
             }
             let handCoins: PublicPlayerCoinTypes[];
             if (G.multiplayer) {
@@ -1337,7 +1339,8 @@ export const moveValidators: IMoveValidators = {
             if (G.solo && ctx.currentPlayer === `1`) {
                 const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
                 if (soloBotPublicPlayer === undefined) {
-                    throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                        1);
                 }
                 const suit: CanBeUndef<SuitTypes> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
                 if (suit === undefined) {

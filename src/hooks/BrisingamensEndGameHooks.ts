@@ -1,10 +1,11 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
+import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { BuffNames } from "../typescript/enums";
+import { BuffNames, ErrorNames } from "../typescript/enums";
 import type { CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -41,7 +42,8 @@ export const CheckEndBrisingamensEndGamePhase = (G: IMyGameState, ctx: Ctx): tru
         && ctx.currentPlayer === ctx.playOrder[0]) {
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с первым ходом с id '${ctx.currentPlayer}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                ctx.currentPlayer);
         }
         if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length) {
             const buffIndex: number =

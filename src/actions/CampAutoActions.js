@@ -21,7 +21,7 @@ export const DiscardTradingCoinAction = (G, ctx) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    DiscardTradingCoin(G, Number(ctx.currentPlayer));
+    DiscardTradingCoin(G, ctx, Number(ctx.currentPlayer));
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
 /**
@@ -88,7 +88,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
     if (G.multiplayer) {

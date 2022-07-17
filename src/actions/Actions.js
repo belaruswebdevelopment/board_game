@@ -170,7 +170,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
     const mercenaryCard = stack.card;
     if (mercenaryCard === undefined) {

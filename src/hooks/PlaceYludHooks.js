@@ -35,7 +35,7 @@ export const CheckEndPlaceYludPhase = (G, ctx) => {
             if (yludIndex !== -1) {
                 const yludPlayer = G.publicPlayers[yludIndex];
                 if (yludPlayer === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с картой героя '${HeroNames.Ylud}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, yludIndex);
                 }
                 const index = Object.values(yludPlayer.cards).flat()
                     .findIndex((card) => card.name === HeroNames.Ylud);

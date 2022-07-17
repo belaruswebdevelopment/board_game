@@ -50,10 +50,10 @@ export const StartTrading = (G, ctx, isSoloBotEndRound = false) => {
     // TODO For solo mode check coins openings
     const index = isSoloBotEndRound ? 1 : Number(ctx.currentPlayer), privatePlayer = G.players[index], player = G.publicPlayers[index];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, index);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, index);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, index);
     }
     const tradingCoins = [];
     for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
@@ -120,7 +120,7 @@ const Trading = (G, ctx, tradingCoins, soloBotOnlyOneCoinTrading = false) => {
     }
     const player = G.publicPlayers[index];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${index}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, index);
     }
     const coinsValues = tradingCoins.map((coin) => coin.value), coinsMinValue = Math.min(...coinsValues), coinsMaxValue = Math.max(...coinsValues);
     let upgradingCoinId, coinMinIndex = -1, coinMaxIndex = -1, value;

@@ -12,16 +12,17 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * </ol>
  *
  * @param G
+ * @param ctx
  * @param playerId Id игрока.
  * @returns Тип и индекс сбрасываемой обменной монеты.
  */
-export const DiscardTradingCoin = (G, playerId) => {
+export const DiscardTradingCoin = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     let handCoins;
     if (G.multiplayer) {
@@ -108,7 +109,7 @@ export const OpenClosedCoinsOnPlayerBoard = (G, ctx, playerId) => {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     for (let j = 0; j < player.boardCoins.length; j++) {
         const privateBoardCoin = privatePlayer.boardCoins[j];
@@ -173,10 +174,10 @@ export const ResolveBoardCoins = (G, ctx) => {
                 }
                 const playerCur = G.publicPlayers[playersOrderNumberCur], playerPrev = G.publicPlayers[playersOrderNumberPrev];
                 if (playerCur === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${playersOrderNumberCur}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playersOrderNumberCur);
                 }
                 if (playerPrev === undefined) {
-                    throw new Error(`В массиве игроков отсутствует предыдущий игрок с id '${playersOrderNumberPrev}'.`);
+                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playersOrderNumberPrev);
                 }
                 const coin = playerCur.boardCoins[G.currentTavern], prevCoin = playerPrev.boardCoins[G.currentTavern];
                 if (coin === undefined) {
@@ -270,7 +271,7 @@ export const ReturnCoinsToPlayerBoard = (G, ctx, playerId) => {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     let handCoins;
     if (G.multiplayer) {
@@ -321,7 +322,7 @@ export const ReturnCoinsToPlayerHands = (G, ctx) => {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует игрок с id '${i}'.`);
+            return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, i);
         }
         if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
             for (let j = 0; j < player.handCoins.length; j++) {
@@ -370,7 +371,7 @@ export const ReturnCoinToPlayerHands = (G, ctx, playerId, coinId, close) => {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     let handCoins;
     if (G.multiplayer || (G.solo && playerId === 1)) {
@@ -434,12 +435,11 @@ export const ReturnCoinToPlayerHands = (G, ctx, playerId, coinId, close) => {
  * @param G
  * @param ctx
  * @param playerId Id игрока.
- * @param solo Является ли игра соло режимом.
  */
-const MixUpCoins = (G, ctx, playerId, solo = false) => {
+const MixUpCoins = (G, ctx, playerId) => {
     const privatePlayer = G.players[playerId];
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует ${solo ? `соло бот` : `игрок`} с id '${playerId}'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     privatePlayer.handCoins = ctx.random.Shuffle(privatePlayer.handCoins);
 };
@@ -460,7 +460,7 @@ export const MixUpCoinsInPlayerHands = (G, ctx) => {
         }
     }
     else if (G.solo) {
-        MixUpCoins(G, ctx, 1, true);
+        MixUpCoins(G, ctx, 1);
     }
 };
 //# sourceMappingURL=CoinHelpers.js.map

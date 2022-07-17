@@ -120,6 +120,7 @@ export const enum DrawNames {
 
 export const enum ErrorNames {
     CurrentTierDeckIsUndefined = `CurrentTierDeckIsUndefined`,
+    CurrentPrivatePlayerIsUndefined = `CurrentPrivatePlayerIsUndefined`,
     CurrentPublicPlayerIsUndefined = `CurrentPublicPlayerIsUndefined`,
     CurrentSuitDistinctionPlayerIndexIsUndefined = `CurrentSuitDistinctionPlayerIndexIsUndefined`,
     CurrentTavernConfigIsUndefined = `CurrentTavernConfigIsUndefined`,
@@ -129,11 +130,13 @@ export const enum ErrorNames {
     `DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined`,
     DoNotDiscardCardFromCurrentTavernIfNoCardInTavern = `DoNotDiscardCardFromCurrentTavernIfNoCardInTavern`,
     DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame = `DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame`,
+    FirstStackActionIsUndefined = `FirstStackActionIsUndefined`,
     NoCardsToDiscardWhenNoWinnerInExplorerDistinction = `NoCardsToDiscardWhenNoWinnerInExplorerDistinction`,
     OnlyInSoloOrTwoPlayersGame = `OnlyInSoloOrTwoPlayersGame`,
     PlayersCurrentSuitCardsMustHaveCardsForDistinction = `PlayersCurrentSuitCardsMustHaveCardsForDistinction`,
     PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount =
     `PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount`,
+    PrivatePlayerWithCurrentIdIsUndefined = `PrivatePlayerWithCurrentIdIsUndefined`,
     PublicPlayerWithCurrentIdIsUndefined = `PublicPlayerWithCurrentIdIsUndefined`,
     SuitDistinctionMustBePresent = `SuitDistinctionMustBePresent`,
     TavernCanNotBeRefilledBecauseNotEnoughCards = `TavernCanNotBeRefilledBecauseNotEnoughCards`,

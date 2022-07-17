@@ -37,7 +37,7 @@ export const CheckSuitsLeastPresentOnPlayerBoard = (G, ctx, player) => {
 export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
     const soloBotPublicPlayer = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
-        throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
     let thrudSuit = null;
     if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud)) {
@@ -133,7 +133,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
     // TODO Least present only if arguments < suit count => < 5(1,2,3,4) or all 5 too (if all suit cards equal count)!?
     const soloBotPublicPlayer = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
-        throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
     const [availableSuitArguments, minLengthCount] = CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
     if (availableSuitArguments.length !== minLengthCount) {
