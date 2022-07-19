@@ -1,6 +1,7 @@
+import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { ArtefactTypes, BasicSuitableNullableCardInfoTypes, CampDeckCardTypes, CanBeUndef, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCardType, IArtefactCampCard, IArtefactConfig, IArtefactData, IArtefactPlayerCampCard, IMercenaryCampCard, IMercenaryPlayerCard, MercenaryType, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { ArtefactTypes, BasicSuitableNullableCardInfoTypes, CampDeckCardTypes, CanBeUndef, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCardType, IArtefactCampCard, IArtefactData, IArtefactPlayerCampCard, IMercenaryCampCard, IMercenaryPlayerCard, MercenaryType, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
@@ -10,16 +11,13 @@ import type { ArtefactTypes, BasicSuitableNullableCardInfoTypes, CampDeckCardTyp
  * </ol>
  *
  * @param tier Эпоха.
- * @param artefactConfig Файл конфига карт артефактов.
- * @param mercenariesConfig Файл конфига наёмников.
  * @returns Все карты лагеря.
  */
-export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
-    mercenariesConfig: Partial<SuitPropertyTypes<MercenaryType>>[][]): CampDeckCardTypes[] => {
+export const BuildCampCards = (tier: number): CampDeckCardTypes[] => {
     const campCards: CampDeckCardTypes[] = [];
     let artefactName: ArtefactTypes;
-    for (artefactName in artefactConfig) {
-        const artefactData: IArtefactData = artefactConfig[artefactName];
+    for (artefactName in artefactsConfig) {
+        const artefactData: IArtefactData = artefactsConfig[artefactName];
         if (artefactData.tier === tier) {
             if (artefactData.suit !== undefined && artefactData.rank !== undefined
                 && artefactData.points !== undefined) {

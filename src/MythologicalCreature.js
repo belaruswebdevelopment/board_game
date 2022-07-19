@@ -1,3 +1,4 @@
+import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты Мифических существ.</h3>
@@ -6,10 +7,9 @@ import { RusCardTypeNames } from "./typescript/enums";
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *.
- * @param deckConfig Конфиг карт.
  * @returns Все карты Мифических существ.
  */
-export const BuildMythologicalCreatureCards = (giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig) => {
+export const BuildMythologicalCreatureCards = () => {
     const cards = [];
     let giantName;
     for (giantName in giantConfig) {

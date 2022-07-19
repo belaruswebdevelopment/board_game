@@ -2,9 +2,7 @@ import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
 import { BuildCoins } from "./Coin";
-import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { initialPlayerCoinsConfig, marketCoinsConfig } from "./data/CoinData";
-import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
@@ -52,7 +50,7 @@ export const SetupGame = (ctx) => {
     const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null);
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
-            secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
+            secret.campDecks[i] = BuildCampCards(i);
             let campDeck = secret.campDecks[i];
             if (campDeck === undefined) {
                 throw new Error(`Колода карт лагеря ${i} эпохи не может отсутствовать.`);
@@ -94,8 +92,7 @@ export const SetupGame = (ctx) => {
     }
     let mythologicalCreatureDeckLength = 0;
     if (expansions.idavoll.active) {
-        secret.mythologicalCreatureDecks =
-            BuildMythologicalCreatureCards(giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig);
+        secret.mythologicalCreatureDecks = BuildMythologicalCreatureCards();
         secret.mythologicalCreatureDecks = ctx.random.Shuffle(secret.mythologicalCreatureDecks);
         mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
     }

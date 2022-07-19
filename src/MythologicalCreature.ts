@@ -1,5 +1,6 @@
+import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardType, CreateValkyryCardType, GiantTypes, GodTypes, IGiantCard, IGiantConfig, IGiantData, IGodCard, IGodConfig, IGodData, IMythicalAnimalCard, IMythicalAnimalConfig, IMythicalAnimalData, IValkyryCard, IValkyryConfig, IValkyryData, MythicalAnimalTypes, MythologicalCreatureDeckCardTypes, ValkyryTypes } from "./typescript/interfaces";
+import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardType, CreateValkyryCardType, GiantTypes, GodTypes, IGiantCard, IGiantData, IGodCard, IGodData, IMythicalAnimalCard, IMythicalAnimalData, IValkyryCard, IValkyryData, MythicalAnimalTypes, MythologicalCreatureDeckCardTypes, ValkyryTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты Мифических существ.</h3>
@@ -8,11 +9,9 @@ import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardTy
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *.
- * @param deckConfig Конфиг карт.
  * @returns Все карты Мифических существ.
  */
-export const BuildMythologicalCreatureCards = (giantConfig: IGiantConfig, godConfig: IGodConfig,
-    mythicalAnimalConfig: IMythicalAnimalConfig, valkyryConfig: IValkyryConfig):
+export const BuildMythologicalCreatureCards = ():
     MythologicalCreatureDeckCardTypes[] => {
     const cards: MythologicalCreatureDeckCardTypes[] = [];
     let giantName: GiantTypes;

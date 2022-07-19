@@ -1,3 +1,4 @@
+import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypeNames } from "./typescript/enums";
 /**
@@ -8,15 +9,13 @@ import { RusCardTypeNames } from "./typescript/enums";
  * </ol>
  *
  * @param tier Эпоха.
- * @param artefactConfig Файл конфига карт артефактов.
- * @param mercenariesConfig Файл конфига наёмников.
  * @returns Все карты лагеря.
  */
-export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
+export const BuildCampCards = (tier) => {
     const campCards = [];
     let artefactName;
-    for (artefactName in artefactConfig) {
-        const artefactData = artefactConfig[artefactName];
+    for (artefactName in artefactsConfig) {
+        const artefactData = artefactsConfig[artefactName];
         if (artefactData.tier === tier) {
             if (artefactData.suit !== undefined && artefactData.rank !== undefined
                 && artefactData.points !== undefined) {
