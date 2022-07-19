@@ -125,49 +125,4 @@ export const CreateValkyryCard = ({ type = RusCardTypeNames.Valkyry_Card, name, 
     name,
     strengthTokenNotch,
 });
-/**
- * <h3>Проверка, является ли объект картой Бога.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой Бога.
- */
-export const IsGodCard = (card) => card !== null && card.isPowerTokenUsed !== undefined;
-/**
-* <h3>Проверка, является ли объект картой Гиганта.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>При проверках в функциях.</li>
-* </ol>
-*
-* @param card Карта.
-* @returns Является ли объект картой Гиганта.
-*/
-export const IsGiantCard = (card) => card !== null && card.placedSuit !== undefined;
-/**
-* <h3>Проверка, является ли объект картой Валькирии.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>При проверках в функциях.</li>
-* </ol>
-*
-* @param card Карта.
-* @returns Является ли объект картой Валькирии.
-*/
-export const IsValkyryCard = (card) => card !== null && card.strengthTokenNotch !== undefined;
-// TODO Fix it not only suit!
-/**
-* <h3>Проверка, является ли объект картой Мифического животного.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>При проверках в функциях.</li>
-* </ol>
-*
-* @param card Карта.
-* @returns Является ли объект картой Мифического животного.
-*/
-export const IsMythicalAnimalCard = (card) => card !== null && card.suit !== undefined;
 //# sourceMappingURL=MythologicalCreature.js.map

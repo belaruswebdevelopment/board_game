@@ -1,4 +1,3 @@
-import { IsMercenaryPlayerCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, BuffNames, RusCardTypeNames } from "../typescript/enums";
@@ -82,7 +81,7 @@ export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
         suit: SuitTypes;
     for (suit in player.cards) {
         score += player.cards[suit].filter((card: PlayerCardTypes): boolean =>
-            IsMercenaryPlayerCard(card)).length * 5;
+            card.type === RusCardTypeNames.Mercenary_Player_Card).length * 5;
     }
     return score;
 };

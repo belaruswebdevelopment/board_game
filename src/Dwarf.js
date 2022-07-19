@@ -71,18 +71,4 @@ export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, suit, rank
     points,
     name,
 });
-// Todo Fix Add !(...) for IsMultiSuitPlayerCard && IsMythicalAnimalCard && IsSpecialCard
-/**
- * <h3>Проверка, является ли объект картой дворфа.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой дворфа.
- */
-export const IsDwarfCard = (card) => card !== null
-    && card.suit !== undefined && !(`description` in card)
-    && !(`path` in card);
 //# sourceMappingURL=Dwarf.js.map

@@ -1,10 +1,9 @@
 import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
-import { CreateDwarfCard, IsDwarfCard } from "../Dwarf";
+import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { ErrorNames } from "../typescript/enums";
+import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
 import type { CanBeUndef, DeckCardTypes, IDwarfCard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
@@ -24,7 +23,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (IsDwarfCard(card1) && IsDwarfCard(card2)) {
+    if (card1.type === RusCardTypeNames.Dwarf_Card && card2.type === RusCardTypeNames.Dwarf_Card) {
         if (card1.suit === card2.suit) {
             const result: number = (card1.points ?? 1) - (card2.points ?? 1);
             if (result === 0) {
@@ -53,7 +52,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  */
 export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
     tavern: TavernCardTypes[]): number => {
-    if (IsDwarfCard(compareCard)) {
+    if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
         const deckTier1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[0];
         if (deckTier1 === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
@@ -84,7 +83,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
         return result - Math.max(...temp.map((player: number[]): number =>
             Math.max(...player)));
     }
-    if (IsDwarfCard(compareCard)) {
+    if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
     return 0;
@@ -165,14 +164,14 @@ const PotentialScoring = (G: IMyGameState, ctx: Ctx, playerId: number, card: Tav
     let score = 0,
         suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (IsDwarfCard(card) && card.suit === suit) {
+        if (card !== null && card.type === RusCardTypeNames.Dwarf_Card && card.suit === suit) {
             score +=
                 suitsConfig[suit].scoringRule(player.cards[suit], suit, card.points ?? 1);
         } else {
             score += suitsConfig[suit].scoringRule(player.cards[suit], suit);
         }
     }
-    if (IsRoyalOfferingCard(card)) {
+    if (card !== null && card.type === RusCardTypeNames.Royal_Offering_Card) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

@@ -1,5 +1,4 @@
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
-import { IsArtefactCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -152,8 +151,8 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             spanClasses = `bg-camp`;
             if (suit === null) {
                 tdClasses = ` bg-yellow-200`;
-                // TODO Rework it?
-                if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
+                if (card.type === RusCardTypeNames.Artefact_Card
+                    && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
                     value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
                 }
             }

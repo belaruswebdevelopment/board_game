@@ -67,16 +67,3 @@ const CreateRoyalOfferingCard = ({
     stack,
     name,
 });
-
-/**
- * <h3>Проверка, является ли объект картой королевской награды.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой королевской награды.
- */
-export const IsRoyalOfferingCard = (card: unknown): card is IRoyalOfferingCard =>
-    card !== null && (card as IRoyalOfferingCard).value !== undefined;

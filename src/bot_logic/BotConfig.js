@@ -1,4 +1,4 @@
-import { IsDwarfCard } from "../Dwarf";
+import { RusCardTypeNames } from "../typescript/enums";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -120,7 +120,9 @@ const GetCharacteristics = (array) => {
  * @TODO Саше: сделать описание функции и параметров.
  */
 const isAllCardsEqual = {
-    heuristic: (cards) => cards.every((card) => (IsDwarfCard(card) && IsDwarfCard(cards[0]) && card.suit === cards[0].suit
+    // TODO Add errors for undefined
+    heuristic: (cards) => cards.every((card) => (card !== null && card.type === RusCardTypeNames.Dwarf_Card && cards[0] !== undefined && cards[0] !== null
+        && cards[0].type === RusCardTypeNames.Dwarf_Card && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };

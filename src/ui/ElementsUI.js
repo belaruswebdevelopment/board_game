@@ -1,5 +1,4 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { IsArtefactCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -137,8 +136,8 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             spanClasses = `bg-camp`;
             if (suit === null) {
                 tdClasses = ` bg-yellow-200`;
-                // TODO Rework it?
-                if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
+                if (card.type === RusCardTypeNames.Artefact_Card
+                    && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
                     value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
                 }
             }

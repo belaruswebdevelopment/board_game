@@ -1,5 +1,4 @@
 import type { Ctx } from "boardgame.io";
-import { IsMercenaryCampCard } from "../Camp";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
@@ -13,7 +12,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, CoinTypes, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
@@ -153,7 +152,7 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
                             i);
                     }
                     startThrud = player.campCards.filter((card: CampDeckCardTypes): boolean =>
-                        IsMercenaryCampCard(card)).length === 0;
+                        card.type === RusCardTypeNames.Mercenary_Card).length === 0;
                     if (!startThrud) {
                         break;
                     }

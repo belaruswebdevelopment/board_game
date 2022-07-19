@@ -1,15 +1,12 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
-import { IsArtefactPlayerCard } from "../Camp";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { IsMythicalAnimalCard } from "../MythologicalCreature";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusPhaseNames, StageNames } from "../typescript/enums";
+import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, StageNames } from "../typescript/enums";
 import type { CampCardTypes, CanBeNull, CanBeUndef, DiscardDeckCardTypes, DrawProfitTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
@@ -53,7 +50,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<Mov
                         ctx.currentPlayer);
                 }
                 let suit: CanBeNull<SuitTypes> = null;
-                if (IsArtefactPlayerCard(campCard)) {
+                if (campCard.type === RusCardTypeNames.Artefact_Player_Card) {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
@@ -241,7 +238,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Can
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit: CanBeNull<SuitTypes> = null;
-        if (IsDwarfCard(card)) {
+        if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickDiscardCard) {
@@ -567,7 +564,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<
                     }
                 } else {
                     let suit: CanBeNull<SuitTypes> = null;
-                    if (IsDwarfCard(tavernCard) || IsMythicalAnimalCard(tavernCard)) {
+                    if (`suit` in tavernCard) {
                         suit = tavernCard.suit;
                     }
                     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

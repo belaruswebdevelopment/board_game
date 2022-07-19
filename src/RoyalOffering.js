@@ -59,15 +59,4 @@ const CreateRoyalOfferingCard = ({ type = RusCardTypeNames.Royal_Offering_Card, 
     stack,
     name,
 });
-/**
- * <h3>Проверка, является ли объект картой королевской награды.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой королевской награды.
- */
-export const IsRoyalOfferingCard = (card) => card !== null && card.value !== undefined;
 //# sourceMappingURL=RoyalOffering.js.map

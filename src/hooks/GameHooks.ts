@@ -1,9 +1,8 @@
 import type { Ctx } from "boardgame.io";
-import { IsMercenaryCampCard } from "../Camp";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
-import { BuffNames, ErrorNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -46,7 +45,7 @@ export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
                         i);
                 }
                 allMercenariesPlayed = player.campCards.filter((card: CampDeckCardTypes): boolean =>
-                    IsMercenaryCampCard(card)).length === 0;
+                    card.type === RusCardTypeNames.Mercenary_Card).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }

@@ -1,12 +1,11 @@
 import type { Ctx } from "boardgame.io";
-import { IsMercenaryCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { BuffNames, ErrorNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
@@ -36,7 +35,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
                         i);
                 }
                 allMercenariesPlayed = playerI.campCards.filter((card: CampDeckCardTypes): boolean =>
-                    IsMercenaryCampCard(card)).length === 0;
+                    card.type === RusCardTypeNames.Mercenary_Card).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }
@@ -68,7 +67,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
         return EndTurnActions(G, ctx);
     } else if (!player.stack.length) {
         return player.campCards.filter((card: CampDeckCardTypes): boolean =>
-            IsMercenaryCampCard(card)).length === 0;
+            card.type === RusCardTypeNames.Mercenary_Card).length === 0;
     }
 };
 
@@ -111,8 +110,8 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length) {
-        const mercenariesCount: number =
-            player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card)).length;
+        const mercenariesCount: number = player.campCards.filter((card: CampDeckCardTypes): boolean =>
+            card.type === RusCardTypeNames.Mercenary_Card).length;
         if (mercenariesCount) {
             AddActionsToStack(G, ctx, [StackData.enlistmentMercenaries()]);
             DrawCurrentProfit(G, ctx);
@@ -176,14 +175,14 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
         playersIndexes: string[] = [];
     sortedPlayers.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
         if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
-            IsMercenaryCampCard(card)).length <
+            card.type === RusCardTypeNames.Mercenary_Card).length <
             currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
-                IsMercenaryCampCard(card)).length) {
+                card.type === RusCardTypeNames.Mercenary_Card).length) {
             return 1;
         } else if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
-            IsMercenaryCampCard(card)).length >
+            card.type === RusCardTypeNames.Mercenary_Card).length >
             currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
-                IsMercenaryCampCard(card)).length) {
+                card.type === RusCardTypeNames.Mercenary_Card).length) {
             return -1;
         }
         if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -195,7 +194,7 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
     });
     sortedPlayers.forEach((playerSorted: IPublicPlayer): void => {
         if (playerSorted.campCards.filter((card: CampDeckCardTypes): boolean =>
-            IsMercenaryCampCard(card)).length) {
+            card.type === RusCardTypeNames.Mercenary_Card).length) {
             playersIndexes.push(String(Object.values(G.publicPlayers)
                 .findIndex((player: IPublicPlayer): boolean => player.nickname === playerSorted.nickname)));
         }

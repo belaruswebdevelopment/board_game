@@ -79,18 +79,3 @@ export const CreateDwarfCard = ({
     points,
     name,
 });
-
-// Todo Fix Add !(...) for IsMultiSuitPlayerCard && IsMythicalAnimalCard && IsSpecialCard
-/**
- * <h3>Проверка, является ли объект картой дворфа.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой дворфа.
- */
-export const IsDwarfCard = (card: unknown): card is IDwarfCard => card !== null
-    && (card as IDwarfCard).suit !== undefined && !(`description` in (card as IDwarfCard))
-    && !(`path` in (card as IDwarfCard));

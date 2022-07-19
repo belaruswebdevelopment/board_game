@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { IsDwarfCard } from "../Dwarf";
+import { RusCardTypeNames } from "../typescript/enums";
 import type { CanBeUndef, ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
@@ -148,8 +148,10 @@ const GetCharacteristics = (array: number[]): ICardCharacteristics => {
  * @TODO Саше: сделать описание функции и параметров.
  */
 const isAllCardsEqual: IHeuristic<TavernCardTypes[]> = {
+    // TODO Add errors for undefined
     heuristic: (cards: TavernCardTypes[]): boolean => cards.every((card: TavernCardTypes): boolean =>
-    (IsDwarfCard(card) && IsDwarfCard(cards[0]) && card.suit === cards[0].suit
+    (card !== null && card.type === RusCardTypeNames.Dwarf_Card && cards[0] !== undefined && cards[0] !== null
+        && cards[0].type === RusCardTypeNames.Dwarf_Card && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };

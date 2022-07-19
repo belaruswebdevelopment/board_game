@@ -1,8 +1,7 @@
 import type { Ctx } from "boardgame.io";
-import { IsMercenaryCampCard } from "../Camp";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardTypes } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
@@ -179,7 +178,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): string | void =>
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (player.campCards.filter((card: CampDeckCardTypes): boolean =>
-            IsMercenaryCampCard(card)).length) {
+            card.type === RusCardTypeNames.Mercenary_Card).length) {
             count = true;
             break;
         }

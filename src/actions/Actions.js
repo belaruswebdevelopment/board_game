@@ -1,7 +1,6 @@
-import { CreateMercenaryPlayerCard, IsMercenaryCampCard } from "../Camp";
+import { CreateMercenaryPlayerCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer, PickCardOrActionCardActions } from "../helpers/CardHelpers";
@@ -80,7 +79,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
     if (pickedCard === undefined) {
         throw new Error(`В массиве карт лагеря игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
-    if (!IsMercenaryCampCard(pickedCard)) {
+    if (pickedCard.type !== RusCardTypeNames.Mercenary_Card) {
         throw new Error(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary_Card}'.`);
     }
     AddActionsToStack(G, ctx, [StackData.placeEnlistmentMercenaries(pickedCard)]);
@@ -148,7 +147,7 @@ export const PickDiscardCardAction = (G, ctx, cardId) => {
     }
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
     const isAdded = PickCardOrActionCardActions(G, ctx, card);
-    if (isAdded && IsDwarfCard(card)) {
+    if (isAdded && card.type === RusCardTypeNames.Dwarf_Card) {
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     }
 };

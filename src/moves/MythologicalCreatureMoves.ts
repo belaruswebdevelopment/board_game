@@ -1,7 +1,6 @@
 import type { Ctx, Move } from "boardgame.io";
 import { godConfig } from "../data/MythologicalCreatureData";
 import { ThrowMyError } from "../Error";
-import { IsGodCard } from "../MythologicalCreature";
 import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
 import type { CanBeUndef, IGodData, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardTypes } from "../typescript/interfaces";
 
@@ -25,7 +24,8 @@ export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, c
     const card: CanBeUndef<MythologicalCreatureCommandZoneCardTypes> = player.mythologicalCreatureCards[cardId];
     if (card === undefined) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта с id '${cardId}'.`);
-    } else if (!IsGodCard(card)) {
+    }
+    if (card.type !== RusCardTypeNames.God_Card) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God_Card}', а не с типом '${card.type}'.`);
     }
     const godCard: CanBeUndef<IGodData> =

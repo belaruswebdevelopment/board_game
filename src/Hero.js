@@ -99,16 +99,4 @@ export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card,
     rank,
     points,
 });
-/**
-* <h3>Проверка, является ли объект картой героя на поле игрока.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>При проверках в функциях.</li>
-* </ol>
-*
-* @param card Карта.
-* @returns Является ли объект картой героя на поле игрока.
-*/
-export const IsHeroPlayerCard = (card) => card !== null
-    && card.description !== undefined && !(`validators` in card);
 //# sourceMappingURL=Hero.js.map

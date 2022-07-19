@@ -1,14 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { IsArtefactPlayerCard } from "../Camp";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { IsMythicalAnimalCard } from "../MythologicalCreature";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusPhaseNames, StageNames } from "../typescript/enums";
+import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, StageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -45,7 +42,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 let suit = null;
-                if (IsArtefactPlayerCard(campCard)) {
+                if (campCard.type === RusCardTypeNames.Artefact_Player_Card) {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
@@ -193,7 +190,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (IsDwarfCard(card)) {
+        if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
         if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickDiscardCard) {
@@ -450,7 +447,7 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                 }
                 else {
                     let suit = null;
-                    if (IsDwarfCard(tavernCard) || IsMythicalAnimalCard(tavernCard)) {
+                    if (`suit` in tavernCard) {
                         suit = tavernCard.suit;
                     }
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];

@@ -2,13 +2,12 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -71,7 +70,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     }
     G.explorerDistinctionCards.splice(0);
     const isAdded = PickCardOrActionCardActions(G, ctx, pickedCard);
-    if (isAdded && IsDwarfCard(pickedCard)) {
+    if (isAdded && pickedCard.type === RusCardTypeNames.Dwarf_Card) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

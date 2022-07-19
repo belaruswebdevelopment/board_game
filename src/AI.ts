@@ -1,10 +1,9 @@
 import type { Ctx } from "boardgame.io";
 import { CompareCards } from "./bot_logic/BotCardLogic";
-import { IsDwarfCard } from "./Dwarf";
 import { ThrowMyError } from "./Error";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, ErrorNames, MoveNames, PhaseNames, StageNames } from "./typescript/enums";
+import { ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
 import type { CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsTypes, MoveValidatorGetRangeTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
@@ -160,7 +159,8 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
             throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '1'.`);
         }
         if (currentTavern.every((card: TavernCardTypes): boolean =>
-            card === null || (IsDwarfCard(card) && IsDwarfCard(tavernNotNullCard)
+            card === null || (card.type === RusCardTypeNames.Dwarf_Card && tavernNotNullCard !== null
+                && tavernNotNullCard.type === RusCardTypeNames.Dwarf_Card
                 && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))
         ) {
             return 1;
@@ -183,7 +183,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
                 return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
             }
             if (deck0.length > 18) {
-                if (IsDwarfCard(tavernCard)) {
+                if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card: TavernCardTypes): boolean => card !== null
                             && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {

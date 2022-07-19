@@ -1,4 +1,3 @@
-import { IsMercenaryCampCard } from "../Camp";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
@@ -12,7 +11,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
  * <p>Применения:</p>
@@ -137,7 +136,7 @@ export const EndTavernsResolutionActions = (G, ctx) => {
                     if (player === undefined) {
                         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                     }
-                    startThrud = player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
+                    startThrud = player.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length === 0;
                     if (!startThrud) {
                         break;
                     }

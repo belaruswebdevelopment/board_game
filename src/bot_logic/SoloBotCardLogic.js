@@ -1,10 +1,8 @@
 import { suitsConfig } from "../data/SuitData";
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
-import { IsRoyalOfferingCard } from "../RoyalOffering";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, ErrorNames, SuitNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 export const CheckSoloBotCanPickHero = (G, ctx, player) => {
     const playerCards = Object.values(player.cards), heroesLength = player.heroes.filter((hero) => hero.name.startsWith(`Dwerg`)).length, playerCardsCount = playerCards.map((item) => item.reduce(TotalRank, 0)), minLength = Math.min(...playerCardsCount), minLengthCount = playerCardsCount.filter((length) => length === minLength).length, isCanPickHero = minLength === heroesLength && minLengthCount === 1;
     if (isCanPickHero) {
@@ -61,7 +59,7 @@ export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
             if (tavernCard === null) {
                 throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${moveArgument}'.`);
             }
-            if (IsRoyalOfferingCard(tavernCard)) {
+            if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
                 continue;
             }
             if (tavernCard.suit === suit) {
@@ -110,7 +108,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) 
         if (tavernCard === null) {
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
         }
-        if (IsRoyalOfferingCard(tavernCard)) {
+        if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта обмена монет с id '${moveArgument}'.`);
         }
         if (tavernCard.points === null) {
@@ -157,11 +155,11 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
         if (tavernCard === null) {
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
         }
-        if (IsRoyalOfferingCard(tavernCard)) {
+        if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
             continue;
         }
         if (availableSuitArguments.includes(tavernCard.suit)) {
-            if (IsDwarfCard(tavernCard)) {
+            if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
                 leastPresentArguments.push(i);
                 if (tavernCard.points === null || tavernCard.suit === SuitNames.Miner) {
                     isNoPoints = true;

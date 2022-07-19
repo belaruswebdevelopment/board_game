@@ -2,15 +2,13 @@ import type { Ctx } from "boardgame.io";
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
-import { IsMercenaryCampCard } from "./Camp";
 import { IsCoin } from "./Coin";
-import { IsDwarfCard } from "./Dwarf";
 import { ThrowMyError } from "./Error";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, StageNames, SuitNames } from "./typescript/enums";
+import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, StageNames, SuitNames } from "./typescript/enums";
 import type { CampDeckCardTypes, CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PickValidatorConfigTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
@@ -301,8 +299,8 @@ export const moveValidators: IMoveValidators = {
                         if (uniqueCard === undefined) {
                             throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
                         }
-                        if (IsDwarfCard(tavernCard)
-                            && IsDwarfCard(uniqueCard)
+                        if (tavernCard.type === RusCardTypeNames.Dwarf_Card
+                            && uniqueCard.type === RusCardTypeNames.Dwarf_Card
                             && tavernCard.suit === uniqueCard.suit
                             && CompareCards(tavernCard, uniqueCard) === 0) {
                             flag = false;
@@ -601,7 +599,7 @@ export const moveValidators: IMoveValidators = {
                     ctx.currentPlayer);
             }
             const mercenariesCount = player.campCards.filter((card: CampDeckCardTypes): boolean =>
-                IsMercenaryCampCard(card)).length;
+                card.type === RusCardTypeNames.Mercenary_Card).length;
             return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                 && mercenariesCount > 0;
         },

@@ -1,9 +1,8 @@
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
-import { CreateDwarfCard, IsDwarfCard } from "../Dwarf";
+import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { IsRoyalOfferingCard } from "../RoyalOffering";
-import { ErrorNames } from "../typescript/enums";
+import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
 // Check all types in this file!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -22,7 +21,7 @@ export const CompareCards = (card1, card2) => {
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (IsDwarfCard(card1) && IsDwarfCard(card2)) {
+    if (card1.type === RusCardTypeNames.Dwarf_Card && card2.type === RusCardTypeNames.Dwarf_Card) {
         if (card1.suit === card2.suit) {
             const result = ((_a = card1.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
             if (result === 0) {
@@ -49,7 +48,7 @@ export const CompareCards = (card1, card2) => {
  * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
-    if (IsDwarfCard(compareCard)) {
+    if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
         const deckTier1 = G.secret.decks[0];
         if (deckTier1 === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
@@ -75,7 +74,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
         return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
-    if (IsDwarfCard(compareCard)) {
+    if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
     return 0;
@@ -154,7 +153,7 @@ const PotentialScoring = (G, ctx, playerId, card) => {
     }
     let score = 0, suit;
     for (suit in suitsConfig) {
-        if (IsDwarfCard(card) && card.suit === suit) {
+        if (card !== null && card.type === RusCardTypeNames.Dwarf_Card && card.suit === suit) {
             score +=
                 suitsConfig[suit].scoringRule(player.cards[suit], suit, (_a = card.points) !== null && _a !== void 0 ? _a : 1);
         }
@@ -162,7 +161,7 @@ const PotentialScoring = (G, ctx, playerId, card) => {
             score += suitsConfig[suit].scoringRule(player.cards[suit], suit);
         }
     }
-    if (IsRoyalOfferingCard(card)) {
+    if (card !== null && card.type === RusCardTypeNames.Royal_Offering_Card) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

@@ -1,4 +1,3 @@
-import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
@@ -8,7 +7,7 @@ import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, PhaseNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -127,11 +126,11 @@ export const PickCampCardAction = (G, ctx, cardId) => {
     }
     G.camp.splice(cardId, 1, null);
     AddCampCardToCards(G, ctx, campCard);
-    if (IsArtefactCard(campCard)) {
+    if (campCard.type === RusCardTypeNames.Artefact_Card) {
         AddActionsToStack(G, ctx, campCard.stack, campCard);
         StartAutoAction(G, ctx, campCard.actions);
     }
-    if (IsMercenaryCampCard(campCard) && ctx.phase === PhaseNames.EnlistmentMercenaries) {
+    if (campCard.type === RusCardTypeNames.Mercenary_Card && ctx.phase === PhaseNames.EnlistmentMercenaries) {
         AddActionsToStack(G, ctx, [StackData.placeEnlistmentMercenaries(campCard)]);
     }
     if (G.odroerirTheMythicCauldron) {

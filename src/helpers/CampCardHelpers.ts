@@ -1,9 +1,8 @@
 import type { Ctx } from "boardgame.io";
-import { IsArtefactCard, IsArtefactPlayerCard } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -31,12 +30,12 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
     if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (IsArtefactPlayerCard(card) && card.suit !== null) {
+    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudAction(G, ctx, card);
     } else {
         AddCampCardToPlayer(G, ctx, card);
-        if (IsArtefactCard(card)) {
+        if (card.type === RusCardTypeNames.Artefact_Card) {
             AddBuffToPlayer(G, ctx, card.buff);
         }
     }
@@ -54,7 +53,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
  * @param card Карта лагеря.
  */
 export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
-    if (IsArtefactPlayerCard(card) && card.suit !== null) {
+    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
         throw new Error(`Не удалось добавить карту артефакта '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
     }
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

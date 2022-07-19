@@ -1,8 +1,7 @@
-import { IsArtefactCard, IsArtefactPlayerCard } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 /**
@@ -28,13 +27,13 @@ export const AddCampCardToCards = (G, ctx, card) => {
     if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (IsArtefactPlayerCard(card) && card.suit !== null) {
+    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudAction(G, ctx, card);
     }
     else {
         AddCampCardToPlayer(G, ctx, card);
-        if (IsArtefactCard(card)) {
+        if (card.type === RusCardTypeNames.Artefact_Card) {
             AddBuffToPlayer(G, ctx, card.buff);
         }
     }
@@ -51,7 +50,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
  * @param card Карта лагеря.
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
-    if (IsArtefactPlayerCard(card) && card.suit !== null) {
+    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
         throw new Error(`Не удалось добавить карту артефакта '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

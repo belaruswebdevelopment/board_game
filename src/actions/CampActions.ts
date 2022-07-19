@@ -1,5 +1,4 @@
 import type { Ctx } from "boardgame.io";
-import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
@@ -9,7 +8,7 @@ import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, PhaseNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 import type { BasicVidofnirVedrfolnirUpgradeValueTypes, CampCardTypes, CanBeUndef, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardTypes, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
@@ -141,11 +140,11 @@ export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): v
     }
     G.camp.splice(cardId, 1, null);
     AddCampCardToCards(G, ctx, campCard);
-    if (IsArtefactCard(campCard)) {
+    if (campCard.type === RusCardTypeNames.Artefact_Card) {
         AddActionsToStack(G, ctx, campCard.stack, campCard);
         StartAutoAction(G, ctx, campCard.actions);
     }
-    if (IsMercenaryCampCard(campCard) && ctx.phase === PhaseNames.EnlistmentMercenaries) {
+    if (campCard.type === RusCardTypeNames.Mercenary_Card && ctx.phase === PhaseNames.EnlistmentMercenaries) {
         AddActionsToStack(G, ctx, [StackData.placeEnlistmentMercenaries(campCard)]);
     }
     if (G.odroerirTheMythicCauldron) {

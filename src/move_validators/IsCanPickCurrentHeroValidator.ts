@@ -1,7 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
-import { IsHeroPlayerCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
 import type { CanBeUndef, ConditionsTypes, ConditionTypes, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
@@ -42,7 +41,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
                     if (card === undefined) {
                         throw new Error(`В массиве карт фракции '${suit}' отсутствует последняя карта с id '${last}'.`);
                     }
-                    if (!IsHeroPlayerCard(card)) {
+                    if (card.type !== RusCardTypeNames.Hero_Player_Card) {
                         cardsToDiscard.push(card);
                     }
                 }

@@ -7,7 +7,6 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helpers/CoinHelpers";
 import { AddDataToLog } from "./Logging";
-import { IsGiantCard, IsGodCard, IsMythicalAnimalCard, IsValkyryCard } from "./MythologicalCreature";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
 /**
@@ -161,37 +160,45 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             if (mythologicalCreatureCard === undefined) {
                 throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' в командной зоне отсутствует карта с id '${i}'.`);
             }
-            if (IsGodCard(mythologicalCreatureCard)) {
-                const godCard = Object.values(godConfig).find((god) => god.name === mythologicalCreatureCard.name);
-                if (godCard === undefined) {
-                    throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.God_Card}' с названием '${mythologicalCreatureCard.name}'.`);
-                }
-                godsScore += godCard.points;
-                AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.God_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${godCard.points}';`);
-            }
-            else if (IsGiantCard(mythologicalCreatureCard)) {
-                const giantCard = Object.values(giantConfig).find((giant) => giant.name === mythologicalCreatureCard.name);
-                if (giantCard === undefined) {
-                    throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Giant_Card}' с названием '${mythologicalCreatureCard.name}'.`);
-                }
-                const currentGiantScore = giantCard.scoringRule(player, giantCard.name);
-                giantsScore += currentGiantScore;
-                AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Giant_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentGiantScore}';`);
-            }
-            else if (IsValkyryCard(mythologicalCreatureCard)) {
-                const valkyryCard = Object.values(valkyryConfig).find((valkyry) => valkyry.name === mythologicalCreatureCard.name);
-                if (valkyryCard === undefined) {
-                    throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}'.`);
-                }
-                if (mythologicalCreatureCard.strengthTokenNotch === null) {
-                    throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}' не может не быть выставлен токен силы.`);
-                }
-                const currentValkyryScore = valkyryCard.scoringRule(mythologicalCreatureCard.strengthTokenNotch, valkyryCard.name);
-                valkyriesScore += currentValkyryScore;
-                AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Valkyry_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentValkyryScore}';`);
+            let godCard, giantCard, valkyryCard, currentGiantScore, currentValkyryScore;
+            switch (mythologicalCreatureCard.type) {
+                case RusCardTypeNames.God_Card:
+                    godCard = Object.values(godConfig).find((god) => god.name === mythologicalCreatureCard.name);
+                    if (godCard === undefined) {
+                        throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.God_Card}' с названием '${mythologicalCreatureCard.name}'.`);
+                    }
+                    godsScore += godCard.points;
+                    AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.God_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${godCard.points}';`);
+                    break;
+                case RusCardTypeNames.Giant_Card:
+                    giantCard = Object.values(giantConfig).find((giant) => giant.name === mythologicalCreatureCard.name);
+                    if (giantCard === undefined) {
+                        throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Giant_Card}' с названием '${mythologicalCreatureCard.name}'.`);
+                    }
+                    currentGiantScore = giantCard.scoringRule(player, giantCard.name);
+                    giantsScore += currentGiantScore;
+                    AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Giant_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentGiantScore}';`);
+                    break;
+                case RusCardTypeNames.Valkyry_Card:
+                    valkyryCard = Object.values(valkyryConfig).find((valkyry) => valkyry.name === mythologicalCreatureCard.name);
+                    if (valkyryCard === undefined) {
+                        throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}'.`);
+                    }
+                    if (mythologicalCreatureCard.strengthTokenNotch === null) {
+                        throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}' не может не быть выставлен токен силы.`);
+                    }
+                    currentValkyryScore = valkyryCard.scoringRule(mythologicalCreatureCard.strengthTokenNotch, valkyryCard.name);
+                    valkyriesScore += currentValkyryScore;
+                    AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Valkyry_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentValkyryScore}';`);
+                    break;
+                default:
+                    // eslint-disable-next-line no-case-declarations
+                    const _exhaustiveCheck = mythologicalCreatureCard;
+                    throw new Error(`В массиве карт мифических существ игрока карта не может быть с недопустимым типом.`);
+                    return _exhaustiveCheck;
             }
         }
-        const cards = Object.values(player.cards).flat().filter((card) => IsMythicalAnimalCard(card));
+        const cards = Object.values(player.cards).flat().filter((card) => card.type === RusCardTypeNames.Mythical_Animal_Card);
         for (let m = 0; m < cards.length; m++) {
             const playerMythicalAnimalCard = cards[m];
             if (playerMythicalAnimalCard === undefined) {

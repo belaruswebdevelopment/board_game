@@ -1,17 +1,14 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
-import { IsMercenaryCampCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { IsHeroPlayerCard } from "../Hero";
-import { IsGodCard } from "../MythologicalCreature";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BuffNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, StageNames, SuitNames } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeNull, CanBeUndef, CoinTypes, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveFunctionTypes, MythologicalCreatureCommandZoneCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
@@ -156,7 +153,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                 if (card !== undefined) {
                     isDrawRow = true;
                     if (p !== Number(ctx.currentPlayer) && stage === StageNames.DiscardSuitCard
-                        && suit === SuitNames.Warrior && !IsHeroPlayerCard(card)) {
+                        && suit === SuitNames.Warrior && card.type !== RusCardTypeNames.Hero_Player_Card) {
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit,
                                 MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
@@ -168,7 +165,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                             moveMainArgs.cards.push(i);
                         }
                     } else if (p === Number(ctx.currentPlayer) && last === i
-                        && stage === StageNames.DiscardBoardCard && !IsHeroPlayerCard(card)) {
+                        && stage === StageNames.DiscardBoardCard && card.type !== RusCardTypeNames.Hero_Player_Card) {
                         // TODO Does it need more then 1 checking?
                         if (stack === undefined) {
                             return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
@@ -192,8 +189,8 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                                 moveMainArgsFoSuit.push(last);
                             }
                         }
-                    } else if (p === Number(ctx.currentPlayer)
-                        && ctx.phase === PhaseNames.BrisingamensEndGame && !IsHeroPlayerCard(card)) {
+                    } else if (p === Number(ctx.currentPlayer) && ctx.phase === PhaseNames.BrisingamensEndGame
+                        && card.type !== RusCardTypeNames.Hero_Player_Card) {
                         if (data !== undefined) {
                             const suitArg: SuitTypes = suit;
                             DrawCard(data, playerCells, card, id, player, suit,
@@ -315,7 +312,8 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                     const campCard: CanBeUndef<CampDeckCardTypes> = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
-                        if (IsMercenaryCampCard(campCard) && ctx.phase === PhaseNames.EnlistmentMercenaries
+                        if (campCard.type === RusCardTypeNames.Mercenary_Card
+                            && ctx.phase === PhaseNames.EnlistmentMercenaries
                             && ctx.activePlayers === null && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
                                 DrawCard(data, playerCells, campCard, id, player, null,
@@ -345,7 +343,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                         player.mythologicalCreatureCards[i];
                     if (mythologicalCreatureCommandZoneCard !== undefined) {
                         isDrawRow = true;
-                        if (IsGodCard(mythologicalCreatureCommandZoneCard)
+                        if (mythologicalCreatureCommandZoneCard.type === RusCardTypeNames.God_Card
                             && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
                                 DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player,

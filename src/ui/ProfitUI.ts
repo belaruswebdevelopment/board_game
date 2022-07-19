@@ -1,8 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, StageNames } from "../typescript/enums";
+import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
 import type { CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, IStack, SuitTypes, VidofnirVedrfolnirUpgradeValueTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
@@ -113,7 +112,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
         let suit: CanBeNull<SuitTypes> = null;
-        if (IsDwarfCard(card)) {
+        if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
         const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

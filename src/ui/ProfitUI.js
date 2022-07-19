@@ -1,6 +1,5 @@
-import { IsDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, StageNames } from "../typescript/enums";
+import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 /**
  * <h3>Отрисовка для выбора уровня сложности соло игры.</h3>
@@ -100,7 +99,7 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (IsDwarfCard(card)) {
+        if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
