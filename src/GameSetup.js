@@ -34,7 +34,7 @@ export const SetupGame = (ctx) => {
         idavoll: {
             active: solo ? false : false,
         },
-    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [GameNames.Basic], multiCardsDeck = BuildMultiSuitCards(configOptions), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
+    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [GameNames.Basic], discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
         campDecks: [],
         decks: [],
         // TODO Add Idavoll deck length info on main page?
@@ -86,7 +86,7 @@ export const SetupGame = (ctx) => {
             configOptions.push(expansion);
         }
     }
-    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(configOptions, solo), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, deck0 = secret.decks[0];
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(configOptions, solo), multiCardsDeck = BuildMultiSuitCards(configOptions), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, deck0 = secret.decks[0];
     if (deck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }

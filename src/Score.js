@@ -160,7 +160,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             if (mythologicalCreatureCard === undefined) {
                 throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' в командной зоне отсутствует карта с id '${i}'.`);
             }
-            let godCard, giantCard, valkyryCard, currentGiantScore, currentValkyryScore;
+            let godCard, giantCard, valkyryCard, currentGiantScore, currentValkyryScore, _exhaustiveCheck;
             switch (mythologicalCreatureCard.type) {
                 case RusCardTypeNames.God_Card:
                     godCard = Object.values(godConfig).find((god) => god.name === mythologicalCreatureCard.name);
@@ -192,8 +192,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
                     AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Valkyry_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentValkyryScore}';`);
                     break;
                 default:
-                    // eslint-disable-next-line no-case-declarations
-                    const _exhaustiveCheck = mythologicalCreatureCard;
+                    _exhaustiveCheck = mythologicalCreatureCard;
                     throw new Error(`В массиве карт мифических существ игрока карта не может быть с недопустимым типом.`);
                     return _exhaustiveCheck;
             }

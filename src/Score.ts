@@ -181,7 +181,8 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
                 giantCard: CanBeUndef<IGiantData>,
                 valkyryCard: CanBeUndef<IValkyryData>,
                 currentGiantScore: number,
-                currentValkyryScore: number;
+                currentValkyryScore: number,
+                _exhaustiveCheck: never;
             switch (mythologicalCreatureCard.type) {
                 case RusCardTypeNames.God_Card:
                     godCard = Object.values(godConfig).find((god: IGodData): boolean =>
@@ -217,8 +218,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
                     AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Valkyry_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentValkyryScore}';`);
                     break;
                 default:
-                    // eslint-disable-next-line no-case-declarations
-                    const _exhaustiveCheck: never = mythologicalCreatureCard;
+                    _exhaustiveCheck = mythologicalCreatureCard;
                     throw new Error(`В массиве карт мифических существ игрока карта не может быть с недопустимым типом.`);
                     return _exhaustiveCheck;
             }

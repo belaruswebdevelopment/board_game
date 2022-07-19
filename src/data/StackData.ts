@@ -106,10 +106,10 @@ export const StackData: IStackData = {
         drawName: DrawNames.PlaceYludHero,
         name: HeroNames.Ylud,
     }),
-    pickHero: (): IStack => ({
+    pickHero: (priority: 1 | 2): IStack => ({
         stageName: StageNames.PickHero,
         drawName: DrawNames.PickHero,
-        priority: 1,
+        priority,
     }),
     pickHeroSoloBot: (): IStack => ({
         stageName: StageNames.PickHeroSoloBot,

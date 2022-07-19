@@ -35,7 +35,7 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
             playerPickHeroActionInStackIndex: number = player.stack.findIndex((stack: IStack): boolean =>
                 stack.stageName === StageNames.PickHero);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
-            AddPickHeroAction(G, ctx);
+            AddPickHeroAction(G, ctx, 1);
         }
     }
 };

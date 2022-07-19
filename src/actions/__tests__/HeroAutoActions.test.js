@@ -13,7 +13,7 @@ describe(`Test AddPickHeroAction method`, () => {
         };
         AddPickHeroAction(G, {
             currentPlayer: `0`,
-        });
+        }, 1);
         expect(G).toEqual({
             publicPlayers: {
                 0: {

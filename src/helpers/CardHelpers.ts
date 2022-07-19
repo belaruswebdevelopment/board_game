@@ -27,17 +27,19 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: AddCardToPlayer
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
+    let _exhaustiveCheck: never;
     switch (card.type) {
         case RusCardTypeNames.Dwarf_Card:
         case RusCardTypeNames.Mercenary_Player_Card:
         case RusCardTypeNames.Mythical_Animal_Card:
         case RusCardTypeNames.Special_Card:
         case RusCardTypeNames.Multi_Suit_Player_Card:
+        case RusCardTypeNames.Artefact_Player_Card:
+            player.cards[card.suit].push(card);
             return true;
         default:
             if (`suit` in card) {
-                // eslint-disable-next-line no-case-declarations
-                const _exhaustiveCheck: never = card;
+                _exhaustiveCheck = card;
                 throw new Error(`Карта имеющая принадлежность к фракции должна быть добавлена на стол игрока.`);
                 return _exhaustiveCheck;
             }
@@ -63,6 +65,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.mythologicalCreatureCards.push(card);
+    let _exhaustiveCheck: never;
     switch (card.type) {
         case RusCardTypeNames.God_Card:
             card.isPowerTokenUsed = false;
@@ -74,8 +77,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
             card.strengthTokenNotch = 0;
             break;
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck: never = card;
+            _exhaustiveCheck = card;
             throw new Error(`Добавленная в командную зону для карт мифических существ карта не может быть с недопустимым типом.`);
             return _exhaustiveCheck;
     }
@@ -103,6 +105,7 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Non
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const isAdded: boolean = AddCardToPlayer(G, ctx, card);
+    let _exhaustiveCheck: never;
     switch (card.type) {
         case RusCardTypeNames.Dwarf_Card:
         case RusCardTypeNames.Mythical_Animal_Card:
@@ -123,8 +126,7 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Non
             }
             break;
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck: never = card;
+            _exhaustiveCheck = card;
             throw new Error(`Добавленная на поле игрока карта не может быть с недопустимым типом.`);
             return _exhaustiveCheck;
     }

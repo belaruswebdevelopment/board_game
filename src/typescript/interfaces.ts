@@ -378,7 +378,7 @@ export interface IStackData {
     readonly placeThrudHero: () => IStack;
     readonly placeTradingCoinsUline: () => IStack;
     readonly placeYludHero: () => IStack;
-    readonly pickHero: () => IStack;
+    readonly pickHero: (priority: 1 | 2) => IStack;
     readonly pickHeroSoloBot: () => IStack;
     readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
     readonly startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueTypes,
@@ -1194,7 +1194,7 @@ export type DiscardCardTypes =
     PlayerCardTypes | IRoyalOfferingCard | IArtefactCampCard | MythologicalCreatureDeckCardTypes;
 
 export type AddCardToPlayerTypes =
-    NonNullable<TavernCardTypes> | IMercenaryPlayerCard | ISpecialCard | IMultiSuitPlayerCard;
+    NonNullable<TavernCardTypes> | IMercenaryPlayerCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard;
 
 // TODO FIX ME!!
 /**

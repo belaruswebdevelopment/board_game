@@ -1,4 +1,4 @@
-import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, RusCardTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
 import type { CanBeNull, IBackground, IStyles, MythologicalCreatureNameTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -539,11 +539,11 @@ export const Styles: IStyles = {
     }),
     RoyalOffering: (name: RoyalOfferingNames): IBackground => {
         switch (name) {
-            case `'${RusCardTypeNames.Royal_Offering_Card}' на +3`:
+            case `${RoyalOfferingNames.PlusThree}`:
                 return {
                     background: `${basicCardsPath}0.png) no-repeat -128px -240px / 288px 288px`,
                 };
-            case `'${RusCardTypeNames.Royal_Offering_Card}' на +5`:
+            case `${RoyalOfferingNames.PlusFive}`:
                 return {
                     background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
                 };

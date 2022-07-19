@@ -13,6 +13,7 @@ import type { DiscardCardTypes, IMyGameState } from "../typescript/interfaces";
  * @param discardedCard Сбрасываемая карта.
  */
 export const DiscardPickedCard = (G: IMyGameState, discardedCard: DiscardCardTypes): void => {
+    let _exhaustiveCheck: never;
     switch (discardedCard.type) {
         case RusCardTypeNames.Mercenary_Player_Card:
         case RusCardTypeNames.Artefact_Card:
@@ -38,8 +39,7 @@ export const DiscardPickedCard = (G: IMyGameState, discardedCard: DiscardCardTyp
         case RusCardTypeNames.Hero_Player_Card:
             throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck: never = discardedCard;
+            _exhaustiveCheck = discardedCard;
             throw new Error(`Сброшенная карта не может быть с недопустимым для сброса типом.`);
             return _exhaustiveCheck;
     }

@@ -5,6 +5,7 @@ import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
 import type { CampDeckCardTypes, CanBeUndef, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
+import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 
 /**
@@ -31,7 +32,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
     if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
-        AddCampCardToPlayerCards(G, ctx, card);
+        AddArtefactPlayerCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudAction(G, ctx, card);
     } else {
         AddCampCardToPlayer(G, ctx, card);
@@ -54,14 +55,14 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
  */
 export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
     if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
-        throw new Error(`Не удалось добавить карту артефакта '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
+        throw new Error(`Не удалось добавить карту лагеря '${card.type}' '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
     }
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     player.campCards.push(card);
-    AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}'.`);
 };
 
 /**
@@ -76,16 +77,14 @@ export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCar
  * @param card Карта лагеря.
  * @returns Добавлен ли артефакт на планшет игрока.
  */
-export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactPlayerCampCard): boolean => {
-    if (card.suit === null) {
-        throw new Error(`Не удалось добавить артефакт '${card.name}' на планшет карт фракций игрока с id '${ctx.currentPlayer}' из-за отсутствия принадлежности его к конкретной фракции.`);
-    }
+export const AddArtefactPlayerCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactPlayerCampCard):
+    boolean => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    player.cards[card.suit].push(card);
-    AddDataToLog(G, LogTypeNames.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+    AddCardToPlayer(G, ctx, card);
+    AddDataToLog(G, LogTypeNames.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };
 

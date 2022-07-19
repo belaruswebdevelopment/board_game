@@ -1,4 +1,4 @@
-import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, RusCardTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Путь к базовым картам.</h3>
  */
@@ -531,11 +531,11 @@ export const Styles = {
     }),
     RoyalOffering: (name) => {
         switch (name) {
-            case `'${RusCardTypeNames.Royal_Offering_Card}' на +3`:
+            case `${RoyalOfferingNames.PlusThree}`:
                 return {
                     background: `${basicCardsPath}0.png) no-repeat -128px -240px / 288px 288px`,
                 };
-            case `'${RusCardTypeNames.Royal_Offering_Card}' на +5`:
+            case `${RoyalOfferingNames.PlusFive}`:
                 return {
                     background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
                 };

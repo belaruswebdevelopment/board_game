@@ -74,10 +74,10 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         value = ``,
         action: MoveFunctionTypes;
     if (`description` in card) {
-        description = card.description;
+        description += card.description;
     }
     if (suit !== null) {
-        tdClasses = suitsConfig[suit].suitColor;
+        tdClasses += suitsConfig[suit].suitColor;
     }
     if (moveName !== undefined) {
         switch (moveName) {
@@ -130,17 +130,18 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     } else {
         action = null;
     }
+    let _exhaustiveCheck: never;
     switch (card.type) {
         case RusCardTypeNames.Hero_Card:
         case RusCardTypeNames.Hero_Player_Card:
             styles = Styles.Hero(card.name);
             if (player === null && `active` in card && !card.active) {
-                spanClasses = `bg-hero-inactive`;
+                spanClasses += `bg-hero-inactive`;
             } else {
-                spanClasses = `bg-hero`;
+                spanClasses += `bg-hero`;
             }
             if (suit === null) {
-                tdClasses = ` bg-gray-600`;
+                tdClasses += ` bg-gray-600`;
             }
             break;
         case RusCardTypeNames.Mercenary_Player_Card:
@@ -148,9 +149,9 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         case RusCardTypeNames.Artefact_Card:
         case RusCardTypeNames.Artefact_Player_Card:
             styles = Styles.CampCard(card.path);
-            spanClasses = `bg-camp`;
+            spanClasses += `bg-camp`;
             if (suit === null) {
-                tdClasses = ` bg-yellow-200`;
+                tdClasses += ` bg-yellow-200`;
                 if (card.type === RusCardTypeNames.Artefact_Card
                     && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
                     value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
@@ -160,11 +161,11 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         case RusCardTypeNames.Dwarf_Card:
         case RusCardTypeNames.Special_Card:
         case RusCardTypeNames.Multi_Suit_Player_Card:
-            spanClasses = `bg-card`;
+            spanClasses += `bg-card`;
             styles = Styles.Card(card.suit, card.name, card.points);
             break;
         case RusCardTypeNames.Royal_Offering_Card:
-            spanClasses = `bg-royal-offering`;
+            spanClasses += `bg-royal-offering`;
             styles = Styles.RoyalOffering(card.name);
             value = String(card.value);
             break;
@@ -172,12 +173,11 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         case RusCardTypeNames.God_Card:
         case RusCardTypeNames.Mythical_Animal_Card:
         case RusCardTypeNames.Valkyry_Card:
-            spanClasses = `bg-mythological-creature`;
+            spanClasses += `bg-mythological-creature`;
             styles = Styles.MythologicalCreature(card.name);
             break;
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck: never = card;
+            _exhaustiveCheck = card;
             throw new Error(`Добавленная на поле игрока карта не может быть с недопустимым типом.`);
             return _exhaustiveCheck;
     }
@@ -261,21 +261,21 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             throw new Error(`Монета на рынке не может отсутствовать.`);
         }
         styles = Styles.Coin(coin.value, false);
-        spanClasses = `bg-market-coin`;
+        spanClasses += `bg-market-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
             span = (<span className={coinClasses}>
                 {additionalParam}
             </span>);
         }
     } else if (type === `hidden-coin`) {
-        spanClasses = `bg-coin`;
+        spanClasses += `bg-coin`;
         if (IsCoin(coin) && coinClasses !== null && coinClasses !== undefined) {
             styles = Styles.CoinBack();
             span = (<span style={Styles.CoinSmall(coin.value, coin.isInitial)} className={coinClasses}>
             </span>);
         }
     } else {
-        spanClasses = `bg-coin`;
+        spanClasses += `bg-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
             spanClasses += ` ${coinClasses}`;
         }

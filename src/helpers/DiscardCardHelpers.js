@@ -11,6 +11,7 @@ import { RusCardTypeNames } from "../typescript/enums";
  * @param discardedCard Сбрасываемая карта.
  */
 export const DiscardPickedCard = (G, discardedCard) => {
+    let _exhaustiveCheck;
     switch (discardedCard.type) {
         case RusCardTypeNames.Mercenary_Player_Card:
         case RusCardTypeNames.Artefact_Card:
@@ -36,8 +37,7 @@ export const DiscardPickedCard = (G, discardedCard) => {
         case RusCardTypeNames.Hero_Player_Card:
             throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck = discardedCard;
+            _exhaustiveCheck = discardedCard;
             throw new Error(`Сброшенная карта не может быть с недопустимым для сброса типом.`);
             return _exhaustiveCheck;
     }

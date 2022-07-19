@@ -1,5 +1,6 @@
 import { ErrorNames } from "./typescript/enums";
 export const ThrowMyError = (G, ctx, error, ...errorArgs) => {
+    let _exhaustiveCheck;
     switch (error) {
         case ErrorNames.CurrentTierDeckIsUndefined:
             throw new Error(`Отсутствует колода карт текущей эпохи с id '${G.secret.decks.length - G.tierToEnd}'.`);
@@ -44,8 +45,7 @@ export const ThrowMyError = (G, ctx, error, ...errorArgs) => {
         case ErrorNames.TavernWithCurrentIdIsUndefined:
             throw new Error(`В массиве таверн отсутствует таверна с id '${errorArgs[0]}'.`);
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck = error;
+            _exhaustiveCheck = error;
             throw new Error(`У ошибок отсутствует название '${error}'.`);
             return _exhaustiveCheck;
     }

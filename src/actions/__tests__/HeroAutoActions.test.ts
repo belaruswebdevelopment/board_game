@@ -16,7 +16,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
         } as Pick<IMyGameState, `publicPlayers` | `logData`>;
         AddPickHeroAction(G as IMyGameState, {
             currentPlayer: `0`,
-        } as Ctx);
+        } as Ctx, 1);
         expect(G).toEqual({
             publicPlayers: {
                 0: {

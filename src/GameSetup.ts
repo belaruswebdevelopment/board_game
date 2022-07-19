@@ -55,7 +55,6 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         odroerirTheMythicCauldronCoins: ICoin[] = [],
         specialCardsDeck: ISpecialCard[] = BuildSpecialCards(),
         configOptions: GameNames[] = [GameNames.Basic],
-        multiCardsDeck: IMultiSuitCard[] = BuildMultiSuitCards(configOptions),
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
         distinctions: SuitPropertyTypes<DistinctionTypes> = {} as SuitPropertyTypes<DistinctionTypes>,
@@ -123,6 +122,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: [IHeroCard[], IHeroCard[], IHeroCard[]] =
         BuildHeroes(configOptions, solo),
+        multiCardsDeck: IMultiSuitCard[] = BuildMultiSuitCards(configOptions),
         taverns: (DeckCardTypes[] | MythologicalCreatureDeckCardTypes[])[] = [],
         tavernsNum = 3,
         currentTavern = -1,

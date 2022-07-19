@@ -78,7 +78,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameStat
             throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' в параметре 'valueArray' отсутствует значение параметра  id '${j}'.`);
         }
         if (data !== undefined && boardCells !== undefined) {
-            DrawButton(data, boardCells, ButtonNames.Start, player,
+            DrawButton(data, boardCells, String(value), player,
                 MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
         } else if (validatorName === MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
             moveMainArgs.push(value);

@@ -73,6 +73,7 @@ const Gjallarhorn: IArtefactData = {
     tier: 1,
     actions: {
         name: AddPickHeroAction.name,
+        params: [2],
     },
     scoringRule: (): number => 0,
 };

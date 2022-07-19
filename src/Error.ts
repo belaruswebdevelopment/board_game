@@ -3,6 +3,7 @@ import { ErrorNames } from "./typescript/enums";
 import type { ErrorArgsTypes, IMyGameState } from "./typescript/interfaces";
 
 export const ThrowMyError = (G: IMyGameState, ctx: Ctx, error: ErrorNames, ...errorArgs: ErrorArgsTypes): never => {
+    let _exhaustiveCheck: never;
     switch (error) {
         case ErrorNames.CurrentTierDeckIsUndefined:
             throw new Error(`Отсутствует колода карт текущей эпохи с id '${G.secret.decks.length - G.tierToEnd}'.`);
@@ -47,8 +48,7 @@ export const ThrowMyError = (G: IMyGameState, ctx: Ctx, error: ErrorNames, ...er
         case ErrorNames.TavernWithCurrentIdIsUndefined:
             throw new Error(`В массиве таверн отсутствует таверна с id '${errorArgs[0]}'.`);
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck: never = error;
+            _exhaustiveCheck = error;
             throw new Error(`У ошибок отсутствует название '${error}'.`);
             return _exhaustiveCheck;
     }

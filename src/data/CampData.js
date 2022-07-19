@@ -68,6 +68,7 @@ const Gjallarhorn = {
     tier: 1,
     actions: {
         name: AddPickHeroAction.name,
+        params: [2],
     },
     scoringRule: () => 0,
 };

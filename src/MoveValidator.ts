@@ -136,7 +136,8 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageNames, id?: V
  * @returns
  */
 export const GetValidator = (phase: PhaseNames, stage: StageNames): CanBeNull<IMoveValidator> => {
-    let validator: CanBeNull<IMoveValidator>;
+    let validator: CanBeNull<IMoveValidator>,
+        _exhaustiveCheck: never;
     switch (phase) {
         case PhaseNames.ChooseDifficultySoloMode:
             validator = moveBy[phase][stage as keyof IMoveByChooseDifficultySoloModeOptions];
@@ -166,8 +167,7 @@ export const GetValidator = (phase: PhaseNames, stage: StageNames): CanBeNull<IM
             validator = moveBy[phase][stage as keyof IMoveByGetMjollnirProfitOptions];
             break;
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck: never = phase;
+            _exhaustiveCheck = phase;
             throw new Error(`Нет такого валидатора.`);
             return _exhaustiveCheck;
     }

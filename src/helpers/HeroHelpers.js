@@ -25,7 +25,7 @@ export const CheckPickHero = (G, ctx) => {
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
         const playerCards = Object.values(player.cards), heroesLength = G.solo ? player.heroes.filter((hero) => hero.name.startsWith(`Dwerg`)).length : player.heroes.length, isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) > heroesLength, playerPickHeroActionInStackIndex = player.stack.findIndex((stack) => stack.stageName === StageNames.PickHero);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
-            AddPickHeroAction(G, ctx);
+            AddPickHeroAction(G, ctx, 1);
         }
     }
 };

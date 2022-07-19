@@ -17,8 +17,12 @@ import { UpgradeCoinAction } from "./CoinActions";
  *
  * @param G
  * @param ctx
+ * @param args Аргументы действия.
  */
-export const AddPickHeroAction = (G, ctx) => {
+export const AddPickHeroAction = (G, ctx, ...args) => {
+    if (args.length > 1) {
+        throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
+    }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -27,7 +31,7 @@ export const AddPickHeroAction = (G, ctx) => {
         AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
     }
     else {
-        AddActionsToStack(G, ctx, [StackData.pickHero()]);
+        AddActionsToStack(G, ctx, [StackData.pickHero(args[0])]);
     }
     AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };

@@ -133,7 +133,7 @@ export const IsValidMove = (G, ctx, stage, id) => {
  * @returns
  */
 export const GetValidator = (phase, stage) => {
-    let validator;
+    let validator, _exhaustiveCheck;
     switch (phase) {
         case PhaseNames.ChooseDifficultySoloMode:
             validator = moveBy[phase][stage];
@@ -163,8 +163,7 @@ export const GetValidator = (phase, stage) => {
             validator = moveBy[phase][stage];
             break;
         default:
-            // eslint-disable-next-line no-case-declarations
-            const _exhaustiveCheck = phase;
+            _exhaustiveCheck = phase;
             throw new Error(`Нет такого валидатора.`);
             return _exhaustiveCheck;
     }
