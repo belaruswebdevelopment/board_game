@@ -293,7 +293,6 @@ export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
     }
     if (ctx.activePlayers === null || ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         player.stack.shift();
-        // TODO Fix all if (stack === undefined) { throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`); }
         if ((player.stack[0]?.priority === undefined)
             || (player.stack[0]?.priority !== undefined && player.stack[0]?.priority > 1)) {
             CheckPickHero(G, ctx);

@@ -32,9 +32,7 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => 
                             return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
                                 playerIndex);
                         }
-                        return privatePlayer.handCoins.every((coin: CoinTypes): boolean => {
-                            return coin === null;
-                        });
+                        return privatePlayer.handCoins.every((coin: CoinTypes): boolean => coin === null);
                     } else if ((G.solo && playerIndex === 0)
                         || (!G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                         return player.handCoins.every((coin: PublicPlayerCoinTypes, coinIndex: number):

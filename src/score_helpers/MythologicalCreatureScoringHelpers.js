@@ -12,6 +12,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @returns Количество очков по валькириям.
  */
 export const ValkyryScoring = (strengthTokenNotch, valkyryName) => {
+    let _exhaustiveCheck;
     switch (valkyryName) {
         case ValkyryNames.Brynhildr:
             return BrynhildrScoring(strengthTokenNotch);
@@ -24,7 +25,9 @@ export const ValkyryScoring = (strengthTokenNotch, valkyryName) => {
         case ValkyryNames.Svafa:
             return SvafaScoring(strengthTokenNotch);
         default:
+            _exhaustiveCheck = valkyryName;
             throw new Error(`У мифических существ типа '${RusCardTypeNames.Valkyry_Card}}' отсутствует существо с названием '${valkyryName}'.`);
+            return _exhaustiveCheck;
     }
 };
 /**

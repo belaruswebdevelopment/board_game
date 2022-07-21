@@ -145,6 +145,7 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
                     const suitArg = suit;
+                    // TODO Move to DrawDistinction
                     boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
                 else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
@@ -153,6 +154,7 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
             }
             else {
                 if (data !== undefined) {
+                    // TODO Move to DrawDistinction
                     boardCells.push(_jsx("td", { className: "bg-green-500", title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
             }

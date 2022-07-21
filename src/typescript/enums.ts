@@ -1,4 +1,17 @@
 /**
+ * <h3>Перечисление для названий автоматических действий.</h3>
+ */
+export const enum AutoActionFunctionNames {
+    AddPickHeroAction = `AddPickHeroAction`,
+    DiscardTradingCoinAction = `DiscardTradingCoinAction`,
+    FinishOdroerirTheMythicCauldronAction = `FinishOdroerirTheMythicCauldronAction`,
+    GetClosedCoinIntoPlayerHandAction = `GetClosedCoinIntoPlayerHandAction`,
+    StartDiscardSuitCardAction = `StartDiscardSuitCardAction`,
+    StartVidofnirVedrfolnirAction = `StartVidofnirVedrfolnirAction`,
+    UpgradeMinCoinAction = `UpgradeMinCoinAction`,
+}
+
+/**
  * <h3>Перечисление для названий артефактов.</h3>
  */
 export const enum ArtefactNames {

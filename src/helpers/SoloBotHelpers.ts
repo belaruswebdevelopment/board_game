@@ -30,13 +30,19 @@ export const CheckMinCoinVisibleValueForSoloBot = (G: IMyGameState, ctx: Ctx,
         if (currentMoveArgument === undefined) {
             throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
         }
-        let coin: CanBeUndef<PublicPlayerCoinTypes>;
-        if (type === CoinTypeNames.Board) {
-            coin = player.boardCoins[currentMoveArgument.coinId];
-        } else if (type === CoinTypeNames.Hand) {
-            coin = player.handCoins[currentMoveArgument.coinId];
-        } else {
-            throw new Error(`Не существует типа монеты - '${type}'.`);
+        let coin: CanBeUndef<PublicPlayerCoinTypes>,
+            _exhaustiveCheck: never;
+        switch (type) {
+            case CoinTypeNames.Hand:
+                coin = player.handCoins[currentMoveArgument.coinId];
+                break;
+            case CoinTypeNames.Board:
+                coin = player.boardCoins[currentMoveArgument.coinId];
+                break;
+            default:
+                _exhaustiveCheck = type;
+                throw new Error(`Не существует типа монеты - '${type}'.`);
+                return _exhaustiveCheck;
         }
         if (coin === undefined) {
             throw new Error(`В массиве монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} отсутствует монета с id '${currentMoveArgument.coinId}'.`);

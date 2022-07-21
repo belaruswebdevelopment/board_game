@@ -1,5 +1,6 @@
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
+import { AutoActionFunctionNames } from "../typescript/enums";
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
  * <p>Применения:</p>
@@ -10,32 +11,34 @@ import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAct
  * @param actionName Название автоматических действий.
  * @returns Автоматические действие.
  */
-const ActionDispatcherSwitcher = (actionName) => {
-    let action;
+const AutoActionDispatcherSwitcher = (actionName) => {
+    let action, _exhaustiveCheck;
     switch (actionName) {
-        case AddPickHeroAction.name:
+        case AutoActionFunctionNames.AddPickHeroAction:
             action = AddPickHeroAction;
             break;
-        case DiscardTradingCoinAction.name:
+        case AutoActionFunctionNames.DiscardTradingCoinAction:
             action = DiscardTradingCoinAction;
             break;
-        case FinishOdroerirTheMythicCauldronAction.name:
+        case AutoActionFunctionNames.FinishOdroerirTheMythicCauldronAction:
             action = FinishOdroerirTheMythicCauldronAction;
             break;
-        case GetClosedCoinIntoPlayerHandAction.name:
+        case AutoActionFunctionNames.GetClosedCoinIntoPlayerHandAction:
             action = GetClosedCoinIntoPlayerHandAction;
             break;
-        case StartDiscardSuitCardAction.name:
+        case AutoActionFunctionNames.StartDiscardSuitCardAction:
             action = StartDiscardSuitCardAction;
             break;
-        case StartVidofnirVedrfolnirAction.name:
+        case AutoActionFunctionNames.StartVidofnirVedrfolnirAction:
             action = StartVidofnirVedrfolnirAction;
             break;
-        case UpgradeMinCoinAction.name:
+        case AutoActionFunctionNames.UpgradeMinCoinAction:
             action = UpgradeMinCoinAction;
             break;
         default:
+            _exhaustiveCheck = actionName;
             throw new Error(`Нет такого действия '${actionName}'.`);
+            return _exhaustiveCheck;
     }
     return action;
 };
@@ -52,7 +55,7 @@ const ActionDispatcherSwitcher = (actionName) => {
  */
 export const StartAutoAction = (G, ctx, action) => {
     if (action !== undefined) {
-        const actionDispatcher = ActionDispatcherSwitcher(action.name);
+        const actionDispatcher = AutoActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
             actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, ...action.params);
         }

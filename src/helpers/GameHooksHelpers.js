@@ -267,7 +267,6 @@ export const StartOrEndActions = (G, ctx) => {
     }
     if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== undefined) {
         player.stack.shift();
-        // TODO Fix all if (stack === undefined) { throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`); }
         if ((((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.priority) === undefined)
             || (((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.priority) !== undefined && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.priority) > 1)) {
             CheckPickHero(G, ctx);

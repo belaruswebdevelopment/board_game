@@ -22,6 +22,7 @@ export const DrawButton = (data, boardCells, name, player, moveName, ...args) =>
     let action;
     switch (moveName) {
         case MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
+            // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove! -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
             action = data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove;
             break;
         case MoveNames.ChooseDifficultyLevelForSoloModeMove:

@@ -16,18 +16,23 @@ export const DrawLogData = (G) => {
         for (let i = G.logData.length - 1; i >= 0; i--) {
             const log = G.logData[i];
             if (log !== undefined) {
-                if (log.type === LogTypeNames.Private) {
-                    loggingData.push(_jsx("li", { className: "text-black", children: log.value }, `Log ${i}`));
+                let className, _exhaustiveCheck;
+                switch (log.type) {
+                    case LogTypeNames.Private:
+                        className = `text-black`;
+                        break;
+                    case LogTypeNames.Game:
+                        className = `text-blue-500`;
+                        break;
+                    case LogTypeNames.Public:
+                        className = `text-green-500`;
+                        break;
+                    default:
+                        _exhaustiveCheck = log.type;
+                        throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
+                        return _exhaustiveCheck;
                 }
-                else if (log.type === LogTypeNames.Game) {
-                    loggingData.push(_jsx("li", { className: "text-blue-500", children: log.value }, `Log ${i}`));
-                }
-                else if (log.type === LogTypeNames.Public) {
-                    loggingData.push(_jsx("li", { className: "text-green-500", children: log.value }, `Log ${i}`));
-                }
-                else {
-                    throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
-                }
+                loggingData.push(_jsx("li", { className: className, children: log.value }, `Log ${i}`));
             }
         }
         return (_jsxs("div", { className: "log ml-3 w-1/4 border overflow-y-auto", children: [_jsx("h3", { children: "Log data:" }), _jsx("ul", { className: "list-none p-0 ml-5", children: loggingData })] }));

@@ -287,7 +287,7 @@ export const Styles: IStyles = {
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinction: (distinction: string): IBackground => {
+    Distinction: (distinction: SuitTypes): IBackground => {
         switch (distinction) {
             case SuitNames.Blacksmith:
                 return {
@@ -319,7 +319,8 @@ export const Styles: IStyles = {
     Exchange: (): IBackground => ({
         background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
     }),
-    Hero: (heroName: string): IBackground => {
+    Hero: (heroName: HeroNames): IBackground => {
+        let _exhaustiveCheck: never;
         switch (heroName) {
             case HeroNames.Bonfur:
                 return {
@@ -434,13 +435,16 @@ export const Styles: IStyles = {
                     background: `${promosPath} no-repeat -4px -4px / 76px 58px`,
                 };
             default:
+                _exhaustiveCheck = heroName;
                 throw new Error(`Нет такого героя '${heroName}'.`);
+                return _exhaustiveCheck;
         }
     },
     HeroBack: (): IBackground => ({
         background: `url(/img/cards/heroes/HeroBack.png) no-repeat 6px 3px / 12px 18px`,
     }),
     MythologicalCreature: (name: MythologicalCreatureNameTypes): IBackground => {
+        // TODO Add  _exhaustiveCheck = heroName;
         switch (name) {
             // case GiantNames.Gymir:
             //     return {
@@ -538,17 +542,20 @@ export const Styles: IStyles = {
         background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
     }),
     RoyalOffering: (name: RoyalOfferingNames): IBackground => {
+        let _exhaustiveCheck: never;
         switch (name) {
-            case `${RoyalOfferingNames.PlusThree}`:
+            case RoyalOfferingNames.PlusThree:
                 return {
                     background: `${basicCardsPath}0.png) no-repeat -128px -240px / 288px 288px`,
                 };
-            case `${RoyalOfferingNames.PlusFive}`:
+            case RoyalOfferingNames.PlusFive:
                 return {
                     background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
                 };
             default:
+                _exhaustiveCheck = name;
                 throw new Error(`Нет такой карты '${name}' улучшения монеты.`);
+                return _exhaustiveCheck;
         }
     },
     Suit: (suit: SuitTypes): IBackground => ({

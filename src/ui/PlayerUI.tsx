@@ -259,6 +259,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                             }
                             isDrawRow = true;
                             const suitArg: SuitTypes = suit;
+                            // TODO Move to DrawSuit
                             playerCells.push(
                                 <td onClick={() => action?.(suitArg)} className="cursor-pointer"
                                     key={`${player.nickname} place card ${stack.name} to ${suit}`}></td>

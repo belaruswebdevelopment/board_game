@@ -88,8 +88,8 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTy
             rank: 1,
             points: 0,
         },
-    };
-    const name: CanBeUndef<MultiSuitCardNames> = stack.name as CanBeUndef<MultiSuitCardNames>;
+    },
+        name: CanBeUndef<MultiSuitCardNames> = stack.name as CanBeUndef<MultiSuitCardNames>;
     if (name === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${MultiSuitCardNames.OlwinsDouble}'.`);
     }
@@ -194,15 +194,15 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): voi
             rank: 1,
             points: 1,
         },
-    };
-    const heroCard: IHeroPlayerCard = CreateHeroPlayerCard({
-        suit,
-        rank: playerVariants[suit].rank,
-        points: playerVariants[suit].points,
-        type: RusCardTypeNames.Hero_Player_Card,
-        name: HeroNames.Ylud,
-        description: heroesConfig.Ylud.description,
-    });
+    },
+        heroCard: IHeroPlayerCard = CreateHeroPlayerCard({
+            suit,
+            rank: playerVariants[suit].rank,
+            points: playerVariants[suit].points,
+            type: RusCardTypeNames.Hero_Player_Card,
+            name: HeroNames.Ylud,
+            description: heroesConfig.Ylud.description,
+        });
     AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
     if (G.tierToEnd === 0) {

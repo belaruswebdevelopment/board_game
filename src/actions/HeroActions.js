@@ -85,8 +85,7 @@ export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
             rank: 1,
             points: 0,
         },
-    };
-    const name = stack.name;
+    }, name = stack.name;
     if (name === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${MultiSuitCardNames.OlwinsDouble}'.`);
     }
@@ -187,8 +186,7 @@ export const PlaceYludAction = (G, ctx, suit) => {
             rank: 1,
             points: 1,
         },
-    };
-    const heroCard = CreateHeroPlayerCard({
+    }, heroCard = CreateHeroPlayerCard({
         suit,
         rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,

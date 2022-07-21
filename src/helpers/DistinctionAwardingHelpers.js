@@ -94,20 +94,24 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
             isTriggerTrading: true,
             value: 3,
         });
-        if (type === CoinTypeNames.Board) {
-            if (G.multiplayer) {
-                privatePlayer.boardCoins[tradingCoinIndex] = coin;
-            }
-            player.boardCoins[tradingCoinIndex] = coin;
-        }
-        else if (type === CoinTypeNames.Hand) {
-            if (G.multiplayer) {
-                privatePlayer.handCoins[tradingCoinIndex] = coin;
-            }
-            player.handCoins[tradingCoinIndex] = coin;
-        }
-        else {
-            throw new Error(`Не существует типа монеты - '${type}'.`);
+        let _exhaustiveCheck;
+        switch (type) {
+            case CoinTypeNames.Hand:
+                if (G.multiplayer) {
+                    privatePlayer.handCoins[tradingCoinIndex] = coin;
+                }
+                player.handCoins[tradingCoinIndex] = coin;
+                break;
+            case CoinTypeNames.Board:
+                if (G.multiplayer) {
+                    privatePlayer.boardCoins[tradingCoinIndex] = coin;
+                }
+                player.boardCoins[tradingCoinIndex] = coin;
+                break;
+            default:
+                _exhaustiveCheck = type;
+                throw new Error(`Не существует типа монеты - '${type}'.`);
+                return _exhaustiveCheck;
         }
         G.distinctions[SuitNames.Hunter] = undefined;
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия охотников свою монету с номиналом '0' на особую монету с номиналом '3'.`);

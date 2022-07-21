@@ -228,6 +228,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                             }
                             isDrawRow = true;
                             const suitArg = suit;
+                            // TODO Move to DrawSuit
                             playerCells.push(_jsx("td", { onClick: () => action === null || action === void 0 ? void 0 : action(suitArg), className: "cursor-pointer" }, `${player.nickname} place card ${stack.name} to ${suit}`));
                         }
                         else {

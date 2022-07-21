@@ -17,27 +17,28 @@ export const DrawLogData = (G: IMyGameState): CanBeNull<JSX.Element> => {
         for (let i: number = G.logData.length - 1; i >= 0; i--) {
             const log: CanBeUndef<ILogData> = G.logData[i];
             if (log !== undefined) {
-                if (log.type === LogTypeNames.Private) {
-                    loggingData.push(
-                        <li key={`Log ${i}`} className="text-black">
-                            {log.value}
-                        </li>
-                    );
-                } else if (log.type === LogTypeNames.Game) {
-                    loggingData.push(
-                        <li key={`Log ${i}`} className="text-blue-500">
-                            {log.value}
-                        </li>
-                    );
-                } else if (log.type === LogTypeNames.Public) {
-                    loggingData.push(
-                        <li key={`Log ${i}`} className="text-green-500">
-                            {log.value}
-                        </li>
-                    );
-                } else {
-                    throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
+                let className: string,
+                    _exhaustiveCheck: never;
+                switch (log.type) {
+                    case LogTypeNames.Private:
+                        className = `text-black`;
+                        break;
+                    case LogTypeNames.Game:
+                        className = `text-blue-500`;
+                        break;
+                    case LogTypeNames.Public:
+                        className = `text-green-500`;
+                        break;
+                    default:
+                        _exhaustiveCheck = log.type;
+                        throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
+                        return _exhaustiveCheck;
                 }
+                loggingData.push(
+                    <li key={`Log ${i}`} className={className}>
+                        {log.value}
+                    </li>
+                );
             }
         }
         return (

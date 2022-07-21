@@ -1,6 +1,5 @@
-import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { GiantScoring, MythicalAnimalScoring, ValkyryScoring } from "../score_helpers/MythologicalCreatureScoringHelpers";
-import { BuffNames, GiantNames, GodNames, MythicalAnimalNames, SuitNames, ValkyryNames } from "../typescript/enums";
+import { AutoActionFunctionNames, BuffNames, GiantNames, GodNames, MythicalAnimalNames, SuitNames, ValkyryNames } from "../typescript/enums";
 import type { IGiantConfig, IGiantData, IGodConfig, IGodData, IMythicalAnimalConfig, IMythicalAnimalData, IValkyryConfig, IValkyryData } from "../typescript/interfaces";
 
 /**
@@ -74,7 +73,7 @@ const Thrivaldi: IGiantData = {
     name: GiantNames.Thrivaldi,
     placedSuit: SuitNames.Blacksmith,
     actions: {
-        name: AddPickHeroAction.name,
+        name: AutoActionFunctionNames.AddPickHeroAction,
     },
     scoringRule: (): number => 0,
 };

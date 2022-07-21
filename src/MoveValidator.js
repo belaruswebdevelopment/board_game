@@ -41,38 +41,41 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    if (coinData.type === CoinTypeNames.Hand) {
-        const handCoin = handCoins[coinData.coinId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinData.coinId}'.`);
-        }
-        if (handCoin === null) {
-            throw new Error(`Выбранная для улучшения монета игрока с id '${ctx.currentPlayer}' в руке с id '${coinData.coinId}' не может отсутствовать там.`);
-        }
-        if (!IsCoin(handCoin)) {
-            throw new Error(`Монета с id '${coinData.coinId}' в руке текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
-        }
-        if (!handCoin.isTriggerTrading) {
-            return true;
-        }
-    }
-    else if (coinData.type === CoinTypeNames.Board) {
-        const boardCoin = boardCoins[coinData.coinId];
-        if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${coinData.coinId}'.`);
-        }
-        if (boardCoin === null) {
-            throw new Error(`Выбранная для улучшения монета игрока с id '${ctx.currentPlayer}' на столе с id '${coinData.coinId}' не может отсутствовать там.`);
-        }
-        if (!IsCoin(boardCoin)) {
-            throw new Error(`Монета с id '${coinData.coinId}' на столе текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
-        }
-        if (!boardCoin.isTriggerTrading) {
-            return true;
-        }
-    }
-    else {
-        throw new Error(`Не существует типа монеты - '${coinData.type}'.`);
+    let _exhaustiveCheck;
+    const handCoin = handCoins[coinData.coinId], boardCoin = boardCoins[coinData.coinId];
+    switch (coinData.type) {
+        case CoinTypeNames.Hand:
+            if (handCoin === undefined) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinData.coinId}'.`);
+            }
+            if (handCoin === null) {
+                throw new Error(`Выбранная для улучшения монета игрока с id '${ctx.currentPlayer}' в руке с id '${coinData.coinId}' не может отсутствовать там.`);
+            }
+            if (!IsCoin(handCoin)) {
+                throw new Error(`Монета с id '${coinData.coinId}' в руке текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
+            }
+            if (!handCoin.isTriggerTrading) {
+                return true;
+            }
+            break;
+        case CoinTypeNames.Board:
+            if (boardCoin === undefined) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${coinData.coinId}'.`);
+            }
+            if (boardCoin === null) {
+                throw new Error(`Выбранная для улучшения монета игрока с id '${ctx.currentPlayer}' на столе с id '${coinData.coinId}' не может отсутствовать там.`);
+            }
+            if (!IsCoin(boardCoin)) {
+                throw new Error(`Монета с id '${coinData.coinId}' на столе текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
+            }
+            if (!boardCoin.isTriggerTrading) {
+                return true;
+            }
+            break;
+        default:
+            _exhaustiveCheck = coinData.type;
+            throw new Error(`Не существует типа монеты - '${coinData.type}'.`);
+            return _exhaustiveCheck;
     }
     return false;
 };

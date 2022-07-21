@@ -1,4 +1,17 @@
 /**
+ * <h3>Перечисление для названий автоматических действий.</h3>
+ */
+export var AutoActionFunctionNames;
+(function (AutoActionFunctionNames) {
+    AutoActionFunctionNames["AddPickHeroAction"] = "AddPickHeroAction";
+    AutoActionFunctionNames["DiscardTradingCoinAction"] = "DiscardTradingCoinAction";
+    AutoActionFunctionNames["FinishOdroerirTheMythicCauldronAction"] = "FinishOdroerirTheMythicCauldronAction";
+    AutoActionFunctionNames["GetClosedCoinIntoPlayerHandAction"] = "GetClosedCoinIntoPlayerHandAction";
+    AutoActionFunctionNames["StartDiscardSuitCardAction"] = "StartDiscardSuitCardAction";
+    AutoActionFunctionNames["StartVidofnirVedrfolnirAction"] = "StartVidofnirVedrfolnirAction";
+    AutoActionFunctionNames["UpgradeMinCoinAction"] = "UpgradeMinCoinAction";
+})(AutoActionFunctionNames || (AutoActionFunctionNames = {}));
+/**
  * <h3>Перечисление для названий артефактов.</h3>
  */
 export var ArtefactNames;

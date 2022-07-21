@@ -1,7 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
-import type { ActionFunctionTypes, IAction, IMyGameState } from "../typescript/interfaces";
+import { AutoActionFunctionNames } from "../typescript/enums";
+import type { AutoActionFunctionTypes, IAction, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
@@ -13,32 +14,35 @@ import type { ActionFunctionTypes, IAction, IMyGameState } from "../typescript/i
  * @param actionName Название автоматических действий.
  * @returns Автоматические действие.
  */
-const ActionDispatcherSwitcher = (actionName: string): ActionFunctionTypes => {
-    let action: ActionFunctionTypes;
+const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): AutoActionFunctionTypes => {
+    let action: AutoActionFunctionTypes,
+        _exhaustiveCheck: never;
     switch (actionName) {
-        case AddPickHeroAction.name:
+        case AutoActionFunctionNames.AddPickHeroAction:
             action = AddPickHeroAction;
             break;
-        case DiscardTradingCoinAction.name:
+        case AutoActionFunctionNames.DiscardTradingCoinAction:
             action = DiscardTradingCoinAction;
             break;
-        case FinishOdroerirTheMythicCauldronAction.name:
+        case AutoActionFunctionNames.FinishOdroerirTheMythicCauldronAction:
             action = FinishOdroerirTheMythicCauldronAction;
             break;
-        case GetClosedCoinIntoPlayerHandAction.name:
+        case AutoActionFunctionNames.GetClosedCoinIntoPlayerHandAction:
             action = GetClosedCoinIntoPlayerHandAction;
             break;
-        case StartDiscardSuitCardAction.name:
+        case AutoActionFunctionNames.StartDiscardSuitCardAction:
             action = StartDiscardSuitCardAction;
             break;
-        case StartVidofnirVedrfolnirAction.name:
+        case AutoActionFunctionNames.StartVidofnirVedrfolnirAction:
             action = StartVidofnirVedrfolnirAction;
             break;
-        case UpgradeMinCoinAction.name:
+        case AutoActionFunctionNames.UpgradeMinCoinAction:
             action = UpgradeMinCoinAction;
             break;
         default:
+            _exhaustiveCheck = actionName;
             throw new Error(`Нет такого действия '${actionName}'.`);
+            return _exhaustiveCheck;
     }
     return action;
 };
@@ -56,7 +60,7 @@ const ActionDispatcherSwitcher = (actionName: string): ActionFunctionTypes => {
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action?: IAction): void => {
     if (action !== undefined) {
-        const actionDispatcher: ActionFunctionTypes = ActionDispatcherSwitcher(action.name);
+        const actionDispatcher: AutoActionFunctionTypes = AutoActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
             actionDispatcher?.(G, ctx, ...action.params);
         } else {

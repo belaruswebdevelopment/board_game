@@ -1,6 +1,5 @@
-import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { HeroScoring } from "../score_helpers/HeroScoringHelpers";
-import { BuffNames, GameNames, HeroNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
+import { AutoActionFunctionNames, BuffNames, GameNames, HeroNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
 import type { IHeroConfig, IHeroData, SoloGameDifficultyLevelHeroesConfigType, SoloGameHeroesForBotConfigType, SoloGameHeroesForPlayerConfigType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -317,7 +316,7 @@ const Khrad: IHeroData = {
     game: GameNames.Thingvellir,
     points: 4,
     actions: {
-        name: UpgradeMinCoinAction.name,
+        name: AutoActionFunctionNames.UpgradeMinCoinAction,
         params: [10],
     },
     scoringRule: (): number => 4,
@@ -438,7 +437,7 @@ const Uline: IHeroData = {
     game: GameNames.Basic,
     points: 9,
     actions: {
-        name: GetClosedCoinIntoPlayerHandAction.name,
+        name: AutoActionFunctionNames.GetClosedCoinIntoPlayerHandAction,
     },
     buff: {
         name: BuffNames.EveryTurn,

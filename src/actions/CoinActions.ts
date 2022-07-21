@@ -40,33 +40,39 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    let upgradingCoin: CanBeUndef<ICoin>;
-    if (type === CoinTypeNames.Hand) {
-        const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[upgradingCoinId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке нет монеты с id '${upgradingCoinId}'.`);
-        }
-        if (handCoin === null) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
-        }
-        if (!IsCoin(handCoin)) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${upgradingCoinId}'.`);
-        }
-        upgradingCoin = handCoin;
-    } else if (type === CoinTypeNames.Board) {
-        const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = boardCoins[upgradingCoinId];
-        if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
-        }
-        if (boardCoin === null) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может не быть монеты с id '${upgradingCoinId}'.`);
-        }
-        if (!IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрыта монета с id '${upgradingCoinId}'.`);
-        }
-        upgradingCoin = boardCoin;
-    } else {
-        throw new Error(`Не существует типа монеты - '${type}'.`);
+    let upgradingCoin: CanBeUndef<ICoin>,
+        _exhaustiveCheck: never;
+    const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[upgradingCoinId],
+        boardCoin: CanBeUndef<PublicPlayerCoinTypes> = boardCoins[upgradingCoinId];
+    switch (type) {
+        case CoinTypeNames.Hand:
+            if (handCoin === undefined) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке нет монеты с id '${upgradingCoinId}'.`);
+            }
+            if (handCoin === null) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
+            }
+            if (!IsCoin(handCoin)) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${upgradingCoinId}'.`);
+            }
+            upgradingCoin = handCoin;
+            break;
+        case CoinTypeNames.Board:
+            if (boardCoin === undefined) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
+            }
+            if (boardCoin === null) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может не быть монеты с id '${upgradingCoinId}'.`);
+            }
+            if (!IsCoin(boardCoin)) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрыта монета с id '${upgradingCoinId}'.`);
+            }
+            upgradingCoin = boardCoin;
+            break;
+        default:
+            _exhaustiveCheck = type;
+            throw new Error(`Не существует типа монеты - '${type}'.`);
+            return _exhaustiveCheck;
     }
     // TODO Split into different functions!?
     if (upgradingCoin === undefined) {

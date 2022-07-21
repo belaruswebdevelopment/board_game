@@ -87,9 +87,8 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G: IMyGameStat
     if (stack === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
-    AddActionsToStack(G, ctx,
-        [StackData.upgradeCoinVidofnirVedrfolnir(value, stack.coinId,
-            stack.priority === 0 ? undefined : 3)]);
+    AddActionsToStack(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(value, stack.coinId,
+        stack.priority === 0 ? undefined : 3)]);
 };
 
 /**

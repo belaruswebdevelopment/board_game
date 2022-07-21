@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, CoinTypeNames, ConfigNames, DrawNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, TavernNames, ValkyryNames } from "./enums";
+import { ArtefactNames, AutoActionFunctionNames, CoinTypeNames, ConfigNames, DrawNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, TavernNames, ValkyryNames } from "./enums";
 
 export interface ISecret {
     readonly campDecks: CampDeckCardTypes[][];
@@ -346,7 +346,7 @@ export interface IDwarfCard extends IBasicSuitableCardInfo {
  * <h3>Интерфейс для действия.</h3>
  */
 export interface IAction {
-    readonly name: string;
+    readonly name: AutoActionFunctionNames;
     readonly params?: AutoActionArgsTypes;
 }
 
@@ -500,11 +500,11 @@ export interface IMarketCoinConfig extends Pick<ICoin, `value`> {
     readonly count: () => INumberValues;
 }
 
-export interface IActionFunctionWithParams {
+export interface IAutoActionFunctionWithParams {
     (G: IMyGameState, ctx: Ctx, ...params: AutoActionArgsTypes): void;
 }
 
-export interface IActionFunction {
+export interface IAutoActionFunction {
     (G: IMyGameState, ctx: Ctx): void;
 }
 
@@ -1091,7 +1091,7 @@ export type CoinTypes = CanBeNull<ICoin>;
 
 export type DrawProfitTypes = ConfigNames | ``;
 
-export type ActionFunctionTypes = IActionFunction | IActionFunctionWithParams;
+export type AutoActionFunctionTypes = IAutoActionFunction | IAutoActionFunctionWithParams;
 
 export type MoveFunctionTypes = CanBeNull<IMoveFunction>;
 

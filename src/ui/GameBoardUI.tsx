@@ -172,6 +172,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
                     const suitArg: SuitTypes = suit;
+                    // TODO Move to DrawDistinction
                     boardCells.push(
                         <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
                             onClick={() => data.moves.ClickDistinctionCardMove?.(suitArg)}
@@ -185,6 +186,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
                 }
             } else {
                 if (data !== undefined) {
+                    // TODO Move to DrawDistinction
                     boardCells.push(
                         <td className="bg-green-500" key={`Distinction ${suit} card`}
                             title={suitsConfig[suit].distinction.description}>

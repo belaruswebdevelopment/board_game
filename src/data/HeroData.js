@@ -1,6 +1,5 @@
-import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { HeroScoring } from "../score_helpers/HeroScoringHelpers";
-import { BuffNames, GameNames, HeroNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
+import { AutoActionFunctionNames, BuffNames, GameNames, HeroNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные о герое.</h3>
@@ -298,7 +297,7 @@ const Khrad = {
     game: GameNames.Thingvellir,
     points: 4,
     actions: {
-        name: UpgradeMinCoinAction.name,
+        name: AutoActionFunctionNames.UpgradeMinCoinAction,
         params: [10],
     },
     scoringRule: () => 4,
@@ -412,7 +411,7 @@ const Uline = {
     game: GameNames.Basic,
     points: 9,
     actions: {
-        name: GetClosedCoinIntoPlayerHandAction.name,
+        name: AutoActionFunctionNames.GetClosedCoinIntoPlayerHandAction,
     },
     buff: {
         name: BuffNames.EveryTurn,

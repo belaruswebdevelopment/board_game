@@ -31,15 +31,13 @@ export const DiscardTradingCoin = (G, ctx, playerId) => {
     else {
         handCoins = player.handCoins;
     }
-    let tradingCoinIndex = player.boardCoins.findIndex((coin) => {
-        return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
-    }), type = CoinTypeNames.Board;
+    let tradingCoinIndex = player.boardCoins.findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading)), type = CoinTypeNames.Board;
     if (tradingCoinIndex === -1 && G.multiplayer) {
         tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin, index) => {
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет приватного игрока с id '${playerId}' на столе не может быть закрыта монета с id '${index}'.`);
             }
-            return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
+            return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading);
         });
     }
     if (!G.solo && tradingCoinIndex === -1 && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
@@ -47,7 +45,7 @@ export const DiscardTradingCoin = (G, ctx, playerId) => {
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${index}'.`);
             }
-            return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
+            return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading);
         });
         if (tradingCoinIndex === -1) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);

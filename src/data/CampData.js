@@ -1,7 +1,5 @@
-import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
-import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ArtefactScoring } from "../score_helpers/ArtefactScoringHelpers";
-import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, AutoActionFunctionNames, BuffNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные об артефакте.</h3>
@@ -67,7 +65,7 @@ const Gjallarhorn = {
     description: `Взяв этот артефакт, сразу же призовите в свою армию нового героя, независимо от количества завершённых линий 5 шевронов. Данное исключение действует только один раз. Чтобы призвать следующего героя игроку будет необходимо соблюсти основное правило: можно призвать нового героя, если собранных линий 5 шевронов на 1 больше, чем героев в армии игрока. Гьяллархорн позволяет игроку призывать героя, даже если он обладает картой мегингьорд. Нельзя призвать героя, если игрок не может выполнить условия, необходимые для призыва.`,
     tier: 1,
     actions: {
-        name: AddPickHeroAction.name,
+        name: AutoActionFunctionNames.AddPickHeroAction,
         params: [2],
     },
     scoringRule: () => 0,
@@ -84,7 +82,7 @@ const Hofud = {
     description: `Когда один из игроков получает этот артефакт, остальные игроки сразу же сбрасывают по одной карте воинов из своих армий. Игроки могут выбрать любую карту класса воин, за исключением карт героев. `,
     tier: 1,
     actions: {
-        name: StartDiscardSuitCardAction.name,
+        name: AutoActionFunctionNames.StartDiscardSuitCardAction,
     },
     stack: [StackData.discardSuitCardHofud()],
     scoringRule: () => 0,
@@ -114,7 +112,7 @@ const Jarnglofi = {
     description: `Взяв этот артефакт, сразу же положите в сброс свою обменную монету (с номиналом 0 или 3). Если обменная монета была использована в качестве ставки в таверне, которую ещё не посещали, то игрок всё равно должен её сбросить. В этом случае он лишается ставки и во время посещения таверны не сможет взять ни одной карты. Во время подсчёта победных очков в конце эпохи 2 прибавьте 24 победных очка к своему итоговому показателю храбрости.`,
     tier: 1,
     actions: {
-        name: DiscardTradingCoinAction.name,
+        name: AutoActionFunctionNames.DiscardTradingCoinAction,
     },
     scoringRule: () => 24,
 };
@@ -155,7 +153,7 @@ const Odroerir_The_Mythic_Cauldron = {
     description: `Во время подготовки отложите Одрерир в сторону. Перемешайте карты Лагеря 2-й эпохи, затем положите Одрерир на верх колоды. Таким образом, в начале Эпохи 2 Одрерир будет среди 5 доступных карт лагеря. Как только эльвеланд берет карту из лагеря, положите самую маленькую монету из Королевской сокровищницы на Одрерир. Делайте это до тех пор, пока эльвеланд не возьмет карту Одрерир с монетами на ней. Карта Одрерир с ее монетами находится в командной зоне. В конце игры Одрерир прибавляет сумму всех монет к вашему итоговому значению храбрости.`,
     tier: 1,
     actions: {
-        name: FinishOdroerirTheMythicCauldronAction.name,
+        name: AutoActionFunctionNames.FinishOdroerirTheMythicCauldronAction,
     },
     scoringRule: ArtefactScoring,
 };
@@ -200,7 +198,7 @@ const Vidofnir_Vedrfolnir = {
     description: `Взяв этот артефакт, сразу же откройте монеты в вашем кошеле и улучшите на +2 одну из них и на +3 другую. Улучшение монет можно производить в любой очерёдности. Если одна из монет в кошеле обменная (0 или особая обменная монета Охотников с номиналом 3), тогда улучшите на +5 вторую монету в кошеле.`,
     tier: 0,
     actions: {
-        name: StartVidofnirVedrfolnirAction.name,
+        name: AutoActionFunctionNames.StartVidofnirVedrfolnirAction,
     },
     scoringRule: () => 0,
 };
