@@ -35,7 +35,7 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                 (DrawCamp(this.props.G, this.props.ctx, null, this.props) as JSX.Element) : null,
             drawDistinctionsUI: JSX.Element =
                 DrawDistinctions(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
-            drawDistinctionProfitUI: JSX.Element | `` = this.props.G.drawProfit ?
+            drawDistinctionProfitUI: CanBeNullType<JSX.Element> = this.props.G.drawProfit ?
                 DrawProfit(this.props.G, this.props.ctx, this.props) : this.props.G.drawProfit,
             tavernsUI: JSX.Element[] =
                 DrawTaverns(this.props.G, this.props.ctx, null, this.props,

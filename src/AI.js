@@ -65,7 +65,7 @@ export const enumerate = (G, ctx) => {
                         activeStageOfCurrentPlayer = StageNames.Default2;
                     }
                 }
-                else if (G.drawProfit === ``) {
+                else if (G.drawProfit === null) {
                     activeStageOfCurrentPlayer = StageNames.Default3;
                 }
             }

@@ -29,10 +29,10 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
         if (stack.configName !== undefined) {
             G.drawProfit = stack.configName;
         } else {
-            G.drawProfit = ``;
+            G.drawProfit = null;
         }
     } else {
-        G.drawProfit = ``;
+        G.drawProfit = null;
     }
 };
 

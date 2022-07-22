@@ -26,7 +26,7 @@ import { GameNames } from "./typescript/enums";
 export const SetupGame = (ctx) => {
     const suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, soloGameDifficultyLevel = null, explorerDistinctionCardId = null, multiplayer = false, 
     // TODO Rework it!
-    solo = ctx.numPlayers === 2, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
+    solo = ctx.numPlayers === 2, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = null, expansions = {
         thingvellir: {
             active: solo ? false : true,
         },

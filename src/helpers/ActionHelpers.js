@@ -27,11 +27,11 @@ export const DrawCurrentProfit = (G, ctx) => {
             G.drawProfit = stack.configName;
         }
         else {
-            G.drawProfit = ``;
+            G.drawProfit = null;
         }
     }
     else {
-        G.drawProfit = ``;
+        G.drawProfit = null;
     }
 };
 /**

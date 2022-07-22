@@ -274,7 +274,7 @@ export const ScoreWinner = (G: IMyGameState, ctx: Ctx): CanBeVoidType<IMyGameSta
         }
         OpenClosedCoinsOnPlayerBoard(G, ctx, index);
     });
-    G.drawProfit = ``;
+    G.drawProfit = null;
     AddDataToLog(G, LogTypeNames.Game, `Финальные результаты игры:`);
     const warriorDistinctions: number[] = CheckCurrentSuitDistinctions(G, ctx, SuitNames.Warrior);
     for (let i = 0; i < ctx.numPlayers; i++) {

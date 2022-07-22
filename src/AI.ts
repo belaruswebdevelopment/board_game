@@ -62,7 +62,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     } else {
                         activeStageOfCurrentPlayer = StageNames.Default2;
                     }
-                } else if (G.drawProfit === ``) {
+                } else if (G.drawProfit === null) {
                     activeStageOfCurrentPlayer = StageNames.Default3;
                 }
             } else if (ctx.phase === PhaseNames.PlaceYlud) {

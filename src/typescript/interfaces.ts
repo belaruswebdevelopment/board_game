@@ -1103,8 +1103,7 @@ export type ActiveStageAIType = StageNames | `default`;
  */
 export type CoinType = CanBeNullType<ICoin>;
 
-// TODO Rework `` to null
-export type DrawProfitType = ConfigNames | ``;
+export type DrawProfitType = CanBeNullType<ConfigNames>;
 
 export type AutoActionFunctionType = IAutoActionFunction | IAutoActionFunctionWithParams;
 

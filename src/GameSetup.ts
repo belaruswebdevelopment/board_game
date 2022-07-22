@@ -40,7 +40,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         log = true,
         debug = false,
         tavernCardDiscarded2Players = false,
-        drawProfit = ``,
+        drawProfit = null,
         expansions: IExpansions = {
             thingvellir: {
                 active: solo ? false : true,
