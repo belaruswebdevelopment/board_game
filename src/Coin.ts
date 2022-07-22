@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import type { CanBeUndefType, CreateCoinType, IBuildCoinsOptions, ICoin, IMarketCoinConfig, IMyGameState, InitialTradingCoinConfigType, INumberValues, PublicPlayerCoinType } from "./typescript/interfaces";
+import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinType, IBuildCoinsOptions, ICoin, IMyGameState, INumberValues, PublicPlayerCoinType } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -13,11 +13,10 @@ import type { CanBeUndefType, CreateCoinType, IBuildCoinsOptions, ICoin, IMarket
  * @param options Опции создания монет.
  * @returns Массив всех монет.
  */
-export const BuildCoins = (coinConfig: IMarketCoinConfig[] | InitialTradingCoinConfigType[],
-    options: IBuildCoinsOptions): ICoin[] => {
+export const BuildCoins = (coinConfig: CoinConfigArraysType, options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        const config: CanBeUndefType<IMarketCoinConfig | InitialTradingCoinConfigType> = coinConfig[i];
+        const config: CanBeUndefType<CoinConfigType> = coinConfig[i];
         if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
         }

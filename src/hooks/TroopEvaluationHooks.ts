@@ -6,7 +6,7 @@ import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../hel
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, DeckCardTypes, DistinctionType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, DistinctionType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -40,7 +40,7 @@ export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx):
  * @param ctx
  * @returns
  */
-export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
@@ -66,7 +66,7 @@ export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): boolean
  * @param ctx
  * @returns
  */
-export const CheckEndTroopEvaluationTurn = (G: IMyGameState, ctx: Ctx): true | void => EndTurnActions(G, ctx);
+export const CheckEndTroopEvaluationTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => EndTurnActions(G, ctx);
 
 /**
  * <h3>Действия при завершении фазы 'Смотр войск'.</h3>

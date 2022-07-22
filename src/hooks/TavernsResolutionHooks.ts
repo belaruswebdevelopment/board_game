@@ -13,7 +13,7 @@ import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, CoinType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, CoinType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -81,7 +81,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
  * @param ctx
  * @returns
  */
-export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): true | void => {
+export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
@@ -106,7 +106,7 @@ export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): true 
  * @param ctx
  * @returns
  */
-export const CheckEndTavernsResolutionTurn = (G: IMyGameState, ctx: Ctx): true | void => EndTurnActions(G, ctx);
+export const CheckEndTavernsResolutionTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => EndTurnActions(G, ctx);
 
 /**
  * <h3>Действия при завершении фазы 'Посещение таверн'.</h3>

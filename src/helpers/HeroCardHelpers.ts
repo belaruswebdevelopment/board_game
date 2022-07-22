@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IHeroCard, IHeroPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { AllHeroCardType, CanBeUndefType, IHeroCard, IHeroPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -20,7 +20,7 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * @param ctx
  * @param hero Герой.
  */
-export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard | IHeroPlayerCard): void => {
+export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: AllHeroCardType): void => {
     if (hero.suit !== null && hero.rank !== null) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {

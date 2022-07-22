@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -19,7 +19,7 @@ import type { CampDeckCardType, CanBeUndefType, IMyGameState, IPublicPlayer, ISt
  * @param ctx
  * @returns
  */
-export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): true | void => {
+export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
@@ -58,7 +58,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
  * @param ctx
  * @returns
  */
-export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

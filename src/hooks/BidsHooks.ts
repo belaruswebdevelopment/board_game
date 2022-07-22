@@ -7,7 +7,7 @@ import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/Co
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, CoinType, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -20,7 +20,7 @@ import type { CanBeUndefType, CoinType, IMyGameState, IPlayer, IPublicPlayer, Pu
  * @param ctx
  * @returns
  */
-export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty: boolean =
             Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
@@ -60,7 +60,7 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => 
  * @param ctx
  * @returns
  */
-export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): true | void => {
+export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {

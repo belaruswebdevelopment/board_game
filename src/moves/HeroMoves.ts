@@ -6,7 +6,7 @@ import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { StageNames } from "../typescript/enums";
-import type { CanBeUndefType, IHeroCard, IMyGameState, SuitKeyofType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор героя.</h3>
@@ -20,7 +20,8 @@ import type { CanBeUndefType, IHeroCard, IMyGameState, SuitKeyofType } from "../
  * @param heroId Id героя.
  * @returns
  */
-export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number): string | void => {
+export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickHero, heroId);
     if (!isValidMove) {
@@ -49,7 +50,7 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @returns
  */
 export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType, cardId: number):
-    string | void => {
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardBoardCard, {
             suit,
@@ -74,7 +75,7 @@ export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, s
  * @returns
  */
 export const PlaceMultiSuitCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType):
-    string | void => {
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceMultiSuitsCards, suit);
     if (!isValidMove) {
@@ -95,7 +96,8 @@ export const PlaceMultiSuitCardMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): string | void => {
+export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType):
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceThrudHero, suit);
     if (!isValidMove) {
@@ -116,7 +118,8 @@ export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): string | void => {
+export const PlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType):
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, suit);
     if (!isValidMove) {

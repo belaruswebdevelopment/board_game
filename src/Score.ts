@@ -10,7 +10,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helper
 import { AddDataToLog } from "./Logging";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitKeyofType } from "./typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitKeyofType } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -267,7 +267,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
  * @param ctx
  * @returns Финальные данные о победителях, если закончилась игра.
  */
-export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
+export const ScoreWinner = (G: IMyGameState, ctx: Ctx): CanBeVoidType<IMyGameState> => {
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
         if (G.solo || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
             ReturnCoinsToPlayerBoard(G, ctx, index);

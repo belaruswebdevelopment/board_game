@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, LogTypeNames, TavernNames } from "./typescript/enums";
-import type { CanBeUndefType, DeckCardTypes, IMyGameState, ITavernInConfig, ITavernsConfig, MythologicalCreatureDeckCardType, TavernCardType } from "./typescript/interfaces";
+import type { CanBeUndefType, DeckCardTypes, IMyGameState, ITavernInConfig, ITavernsConfig, TavernAllCardType, TavernCardType } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет не осталось ли карт в текущей таверне.</h1>
@@ -129,7 +129,7 @@ export const DiscardConcreteCardFromTavern = (G: IMyGameState, ctx: Ctx, discard
 export const RefillTaverns = (G: IMyGameState, ctx: Ctx): void => {
     G.round++;
     for (let t = 0; t < G.tavernsNum; t++) {
-        let refillDeck: DeckCardTypes[] | MythologicalCreatureDeckCardType[];
+        let refillDeck: TavernAllCardType;
         if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
             refillDeck = G.secret.mythologicalCreatureDecks.splice(0, G.drawSize);
             G.mythologicalCreatureDeckLength = G.secret.mythologicalCreatureDecks.length;

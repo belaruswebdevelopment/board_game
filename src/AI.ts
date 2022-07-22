@@ -4,7 +4,7 @@ import { ThrowMyError } from "./Error";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -27,7 +27,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     if (ctx.phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage: CanBeUndefType<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
-        let activeStageOfCurrentPlayer: StageNames | `default` =
+        let activeStageOfCurrentPlayer: ActiveStageAIType =
             currentStage !== undefined ? currentStage as StageNames : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {

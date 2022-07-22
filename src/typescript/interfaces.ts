@@ -379,7 +379,7 @@ export interface IStackData {
     readonly placeThrudHero: () => IStack;
     readonly placeTradingCoinsUline: () => IStack;
     readonly placeYludHero: () => IStack;
-    readonly pickHero: (priority: 1 | 2) => IStack;
+    readonly pickHero: (priority: OneOrTwoStackPriorityType) => IStack;
     readonly pickHeroSoloBot: () => IStack;
     readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
     readonly startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueType,
@@ -857,7 +857,7 @@ export interface INumberValues {
  * <h3>Интерфейс для значений очков карт.</h3>
  */
 export interface IPointsValues {
-    readonly [index: number]: INumberValues | INumberArrayValues;
+    readonly [index: number]: PointsValuesType;
 }
 
 /**
@@ -1018,10 +1018,14 @@ export type DebugDrawDataType<T> = {
 
 export type BasicVidofnirVedrfolnirUpgradeValueType = 2 | 3 | 5;
 
+export type AllHeroCardType = IHeroCard | IHeroPlayerCard;
+
 export type VidofnirVedrfolnirUpgradeValueType = [BasicVidofnirVedrfolnirUpgradeValueType]
     | [BasicVidofnirVedrfolnirUpgradeValueType, 2 | 3];
 
-export type BuffValueType = CanBeUndefType<SuitKeyofType | true>;
+export type BuffValueType = SuitKeyofType | true;
+
+export type OneOrTwoStackPriorityType = 1 | 2;
 
 export type MoveCardPlayerCurrentIdType = ICardId & IPlayerId;
 
@@ -1069,6 +1073,8 @@ export type CardsHasStackType = IHeroCard | IArtefactCampCard | IRoyalOfferingCa
 
 export type CardsHasStackValidatorsType = IHeroCard | IArtefactCampCard;
 
+export type PointsType = number | number[];
+
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
@@ -1083,6 +1089,14 @@ export type TavernCardType = CanBeNullType<DeckCardTypes | MythologicalCreatureD
 
 export type AllCardType = PlayerCardType | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard
     | IArtefactCampCard | MythologicalCreatureDeckCardType;
+
+export type PointsValuesType = INumberValues | INumberArrayValues;
+
+export type CoinConfigType = IMarketCoinConfig | InitialTradingCoinConfigType;
+
+export type CoinConfigArraysType = IMarketCoinConfig[] | InitialTradingCoinConfigType[];
+
+export type ActiveStageAIType = StageNames | `default`;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
@@ -1293,6 +1307,8 @@ export type VariantType = IBasicSuitableNonNullableCardInfo;
 // TODO Fix it!
 export type StrengthTokenNotchPointsType = [number, number, number, number, number?];
 
+export type BuildHeroesArraysType = [IHeroCard[], IHeroCard[], IHeroCard[]];
+
 /**
  * <h3>Тип для создания публичных данных игрока.</h3>
  */
@@ -1312,11 +1328,18 @@ export type SoloGameHeroesForPlayerConfigType = Pick<IHeroConfig, `Kraal` | `Tar
 
 export type ObjectEntriesCtxType = [CtxKeyofType, Ctx[CtxKeyofType]];
 
+export type TavernAllCardType = DeckCardTypes[] | MythologicalCreatureDeckCardType[];
+
 // My Utilities types
 /**
  * <h3>Тип для того, чтобы сделать дополнительный union тип undefined.</h3>
  */
 export type CanBeUndefType<T> = T | undefined;
+
+/**
+ * <h3>Тип для того, чтобы сделать дополнительный union тип void.</h3>
+ */
+export type CanBeVoidType<T> = T | void;
 
 /**
  * <h3>Тип для того, чтобы сделать дополнительный union тип null.</h3>

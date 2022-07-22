@@ -86,7 +86,7 @@ export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffKe
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
 
-export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofType): true | SuitKeyofType => {
+export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofType): BuffValueType => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -96,7 +96,7 @@ export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofType)
     if (buff === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует баф '${buffName}'.`);
     }
-    const buffValue: BuffValueType = buff[buffName];
+    const buffValue: CanBeUndefType<BuffValueType> = buff[buffName];
     if (buffValue === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует значение у бафа '${buffName}'.`);
     }

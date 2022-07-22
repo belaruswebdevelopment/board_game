@@ -7,7 +7,7 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndefType, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
@@ -32,7 +32,7 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
  * @param ctx
  * @returns
  */
-export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.solo) {
         if (ctx.currentPlayer === `1`) {
             const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
@@ -57,7 +57,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx)
  * @param ctx
  * @returns
  */
-export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (ctx.currentPlayer === `0`) {
         const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {

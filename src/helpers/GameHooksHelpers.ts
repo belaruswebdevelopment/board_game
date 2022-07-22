@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";
@@ -18,7 +18,7 @@ import { CheckPickHero } from "./HeroHelpers";
  * @param ctx
  * @returns
  */
-export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): string | void => {
+export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
     const isLastRound: boolean = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
         ((G.round === 2 || G.round === 5) ? true : false),
         currentDeck: CanBeUndefType<DeckCardTypes[]> =
@@ -47,7 +47,7 @@ export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): string |
  * @param G
  * @returns
  */
-export const StartGetMjollnirProfitPhase = (G: IMyGameState): string | void => {
+export const StartGetMjollnirProfitPhase = (G: IMyGameState): CanBeVoidType<string> => {
     const buffIndex: number =
         Object.values(G.publicPlayers).findIndex((playerB: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
@@ -89,7 +89,7 @@ export const StartBidUlineOrTavernsResolutionPhase = (G: IMyGameState): string =
  * @returns
  */
 export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase = (G: IMyGameState, ctx: Ctx):
-    string | void => {
+    CanBeVoidType<string> => {
     const isLastTavern: boolean = G.tavernsNum - 1 === G.currentTavern;
     if (isLastTavern) {
         return AfterLastTavernEmptyActions(G, ctx);
@@ -109,7 +109,7 @@ export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsP
  * @param ctx
  * @returns Название новой фазы игры.
  */
-export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): string | void => {
+export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
     const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[0],
         deck2: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
     if (deck1 === undefined) {
@@ -150,7 +150,7 @@ export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): string | voi
 * @param ctx
 * @returns
 */
-export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): string | void => {
+export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
     const yludIndex: number = Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
@@ -170,7 +170,7 @@ export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx)
  * @param G
  * @returns
  */
-const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): string | void => {
+const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
     let count = false;
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
@@ -230,7 +230,7 @@ export const EndGame = (ctx: Ctx): void => {
  * @param G
  * @param ctx
  */
-export const EndTurnActions = (G: IMyGameState, ctx: Ctx): true | void => {
+export const EndTurnActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

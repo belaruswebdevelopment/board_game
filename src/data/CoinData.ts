@@ -1,4 +1,4 @@
-import type { IMarketCoinConfig, InitialTradingCoinConfigType, INumberValues } from "../typescript/interfaces";
+import type { CoinConfigType, IMarketCoinConfig, InitialTradingCoinConfigType, INumberValues } from "../typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
@@ -10,8 +10,8 @@ import type { IMarketCoinConfig, InitialTradingCoinConfigType, INumberValues } f
  * @param config Конфиг.
  * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
  */
-export const isInitialPlayerCoinsConfigNotMarket = (config: InitialTradingCoinConfigType | IMarketCoinConfig):
-    config is InitialTradingCoinConfigType => (config as InitialTradingCoinConfigType).isTriggerTrading !== undefined;
+export const isInitialPlayerCoinsConfigNotMarket = (config: CoinConfigType): config is InitialTradingCoinConfigType =>
+    (config as InitialTradingCoinConfigType).isTriggerTrading !== undefined;
 
 /**
  * <h3>Конфиг базовых монет игрока.</h3>

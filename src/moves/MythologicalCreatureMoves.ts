@@ -2,7 +2,7 @@ import type { Ctx, Move } from "boardgame.io";
 import { godConfig } from "../data/MythologicalCreatureData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IGodData, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IGodData, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Использование способности карты Бога.</h3>
@@ -16,7 +16,8 @@ import type { CanBeUndefType, IGodData, IMyGameState, IPublicPlayer, Mythologica
  * @param cardId Id выбираемой карты Бога.
  * @returns
  */
-export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
+export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+    CanBeVoidType<string> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

@@ -4,7 +4,7 @@ import { suitsConfig } from "../data/SuitData";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, DeckCardTypes, IDwarfCard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PublicPlayerCoinType, SuitKeyofType, TavernCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, DeckCardTypes, IDwarfCard, IMyGameState, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PointsType, PointsValuesType, PublicPlayerCoinType, SuitKeyofType, TavernCardType } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -103,11 +103,11 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
  */
 export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCardData): IDwarfCard => {
     let totalPoints = 0;
-    const pointsValuesPlayers: CanBeUndefType<INumberValues | INumberArrayValues> = suitConfig.pointsValues()[data.players];
+    const pointsValuesPlayers: CanBeUndefType<PointsValuesType> = suitConfig.pointsValues()[data.players];
     if (pointsValuesPlayers === undefined) {
         throw new Error(`Отсутствует массив значений карт для указанного числа игроков - '${data.players}'.`);
     }
-    const points: CanBeUndefType<number | number[]> = pointsValuesPlayers[data.tier];
+    const points: CanBeUndefType<PointsType> = pointsValuesPlayers[data.tier];
     if (points === undefined) {
         throw new Error(`Отсутствует массив значений карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
     }

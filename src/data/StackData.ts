@@ -1,7 +1,6 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
-import type { IMercenaryCampCard, IStack, IStackData, SuitKeyofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { IMercenaryCampCard, IStack, IStackData, OneOrTwoStackPriorityType, SuitKeyofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
-// TODO Move all value into 3 | 5 ...
 export const StackData: IStackData = {
     addCoinToPouch: (): IStack => ({
         stageName: StageNames.AddCoinToPouch,
@@ -106,7 +105,7 @@ export const StackData: IStackData = {
         drawName: DrawNames.PlaceYludHero,
         name: HeroNames.Ylud,
     }),
-    pickHero: (priority: 1 | 2): IStack => ({
+    pickHero: (priority: OneOrTwoStackPriorityType): IStack => ({
         stageName: StageNames.PickHero,
         drawName: DrawNames.PickHero,
         priority,

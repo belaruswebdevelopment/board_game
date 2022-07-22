@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -19,7 +19,7 @@ import type { CanBeNullType, CanBeUndefType, IHeroCard, IMyGameState, IPublicPla
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceYludPhase = (G: IMyGameState, ctx: Ctx): true | void => {
+export const CheckEndPlaceYludPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
         if (G.solo && G.tierToEnd === 0) {
             // TODO Check it!
@@ -116,7 +116,7 @@ export const CheckPlaceYludOrder = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  * @returns
  */
-export const CheckEndPlaceYludTurn = (G: IMyGameState, ctx: Ctx): true | void => EndTurnActions(G, ctx);
+export const CheckEndPlaceYludTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => EndTurnActions(G, ctx);
 
 /**
  * <h3>Действия при завершении фазы 'Поместить Труд'.</h3>

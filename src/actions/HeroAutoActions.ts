@@ -8,7 +8,7 @@ import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { AutoActionArgsType, CanBeUndefType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { AutoActionArgsType, CanBeUndefType, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoStackPriorityType, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -33,7 +33,7 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAction
     if (G.solo && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
     } else {
-        AddActionsToStack(G, ctx, [StackData.pickHero(args[0] as 1 | 2)]);
+        AddActionsToStack(G, ctx, [StackData.pickHero(args[0] as OneOrTwoStackPriorityType)]);
     }
     AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };

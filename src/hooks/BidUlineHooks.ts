@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndefType, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>
@@ -17,7 +17,7 @@ import type { CanBeUndefType, IMyGameState, IPublicPlayer, PublicPlayerCoinType 
  * @param ctx
  * @returns
  */
-export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {

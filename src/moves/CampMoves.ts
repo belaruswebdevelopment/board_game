@@ -3,7 +3,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
 import { CoinTypeNames, StageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, IMyGameState } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeVoidType, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
@@ -17,7 +17,8 @@ import type { BasicVidofnirVedrfolnirUpgradeValueType, IMyGameState } from "../t
  * @param coinId Id монеты.
  * @returns
  */
-export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): string | void => {
+export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.AddCoinToPouch, coinId);
     if (!isValidMove) {
@@ -39,7 +40,7 @@ export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @returns
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
-    value: BasicVidofnirVedrfolnirUpgradeValueType): string | void => {
+    value: BasicVidofnirVedrfolnirUpgradeValueType): CanBeVoidType<string> => {
     const isValidMove: boolean = ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, value);
     if (!isValidMove) {
@@ -61,7 +62,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove: Move<IMyGameState>
  * @returns
  */
 export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
-    string | void => {
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickCampCardHolda, cardId);
     if (!isValidMove) {
@@ -82,7 +83,8 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
-export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2, cardId);
     if (!isValidMove) {
@@ -105,7 +107,7 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @returns
  */
 export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
-    string | void => {
+    CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardSuitCard, {
             playerId: Number(ctx.playerID),
@@ -131,7 +133,7 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGam
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
-    type: CoinTypeNames): string | void => {
+    type: CoinTypeNames): CanBeVoidType<string> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.UpgradeVidofnirVedrfolnirCoin, {
             coinId,

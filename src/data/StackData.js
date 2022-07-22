@@ -1,5 +1,4 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
-// TODO Move all value into 3 | 5 ...
 export const StackData = {
     addCoinToPouch: () => ({
         stageName: StageNames.AddCoinToPouch,

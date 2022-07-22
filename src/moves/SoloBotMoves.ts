@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IHeroCard, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, CoinType, IHeroCard, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Add all solo bot moves!
 /**
@@ -21,7 +21,7 @@ import type { CanBeUndefType, CoinType, IHeroCard, IMyGameState, IPlayer, IPubli
  * @returns
  */
 export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
-    string | void => {
+    CanBeVoidType<string> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.PickHeroSoloBot, heroId);
     if (!isValidMove) {
@@ -47,7 +47,7 @@ export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @returns
  */
 export const SoloBotPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
-    string | void => {
+    CanBeVoidType<string> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.Default4, coinsOrder);
     if (!isValidMove) {

@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
@@ -37,7 +37,7 @@ export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
  * @param ctx
  * @returns
  */
-export const CheckEndBrisingamensEndGamePhase = (G: IMyGameState, ctx: Ctx): true | void => {
+export const CheckEndBrisingamensEndGamePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length && ctx.playOrder.length === 1 && G.publicPlayersOrder[0] === ctx.playOrder[0]
         && ctx.currentPlayer === ctx.playOrder[0]) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

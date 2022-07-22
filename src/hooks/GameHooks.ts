@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
 import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>
@@ -16,7 +16,7 @@ import type { CampDeckCardType, CanBeUndefType, IMyGameState, IPublicPlayer } fr
  * @param ctx
  * @returns Должна ли быть завершена игра.
  */
-export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndGame = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.tierToEnd === 0) {
         const yludIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
@@ -67,4 +67,4 @@ export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
  * @param ctx
  * @returns Финальные данные о игре.
  */
-export const ReturnEndGameData = (G: IMyGameState, ctx: Ctx): IMyGameState | void => ScoreWinner(G, ctx);
+export const ReturnEndGameData = (G: IMyGameState, ctx: Ctx): CanBeVoidType<IMyGameState> => ScoreWinner(G, ctx);

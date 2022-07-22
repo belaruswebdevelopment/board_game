@@ -22,7 +22,7 @@ import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove
 import { UseGodPowerMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
-import type { IMyGameState, IOrder } from "./typescript/interfaces";
+import type { CanBeVoidType, IMyGameState, IOrder } from "./typescript/interfaces";
 
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add Log data fo Solo Bot fo all files!
@@ -69,7 +69,8 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnChooseDifficultySoloModeTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnChooseDifficultySoloModeMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndChooseDifficultySoloModeTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> =>
+                    CheckEndChooseDifficultySoloModeTurn(G, ctx),
             },
             start: true,
             moves: {
@@ -77,13 +78,13 @@ export const BoardGame: Game<IMyGameState> = {
             },
             next: PhaseNames.Bids,
             onBegin: (G: IMyGameState, ctx: Ctx): void => CheckChooseDifficultySoloModeOrder(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndChooseDifficultySoloModePhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndChooseDifficultySoloModePhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndChooseDifficultySoloModeActions(G),
         },
         bids: {
             turn: {
                 order,
-                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndBidsTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndBidsTurn(G, ctx),
             },
             moves: {
                 ClickHandCoinMove,
@@ -93,7 +94,7 @@ export const BoardGame: Game<IMyGameState> = {
             },
             next: (G: IMyGameState): string => StartBidUlineOrTavernsResolutionPhase(G),
             onBegin: (G: IMyGameState, ctx: Ctx): void => PreparationPhaseActions(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndBidsPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndBidsPhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndBidsActions(G),
         },
         bidUline: {
@@ -105,7 +106,7 @@ export const BoardGame: Game<IMyGameState> = {
             },
             next: PhaseNames.TavernsResolution,
             onBegin: (G: IMyGameState, ctx: Ctx): void => CheckBidUlineOrder(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndBidUlinePhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndBidUlinePhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndBidUlineActions(G),
         },
         tavernsResolution: {
@@ -194,7 +195,7 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnTavernsResolutionTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnTavernsResolutionMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndTavernsResolutionTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndTavernsResolutionTurn(G, ctx),
                 onEnd: (G: IMyGameState, ctx: Ctx): void => OnTavernsResolutionTurnEnd(G, ctx),
             },
             moves: {
@@ -202,10 +203,10 @@ export const BoardGame: Game<IMyGameState> = {
                 ClickCampCardMove,
                 UseGodPowerMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): string | void =>
+            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> =>
                 StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase(G, ctx),
             onBegin: (G: IMyGameState, ctx: Ctx): void => ResolveCurrentTavernOrders(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndTavernsResolutionPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndTavernsResolutionPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndTavernsResolutionActions(G, ctx),
         },
         enlistmentMercenaries: {
@@ -277,7 +278,7 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndEnlistmentMercenariesTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndEnlistmentMercenariesTurn(G, ctx),
                 onEnd: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesTurnEnd(G, ctx),
             },
             moves: {
@@ -285,9 +286,9 @@ export const BoardGame: Game<IMyGameState> = {
                 PassEnlistmentMercenariesMove,
                 GetEnlistmentMercenariesMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): string | void => StartEndTierPhaseOrEndGameLastActions(G, ctx),
+            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => StartEndTierPhaseOrEndGameLastActions(G, ctx),
             onBegin: (G: IMyGameState): void => PrepareMercenaryPhaseOrders(G),
-            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndEnlistmentMercenariesPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndEnlistmentMercenariesPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndEnlistmentMercenariesActions(G, ctx),
         },
         placeYlud: {
@@ -360,15 +361,15 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnPlaceYludTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnPlaceYludMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndPlaceYludTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndPlaceYludTurn(G, ctx),
                 onEnd: (G: IMyGameState, ctx: Ctx): void => OnPlaceYludTurnEnd(G, ctx),
             },
             moves: {
                 PlaceYludHeroMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): string | void => StartEndGameLastActions(G, ctx),
+            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => StartEndGameLastActions(G, ctx),
             onBegin: (G: IMyGameState, ctx: Ctx): void => CheckPlaceYludOrder(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndPlaceYludPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndPlaceYludPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndPlaceYludActions(G, ctx),
         },
         troopEvaluation: {
@@ -446,7 +447,7 @@ export const BoardGame: Game<IMyGameState> = {
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnTroopEvaluationTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnTroopEvaluationMove(G, ctx),
-                endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndTroopEvaluationTurn(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndTroopEvaluationTurn(G, ctx),
                 onEnd: (G: IMyGameState, ctx: Ctx): void => OnTroopEvaluationTurnEnd(G, ctx),
             },
             next: PhaseNames.Bids,
@@ -454,7 +455,7 @@ export const BoardGame: Game<IMyGameState> = {
                 ClickDistinctionCardMove,
             },
             onBegin: (G: IMyGameState, ctx: Ctx): void => CheckAndResolveTroopEvaluationOrders(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndTroopEvaluationPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndTroopEvaluationPhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndTroopEvaluationPhaseActions(G),
         },
         brisingamensEndGame: {
@@ -468,9 +469,9 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
-            next: (G: IMyGameState): string | void => StartGetMjollnirProfitPhase(G),
+            next: (G: IMyGameState): CanBeVoidType<string> => StartGetMjollnirProfitPhase(G),
             onBegin: (G: IMyGameState): void => CheckBrisingamensEndGameOrder(G),
-            endIf: (G: IMyGameState, ctx: Ctx): true | void => CheckEndBrisingamensEndGamePhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndBrisingamensEndGamePhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndBrisingamensEndGameActions(G),
         },
         getMjollnirProfit: {
@@ -485,12 +486,12 @@ export const BoardGame: Game<IMyGameState> = {
                 GetMjollnirProfitMove,
             },
             onBegin: (G: IMyGameState): void => CheckGetMjollnirProfitOrder(G),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndGetMjollnirProfitPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndGetMjollnirProfitPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => StartEndGame(G, ctx),
         },
     },
-    endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndGame(G, ctx),
-    onEnd: (G: IMyGameState, ctx: Ctx): IMyGameState | void => ReturnEndGameData(G, ctx),
+    endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndGame(G, ctx),
+    onEnd: (G: IMyGameState, ctx: Ctx): CanBeVoidType<IMyGameState> => ReturnEndGameData(G, ctx),
     ai: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore

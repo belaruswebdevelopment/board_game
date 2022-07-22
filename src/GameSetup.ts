@@ -14,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, ExpansionKeyofType, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, SuitKeyofType, SuitPropertyType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, ExpansionKeyofType, IBotData, ICoin, IDwarfCard, IExpansions, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, SuitKeyofType, SuitPropertyType, TavernAllCardType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -119,10 +119,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             configOptions.push(expansion as GameNames);
         }
     }
-    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: [IHeroCard[], IHeroCard[], IHeroCard[]] =
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: BuildHeroesArraysType =
         BuildHeroes(configOptions, solo),
         multiCardsDeck: IMultiSuitCard[] = BuildMultiSuitCards(configOptions),
-        taverns: (DeckCardTypes[] | MythologicalCreatureDeckCardType[])[] = [],
+        taverns: TavernAllCardType[] = [],
         tavernsNum = 3,
         currentTavern = -1,
         drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers,
