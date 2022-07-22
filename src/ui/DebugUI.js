@@ -67,7 +67,8 @@ const GetDebugData = (G, ctx) => {
         for (const [key, value] of Object.entries(G)) {
             debugData.G[key] = value;
         }
-        for (const [key, value] of Object.entries(ctx)) {
+        let key, value;
+        for ([key, value] of Object.entries(ctx)) {
             debugData.ctx[key] = value;
         }
         return debugData;

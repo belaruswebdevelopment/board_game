@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { ThrowMyError } from "../Error";
 import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
-import type { CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, IStack, SuitTypes, VidofnirVedrfolnirUpgradeValueTypes } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueTypes, CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, IStack, SuitKeyofTypes, VidofnirVedrfolnirUpgradeValueTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -72,8 +72,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameStat
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр 'valueArray'.`);
     }
     for (let j = 0; j < values.length; j++) {
-        // TODO Move it to type in all places!
-        const value: CanBeUndef<5 | 2 | 3> = values[j];
+        const value: CanBeUndef<BasicVidofnirVedrfolnirUpgradeValueTypes> = values[j];
         if (value === undefined) {
             throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' в параметре 'valueArray' отсутствует значение параметра  id '${j}'.`);
         }
@@ -111,7 +110,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
         if (card === undefined) {
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
-        let suit: CanBeNull<SuitTypes> = null;
+        let suit: CanBeNull<SuitKeyofTypes> = null;
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }

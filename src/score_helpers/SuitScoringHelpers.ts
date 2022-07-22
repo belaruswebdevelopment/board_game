@@ -1,5 +1,5 @@
 import { HeroNames, SuitNames } from "../typescript/enums";
-import type { PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
+import type { PlayerCardTypes, SuitKeyofTypes } from "../typescript/interfaces";
 import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -13,7 +13,7 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 * @param heroName Название фракции дворфов.
 * @returns Количество очков по фракциям дворфов.
 */
-export const SuitScoring = (cards: PlayerCardTypes[], suit: SuitTypes, potentialCardValue = 0,
+export const SuitScoring = (cards: PlayerCardTypes[], suit: SuitKeyofTypes, potentialCardValue = 0,
     additionalScoring = false): number => {
     switch (suit) {
         case SuitNames.Blacksmith:

@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { CanBeNull, CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArrayValues, INumberValues, IPlayersNumberTierCardData, SuitTypes } from "./typescript/interfaces";
+import type { CanBeNull, CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArrayValues, INumberValues, IPlayersNumberTierCardData, SuitKeyofTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -14,7 +14,7 @@ import type { CanBeNull, CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArr
  */
 export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] => {
     const cards: IDwarfCard[] = [];
-    let suit: SuitTypes;
+    let suit: SuitKeyofTypes;
     for (suit in suitsConfig) {
         const pointValuesPlayers: CanBeUndef<INumberValues | INumberArrayValues> =
             suitsConfig[suit].pointsValues()[data.players];

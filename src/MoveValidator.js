@@ -41,8 +41,8 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    let _exhaustiveCheck;
     const handCoin = handCoins[coinData.coinId], boardCoin = boardCoins[coinData.coinId];
+    let _exhaustiveCheck;
     switch (coinData.type) {
         case CoinTypeNames.Hand:
             if (handCoin === undefined) {
@@ -101,7 +101,8 @@ export const IsValidMove = (G, ctx, stage, id) => {
             isValid = ValidateByValues(id, validator.getRange(G, ctx));
         }
         else if (typeof id === `string`) {
-            isValid = ValidateByValues(id, validator.getRange(G, ctx));
+            isValid =
+                ValidateByValues(id, validator.getRange(G, ctx));
         }
         else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
             if (`coinId` in id) {

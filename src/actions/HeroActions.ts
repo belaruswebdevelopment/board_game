@@ -13,7 +13,7 @@ import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { CreateMultiSuitPlayerCard } from "../MultiSuitCard";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, MultiSuitCardNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndef, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardTypes, SuitPropertyTypes, SuitTypes, VariantType } from "../typescript/interfaces";
+import type { CanBeUndef, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardTypes, SuitKeyofTypes, SuitPropertyTypes, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -27,7 +27,7 @@ import type { CanBeUndef, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard,
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number): void => {
+export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes, cardId: number): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -53,7 +53,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
+export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -125,7 +125,7 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTy
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
+export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -159,7 +159,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
+export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): void => {
     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

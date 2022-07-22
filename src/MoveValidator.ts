@@ -9,7 +9,7 @@ import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot 
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, StageNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PickValidatorConfigTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeTypes, MythologicalCreatureDeckCardTypes, PickValidatorConfigKeyofTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitKeyofTypes, SuitPropertyTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -34,8 +34,7 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined,
-            ctx.currentPlayer);
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinTypes[],
         boardCoins: PublicPlayerCoinTypes[];
@@ -46,9 +45,9 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    let _exhaustiveCheck: never;
     const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[coinData.coinId],
         boardCoin: CanBeUndef<PublicPlayerCoinTypes> = boardCoins[coinData.coinId];
+    let _exhaustiveCheck: never;
     switch (coinData.type) {
         case CoinTypeNames.Hand:
             if (handCoin === undefined) {
@@ -107,14 +106,15 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageNames, id?: V
         if (typeof id === `number`) {
             isValid = ValidateByValues<number>(id, validator.getRange(G, ctx) as number[]);
         } else if (typeof id === `string`) {
-            isValid = ValidateByValues<SuitTypes>(id, validator.getRange(G, ctx) as SuitTypes[]);
+            isValid =
+                ValidateByValues<SuitKeyofTypes>(id, validator.getRange(G, ctx) as SuitKeyofTypes[]);
         } else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
             if (`coinId` in id) {
                 isValid = ValidateByObjectCoinIdTypeIsInitialValues(id, validator.getRange(G, ctx) as
                     IMoveCoinsArguments[]);
             } else if (`playerId` in id) {
                 isValid = ValidateByObjectSuitCardIdPlayerIdValues(id,
-                    validator.getRange(G, ctx, id.playerId) as IMoveCardIdPlayerIdArguments);
+                    validator.getRange(G, ctx, id.playerId) as IMoveCardsPlayerIdArguments);
             } else if (`suit` in id) {
                 isValid = ValidateByObjectSuitCardIdValues(id, validator.getRange(G, ctx) as
                     Partial<SuitPropertyTypes<number[]>>);
@@ -149,22 +149,22 @@ export const GetValidator = (phase: PhaseNames, stage: StageNames): CanBeNull<IM
             validator = moveBy[phase][stage as keyof IMoveByChooseDifficultySoloModeOptions];
             break;
         case PhaseNames.Bids:
-            validator = moveBy[phase][stage as keyof IMoveByPlaceCoinsOptions];
+            validator = moveBy[phase][stage as keyof IMoveByBidOptions];
             break;
         case PhaseNames.BidUline:
-            validator = moveBy[phase][stage as keyof IMoveByPlaceCoinsUlineOptions];
+            validator = moveBy[phase][stage as keyof IMoveByBidUlineOptions];
             break;
         case PhaseNames.TavernsResolution:
-            validator = moveBy[phase][stage as keyof IMoveByPickCardsOptions];
+            validator = moveBy[phase][stage as keyof IMoveByTavernsResolutionOptions];
             break;
         case PhaseNames.EnlistmentMercenaries:
             validator = moveBy[phase][stage as keyof IMoveByEnlistmentMercenariesOptions];
             break;
         case PhaseNames.PlaceYlud:
-            validator = moveBy[phase][stage as keyof IMoveByEndTierOptions];
+            validator = moveBy[phase][stage as keyof IMoveByPlaceYludOptions];
             break;
         case PhaseNames.TroopEvaluation:
-            validator = moveBy[phase][stage as keyof IMoveByGetDistinctionsOptions];
+            validator = moveBy[phase][stage as keyof IMoveByTroopEvaluationOptions];
             break;
         case PhaseNames.BrisingamensEndGame:
             validator = moveBy[phase][stage as keyof IMoveByBrisingamensEndGameOptions];
@@ -364,7 +364,7 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     ClickDistinctionCardMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -372,12 +372,12 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
             return DrawDistinctions(G, ctx, MoveValidatorNames.ClickDistinctionCardMoveValidator) as
-                IMoveArgumentsStage<SuitTypes[]>[`args`];
+                IMoveArgumentsStage<SuitKeyofTypes[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
-                moveArgument: CanBeUndef<SuitTypes> =
+            const moveArguments: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = currentMoveArguments as SuitKeyofTypes[],
+                moveArgument: CanBeUndef<SuitKeyofTypes> =
                     moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
@@ -475,12 +475,12 @@ export const moveValidators: IMoveValidators = {
             ValidMoveIdParamTypes => {
             const moveArguments: IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`] =
                 currentMoveArguments as IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`],
-                suitNames: SuitTypes[] = [];
-            let suit: SuitTypes;
+                suitNames: SuitKeyofTypes[] = [];
+            let suit: SuitKeyofTypes;
             for (suit in moveArguments) {
                 suitNames.push(suit);
             }
-            const suitName: CanBeUndef<SuitTypes> = suitNames[Math.floor(Math.random() * suitNames.length)];
+            const suitName: CanBeUndef<SuitKeyofTypes> = suitNames[Math.floor(Math.random() * suitNames.length)];
             if (suitName === undefined) {
                 throw new Error(`Отсутствует выбранная случайно фракция '${suitName}' для сброса карты.`);
             }
@@ -548,7 +548,7 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     GetMjollnirProfitMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -556,11 +556,11 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
             return DrawPlayersBoards(G, ctx, MoveValidatorNames.GetMjollnirProfitMoveValidator,
-                null) as IMoveArgumentsStage<SuitTypes[]>[`args`];
+                null) as IMoveArgumentsStage<SuitKeyofTypes[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
+            const moveArguments: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = currentMoveArguments as SuitKeyofTypes[],
                 totalSuitsRanks: number[] = [];
             for (let j = 0; j < moveArguments.length; j++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -568,7 +568,7 @@ export const moveValidators: IMoveValidators = {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
-                const moveArgumentI: CanBeUndef<SuitTypes> = moveArguments[j];
+                const moveArgumentI: CanBeUndef<SuitKeyofTypes> = moveArguments[j];
                 if (moveArgumentI === undefined) {
                     throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${j}'.`);
                 }
@@ -579,7 +579,7 @@ export const moveValidators: IMoveValidators = {
             if (index === -1) {
                 throw new Error(`Должна быть хотя бы одна фракция с максимальным количеством шевронов.`);
             }
-            const moveArgument: CanBeUndef<SuitTypes> = moveArguments[index];
+            const moveArgument: CanBeUndef<SuitKeyofTypes> = moveArguments[index];
             if (moveArgument === undefined) {
                 throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${index}'.`);
             }
@@ -611,7 +611,7 @@ export const moveValidators: IMoveValidators = {
         },
     },
     PlaceEnlistmentMercenariesMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -619,12 +619,12 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
             return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator,
-                null) as IMoveArgumentsStage<SuitTypes[]>[`args`];
+                null) as IMoveArgumentsStage<SuitKeyofTypes[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
-                moveArgument: CanBeUndef<SuitTypes> =
+            const moveArguments: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = currentMoveArguments as SuitKeyofTypes[],
+                moveArgument: CanBeUndef<SuitKeyofTypes> =
                     moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
@@ -635,7 +635,7 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PlaceYludHeroMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -643,13 +643,13 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
             return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceYludHeroMoveValidator,
-                null) as IMoveArgumentsStage<SuitTypes[]>[`args`];
+                null) as IMoveArgumentsStage<SuitKeyofTypes[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
             // TODO Add for Solo Bot!
-            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
-                moveArgument: CanBeUndef<SuitTypes> =
+            const moveArguments: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = currentMoveArguments as SuitKeyofTypes[],
+                moveArgument: CanBeUndef<SuitKeyofTypes> =
                     moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
@@ -1156,7 +1156,7 @@ export const moveValidators: IMoveValidators = {
             }
             const validators: CanBeUndef<IPickValidatorsConfig> = hero.pickValidators;
             if (validators !== undefined) {
-                let validator: PickValidatorConfigTypes;
+                let validator: PickValidatorConfigKeyofTypes;
                 for (validator in validators) {
                     switch (validator) {
                         case PickHeroCardValidatorNames.Conditions:
@@ -1191,12 +1191,12 @@ export const moveValidators: IMoveValidators = {
             ValidMoveIdParamTypes => {
             const moveArguments: IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`] =
                 currentMoveArguments as IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`],
-                suitNamesArray: SuitTypes[] = [];
-            let suit: SuitTypes;
+                suitNamesArray: SuitKeyofTypes[] = [];
+            let suit: SuitKeyofTypes;
             for (suit in moveArguments) {
                 suitNamesArray.push(suit);
             }
-            const suitName: CanBeUndef<SuitTypes> =
+            const suitName: CanBeUndef<SuitKeyofTypes> =
                 suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)];
             if (suitName === undefined) {
                 throw new Error(`Отсутствует выбранная случайно фракция для сброса карты.`);
@@ -1220,7 +1220,7 @@ export const moveValidators: IMoveValidators = {
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number):
-            IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`] => {
+            IMoveArgumentsStage<IMoveCardsPlayerIdArguments>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -1232,12 +1232,12 @@ export const moveValidators: IMoveValidators = {
             }
             return DrawPlayersBoards(G, ctx,
                 MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator, playerId) as
-                IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`];
+                IMoveArgumentsStage<IMoveCardsPlayerIdArguments>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`] =
-                currentMoveArguments as IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`],
+            const moveArguments: IMoveArgumentsStage<IMoveCardsPlayerIdArguments>[`args`] =
+                currentMoveArguments as IMoveArgumentsStage<IMoveCardsPlayerIdArguments>[`args`],
                 player: CanBeUndef<IPublicPlayer> = G.publicPlayers[moveArguments.playerId];
             if (player === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -1300,7 +1300,7 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PlaceMultiSuitCardMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -1308,12 +1308,12 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
             return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceMultiSuitCardMoveValidator,
-                null) as IMoveArgumentsStage<SuitTypes[]>[`args`];
+                null) as IMoveArgumentsStage<SuitKeyofTypes[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
-                moveArgument: CanBeUndef<SuitTypes> =
+            const moveArguments: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = currentMoveArguments as SuitKeyofTypes[],
+                moveArgument: CanBeUndef<SuitKeyofTypes> =
                     moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
@@ -1324,7 +1324,7 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PlaceThrudHeroMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -1332,23 +1332,23 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
             return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceThrudHeroMoveValidator,
-                null) as IMoveArgumentsStage<SuitTypes[]>[`args`];
+                null) as IMoveArgumentsStage<SuitKeyofTypes[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
             // TODO Same logic for Ylud placement!
-            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
-            let moveArgument: CanBeUndef<SuitTypes>;
+            const moveArguments: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = currentMoveArguments as SuitKeyofTypes[];
+            let moveArgument: CanBeUndef<SuitKeyofTypes>;
             if (G.solo && ctx.currentPlayer === `1`) {
                 const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
                 if (soloBotPublicPlayer === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         1);
                 }
-                const suit: CanBeUndef<SuitTypes> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
+                const suit: CanBeUndef<SuitKeyofTypes> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
                 if (suit === undefined) {
-                    const [suits]: [SuitTypes[], number] =
+                    const [suits]: [SuitKeyofTypes[], number] =
                         CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
                     if (suits.length === 0) {
                         throw new Error(`Не может не быть фракций с минимальным количеством карт.`);
@@ -1630,6 +1630,6 @@ const ValidateByObjectSuitCardIdValues = (value: IMoveSuitCardCurrentId,
  * @param values
  * @returns
  */
-const ValidateByObjectSuitCardIdPlayerIdValues = (value: IMoveCardPlayerCurrentId,
-    values: IMoveCardIdPlayerIdArguments): boolean =>
+const ValidateByObjectSuitCardIdPlayerIdValues = (value: MoveCardPlayerCurrentIdType,
+    values: IMoveCardsPlayerIdArguments): boolean =>
     values.playerId === value.playerId && values.cards.includes(value.cardId);

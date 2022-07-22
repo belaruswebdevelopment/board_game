@@ -10,7 +10,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helper
 import { AddDataToLog } from "./Logging";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitKeyofTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -27,7 +27,7 @@ import type { CampDeckCardTypes, CanBeUndef, IArtefactData, IGiantData, IGodData
  */
 export const CurrentScoring = (G: IMyGameState, player: IPublicPlayer): number => {
     let score = 0,
-        suit: SuitTypes;
+        suit: SuitKeyofTypes;
     for (suit in suitsConfig) {
         let additionalScoring = false;
         if (G.expansions.idavoll) {

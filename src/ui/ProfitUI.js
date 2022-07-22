@@ -61,7 +61,6 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G, ctx, valida
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр 'valueArray'.`);
     }
     for (let j = 0; j < values.length; j++) {
-        // TODO Move it to type in all places!
         const value = values[j];
         if (value === undefined) {
             throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' в параметре 'valueArray' отсутствует значение параметра  id '${j}'.`);

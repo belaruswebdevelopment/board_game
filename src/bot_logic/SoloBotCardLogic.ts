@@ -4,9 +4,9 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
+import type { CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, PlayerCardTypes, SuitKeyofTypes } from "../typescript/interfaces";
 
-export const CheckSoloBotCanPickHero = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): CanBeUndef<SuitTypes> => {
+export const CheckSoloBotCanPickHero = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): CanBeUndef<SuitKeyofTypes> => {
     const playerCards: PlayerCardTypes[][] = Object.values(player.cards),
         heroesLength: number = player.heroes.filter((hero: IHeroCard): boolean =>
             hero.name.startsWith(`Dwerg`)).length,
@@ -21,8 +21,8 @@ export const CheckSoloBotCanPickHero = (G: IMyGameState, ctx: Ctx, player: IPubl
         if (suitIndex === -1) {
             throw new Error(`В массиве фракций отсутствует фракция с минимальным количеством карт '${minLength}' для выкладки карты соло ботом.`);
         }
-        const suits: SuitTypes[] = Object.keys(player.cards) as SuitTypes[],
-            suit: CanBeUndef<SuitTypes> = suits[suitIndex];
+        const suits: SuitKeyofTypes[] = Object.keys(player.cards) as SuitKeyofTypes[],
+            suit: CanBeUndef<SuitKeyofTypes> = suits[suitIndex];
         if (suit === undefined) {
             throw new Error(`В массиве фракций отсутствует фракция с id '${suitIndex}'.`);
         }
@@ -32,22 +32,22 @@ export const CheckSoloBotCanPickHero = (G: IMyGameState, ctx: Ctx, player: IPubl
 };
 
 export const CheckSuitsLeastPresentOnPlayerBoard = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer):
-    [SuitTypes[], number] => {
+    [SuitKeyofTypes[], number] => {
     const playerCards: PlayerCardTypes[][] = Object.values(player.cards),
         playerCardsCount: number[] = playerCards.map((item: PlayerCardTypes[]): number =>
             item.reduce(TotalRank, 0)),
         minLength: number = Math.min(...playerCardsCount),
         minLengthCount: number =
             playerCardsCount.filter((length: number): boolean => length === minLength).length,
-        availableSuitArguments: SuitTypes[] = [];
+        availableSuitArguments: SuitKeyofTypes[] = [];
     for (let i = 0; i < playerCardsCount.length; i++) {
         if (playerCardsCount[i] === minLength) {
-            const suits: SuitTypes[] = Object.keys(player.cards) as SuitTypes[],
-                suit: CanBeUndef<SuitTypes> = suits[i];
+            const suits: SuitKeyofTypes[] = Object.keys(player.cards) as SuitKeyofTypes[],
+                suit: CanBeUndef<SuitKeyofTypes> = suits[i];
             if (suit === undefined) {
                 throw new Error(`В массиве фракций отсутствует фракция с id '${i}'.`);
             }
-            const suitName: SuitTypes = suitsConfig[suit].suit;
+            const suitName: SuitKeyofTypes = suitsConfig[suit].suit;
             availableSuitArguments.push(suitName);
         }
     }
@@ -60,11 +60,11 @@ export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
-    let thrudSuit: CanBeNull<SuitTypes> = null;
+    let thrudSuit: CanBeNull<SuitKeyofTypes> = null;
     if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud)) {
-        thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud) as SuitTypes;
+        thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud) as SuitKeyofTypes;
     }
-    const suit: CanBeUndef<SuitTypes> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer),
+    const suit: CanBeUndef<SuitKeyofTypes> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer),
         availableMoveArguments: IMoveArgumentsStage<number[]>[`args`] = [],
         availableThrudArguments: IMoveArgumentsStage<number[]>[`args`] = [];
     if (suit !== undefined) {
@@ -161,7 +161,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
-    const [availableSuitArguments, minLengthCount]: [SuitTypes[], number] =
+    const [availableSuitArguments, minLengthCount]: [SuitKeyofTypes[], number] =
         CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
     if (availableSuitArguments.length !== minLengthCount) {
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);

@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { CanBeNull, CanBeUndef, DebugDrawDataType, IDebugData, IMyGameState, ObjectEntries } from "../typescript/interfaces";
+import type { CanBeNull, CanBeUndef, CtxKeyofTypes, IDebugData, IDebugDrawData, IMyGameState, ObjectEntries, ObjectEntriesCtx } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -36,7 +36,7 @@ export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNull<JSX.Element>
  * @param obj Информация.
  * @returns
  */
-const DrawObjectData = (obj: DebugDrawDataType<IDebugData | IDebugData[keyof IDebugData]>): JSX.Element => {
+const DrawObjectData = (obj: IDebugDrawData<IDebugData | IDebugData[keyof IDebugData]>): JSX.Element => {
     const values: JSX.Element[] = [];
     for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
@@ -103,7 +103,9 @@ const GetDebugData = (G: IMyGameState, ctx: Ctx): CanBeUndef<IDebugData> => {
         for (const [key, value] of Object.entries(G) as ObjectEntries<typeof G>) {
             debugData.G[key] = value;
         }
-        for (const [key, value] of Object.entries(ctx)) {
+        let key: keyof Ctx,
+            value: Ctx[CtxKeyofTypes];
+        for ([key, value] of Object.entries(ctx) as ObjectEntriesCtx) {
             debugData.ctx[key] = value;
         }
         return debugData;

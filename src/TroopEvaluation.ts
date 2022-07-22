@@ -5,7 +5,7 @@ import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "./typescript/enums";
-import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, SuitKeyofTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
@@ -19,7 +19,7 @@ import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublic
  * @param suit Фракция.
  * @returns Индекс игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
-const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): DistinctionTypes => {
+const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): DistinctionTypes => {
     const [playersRanks, max]: [number[], number] = CountPlayerRanksAndMaxRanksForDistinctions(G, ctx, suit),
         maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
     if (maxPlayers.length === 1) {
@@ -61,7 +61,7 @@ const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes)
  * @param suit Название фракции дворфов.
  * @returns Индексы игроков с преимуществом по количеству шевронов конкретной фракции.
  */
-export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): number[] => {
+export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): number[] => {
     const [playersRanks, max]: [number[], number] = CountPlayerRanksAndMaxRanksForDistinctions(G, ctx, suit),
         maxPlayers: number[] = [];
     playersRanks.forEach((value: number, index: number): void => {
@@ -94,7 +94,7 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
  */
 export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
     AddDataToLog(G, LogTypeNames.Game, `Преимущество по фракциям в конце эпохи:`);
-    let suit: SuitTypes;
+    let suit: SuitKeyofTypes;
     for (suit in suitsConfig) {
         const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[suit] = result;
@@ -115,7 +115,7 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
  * @param suit Название фракции дворфов.
  * @returns [Количество шевронов каждого игрока конкретной фракции, Максимальное количество шевронов конкретной фракции].
  */
-const CountPlayerRanksAndMaxRanksForDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): [number[], number] => {
+const CountPlayerRanksAndMaxRanksForDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): [number[], number] => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
@@ -144,7 +144,7 @@ const CountPlayerRanksAndMaxRanksForDistinctions = (G: IMyGameState, ctx: Ctx, s
  * @param suit Название фракции дворфов.
  * @param result Id игрока, получившего преимущество (если имеется).
  */
-const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes,
+const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes,
     result: DistinctionTypes): void => {
     if (suit === SuitNames.Explorer && result === undefined) {
         const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];

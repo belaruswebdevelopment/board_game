@@ -1,5 +1,5 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
-import type { IMercenaryCampCard, IStack, IStackData, SuitTypes, VidofnirVedrfolnirUpgradeValueTypes } from "../typescript/interfaces";
+import type { IMercenaryCampCard, IStack, IStackData, SuitKeyofTypes, VidofnirVedrfolnirUpgradeValueTypes } from "../typescript/interfaces";
 
 // TODO Move all value into 3 | 5 ...
 export const StackData: IStackData = {
@@ -19,7 +19,7 @@ export const StackData: IStackData = {
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (pickedSuit?: SuitTypes): IStack => ({
+    discardCardFromBoardDagda: (pickedSuit?: SuitKeyofTypes): IStack => ({
         stageName: StageNames.DiscardBoardCard,
         drawName: DrawNames.Dagda,
         suit: SuitNames.Hunter,
@@ -85,7 +85,7 @@ export const StackData: IStackData = {
         stageName: StageNames.PickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
-    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitTypes, priority?: 3): IStack => ({
+    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitKeyofTypes, priority?: 3): IStack => ({
         stageName: StageNames.PlaceMultiSuitsCards,
         drawName: DrawNames.PlaceMultiSuitsCards,
         pickedSuit,

@@ -37,7 +37,6 @@ export const SetupGame = (ctx) => {
     }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [GameNames.Basic], discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
         campDecks: [],
         decks: [],
-        // TODO Add Idavoll deck length info on main page?
         mythologicalCreatureDecks: [],
     };
     if (solo && multiplayer) {
@@ -94,6 +93,7 @@ export const SetupGame = (ctx) => {
     if (expansions.idavoll.active) {
         secret.mythologicalCreatureDecks = BuildMythologicalCreatureCards();
         secret.mythologicalCreatureDecks = ctx.random.Shuffle(secret.mythologicalCreatureDecks);
+        // TODO Add Idavoll deck length info on main page?
         mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
     }
     for (let i = 0; i < tavernsNum; i++) {

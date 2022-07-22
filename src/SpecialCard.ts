@@ -1,6 +1,6 @@
 import { specialCardsConfig } from "./data/SpecialCardData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { CreateSpecialCardType, ISpecialCard, SpecialCardDataType, SpecialCardTypes } from "./typescript/interfaces";
+import type { CreateSpecialCardType, ISpecialCard, SpecialCardDataType, SpecialCardKeyofTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создание особых карт.</h3>
@@ -13,7 +13,7 @@ import type { CreateSpecialCardType, ISpecialCard, SpecialCardDataType, SpecialC
  */
 export const BuildSpecialCards = (): ISpecialCard[] => {
     const cards: ISpecialCard[] = [];
-    let cardName: SpecialCardTypes;
+    let cardName: SpecialCardKeyofTypes;
     for (cardName in specialCardsConfig) {
         const card: SpecialCardDataType = specialCardsConfig[cardName];
         cards.push(CreateSpecialCard({

@@ -14,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardTypes, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionKeyofTypes, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardTypes, SuitKeyofTypes, SuitPropertyTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -61,13 +61,12 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         secret: ISecret = {
             campDecks: [],
             decks: [],
-            // TODO Add Idavoll deck length info on main page?
             mythologicalCreatureDecks: [],
         };
     if (solo && multiplayer) {
         throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
     }
-    let suit: SuitTypes;
+    let suit: SuitKeyofTypes;
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
@@ -114,7 +113,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random!.Shuffle(deck);
     }
-    let expansion: ExpansionTypes;
+    let expansion: ExpansionKeyofTypes;
     for (expansion in expansions) {
         if (expansions[expansion].active) {
             configOptions.push(expansion as GameNames);
@@ -135,6 +134,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     if (expansions.idavoll.active) {
         secret.mythologicalCreatureDecks = BuildMythologicalCreatureCards();
         secret.mythologicalCreatureDecks = ctx.random!.Shuffle(secret.mythologicalCreatureDecks);
+        // TODO Add Idavoll deck length info on main page?
         mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
     }
     for (let i = 0; i < tavernsNum; i++) {

@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndef, ConditionsTypes, ConditionTypes, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, PlayerCardTypes, SuitTypes } from "../typescript/interfaces";
+import type { CanBeUndef, ConditionKeyofTypes, ConditionsKeyofTypes, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, PlayerCardTypes, SuitKeyofTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -27,7 +27,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
         cardsToDiscard: PlayerCardTypes[] = [];
     let isValidMove = false;
     if (validators?.discardCard !== undefined) {
-        let suit: SuitTypes;
+        let suit: SuitKeyofTypes;
         for (suit in suitsConfig) {
             if (validators.discardCard.suit !== suit) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -74,11 +74,11 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
         throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.Conditions}'.`);
     }
     let isValidMove = false,
-        condition: ConditionsTypes;
+        condition: ConditionsKeyofTypes;
     for (condition in conditions) {
         if (condition === `suitCountMin`) {
             let ranks = 0,
-                key: ConditionTypes;
+                key: ConditionKeyofTypes;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
                     const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

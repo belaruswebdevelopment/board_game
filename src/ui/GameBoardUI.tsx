@@ -7,7 +7,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, StageNames } from "../typescript/enums";
-import type { CampCardTypes, CanBeNull, CanBeUndef, DiscardDeckCardTypes, DrawProfitTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CampCardTypes, CanBeNull, CanBeUndef, DiscardDeckCardTypes, DrawProfitTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitKeyofTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -49,7 +49,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<Mov
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
-                let suit: CanBeNull<SuitTypes> = null;
+                let suit: CanBeNull<SuitKeyofTypes> = null;
                 if (campCard.type === RusCardTypeNames.Artefact_Player_Card) {
                     suit = campCard.suit;
                 }
@@ -155,11 +155,11 @@ export const DrawCurrentPlayerTurn = (ctx: Ctx): JSX.Element => (
  * @returns Поле преимуществ в конце эпохи.
  */
 export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<SuitTypes[]>[`args`] => {
+    data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
-        moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+        moveMainArgs: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
-        let suit: SuitTypes,
+        let suit: SuitKeyofTypes,
             currentDistinctionSuit: CanBeUndef<string>;
         for (suit in G.distinctions) {
             if (G.distinctions[suit] !== undefined) {
@@ -171,7 +171,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
             if (ctx.phase === PhaseNames.TroopEvaluation && ctx.activePlayers === null
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
-                    const suitArg: SuitTypes = suit;
+                    const suitArg: SuitKeyofTypes = suit;
                     // TODO Move to DrawDistinction
                     boardCells.push(
                         <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
@@ -239,7 +239,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Can
         if (card === undefined) {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
-        let suit: CanBeNull<SuitTypes> = null;
+        let suit: CanBeNull<SuitKeyofTypes> = null;
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
@@ -307,7 +307,7 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<M
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
-            const suit: CanBeNull<SuitTypes> = hero.suit;
+            const suit: CanBeNull<SuitKeyofTypes> = hero.suit;
             if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickHero) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
@@ -565,7 +565,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<
                         );
                     }
                 } else {
-                    let suit: CanBeNull<SuitTypes> = null;
+                    let suit: CanBeNull<SuitKeyofTypes> = null;
                     if (`suit` in tavernCard) {
                         suit = tavernCard.suit;
                     }

@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig, ValidatorConfigTypes } from "../typescript/interfaces";
+import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig, ValidatorConfigKeyofTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
@@ -22,7 +22,7 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
         if (card !== undefined && `validators` in card) {
             const validators: CanBeUndef<IValidatorsConfig> = card.validators;
             if (validators !== undefined) {
-                let validator: ValidatorConfigTypes;
+                let validator: ValidatorConfigKeyofTypes;
                 for (validator in validators) {
                     switch (validator) {
                         case PickCardValidatorNames.PickDiscardCardToStack:

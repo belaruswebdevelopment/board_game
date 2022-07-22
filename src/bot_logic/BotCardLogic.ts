@@ -4,7 +4,7 @@ import { suitsConfig } from "../data/SuitData";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndef, DeckCardTypes, IDwarfCard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CanBeUndef, DeckCardTypes, IDwarfCard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitKeyofTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -162,7 +162,7 @@ const PotentialScoring = (G: IMyGameState, ctx: Ctx, playerId: number, card: Tav
         handCoins = player.handCoins;
     }
     let score = 0,
-        suit: SuitTypes;
+        suit: SuitKeyofTypes;
     for (suit in suitsConfig) {
         if (card !== null && card.type === RusCardTypeNames.Dwarf_Card && card.suit === suit) {
             score +=
