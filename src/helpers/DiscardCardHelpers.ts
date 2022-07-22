@@ -1,5 +1,5 @@
 import { RusCardTypeNames } from "../typescript/enums";
-import type { DiscardCardTypes, IMyGameState } from "../typescript/interfaces";
+import type { DiscardCardType, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт от действий сбрасывающих карты.</h3>
@@ -12,7 +12,7 @@ import type { DiscardCardTypes, IMyGameState } from "../typescript/interfaces";
  * @param player Игрок.
  * @param discardedCard Сбрасываемая карта.
  */
-export const DiscardPickedCard = (G: IMyGameState, discardedCard: DiscardCardTypes): void => {
+export const DiscardPickedCard = (G: IMyGameState, discardedCard: DiscardCardType): void => {
     let _exhaustiveCheck: never;
     switch (discardedCard.type) {
         case RusCardTypeNames.Mercenary_Player_Card:

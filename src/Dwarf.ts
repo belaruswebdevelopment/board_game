@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { CanBeNull, CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArrayValues, INumberValues, IPlayersNumberTierCardData, SuitKeyofTypes } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CreateDwarfCardType, IDwarfCard, INumberArrayValues, INumberValues, IPlayersNumberTierCardData, SuitKeyofType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -14,14 +14,14 @@ import type { CanBeNull, CanBeUndef, CreateDwarfCardType, IDwarfCard, INumberArr
  */
 export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] => {
     const cards: IDwarfCard[] = [];
-    let suit: SuitKeyofTypes;
+    let suit: SuitKeyofType;
     for (suit in suitsConfig) {
-        const pointValuesPlayers: CanBeUndef<INumberValues | INumberArrayValues> =
+        const pointValuesPlayers: CanBeUndefType<INumberValues | INumberArrayValues> =
             suitsConfig[suit].pointsValues()[data.players];
         if (pointValuesPlayers === undefined) {
             throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
         }
-        const points: CanBeUndef<number | number[]> = pointValuesPlayers[data.tier];
+        const points: CanBeUndefType<number | number[]> = pointValuesPlayers[data.tier];
         if (points === undefined) {
             throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
         }
@@ -32,9 +32,9 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
             count = points;
         }
         for (let j = 0; j < count; j++) {
-            let currentPoints: CanBeNull<number>;
+            let currentPoints: CanBeNullType<number>;
             if (Array.isArray(points)) {
-                const cardPoints: CanBeUndef<number> = points[j];
+                const cardPoints: CanBeUndefType<number> = points[j];
                 if (cardPoints === undefined) {
                     throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                 }

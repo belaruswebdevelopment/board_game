@@ -13,7 +13,7 @@ import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { CreateMultiSuitPlayerCard } from "../MultiSuitCard";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, MultiSuitCardNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndef, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardTypes, SuitKeyofTypes, SuitPropertyTypes, VariantType } from "../typescript/interfaces";
+import type { CanBeUndefType, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, SuitKeyofType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -27,12 +27,12 @@ import type { CanBeUndef, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard,
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes, cardId: number): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType, cardId: number): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const discardedCard: CanBeUndef<PlayerCardTypes> = player.cards[suit].splice(cardId, 1)[0];
+    const discardedCard: CanBeUndefType<PlayerCardType> = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
@@ -53,16 +53,16 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const stack: CanBeUndef<IStack> = player.stack[0];
+    const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
-    const playerVariants: SuitPropertyTypes<VariantType> = {
+    const playerVariants: SuitPropertyType<VariantType> = {
         blacksmith: {
             suit: SuitNames.Blacksmith,
             rank: 1,
@@ -89,11 +89,11 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKe
             points: 0,
         },
     },
-        name: CanBeUndef<MultiSuitCardNames> = stack.name as CanBeUndef<MultiSuitCardNames>;
+        name: CanBeUndefType<MultiSuitCardNames> = stack.name as CanBeUndefType<MultiSuitCardNames>;
     if (name === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${MultiSuitCardNames.OlwinsDouble}'.`);
     }
-    const card: CanBeUndef<IMultiSuitCard> = G.multiCardsDeck.find((card: IMultiSuitCard): boolean =>
+    const card: CanBeUndefType<IMultiSuitCard> = G.multiCardsDeck.find((card: IMultiSuitCard): boolean =>
         card.name === name);
     if (card === undefined) {
         throw new Error(`В игре отсутствует карта с типом '${RusCardTypeNames.Multi_Suit_Card}' '${name}'.`);
@@ -125,12 +125,12 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKe
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const stack: CanBeUndef<IStack> = player.stack[0];
+    const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
@@ -159,16 +159,16 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const stack: CanBeUndef<IStack> = player.stack[0];
+    const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
-    const playerVariants: SuitPropertyTypes<VariantType> = {
+    const playerVariants: SuitPropertyType<VariantType> = {
         blacksmith: {
             suit: SuitNames.Blacksmith,
             rank: 1,

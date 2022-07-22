@@ -13,7 +13,7 @@ import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, CoinTypes, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CoinType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -26,21 +26,21 @@ import type { CampDeckCardTypes, CanBeUndef, CoinTypes, DeckCardTypes, IMyGameSt
  * @param ctx
  */
 const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
-    let handCoins: PublicPlayerCoinTypes[];
+    let handCoins: PublicPlayerCoinType[];
     if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
     }
-    const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[G.currentTavern];
+    const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
     if (boardCoin === undefined) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета на месте текущей таверны с id '${G.currentTavern}'.`);
     }
@@ -49,11 +49,11 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
     }
     if (boardCoin?.isTriggerTrading) {
         const tradingCoinPlacesLength: number =
-            player.boardCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean =>
+            player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
                 index >= G.tavernsNum && coin === null).length;
         if (tradingCoinPlacesLength > 0) {
             const handCoinsLength: number =
-                handCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
+                handCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
                     if (coin !== null && !IsCoin(coin)) {
                         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${index}'.`);
                     }
@@ -83,7 +83,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
  */
 export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): true | void => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
@@ -119,7 +119,7 @@ export const CheckEndTavernsResolutionTurn = (G: IMyGameState, ctx: Ctx): true |
  * @param ctx
  */
 export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => {
-    const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[G.currentTavern];
+    const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined,
             G.currentTavern);
@@ -131,7 +131,7 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
         StartTrading(G, ctx, true);
     }
     AddDataToLog(G, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
-    const currentDeck: CanBeUndef<DeckCardTypes[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
+    const currentDeck: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (currentDeck === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTierDeckIsUndefined);
     }
@@ -146,12 +146,12 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
             let startThrud = true;
             if (G.expansions.thingvellir.active) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+                    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
                     if (player === undefined) {
                         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                             i);
                     }
-                    startThrud = player.campCards.filter((card: CampDeckCardTypes): boolean =>
+                    startThrud = player.campCards.filter((card: CampDeckCardType): boolean =>
                         card.type === RusCardTypeNames.Mercenary_Card).length === 0;
                     if (!startThrud) {
                         break;
@@ -186,7 +186,7 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
  * @param ctx
  */
 export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -271,12 +271,12 @@ export const ResolveCurrentTavernOrders = (G: IMyGameState, ctx: Ctx): void => {
     G.currentTavern++;
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
         if (G.multiplayer || (G.solo && index === 1)) {
-            const privatePlayer: CanBeUndef<IPlayer> = G.players[index];
+            const privatePlayer: CanBeUndefType<IPlayer> = G.players[index];
             if (privatePlayer === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
                     index);
             }
-            const privateBoardCoin: CanBeUndef<CoinTypes> = privatePlayer.boardCoins[G.currentTavern];
+            const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[G.currentTavern];
             if (privateBoardCoin === undefined) {
                 throw new Error(`В массиве монет приватного игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
             }
@@ -285,7 +285,7 @@ export const ResolveCurrentTavernOrders = (G: IMyGameState, ctx: Ctx): void => {
             }
             player.boardCoins[G.currentTavern] = privateBoardCoin;
         } else {
-            const publicBoardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[G.currentTavern];
+            const publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
             if (publicBoardCoin === undefined) {
                 throw new Error(`В массиве монет игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
             }

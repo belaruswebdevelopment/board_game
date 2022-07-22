@@ -1,8 +1,8 @@
 import { BuffNames, RusCardTypeNames, ValkyryNames } from "../typescript/enums";
-import type { BuffKeyofTypes, CanBeUndef, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardTypes } from "../typescript/interfaces";
+import type { BuffKeyofType, CanBeUndefType, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
-export const CheckValkyryRequirement = (player: IPublicPlayer, playerId: number, buffName: BuffKeyofTypes): void => {
+export const CheckValkyryRequirement = (player: IPublicPlayer, playerId: number, buffName: BuffKeyofType): void => {
     if (CheckPlayerHasBuff(player, buffName)) {
         let valkyryName: ValkyryNames;
         switch (buffName) {
@@ -24,9 +24,9 @@ export const CheckValkyryRequirement = (player: IPublicPlayer, playerId: number,
             default:
                 throw new Error(`Нет такого бафа '${buffName}' у мифических существ типа '${RusCardTypeNames.Valkyry_Card}}'.`);
         }
-        const valkyryCard: CanBeUndef<IValkyryCard> =
-            player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardTypes):
-                boolean => card.name === valkyryName) as CanBeUndef<IValkyryCard>;
+        const valkyryCard: CanBeUndefType<IValkyryCard> =
+            player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
+                boolean => card.name === valkyryName) as CanBeUndefType<IValkyryCard>;
         if (valkyryCard === undefined) {
             throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryName}'.`);
         }

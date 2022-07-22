@@ -1,6 +1,6 @@
 import { actionCardsConfigArray } from "./data/RoyalOfferingCardData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { CanBeUndef, CreateRoyalOfferingCardType, INumberValues, IPlayersNumberTierCardData, IRoyalOfferingCard, IRoyalOfferingCardConfig } from "./typescript/interfaces";
+import type { CanBeUndefType, CreateRoyalOfferingCardType, INumberValues, IPlayersNumberTierCardData, IRoyalOfferingCard, IRoyalOfferingCardConfig } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты королевских наград.</h3>
@@ -16,15 +16,15 @@ import type { CanBeUndef, CreateRoyalOfferingCardType, INumberValues, IPlayersNu
 export const BuildRoyalOfferingCards = (data: IPlayersNumberTierCardData): IRoyalOfferingCard[] => {
     const cards: IRoyalOfferingCard[] = [];
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
-        const currentActionCardConfig: CanBeUndef<IRoyalOfferingCardConfig> = actionCardsConfigArray[i];
+        const currentActionCardConfig: CanBeUndefType<IRoyalOfferingCardConfig> = actionCardsConfigArray[i];
         if (currentActionCardConfig === undefined) {
             throw new Error(`В массиве конфигов карт '${RusCardTypeNames.Royal_Offering_Card}' отсутствует значение с id '${i}'.`);
         }
-        const amountPlayersValue: CanBeUndef<INumberValues> = currentActionCardConfig.amount()[data.players];
+        const amountPlayersValue: CanBeUndefType<INumberValues> = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
             throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}'.`);
         }
-        const amountTierValue: CanBeUndef<number> = amountPlayersValue[data.tier];
+        const amountTierValue: CanBeUndefType<number> = amountPlayersValue[data.tier];
         if (amountTierValue === undefined) {
             throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
         }

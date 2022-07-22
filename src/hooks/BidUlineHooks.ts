@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndef, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>
@@ -19,7 +19,7 @@ import type { CanBeUndef, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes } f
  */
 export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
@@ -28,13 +28,13 @@ export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): boolean | void
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                 CheckPlayerHasBuff(player, BuffNames.EveryTurn));
         if (!G.solo && ulinePlayerIndex !== - 1) {
-            const ulinePlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];
+            const ulinePlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     ulinePlayerIndex);
             }
             if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-                const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = ulinePlayer.boardCoins[G.currentTavern + 1];
+                const boardCoin: CanBeUndefType<PublicPlayerCoinType> = ulinePlayer.boardCoins[G.currentTavern + 1];
                 if (boardCoin === undefined) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${G.currentTavern + 1}' для выкладки при наличии героя '${HeroNames.Uline}'.`);
                 }

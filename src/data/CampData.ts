@@ -1,6 +1,6 @@
 import { ArtefactScoring } from "../score_helpers/ArtefactScoringHelpers";
 import { ArtefactNames, AutoActionFunctionNames, BuffNames, SuitNames } from "../typescript/enums";
-import type { IArtefactConfig, IArtefactData, MercenaryType, SuitPropertyTypes } from "../typescript/interfaces";
+import type { IArtefactConfig, IArtefactData, MercenaryType, SuitPropertyType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**
@@ -224,7 +224,7 @@ const Vidofnir_Vedrfolnir: IArtefactData = {
  * <li>Происходит при создании всех карт артефактов для лагеря при инициализации игры.</li>
  * </ol>
  */
-export const mercenariesConfig: Partial<SuitPropertyTypes<MercenaryType>>[][] = [
+export const mercenariesConfig: Partial<SuitPropertyType<MercenaryType>>[][] = [
     [
         {
             warrior: {

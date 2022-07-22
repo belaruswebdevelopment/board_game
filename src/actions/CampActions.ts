@@ -9,7 +9,7 @@ import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueTypes, CampCardTypes, CanBeUndef, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardTypes, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardType, CanBeUndefType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -23,8 +23,8 @@ import type { BasicVidofnirVedrfolnirUpgradeValueTypes, CampCardTypes, CanBeUnde
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -33,18 +33,18 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
             ctx.currentPlayer);
     }
     const tempId: number =
-        player.boardCoins.findIndex((coin: PublicPlayerCoinTypes, index: number): boolean =>
+        player.boardCoins.findIndex((coin: PublicPlayerCoinType, index: number): boolean =>
             index >= G.tavernsNum && coin === null);
     if (tempId === -1) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
     }
-    let handCoins: PublicPlayerCoinTypes[];
+    let handCoins: PublicPlayerCoinType[];
     if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
     }
-    const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[coinId];
+    const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[coinId];
     if (handCoin === undefined) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует выбранная монета с id '${coinId}': это должно проверяться в MoveValidator.`);
     }
@@ -78,12 +78,12 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  * @param value Значение улучшения монеты.
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G: IMyGameState, ctx: Ctx,
-    value: BasicVidofnirVedrfolnirUpgradeValueTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    value: BasicVidofnirVedrfolnirUpgradeValueType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const stack: CanBeUndef<IStack> = player.stack[0];
+    const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
@@ -103,12 +103,12 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G: IMyGameStat
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.playerID)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.playerID)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.playerID!);
     }
-    const discardedCard: CanBeUndef<PlayerCardTypes> =
+    const discardedCard: CanBeUndefType<PlayerCardType> =
         player.cards[SuitNames.Warrior].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
@@ -130,7 +130,7 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
  * @param cardId Id выбранной карты.
  */
 export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const campCard: CanBeUndef<CampCardTypes> = G.camp[cardId];
+    const campCard: CanBeUndefType<CampCardType> = G.camp[cardId];
     if (campCard === undefined) {
         throw new Error(`Отсутствует кликнутая карта лагеря с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
@@ -165,11 +165,11 @@ export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): v
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypeNames):
     void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const stack: CanBeUndef<IStack> = player.stack[0];
+    const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }

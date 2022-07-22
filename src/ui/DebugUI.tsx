@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { CanBeNull, CanBeUndef, CtxKeyofTypes, IDebugData, IDebugDrawData, IMyGameState, ObjectEntries, ObjectEntriesCtx } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CtxKeyofType, DebugDrawDataType, DrawObjectDataType, IDebugData, IMyGameState, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -12,8 +12,8 @@ import type { CanBeNull, CanBeUndef, CtxKeyofTypes, IDebugData, IDebugDrawData, 
  * @param ctx
  * @returns Дебаг панель.
  */
-export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNull<JSX.Element> => {
-    const debugData: CanBeUndef<IDebugData> = GetDebugData(G, ctx);
+export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNullType<JSX.Element> => {
+    const debugData: CanBeUndefType<IDebugData> = GetDebugData(G, ctx);
     if (debugData === undefined) {
         return null;
     } else {
@@ -36,7 +36,7 @@ export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNull<JSX.Element>
  * @param obj Информация.
  * @returns
  */
-const DrawObjectData = (obj: IDebugDrawData<IDebugData | IDebugData[keyof IDebugData]>): JSX.Element => {
+const DrawObjectData = (obj: DebugDrawDataType<DrawObjectDataType>): JSX.Element => {
     const values: JSX.Element[] = [];
     for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
@@ -94,18 +94,18 @@ const DrawObjectData = (obj: IDebugDrawData<IDebugData | IDebugData[keyof IDebug
  * @param ctx
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (G: IMyGameState, ctx: Ctx): CanBeUndef<IDebugData> => {
+const GetDebugData = (G: IMyGameState, ctx: Ctx): CanBeUndefType<IDebugData> => {
     if (G.debug) {
         const debugData: IDebugData = {
             G: {},
             ctx: {},
         };
-        for (const [key, value] of Object.entries(G) as ObjectEntries<typeof G>) {
+        for (const [key, value] of Object.entries(G) as ObjectEntriesType<typeof G>) {
             debugData.G[key] = value;
         }
         let key: keyof Ctx,
-            value: Ctx[CtxKeyofTypes];
-        for ([key, value] of Object.entries(ctx) as ObjectEntriesCtx) {
+            value: Ctx[CtxKeyofType];
+        for ([key, value] of Object.entries(ctx) as ObjectEntriesCtxType) {
             debugData.ctx[key] = value;
         }
         return debugData;

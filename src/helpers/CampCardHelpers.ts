@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -19,8 +19,8 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  * @param ctx
  * @param card Карта.
  */
-export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCardType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -53,11 +53,11 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
  * @param ctx
  * @param card Карта лагеря.
  */
-export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
+export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardType): void => {
     if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
         throw new Error(`Не удалось добавить карту лагеря '${card.type}' '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
     }
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -79,7 +79,7 @@ export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCar
  */
 export const AddArtefactPlayerCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactPlayerCampCard):
     boolean => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -105,7 +105,7 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G: IMyGameState): voi
     if (minCoinIndex === -1) {
         throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
     }
-    const coin: CanBeUndef<ICoin> = G.marketCoins.splice(minCoinIndex, 1)[0];
+    const coin: CanBeUndefType<ICoin> = G.marketCoins.splice(minCoinIndex, 1)[0];
     if (coin === undefined) {
         throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
     }

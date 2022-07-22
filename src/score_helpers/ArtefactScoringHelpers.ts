@@ -1,7 +1,7 @@
 import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, BuffNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndef, IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardTypes, PublicPlayerCoinTypes, SuitKeyofTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardType, PublicPlayerCoinType, SuitKeyofType } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 /**
@@ -55,7 +55,7 @@ export const ArtefactScoring = (G?: IMyGameState, player?: IPublicPlayer, artefa
  */
 export const DraupnirScoring = (G: IMyGameState, player: IPublicPlayer): number => {
     const basicScore: number =
-        player.boardCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
+        player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
             if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
                 throw new Error(`В массиве монет игрока '${player.nickname}' в руке не может быть закрыта монета с id '${index}'.`);
             }
@@ -78,9 +78,9 @@ export const DraupnirScoring = (G: IMyGameState, player: IPublicPlayer): number 
  */
 export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
     let score = 0,
-        suit: SuitKeyofTypes;
+        suit: SuitKeyofType;
     for (suit in player.cards) {
-        score += player.cards[suit].filter((card: PlayerCardTypes): boolean =>
+        score += player.cards[suit].filter((card: PlayerCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Player_Card).length * 5;
     }
     return score;
@@ -97,7 +97,7 @@ export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
  * @returns
  */
 export const MjollnirScoring = (player: IPublicPlayer): number => {
-    const suit: CanBeUndef<SuitKeyofTypes> = player.buffs.find((buff: IBuffs): boolean =>
+    const suit: CanBeUndefType<SuitKeyofType> = player.buffs.find((buff: IBuffs): boolean =>
         buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
     if (suit === undefined) {
         throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);

@@ -2,11 +2,11 @@ import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndef, IMoveArgumentsStage, IMoveCoinsArguments, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, IMoveArgumentsStage, IMoveCoinsArguments, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
-export const CheckMinCoinVisibleIndexForSoloBot = (coins: PublicPlayerCoinTypes[], minValue: number): number => {
+export const CheckMinCoinVisibleIndexForSoloBot = (coins: PublicPlayerCoinType[], minValue: number): number => {
     let coinId = -1;
-    coins.forEach((coin: PublicPlayerCoinTypes, index: number): void => {
+    coins.forEach((coin: PublicPlayerCoinType, index: number): void => {
         if (IsCoin(coin)) {
             if ((coinId === -1 && coin.value === minValue)
                 || (coinId !== -1 && coin.value === minValue && !coin.isInitial)) {
@@ -19,18 +19,18 @@ export const CheckMinCoinVisibleIndexForSoloBot = (coins: PublicPlayerCoinTypes[
 
 export const CheckMinCoinVisibleValueForSoloBot = (G: IMyGameState, ctx: Ctx,
     moveArguments: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`], type: CoinTypeNames): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
             ctx.currentPlayer);
     }
     let minValue = 0;
     for (let i = 0; i < moveArguments.length; i++) {
-        const currentMoveArgument: CanBeUndef<IMoveCoinsArguments> = moveArguments[i];
+        const currentMoveArgument: CanBeUndefType<IMoveCoinsArguments> = moveArguments[i];
         if (currentMoveArgument === undefined) {
             throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
         }
-        let coin: CanBeUndef<PublicPlayerCoinTypes>,
+        let coin: CanBeUndefType<PublicPlayerCoinType>,
             _exhaustiveCheck: never;
         switch (type) {
             case CoinTypeNames.Hand:

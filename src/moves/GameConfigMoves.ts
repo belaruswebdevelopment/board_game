@@ -6,7 +6,7 @@ import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, StageNames } from "../typescript/enums";
-import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
@@ -50,14 +50,14 @@ export const ChooseHeroForDifficultySoloModeMove: Move<IMyGameState> = (G: IMyGa
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (G.heroesForSoloGameDifficultyLevel === null) {
         throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
     }
-    const hero: CanBeUndef<IHeroCard> = G.heroesForSoloGameDifficultyLevel.splice(heroId, 1)[0];
+    const hero: CanBeUndefType<IHeroCard> = G.heroesForSoloGameDifficultyLevel.splice(heroId, 1)[0];
     if (hero === undefined) {
         throw new Error(`Не существует выбранная карта героя с id '${heroId}'.`);
     }

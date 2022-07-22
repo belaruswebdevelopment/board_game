@@ -5,7 +5,7 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndef, CoinTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -21,11 +21,11 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param ctx
  */
 export const ActivateTrading = (G: IMyGameState, ctx: Ctx): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const boardCoinCurrentTavern: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[G.currentTavern];
+    const boardCoinCurrentTavern: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
     if (boardCoinCurrentTavern === undefined) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
     }
@@ -53,8 +53,8 @@ export const ActivateTrading = (G: IMyGameState, ctx: Ctx): void => {
 export const StartTrading = (G: IMyGameState, ctx: Ctx, isSoloBotEndRound = false): void => {
     // TODO For solo mode check coins openings
     const index: number = isSoloBotEndRound ? 1 : Number(ctx.currentPlayer),
-        privatePlayer: CanBeUndef<IPlayer> = G.players[index],
-        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[index];
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[index],
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[index];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, index);
     }
@@ -64,7 +64,7 @@ export const StartTrading = (G: IMyGameState, ctx: Ctx, isSoloBotEndRound = fals
     const tradingCoins: ICoin[] = [];
     for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
         if (G.multiplayer || (G.solo && index === 1)) {
-            const privateBoardCoin: CanBeUndef<CoinTypes> = privatePlayer.boardCoins[i];
+            const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[i];
             if (privateBoardCoin === undefined) {
                 throw new Error(`В массиве монет приватного игрока с id '${index}' на поле отсутствует монета с id '${i}'.`);
             }
@@ -76,7 +76,7 @@ export const StartTrading = (G: IMyGameState, ctx: Ctx, isSoloBotEndRound = fals
             }
             player.boardCoins[i] = privateBoardCoin;
         }
-        const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[i];
+        const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[i];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${index}' на поле отсутствует монета с id '${i}'.`);
         }
@@ -127,7 +127,7 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[], soloBotOnlyOn
     if (!soloBotOnlyOneCoinTrading && length !== 2) {
         throw new Error(`В массиве обменных монет игрока с id '${index}' должно быть ровно '2' монеты, а не '${length}'.`);
     }
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[index];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[index];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, index);
     }
@@ -144,7 +144,7 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[], soloBotOnlyOn
         AddDataToLog(G, LogTypeNames.Game, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') ${G.solo && index === 1 ? `соло бота` : `игрока`} '${player.nickname}'.`);
     }
     for (let i = 0; i < tradingCoins.length; i++) {
-        const tradingCoin: CanBeUndef<ICoin> = tradingCoins[i];
+        const tradingCoin: CanBeUndefType<ICoin> = tradingCoins[i];
         if (tradingCoin === undefined) {
             throw new Error(`В массиве обменных монет ${G.solo && index === 1 ? `соло бота` : `игрока`} с id '${index}' отсутствует монета с id '${i}'.`);
         }
@@ -163,11 +163,11 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[], soloBotOnlyOn
     if (!soloBotOnlyOneCoinTrading && coinMaxIndex === -1) {
         throw new Error(`В массиве обменных монет ${G.solo && index === 1 ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' не найдена максимальная монета с значением '${coinsMaxValue}'.`);
     }
-    const minTradingCoin: CanBeUndef<ICoin> = tradingCoins[coinMinIndex];
+    const minTradingCoin: CanBeUndefType<ICoin> = tradingCoins[coinMinIndex];
     if (minTradingCoin === undefined) {
         throw new Error(`В массиве обменных монет ${G.solo && index === 1 ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' отсутствует минимальная монета с id '${coinMinIndex}'.`);
     }
-    const maxTradingCoin: CanBeUndef<ICoin> = tradingCoins[coinMaxIndex];
+    const maxTradingCoin: CanBeUndefType<ICoin> = tradingCoins[coinMaxIndex];
     if (!soloBotOnlyOneCoinTrading && maxTradingCoin === undefined) {
         throw new Error(`В массиве обменных монет ${G.solo && index === 1 ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' отсутствует максимальная монета с id '${coinMaxIndex}'.`);
     }

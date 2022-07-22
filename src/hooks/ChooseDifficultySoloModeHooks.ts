@@ -7,7 +7,7 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndef, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
@@ -35,7 +35,7 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.solo) {
         if (ctx.currentPlayer === `1`) {
-            const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
+            const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
             if (soloBotPublicPlayer === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
             }
@@ -59,7 +59,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx)
  */
 export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (ctx.currentPlayer === `0`) {
-        const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
@@ -109,7 +109,7 @@ export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): 
         AddActionsToStack(G, ctx, [StackData.getDifficultyLevelForSoloMode()]);
         DrawCurrentProfit(G, ctx);
     } else if (ctx.currentPlayer === `1`) {
-        const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }

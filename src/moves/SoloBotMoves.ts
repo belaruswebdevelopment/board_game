@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, StageNames } from "../typescript/enums";
-import type { CanBeUndef, CoinTypes, IHeroCard, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, IHeroCard, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Add all solo bot moves!
 /**
@@ -27,7 +27,7 @@ export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ct
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const hero: CanBeUndef<IHeroCard> = G.heroesForSoloBot[heroId];
+    const hero: CanBeUndefType<IHeroCard> = G.heroesForSoloBot[heroId];
     if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }
@@ -53,17 +53,17 @@ export const SoloBotPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ct
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
-    const handCoins: CoinTypes[] = privatePlayer.handCoins;
+    const handCoins: CoinType[] = privatePlayer.handCoins;
     for (let i = 0; i < handCoins.length; i++) {
-        const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[i];
+        const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[i];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${i}'.`);
         }

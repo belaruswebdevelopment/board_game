@@ -7,7 +7,7 @@ import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/Co
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndef, CoinTypes, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -27,15 +27,15 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => 
                 player).every((player: IPublicPlayer, playerIndex: number): boolean => {
                     if ((G.solo && playerIndex === 1)
                         || (G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
-                        const privatePlayer: CanBeUndef<IPlayer> = G.players[playerIndex];
+                        const privatePlayer: CanBeUndefType<IPlayer> = G.players[playerIndex];
                         if (privatePlayer === undefined) {
                             return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
                                 playerIndex);
                         }
-                        return privatePlayer.handCoins.every((coin: CoinTypes): boolean => coin === null);
+                        return privatePlayer.handCoins.every((coin: CoinType): boolean => coin === null);
                     } else if ((G.solo && playerIndex === 0)
                         || (!G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
-                        return player.handCoins.every((coin: PublicPlayerCoinTypes, coinIndex: number):
+                        return player.handCoins.every((coin: PublicPlayerCoinType, coinIndex: number):
                             boolean => {
                             if (coin !== null && !IsCoin(coin)) {
                                 throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
@@ -61,22 +61,22 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => 
  * @returns
  */
 export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): true | void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
-    let handCoins: PublicPlayerCoinTypes[];
+    let handCoins: PublicPlayerCoinType[];
     if ((G.solo && ctx.currentPlayer === `1`) || G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
     }
     const isEveryCoinsInHandsNull: boolean =
-        handCoins.every((coin: PublicPlayerCoinTypes, index: number): boolean => {
+        handCoins.every((coin: PublicPlayerCoinType, index: number): boolean => {
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
             }

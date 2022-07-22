@@ -5,7 +5,7 @@ import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "./typescript/enums";
-import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, SuitKeyofTypes } from "./typescript/interfaces";
+import type { CanBeUndefType, DeckCardTypes, DistinctionType, IMyGameState, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType, SuitKeyofType } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
@@ -19,11 +19,12 @@ import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublic
  * @param suit Фракция.
  * @returns Индекс игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
-const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): DistinctionTypes => {
-    const [playersRanks, max]: [number[], number] = CountPlayerRanksAndMaxRanksForDistinctions(G, ctx, suit),
+const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): DistinctionType => {
+    const [playersRanks, max]: PlayerRanksAndMaxRanksForDistinctionsType =
+        CountPlayerRanksAndMaxRanksForDistinctions(G, ctx, suit),
         maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
     if (maxPlayers.length === 1) {
-        const maxPlayerIndex: CanBeUndef<number> = maxPlayers[0];
+        const maxPlayerIndex: CanBeUndefType<number> = maxPlayers[0];
         if (maxPlayerIndex === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentSuitDistinctionPlayerIndexIsUndefined,
                 suit);
@@ -33,7 +34,7 @@ const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofT
             return ThrowMyError(G, ctx, ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount,
                 max, suit);
         }
-        const playerDist: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerDistinctionIndex];
+        const playerDist: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerDistinctionIndex];
         if (playerDist === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 playerDistinctionIndex);
@@ -61,13 +62,14 @@ const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofT
  * @param suit Название фракции дворфов.
  * @returns Индексы игроков с преимуществом по количеству шевронов конкретной фракции.
  */
-export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): number[] => {
-    const [playersRanks, max]: [number[], number] = CountPlayerRanksAndMaxRanksForDistinctions(G, ctx, suit),
+export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): number[] => {
+    const [playersRanks, max]: PlayerRanksAndMaxRanksForDistinctionsType =
+        CountPlayerRanksAndMaxRanksForDistinctions(G, ctx, suit),
         maxPlayers: number[] = [];
     playersRanks.forEach((value: number, index: number): void => {
         if (value === max) {
             maxPlayers.push(index);
-            const playerIndex: CanBeUndef<IPublicPlayer> = G.publicPlayers[index];
+            const playerIndex: CanBeUndefType<IPublicPlayer> = G.publicPlayers[index];
             if (playerIndex === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     index);
@@ -94,9 +96,9 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
  */
 export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
     AddDataToLog(G, LogTypeNames.Game, `Преимущество по фракциям в конце эпохи:`);
-    let suit: SuitKeyofTypes;
+    let suit: SuitKeyofType;
     for (suit in suitsConfig) {
-        const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
+        const result: DistinctionType = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[suit] = result;
         RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction(G, ctx, suit, result);
     }
@@ -115,10 +117,11 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
  * @param suit Название фракции дворфов.
  * @returns [Количество шевронов каждого игрока конкретной фракции, Максимальное количество шевронов конкретной фракции].
  */
-const CountPlayerRanksAndMaxRanksForDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes): [number[], number] => {
+const CountPlayerRanksAndMaxRanksForDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType):
+    PlayerRanksAndMaxRanksForDistinctionsType => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+        const playerI: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
         if (playerI === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
@@ -144,14 +147,14 @@ const CountPlayerRanksAndMaxRanksForDistinctions = (G: IMyGameState, ctx: Ctx, s
  * @param suit Название фракции дворфов.
  * @param result Id игрока, получившего преимущество (если имеется).
  */
-const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofTypes,
-    result: DistinctionTypes): void => {
+const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType,
+    result: DistinctionType): void => {
     if (suit === SuitNames.Explorer && result === undefined) {
-        const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
+        const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
         if (deck1 === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
         }
-        const discardedCard: CanBeUndef<DeckCardTypes> = deck1.splice(0, 1)[0];
+        const discardedCard: CanBeUndefType<DeckCardTypes> = deck1.splice(0, 1)[0];
         if (discardedCard === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);
         }

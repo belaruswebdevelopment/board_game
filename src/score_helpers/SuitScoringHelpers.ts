@@ -1,5 +1,5 @@
 import { HeroNames, SuitNames } from "../typescript/enums";
-import type { PlayerCardTypes, SuitKeyofTypes } from "../typescript/interfaces";
+import type { PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
 import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -13,7 +13,7 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 * @param heroName Название фракции дворфов.
 * @returns Количество очков по фракциям дворфов.
 */
-export const SuitScoring = (cards: PlayerCardTypes[], suit: SuitKeyofTypes, potentialCardValue = 0,
+export const SuitScoring = (cards: PlayerCardType[], suit: SuitKeyofType, potentialCardValue = 0,
     additionalScoring = false): number => {
     switch (suit) {
         case SuitNames.Blacksmith:
@@ -42,7 +42,7 @@ export const SuitScoring = (cards: PlayerCardTypes[], suit: SuitKeyofTypes, pote
  * @param potentialCardValue Потенциальное значение карты для ботов.
  * @returns Суммарное количество очков по фракции кузнецов.
  */
-export const BlacksmithScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
+export const BlacksmithScoring = (cards: PlayerCardType[], potentialCardValue = 0): number =>
     ArithmeticSum(3, 1, (cards.reduce(TotalRank, 0) +
         potentialCardValue));
 
@@ -57,7 +57,7 @@ export const BlacksmithScoring = (cards: PlayerCardTypes[], potentialCardValue =
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns Суммарное количество очков по фракции разведчиков.
 */
-export const ExplorerScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
+export const ExplorerScoring = (cards: PlayerCardType[], potentialCardValue = 0): number =>
     cards.reduce(TotalPoints, 0) + potentialCardValue;
 
 /**
@@ -71,7 +71,7 @@ export const ExplorerScoring = (cards: PlayerCardTypes[], potentialCardValue = 0
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns Суммарное количество очков по фракции охотников.
 */
-export const HunterScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
+export const HunterScoring = (cards: PlayerCardType[], potentialCardValue = 0): number =>
     (cards.reduce(TotalRank, 0) + potentialCardValue) ** 2;
 
 /**
@@ -85,11 +85,11 @@ export const HunterScoring = (cards: PlayerCardTypes[], potentialCardValue = 0):
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns Суммарное количество очков по фракции горняков.
 */
-export const MinerScoring = (cards: PlayerCardTypes[], potentialCardValue = 0, additionalScoring = false): number => {
+export const MinerScoring = (cards: PlayerCardType[], potentialCardValue = 0, additionalScoring = false): number => {
     let ratatoskValue = 0;
     if (additionalScoring) {
         let zeroRankValue = 0;
-        cards.forEach((card: PlayerCardTypes): void => {
+        cards.forEach((card: PlayerCardType): void => {
             if (card.points === 0) {
                 zeroRankValue += 1;
             } else if (card.name === HeroNames.Zoral) {
@@ -113,5 +113,5 @@ export const MinerScoring = (cards: PlayerCardTypes[], potentialCardValue = 0, a
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns Суммарное количество очков по фракции воинов.
 */
-export const WarriorScoring = (cards: PlayerCardTypes[], potentialCardValue = 0): number =>
+export const WarriorScoring = (cards: PlayerCardType[], potentialCardValue = 0): number =>
     cards.reduce(TotalPoints, 0) + potentialCardValue;

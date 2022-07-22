@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndef, ConditionKeyofTypes, ConditionsKeyofTypes, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, PlayerCardTypes, SuitKeyofTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, ConditionKeyofType, ConditionsKeyofType, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -19,25 +19,25 @@ import type { CanBeUndef, ConditionKeyofTypes, ConditionsKeyofTypes, IConditions
  */
 export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGameState, ctx: Ctx, id: number):
     boolean => {
-    const hero: CanBeUndef<IHeroCard> = G.heroes[id];
+    const hero: CanBeUndefType<IHeroCard> = G.heroes[id];
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const validators: CanBeUndef<IPickValidatorsConfig> = hero.pickValidators,
-        cardsToDiscard: PlayerCardTypes[] = [];
+    const validators: CanBeUndefType<IPickValidatorsConfig> = hero.pickValidators,
+        cardsToDiscard: PlayerCardType[] = [];
     let isValidMove = false;
     if (validators?.discardCard !== undefined) {
-        let suit: SuitKeyofTypes;
+        let suit: SuitKeyofType;
         for (suit in suitsConfig) {
             if (validators.discardCard.suit !== suit) {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
                 const last: number = player.cards[suit].length - 1;
                 if (last >= 0) {
-                    const card: CanBeUndef<PlayerCardTypes> = player.cards[suit][last];
+                    const card: CanBeUndefType<PlayerCardType> = player.cards[suit][last];
                     if (card === undefined) {
                         throw new Error(`В массиве карт фракции '${suit}' отсутствует последняя карта с id '${last}'.`);
                     }
@@ -65,23 +65,23 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
  * @returns Можно ли пикнуть конкретного героя.
  */
 export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, id: number): boolean => {
-    const hero: CanBeUndef<IHeroCard> = G.heroes[id];
+    const hero: CanBeUndefType<IHeroCard> = G.heroes[id];
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
-    const conditions: CanBeUndef<IConditions> = hero.pickValidators?.conditions;
+    const conditions: CanBeUndefType<IConditions> = hero.pickValidators?.conditions;
     if (conditions === undefined) {
         throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.Conditions}'.`);
     }
     let isValidMove = false,
-        condition: ConditionsKeyofTypes;
+        condition: ConditionsKeyofType;
     for (condition in conditions) {
         if (condition === `suitCountMin`) {
             let ranks = 0,
-                key: ConditionKeyofTypes;
+                key: ConditionKeyofType;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
-                    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
                         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                             ctx.currentPlayer);

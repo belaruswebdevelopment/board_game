@@ -5,7 +5,7 @@ import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, ErrorNames, PhaseNames } from "./typescript/enums";
-import type { CanBeNull, CanBeUndef, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardTypes, SuitKeyofTypes, SuitPropertyTypes } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitKeyofType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -37,9 +37,9 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @returns Публичные данные игрока.
  */
 export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
-    const cards: SuitPropertyTypes<PlayerCardTypes[]> = {} as SuitPropertyTypes<PlayerCardTypes[]>,
-        giantTokenSuits: SuitPropertyTypes<CanBeNull<boolean>> = {} as SuitPropertyTypes<CanBeNull<boolean>>;
-    let suit: SuitKeyofTypes;
+    const cards: SuitPropertyType<PlayerCardType[]> = {} as SuitPropertyType<PlayerCardType[]>,
+        giantTokenSuits: SuitPropertyType<CanBeNullType<boolean>> = {} as SuitPropertyType<CanBeNullType<boolean>>;
+    let suit: SuitKeyofType;
     for (suit in suitsConfig) {
         cards[suit] = [];
         giantTokenSuits[suit] = null;
@@ -76,7 +76,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
 export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }

@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, LogTypeNames, TavernNames } from "./typescript/enums";
-import type { CanBeUndef, DeckCardTypes, IMyGameState, ITavernInConfig, ITavernsConfig, MythologicalCreatureDeckCardTypes, TavernCardTypes } from "./typescript/interfaces";
+import type { CanBeUndefType, DeckCardTypes, IMyGameState, ITavernInConfig, ITavernsConfig, MythologicalCreatureDeckCardType, TavernCardType } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет не осталось ли карт в текущей таверне.</h1>
@@ -20,11 +20,11 @@ import type { CanBeUndef, DeckCardTypes, IMyGameState, ITavernInConfig, ITaverns
  * @returns Нет ли карт в текущей таверне.
  */
 export const CheckIfCurrentTavernEmpty = (G: IMyGameState, ctx: Ctx): boolean => {
-    const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
+    const currentTavern: CanBeUndefType<TavernCardType[]> = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
     }
-    return currentTavern.every((card: TavernCardTypes): boolean => card === null);
+    return currentTavern.every((card: TavernCardType): boolean => card === null);
 };
 
 /**
@@ -41,7 +41,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G: IMyGameState, ctx: Ctx)
     if (!G.solo && ctx.numPlayers !== 2) {
         return ThrowMyError(G, ctx, ErrorNames.OnlyInSoloOrTwoPlayersGame);
     }
-    const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[G.currentTavern];
+    const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined, G.currentTavern);
     }
@@ -67,11 +67,11 @@ export const DiscardCardIfTavernHasCardFor2Players = (G: IMyGameState, ctx: Ctx)
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = (G: IMyGameState, ctx: Ctx): boolean => {
-    const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
+    const currentTavern: CanBeUndefType<TavernCardType[]> = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
     }
-    const cardIndex: number = currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null);
+    const cardIndex: number = currentTavern.findIndex((card: TavernCardType): boolean => card !== null);
     if (cardIndex === -1) {
         return ThrowMyError(G, ctx, ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern,
             G.currentTavern);
@@ -93,11 +93,11 @@ export const DiscardCardFromTavern = (G: IMyGameState, ctx: Ctx): boolean => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardConcreteCardFromTavern = (G: IMyGameState, ctx: Ctx, discardCardIndex: number): boolean => {
-    const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
+    const currentTavern: CanBeUndefType<TavernCardType[]> = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
     }
-    const discardedCard: CanBeUndef<TavernCardTypes> = currentTavern[discardCardIndex];
+    const discardedCard: CanBeUndefType<TavernCardType> = currentTavern[discardCardIndex];
     if (discardedCard === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined,
             G.currentTavern, discardCardIndex);
@@ -105,7 +105,7 @@ export const DiscardConcreteCardFromTavern = (G: IMyGameState, ctx: Ctx, discard
     if (discardedCard !== null) {
         DiscardPickedCard(G, discardedCard);
         currentTavern.splice(discardCardIndex, 1, null);
-        const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[G.currentTavern];
+        const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[G.currentTavern];
         if (currentTavernConfig === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined,
                 G.currentTavern);
@@ -129,12 +129,12 @@ export const DiscardConcreteCardFromTavern = (G: IMyGameState, ctx: Ctx, discard
 export const RefillTaverns = (G: IMyGameState, ctx: Ctx): void => {
     G.round++;
     for (let t = 0; t < G.tavernsNum; t++) {
-        let refillDeck: DeckCardTypes[] | MythologicalCreatureDeckCardTypes[];
+        let refillDeck: DeckCardTypes[] | MythologicalCreatureDeckCardType[];
         if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
             refillDeck = G.secret.mythologicalCreatureDecks.splice(0, G.drawSize);
             G.mythologicalCreatureDeckLength = G.secret.mythologicalCreatureDecks.length;
         } else {
-            const currentDeck: CanBeUndef<DeckCardTypes[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
+            const currentDeck: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
             if (currentDeck === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentTierDeckIsUndefined);
             }
@@ -144,12 +144,12 @@ export const RefillTaverns = (G: IMyGameState, ctx: Ctx): void => {
         if (refillDeck.length !== G.drawSize) {
             return ThrowMyError(G, ctx, ErrorNames.TavernCanNotBeRefilledBecauseNotEnoughCards, t);
         }
-        const tavern: CanBeUndef<TavernCardTypes[]> = G.taverns[t];
+        const tavern: CanBeUndefType<TavernCardType[]> = G.taverns[t];
         if (tavern === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, t);
         }
         tavern.splice(0, tavern.length, ...refillDeck);
-        const tavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[t];
+        const tavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[t];
         if (tavernConfig === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined, t);
         }

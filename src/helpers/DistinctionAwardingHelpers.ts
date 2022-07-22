@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndef, ICoin, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
+import type { CanBeUndefType, ICoin, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
 import { AddCardToPlayer } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -25,12 +25,12 @@ import { AddActionsToStack } from "./StackHelpers";
  * @returns
  */
 export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        const card: CanBeUndef<ISpecialCard> = G.specialCardsDeck.find((card: ISpecialCard): boolean =>
+        const card: CanBeUndefType<ISpecialCard> = G.specialCardsDeck.find((card: ISpecialCard): boolean =>
             card.name === SpecialCardNames.ChiefBlacksmith);
         if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
@@ -57,7 +57,7 @@ export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerI
  * @returns
  */
 export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
@@ -87,8 +87,8 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
  */
 export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     if (G.tierToEnd !== 0) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId],
-            privatePlayer: CanBeUndef<IPlayer> = G.players[playerId];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId],
+            privatePlayer: CanBeUndefType<IPlayer> = G.players[playerId];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
         }
@@ -141,7 +141,7 @@ export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: n
  * @returns
  */
 export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
@@ -175,7 +175,7 @@ export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: nu
  * @returns
  */
 export const WarriorDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }

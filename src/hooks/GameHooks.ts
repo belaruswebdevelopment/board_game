@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
 import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>
@@ -39,12 +39,12 @@ export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
             }
             let allMercenariesPlayed = true;
             for (let i = 0; i < ctx.numPlayers; i++) {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         i);
                 }
-                allMercenariesPlayed = player.campCards.filter((card: CampDeckCardTypes): boolean =>
+                allMercenariesPlayed = player.campCards.filter((card: CampDeckCardType): boolean =>
                     card.type === RusCardTypeNames.Mercenary_Card).length === 0;
                 if (!allMercenariesPlayed) {
                     break;

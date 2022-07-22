@@ -2,7 +2,7 @@ import type { Ctx, Move } from "boardgame.io";
 import { godConfig } from "../data/MythologicalCreatureData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndef, IGodData, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, IGodData, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Использование способности карты Бога.</h3>
@@ -17,18 +17,18 @@ import type { CanBeUndef, IGodData, IMyGameState, IPublicPlayer, MythologicalCre
  * @returns
  */
 export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const card: CanBeUndef<MythologicalCreatureCommandZoneCardTypes> = player.mythologicalCreatureCards[cardId];
+    const card: CanBeUndefType<MythologicalCreatureCommandZoneCardType> = player.mythologicalCreatureCards[cardId];
     if (card === undefined) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта с id '${cardId}'.`);
     }
     if (card.type !== RusCardTypeNames.God_Card) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God_Card}', а не с типом '${card.type}'.`);
     }
-    const godCard: CanBeUndef<IGodData> =
+    const godCard: CanBeUndefType<IGodData> =
         Object.values(godConfig).find((god: IGodData): boolean => god.name === card.name);
     if (godCard === undefined) {
         throw new Error(`Не удалось найти Бога '${card.name}'.`);

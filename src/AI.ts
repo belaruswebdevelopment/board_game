@@ -4,7 +4,7 @@ import { ThrowMyError } from "./Error";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
-import type { CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsTypes, MoveValidatorGetRangeTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -19,14 +19,14 @@ import type { CanBeNull, CanBeUndef, DeckCardTypes, IBuffs, IMoves, IMoveValidat
  */
 export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     const moves: IMoves[] = [],
-        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
-    let playerId: CanBeUndef<number>;
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    let playerId: CanBeUndefType<number>;
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (ctx.phase !== null) {
         // TODO Add MythologicalCreature moves
-        const currentStage: CanBeUndef<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
+        const currentStage: CanBeUndefType<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
         let activeStageOfCurrentPlayer: StageNames | `default` =
             currentStage !== undefined ? currentStage as StageNames : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
@@ -78,7 +78,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                 activeStageOfCurrentPlayer = StageNames.DiscardSuitCard;
                 // TODO Bot can't do async turns...?
                 for (let p = 0; p < ctx.numPlayers; p++) {
-                    const playerP: CanBeUndef<IPublicPlayer> = G.publicPlayers[p];
+                    const playerP: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p];
                     if (playerP === undefined) {
                         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                             p);
@@ -94,13 +94,13 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator: CanBeNull<IMoveValidator> =
+        const validator: CanBeNullType<IMoveValidator> =
             GetValidator(ctx.phase as PhaseNames, activeStageOfCurrentPlayer);
         if (validator !== null) {
             const moveName: MoveNames = validator.moveName,
-                moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
-                moveValue: ValidMoveIdParamTypes = validator.getValue(G, ctx, moveRangeData);
-            let moveValues: MoveArgsTypes = [];
+                moveRangeData: MoveValidatorGetRangeType = validator.getRange(G, ctx, playerId),
+                moveValue: ValidMoveIdParamType = validator.getValue(G, ctx, moveRangeData);
+            let moveValues: MoveArgsType = [];
             if (typeof moveValue === `number`) {
                 moveValues = [moveValue];
             } else if (typeof moveValue === `string`) {
@@ -145,20 +145,20 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
 export const iterations = (G: IMyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
     if (ctx.phase === PhaseNames.TavernsResolution) {
-        const currentTavern: CanBeUndef<TavernCardTypes[]> = G.taverns[G.currentTavern];
+        const currentTavern: CanBeUndefType<TavernCardType[]> = G.taverns[G.currentTavern];
         if (currentTavern === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
         }
-        if (currentTavern.filter((card: TavernCardTypes): boolean => card !== null).length === 1) {
+        if (currentTavern.filter((card: TavernCardType): boolean => card !== null).length === 1) {
             return 1;
         }
         const cardIndex: number =
-            currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null),
-            tavernNotNullCard: CanBeUndef<TavernCardTypes> = currentTavern[cardIndex];
+            currentTavern.findIndex((card: TavernCardType): boolean => card !== null),
+            tavernNotNullCard: CanBeUndefType<TavernCardType> = currentTavern[cardIndex];
         if (tavernNotNullCard === undefined) {
             throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '1'.`);
         }
-        if (currentTavern.every((card: TavernCardTypes): boolean =>
+        if (currentTavern.every((card: TavernCardType): boolean =>
             card === null || (card.type === RusCardTypeNames.Dwarf_Card && tavernNotNullCard !== null
                 && tavernNotNullCard.type === RusCardTypeNames.Dwarf_Card
                 && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))
@@ -167,14 +167,14 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
         }
         let efficientMovesCount = 0;
         for (let i = 0; i < currentTavern.length; i++) {
-            const tavernCard: CanBeUndef<TavernCardTypes> = currentTavern[i];
+            const tavernCard: CanBeUndefType<TavernCardType> = currentTavern[i];
             if (tavernCard === undefined) {
                 throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '2'.`);
             }
             if (tavernCard === null) {
                 continue;
             }
-            if (currentTavern.some((card: TavernCardTypes): boolean =>
+            if (currentTavern.some((card: TavernCardType): boolean =>
                 CompareCards(tavernCard, card) === -1)) {
                 continue;
             }
@@ -185,7 +185,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
             if (deck0.length > 18) {
                 if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
-                        && currentTavern.some((card: TavernCardTypes): boolean => card !== null
+                        && currentTavern.some((card: TavernCardType): boolean => card !== null
                             && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
                         continue;
                     }
@@ -215,7 +215,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
 export const objectives = (): IObjectives => ({
     isEarlyGame: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            const deck0: CanBeUndef<DeckCardTypes[]> = G.secret.decks[0];
+            const deck0: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[0];
             if (deck0 === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
             }
@@ -350,24 +350,24 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
+            const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
-            const tavern0: CanBeUndef<CanBeNull<DeckCardTypes>[]> =
-                G.taverns[0] as CanBeUndef<CanBeNull<DeckCardTypes>[]>;
+            const tavern0: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
+                G.taverns[0] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
             if (tavern0 === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: CanBeNull<DeckCardTypes>): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<DeckCardTypes>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         i);
@@ -376,7 +376,7 @@ export const objectives = (): IObjectives => ({
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
-                totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
+                totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
@@ -395,24 +395,24 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
+            const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
-            const tavern0: CanBeUndef<CanBeNull<DeckCardTypes>[]> =
-                G.taverns[0] as CanBeUndef<CanBeNull<DeckCardTypes>[]>;
+            const tavern0: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
+                G.taverns[0] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
             if (tavern0 === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: CanBeNull<DeckCardTypes>): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<DeckCardTypes>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         i);
@@ -421,7 +421,7 @@ export const objectives = (): IObjectives => ({
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
-                totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
+                totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
@@ -450,12 +450,12 @@ export const objectives = (): IObjectives => ({
  * @returns
  */
 export const playoutDepth = (G: IMyGameState, ctx: Ctx): number => {
-    const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
+    const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
     if (deck1 === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
     }
-    const tavern0: CanBeUndef<CanBeNull<DeckCardTypes>[]> =
-        G.taverns[0] as CanBeUndef<CanBeNull<DeckCardTypes>[]>;
+    const tavern0: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
+        G.taverns[0] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
     if (tavern0 === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
     }

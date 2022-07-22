@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardTypes } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";
@@ -21,7 +21,7 @@ import { CheckPickHero } from "./HeroHelpers";
 export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): string | void => {
     const isLastRound: boolean = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
         ((G.round === 2 || G.round === 5) ? true : false),
-        currentDeck: CanBeUndef<DeckCardTypes[]> =
+        currentDeck: CanBeUndefType<DeckCardTypes[]> =
             G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
     if (currentDeck === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTierDeckIsUndefined);
@@ -110,8 +110,8 @@ export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsP
  * @returns Название новой фазы игры.
  */
 export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): string | void => {
-    const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[0],
-        deck2: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
+    const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[0],
+        deck2: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
     if (deck1 === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
     }
@@ -173,11 +173,11 @@ export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx)
 const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): string | void => {
     let count = false;
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
-        if (player.campCards.filter((card: CampDeckCardTypes): boolean =>
+        if (player.campCards.filter((card: CampDeckCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Card).length) {
             count = true;
             break;
@@ -201,7 +201,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): string | void =>
  * @param ctx
  */
 export const ClearPlayerPickedCard = (G: IMyGameState, ctx: Ctx): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -231,7 +231,7 @@ export const EndGame = (ctx: Ctx): void => {
  * @param ctx
  */
 export const EndTurnActions = (G: IMyGameState, ctx: Ctx): true | void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -255,17 +255,17 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(player, BuffNames.MoveThrud));
     if (thrudPlayerIndex !== -1) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[thrudPlayerIndex];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 thrudPlayerIndex);
         }
-        const playerCards: PlayerCardTypes[] = Object.values(player.cards).flat(),
-            thrud: CanBeUndef<PlayerCardTypes> =
-                playerCards.find((card: PlayerCardTypes): boolean => card.name === HeroNames.Thrud);
+        const playerCards: PlayerCardType[] = Object.values(player.cards).flat(),
+            thrud: CanBeUndefType<PlayerCardType> =
+                playerCards.find((card: PlayerCardType): boolean => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudIndex: number =
-                player.cards[thrud.suit].findIndex((card: PlayerCardTypes): boolean =>
+                player.cards[thrud.suit].findIndex((card: PlayerCardType): boolean =>
                     card.name === HeroNames.Thrud);
             if (thrudIndex === -1) {
                 throw new Error(`У игрока с id '${thrudPlayerIndex}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
@@ -287,7 +287,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
  * @param ctx
  */
 export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }

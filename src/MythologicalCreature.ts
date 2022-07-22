@@ -1,6 +1,6 @@
 import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardType, CreateValkyryCardType, GiantKeyofTypes, GodKeyofTypes, IGiantCard, IGiantData, IGodCard, IGodData, IMythicalAnimalCard, IMythicalAnimalData, IValkyryCard, IValkyryData, MythicalAnimalKeyofTypes, MythologicalCreatureDeckCardTypes, ValkyryKeyofTypes } from "./typescript/interfaces";
+import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardType, CreateValkyryCardType, GiantKeyofType, GodKeyofType, IGiantCard, IGiantData, IGodCard, IGodData, IMythicalAnimalCard, IMythicalAnimalData, IValkyryCard, IValkyryData, MythicalAnimalKeyofType, MythologicalCreatureDeckCardType, ValkyryKeyofTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты Мифических существ.</h3>
@@ -12,9 +12,9 @@ import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardTy
  * @returns Все карты Мифических существ.
  */
 export const BuildMythologicalCreatureCards = ():
-    MythologicalCreatureDeckCardTypes[] => {
-    const cards: MythologicalCreatureDeckCardTypes[] = [];
-    let giantName: GiantKeyofTypes;
+    MythologicalCreatureDeckCardType[] => {
+    const cards: MythologicalCreatureDeckCardType[] = [];
+    let giantName: GiantKeyofType;
     for (giantName in giantConfig) {
         const giantData: IGiantData = giantConfig[giantName];
         cards.push(CreateGiantCard({
@@ -22,7 +22,7 @@ export const BuildMythologicalCreatureCards = ():
             placedSuit: giantData.placedSuit,
         }));
     }
-    let godName: GodKeyofTypes;
+    let godName: GodKeyofType;
     for (godName in godConfig) {
         const godData: IGodData = godConfig[godName];
         cards.push(CreateGodCard({
@@ -30,7 +30,7 @@ export const BuildMythologicalCreatureCards = ():
             points: godData.points,
         }));
     }
-    let mythicalAnimalName: MythicalAnimalKeyofTypes;
+    let mythicalAnimalName: MythicalAnimalKeyofType;
     for (mythicalAnimalName in mythicalAnimalConfig) {
         const mythicalAnimalData: IMythicalAnimalData = mythicalAnimalConfig[mythicalAnimalName];
         cards.push(CreateMythicalAnimalCard({

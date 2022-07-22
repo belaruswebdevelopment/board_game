@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { ArtefactNames, DrawNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
-import type { DeckCardTypes, DiscardCampCardTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardTypes, PublicPlayerCoinTypes } from "../../typescript/interfaces";
+import type { DeckCardTypes, DiscardCampCardType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 
 describe(`Test AddCoinToPouchAction method`, (): void => {
@@ -585,7 +585,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 publicPlayers: {
                     0: {
                         nickname: `Dan`,
-                        boardCoins: [] as PublicPlayerCoinTypes[],
+                        boardCoins: [] as PublicPlayerCoinType[],
                     } as IPublicPlayer,
                 },
                 logData: [],
@@ -613,7 +613,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             {},
                             null,
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                     } as IPublicPlayer,
                 },
                 logData: [],
@@ -631,7 +631,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -790,7 +790,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -840,7 +840,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -850,7 +850,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                     name: `Test`,
                     suit: SuitNames.Warrior,
                 },
-            ] as DiscardCampCardTypes[],
+            ] as DiscardCampCardType[],
             logData: [
                 {
                     type: LogTypeNames.Game,

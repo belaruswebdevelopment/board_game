@@ -10,7 +10,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helper
 import { AddDataToLog } from "./Logging";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardTypes, PlayerCardTypes, PublicPlayerCoinTypes, SuitKeyofTypes } from "./typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitKeyofType } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -27,7 +27,7 @@ import type { CampDeckCardTypes, CanBeUndef, IArtefactData, IGiantData, IGodData
  */
 export const CurrentScoring = (G: IMyGameState, player: IPublicPlayer): number => {
     let score = 0,
-        suit: SuitKeyofTypes;
+        suit: SuitKeyofType;
     for (suit in suitsConfig) {
         let additionalScoring = false;
         if (G.expansions.idavoll) {
@@ -54,7 +54,7 @@ export const CurrentScoring = (G: IMyGameState, player: IPublicPlayer): number =
  * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warriorDistinctions: number[]): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
@@ -63,7 +63,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         coinsValue = 0;
     AddDataToLog(G, LogTypeNames.Public, `Очки за карты дворфов ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const boardCoin: CanBeUndef<PublicPlayerCoinTypes> = player.boardCoins[i];
+        const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[i];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет ${(G.solo || (G.solo && playerId === 0)) ? `игрока` : `соло бота`} с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
@@ -95,11 +95,11 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         dwerg_brothers = 0;
     const dwerg_brothers_scoring: number[] = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const hero: CanBeUndef<IHeroCard> = player.heroes[i];
+        const hero: CanBeUndefType<IHeroCard> = player.heroes[i];
         if (hero === undefined) {
             throw new Error(`Не существует карта героя с id '${i}'.`);
         }
-        const heroData: CanBeUndef<IHeroData> =
+        const heroData: CanBeUndefType<IHeroData> =
             Object.values(heroesConfig).find((heroObj: IHeroData): boolean => heroObj.name === hero.name);
         if (heroData === undefined) {
             throw new Error(`Не удалось найти героя '${hero.name}'.`);
@@ -117,12 +117,12 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         }
     }
     if (G.solo && playerId === 0) {
-        const soloBotPublicPlayer: CanBeUndef<IPublicPlayer> = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.EveryTurn)) {
-            const heroData: CanBeUndef<IHeroData> =
+            const heroData: CanBeUndefType<IHeroData> =
                 Object.values(heroesConfig).find((heroObj: IHeroData): boolean =>
                     heroObj.name === HeroNames.Uline);
             if (heroData === undefined) {
@@ -134,7 +134,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         }
     }
     if ((!G.solo || G.solo && playerId === 1) && dwerg_brothers) {
-        const dwerg_brother_value: CanBeUndef<number> = dwerg_brothers_scoring[dwerg_brothers];
+        const dwerg_brother_value: CanBeUndefType<number> = dwerg_brothers_scoring[dwerg_brothers];
         if (dwerg_brother_value === undefined) {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
         }
@@ -146,11 +146,11 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
-            const campCard: CanBeUndef<CampDeckCardTypes> = player.campCards[i];
+            const campCard: CanBeUndefType<CampDeckCardType> = player.campCards[i];
             if (campCard === undefined) {
                 throw new Error(`В массиве карт лагеря игрока отсутствует карта с id '${i}'.`);
             }
-            const artefact: CanBeUndef<IArtefactData> =
+            const artefact: CanBeUndefType<IArtefactData> =
                 Object.values(artefactsConfig).find((artefact: IArtefactData): boolean =>
                     artefact.name === campCard.name);
             let currentArtefactScore = 0;
@@ -172,14 +172,14 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
             valkyriesScore = 0,
             mythicalAnimalScore = 0;
         for (let i = 0; i < player.mythologicalCreatureCards.length; i++) {
-            const mythologicalCreatureCard: CanBeUndef<MythologicalCreatureCommandZoneCardTypes> =
+            const mythologicalCreatureCard: CanBeUndefType<MythologicalCreatureCommandZoneCardType> =
                 player.mythologicalCreatureCards[i];
             if (mythologicalCreatureCard === undefined) {
                 throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' в командной зоне отсутствует карта с id '${i}'.`);
             }
-            let godCard: CanBeUndef<IGodData>,
-                giantCard: CanBeUndef<IGiantData>,
-                valkyryCard: CanBeUndef<IValkyryData>,
+            let godCard: CanBeUndefType<IGodData>,
+                giantCard: CanBeUndefType<IGiantData>,
+                valkyryCard: CanBeUndefType<IValkyryData>,
                 currentGiantScore: number,
                 currentValkyryScore: number,
                 _exhaustiveCheck: never;
@@ -224,14 +224,14 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
             }
         }
         const cards: IMythicalAnimalCard[] =
-            Object.values(player.cards).flat().filter((card: PlayerCardTypes): boolean =>
+            Object.values(player.cards).flat().filter((card: PlayerCardType): boolean =>
                 card.type === RusCardTypeNames.Mythical_Animal_Card) as IMythicalAnimalCard[];
         for (let m = 0; m < cards.length; m++) {
-            const playerMythicalAnimalCard: CanBeUndef<IMythicalAnimalCard> = cards[m];
+            const playerMythicalAnimalCard: CanBeUndefType<IMythicalAnimalCard> = cards[m];
             if (playerMythicalAnimalCard === undefined) {
                 throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' отсутствует карта с id '${m}'.`);
             }
-            const mythicalAnimalCard: CanBeUndef<IMythicalAnimalData> =
+            const mythicalAnimalCard: CanBeUndefType<IMythicalAnimalData> =
                 Object.values(mythicalAnimalConfig).find((mythicalAnimal: IMythicalAnimalData):
                     boolean => mythicalAnimal.name === playerMythicalAnimalCard.name);
             if (mythicalAnimalCard === undefined) {
@@ -284,7 +284,7 @@ export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
         maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;
     let winners = 0;
     for (let i: number = ctx.numPlayers - 1; i >= 0; i--) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }

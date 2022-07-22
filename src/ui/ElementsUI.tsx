@@ -4,7 +4,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, MoveNames, RusCardTypeNames } from "../typescript/enums";
-import type { AllCardTypes, ArgsTypes, CanBeNull, IBackground, IMyGameState, IPublicPlayer, MoveFunctionTypes, PublicPlayerCoinTypes, SuitKeyofTypes } from "../typescript/interfaces";
+import type { AllCardType, ArgsType, CanBeNullType, IBackground, IMyGameState, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -21,8 +21,8 @@ import type { AllCardTypes, ArgsTypes, CanBeNull, IBackground, IMyGameState, IPu
  * @param args Аргументы действия.
  */
 export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], name: string,
-    player: IPublicPlayer, moveName?: MoveNames, ...args: ArgsTypes): void => {
-    let action: MoveFunctionTypes;
+    player: IPublicPlayer, moveName?: MoveNames, ...args: ArgsType): void => {
+    let action: MoveFunctionType;
     switch (moveName) {
         case MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
             // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove! -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
@@ -66,14 +66,14 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param moveName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardTypes, id: number,
-    player: CanBeNull<IPublicPlayer>, suit: CanBeNull<SuitKeyofTypes>, moveName?: MoveNames, ...args: ArgsTypes): void => {
+export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardType, id: number,
+    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitKeyofType>, moveName?: MoveNames, ...args: ArgsType): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
         description = ``,
         value = ``,
-        action: MoveFunctionTypes;
+        action: MoveFunctionType;
     if (`description` in card) {
         description += card.description;
     }
@@ -215,13 +215,13 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param args Аргументы действия.
  */
 export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string,
-    coin: PublicPlayerCoinTypes, id: number, player: CanBeNull<IPublicPlayer>, coinClasses?: CanBeNull<string>,
-    additionalParam?: CanBeNull<number>, moveName?: MoveNames, ...args: ArgsTypes): void => {
+    coin: PublicPlayerCoinType, id: number, player: CanBeNullType<IPublicPlayer>, coinClasses?: CanBeNullType<string>,
+    additionalParam?: CanBeNullType<number>, moveName?: MoveNames, ...args: ArgsType): void => {
     let styles: IBackground = { background: `` },
-        span: CanBeNull<JSX.Element | number> = null,
+        span: CanBeNullType<JSX.Element | number> = null,
         tdClasses = `bg-yellow-300`,
         spanClasses = ``,
-        action: MoveFunctionTypes;
+        action: MoveFunctionType;
     if (moveName !== undefined) {
         switch (moveName) {
             case MoveNames.ClickBoardCoinMove:
@@ -325,9 +325,9 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param player Игрок.
  * @param moveName Название действия.
  */
-export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitKeyofTypes,
-    player: IPublicPlayer, moveName: CanBeNull<MoveNames>): void => {
-    let action: MoveFunctionTypes;
+export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitKeyofType,
+    player: IPublicPlayer, moveName: CanBeNullType<MoveNames>): void => {
+    let action: MoveFunctionType;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove!;

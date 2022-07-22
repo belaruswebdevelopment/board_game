@@ -1,7 +1,7 @@
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { ArtefactKeyofTypes, BasicSuitableNullableCardInfoKeyofTypes, CampDeckCardTypes, CanBeUndef, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCardType, IArtefactCampCard, IArtefactData, IArtefactPlayerCampCard, IMercenaryCampCard, IMercenaryPlayerCard, MercenaryType, SuitKeyofTypes, SuitPropertyTypes } from "./typescript/interfaces";
+import type { ArtefactKeyofType, BasicSuitableNullableCardInfoKeyofType, CampDeckCardType, CanBeUndefType, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCardType, IArtefactCampCard, IArtefactData, IArtefactPlayerCampCard, IMercenaryCampCard, IMercenaryPlayerCard, MercenaryType, SuitKeyofType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
@@ -13,9 +13,9 @@ import type { ArtefactKeyofTypes, BasicSuitableNullableCardInfoKeyofTypes, CampD
  * @param tier Эпоха.
  * @returns Все карты лагеря.
  */
-export const BuildCampCards = (tier: number): CampDeckCardTypes[] => {
-    const campCards: CampDeckCardTypes[] = [];
-    let artefactName: ArtefactKeyofTypes;
+export const BuildCampCards = (tier: number): CampDeckCardType[] => {
+    const campCards: CampDeckCardType[] = [];
+    let artefactName: ArtefactKeyofType;
     for (artefactName in artefactsConfig) {
         const artefactData: IArtefactData = artefactsConfig[artefactName];
         if (artefactData.tier === tier) {
@@ -42,24 +42,24 @@ export const BuildCampCards = (tier: number): CampDeckCardTypes[] => {
             }
         }
     }
-    const mercenariesConfigTier: CanBeUndef<Partial<SuitPropertyTypes<MercenaryType>>[]> = mercenariesConfig[tier];
+    const mercenariesConfigTier: CanBeUndefType<Partial<SuitPropertyType<MercenaryType>>[]> = mercenariesConfig[tier];
     if (mercenariesConfigTier === undefined) {
         throw new Error(`Отсутствует массив значений карт наёмников в указанной эпохе - '${tier}'.`);
     }
     for (let i = 0; i < mercenariesConfigTier.length; i++) {
         let name = ``,
             path = ``,
-            campMercenarySuit: SuitKeyofTypes;
-        const mercenaryData: CanBeUndef<Partial<SuitPropertyTypes<MercenaryType>>> = mercenariesConfigTier[i];
+            campMercenarySuit: SuitKeyofType;
+        const mercenaryData: CanBeUndefType<Partial<SuitPropertyType<MercenaryType>>> = mercenariesConfigTier[i];
         if (mercenaryData === undefined) {
             throw new Error(`Отсутствует массив значений карты наёмника с id '${i}' в указанной эпохе - '${tier}'.`);
         }
         for (campMercenarySuit in mercenaryData) {
             path += campMercenarySuit + ` `;
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
-            let campMercenaryCardProperty: BasicSuitableNullableCardInfoKeyofTypes;
+            let campMercenaryCardProperty: BasicSuitableNullableCardInfoKeyofType;
             for (campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
-                const mercenaryVariant: CanBeUndef<MercenaryType> = mercenaryData[campMercenarySuit];
+                const mercenaryVariant: CanBeUndefType<MercenaryType> = mercenaryData[campMercenarySuit];
                 if (mercenaryVariant !== undefined) {
                     if (campMercenaryCardProperty === `rank`) {
                         name += `шевронов: ${mercenaryVariant.rank}, `;

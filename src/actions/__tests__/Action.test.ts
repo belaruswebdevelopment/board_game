@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, IArtefactCampCard, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardTypes, SuitPropertyTypes, TavernCardTypes } from "../../typescript/interfaces";
+import type { CampDeckCardType, DeckCardTypes, IArtefactCampCard, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardType, SuitPropertyType, TavernCardType } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -36,7 +36,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -90,7 +90,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -145,7 +145,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -175,7 +175,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                     cards: {
                         warrior: [
                             {},
-                        ] as PlayerCardTypes[],
+                        ] as PlayerCardType[],
                     },
                 } as IPublicPlayer,
             },
@@ -191,8 +191,8 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             publicPlayers: {
                 0: {
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
-                    } as SuitPropertyTypes<PlayerCardTypes[]>,
+                        warrior: [] as PlayerCardType[],
+                    } as SuitPropertyType<PlayerCardType[]>,
                 } as IPublicPlayer,
             },
         } as Pick<IMyGameState, `publicPlayers`>;
@@ -220,7 +220,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                         suit: SuitNames.Warrior,
                     },
                 ],
-            ] as TavernCardTypes[][],
+            ] as TavernCardType[][],
             discardCardsDeck: [],
             tavernCardDiscarded2Players: false,
             logData: [],
@@ -357,7 +357,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
-                    campCards: [] as CampDeckCardTypes[],
+                    campCards: [] as CampDeckCardType[],
                 } as IPublicPlayer,
             },
         } as Pick<IMyGameState, `publicPlayers`>;
@@ -472,8 +472,8 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     nickname: `Dan`,
                     heroes: [] as IHeroCard[],
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
-                    } as SuitPropertyTypes<PlayerCardTypes[]>,
+                        warrior: [] as PlayerCardType[],
+                    } as SuitPropertyType<PlayerCardType[]>,
                     buffs: [] as IBuffs,
                 } as IPublicPlayer,
             },
@@ -500,7 +500,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                                 suit: SuitNames.Warrior,
                             } as IDwarfCard,
                         ],
-                    } as SuitPropertyTypes<PlayerCardTypes[]>,
+                    } as SuitPropertyType<PlayerCardType[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -602,8 +602,8 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                         {},
                     ],
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
-                    } as SuitPropertyTypes<PlayerCardTypes[]>,
+                        warrior: [] as PlayerCardType[],
+                    } as SuitPropertyType<PlayerCardType[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -640,7 +640,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                                 suit: SuitNames.Warrior,
                             } as IDwarfCard,
                         ],
-                    } as SuitPropertyTypes<PlayerCardTypes[]>,
+                    } as SuitPropertyType<PlayerCardType[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -930,8 +930,8 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                     ],
                     heroes: [] as IHeroCard[],
                     cards: {
-                        blacksmith: [] as PlayerCardTypes[],
-                        miner: [] as PlayerCardTypes[],
+                        blacksmith: [] as PlayerCardType[],
+                        miner: [] as PlayerCardType[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -946,7 +946,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    campCards: [] as CampDeckCardTypes[],
+                    campCards: [] as CampDeckCardType[],
                     heroes: [] as IHeroCard[],
                     cards: {
                         blacksmith: [
@@ -959,7 +959,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                                 path: ``,
                             },
                         ],
-                        miner: [] as PlayerCardTypes[],
+                        miner: [] as PlayerCardType[],
                     },
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
@@ -1206,7 +1206,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    campCards: [] as CampDeckCardTypes[],
+                    campCards: [] as CampDeckCardType[],
                     stack: [
                         {},
                         {
@@ -1314,7 +1314,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                             } as IMercenaryCampCard,
                         ],
                         cards: {
-                            explorer: [] as PlayerCardTypes[],
+                            explorer: [] as PlayerCardType[],
                         },
                     } as IPublicPlayer,
                 },

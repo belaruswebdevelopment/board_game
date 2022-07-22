@@ -1,5 +1,5 @@
 import { LogTypeNames } from "../typescript/enums";
-import type { CanBeNull, CanBeUndef, ILogData, IMyGameState } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, ILogData, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -11,11 +11,11 @@ import type { CanBeNull, CanBeUndef, ILogData, IMyGameState } from "../typescrip
  * @param G
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (G: IMyGameState): CanBeNull<JSX.Element> => {
+export const DrawLogData = (G: IMyGameState): CanBeNullType<JSX.Element> => {
     if (G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = G.logData.length - 1; i >= 0; i--) {
-            const log: CanBeUndef<ILogData> = G.logData[i];
+            const log: CanBeUndefType<ILogData> = G.logData[i];
             if (log !== undefined) {
                 let className: string,
                     _exhaustiveCheck: never;

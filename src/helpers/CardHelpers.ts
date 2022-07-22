@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
-import type { AddCardToPlayerTypes, CanBeUndef, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { AddCardToPlayerType, CanBeUndefType, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType, TavernCardType } from "../typescript/interfaces";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -22,8 +22,8 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param card Карта.
  * @returns Добавлена ли карта на планшет игрока.
  */
-export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: AddCardToPlayerTypes): boolean => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: AddCardToPlayerType): boolean => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -59,8 +59,8 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: AddCardToPlayer
  * @param card Карта.
  */
 const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ctx,
-    card: MythologicalCreatureCommandZoneCardTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    card: MythologicalCreatureCommandZoneCardType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -99,8 +99,8 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
  * @param card Выбранная карта дворфа или улучшения монет.
  * @returns
  */
-export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: NonNullable<TavernCardTypes>): boolean => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: NonNullable<TavernCardType>): boolean => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }

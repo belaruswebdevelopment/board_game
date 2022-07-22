@@ -6,7 +6,7 @@ import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../hel
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, DeckCardTypes, DistinctionType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -20,10 +20,10 @@ import type { CanBeUndef, DeckCardTypes, DistinctionTypes, IMyGameState, IPublic
  */
 export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx): void => {
     CheckDistinction(G, ctx);
-    const distinctions: DistinctionTypes[] =
-        Object.values(G.distinctions).filter((distinction: DistinctionTypes): boolean =>
+    const distinctions: DistinctionType[] =
+        Object.values(G.distinctions).filter((distinction: DistinctionType): boolean =>
             distinction !== null && distinction !== undefined);
-    if (distinctions.every((distinction: DistinctionTypes): boolean =>
+    if (distinctions.every((distinction: DistinctionType): boolean =>
         distinction !== null && distinction !== undefined)) {
         G.publicPlayersOrder = distinctions as string[];
     }
@@ -42,13 +42,13 @@ export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx):
  */
 export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
-            return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
+            return Object.values(G.distinctions).every((distinction: DistinctionType): boolean =>
                 distinction === undefined);
         }
     }
@@ -112,11 +112,11 @@ export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.Explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         for (let j = 0; j < 3; j++) {
-            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
+            const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
             if (deck1 === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
             }
-            const card: CanBeUndef<DeckCardTypes> = deck1[j];
+            const card: CanBeUndefType<DeckCardTypes> = deck1[j];
             if (card === undefined) {
                 throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
             }
@@ -138,7 +138,7 @@ export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
 export const OnTroopEvaluationTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
+        const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
         if (deck1 === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
         }

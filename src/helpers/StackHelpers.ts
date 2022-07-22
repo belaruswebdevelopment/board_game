@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig, ValidatorConfigKeyofTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackType, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig, ValidatorConfigKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
@@ -16,13 +16,13 @@ import type { CanBeUndef, CardsHasStack, IMyGameState, IPublicPlayer, IStack, IV
  * @param stack Стэк действий.
  * @param card Карта.
  */
-export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], card?: CardsHasStack): void => {
+export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], card?: CardsHasStackType): void => {
     let isValid = false;
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
-            const validators: CanBeUndef<IValidatorsConfig> = card.validators;
+            const validators: CanBeUndefType<IValidatorsConfig> = card.validators;
             if (validators !== undefined) {
-                let validator: ValidatorConfigKeyofTypes;
+                let validator: ValidatorConfigKeyofType;
                 for (validator in validators) {
                     switch (validator) {
                         case PickCardValidatorNames.PickDiscardCardToStack:
@@ -43,13 +43,13 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
         }
         if (isValid) {
             for (let i = 0; i < stack.length; i++) {
-                const stackI: CanBeUndef<IStack> = stack[i];
+                const stackI: CanBeUndefType<IStack> = stack[i];
                 if (stackI === undefined) {
                     throw new Error(`В массиве стека новых действий отсутствует действие с id '${i}'.`);
                 }
                 stackI.priority = stackI.priority ?? 0;
                 const playerId: number = stackI.playerId ?? Number(ctx.currentPlayer),
-                    player: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
+                    player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         playerId);
@@ -88,7 +88,7 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
 const FindLastIndex = <T>(array: Array<T>, predicate: (value: T, index: number, obj: T[]) => boolean): number => {
     let l: number = array.length;
     while (l--) {
-        const element: CanBeUndef<T> = array[l];
+        const element: CanBeUndefType<T> = array[l];
         if (element === undefined) {
             throw new Error(`В массиве отсутствует элемент с id ${l}.`);
         }

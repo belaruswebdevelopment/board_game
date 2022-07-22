@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndef, CoinTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
@@ -22,8 +22,8 @@ import type { CanBeUndef, CoinTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer
  */
 export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean, value: number,
     upgradingCoinId: number, type: CoinTypeNames): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndef<IPlayer> = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -31,8 +31,8 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined,
             ctx.currentPlayer);
     }
-    let handCoins: PublicPlayerCoinTypes[],
-        boardCoins: PublicPlayerCoinTypes[];
+    let handCoins: PublicPlayerCoinType[],
+        boardCoins: PublicPlayerCoinType[];
     if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
@@ -40,10 +40,10 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    let upgradingCoin: CanBeUndef<ICoin>,
+    let upgradingCoin: CanBeUndefType<ICoin>,
         _exhaustiveCheck: never;
-    const handCoin: CanBeUndef<PublicPlayerCoinTypes> = handCoins[upgradingCoinId],
-        boardCoin: CanBeUndef<PublicPlayerCoinTypes> = boardCoins[upgradingCoinId];
+    const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[upgradingCoinId],
+        boardCoin: CanBeUndefType<PublicPlayerCoinType> = boardCoins[upgradingCoinId];
     switch (type) {
         case CoinTypeNames.Hand:
             if (handCoin === undefined) {
@@ -80,9 +80,9 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
     }
     const buffValue: number = CheckPlayerHasBuff(player, BuffNames.UpgradeCoin) ? 2 : 0,
         newValue: number = upgradingCoin.value + value + buffValue;
-    let upgradedCoin: CoinTypes = null;
+    let upgradedCoin: CoinType = null;
     if (G.marketCoins.length) {
-        const lastMarketCoin: CanBeUndef<ICoin> = G.marketCoins[G.marketCoins.length - 1];
+        const lastMarketCoin: CanBeUndefType<ICoin> = G.marketCoins[G.marketCoins.length - 1];
         if (lastMarketCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует последняя монета с id '${G.marketCoins.length - 1}'.`);
         }
@@ -91,7 +91,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             G.marketCoins.splice(G.marketCoins.length - 1, 1);
         } else {
             for (let i = 0; i < G.marketCoins.length; i++) {
-                const marketCoin: CanBeUndef<ICoin> = G.marketCoins[i];
+                const marketCoin: CanBeUndefType<ICoin> = G.marketCoins[i];
                 if (marketCoin === undefined) {
                     throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
                 }
@@ -145,7 +145,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
         let returningIndex = 0;
         for (let i = 0; i < G.marketCoins.length; i++) {
             returningIndex = i;
-            const marketCoinReturn: CanBeUndef<ICoin> = G.marketCoins[i];
+            const marketCoinReturn: CanBeUndefType<ICoin> = G.marketCoins[i];
             if (marketCoinReturn === undefined) {
                 throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
             }

@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -21,7 +21,7 @@ import type { CampDeckCardTypes, CanBeUndef, IMyGameState, IPublicPlayer, IStack
  */
 export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): true | void => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
@@ -29,12 +29,12 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             let allMercenariesPlayed = true;
             for (let i = 0; i < ctx.numPlayers; i++) {
-                const playerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
+                const playerI: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
                 if (playerI === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         i);
                 }
-                allMercenariesPlayed = playerI.campCards.filter((card: CampDeckCardTypes): boolean =>
+                allMercenariesPlayed = playerI.campCards.filter((card: CampDeckCardType): boolean =>
                     card.type === RusCardTypeNames.Mercenary_Card).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
@@ -59,14 +59,14 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): t
  * @returns
  */
 export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
         return EndTurnActions(G, ctx);
     } else if (!player.stack.length) {
-        return player.campCards.filter((card: CampDeckCardTypes): boolean =>
+        return player.campCards.filter((card: CampDeckCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Card).length === 0;
     }
 };
@@ -105,12 +105,12 @@ export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void
  */
 export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length) {
-        const mercenariesCount: number = player.campCards.filter((card: CampDeckCardTypes): boolean =>
+        const mercenariesCount: number = player.campCards.filter((card: CampDeckCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Card).length;
         if (mercenariesCount) {
             AddActionsToStack(G, ctx, [StackData.enlistmentMercenaries()]);
@@ -130,7 +130,7 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
  * @param ctx
  */
 export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -174,14 +174,14 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
         Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer => player),
         playersIndexes: string[] = [];
     sortedPlayers.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
-        if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+        if (nextPlayer.campCards.filter((card: CampDeckCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Card).length <
-            currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+            currentPlayer.campCards.filter((card: CampDeckCardType): boolean =>
                 card.type === RusCardTypeNames.Mercenary_Card).length) {
             return 1;
-        } else if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+        } else if (nextPlayer.campCards.filter((card: CampDeckCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Card).length >
-            currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+            currentPlayer.campCards.filter((card: CampDeckCardType): boolean =>
                 card.type === RusCardTypeNames.Mercenary_Card).length) {
             return -1;
         }
@@ -193,7 +193,7 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
         return 0;
     });
     sortedPlayers.forEach((playerSorted: IPublicPlayer): void => {
-        if (playerSorted.campCards.filter((card: CampDeckCardTypes): boolean =>
+        if (playerSorted.campCards.filter((card: CampDeckCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Card).length) {
             playersIndexes.push(String(Object.values(G.publicPlayers)
                 .findIndex((player: IPublicPlayer): boolean => player.nickname === playerSorted.nickname)));
@@ -201,7 +201,7 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
     });
     G.publicPlayersOrder = playersIndexes;
     if (playersIndexes.length > 1) {
-        const playerIndex: CanBeUndef<string> = playersIndexes[0];
+        const playerIndex: CanBeUndefType<string> = playersIndexes[0];
         if (playerIndex === undefined) {
             throw new Error(`В массиве индексов игроков отсутствует индекс '0'.`);
         }

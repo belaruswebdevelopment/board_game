@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { ThrowMyError } from "../Error";
 import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueTypes, CanBeNull, CanBeUndef, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, IStack, SuitKeyofTypes, VidofnirVedrfolnirUpgradeValueTypes } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, IStack, SuitKeyofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -20,10 +20,10 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  * @returns Поле для выбора уровня сложности соло игры.
  */
 export const ChooseDifficultyLevelForSoloModeProfit = (G: IMyGameState, ctx: Ctx,
-    validatorName: CanBeNull<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
     IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
-        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -56,23 +56,23 @@ export const ChooseDifficultyLevelForSoloModeProfit = (G: IMyGameState, ctx: Ctx
  * @returns Игровое поле для отрисовки выбора значения улучшения монеты по артефакту 'Vidofnir Vedrfolnir'.
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameState, ctx: Ctx,
-    validatorName: CanBeNull<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
     IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
-        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const stack: CanBeUndef<IStack> = player.stack[0];
+    const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
-    const values: CanBeUndef<VidofnirVedrfolnirUpgradeValueTypes> = stack.valueArray;
+    const values: CanBeUndefType<VidofnirVedrfolnirUpgradeValueType> = stack.valueArray;
     if (values === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр 'valueArray'.`);
     }
     for (let j = 0; j < values.length; j++) {
-        const value: CanBeUndef<BasicVidofnirVedrfolnirUpgradeValueTypes> = values[j];
+        const value: CanBeUndefType<BasicVidofnirVedrfolnirUpgradeValueType> = values[j];
         if (value === undefined) {
             throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' в параметре 'valueArray' отсутствует значение параметра  id '${j}'.`);
         }
@@ -102,19 +102,19 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameStat
  * @param boardCells Ячейки для отрисовки.
  * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
  */
-export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
-        const card: CanBeUndef<DeckCardTypes> = G.explorerDistinctionCards[j];
+        const card: CanBeUndefType<DeckCardTypes> = G.explorerDistinctionCards[j];
         if (card === undefined) {
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
-        let suit: CanBeNull<SuitKeyofTypes> = null;
+        let suit: CanBeNullType<SuitKeyofType> = null;
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
@@ -147,7 +147,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле героев для выбора сложности соло игры.
  */
-export const PickHeroesForSoloModeProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+export const PickHeroesForSoloModeProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): IMoveArgumentsStage<number[]>[`args`] | void => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
@@ -155,13 +155,13 @@ export const PickHeroesForSoloModeProfit = (G: IMyGameState, ctx: Ctx, validator
             throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
         }
         for (let j = 0; j < G.heroesForSoloGameDifficultyLevel.length; j++) {
-            const hero: CanBeUndef<IHeroCard> = G.heroesForSoloGameDifficultyLevel[j];
+            const hero: CanBeUndefType<IHeroCard> = G.heroesForSoloGameDifficultyLevel[j];
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев для выбора сложности соло игры отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 0
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.ChooseHeroesForSoloMode) {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
@@ -195,7 +195,7 @@ export const PickHeroesForSoloModeProfit = (G: IMyGameState, ctx: Ctx, validator
  */
 export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }

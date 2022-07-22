@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { ArtefactNames, BuffNames, DrawNames, LogTypeNames, StageNames, SuitNames } from "../../typescript/enums";
-import type { CoinTypes, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardTypes, PublicPlayerCoinTypes } from "../../typescript/interfaces";
+import type { CoinType, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {
@@ -447,7 +447,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                     handCoins: [
                         {
                             isTriggerTrading: true,
@@ -474,7 +474,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                     handCoins: [
                         null,
                     ],
@@ -504,7 +504,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                 } as IPlayer,
             },
             publicPlayers: {
@@ -513,7 +513,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     handCoins: [
                         {},
                     ],
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -542,7 +542,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -569,7 +569,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                 } as IPlayer,
             },
             publicPlayers: {
@@ -581,7 +581,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -610,7 +610,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                    boardCoins: [] as PublicPlayerCoinTypes[],
+                    boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -636,7 +636,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 },
                 publicPlayers: {
                     0: {
-                        boardCoins: [] as PublicPlayerCoinTypes[],
+                        boardCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as IBuffs[],
                     } as IPublicPlayer,
                 },
@@ -653,12 +653,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 multiplayer: true,
                 players: {
                     0: {
-                        boardCoins: [] as PublicPlayerCoinTypes[],
+                        boardCoins: [] as PublicPlayerCoinType[],
                     } as IPlayer,
                 },
                 publicPlayers: {
                     0: {
-                        boardCoins: [] as PublicPlayerCoinTypes[],
+                        boardCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as IBuffs[],
                     } as IPublicPlayer,
                 },
@@ -678,8 +678,8 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 },
                 publicPlayers: {
                     0: {
-                        boardCoins: [] as PublicPlayerCoinTypes[],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        boardCoins: [] as PublicPlayerCoinType[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -706,8 +706,8 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 },
                 publicPlayers: {
                     0: {
-                        boardCoins: [] as PublicPlayerCoinTypes[],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        boardCoins: [] as PublicPlayerCoinType[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -784,7 +784,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 0: {} as IPublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -808,7 +808,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 0: {} as IPublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -838,7 +838,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 0: {} as IPublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardTypes[],
+                        warrior: [] as PlayerCardType[],
                     },
                 } as IPublicPlayer,
             },
@@ -878,7 +878,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as IBuffs[],
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -910,7 +910,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as IBuffs[],
                     stack: [
                         {
@@ -948,7 +948,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as IBuffs[],
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -980,7 +980,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as IBuffs[],
                     stack: [
                         {
@@ -1000,7 +1000,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             tavernsNum: 3,
             players: {
                 0: {
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     boardCoins: [
                         {},
                         {},
@@ -1040,7 +1040,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             tavernsNum: 3,
             players: {
                 0: {
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     boardCoins: [
                         {},
                         {},
@@ -1094,7 +1094,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             tavernsNum: 3,
             players: {
                 0: {
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     boardCoins: [
                         {},
                         {},
@@ -1142,7 +1142,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             tavernsNum: 3,
             players: {
                 0: {
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     boardCoins: [
                         {},
                         {},
@@ -1215,7 +1215,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as IBuffs[],
                         stack: [] as IStack[],
                     } as IPublicPlayer,
@@ -1247,7 +1247,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as IBuffs[],
                         stack: [
                             {
@@ -1268,7 +1268,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -1308,7 +1308,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -1377,7 +1377,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as IBuffs[],
                         stack: [] as IStack[],
                     } as IPublicPlayer,
@@ -1405,7 +1405,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as IBuffs[],
                         stack: [
                             {
@@ -1426,7 +1426,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -1462,7 +1462,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -1876,7 +1876,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 isTriggerTrading: false,
                                 value: 3,
                             },
-                        ] as CoinTypes[],
+                        ] as CoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -2441,7 +2441,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -2477,7 +2477,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -2502,7 +2502,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -2550,7 +2550,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -2605,7 +2605,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -2653,7 +2653,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -2726,7 +2726,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -2758,7 +2758,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -2783,7 +2783,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -2823,7 +2823,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 tavernsNum: 3,
                 players: {
                     0: {
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         boardCoins: [
                             {},
                             {},
@@ -2885,7 +2885,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             null,
                             null,
                         ],
-                        handCoins: [] as PublicPlayerCoinTypes[],
+                        handCoins: [] as PublicPlayerCoinType[],
                         buffs: [
                             {
                                 everyTurn: true,
@@ -2920,7 +2920,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             isTriggerTrading: false,
                         },
                     ],
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as IBuffs[],
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -2948,7 +2948,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as IBuffs[],
                     stack: [] as IStack[],
                 } as IPublicPlayer,
@@ -2973,7 +2973,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                    handCoins: [] as PublicPlayerCoinTypes[],
+                    handCoins: [] as PublicPlayerCoinType[],
                 } as IPlayer,
             },
             publicPlayers: {

@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndef, IMyGameState, IPublicPlayer, PlayerCardTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 
@@ -18,19 +18,19 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param card Карта.
  * @returns Нужно ли перемещать героя Труд.
  */
-export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardTypes): boolean => {
+export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardType): boolean => {
     if (card.suit !== null) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
         }
         if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)
             && GetBuffValue(G, ctx, BuffNames.MoveThrud) === card.suit) {
-            const index: number = player.cards[card.suit].findIndex((card: PlayerCardTypes): boolean =>
+            const index: number = player.cards[card.suit].findIndex((card: PlayerCardType): boolean =>
                 card.name === HeroNames.Thrud);
             if (index !== -1) {
-                const thrudCard: CanBeUndef<PlayerCardTypes> = player.cards[card.suit][index];
+                const thrudCard: CanBeUndefType<PlayerCardType> = player.cards[card.suit][index];
                 if (thrudCard === undefined) {
                     throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' во фракции '${card.suit}' с id '${index}' отсутствует карта героя '${HeroNames.Thrud}' для перемещения на новое место.`);
                 }
@@ -54,7 +54,7 @@ export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardTyp
  * @param card Карта, помещающаяся на карту героя Труд.
  */
 
-export const CheckAndMoveThrudAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardTypes): void => {
+export const CheckAndMoveThrudAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardType): void => {
     const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
         AddActionsToStack(G, ctx, [StackData.placeThrudHero()]);

@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNull, IBackground, IStyles, MythologicalCreatureNameTypes, SuitKeyofTypes } from "../typescript/interfaces";
+import type { CanBeNullType, IBackground, IStyles, MythologicalCreatureNameTypes, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -152,7 +152,7 @@ export const Styles: IStyles = {
     CardBack: (tier: number): IBackground => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    Card: (suit: SuitKeyofTypes, name: string, points: CanBeNull<number>): IBackground => {
+    Card: (suit: SuitKeyofType, name: string, points: CanBeNullType<number>): IBackground => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             switch (name) {
                 case SpecialCardNames.ChiefBlacksmith:
@@ -287,7 +287,7 @@ export const Styles: IStyles = {
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinction: (distinction: SuitKeyofTypes): IBackground => {
+    Distinction: (distinction: SuitKeyofType): IBackground => {
         switch (distinction) {
             case SuitNames.Blacksmith:
                 return {
@@ -558,7 +558,7 @@ export const Styles: IStyles = {
                 return _exhaustiveCheck;
         }
     },
-    Suit: (suit: SuitKeyofTypes): IBackground => ({
+    Suit: (suit: SuitKeyofType): IBackground => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Tavern: (tavernId: number): IBackground => {

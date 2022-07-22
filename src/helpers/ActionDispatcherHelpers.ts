@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
-import type { AutoActionFunctionTypes, IAction, IMyGameState } from "../typescript/interfaces";
+import type { AutoActionFunctionType, IAction, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
@@ -14,8 +14,8 @@ import type { AutoActionFunctionTypes, IAction, IMyGameState } from "../typescri
  * @param actionName Название автоматических действий.
  * @returns Автоматические действие.
  */
-const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): AutoActionFunctionTypes => {
-    let action: AutoActionFunctionTypes,
+const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): AutoActionFunctionType => {
+    let action: AutoActionFunctionType,
         _exhaustiveCheck: never;
     switch (actionName) {
         case AutoActionFunctionNames.AddPickHeroAction:
@@ -60,7 +60,7 @@ const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): Auto
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action?: IAction): void => {
     if (action !== undefined) {
-        const actionDispatcher: AutoActionFunctionTypes = AutoActionDispatcherSwitcher(action.name);
+        const actionDispatcher: AutoActionFunctionType = AutoActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
             actionDispatcher?.(G, ctx, ...action.params);
         } else {

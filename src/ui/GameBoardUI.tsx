@@ -7,7 +7,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, StageNames } from "../typescript/enums";
-import type { CampCardTypes, CanBeNull, CanBeUndef, DiscardDeckCardTypes, DrawProfitTypes, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitKeyofTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitKeyofType, TavernCardType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -25,13 +25,13 @@ import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLeve
  * @param data Глобальные параметры.
  * @returns Поле лагеря | данные для списка доступных аргументов мува.
  */
-export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
-            const campCard: CanBeUndef<CampCardTypes> = G.camp[j];
+            const campCard: CanBeUndefType<CampCardType> = G.camp[j];
             if (campCard === undefined) {
                 throw new Error(`В массиве карт лагеря отсутствует карта с id '${j}'.`);
             }
@@ -44,19 +44,19 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<Mov
                     );
                 }
             } else {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
-                let suit: CanBeNull<SuitKeyofTypes> = null;
+                let suit: CanBeNullType<SuitKeyofType> = null;
                 if (campCard.type === RusCardTypeNames.Artefact_Player_Card) {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
                     || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickCampCardHolda)) {
                     if (data !== undefined) {
-                        const stage: CanBeUndef<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
+                        const stage: CanBeUndefType<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                         let moveName: MoveNames;
                         switch (stage) {
                             case StageNames.PickCampCardHolda:
@@ -154,13 +154,13 @@ export const DrawCurrentPlayerTurn = (ctx: Ctx): JSX.Element => (
  * @param data Глобальные параметры.
  * @returns Поле преимуществ в конце эпохи.
  */
-export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] => {
+export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
+    data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<SuitKeyofType[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
-        moveMainArgs: IMoveArgumentsStage<SuitKeyofTypes[]>[`args`] = [];
+        moveMainArgs: IMoveArgumentsStage<SuitKeyofType[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
-        let suit: SuitKeyofTypes,
-            currentDistinctionSuit: CanBeUndef<string>;
+        let suit: SuitKeyofType,
+            currentDistinctionSuit: CanBeUndefType<string>;
         for (suit in G.distinctions) {
             if (G.distinctions[suit] !== undefined) {
                 currentDistinctionSuit = suit;
@@ -171,7 +171,7 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
             if (ctx.phase === PhaseNames.TroopEvaluation && ctx.activePlayers === null
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
-                    const suitArg: SuitKeyofTypes = suit;
+                    const suitArg: SuitKeyofType = suit;
                     // TODO Move to DrawDistinction
                     boardCells.push(
                         <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
@@ -230,21 +230,21 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
  * @param data Глобальные параметры.
  * @returns Поле колоды сброса карт.
  */
-export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
-        const card: CanBeUndef<DiscardDeckCardTypes> = G.discardCardsDeck[j];
+        const card: CanBeUndefType<DiscardDeckCardType> = G.discardCardsDeck[j];
         if (card === undefined) {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
-        let suit: CanBeNull<SuitKeyofTypes> = null;
+        let suit: CanBeNullType<SuitKeyofType> = null;
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickDiscardCard) {
-            const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+            const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                     ctx.currentPlayer);
@@ -294,7 +294,7 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Can
  * @param data Глобальные параметры.
  * @returns Поле героев.
  */
-export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardRows: JSX.Element[] = [],
         drawData: IDrawBoardOptions = DrawBoard(G.heroes.length),
@@ -303,13 +303,13 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<M
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
-                hero: CanBeUndef<IHeroCard> = G.heroes[increment];
+                hero: CanBeUndefType<IHeroCard> = G.heroes[increment];
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
-            const suit: CanBeNull<SuitKeyofTypes> = hero.suit;
+            const suit: CanBeNullType<SuitKeyofType> = hero.suit;
             if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickHero) {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
@@ -367,19 +367,19 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<M
  * @param data Глобальные параметры.
  * @returns Поле героев для соло бота.
  */
-export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
-            const hero: CanBeUndef<IHeroCard> = G.heroesForSoloBot[j];
+            const hero: CanBeUndefType<IHeroCard> = G.heroesForSoloBot[j];
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 1
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.PickHeroSoloBot) {
-                const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
@@ -435,7 +435,7 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
-                marketCoin: CanBeUndef<ICoin> = G.marketCoinsUnique[increment];
+                marketCoin: CanBeUndefType<ICoin> = G.marketCoinsUnique[increment];
             if (marketCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
@@ -479,11 +479,11 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
  */
 export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [],
-        player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const option: DrawProfitTypes = G.drawProfit;
+    const option: DrawProfitType = G.drawProfit;
     let caption = ``;
     switch (option) {
         case ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade:
@@ -536,23 +536,23 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
  * @param gridClass Класс для отрисовки таверны.
  * @returns Поле таверн.
  */
-export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<MoveValidatorNames>,
+export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, gridClass?: string): JSX.Element[] | IMoveArgumentsStage<number[]>[`args`] => {
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let t = 0; t < G.tavernsNum; t++) {
-        const currentTavernConfig: CanBeUndef<ITavernInConfig> = tavernsConfig[t];
+        const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[t];
         if (currentTavernConfig === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined, t);
         }
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
-                const tavern: CanBeUndef<TavernCardTypes[]> = G.taverns[t];
+                const tavern: CanBeUndefType<TavernCardType[]> = G.taverns[t];
                 if (tavern === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, t);
                 }
-                const tavernCard: CanBeUndef<TavernCardTypes> = tavern[j];
+                const tavernCard: CanBeUndefType<TavernCardType> = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
                 }
@@ -565,11 +565,11 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<
                         );
                     }
                 } else {
-                    let suit: CanBeNull<SuitKeyofTypes> = null;
+                    let suit: CanBeNullType<SuitKeyofType> = null;
                     if (`suit` in tavernCard) {
                         suit = tavernCard.suit;
                     }
-                    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
                         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                             ctx.currentPlayer);
@@ -578,7 +578,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNull<
                         && ((ctx.activePlayers === null)
                             || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.DiscardCard))) {
                         if (data !== undefined) {
-                            const stage: CanBeUndef<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
+                            const stage: CanBeUndefType<string> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                             let moveName: MoveNames;
                             switch (stage) {
                                 case StageNames.DiscardCard:
@@ -669,7 +669,7 @@ export const DrawWinner = (G: IMyGameState, ctx: Ctx): JSX.Element => {
     if (ctx.gameover !== undefined) {
         if (G.winner !== undefined) {
             if (G.winner.length === 1) {
-                const winnerIndex: CanBeUndef<number> = G.winner[0];
+                const winnerIndex: CanBeUndefType<number> = G.winner[0];
                 if (winnerIndex === undefined) {
                     throw new Error(`Отсутствует индекс игрока победителя.`);
                 }
@@ -681,7 +681,7 @@ export const DrawWinner = (G: IMyGameState, ctx: Ctx): JSX.Element => {
             } else {
                 winner = "Winners: ";
                 G.winner.forEach((playerId: number, index: number): void => {
-                    const winnerPlayerI: CanBeUndef<IPublicPlayer> = G.publicPlayers[playerId];
+                    const winnerPlayerI: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
                     if (winnerPlayerI === undefined) {
                         throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
                     }

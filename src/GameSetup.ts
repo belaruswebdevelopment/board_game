@@ -14,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CanBeUndef, DeckCardTypes, DistinctionTypes, ExpansionKeyofTypes, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardTypes, SuitKeyofTypes, SuitPropertyTypes } from "./typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, ExpansionKeyofType, IBotData, ICoin, IDwarfCard, IExpansions, IHeroCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, SuitKeyofType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -57,7 +57,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         configOptions: GameNames[] = [GameNames.Basic],
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
-        distinctions: SuitPropertyTypes<DistinctionTypes> = {} as SuitPropertyTypes<DistinctionTypes>,
+        distinctions: SuitPropertyType<DistinctionType> = {} as SuitPropertyType<DistinctionType>,
         secret: ISecret = {
             campDecks: [],
             decks: [],
@@ -66,23 +66,23 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     if (solo && multiplayer) {
         throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
     }
-    let suit: SuitKeyofTypes;
+    let suit: SuitKeyofType;
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
     const winner: number[] = [],
         campPicked = false,
         mustDiscardTavernCardJarnglofi = null,
-        discardCampCardsDeck: CampDeckCardTypes[] = [],
-        discardMythologicalCreaturesCards: MythologicalCreatureDeckCardTypes[] = [],
+        discardCampCardsDeck: CampDeckCardType[] = [],
+        discardMythologicalCreaturesCards: MythologicalCreatureDeckCardType[] = [],
         discardMultiCards: IMultiSuitPlayerCard[] = [],
         discardSpecialCards: ISpecialCard[] = [],
         campDeckLength: [number, number] = [0, 0],
-        camp: CampDeckCardTypes[] = Array(campNum).fill(null);
+        camp: CampDeckCardType[] = Array(campNum).fill(null);
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i);
-            let campDeck: CanBeUndef<CampDeckCardTypes[]> = secret.campDecks[i];
+            let campDeck: CanBeUndefType<CampDeckCardType[]> = secret.campDecks[i];
             if (campDeck === undefined) {
                 throw new Error(`Колода карт лагеря ${i} эпохи не может отсутствовать.`);
             }
@@ -90,7 +90,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             secret.campDecks[i] = campDeck;
             campDeckLength[i] = campDeck.length;
         }
-        const campDeck0: CanBeUndef<CampDeckCardTypes[]> = secret.campDecks[0];
+        const campDeck0: CanBeUndefType<CampDeckCardType[]> = secret.campDecks[0];
         if (campDeck0 === undefined) {
             throw new Error(`Колода карт лагеря 1 эпохи не может отсутствовать.`);
         }
@@ -105,7 +105,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         },
             dwarfDeck: IDwarfCard[] = BuildDwarfCards(data),
             royalOfferingDeck: IRoyalOfferingCard[] = BuildRoyalOfferingCards(data);
-        let deck: CanBeUndef<DeckCardTypes[]> = secret.decks[i];
+        let deck: CanBeUndefType<DeckCardTypes[]> = secret.decks[i];
         if (deck === undefined) {
             throw new Error(`Колода карт ${i} эпохи не может отсутствовать.`);
         }
@@ -113,7 +113,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random!.Shuffle(deck);
     }
-    let expansion: ExpansionKeyofTypes;
+    let expansion: ExpansionKeyofType;
     for (expansion in expansions) {
         if (expansions[expansion].active) {
             configOptions.push(expansion as GameNames);
@@ -122,11 +122,11 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: [IHeroCard[], IHeroCard[], IHeroCard[]] =
         BuildHeroes(configOptions, solo),
         multiCardsDeck: IMultiSuitCard[] = BuildMultiSuitCards(configOptions),
-        taverns: (DeckCardTypes[] | MythologicalCreatureDeckCardTypes[])[] = [],
+        taverns: (DeckCardTypes[] | MythologicalCreatureDeckCardType[])[] = [],
         tavernsNum = 3,
         currentTavern = -1,
         drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers,
-        deck0: CanBeUndef<DeckCardTypes[]> = secret.decks[0];
+        deck0: CanBeUndefType<DeckCardTypes[]> = secret.decks[0];
     if (deck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
@@ -148,7 +148,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex: number = solo ? 0 : Math.floor(Math.random() * priorities.length),
-            priority: CanBeUndef<IPriority> = priorities.splice(randomPriorityIndex, 1)[0];
+            priority: CanBeUndefType<IPriority> = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
@@ -162,7 +162,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             count: marketCoinsUnique,
             players: ctx.numPlayers,
         }),
-        averageCards: SuitPropertyTypes<IDwarfCard> = {} as SuitPropertyTypes<IDwarfCard>;
+        averageCards: SuitPropertyType<IDwarfCard> = {} as SuitPropertyType<IDwarfCard>;
     for (suit in suitsConfig) {
         averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
             players: ctx.numPlayers,
@@ -174,13 +174,13 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (let i = 0; i < initCoinsOrder.length; i++) {
-        const coinsOrder: CanBeUndef<number[]> = initCoinsOrder[i];
+        const coinsOrder: CanBeUndefType<number[]> = initCoinsOrder[i];
         if (coinsOrder === undefined) {
             throw new Error(`Отсутствует порядок выкладки монет ${i}.`);
         }
         allCoinsOrder = allCoinsOrder.concat(Permute(coinsOrder));
     }
-    const cardDeck0: CanBeUndef<DeckCardTypes[]> = secret.decks[0];
+    const cardDeck0: CanBeUndefType<DeckCardTypes[]> = secret.decks[0];
     if (cardDeck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }

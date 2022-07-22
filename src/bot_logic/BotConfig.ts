@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndef, ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
+import type { CanBeUndefType, ICardCharacteristics, IHeuristic, IMyGameState, TavernCardType } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
 /**
@@ -16,21 +16,21 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @returns
  */
 export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): number[] => {
-    const taverns: TavernCardTypes[][] = G.taverns,
-        temp: number[] = taverns.map((tavern: TavernCardTypes[]): number =>
-            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernCardTypes[]>):
+    const taverns: TavernCardType[][] = G.taverns,
+        temp: number[] = taverns.map((tavern: TavernCardType[]): number =>
+            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernCardType[]>):
                 number => acc + (item.heuristic(tavern) ? item.weight : 0), 0)),
         result: number[] =
             Array(taverns.length).fill(0).map((value: number, index: number):
                 number => {
-                const num: CanBeUndef<number> = temp[index];
+                const num: CanBeUndefType<number> = temp[index];
                 if (num === undefined) {
                     throw new Error(`Отсутствует значение с id '${index}'.`);
                 }
                 return value + num;
             }),
-        tempNumbers: number[][] = taverns.map((tavern: TavernCardTypes[]): number[] =>
-            tavern.map((card: TavernCardTypes, index: number, arr: TavernCardTypes[]): number =>
+        tempNumbers: number[][] = taverns.map((tavern: TavernCardType[]): number[] =>
+            tavern.map((card: TavernCardType, index: number, arr: TavernCardType[]): number =>
                 EvaluateCard(G, ctx, card, index, arr))),
         tempChars: ICardCharacteristics[] = tempNumbers.map((element: number[]): ICardCharacteristics =>
             GetCharacteristics(element))/*,
@@ -38,8 +38,8 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
     let maxIndex = 0,
         minIndex: number = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {
-        const maxCard: CanBeUndef<ICardCharacteristics> = tempChars[maxIndex],
-            tempCard1: CanBeUndef<ICardCharacteristics> = tempChars[i];
+        const maxCard: CanBeUndefType<ICardCharacteristics> = tempChars[maxIndex],
+            tempCard1: CanBeUndefType<ICardCharacteristics> = tempChars[i];
         if (maxCard === undefined) {
             throw new Error(`Отсутствует значение максимальной карты с id '${maxIndex}'.`);
         }
@@ -49,8 +49,8 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
         if (CompareCharacteristics(maxCard, tempCard1) < 0) {
             maxIndex = i;
         }
-        const minCard: CanBeUndef<ICardCharacteristics> = tempChars[minIndex],
-            tempCard2: CanBeUndef<ICardCharacteristics> = tempChars[tempChars.length - 1 - i];
+        const minCard: CanBeUndefType<ICardCharacteristics> = tempChars[minIndex],
+            tempCard2: CanBeUndefType<ICardCharacteristics> = tempChars[tempChars.length - 1 - i];
         if (minCard === undefined) {
             throw new Error(`Отсутствует значение минимальной карты с id '${minIndex}'.`);
         }
@@ -147,9 +147,9 @@ const GetCharacteristics = (array: number[]): ICardCharacteristics => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: IHeuristic<TavernCardTypes[]> = {
+const isAllCardsEqual: IHeuristic<TavernCardType[]> = {
     // TODO Add errors for undefined
-    heuristic: (cards: TavernCardTypes[]): boolean => cards.every((card: TavernCardTypes): boolean =>
+    heuristic: (cards: TavernCardType[]): boolean => cards.every((card: TavernCardType): boolean =>
     (card !== null && card.type === RusCardTypeNames.Dwarf_Card && cards[0] !== undefined && cards[0] !== null
         && cards[0].type === RusCardTypeNames.Dwarf_Card && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
@@ -234,7 +234,7 @@ export const k_combinations = (set: number[], k: number): number[][] => {
     }
     if (k === 1) {
         for (let i = 0; i < set.length; i++) {
-            const num1: CanBeUndef<number> = set[i];
+            const num1: CanBeUndefType<number> = set[i];
             if (num1 === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}'.`);
             }
@@ -249,7 +249,7 @@ export const k_combinations = (set: number[], k: number): number[][] => {
         tailCombs = k_combinations(set.slice(i + 1), k - 1);
         // For each (k-1)-combination we join it with the current and store it to the set of k-combinations.
         for (let j = 0; j < tailCombs.length; j++) {
-            const num2: CanBeUndef<number[]> = tailCombs[j];
+            const num2: CanBeUndefType<number[]> = tailCombs[j];
             if (num2 === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}'.`);
             }
@@ -278,18 +278,18 @@ export const Permute = (permutation: number[]): number[][] => {
         k: number,
         p: number;
     while (i < length) {
-        const num: CanBeUndef<number> = c[i];
+        const num: CanBeUndefType<number> = c[i];
         if (num === undefined) {
             throw new Error(`Отсутствует значение '1' с id '${i}'.`);
         }
         if (num < i) {
             k = i % 2 && num;
-            const permI: CanBeUndef<number> = permutation[i];
+            const permI: CanBeUndefType<number> = permutation[i];
             if (permI === undefined) {
                 throw new Error(`Отсутствует значение '2' с id '${i}'.`);
             }
             p = permI;
-            const permK: CanBeUndef<number> = permutation[k];
+            const permK: CanBeUndefType<number> = permutation[k];
             if (permK === undefined) {
                 throw new Error(`Отсутствует значение '3' с id '${i}'.`);
             }
@@ -314,7 +314,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: IHeuristic<TavernCardTypes[]>[] = [isAllCardsEqual];
+const absoluteHeuristicsForTradingCoin: IHeuristic<TavernCardType[]>[] = [isAllCardsEqual];
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

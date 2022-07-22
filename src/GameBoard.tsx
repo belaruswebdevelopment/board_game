@@ -1,6 +1,6 @@
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import React from "react";
-import type { CanBeNull, IMyGameState } from "./typescript/interfaces";
+import type { CanBeNullType, IMyGameState } from "./typescript/interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
 import { DrawCamp, DrawCurrentPhaseStage, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";
@@ -28,10 +28,10 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             marketCoinsUI: JSX.Element = DrawMarketCoins(this.props.G, this.props),
             drawHeroesUI: JSX.Element =
                 DrawHeroes(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
-            drawHeroesForSoloBotUI: CanBeNull<JSX.Element> = this.props.G.solo ?
+            drawHeroesForSoloBotUI: CanBeNullType<JSX.Element> = this.props.G.solo ?
                 DrawHeroesForSoloBotUI(this.props.G, this.props.ctx, null, this.props) as
                 JSX.Element : null,
-            drawCampUI: CanBeNull<JSX.Element> = this.props.G.expansions.thingvellir.active ?
+            drawCampUI: CanBeNullType<JSX.Element> = this.props.G.expansions.thingvellir.active ?
                 (DrawCamp(this.props.G, this.props.ctx, null, this.props) as JSX.Element) : null,
             drawDistinctionsUI: JSX.Element =
                 DrawDistinctions(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
@@ -49,8 +49,8 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             playersBoardsUI: JSX.Element[] =
                 DrawPlayersBoards(this.props.G, this.props.ctx, null, null,
                     this.props) as JSX.Element[],
-            logUI: CanBeNull<JSX.Element> = DrawLogData(this.props.G),
-            debugUI: CanBeNull<JSX.Element> = DrawDebugData(this.props.G, this.props.ctx);
+            logUI: CanBeNullType<JSX.Element> = DrawLogData(this.props.G),
+            debugUI: CanBeNullType<JSX.Element> = DrawDebugData(this.props.G, this.props.ctx);
         return (
             <div className="flex">
                 <div className="grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1">

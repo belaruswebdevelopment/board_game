@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import type { CanBeUndef, CreateCoinType, IBuildCoinsOptions, ICoin, IMarketCoinConfig, IMyGameState, InitialTradingCoinConfigType, INumberValues, PublicPlayerCoinTypes } from "./typescript/interfaces";
+import type { CanBeUndefType, CreateCoinType, IBuildCoinsOptions, ICoin, IMarketCoinConfig, IMyGameState, InitialTradingCoinConfigType, INumberValues, PublicPlayerCoinType } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -17,11 +17,11 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | InitialTradingCoinC
     options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        const config: CanBeUndef<IMarketCoinConfig | InitialTradingCoinConfigType> = coinConfig[i];
+        const config: CanBeUndefType<IMarketCoinConfig | InitialTradingCoinConfigType> = coinConfig[i];
         if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
         }
-        const count: CanBeUndef<number> = options.players !== undefined
+        const count: CanBeUndefType<number> = options.players !== undefined
             && !isInitialPlayerCoinsConfigNotMarket(config) ? config.count()[options.players] : 1;
         if (count === undefined) {
             throw new Error(`В конфиге монет для монеты с id '${i}' отсутствует количество нужных монет для количества игроков - '${options.players}'.`);
@@ -72,7 +72,7 @@ export const ChangeIsOpenedCoinStatus = (coin: ICoin, status: boolean): void => 
 export const CountMarketCoins = (G: IMyGameState): INumberValues => {
     const repeated: INumberValues = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
-        const marketCoin: CanBeUndef<ICoin> = G.marketCoinsUnique[i];
+        const marketCoin: CanBeUndefType<ICoin> = G.marketCoinsUnique[i];
         if (marketCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
         }
@@ -119,4 +119,4 @@ export const CreateCoin = ({
  * @returns Является ли объект монетой, а не пустым объектом.
  */
 export const IsCoin =
-    (coin: PublicPlayerCoinTypes): coin is ICoin => coin !== null && (coin as ICoin).value !== undefined;
+    (coin: PublicPlayerCoinType): coin is ICoin => coin !== null && (coin as ICoin).value !== undefined;

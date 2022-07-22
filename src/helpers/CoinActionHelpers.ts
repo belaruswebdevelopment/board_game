@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CanBeUndefType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от действий улучшающих монеты.</h3>
@@ -18,15 +18,15 @@ import type { CanBeUndef, IMyGameState, IPublicPlayer, IStack } from "../typescr
  * @returns Значение на которое улучшается монета.
  */
 export const UpgradeCoinActions = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypeNames): number => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const stack: CanBeUndef<IStack> = player.stack[0];
+    const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
     }
-    const value: CanBeUndef<number> = stack.value;
+    const value: CanBeUndefType<number> = stack.value;
     if (value === undefined) {
         throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }

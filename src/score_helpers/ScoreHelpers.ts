@@ -1,4 +1,4 @@
-import type { IPublicPlayer, PlayerCardTypes, SuitKeyofTypes } from "../typescript/interfaces";
+import type { IPublicPlayer, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
@@ -27,7 +27,7 @@ export const ArithmeticSum = (startValue: number, step: number, ranksCount: numb
  * @param multiplier Множитель.
  * @returns Суммарное количество очков за множитель.
  */
-export const GetRanksValueMultiplier = (player: IPublicPlayer, suit: SuitKeyofTypes, multiplier: number): number =>
+export const GetRanksValueMultiplier = (player: IPublicPlayer, suit: SuitKeyofType, multiplier: number): number =>
     player.cards[suit].reduce(TotalRank, 0) * multiplier;
 
 /**
@@ -41,7 +41,7 @@ export const GetRanksValueMultiplier = (player: IPublicPlayer, suit: SuitKeyofTy
  * @param currentValue Текущее значение очков.
  * @returns Суммарное количество очков фракции.
  */
-export const TotalPoints = (accumulator: number, currentValue: PlayerCardTypes): number => {
+export const TotalPoints = (accumulator: number, currentValue: PlayerCardType): number => {
     if (currentValue.points !== null) {
         return accumulator + currentValue.points;
     }
@@ -59,7 +59,7 @@ export const TotalPoints = (accumulator: number, currentValue: PlayerCardTypes):
  * @param currentValue Текущее значение шевронов.
  * @returns Суммарное количество шевронов фракции.
  */
-export const TotalRank = (accumulator: number, currentValue: PlayerCardTypes): number => {
+export const TotalRank = (accumulator: number, currentValue: PlayerCardType): number => {
     if (currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }

@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { BuffKeyofTypes, BuffValueTypes, CanBeUndef, IBuff, IBuffs, IMyGameState, IPublicPlayer, SuitKeyofTypes } from "../typescript/interfaces";
+import type { BuffKeyofType, BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPublicPlayer, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -19,7 +19,7 @@ import type { BuffKeyofTypes, BuffValueTypes, CanBeUndef, IBuff, IBuffs, IMyGame
  */
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: string): void => {
     if (buff !== undefined) {
-        const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
@@ -31,8 +31,8 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
     }
 };
 
-export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, value: SuitKeyofTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, value: SuitKeyofType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -58,7 +58,7 @@ export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, 
  * @param buffName Баф.
  * @returns
  */
-export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffKeyofTypes): boolean =>
+export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffKeyofType): boolean =>
     player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined) !== undefined;
 
 /**
@@ -72,8 +72,8 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffKeyofTyp
 * @param ctx
 * @param buffName Баф.
 */
-export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofTypes): void => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
@@ -86,17 +86,17 @@ export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffKe
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
 
-export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofTypes): true | SuitKeyofTypes => {
-    const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofType): true | SuitKeyofType => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const buff: CanBeUndef<IBuffs> =
+    const buff: CanBeUndefType<IBuffs> =
         player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined);
     if (buff === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует баф '${buffName}'.`);
     }
-    const buffValue: BuffValueTypes = buff[buffName];
+    const buffValue: BuffValueType = buff[buffName];
     if (buffValue === undefined) {
         throw new Error(`У игрока в массиве бафов отсутствует значение у бафа '${buffName}'.`);
     }
