@@ -21,65 +21,73 @@ export const enumerate = (G, ctx) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    if (ctx.phase !== null) {
+    const phase = ctx.phase;
+    if (phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
         let activeStageOfCurrentPlayer = currentStage !== undefined ? currentStage : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
-            if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
-                activeStageOfCurrentPlayer = StageNames.Default1;
-            }
-            else if (ctx.phase === PhaseNames.Bids) {
-                if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
-                    activeStageOfCurrentPlayer = StageNames.Default3;
-                }
-                else if (G.solo && ctx.currentPlayer === `1`) {
-                    activeStageOfCurrentPlayer = StageNames.Default4;
-                }
-            }
-            else if (ctx.phase === PhaseNames.BidUline) {
-                // TODO Add BotPlaceCoinUline and others moves only for bots?!
-                activeStageOfCurrentPlayer = StageNames.Default1;
-            }
-            else if (ctx.phase === PhaseNames.TavernsResolution) {
-                if (ctx.activePlayers === null) {
-                    let pickCardOrCampCard = `card`;
-                    if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                        || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined))) {
-                        pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
+            let _exhaustiveCheck;
+            switch (phase) {
+                case PhaseNames.ChooseDifficultySoloMode:
+                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                case PhaseNames.Bids:
+                    if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
+                        activeStageOfCurrentPlayer = StageNames.Default3;
                     }
-                    if (pickCardOrCampCard === `card`) {
-                        activeStageOfCurrentPlayer = StageNames.Default1;
+                    else if (G.solo && ctx.currentPlayer === `1`) {
+                        activeStageOfCurrentPlayer = StageNames.Default4;
                     }
-                    else {
-                        activeStageOfCurrentPlayer = StageNames.Default2;
+                    break;
+                case PhaseNames.BidUline:
+                    // TODO Add BotPlaceCoinUline and others moves only for bots?!
+                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                case PhaseNames.TavernsResolution:
+                    if (ctx.activePlayers === null) {
+                        let pickCardOrCampCard = `card`;
+                        if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                            || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined))) {
+                            pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
+                        }
+                        if (pickCardOrCampCard === `card`) {
+                            activeStageOfCurrentPlayer = StageNames.Default1;
+                        }
+                        else {
+                            activeStageOfCurrentPlayer = StageNames.Default2;
+                        }
                     }
-                }
-            }
-            else if (ctx.phase === PhaseNames.EnlistmentMercenaries) {
-                if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                    if (G.publicPlayersOrder.length === 1 || Math.floor(Math.random() * 2) === 0) {
-                        activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                case PhaseNames.EnlistmentMercenaries:
+                    if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
+                        if (G.publicPlayersOrder.length === 1 || Math.floor(Math.random() * 2) === 0) {
+                            activeStageOfCurrentPlayer = StageNames.Default1;
+                        }
+                        else {
+                            activeStageOfCurrentPlayer = StageNames.Default2;
+                        }
                     }
-                    else {
-                        activeStageOfCurrentPlayer = StageNames.Default2;
+                    else if (G.drawProfit === null) {
+                        activeStageOfCurrentPlayer = StageNames.Default3;
                     }
-                }
-                else if (G.drawProfit === null) {
-                    activeStageOfCurrentPlayer = StageNames.Default3;
-                }
-            }
-            else if (ctx.phase === PhaseNames.PlaceYlud) {
-                activeStageOfCurrentPlayer = StageNames.Default1;
-            }
-            else if (ctx.phase === PhaseNames.TroopEvaluation) {
-                activeStageOfCurrentPlayer = StageNames.Default1;
-            }
-            else if (ctx.phase === PhaseNames.BrisingamensEndGame) {
-                activeStageOfCurrentPlayer = StageNames.Default1;
-            }
-            else if (ctx.phase === PhaseNames.GetMjollnirProfit) {
-                activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                case PhaseNames.PlaceYlud:
+                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                case PhaseNames.TroopEvaluation:
+                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                case PhaseNames.BrisingamensEndGame:
+                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                case PhaseNames.GetMjollnirProfit:
+                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    break;
+                default:
+                    _exhaustiveCheck = phase;
+                    throw new Error(`Нет такой фазы '${phase}'.`);
+                    return _exhaustiveCheck;
             }
             if (ctx.activePlayers !== null) {
                 activeStageOfCurrentPlayer = StageNames.DiscardSuitCard;
@@ -100,7 +108,7 @@ export const enumerate = (G, ctx) => {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator = GetValidator(ctx.phase, activeStageOfCurrentPlayer);
+        const validator = GetValidator(phase, activeStageOfCurrentPlayer);
         if (validator !== null) {
             const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx, playerId), moveValue = validator.getValue(G, ctx, moveRangeData);
             let moveValues = [];
@@ -133,7 +141,7 @@ export const enumerate = (G, ctx) => {
             });
         }
         if (moves.length === 0) {
-            console.log(`ALERT: bot has '${moves.length}' moves. Phase: '${ctx.phase}'.`);
+            console.log(`ALERT: bot has '${moves.length}' moves. Phase: '${phase}'.`);
         }
     }
     return moves;

@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, AutoActionFunctionNames, CoinTypeNames, ConfigNames, DrawNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, TavernNames, ValkyryNames } from "./enums";
+import { ArtefactNames, AutoActionFunctionNames, BuffNames, CoinTypeNames, ConfigNames, DrawNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, TavernNames, ValkyryNames } from "./enums";
 
 export interface ISecret {
     readonly campDecks: CampDeckCardType[][];
@@ -471,7 +471,7 @@ export interface ICardWithActionInfo {
  * <h3>Интерфейс для бафа карт.</h3>
  */
 export interface IBuff {
-    readonly name: BuffKeyofType;
+    readonly name: BuffNames;
 }
 
 /**
@@ -1128,8 +1128,6 @@ export type BasicSuitableNullableCardInfoKeyofType = keyof IBasicSuitableNullabl
 export type PickValidatorConfigKeyofType = keyof IPickValidatorsConfig;
 
 export type ValidatorConfigKeyofType = keyof IValidatorsConfig;
-
-export type BuffKeyofType = keyof IBuffs;
 
 export type ArtefactKeyofType = keyof IArtefactConfig;
 

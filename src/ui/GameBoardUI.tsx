@@ -7,7 +7,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, StageNames } from "../typescript/enums";
-import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMoveBy, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitKeyofType, TavernCardType } from "../typescript/interfaces";
+import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitKeyofType, TavernCardType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -122,7 +122,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType
  * @returns Поле информации о текущей фазе и стадии игры.
  */
 export const DrawCurrentPhaseStage = (ctx: Ctx): JSX.Element => (
-    <b>Phase: <span className="italic">{RusPhaseNames[ctx.phase as keyof IMoveBy] ?? `none`}</span>
+    <b>Phase: <span className="italic">{RusPhaseNames[ctx.phase as PhaseNames] ?? `none`}</span>
         (Stage: <span className="italic">{ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `none`}</span>)</b>
 );
 

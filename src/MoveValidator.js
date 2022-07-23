@@ -168,7 +168,7 @@ export const GetValidator = (phase, stage) => {
             break;
         default:
             _exhaustiveCheck = phase;
-            throw new Error(`Нет такого валидатора.`);
+            throw new Error(`Нет такого валидатора '${phase}'.`);
             return _exhaustiveCheck;
     }
     return validator;

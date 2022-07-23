@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { BuffKeyofType, BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPublicPlayer, SuitKeyofType } from "../typescript/interfaces";
+import type { BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPublicPlayer, SuitKeyofType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -58,7 +58,7 @@ export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, 
  * @param buffName Баф.
  * @returns
  */
-export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffKeyofType): boolean =>
+export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffNames): boolean =>
     player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined) !== undefined;
 
 /**
@@ -72,7 +72,7 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffKeyofTyp
 * @param ctx
 * @param buffName Баф.
 */
-export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofType): void => {
+export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -86,7 +86,7 @@ export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffKe
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
 
-export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffKeyofType): BuffValueType => {
+export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames): BuffValueType => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

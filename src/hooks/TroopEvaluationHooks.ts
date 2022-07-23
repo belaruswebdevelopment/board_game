@@ -20,12 +20,12 @@ import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, DistinctionType, IMy
  */
 export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx): void => {
     CheckDistinction(G, ctx);
-    const distinctions: DistinctionType[] =
+    const distinctions: string[] =
         Object.values(G.distinctions).filter((distinction: DistinctionType): boolean =>
-            distinction !== null && distinction !== undefined);
+            distinction !== null && distinction !== undefined) as string[];
     if (distinctions.every((distinction: DistinctionType): boolean =>
         distinction !== null && distinction !== undefined)) {
-        G.publicPlayersOrder = distinctions as string[];
+        G.publicPlayersOrder = distinctions;
     }
 };
 

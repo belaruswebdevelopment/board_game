@@ -1,8 +1,8 @@
 import { BuffNames, RusCardTypeNames, ValkyryNames } from "../typescript/enums";
-import type { BuffKeyofType, CanBeUndefType, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
-export const CheckValkyryRequirement = (player: IPublicPlayer, playerId: number, buffName: BuffKeyofType): void => {
+export const CheckValkyryRequirement = (player: IPublicPlayer, playerId: number, buffName: BuffNames): void => {
     if (CheckPlayerHasBuff(player, buffName)) {
         let valkyryName: ValkyryNames;
         switch (buffName) {
