@@ -19,7 +19,7 @@ import { ErrorNames, StageNames } from "../typescript/enums";
  */
 export const SoloBotClickHeroCardMove = (G, ctx, heroId) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.PickHeroSoloBot, heroId);
+        && IsValidMove(G, ctx, StageNames.pickHeroSoloBot, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -43,7 +43,7 @@ export const SoloBotClickHeroCardMove = (G, ctx, heroId) => {
  */
 export const SoloBotPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.Default4, coinsOrder);
+        && IsValidMove(G, ctx, StageNames.default4, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

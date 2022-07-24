@@ -4,7 +4,7 @@ import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { StageNames } from "../typescript/enums";
+import { StageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор героя.</h3>
  * <p>Применения:</p>
@@ -18,7 +18,7 @@ import { StageNames } from "../typescript/enums";
  * @returns
  */
 export const ClickHeroCardMove = (G, ctx, heroId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickHero, heroId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickHero, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -44,7 +44,7 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
  * @returns
  */
 export const DiscardCardMove = (G, ctx, suit, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardBoardCard, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.discardBoardCard, {
         suit,
         cardId,
     });
@@ -66,7 +66,7 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
  * @returns
  */
 export const PlaceMultiSuitCardMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceMultiSuitsCards, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeMultiSuitsCards, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -85,7 +85,7 @@ export const PlaceMultiSuitCardMove = (G, ctx, suit) => {
  * @returns
  */
 export const PlaceThrudHeroMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceThrudHero, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeThrudHero, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -104,7 +104,7 @@ export const PlaceThrudHeroMove = (G, ctx, suit) => {
  * @returns
  */
 export const PlaceYludHeroMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

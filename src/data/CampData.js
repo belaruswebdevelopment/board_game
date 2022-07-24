@@ -181,7 +181,7 @@ const Vegvisir = {
     name: ArtefactNames.Vegvisir,
     description: `Взяв карту этого артефакта, сразу же положите её в колонку разведчиков своей армии. Если таким образом создаётся новая линия 5 шевронов, сразу же призовите нового героя. Карта Вегвисир обладает одним шевроном и прибавляет 13 победных очков к показателю храбрости разведчиков. `,
     tier: 0,
-    suit: SuitNames.Explorer,
+    suit: SuitNames.explorer,
     rank: 1,
     points: 13,
     scoringRule: () => 0,
@@ -213,72 +213,72 @@ export const mercenariesConfig = [
     [
         {
             warrior: {
-                suit: SuitNames.Warrior,
+                suit: SuitNames.warrior,
                 rank: 1,
                 points: 6,
             },
             explorer: {
-                suit: SuitNames.Explorer,
+                suit: SuitNames.explorer,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: SuitNames.Warrior,
+                suit: SuitNames.warrior,
                 rank: 1,
                 points: 6,
             },
             blacksmith: {
-                suit: SuitNames.Blacksmith,
+                suit: SuitNames.blacksmith,
                 rank: 1,
                 points: null,
             },
         },
         {
             hunter: {
-                suit: SuitNames.Hunter,
+                suit: SuitNames.hunter,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: SuitNames.Explorer,
+                suit: SuitNames.explorer,
                 rank: 1,
                 points: 6,
             },
         },
         {
             hunter: {
-                suit: SuitNames.Hunter,
+                suit: SuitNames.hunter,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: SuitNames.Miner,
+                suit: SuitNames.miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: SuitNames.Blacksmith,
+                suit: SuitNames.blacksmith,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: SuitNames.Miner,
+                suit: SuitNames.miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: SuitNames.Warrior,
+                suit: SuitNames.warrior,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: SuitNames.Explorer,
+                suit: SuitNames.explorer,
                 rank: 1,
                 points: 11,
             },
@@ -287,72 +287,72 @@ export const mercenariesConfig = [
     [
         {
             hunter: {
-                suit: SuitNames.Hunter,
+                suit: SuitNames.hunter,
                 rank: 1,
                 points: null,
             },
             blacksmith: {
-                suit: SuitNames.Blacksmith,
+                suit: SuitNames.blacksmith,
                 rank: 1,
                 points: null,
             },
         },
         {
             warrior: {
-                suit: SuitNames.Warrior,
+                suit: SuitNames.warrior,
                 rank: 1,
                 points: 6,
             },
             miner: {
-                suit: SuitNames.Miner,
+                suit: SuitNames.miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: SuitNames.Blacksmith,
+                suit: SuitNames.blacksmith,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: SuitNames.Explorer,
+                suit: SuitNames.explorer,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: SuitNames.Warrior,
+                suit: SuitNames.warrior,
                 rank: 1,
                 points: 6,
             },
             hunter: {
-                suit: SuitNames.Hunter,
+                suit: SuitNames.hunter,
                 rank: 1,
                 points: null,
             },
         },
         {
             explorer: {
-                suit: SuitNames.Explorer,
+                suit: SuitNames.explorer,
                 rank: 1,
                 points: 8,
             },
             miner: {
-                suit: SuitNames.Miner,
+                suit: SuitNames.miner,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: SuitNames.Warrior,
+                suit: SuitNames.warrior,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: SuitNames.Explorer,
+                suit: SuitNames.explorer,
                 rank: 1,
                 points: 11,
             },

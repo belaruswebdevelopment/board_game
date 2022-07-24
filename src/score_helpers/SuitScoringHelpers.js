@@ -13,15 +13,15 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 */
 export const SuitScoring = (cards, suit, potentialCardValue = 0, additionalScoring = false) => {
     switch (suit) {
-        case SuitNames.Blacksmith:
+        case SuitNames.blacksmith:
             return BlacksmithScoring(cards, potentialCardValue);
-        case SuitNames.Explorer:
+        case SuitNames.explorer:
             return ExplorerScoring(cards, potentialCardValue);
-        case SuitNames.Hunter:
+        case SuitNames.hunter:
             return HunterScoring(cards, potentialCardValue);
-        case SuitNames.Miner:
+        case SuitNames.miner:
             return MinerScoring(cards, potentialCardValue, additionalScoring);
-        case SuitNames.Warrior:
+        case SuitNames.warrior:
             return WarriorScoring(cards, potentialCardValue);
         default:
             throw new Error(`У фракций отсутствует фракция с названием '${suit}'.`);

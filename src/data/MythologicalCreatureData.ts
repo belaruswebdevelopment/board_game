@@ -1,6 +1,6 @@
 import { GiantScoring, MythicalAnimalScoring, ValkyryScoring } from "../score_helpers/MythologicalCreatureScoringHelpers";
 import { AutoActionFunctionNames, BuffNames, GiantNames, GodNames, MythicalAnimalNames, SuitNames, ValkyryNames } from "../typescript/enums";
-import type { IGiantConfig, IGiantData, IGodConfig, IGodData, IMythicalAnimalConfig, IMythicalAnimalData, IValkyryConfig, IValkyryData } from "../typescript/interfaces";
+import type { GiantConfigType, GodConfigType, IGiantData, IGodData, IMythicalAnimalData, IValkyryData, MythicalAnimalConfigType, ValkyryConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Данные об Гиганте.</h3>
@@ -11,7 +11,7 @@ import type { IGiantConfig, IGiantData, IGodConfig, IGodData, IMythicalAnimalCon
  */
 const Gymir: IGiantData = {
     name: GiantNames.Gymir,
-    placedSuit: SuitNames.Explorer,
+    placedSuit: SuitNames.explorer,
     scoringRule: GiantScoring,
 };
 
@@ -24,7 +24,7 @@ const Gymir: IGiantData = {
  */
 const Hrungnir: IGiantData = {
     name: GiantNames.Hrungnir,
-    placedSuit: SuitNames.Miner,
+    placedSuit: SuitNames.miner,
     // TODO Add +2 to upgrade coin during next trading coin upgrade or for each coin on player board...?!
     // actions: {
     //     name: AddValueToCoin.name,
@@ -41,7 +41,7 @@ const Hrungnir: IGiantData = {
  */
 const Skymir: IGiantData = {
     name: GiantNames.Surt,
-    placedSuit: SuitNames.Hunter,
+    placedSuit: SuitNames.hunter,
     // TODO Get 2 random(?) mythological creatures cards form it's deck?!
     // actions: {
     //     name: GetMythologicalCreaturesCards.name,
@@ -58,7 +58,7 @@ const Skymir: IGiantData = {
  */
 const Surt: IGiantData = {
     name: GiantNames.Surt,
-    placedSuit: SuitNames.Warrior,
+    placedSuit: SuitNames.warrior,
     scoringRule: GiantScoring,
 };
 
@@ -71,7 +71,7 @@ const Surt: IGiantData = {
  */
 const Thrivaldi: IGiantData = {
     name: GiantNames.Thrivaldi,
-    placedSuit: SuitNames.Blacksmith,
+    placedSuit: SuitNames.blacksmith,
     actions: {
         name: AutoActionFunctionNames.AddPickHeroAction,
     },
@@ -162,7 +162,7 @@ const Thor: IGodData = {
  */
 const Durathor: IMythicalAnimalData = {
     name: MythicalAnimalNames.Durathor,
-    suit: SuitNames.Hunter,
+    suit: SuitNames.hunter,
     buff: {
         name: BuffNames.DagdaDiscardOnlyOneCards,
     },
@@ -179,7 +179,7 @@ const Garm: IMythicalAnimalData = {
     name: MythicalAnimalNames.Garm,
     points: 9,
     rank: 2,
-    suit: SuitNames.Explorer,
+    suit: SuitNames.explorer,
     scoringRule: MythicalAnimalScoring,
 };
 
@@ -192,7 +192,7 @@ const Garm: IMythicalAnimalData = {
  */
 const Hraesvelg: IMythicalAnimalData = {
     name: MythicalAnimalNames.Hraesvelg,
-    suit: SuitNames.Blacksmith,
+    suit: SuitNames.blacksmith,
     ability: (): void => {
         // TODO Add Gullinbursti to your dwarf's player board
     },
@@ -208,7 +208,7 @@ const Hraesvelg: IMythicalAnimalData = {
 const Nidhogg: IMythicalAnimalData = {
     name: MythicalAnimalNames.Nidhogg,
     points: 5,
-    suit: SuitNames.Warrior,
+    suit: SuitNames.warrior,
     scoringRule: MythicalAnimalScoring,
 };
 
@@ -222,7 +222,7 @@ const Nidhogg: IMythicalAnimalData = {
 const Ratatosk: IMythicalAnimalData = {
     name: MythicalAnimalNames.Ratatosk,
     points: 2,
-    suit: SuitNames.Miner,
+    suit: SuitNames.miner,
     buff: {
         name: BuffNames.RatatoskFinalScoring,
     },
@@ -313,7 +313,7 @@ const Svafa: IValkyryData = {
  * <li>Происходит при создании всех Мифических существ при инициализации игры.</li>
  * </ol>
  */
-export const giantConfig: IGiantConfig = {
+export const giantConfig: GiantConfigType = {
     Gymir,
     Hrungnir,
     Skymir,
@@ -328,7 +328,7 @@ export const giantConfig: IGiantConfig = {
  * <li>Происходит при создании всех Богов при инициализации игры.</li>
  * </ol>
  */
-export const godConfig: IGodConfig = {
+export const godConfig: GodConfigType = {
     Freyja,
     Frigg,
     Loki,
@@ -343,7 +343,7 @@ export const godConfig: IGodConfig = {
  * <li>Происходит при создании всех Мифических животных при инициализации игры.</li>
  * </ol>
  */
-export const mythicalAnimalConfig: IMythicalAnimalConfig = {
+export const mythicalAnimalConfig: MythicalAnimalConfigType = {
     Durathor,
     Garm,
     Hraesvelg,
@@ -358,7 +358,7 @@ export const mythicalAnimalConfig: IMythicalAnimalConfig = {
  * <li>Происходит при создании всех Валькирий при инициализации игры.</li>
  * </ol>
  */
-export const valkyryConfig: IValkyryConfig = {
+export const valkyryConfig: ValkyryConfigType = {
     Brynhildr,
     Hildr,
     Olrun,

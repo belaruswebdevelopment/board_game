@@ -5,7 +5,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, StageNames } from "../typescript/enums";
+import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -46,12 +46,12 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
-                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickCampCardHolda)) {
+                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickCampCardHolda)) {
                     if (data !== undefined) {
                         const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                         let moveName;
                         switch (stage) {
-                            case StageNames.PickCampCardHolda:
+                            case StageNames.pickCampCardHolda:
                                 moveName = MoveNames.ClickCampCardHoldaMove;
                                 break;
                             case undefined:
@@ -104,7 +104,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
  */
 export const DrawCurrentPhaseStage = (ctx) => {
     var _a, _b, _c;
-    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_a = RusPhaseNames[ctx.phase]) !== null && _a !== void 0 ? _a : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: (_c = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== null && _c !== void 0 ? _c : `none` }), ")"] }));
+    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_a = RusPhaseNames[ctx.phase]) !== null && _a !== void 0 ? _a : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: (_c = RusStageNames[(_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]]) !== null && _c !== void 0 ? _c : `none` }), ")"] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
@@ -144,9 +144,8 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
             if (ctx.phase === PhaseNames.TroopEvaluation && ctx.activePlayers === null
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
-                    const suitArg = suit;
                     // TODO Move to DrawDistinction
-                    boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
+                    boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suit); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
                 else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
                     moveMainArgs.push(suit);
@@ -195,7 +194,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
-        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickDiscardCard) {
+        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickDiscardCard) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -247,7 +246,7 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit = hero.suit;
-            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickHero) {
+            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickHero) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -305,7 +304,7 @@ export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 1
-                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.PickHeroSoloBot) {
+                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickHeroSoloBot) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -458,12 +457,12 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                     }
                     if (t === G.currentTavern && ctx.phase === PhaseNames.TavernsResolution
                         && ((ctx.activePlayers === null)
-                            || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.DiscardCard))) {
+                            || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.discardCard))) {
                         if (data !== undefined) {
                             const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                             let moveName;
                             switch (stage) {
-                                case StageNames.DiscardCard:
+                                case StageNames.discardCard:
                                     moveName = MoveNames.DiscardCard2PlayersMove;
                                     break;
                                 case undefined:

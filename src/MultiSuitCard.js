@@ -1,5 +1,5 @@
 import { multiCardsConfig } from "./data/MultiSuitCardData";
-import { GameNames, RusCardTypeNames } from "./typescript/enums";
+import { RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создание особых мультифракционных карт.</h3>
  * <p>Применения:</p>

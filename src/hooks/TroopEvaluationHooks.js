@@ -96,7 +96,7 @@ export const OnTroopEvaluationMove = (G, ctx) => {
  */
 export const OnTroopEvaluationTurnBegin = (G, ctx) => {
     AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
-    if (G.distinctions[SuitNames.Explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+    if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         for (let j = 0; j < 3; j++) {
             const deck1 = G.secret.decks[1];
             if (deck1 === undefined) {

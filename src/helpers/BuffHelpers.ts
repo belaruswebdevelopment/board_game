@@ -1,8 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPublicPlayer, SuitKeyofType } from "../typescript/interfaces";
+import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
+import type { BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -31,7 +31,7 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
     }
 };
 
-export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, value: SuitKeyofType): void => {
+export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, value: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

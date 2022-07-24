@@ -1,6 +1,6 @@
 import { multiCardsConfig } from "./data/MultiSuitCardData";
-import { GameNames, RusCardTypeNames } from "./typescript/enums";
-import type { CreateMultiSuitCardType, CreateMultiSuitPlayerCardType, IMultiSuitCard, IMultiSuitPlayerCard, MultiSuitCardDataType, MultiSuitCardKeyofType } from "./typescript/interfaces";
+import { RusCardTypeNames } from "./typescript/enums";
+import type { CreateMultiSuitCardType, CreateMultiSuitPlayerCardType, GameNamesKeyofTypeofType, IMultiSuitCard, IMultiSuitPlayerCard, MultiSuitCardDataType, MultiSuitCardNamesKeyofTypeofType } from "./typescript/interfaces";
 
 /**
  * <h3>Создание особых мультифракционных карт.</h3>
@@ -12,9 +12,9 @@ import type { CreateMultiSuitCardType, CreateMultiSuitPlayerCardType, IMultiSuit
  * @param configOptions Конфиг опций мультифракционных карт.
  * @returns Массив мультифракционных карт.
  */
-export const BuildMultiSuitCards = (configOptions: GameNames[]): IMultiSuitCard[] => {
+export const BuildMultiSuitCards = (configOptions: GameNamesKeyofTypeofType[]): IMultiSuitCard[] => {
     const cards: IMultiSuitCard[] = [];
-    let cardName: MultiSuitCardKeyofType;
+    let cardName: MultiSuitCardNamesKeyofTypeofType;
     for (cardName in multiCardsConfig) {
         const card: MultiSuitCardDataType = multiCardsConfig[cardName];
         if (configOptions.includes(card.game)) {

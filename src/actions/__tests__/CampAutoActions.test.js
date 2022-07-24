@@ -833,7 +833,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
         };
         expect(() => {
             StartDiscardSuitCardAction(G, ctx);
-        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.Warrior}'.`);
+        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
     });
 });
 describe(`Test StartVidofnirVedrfolnirAction method`, () => {
@@ -898,7 +898,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -968,7 +968,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -1062,7 +1062,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -1164,7 +1164,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -1234,7 +1234,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -1328,7 +1328,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -1390,7 +1390,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -1472,7 +1472,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -1551,7 +1551,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -1646,7 +1646,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -1723,7 +1723,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -1822,7 +1822,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -1893,7 +1893,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -1980,7 +1980,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -2075,7 +2075,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -2186,7 +2186,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -2271,7 +2271,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -2378,7 +2378,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -2456,7 +2456,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2558,7 +2558,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2664,7 +2664,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2734,7 +2734,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2824,7 +2824,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },

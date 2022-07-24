@@ -1,4 +1,5 @@
-import type { IPublicPlayer, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
+import { SuitNames } from "../typescript/enums";
+import type { IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
@@ -27,7 +28,7 @@ export const ArithmeticSum = (startValue: number, step: number, ranksCount: numb
  * @param multiplier Множитель.
  * @returns Суммарное количество очков за множитель.
  */
-export const GetRanksValueMultiplier = (player: IPublicPlayer, suit: SuitKeyofType, multiplier: number): number =>
+export const GetRanksValueMultiplier = (player: IPublicPlayer, suit: SuitNames, multiplier: number): number =>
     player.cards[suit].reduce(TotalRank, 0) * multiplier;
 
 /**

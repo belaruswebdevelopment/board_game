@@ -49,5 +49,5 @@ export const AstridScoring = (player) => GetMaxCoinValue(player);
  * @param player Игрок.
  * @returns Количество очков по герою Idunn.
  */
-export const IdunnScoring = (player) => GetRanksValueMultiplier(player, SuitNames.Explorer, 2);
+export const IdunnScoring = (player) => GetRanksValueMultiplier(player, SuitNames.explorer, 2);
 //# sourceMappingURL=HeroScoringHelpers.js.map

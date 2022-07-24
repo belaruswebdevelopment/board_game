@@ -9,7 +9,7 @@ import { AutoActionFunctionNames, BuffNames, GiantNames, GodNames, MythicalAnima
  */
 const Gymir = {
     name: GiantNames.Gymir,
-    placedSuit: SuitNames.Explorer,
+    placedSuit: SuitNames.explorer,
     scoringRule: GiantScoring,
 };
 /**
@@ -21,7 +21,7 @@ const Gymir = {
  */
 const Hrungnir = {
     name: GiantNames.Hrungnir,
-    placedSuit: SuitNames.Miner,
+    placedSuit: SuitNames.miner,
     // TODO Add +2 to upgrade coin during next trading coin upgrade or for each coin on player board...?!
     // actions: {
     //     name: AddValueToCoin.name,
@@ -37,7 +37,7 @@ const Hrungnir = {
  */
 const Skymir = {
     name: GiantNames.Surt,
-    placedSuit: SuitNames.Hunter,
+    placedSuit: SuitNames.hunter,
     // TODO Get 2 random(?) mythological creatures cards form it's deck?!
     // actions: {
     //     name: GetMythologicalCreaturesCards.name,
@@ -53,7 +53,7 @@ const Skymir = {
  */
 const Surt = {
     name: GiantNames.Surt,
-    placedSuit: SuitNames.Warrior,
+    placedSuit: SuitNames.warrior,
     scoringRule: GiantScoring,
 };
 /**
@@ -65,7 +65,7 @@ const Surt = {
  */
 const Thrivaldi = {
     name: GiantNames.Thrivaldi,
-    placedSuit: SuitNames.Blacksmith,
+    placedSuit: SuitNames.blacksmith,
     actions: {
         name: AutoActionFunctionNames.AddPickHeroAction,
     },
@@ -150,7 +150,7 @@ const Thor = {
  */
 const Durathor = {
     name: MythicalAnimalNames.Durathor,
-    suit: SuitNames.Hunter,
+    suit: SuitNames.hunter,
     buff: {
         name: BuffNames.DagdaDiscardOnlyOneCards,
     },
@@ -166,7 +166,7 @@ const Garm = {
     name: MythicalAnimalNames.Garm,
     points: 9,
     rank: 2,
-    suit: SuitNames.Explorer,
+    suit: SuitNames.explorer,
     scoringRule: MythicalAnimalScoring,
 };
 /**
@@ -178,7 +178,7 @@ const Garm = {
  */
 const Hraesvelg = {
     name: MythicalAnimalNames.Hraesvelg,
-    suit: SuitNames.Blacksmith,
+    suit: SuitNames.blacksmith,
     ability: () => {
         // TODO Add Gullinbursti to your dwarf's player board
     },
@@ -193,7 +193,7 @@ const Hraesvelg = {
 const Nidhogg = {
     name: MythicalAnimalNames.Nidhogg,
     points: 5,
-    suit: SuitNames.Warrior,
+    suit: SuitNames.warrior,
     scoringRule: MythicalAnimalScoring,
 };
 /**
@@ -206,7 +206,7 @@ const Nidhogg = {
 const Ratatosk = {
     name: MythicalAnimalNames.Ratatosk,
     points: 2,
-    suit: SuitNames.Miner,
+    suit: SuitNames.miner,
     buff: {
         name: BuffNames.RatatoskFinalScoring,
     },

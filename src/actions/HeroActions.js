@@ -61,27 +61,27 @@ export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
     }
     const playerVariants = {
         blacksmith: {
-            suit: SuitNames.Blacksmith,
+            suit: SuitNames.blacksmith,
             rank: 1,
             points: null,
         },
         hunter: {
-            suit: SuitNames.Hunter,
+            suit: SuitNames.hunter,
             rank: 1,
             points: null,
         },
         explorer: {
-            suit: SuitNames.Explorer,
+            suit: SuitNames.explorer,
             rank: 1,
             points: 0,
         },
         warrior: {
-            suit: SuitNames.Warrior,
+            suit: SuitNames.warrior,
             rank: 1,
             points: 0,
         },
         miner: {
-            suit: SuitNames.Miner,
+            suit: SuitNames.miner,
             rank: 1,
             points: 0,
         },
@@ -162,27 +162,27 @@ export const PlaceYludAction = (G, ctx, suit) => {
     }
     const playerVariants = {
         blacksmith: {
-            suit: SuitNames.Blacksmith,
+            suit: SuitNames.blacksmith,
             rank: 1,
             points: null,
         },
         hunter: {
-            suit: SuitNames.Hunter,
+            suit: SuitNames.hunter,
             rank: 1,
             points: null,
         },
         explorer: {
-            suit: SuitNames.Explorer,
+            suit: SuitNames.explorer,
             rank: 1,
             points: 11,
         },
         warrior: {
-            suit: SuitNames.Warrior,
+            suit: SuitNames.warrior,
             rank: 1,
             points: 7,
         },
         miner: {
-            suit: SuitNames.Miner,
+            suit: SuitNames.miner,
             rank: 1,
             points: 1,
         },

@@ -1,27 +1,27 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
-import type { IMercenaryCampCard, IStack, IStackData, OneOrTwoStackPriorityType, SuitKeyofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { IMercenaryCampCard, IStack, IStackData, OneOrTwoStackPriorityType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
 export const StackData: IStackData = {
     addCoinToPouch: (): IStack => ({
-        stageName: StageNames.AddCoinToPouch,
+        stageName: StageNames.addCoinToPouch,
         drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
     brisingamensEndGameAction: (): IStack => ({
         drawName: DrawNames.BrisingamensEndGame,
     }),
     discardCardFromBoardBonfur: (): IStack => ({
-        stageName: StageNames.DiscardBoardCard,
+        stageName: StageNames.discardBoardCard,
         drawName: DrawNames.Bonfur,
-        suit: SuitNames.Blacksmith,
+        suit: SuitNames.blacksmith,
     }),
     discardCardFromBoardCrovaxTheDoppelganger: (): IStack => ({
-        stageName: StageNames.DiscardBoardCard,
+        stageName: StageNames.discardBoardCard,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (pickedSuit?: SuitKeyofType): IStack => ({
-        stageName: StageNames.DiscardBoardCard,
+    discardCardFromBoardDagda: (pickedSuit?: SuitNamesKeyofTypeofType): IStack => ({
+        stageName: StageNames.discardBoardCard,
         drawName: DrawNames.Dagda,
-        suit: SuitNames.Hunter,
+        suit: SuitNames.hunter,
         pickedSuit,
         name: HeroNames.Dagda,
     }),
@@ -32,7 +32,7 @@ export const StackData: IStackData = {
         drawName: DrawNames.Hofud,
     }),
     discardTavernCard: (): IStack => ({
-        stageName: StageNames.DiscardCard,
+        stageName: StageNames.discardCard,
         drawName: DrawNames.DiscardTavernCard,
     }),
     enlistmentMercenaries: (): IStack => ({
@@ -44,7 +44,7 @@ export const StackData: IStackData = {
     }),
     getHeroesForSoloMode: (): IStack => ({
         configName: ConfigNames.GetHeroesForSoloMode,
-        stageName: StageNames.ChooseHeroesForSoloMode,
+        stageName: StageNames.chooseHeroesForSoloMode,
         drawName: DrawNames.GetHeroesForSoloMode,
     }),
     getDistinctions: (): IStack => ({
@@ -54,51 +54,51 @@ export const StackData: IStackData = {
         drawName: DrawNames.Mjollnir,
     }),
     pickCampCardHolda: (): IStack => ({
-        stageName: StageNames.PickCampCardHolda,
+        stageName: StageNames.pickCampCardHolda,
         drawName: DrawNames.Holda,
     }),
     pickCard: (): IStack => ({
         drawName: DrawNames.PickCard,
     }),
     pickConcreteCoinToUpgrade: (coinValue: number, value: number): IStack => ({
-        stageName: StageNames.PickConcreteCoinToUpgrade,
+        stageName: StageNames.pickConcreteCoinToUpgrade,
         drawName: DrawNames.PickConcreteCoinToUpgrade,
         coinValue,
         value,
     }),
     pickDiscardCardAndumia: (): IStack => ({
-        stageName: StageNames.PickDiscardCard,
+        stageName: StageNames.pickDiscardCard,
         drawName: DrawNames.Andumia,
     }),
     pickDiscardCardBrisingamens: (priority?: number): IStack => ({
-        stageName: StageNames.PickDiscardCard,
+        stageName: StageNames.pickDiscardCard,
         drawName: DrawNames.Brisingamens,
         priority,
     }),
     pickDistinctionCard: (): IStack => ({
         configName: ConfigNames.ExplorerDistinction,
-        stageName: StageNames.PickDistinctionCard,
+        stageName: StageNames.pickDistinctionCard,
         drawName: DrawNames.PickCardByExplorerDistinction,
     }),
     pickDistinctionCardSoloBot: (): IStack => ({
-        stageName: StageNames.PickDistinctionCardSoloBot,
+        stageName: StageNames.pickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
-    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitKeyofType, priority?: 3): IStack => ({
-        stageName: StageNames.PlaceMultiSuitsCards,
+    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3): IStack => ({
+        stageName: StageNames.placeMultiSuitsCards,
         drawName: DrawNames.PlaceMultiSuitsCards,
         pickedSuit,
         priority,
         name,
     }),
     placeThrudHero: (): IStack => ({
-        stageName: StageNames.PlaceThrudHero,
+        stageName: StageNames.placeThrudHero,
         drawName: DrawNames.PlaceThrudHero,
         priority: 2,
         name: HeroNames.Thrud,
     }),
     placeTradingCoinsUline: (): IStack => ({
-        stageName: StageNames.PlaceTradingCoinsUline,
+        stageName: StageNames.placeTradingCoinsUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
     }),
     placeYludHero: (): IStack => ({
@@ -106,23 +106,23 @@ export const StackData: IStackData = {
         name: HeroNames.Ylud,
     }),
     pickHero: (priority: OneOrTwoStackPriorityType): IStack => ({
-        stageName: StageNames.PickHero,
+        stageName: StageNames.pickHero,
         drawName: DrawNames.PickHero,
         priority,
     }),
     pickHeroSoloBot: (): IStack => ({
-        stageName: StageNames.PickHeroSoloBot,
+        stageName: StageNames.pickHeroSoloBot,
         drawName: DrawNames.PickHeroSoloBot,
     }),
     placeEnlistmentMercenaries: (card: IMercenaryCampCard): IStack => ({
-        stageName: StageNames.PlaceEnlistmentMercenaries,
+        stageName: StageNames.placeEnlistmentMercenaries,
         drawName: DrawNames.PlaceEnlistmentMercenaries,
         card,
     }),
     startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueType,
         coinId?: number, priority?: 3): IStack => ({
             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
-            stageName: StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
             valueArray,
             coinId,
@@ -133,19 +133,19 @@ export const StackData: IStackData = {
         drawName: DrawNames.StartOrPassEnlistmentMercenaries,
     }),
     upgradeCoin: (value: number): IStack => ({
-        stageName: StageNames.UpgradeCoin,
+        stageName: StageNames.upgradeCoin,
         value,
         drawName: DrawNames.UpgradeCoin,
     }),
     upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3): IStack => ({
         coinId,
-        stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+        stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
         value,
         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
         priority,
     }),
     upgradeCoinWarriorDistinction: (): IStack => ({
-        stageName: StageNames.UpgradeCoin,
+        stageName: StageNames.upgradeCoin,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinction,
     }),

@@ -1,25 +1,25 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
 export const StackData = {
     addCoinToPouch: () => ({
-        stageName: StageNames.AddCoinToPouch,
+        stageName: StageNames.addCoinToPouch,
         drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
     brisingamensEndGameAction: () => ({
         drawName: DrawNames.BrisingamensEndGame,
     }),
     discardCardFromBoardBonfur: () => ({
-        stageName: StageNames.DiscardBoardCard,
+        stageName: StageNames.discardBoardCard,
         drawName: DrawNames.Bonfur,
-        suit: SuitNames.Blacksmith,
+        suit: SuitNames.blacksmith,
     }),
     discardCardFromBoardCrovaxTheDoppelganger: () => ({
-        stageName: StageNames.DiscardBoardCard,
+        stageName: StageNames.discardBoardCard,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
     discardCardFromBoardDagda: (pickedSuit) => ({
-        stageName: StageNames.DiscardBoardCard,
+        stageName: StageNames.discardBoardCard,
         drawName: DrawNames.Dagda,
-        suit: SuitNames.Hunter,
+        suit: SuitNames.hunter,
         pickedSuit,
         name: HeroNames.Dagda,
     }),
@@ -30,7 +30,7 @@ export const StackData = {
         drawName: DrawNames.Hofud,
     }),
     discardTavernCard: () => ({
-        stageName: StageNames.DiscardCard,
+        stageName: StageNames.discardCard,
         drawName: DrawNames.DiscardTavernCard,
     }),
     enlistmentMercenaries: () => ({
@@ -42,7 +42,7 @@ export const StackData = {
     }),
     getHeroesForSoloMode: () => ({
         configName: ConfigNames.GetHeroesForSoloMode,
-        stageName: StageNames.ChooseHeroesForSoloMode,
+        stageName: StageNames.chooseHeroesForSoloMode,
         drawName: DrawNames.GetHeroesForSoloMode,
     }),
     getDistinctions: () => ({
@@ -52,51 +52,51 @@ export const StackData = {
         drawName: DrawNames.Mjollnir,
     }),
     pickCampCardHolda: () => ({
-        stageName: StageNames.PickCampCardHolda,
+        stageName: StageNames.pickCampCardHolda,
         drawName: DrawNames.Holda,
     }),
     pickCard: () => ({
         drawName: DrawNames.PickCard,
     }),
     pickConcreteCoinToUpgrade: (coinValue, value) => ({
-        stageName: StageNames.PickConcreteCoinToUpgrade,
+        stageName: StageNames.pickConcreteCoinToUpgrade,
         drawName: DrawNames.PickConcreteCoinToUpgrade,
         coinValue,
         value,
     }),
     pickDiscardCardAndumia: () => ({
-        stageName: StageNames.PickDiscardCard,
+        stageName: StageNames.pickDiscardCard,
         drawName: DrawNames.Andumia,
     }),
     pickDiscardCardBrisingamens: (priority) => ({
-        stageName: StageNames.PickDiscardCard,
+        stageName: StageNames.pickDiscardCard,
         drawName: DrawNames.Brisingamens,
         priority,
     }),
     pickDistinctionCard: () => ({
         configName: ConfigNames.ExplorerDistinction,
-        stageName: StageNames.PickDistinctionCard,
+        stageName: StageNames.pickDistinctionCard,
         drawName: DrawNames.PickCardByExplorerDistinction,
     }),
     pickDistinctionCardSoloBot: () => ({
-        stageName: StageNames.PickDistinctionCardSoloBot,
+        stageName: StageNames.pickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
     placeMultiSuitsCards: (name, pickedSuit, priority) => ({
-        stageName: StageNames.PlaceMultiSuitsCards,
+        stageName: StageNames.placeMultiSuitsCards,
         drawName: DrawNames.PlaceMultiSuitsCards,
         pickedSuit,
         priority,
         name,
     }),
     placeThrudHero: () => ({
-        stageName: StageNames.PlaceThrudHero,
+        stageName: StageNames.placeThrudHero,
         drawName: DrawNames.PlaceThrudHero,
         priority: 2,
         name: HeroNames.Thrud,
     }),
     placeTradingCoinsUline: () => ({
-        stageName: StageNames.PlaceTradingCoinsUline,
+        stageName: StageNames.placeTradingCoinsUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
     }),
     placeYludHero: () => ({
@@ -104,22 +104,22 @@ export const StackData = {
         name: HeroNames.Ylud,
     }),
     pickHero: (priority) => ({
-        stageName: StageNames.PickHero,
+        stageName: StageNames.pickHero,
         drawName: DrawNames.PickHero,
         priority,
     }),
     pickHeroSoloBot: () => ({
-        stageName: StageNames.PickHeroSoloBot,
+        stageName: StageNames.pickHeroSoloBot,
         drawName: DrawNames.PickHeroSoloBot,
     }),
     placeEnlistmentMercenaries: (card) => ({
-        stageName: StageNames.PlaceEnlistmentMercenaries,
+        stageName: StageNames.placeEnlistmentMercenaries,
         drawName: DrawNames.PlaceEnlistmentMercenaries,
         card,
     }),
     startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray, coinId, priority) => ({
         configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
-        stageName: StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+        stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
         drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
         valueArray,
         coinId,
@@ -130,19 +130,19 @@ export const StackData = {
         drawName: DrawNames.StartOrPassEnlistmentMercenaries,
     }),
     upgradeCoin: (value) => ({
-        stageName: StageNames.UpgradeCoin,
+        stageName: StageNames.upgradeCoin,
         value,
         drawName: DrawNames.UpgradeCoin,
     }),
     upgradeCoinVidofnirVedrfolnir: (value, coinId, priority) => ({
         coinId,
-        stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+        stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
         value,
         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
         priority,
     }),
     upgradeCoinWarriorDistinction: () => ({
-        stageName: StageNames.UpgradeCoin,
+        stageName: StageNames.upgradeCoin,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinction,
     }),

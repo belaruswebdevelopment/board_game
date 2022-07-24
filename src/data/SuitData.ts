@@ -1,7 +1,7 @@
 import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDistinctionAwarding, MinerDistinctionAwarding, WarriorDistinctionAwarding } from "../helpers/DistinctionAwardingHelpers";
 import { SuitScoring } from "../score_helpers/SuitScoringHelpers";
 import { RusSuitNames, SuitNames } from "../typescript/enums";
-import type { IPointsValues, ISuit, ISuitConfig } from "../typescript/interfaces";
+import type { IPointsValues, ISuit, SuitConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Фракция кузнецов.</h3>
@@ -12,7 +12,7 @@ import type { IPointsValues, ISuit, ISuitConfig } from "../typescript/interfaces
  * @TODO Add may be potential points for hunters and blacksmiths.
  */
 const blacksmith: ISuit = {
-    suit: SuitNames.Blacksmith,
+    suit: SuitNames.blacksmith,
     suitName: RusSuitNames.blacksmith,
     suitColor: `bg-purple-600`,
     description: `Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).`,
@@ -53,7 +53,7 @@ const blacksmith: ISuit = {
  * </ol>
  */
 const explorer: ISuit = {
-    suit: SuitNames.Explorer,
+    suit: SuitNames.explorer,
     suitName: RusSuitNames.explorer,
     suitColor: `bg-blue-500`,
     description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
@@ -94,7 +94,7 @@ const explorer: ISuit = {
  * </ol>
  */
 const hunter: ISuit = {
-    suit: SuitNames.Hunter,
+    suit: SuitNames.hunter,
     suitName: RusSuitNames.hunter,
     suitColor: `bg-green-600`,
     description: `Их показатель храбрости равен квадрату числа карт охотников в армии игрока.`,
@@ -135,7 +135,7 @@ const hunter: ISuit = {
  * </ol>
  */
 const miner: ISuit = {
-    suit: SuitNames.Miner,
+    suit: SuitNames.miner,
     suitName: RusSuitNames.miner,
     suitColor: `bg-yellow-600`,
     description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.`,
@@ -176,7 +176,7 @@ const miner: ISuit = {
  * </ol>
  */
 const warrior: ISuit = {
-    suit: SuitNames.Warrior,
+    suit: SuitNames.warrior,
     suitName: RusSuitNames.warrior,
     suitColor: `bg-red-600`,
     description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.`,
@@ -217,7 +217,7 @@ const warrior: ISuit = {
  * </ol>
  * @TODO Create GenerateSuitsConfig function to create a config in Distinction Order?
  */
-export const suitsConfig: ISuitConfig = {
+export const suitsConfig: SuitConfigType = {
     warrior,
     hunter,
     miner,

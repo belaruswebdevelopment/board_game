@@ -21,7 +21,7 @@ import { ErrorNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } fro
  * @returns
  */
 export const ClickCardMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -60,7 +60,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
  * @returns
  */
 export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickDistinctionCard, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickDistinctionCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -76,7 +76,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
-        G.distinctions[SuitNames.Explorer] = undefined;
+        G.distinctions[SuitNames.explorer] = undefined;
     }
     G.explorerDistinctionCardId = cardId;
 };
@@ -93,7 +93,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
  * @returns
  */
 export const ClickDistinctionCardMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -113,7 +113,7 @@ export const ClickDistinctionCardMove = (G, ctx, suit) => {
  * @returns
  */
 export const DiscardCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, {
         suit,
         cardId,
     });
@@ -135,7 +135,7 @@ export const DiscardCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
  * @returns
  */
 export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardCard, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.discardCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -154,7 +154,7 @@ export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
  * @returns
  */
 export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default3, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -173,7 +173,7 @@ export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
  * @returns
  */
 export const GetMjollnirProfitMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -191,7 +191,7 @@ export const GetMjollnirProfitMove = (G, ctx, suit) => {
  * @returns
  */
 export const PassEnlistmentMercenariesMove = (G, ctx) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -211,7 +211,7 @@ export const PassEnlistmentMercenariesMove = (G, ctx) => {
  * @returns
  */
 export const PickDiscardCardMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickDiscardCard, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickDiscardCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -231,7 +231,7 @@ export const PickDiscardCardMove = (G, ctx, cardId) => {
  */
 export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.PlaceEnlistmentMercenaries, suit);
+        && IsValidMove(G, ctx, StageNames.placeEnlistmentMercenaries, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -249,7 +249,7 @@ export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
  * @returns
  */
 export const StartEnlistmentMercenariesMove = (G, ctx) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

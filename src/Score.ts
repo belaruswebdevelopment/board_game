@@ -10,7 +10,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helper
 import { AddDataToLog } from "./Logging";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitKeyofType } from "./typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IArtefactData, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -27,7 +27,7 @@ import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IArtefactData, IG
  */
 export const CurrentScoring = (G: IMyGameState, player: IPublicPlayer): number => {
     let score = 0,
-        suit: SuitKeyofType;
+        suit: SuitNamesKeyofTypeofType;
     for (suit in suitsConfig) {
         let additionalScoring = false;
         if (G.expansions.idavoll) {
@@ -80,13 +80,13 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
     score += coinsValue;
     AddDataToLog(G, LogTypeNames.Public, `Очки за монеты ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${coinsValue}';`);
     if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
-        const warriorDistinctionScore: number = suitsConfig[SuitNames.Warrior].distinction.awarding(G, ctx, playerId);
+        const warriorDistinctionScore: number = suitsConfig[SuitNames.warrior].distinction.awarding(G, ctx, playerId);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
             AddDataToLog(G, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${warriorDistinctionScore}';`);
         }
     }
-    const minerDistinctionPriorityScore: number = suitsConfig[SuitNames.Miner].distinction.awarding(G, ctx, playerId);
+    const minerDistinctionPriorityScore: number = suitsConfig[SuitNames.miner].distinction.awarding(G, ctx, playerId);
     score += minerDistinctionPriorityScore;
     if (minerDistinctionPriorityScore) {
         AddDataToLog(G, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${minerDistinctionPriorityScore}';`);
@@ -276,7 +276,7 @@ export const ScoreWinner = (G: IMyGameState, ctx: Ctx): CanBeVoidType<IMyGameSta
     });
     G.drawProfit = null;
     AddDataToLog(G, LogTypeNames.Game, `Финальные результаты игры:`);
-    const warriorDistinctions: number[] = CheckCurrentSuitDistinctions(G, ctx, SuitNames.Warrior);
+    const warriorDistinctions: number[] = CheckCurrentSuitDistinctions(G, ctx, SuitNames.warrior);
     for (let i = 0; i < ctx.numPlayers; i++) {
         G.totalScore.push(FinalScoring(G, ctx, i, warriorDistinctions));
     }

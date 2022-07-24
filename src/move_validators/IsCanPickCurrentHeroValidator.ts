@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, ConditionKeyofType, ConditionsKeyofType, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
+import type { CanBeUndefType, ICondition, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, KeyofType, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -27,7 +27,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
         cardsToDiscard: PlayerCardType[] = [];
     let isValidMove = false;
     if (validators?.discardCard !== undefined) {
-        let suit: SuitKeyofType;
+        let suit: SuitNamesKeyofTypeofType;
         for (suit in suitsConfig) {
             if (validators.discardCard.suit !== suit) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -74,11 +74,11 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
         throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.Conditions}'.`);
     }
     let isValidMove = false,
-        condition: ConditionsKeyofType;
+        condition: KeyofType<IConditions>;
     for (condition in conditions) {
         if (condition === `suitCountMin`) {
             let ranks = 0,
-                key: ConditionKeyofType;
+                key: KeyofType<ICondition>;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
                     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

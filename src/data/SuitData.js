@@ -10,7 +10,7 @@ import { RusSuitNames, SuitNames } from "../typescript/enums";
  * @TODO Add may be potential points for hunters and blacksmiths.
  */
 const blacksmith = {
-    suit: SuitNames.Blacksmith,
+    suit: SuitNames.blacksmith,
     suitName: RusSuitNames.blacksmith,
     suitColor: `bg-purple-600`,
     description: `Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).`,
@@ -50,7 +50,7 @@ const blacksmith = {
  * </ol>
  */
 const explorer = {
-    suit: SuitNames.Explorer,
+    suit: SuitNames.explorer,
     suitName: RusSuitNames.explorer,
     suitColor: `bg-blue-500`,
     description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
@@ -90,7 +90,7 @@ const explorer = {
  * </ol>
  */
 const hunter = {
-    suit: SuitNames.Hunter,
+    suit: SuitNames.hunter,
     suitName: RusSuitNames.hunter,
     suitColor: `bg-green-600`,
     description: `Их показатель храбрости равен квадрату числа карт охотников в армии игрока.`,
@@ -130,7 +130,7 @@ const hunter = {
  * </ol>
  */
 const miner = {
-    suit: SuitNames.Miner,
+    suit: SuitNames.miner,
     suitName: RusSuitNames.miner,
     suitColor: `bg-yellow-600`,
     description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.`,
@@ -170,7 +170,7 @@ const miner = {
  * </ol>
  */
 const warrior = {
-    suit: SuitNames.Warrior,
+    suit: SuitNames.warrior,
     suitName: RusSuitNames.warrior,
     suitColor: `bg-red-600`,
     description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.`,

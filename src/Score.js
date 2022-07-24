@@ -73,13 +73,13 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
     score += coinsValue;
     AddDataToLog(G, LogTypeNames.Public, `Очки за монеты ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${coinsValue}';`);
     if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
-        const warriorDistinctionScore = suitsConfig[SuitNames.Warrior].distinction.awarding(G, ctx, playerId);
+        const warriorDistinctionScore = suitsConfig[SuitNames.warrior].distinction.awarding(G, ctx, playerId);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
             AddDataToLog(G, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${warriorDistinctionScore}';`);
         }
     }
-    const minerDistinctionPriorityScore = suitsConfig[SuitNames.Miner].distinction.awarding(G, ctx, playerId);
+    const minerDistinctionPriorityScore = suitsConfig[SuitNames.miner].distinction.awarding(G, ctx, playerId);
     score += minerDistinctionPriorityScore;
     if (minerDistinctionPriorityScore) {
         AddDataToLog(G, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${minerDistinctionPriorityScore}';`);
@@ -244,7 +244,7 @@ export const ScoreWinner = (G, ctx) => {
     });
     G.drawProfit = null;
     AddDataToLog(G, LogTypeNames.Game, `Финальные результаты игры:`);
-    const warriorDistinctions = CheckCurrentSuitDistinctions(G, ctx, SuitNames.Warrior);
+    const warriorDistinctions = CheckCurrentSuitDistinctions(G, ctx, SuitNames.warrior);
     for (let i = 0; i < ctx.numPlayers; i++) {
         G.totalScore.push(FinalScoring(G, ctx, i, warriorDistinctions));
     }

@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, IBackground, IStyles, MythologicalCreatureNameTypes, SuitKeyofType } from "../typescript/interfaces";
+import type { CanBeNullType, IBackground, IStyles, MythologicalCreatureNameTypes, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -152,7 +152,7 @@ export const Styles: IStyles = {
     CardBack: (tier: number): IBackground => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    Card: (suit: SuitKeyofType, name: string, points: CanBeNullType<number>): IBackground => {
+    Card: (suit: SuitNamesKeyofTypeofType, name: string, points: CanBeNullType<number>): IBackground => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             switch (name) {
                 case SpecialCardNames.ChiefBlacksmith:
@@ -174,15 +174,15 @@ export const Styles: IStyles = {
         } else {
             // TODO Add images for different cards in same suit by unique id in card name -> use this names for keys
             switch (suit) {
-                case SuitNames.Blacksmith:
+                case SuitNames.blacksmith:
                     return {
                         background: `${basicCardsPath}0.png) no-repeat 0px 0px / 288px 288px`,
                     };
-                case SuitNames.Hunter:
+                case SuitNames.hunter:
                     return {
                         background: `${basicCardsPath}0.png) no-repeat -128px 0px / 288px 288px`,
                     };
-                case SuitNames.Miner:
+                case SuitNames.miner:
                     switch (points) {
                         case 0:
                             return {
@@ -197,9 +197,9 @@ export const Styles: IStyles = {
                                 background: `${basicCardsPath}0.png) no-repeat -224px -48px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты во фракции ${SuitNames.Miner}.`);
+                            throw new Error(`Нет такой карты во фракции ${SuitNames.miner}.`);
                     }
-                case SuitNames.Warrior:
+                case SuitNames.warrior:
                     switch (points) {
                         case 3:
                             return {
@@ -234,9 +234,9 @@ export const Styles: IStyles = {
                                 background: `${basicCardsPath}0.png) no-repeat -32px -240px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.Warrior}.`);
+                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.warrior}.`);
                     }
-                case SuitNames.Explorer:
+                case SuitNames.explorer:
                     switch (points) {
                         case 5:
                             return {
@@ -271,7 +271,7 @@ export const Styles: IStyles = {
                                 background: `${basicCardsPath}0.png) no-repeat -96px -240px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.Explorer}.`);
+                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.explorer}.`);
                     }
                 default:
                     throw new Error(`Нет такой карты.`);
@@ -287,25 +287,25 @@ export const Styles: IStyles = {
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinction: (distinction: SuitKeyofType): IBackground => {
+    Distinction: (distinction: SuitNamesKeyofTypeofType): IBackground => {
         switch (distinction) {
-            case SuitNames.Blacksmith:
+            case SuitNames.blacksmith:
                 return {
                     background: `${distinctionsPath} no-repeat 0px -100px / 96px 150px`,
                 };
-            case SuitNames.Hunter:
+            case SuitNames.hunter:
                 return {
                     background: `${distinctionsPath} no-repeat -64px 0px / 96px 150px`,
                 };
-            case SuitNames.Miner:
+            case SuitNames.miner:
                 return {
                     background: `${distinctionsPath} no-repeat 0px -50px / 96px 150px`,
                 };
-            case SuitNames.Warrior:
+            case SuitNames.warrior:
                 return {
                     background: `${distinctionsPath} no-repeat -32px -50px / 96px 150px`,
                 };
-            case SuitNames.Explorer:
+            case SuitNames.explorer:
                 return {
                     background: `${distinctionsPath} no-repeat 0px 0px / 96px 150px`,
                 };
@@ -558,7 +558,7 @@ export const Styles: IStyles = {
                 return _exhaustiveCheck;
         }
     },
-    Suit: (suit: SuitKeyofType): IBackground => ({
+    Suit: (suit: SuitNamesKeyofTypeofType): IBackground => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Tavern: (tavernId: number): IBackground => {

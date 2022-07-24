@@ -4,7 +4,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, MoveNames, RusCardTypeNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, CanBeNullType, IBackground, IMyGameState, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitKeyofType } from "../typescript/interfaces";
+import type { AllCardType, ArgsType, CanBeNullType, IBackground, IMyGameState, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -67,7 +67,8 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardType, id: number,
-    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitKeyofType>, moveName?: MoveNames, ...args: ArgsType): void => {
+    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNamesKeyofTypeofType>, moveName?: MoveNames,
+    ...args: ArgsType): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
@@ -325,7 +326,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param player Игрок.
  * @param moveName Название действия.
  */
-export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitKeyofType,
+export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitNamesKeyofTypeofType,
     player: IPublicPlayer, moveName: CanBeNullType<MoveNames>): void => {
     let action: MoveFunctionType;
     switch (moveName) {

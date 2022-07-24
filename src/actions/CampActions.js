@@ -97,7 +97,7 @@ export const DiscardSuitCardAction = (G, ctx, cardId) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.playerID);
     }
-    const discardedCard = player.cards[SuitNames.Warrior].splice(cardId, 1)[0];
+    const discardedCard = player.cards[SuitNames.warrior].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }

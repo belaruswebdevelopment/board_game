@@ -33,7 +33,7 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
                 Math.min(...playerCards.map((item: PlayerCardType[]): number =>
                     item.reduce(TotalRank, 0))) > heroesLength,
             playerPickHeroActionInStackIndex: number = player.stack.findIndex((stack: IStack): boolean =>
-                stack.stageName === StageNames.PickHero);
+                stack.stageName === StageNames.pickHero);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
             AddPickHeroAction(G, ctx, 1);
         }

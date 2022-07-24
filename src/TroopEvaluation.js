@@ -129,7 +129,7 @@ const CountPlayerRanksAndMaxRanksForDistinctions = (G, ctx, suit) => {
  * @param result Id игрока, получившего преимущество (если имеется).
  */
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G, ctx, suit, result) => {
-    if (suit === SuitNames.Explorer && result === undefined) {
+    if (suit === SuitNames.explorer && result === undefined) {
         const deck1 = G.secret.decks[1];
         if (deck1 === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);

@@ -54,4 +54,4 @@ export const AstridScoring = (player: IPublicPlayer): number => GetMaxCoinValue(
  * @returns Количество очков по герою Idunn.
  */
 export const IdunnScoring = (player: IPublicPlayer): number =>
-    GetRanksValueMultiplier(player, SuitNames.Explorer, 2);
+    GetRanksValueMultiplier(player, SuitNames.explorer, 2);

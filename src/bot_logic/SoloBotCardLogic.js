@@ -161,7 +161,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
         if (availableSuitArguments.includes(tavernCard.suit)) {
             if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
                 leastPresentArguments.push(i);
-                if (tavernCard.points === null || tavernCard.suit === SuitNames.Miner) {
+                if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
                     isNoPoints = true;
                 }
             }

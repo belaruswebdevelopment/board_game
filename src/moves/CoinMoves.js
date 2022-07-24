@@ -19,7 +19,7 @@ import { CoinTypeNames, ErrorNames, StageNames, SuitNames } from "../typescript/
  */
 export const ClickBoardCoinMove = (G, ctx, coinId) => {
     // TODO Add Place coins async
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -108,7 +108,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.UpgradeCoin, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.upgradeCoin, {
         coinId,
         type,
     });
@@ -118,12 +118,12 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
     // todo Move to distinction phase hook?
     if (Object.values(G.distinctions).length) {
         // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionWarrior = G.distinctions[SuitNames.Warrior] !== undefined;
+        const isDistinctionWarrior = G.distinctions[SuitNames.warrior] !== undefined;
         if (isDistinctionWarrior) {
-            G.distinctions[SuitNames.Warrior] = undefined;
+            G.distinctions[SuitNames.warrior] = undefined;
         }
-        else if (!isDistinctionWarrior && G.distinctions[SuitNames.Explorer] !== undefined) {
-            G.distinctions[SuitNames.Explorer] = undefined;
+        else if (!isDistinctionWarrior && G.distinctions[SuitNames.explorer] !== undefined) {
+            G.distinctions[SuitNames.explorer] = undefined;
         }
     }
     UpgradeCoinActions(G, ctx, coinId, type);
@@ -142,7 +142,7 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
  * @returns
  */
 export const ClickConcreteCoinToUpgradeMove = (G, ctx, coinId, type) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickConcreteCoinToUpgrade, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickConcreteCoinToUpgrade, {
         coinId,
         type,
     });
@@ -164,7 +164,7 @@ export const ClickConcreteCoinToUpgradeMove = (G, ctx, coinId, type) => {
  * @returns
  */
 export const ClickHandCoinMove = (G, ctx, coinId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -187,7 +187,7 @@ export const ClickHandCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickHandCoinUlineMove = (G, ctx, coinId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -246,7 +246,7 @@ export const ClickHandCoinUlineMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickHandTradingCoinUlineMove = (G, ctx, coinId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceTradingCoinsUline, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeTradingCoinsUline, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

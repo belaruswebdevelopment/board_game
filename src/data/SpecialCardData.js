@@ -8,7 +8,7 @@ import { SpecialCardNames, SuitNames } from "../typescript/enums";
  */
 const ChiefBlacksmith = {
     name: SpecialCardNames.ChiefBlacksmith,
-    suit: SuitNames.Blacksmith,
+    suit: SuitNames.blacksmith,
     rank: 2,
     points: null,
 };

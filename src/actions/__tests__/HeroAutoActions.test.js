@@ -20,7 +20,7 @@ describe(`Test AddPickHeroAction method`, () => {
                     nickname: `Dan`,
                     stack: [
                         {
-                            stageName: StageNames.PickHero,
+                            stageName: StageNames.pickHero,
                             drawName: DrawNames.PickHero,
                         },
                     ],

@@ -23,7 +23,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
                     nickname: `Dan`,
                     stack: [
                         {
-                            stageName: StageNames.PickHero,
+                            stageName: StageNames.pickHero,
                             drawName: DrawNames.PickHero,
                         },
                     ],

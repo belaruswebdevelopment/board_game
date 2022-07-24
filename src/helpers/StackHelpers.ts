@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndefType, CardsHasStackType, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig, ValidatorConfigKeyofType } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackType, IMyGameState, IPublicPlayer, IStack, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
@@ -20,15 +20,15 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
     let isValid = false;
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
-            const validators: CanBeUndefType<IValidatorsConfig> = card.validators;
+            const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;
             if (validators !== undefined) {
-                let validator: ValidatorConfigKeyofType;
+                let validator: PickCardValidatorNamesKeyofTypeofType;
                 for (validator in validators) {
                     switch (validator) {
-                        case PickCardValidatorNames.PickDiscardCardToStack:
+                        case PickCardValidatorNames.pickDiscardCardToStack:
                             isValid = IsCanPickPickDiscardCardToStack(G, card);
                             break;
-                        case PickCardValidatorNames.PickCampCardToStack:
+                        case PickCardValidatorNames.pickCampCardToStack:
                             isValid = IsCanPickPickCampCardToStack(G, card);
                             break;
                         default:

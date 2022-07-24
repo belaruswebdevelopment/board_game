@@ -23,10 +23,10 @@ export const AddActionsToStack = (G, ctx, stack, card) => {
                 let validator;
                 for (validator in validators) {
                     switch (validator) {
-                        case PickCardValidatorNames.PickDiscardCardToStack:
+                        case PickCardValidatorNames.pickDiscardCardToStack:
                             isValid = IsCanPickPickDiscardCardToStack(G, card);
                             break;
-                        case PickCardValidatorNames.PickCampCardToStack:
+                        case PickCardValidatorNames.pickCampCardToStack:
                             isValid = IsCanPickPickCampCardToStack(G, card);
                             break;
                         default:

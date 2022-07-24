@@ -13,8 +13,7 @@ import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
-import { GameNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, ExpansionKeyofType, IBotData, ICoin, IDwarfCard, IExpansions, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, SuitKeyofType, SuitPropertyType, TavernAllCardType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -41,7 +40,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         debug = false,
         tavernCardDiscarded2Players = false,
         drawProfit = null,
-        expansions: IExpansions = {
+        expansions: ExpansionsType = {
+            basic: {
+                active: true,
+            },
             thingvellir: {
                 active: solo ? false : true,
             },
@@ -54,7 +56,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         logData: ILogData[] = [],
         odroerirTheMythicCauldronCoins: ICoin[] = [],
         specialCardsDeck: ISpecialCard[] = BuildSpecialCards(),
-        configOptions: GameNames[] = [GameNames.Basic],
+        configOptions: GameNamesKeyofTypeofType[] = [],
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
         distinctions: SuitPropertyType<DistinctionType> = {} as SuitPropertyType<DistinctionType>,
@@ -66,7 +68,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     if (solo && multiplayer) {
         throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
     }
-    let suit: SuitKeyofType;
+    let suit: SuitNamesKeyofTypeofType;
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
@@ -113,10 +115,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random!.Shuffle(deck);
     }
-    let expansion: ExpansionKeyofType;
+    let expansion: GameNamesKeyofTypeofType;
     for (expansion in expansions) {
         if (expansions[expansion].active) {
-            configOptions.push(expansion as GameNames);
+            configOptions.push(expansion);
         }
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: BuildHeroesArraysType =

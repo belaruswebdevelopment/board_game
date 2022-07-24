@@ -173,7 +173,7 @@ export const MythicalAnimalScoring = (player: IPublicPlayer, mythicalAnimalName:
  * @returns Количество очков по мифическому существу Garm.
  */
 export const GarmScoring = (player: IPublicPlayer): number =>
-    GetRanksValueMultiplier(player, SuitNames.Explorer, 1);
+    GetRanksValueMultiplier(player, SuitNames.explorer, 1);
 
 /**
  * <h3>Получение победных очков по мифическому существу Nidhogg.</h3>
@@ -186,7 +186,7 @@ export const GarmScoring = (player: IPublicPlayer): number =>
  * @returns Количество очков по мифическому существу Nidhogg.
  */
 export const NidhoggScoring = (player: IPublicPlayer): number =>
-    GetRanksValueMultiplier(player, SuitNames.Warrior, 2);
+    GetRanksValueMultiplier(player, SuitNames.warrior, 2);
 
 /**
 * <h3>Получение победных очков по гигантам.</h3>
@@ -227,7 +227,7 @@ export const GiantScoring = (player?: IPublicPlayer, giantName?: GiantNames): nu
  * @returns Количество очков по мифическому существу Gymir.
  */
 export const GymirScoring = (player: IPublicPlayer): number =>
-    GetRanksValueMultiplier(player, SuitNames.Explorer, 3);
+    GetRanksValueMultiplier(player, SuitNames.explorer, 3);
 
 /**
  * <h3>Получение победных очков по мифическому существу Surt.</h3>

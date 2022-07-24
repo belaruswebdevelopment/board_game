@@ -35,18 +35,18 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             let _exhaustiveCheck: never;
             switch (phase) {
                 case PhaseNames.ChooseDifficultySoloMode:
-                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 case PhaseNames.Bids:
                     if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
-                        activeStageOfCurrentPlayer = StageNames.Default3;
+                        activeStageOfCurrentPlayer = StageNames.default3;
                     } else if (G.solo && ctx.currentPlayer === `1`) {
-                        activeStageOfCurrentPlayer = StageNames.Default4;
+                        activeStageOfCurrentPlayer = StageNames.default4;
                     }
                     break;
                 case PhaseNames.BidUline:
                     // TODO Add BotPlaceCoinUline and others moves only for bots?!
-                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 case PhaseNames.TavernsResolution:
                     if (ctx.activePlayers === null) {
@@ -57,34 +57,34 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                             pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                         }
                         if (pickCardOrCampCard === `card`) {
-                            activeStageOfCurrentPlayer = StageNames.Default1;
+                            activeStageOfCurrentPlayer = StageNames.default1;
                         } else {
-                            activeStageOfCurrentPlayer = StageNames.Default2;
+                            activeStageOfCurrentPlayer = StageNames.default2;
                         }
                     }
                     break;
                 case PhaseNames.EnlistmentMercenaries:
                     if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
                         if (G.publicPlayersOrder.length === 1 || Math.floor(Math.random() * 2) === 0) {
-                            activeStageOfCurrentPlayer = StageNames.Default1;
+                            activeStageOfCurrentPlayer = StageNames.default1;
                         } else {
-                            activeStageOfCurrentPlayer = StageNames.Default2;
+                            activeStageOfCurrentPlayer = StageNames.default2;
                         }
                     } else if (G.drawProfit === null) {
-                        activeStageOfCurrentPlayer = StageNames.Default3;
+                        activeStageOfCurrentPlayer = StageNames.default3;
                     }
                     break;
                 case PhaseNames.PlaceYlud:
-                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 case PhaseNames.TroopEvaluation:
-                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 case PhaseNames.BrisingamensEndGame:
-                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 case PhaseNames.GetMjollnirProfit:
-                    activeStageOfCurrentPlayer = StageNames.Default1;
+                    activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 default:
                     _exhaustiveCheck = phase;
@@ -92,7 +92,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     return _exhaustiveCheck;
             }
             if (ctx.activePlayers !== null) {
-                activeStageOfCurrentPlayer = StageNames.DiscardSuitCard;
+                activeStageOfCurrentPlayer = StageNames.discardSuitCard;
                 // TODO Bot can't do async turns...?
                 for (let p = 0; p < ctx.numPlayers; p++) {
                     const playerP: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p];

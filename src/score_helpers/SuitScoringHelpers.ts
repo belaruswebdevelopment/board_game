@@ -1,5 +1,5 @@
 import { HeroNames, SuitNames } from "../typescript/enums";
-import type { PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
+import type { PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -13,18 +13,18 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 * @param heroName Название фракции дворфов.
 * @returns Количество очков по фракциям дворфов.
 */
-export const SuitScoring = (cards: PlayerCardType[], suit: SuitKeyofType, potentialCardValue = 0,
+export const SuitScoring = (cards: PlayerCardType[], suit: SuitNamesKeyofTypeofType, potentialCardValue = 0,
     additionalScoring = false): number => {
     switch (suit) {
-        case SuitNames.Blacksmith:
+        case SuitNames.blacksmith:
             return BlacksmithScoring(cards, potentialCardValue);
-        case SuitNames.Explorer:
+        case SuitNames.explorer:
             return ExplorerScoring(cards, potentialCardValue);
-        case SuitNames.Hunter:
+        case SuitNames.hunter:
             return HunterScoring(cards, potentialCardValue);
-        case SuitNames.Miner:
+        case SuitNames.miner:
             return MinerScoring(cards, potentialCardValue, additionalScoring);
-        case SuitNames.Warrior:
+        case SuitNames.warrior:
             return WarriorScoring(cards, potentialCardValue);
         default:
             throw new Error(`У фракций отсутствует фракция с названием '${suit}'.`);

@@ -13,7 +13,7 @@ import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { CreateMultiSuitPlayerCard } from "../MultiSuitCard";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, MultiSuitCardNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, SuitKeyofType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import type { CanBeUndefType, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -27,7 +27,7 @@ import type { CanBeUndefType, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerC
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType, cardId: number): void => {
+export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames, cardId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -53,7 +53,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -64,27 +64,27 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKe
     }
     const playerVariants: SuitPropertyType<VariantType> = {
         blacksmith: {
-            suit: SuitNames.Blacksmith,
+            suit: SuitNames.blacksmith,
             rank: 1,
             points: null,
         },
         hunter: {
-            suit: SuitNames.Hunter,
+            suit: SuitNames.hunter,
             rank: 1,
             points: null,
         },
         explorer: {
-            suit: SuitNames.Explorer,
+            suit: SuitNames.explorer,
             rank: 1,
             points: 0,
         },
         warrior: {
-            suit: SuitNames.Warrior,
+            suit: SuitNames.warrior,
             rank: 1,
             points: 0,
         },
         miner: {
-            suit: SuitNames.Miner,
+            suit: SuitNames.miner,
             rank: 1,
             points: 0,
         },
@@ -125,7 +125,7 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKe
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -159,7 +159,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType)
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -170,27 +170,27 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType):
     }
     const playerVariants: SuitPropertyType<VariantType> = {
         blacksmith: {
-            suit: SuitNames.Blacksmith,
+            suit: SuitNames.blacksmith,
             rank: 1,
             points: null,
         },
         hunter: {
-            suit: SuitNames.Hunter,
+            suit: SuitNames.hunter,
             rank: 1,
             points: null,
         },
         explorer: {
-            suit: SuitNames.Explorer,
+            suit: SuitNames.explorer,
             rank: 1,
             points: 11,
         },
         warrior: {
-            suit: SuitNames.Warrior,
+            suit: SuitNames.warrior,
             rank: 1,
             points: 7,
         },
         miner: {
-            suit: SuitNames.Miner,
+            suit: SuitNames.miner,
             rank: 1,
             points: 1,
         },

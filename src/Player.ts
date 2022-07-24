@@ -5,7 +5,7 @@ import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, ErrorNames, PhaseNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitKeyofType, SuitPropertyType } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -39,7 +39,7 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
 export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
     const cards: SuitPropertyType<PlayerCardType[]> = {} as SuitPropertyType<PlayerCardType[]>,
         giantTokenSuits: SuitPropertyType<CanBeNullType<boolean>> = {} as SuitPropertyType<CanBeNullType<boolean>>;
-    let suit: SuitKeyofType;
+    let suit: SuitNamesKeyofTypeofType;
     for (suit in suitsConfig) {
         cards[suit] = [];
         giantTokenSuits[suit] = null;

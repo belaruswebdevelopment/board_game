@@ -101,8 +101,7 @@ export const IsValidMove = (G, ctx, stage, id) => {
             isValid = ValidateByValues(id, validator.getRange(G, ctx));
         }
         else if (typeof id === `string`) {
-            isValid =
-                ValidateByValues(id, validator.getRange(G, ctx));
+            isValid = ValidateByValues(id, validator.getRange(G, ctx));
         }
         else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
             if (`coinId` in id) {
@@ -1109,15 +1108,15 @@ export const moveValidators = {
             if (player === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, moveArguments.playerId);
             }
-            const cardFirst = player.cards[SuitNames.Warrior][0];
+            const cardFirst = player.cards[SuitNames.warrior][0];
             if (cardFirst === undefined) {
-                throw new Error(`В массиве карт игрока во фракции '${SuitNames.Warrior}' отсутствует первая карта.`);
+                throw new Error(`В массиве карт игрока во фракции '${SuitNames.warrior}' отсутствует первая карта.`);
             }
             let minCardIndex = 0, minCardValue = cardFirst.points;
             moveArguments.cards.forEach((value, index) => {
-                const card = player.cards[SuitNames.Warrior][value];
+                const card = player.cards[SuitNames.warrior][value];
                 if (card === undefined) {
-                    throw new Error(`В массиве карт игрока во фракции '${SuitNames.Warrior}' отсутствует карта ${value}.`);
+                    throw new Error(`В массиве карт игрока во фракции '${SuitNames.warrior}' отсутствует карта ${value}.`);
                 }
                 const cardPoints = card.points;
                 if (cardPoints === null || minCardValue === null) {

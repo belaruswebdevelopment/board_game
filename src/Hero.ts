@@ -1,6 +1,6 @@
 import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { GameNames, RusCardTypeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CreateHeroCardType, CreateHeroPlayerCardType, HeroKeyofType, IHeroCard, IHeroData, IHeroPlayerCard } from "./typescript/interfaces";
+import { RusCardTypeNames } from "./typescript/enums";
+import type { BuildHeroesArraysType, CreateHeroCardType, CreateHeroPlayerCardType, GameNamesKeyofTypeofType, HeroNamesKeyofTypeofType, IHeroCard, IHeroData, IHeroPlayerCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -13,11 +13,11 @@ import type { BuildHeroesArraysType, CreateHeroCardType, CreateHeroPlayerCardTyp
  * @param solo Является ли режим игры соло игрой.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions: GameNames[], solo: boolean): BuildHeroesArraysType => {
+export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], solo: boolean): BuildHeroesArraysType => {
     const heroes: IHeroCard[] = [],
         heroesForSoloBot: IHeroCard[] = [],
         heroesForSoloGameDifficultyLevel: IHeroCard[] = [];
-    let heroName: HeroKeyofType;
+    let heroName: HeroNamesKeyofTypeofType;
     for (heroName in heroesConfig) {
         const heroData: IHeroData = heroesConfig[heroName];
         if (solo || (!solo && configOptions.includes(heroData.game))) {

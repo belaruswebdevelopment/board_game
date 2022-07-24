@@ -15,7 +15,7 @@ import { CoinTypeNames, StageNames } from "../typescript/enums";
  * @returns
  */
 export const AddCoinToPouchMove = (G, ctx, coinId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.AddCoinToPouch, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.addCoinToPouch, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -35,7 +35,7 @@ export const AddCoinToPouchMove = (G, ctx, coinId) => {
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = (G, ctx, value) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, value);
+        && IsValidMove(G, ctx, StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade, value);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -54,7 +54,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = (G, ctx, value) =
  * @returns
  */
 export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickCampCardHolda, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickCampCardHolda, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -73,7 +73,7 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
  * @returns
  */
 export const ClickCampCardMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -93,7 +93,7 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
  * @returns
  */
 export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, cardId) => {
-    const isValidMove = ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, StageNames.DiscardSuitCard, {
+    const isValidMove = ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, StageNames.discardSuitCard, {
         playerId: Number(ctx.playerID),
         cardId,
     });
@@ -116,7 +116,7 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, cardId) => {
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.UpgradeVidofnirVedrfolnirCoin, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.upgradeVidofnirVedrfolnirCoin, {
         coinId,
         type,
     });

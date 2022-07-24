@@ -23,7 +23,7 @@ import type { CanBeUndefType, CanBeVoidType, CoinType, IHeroCard, IMyGameState, 
 export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
     CanBeVoidType<string> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.PickHeroSoloBot, heroId);
+        && IsValidMove(G, ctx, StageNames.pickHeroSoloBot, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -49,7 +49,7 @@ export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ct
 export const SoloBotPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
     CanBeVoidType<string> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.Default4, coinsOrder);
+        && IsValidMove(G, ctx, StageNames.default4, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

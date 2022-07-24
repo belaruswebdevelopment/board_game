@@ -23,7 +23,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     CanBeVoidType<string> => {
     // TODO Check it bot can't play in multiplayer now...
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default3, coinsOrder);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

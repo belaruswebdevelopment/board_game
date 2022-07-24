@@ -19,7 +19,7 @@ import { ErrorNames, StageNames } from "../typescript/enums";
  */
 export const ChooseDifficultyLevelForSoloModeMove = (G, ctx, level) => {
     const isValidMove = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.Default1, level);
+        && IsValidMove(G, ctx, StageNames.default1, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -40,7 +40,7 @@ export const ChooseDifficultyLevelForSoloModeMove = (G, ctx, level) => {
  */
 export const ChooseHeroForDifficultySoloModeMove = (G, ctx, heroId) => {
     const isValidMove = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.ChooseHeroesForSoloMode, heroId);
+        && IsValidMove(G, ctx, StageNames.chooseHeroesForSoloMode, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

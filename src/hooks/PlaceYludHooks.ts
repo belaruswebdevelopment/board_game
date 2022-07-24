@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -93,7 +93,7 @@ export const CheckPlaceYludOrder = (G: IMyGameState, ctx: Ctx): void => {
             if (yludCard === undefined) {
                 throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}' с id '${index}'.`);
             }
-            const suit: CanBeNullType<SuitKeyofType> = yludCard.suit;
+            const suit: CanBeNullType<SuitNamesKeyofTypeofType> = yludCard.suit;
             if (suit !== null) {
                 const yludCardIndex: number =
                     player.cards[suit].findIndex((card: PlayerCardType): boolean =>

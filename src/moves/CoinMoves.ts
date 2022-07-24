@@ -24,7 +24,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
     CanBeVoidType<string> => {
     // TODO Add Place coins async
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default2, coinId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -114,7 +114,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
 export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): CanBeVoidType<string> => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.UpgradeCoin, {
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.upgradeCoin, {
             coinId,
             type,
         });
@@ -124,11 +124,11 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     // todo Move to distinction phase hook?
     if (Object.values(G.distinctions).length) {
         // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionWarrior: boolean = G.distinctions[SuitNames.Warrior] !== undefined;
+        const isDistinctionWarrior: boolean = G.distinctions[SuitNames.warrior] !== undefined;
         if (isDistinctionWarrior) {
-            G.distinctions[SuitNames.Warrior] = undefined;
-        } else if (!isDistinctionWarrior && G.distinctions[SuitNames.Explorer] !== undefined) {
-            G.distinctions[SuitNames.Explorer] = undefined;
+            G.distinctions[SuitNames.warrior] = undefined;
+        } else if (!isDistinctionWarrior && G.distinctions[SuitNames.explorer] !== undefined) {
+            G.distinctions[SuitNames.explorer] = undefined;
         }
     }
     UpgradeCoinActions(G, ctx, coinId, type);
@@ -150,7 +150,7 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
 export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): CanBeVoidType<string> => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PickConcreteCoinToUpgrade, {
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickConcreteCoinToUpgrade, {
             coinId,
             type,
         });
@@ -175,7 +175,7 @@ export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameSta
 export const ClickHandCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
     CanBeVoidType<string> => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, coinId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -201,7 +201,7 @@ export const ClickHandCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
 export const ClickHandCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
     CanBeVoidType<string> => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.Default1, coinId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -263,7 +263,7 @@ export const ClickHandCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx:
 export const ClickHandTradingCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
     CanBeVoidType<string> => {
     const isValidMove: boolean =
-        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.PlaceTradingCoinsUline, coinId);
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeTradingCoinsUline, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

@@ -15,6 +15,25 @@ export const enum AutoActionFunctionNames {
  * <h3>Перечисление для названий артефактов.</h3>
  */
 export const enum ArtefactNames {
+    Brisingamens = `Brisingamens`,
+    Draupnir = `Draupnir`,
+    Fafnir_Baleygr = `Fafnir_Baleygr`,
+    Gjallarhorn = `Gjallarhorn`,
+    Hofud = `Hofud`,
+    Hrafnsmerki = `Hrafnsmerki`,
+    Jarnglofi = `Jarnglofi`,
+    Megingjord = `Megingjord`,
+    Mjollnir = `Mjollnir`,
+    Odroerir_The_Mythic_Cauldron = `Odroerir_The_Mythic_Cauldron`,
+    Svalinn = `Svalinn`,
+    Vegvisir = `Vegvisir`,
+    Vidofnir_Vedrfolnir = `Vidofnir_Vedrfolnir`,
+}
+
+/**
+ * <h3>Перечисление для русских названий артефактов.</h3>
+ */
+export const enum RusArtefactNames {
     Brisingamens = `Брисингамен`,
     Draupnir = `Драупнир`,
     Fafnir_Baleygr = `Фафнир Баулейгр`,
@@ -63,6 +82,14 @@ export const enum ButtonNames {
  * <h3>Перечисление для названия мультифракционных карт.</h3>
  */
 export const enum MultiSuitCardNames {
+    Gullinbursti = `Gullinbursti`,
+    OlwinsDouble = `OlwinsDouble`,
+}
+
+/**
+ * <h3>Перечисление для русских названий мультифракционных карт.</h3>
+ */
+export const enum RusMultiSuitCardNames {
     Gullinbursti = `Гуллинбурсти`,
     OlwinsDouble = `Двойник Ольвюна`,
 }
@@ -71,6 +98,13 @@ export const enum MultiSuitCardNames {
  * <h3>Перечисление для названия особых карт.</h3>
  */
 export const enum SpecialCardNames {
+    ChiefBlacksmith = `ChiefBlacksmith`,
+}
+
+/**
+ * <h3>Перечисление для русских названий особых карт.</h3>
+ */
+export const enum RusSpecialCardNames {
     ChiefBlacksmith = `Главный кузнец`,
 }
 
@@ -161,15 +195,26 @@ export const enum ErrorNames {
  * <h3>Перечисление для названия игры и дополнений.</h3>
  */
 export const enum GameNames {
-    Basic = `basic`,
-    Idavoll = `idavoll`,
-    Thingvellir = `thingvellir`,
+    basic = `basic`,
+    idavoll = `idavoll`,
+    thingvellir = `thingvellir`,
 }
 
 /**
  * <h3>Перечисление для названия Гигантов.</h3>
  */
 export const enum GiantNames {
+    Gymir = `Gymir`,
+    Hrungnir = `Hrungnir`,
+    Skymir = `Skymir`,
+    Surt = `Surt`,
+    Thrivaldi = `Thrivaldi`,
+}
+
+/**
+ * <h3>Перечисление для русских названия Гигантов.</h3>
+ */
+export const enum RusGiantNames {
     Gymir = `Гюмир`,
     Hrungnir = `Грунгнир`,
     Skymir = `Скаймир`,
@@ -181,6 +226,17 @@ export const enum GiantNames {
  * <h3>Перечисление для названия Богов.</h3>
  */
 export const enum GodNames {
+    Freyja = `Freyja`,
+    Frigg = `Frigg`,
+    Loki = `Loki`,
+    Odin = `Odin`,
+    Thor = `Thor`,
+}
+
+/**
+ * <h3>Перечисление для русских названий Богов.</h3>
+ */
+export const enum RusGodNames {
     Freyja = `Фрейя`,
     Frigg = `Фригг`,
     Loki = `Локи`,
@@ -192,6 +248,17 @@ export const enum GodNames {
  * <h3>Перечисление для названия Мифических животных.</h3>
  */
 export const enum MythicalAnimalNames {
+    Durathor = `Durathor`,
+    Garm = `Garm`,
+    Hraesvelg = `Hraesvelg`,
+    Nidhogg = `Nidhogg`,
+    Ratatosk = `Ratatosk`,
+}
+
+/**
+ * <h3>Перечисление для русских названий Мифических животных.</h3>
+ */
+export const enum RusMythicalAnimalNames {
     Durathor = `Дуратор`,
     Garm = `Гарм`,
     Hraesvelg = `Хрэсвелг`,
@@ -203,6 +270,17 @@ export const enum MythicalAnimalNames {
  * <h3>Перечисление для названия Мифических животных.</h3>
  */
 export const enum ValkyryNames {
+    Brynhildr = `Brynhildr`,
+    Hildr = `Hildr`,
+    Olrun = `Olrun`,
+    Sigrdrifa = `Sigrdrifa`,
+    Svafa = `Svafa`,
+}
+
+/**
+ * <h3>Перечисление для русских названия Мифических животных.</h3>
+ */
+export const enum RusValkyryNames {
     Brynhildr = `Брюнхильда`,
     Hildr = `Хильд`,
     Olrun = `Ольрун`,
@@ -214,6 +292,40 @@ export const enum ValkyryNames {
  * <h3>Перечисление для названий героев.</h3>
  */
 export const enum HeroNames {
+    Aegur = `Aegur`,
+    Andumia = `Andumia`,
+    Aral = `Aral`,
+    Astrid = `Astrid`,
+    Bonfur = `Bonfur`,
+    Crovax_The_Doppelganger = `Crovax_The_Doppelganger`,
+    Dagda = `Dagda`,
+    Dwerg_Aesir = `Dwerg_Aesir`,
+    Dwerg_Bergelmir = `Dwerg_Bergelmir`,
+    Dwerg_Jungir = `Dwerg_Jungir`,
+    Dwerg_Sigmir = `Dwerg_Sigmir`,
+    Dwerg_Ymir = `Dwerg_Ymir`,
+    Grid = `Grid`,
+    Holda = `Holda`,
+    Hourya = `Hourya`,
+    Idunn = `Idunn`,
+    Jarika = `Jarika`,
+    Khrad = `Khrad`,
+    Kraal = `Kraal`,
+    Lokdur = `Lokdur`,
+    Olwin = `Olwin`,
+    Skaa = `Skaa`,
+    Tarah = `Tarah`,
+    Thrud = `Thrud`,
+    Uline = `Uline`,
+    Ylud = `Ylud`,
+    Zolkur = `Zolkur`,
+    Zoral = `Zoral`,
+}
+
+/**
+ * <h3>Перечисление для русских названий героев.</h3>
+ */
+export const enum RusHeroNames {
     Aegur = `Эгур Стальной кулак`,
     Andumia = `Аннумия Некромант`,
     Aral = `Арал Орлиный коготь`,
@@ -365,40 +477,69 @@ export enum RusSuitNames {
  * <h3>Перечисление для стадий игры.</h3>
  */
 export const enum StageNames {
-    AddCoinToPouch = `addCoinToPouch`,
-    ChooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
-    Default1 = `default1`,
-    Default2 = `default2`,
-    Default3 = `default3`,
-    Default4 = `default4`,
-    DiscardCard = `discardCard`,
-    DiscardBoardCard = `discardBoardCard`,
-    DiscardSuitCard = `discardSuitCard`,
-    PickCampCardHolda = `pickCampCardHolda`,
-    PickConcreteCoinToUpgrade = `pickConcreteCoinToUpgrade`,
-    PickDiscardCard = `pickDiscardCard`,
-    PickDistinctionCard = `pickDistinctionCard`,
-    PickDistinctionCardSoloBot = `pickDistinctionCardSoloBot`,
-    PickHero = `pickHero`,
-    PickHeroSoloBot = `pickHeroSoloBot`,
-    PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
-    PlaceMultiSuitsCards = `placeMultiSuitsCards`,
-    PlaceTradingCoinsUline = `placeTradingCoinsUline`,
-    PlaceThrudHero = `placeThrudHero`,
-    ChooseHeroesForSoloMode = `chooseHeroesForSoloMode`,
-    UpgradeCoin = `upgradeCoin`,
-    UpgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
+    addCoinToPouch = `addCoinToPouch`,
+    chooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
+    default1 = `default1`,
+    default2 = `default2`,
+    default3 = `default3`,
+    default4 = `default4`,
+    discardCard = `discardCard`,
+    discardBoardCard = `discardBoardCard`,
+    discardSuitCard = `discardSuitCard`,
+    pickCampCardHolda = `pickCampCardHolda`,
+    pickConcreteCoinToUpgrade = `pickConcreteCoinToUpgrade`,
+    pickDiscardCard = `pickDiscardCard`,
+    pickDistinctionCard = `pickDistinctionCard`,
+    pickDistinctionCardSoloBot = `pickDistinctionCardSoloBot`,
+    pickHero = `pickHero`,
+    pickHeroSoloBot = `pickHeroSoloBot`,
+    placeEnlistmentMercenaries = `placeEnlistmentMercenaries`,
+    placeMultiSuitsCards = `placeMultiSuitsCards`,
+    placeTradingCoinsUline = `placeTradingCoinsUline`,
+    placeThrudHero = `placeThrudHero`,
+    chooseHeroesForSoloMode = `chooseHeroesForSoloMode`,
+    upgradeCoin = `upgradeCoin`,
+    upgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
+}
+
+/**
+ * <h3>Перечисление для русских названий стадий игры.</h3>
+ */
+export enum RusStageNames {
+    addCoinToPouch = `addCoinToPouch`,
+    chooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
+    default1 = `default1`,
+    default2 = `default2`,
+    default3 = `default3`,
+    default4 = `default4`,
+    discardCard = `discardCard`,
+    discardBoardCard = `discardBoardCard`,
+    discardSuitCard = `discardSuitCard`,
+    pickCampCardHolda = `pickCampCardHolda`,
+    pickConcreteCoinToUpgrade = `pickConcreteCoinToUpgrade`,
+    pickDiscardCard = `pickDiscardCard`,
+    pickDistinctionCard = `pickDistinctionCard`,
+    pickDistinctionCardSoloBot = `pickDistinctionCardSoloBot`,
+    pickHero = `pickHero`,
+    pickHeroSoloBot = `pickHeroSoloBot`,
+    placeEnlistmentMercenaries = `placeEnlistmentMercenaries`,
+    placeMultiSuitsCards = `placeMultiSuitsCards`,
+    placeTradingCoinsUline = `placeTradingCoinsUline`,
+    placeThrudHero = `placeThrudHero`,
+    chooseHeroesForSoloMode = `chooseHeroesForSoloMode`,
+    upgradeCoin = `upgradeCoin`,
+    upgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
 }
 
 /**
  * <h3>Перечисление для названий фракций.</h3>
  */
 export const enum SuitNames {
-    Blacksmith = `blacksmith`,
-    Explorer = `explorer`,
-    Hunter = `hunter`,
-    Miner = `miner`,
-    Warrior = `warrior`,
+    blacksmith = `blacksmith`,
+    explorer = `explorer`,
+    hunter = `hunter`,
+    miner = `miner`,
+    warrior = `warrior`,
 }
 
 /**
@@ -413,8 +554,8 @@ export const enum PickHeroCardValidatorNames {
  * <h3>Перечисление для названия валидаторов для выбора карты при выборе героя.</h3>
  */
 export const enum PickCardValidatorNames {
-    PickDiscardCardToStack = `pickDiscardCardToStack`,
-    PickCampCardToStack = `pickCampCardToStack`,
+    pickDiscardCardToStack = `pickDiscardCardToStack`,
+    pickCampCardToStack = `pickCampCardToStack`,
 }
 
 /**

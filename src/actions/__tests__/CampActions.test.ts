@@ -39,7 +39,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -85,12 +85,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -140,7 +140,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -186,12 +186,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -253,7 +253,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -315,12 +315,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -370,7 +370,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -416,13 +416,13 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -489,7 +489,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
@@ -552,13 +552,13 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.AddCoinToPouch,
+                            stageName: StageNames.addCoinToPouch,
                             number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
                             coinId: undefined,
-                            stageName: StageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -768,7 +768,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                         warrior: [
                             {
                                 name: `Test`,
-                                suit: SuitNames.Warrior,
+                                suit: SuitNames.warrior,
                             },
                         ],
                     },
@@ -798,7 +798,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             discardCardsDeck: [
                 {
                     name: `Test`,
-                    suit: SuitNames.Warrior,
+                    suit: SuitNames.warrior,
                 },
             ] as DeckCardTypes[],
             logData: [
@@ -818,7 +818,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                         warrior: [
                             {
                                 name: `Test`,
-                                suit: SuitNames.Warrior,
+                                suit: SuitNames.warrior,
                             },
                         ],
                     },
@@ -848,7 +848,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             discardCampCardsDeck: [
                 {
                     name: `Test`,
-                    suit: SuitNames.Warrior,
+                    suit: SuitNames.warrior,
                 },
             ] as DiscardCampCardType[],
             logData: [

@@ -1,7 +1,7 @@
 import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, BuffNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardType, PublicPlayerCoinType, SuitKeyofType } from "../typescript/interfaces";
+import type { CanBeUndefType, IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 /**
@@ -78,7 +78,7 @@ export const DraupnirScoring = (G: IMyGameState, player: IPublicPlayer): number 
  */
 export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
     let score = 0,
-        suit: SuitKeyofType;
+        suit: SuitNamesKeyofTypeofType;
     for (suit in player.cards) {
         score += player.cards[suit].filter((card: PlayerCardType): boolean =>
             card.type === RusCardTypeNames.Mercenary_Player_Card).length * 5;
@@ -97,7 +97,7 @@ export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
  * @returns
  */
 export const MjollnirScoring = (player: IPublicPlayer): number => {
-    const suit: CanBeUndefType<SuitKeyofType> = player.buffs.find((buff: IBuffs): boolean =>
+    const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = player.buffs.find((buff: IBuffs): boolean =>
         buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
     if (suit === undefined) {
         throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);

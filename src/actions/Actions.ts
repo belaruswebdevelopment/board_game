@@ -10,8 +10,8 @@ import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
-import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, SuitKeyofType } from "../typescript/interfaces";
+import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
+import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -25,7 +25,7 @@ import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IMercenaryC
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  */
-export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType, cardId: number):
+export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames, cardId: number):
     void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -103,7 +103,7 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -172,7 +172,7 @@ export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
  * @param ctx
  * @param suit Название фракции дворфов.
  */
-export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitKeyofType): void => {
+export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

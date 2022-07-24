@@ -23,7 +23,7 @@ import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPla
 export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, level: number):
     CanBeVoidType<string> => {
     const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.Default1, level);
+        && IsValidMove(G, ctx, StageNames.default1, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -46,7 +46,7 @@ export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyG
 export const ChooseHeroForDifficultySoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
     CanBeVoidType<string> => {
     const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
-        && IsValidMove(G, ctx, StageNames.ChooseHeroesForSoloMode, heroId);
+        && IsValidMove(G, ctx, StageNames.chooseHeroesForSoloMode, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

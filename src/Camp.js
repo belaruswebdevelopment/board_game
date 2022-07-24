@@ -46,11 +46,11 @@ export const BuildCampCards = (tier) => {
         throw new Error(`Отсутствует массив значений карт наёмников в указанной эпохе - '${tier}'.`);
     }
     for (let i = 0; i < mercenariesConfigTier.length; i++) {
-        let name = ``, path = ``, campMercenarySuit;
         const mercenaryData = mercenariesConfigTier[i];
         if (mercenaryData === undefined) {
             throw new Error(`Отсутствует массив значений карты наёмника с id '${i}' в указанной эпохе - '${tier}'.`);
         }
+        let name = ``, path = ``, campMercenarySuit;
         for (campMercenarySuit in mercenaryData) {
             path += campMercenarySuit + ` `;
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;

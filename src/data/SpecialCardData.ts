@@ -1,5 +1,5 @@
 import { SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { ISpecialCardsConfig, SpecialCardDataType } from "../typescript/interfaces";
+import type { SpecialCardDataType, SpecialCardsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Данные о особой карте.</h3>
@@ -10,7 +10,7 @@ import type { ISpecialCardsConfig, SpecialCardDataType } from "../typescript/int
  */
 const ChiefBlacksmith: SpecialCardDataType = {
     name: SpecialCardNames.ChiefBlacksmith,
-    suit: SuitNames.Blacksmith,
+    suit: SuitNames.blacksmith,
     rank: 2,
     points: null,
 };
@@ -22,6 +22,6 @@ const ChiefBlacksmith: SpecialCardDataType = {
  * <li>Происходит при создании всех особых карт при инициализации игры.</li>
  * </ol>
  */
-export const specialCardsConfig: ISpecialCardsConfig = {
+export const specialCardsConfig: SpecialCardsConfigType = {
     ChiefBlacksmith,
 };

@@ -32,8 +32,8 @@ export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
             throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
         }
         AddCardToPlayer(G, ctx, card);
-        G.distinctions[SuitNames.Blacksmith] = undefined;
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${card.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.Blacksmith}'.`);
+        G.distinctions[SuitNames.blacksmith] = undefined;
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${card.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.blacksmith}'.`);
         CheckAndMoveThrudAction(G, ctx, card);
     }
     return 0;
@@ -113,7 +113,7 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
                 throw new Error(`Не существует типа монеты - '${type}'.`);
                 return _exhaustiveCheck;
         }
-        G.distinctions[SuitNames.Hunter] = undefined;
+        G.distinctions[SuitNames.hunter] = undefined;
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия охотников свою монету с номиналом '0' на особую монету с номиналом '3'.`);
     }
     return 0;
@@ -142,7 +142,7 @@ export const MinerDistinctionAwarding = (G, ctx, playerId) => {
             value: 6,
             isExchangeable: false,
         });
-        G.distinctions[SuitNames.Miner] = undefined;
+        G.distinctions[SuitNames.miner] = undefined;
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);
     }
     else {

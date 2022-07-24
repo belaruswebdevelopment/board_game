@@ -12,7 +12,6 @@ import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
-import { GameNames } from "./typescript/enums";
 /**
  * <h3>Инициализация игры.</h3>
  * <p>Применения:</p>
@@ -27,6 +26,9 @@ export const SetupGame = (ctx) => {
     const suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, soloGameDifficultyLevel = null, explorerDistinctionCardId = null, multiplayer = false, 
     // TODO Rework it!
     solo = ctx.numPlayers === 2, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = null, expansions = {
+        basic: {
+            active: true,
+        },
         thingvellir: {
             active: solo ? false : true,
         },
@@ -34,7 +36,7 @@ export const SetupGame = (ctx) => {
         idavoll: {
             active: solo ? false : false,
         },
-    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [GameNames.Basic], discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
+    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
         campDecks: [],
         decks: [],
         mythologicalCreatureDecks: [],

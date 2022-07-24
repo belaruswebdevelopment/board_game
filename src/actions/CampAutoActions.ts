@@ -59,16 +59,16 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
-        if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.Warrior].length) {
+        if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.warrior].length) {
             value[i] = {
-                stage: StageNames.DiscardSuitCard,
+                stage: StageNames.discardSuitCard,
             };
             AddActionsToStack(G, ctx, [StackData.discardSuitCard(i)]);
             results++;
         }
     }
     if (!results) {
-        throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.Warrior}'.`);
+        throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
     }
     ctx.events?.setActivePlayers({
         value,
