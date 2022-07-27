@@ -1,7 +1,7 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
-import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
+import { StartAutoAction } from "../dispatchers/ActionDispatcher";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";

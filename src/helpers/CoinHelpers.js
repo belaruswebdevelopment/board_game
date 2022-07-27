@@ -78,14 +78,8 @@ export const DiscardTradingCoin = (G, ctx, playerId) => {
  * @param player Игрок.
  * @returns Максимальная монета игрока.
  */
-export const GetMaxCoinValue = (player) => Math.max(...player.boardCoins.filter((coin) => IsCoin(coin)).map((coin, index) => {
-    if (coin === null) {
-        throw new Error(`В массиве монет игрока '${player.nickname}' на поле отсутствует монета с id '${index}'.`);
-    }
-    if (coin !== null && !IsCoin(coin)) {
-        throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть закрыта монета с id '${index}'.`);
-    }
-    if (coin !== null && IsCoin(coin) && !coin.isOpened) {
+export const GetMaxCoinValue = (player) => Math.max(...player.boardCoins.filter(IsCoin).map((coin, index) => {
+    if (!coin.isOpened) {
         throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
     }
     return coin.value;

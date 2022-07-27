@@ -1,5 +1,4 @@
-import { ArtefactScoring } from "../score_helpers/ArtefactScoringHelpers";
-import { ArtefactNames, AutoActionFunctionNames, BuffNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, BuffNames, SuitNames } from "../typescript/enums";
 import type { ArtefactConfigType, IArtefactData, MercenaryType, SuitPropertyType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -24,7 +23,10 @@ const Brisingamens: IArtefactData = {
         StackData.pickDiscardCardBrisingamens(),
         StackData.pickDiscardCardBrisingamens(3),
     ],
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -38,7 +40,9 @@ const Draupnir: IArtefactData = {
     name: ArtefactNames.Draupnir,
     description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 6 победных очков за каждую свою монету с номиналом 15 или выше.`,
     tier: 0,
-    scoringRule: ArtefactScoring,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.DraupnirScoring,
+    },
 };
 
 /**
@@ -55,7 +59,10 @@ const Fafnir_Baleygr: IArtefactData = {
     buff: {
         name: BuffNames.GoCamp,
     },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -73,7 +80,10 @@ const Gjallarhorn: IArtefactData = {
         name: AutoActionFunctionNames.AddPickHeroAction,
         params: [2],
     },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -91,7 +101,10 @@ const Hofud: IArtefactData = {
         name: AutoActionFunctionNames.StartDiscardSuitCardAction,
     },
     stack: [StackData.discardSuitCardHofud()],
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -105,7 +118,9 @@ const Hrafnsmerki: IArtefactData = {
     name: ArtefactNames.Hrafnsmerki,
     description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 5 победных очков за каждую свою карту наёмника.`,
     tier: 1,
-    scoringRule: ArtefactScoring,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.HrafnsmerkiScoring,
+    },
 };
 
 /**
@@ -122,7 +137,10 @@ const Jarnglofi: IArtefactData = {
     actions: {
         name: AutoActionFunctionNames.DiscardTradingCoinAction,
     },
-    scoringRule: (): number => 24,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [24],
+    },
 };
 
 /**
@@ -139,7 +157,10 @@ const Megingjord: IArtefactData = {
     buff: {
         name: BuffNames.NoHero,
     },
-    scoringRule: (): number => 28,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [28],
+    },
 };
 
 /**
@@ -156,7 +177,9 @@ const Mjollnir: IArtefactData = {
     buff: {
         name: BuffNames.GetMjollnirProfit,
     },
-    scoringRule: ArtefactScoring,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.MjollnirScoring,
+    },
 };
 
 const Odroerir_The_Mythic_Cauldron: IArtefactData = {
@@ -166,7 +189,9 @@ const Odroerir_The_Mythic_Cauldron: IArtefactData = {
     actions: {
         name: AutoActionFunctionNames.FinishOdroerirTheMythicCauldronAction,
     },
-    scoringRule: ArtefactScoring,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.OdroerirTheMythicCauldronScoring,
+    },
 };
 
 /**
@@ -180,7 +205,9 @@ const Svalinn: IArtefactData = {
     name: ArtefactNames.Svalinn,
     description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 5 победных очков за каждую свою карту героя.`,
     tier: 0,
-    scoringRule: ArtefactScoring,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.SvalinnScoring,
+    },
 };
 
 /**
@@ -197,7 +224,10 @@ const Vegvisir: IArtefactData = {
     suit: SuitNames.explorer,
     rank: 1,
     points: 13,
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -214,7 +244,10 @@ const Vidofnir_Vedrfolnir: IArtefactData = {
     actions: {
         name: AutoActionFunctionNames.StartVidofnirVedrfolnirAction,
     },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: ArtefactScoringFunctionNames.BasicArtefactScoring,
+        params: [0],
+    },
 };
 
 /**

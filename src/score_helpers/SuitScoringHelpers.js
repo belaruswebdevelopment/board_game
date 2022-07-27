@@ -1,32 +1,5 @@
-import { HeroNames, SuitNames } from "../typescript/enums";
+import { HeroNames } from "../typescript/enums";
 import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
-/**
-* <h3>Получение победных очков по фракциям дворфов.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>В конце игры, когда получаются победные очки по фракциям дворфов.</li>
-* </ol>
-*
-* @param player Игрок.
-* @param heroName Название фракции дворфов.
-* @returns Количество очков по фракциям дворфов.
-*/
-export const SuitScoring = (cards, suit, potentialCardValue = 0, additionalScoring = false) => {
-    switch (suit) {
-        case SuitNames.blacksmith:
-            return BlacksmithScoring(cards, potentialCardValue);
-        case SuitNames.explorer:
-            return ExplorerScoring(cards, potentialCardValue);
-        case SuitNames.hunter:
-            return HunterScoring(cards, potentialCardValue);
-        case SuitNames.miner:
-            return MinerScoring(cards, potentialCardValue, additionalScoring);
-        case SuitNames.warrior:
-            return WarriorScoring(cards, potentialCardValue);
-        default:
-            throw new Error(`У фракций отсутствует фракция с названием '${suit}'.`);
-    }
-};
 /**
  * <h3>Получение победных очков по фракции кузнецов.</h3>
  * <p>Применения:</p>
@@ -73,6 +46,7 @@ export const HunterScoring = (cards, potentialCardValue = 0) => (cards.reduce(To
 *
 * @param cards Массив карт.
 * @param potentialCardValue Потенциальное значение карты для ботов.
+* @param additionalScoring Дополнительное значение специфической карты.
 * @returns Суммарное количество очков по фракции горняков.
 */
 export const MinerScoring = (cards, potentialCardValue = 0, additionalScoring = false) => {

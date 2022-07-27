@@ -89,24 +89,13 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
         else {
             handCoins = player.handCoins;
         }
-        const allCoins = [], allHandCoins = handCoins.filter((coin, index) => {
-            if (coin !== null && !IsCoin(coin)) {
-                throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
-            }
-            return IsCoin(coin);
-        });
+        const allCoins = [], allHandCoins = handCoins.filter(IsCoin);
         for (let i = 0; i < player.boardCoins.length; i++) {
             const boardCoin = player.boardCoins[i];
             if (boardCoin === null) {
                 const handCoin = allHandCoins.splice(0, 1)[0];
                 if (handCoin === undefined) {
                     throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке отсутствует монета с id '${i}'.`);
-                }
-                if (handCoin === null) {
-                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может не быть монеты с id '${i}'.`);
-                }
-                if (!IsCoin(handCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может быть закрыта монета с id '${i}'.`);
                 }
                 allCoins.push(handCoin);
             }
@@ -117,23 +106,21 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 if (!IsCoin(boardCoin)) {
                     throw new Error(`В массиве монет игрока с id '${currentPlayer}' на поле не может быть закрыта монета с id '${i}'.`);
                 }
-                if (IsCoin(boardCoin)) {
-                    allCoins.push(boardCoin);
-                }
+                allCoins.push(boardCoin);
             }
         }
-        const minCoinValue = Math.min(...allCoins.filter((coin) => IsCoin(coin) && !coin.isTriggerTrading).map((coin) => coin.value));
+        const minCoinValue = Math.min(...allCoins.filter((coin) => !coin.isTriggerTrading).map((coin) => coin.value));
         if (G.solo && minCoinValue !== 2) {
             throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
         }
-        const upgradingCoinsArray = allCoins.filter((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
+        const upgradingCoinsArray = allCoins.filter((coin) => coin.value === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
-                upgradingCoinsArray.some((coin) => (coin === null || coin === void 0 ? void 0 : coin.isInitial) === true);
+                upgradingCoinsArray.some((coin) => coin.isInitial === true);
         }
         if (upgradingCoinsValue === 1 || ((upgradingCoinsValue > 1) && !isInitialInUpgradingCoinsValue)) {
-            const upgradingCoinId = allCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), boardCoin = player.boardCoins[upgradingCoinId];
+            const upgradingCoinId = allCoins.findIndex((coin) => coin.value === minCoinValue), boardCoin = player.boardCoins[upgradingCoinId];
             if (boardCoin === undefined) {
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
             }

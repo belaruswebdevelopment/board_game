@@ -1,9 +1,10 @@
 import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { ScoreWinner } from "../Score";
-import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { BuffNames, ErrorNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>
@@ -44,8 +45,7 @@ export const CheckEndGame = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> 
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         i);
                 }
-                allMercenariesPlayed = player.campCards.filter((card: CampDeckCardType): boolean =>
-                    card.type === RusCardTypeNames.Mercenary_Card).length === 0;
+                allMercenariesPlayed = player.campCards.filter(IsMercenaryCampCard).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }

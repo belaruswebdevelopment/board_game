@@ -1,5 +1,4 @@
-import { HeroScoring } from "../score_helpers/HeroScoringHelpers";
-import { AutoActionFunctionNames, BuffNames, GameNames, HeroNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
+import { AutoActionFunctionNames, BuffNames, GameNames, HeroNames, HeroScoringFunctionNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
 import type { HeroConfigType, IHeroData, SoloGameDifficultyLevelHeroesConfigType, SoloGameHeroesForBotConfigType, SoloGameHeroesForPlayerConfigType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -16,7 +15,10 @@ const Aegur: IHeroData = {
     game: GameNames.basic,
     suit: SuitNames.blacksmith,
     rank: 2,
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -35,7 +37,10 @@ const Andumia: IHeroData = {
         pickDiscardCardToStack: {},
     },
     stack: [StackData.pickDiscardCardAndumia()],
-    scoringRule: (): number => 12,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [12],
+    },
 };
 
 /**
@@ -51,7 +56,10 @@ const Aral: IHeroData = {
     game: GameNames.basic,
     suit: SuitNames.hunter,
     rank: 2,
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -65,7 +73,9 @@ const Astrid: IHeroData = {
     name: HeroNames.Astrid,
     description: `Прибавьте к своему итоговому показателю храбрости номинал своей самой ценной монеты.`,
     game: GameNames.basic,
-    scoringRule: HeroScoring,
+    scoringRule: {
+        name: HeroScoringFunctionNames.AstridScoring,
+    },
 };
 
 /**
@@ -87,7 +97,10 @@ const Bonfur: IHeroData = {
         },
     },
     stack: [StackData.discardCardFromBoardBonfur()],
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -108,7 +121,10 @@ const Crovax_The_Doppelganger: IHeroData = {
         },
     },
     stack: [StackData.discardCardFromBoardCrovaxTheDoppelganger()],
-    scoringRule: (): number => 25,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [25],
+    },
 };
 
 /**
@@ -131,7 +147,10 @@ const Dagda: IHeroData = {
         },
     },
     stack: [StackData.discardCardFromBoardDagda()],
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -145,7 +164,10 @@ const Dwerg_Aesir: IHeroData = {
     name: HeroNames.Dwerg_Aesir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.basic,
-    scoringRule: (): number => 1,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [1],
+    },
 };
 
 /**
@@ -159,7 +181,10 @@ const Dwerg_Bergelmir: IHeroData = {
     name: HeroNames.Dwerg_Bergelmir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.basic,
-    scoringRule: (): number => 1,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [1],
+    },
 };
 
 /**
@@ -173,7 +198,10 @@ const Dwerg_Jungir: IHeroData = {
     name: HeroNames.Dwerg_Jungir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.basic,
-    scoringRule: (): number => 1,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [1],
+    },
 };
 
 /**
@@ -187,7 +215,10 @@ const Dwerg_Sigmir: IHeroData = {
     name: HeroNames.Dwerg_Sigmir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.basic,
-    scoringRule: (): number => 1,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [1],
+    },
 };
 
 /**
@@ -201,7 +232,10 @@ const Dwerg_Ymir: IHeroData = {
     name: HeroNames.Dwerg_Ymir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.basic,
-    scoringRule: (): number => 1,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [1],
+    },
 };
 
 // TODO For Solo game `Replace the coin of value 2 at the start of the game with a coin of value 9 and add 7 points to the final Bravery Value.`
@@ -218,7 +252,10 @@ const Grid: IHeroData = {
     game: GameNames.basic,
     points: 7,
     stack: [StackData.upgradeCoin(7)],
-    scoringRule: (): number => 7,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [7],
+    },
 };
 
 /**
@@ -240,7 +277,10 @@ const Holda: IHeroData = {
         pickCampCardToStack: {},
     },
     stack: [StackData.pickCampCardHolda()],
-    scoringRule: (): number => 12,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [12],
+    },
 };
 
 /**
@@ -265,7 +305,10 @@ const Hourya: IHeroData = {
             },
         },
     },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -282,7 +325,9 @@ const Idunn: IHeroData = {
     suit: SuitNames.explorer,
     rank: 1,
     points: 7,
-    scoringRule: HeroScoring,
+    scoringRule: {
+        name: HeroScoringFunctionNames.IdunnScoring,
+    },
 };
 
 /**
@@ -300,7 +345,10 @@ const Jarika: IHeroData = {
     buff: {
         name: BuffNames.UpgradeCoin,
     },
-    scoringRule: (): number => 8,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [8],
+    },
 };
 
 /**
@@ -319,7 +367,10 @@ const Khrad: IHeroData = {
         name: AutoActionFunctionNames.UpgradeMinCoinAction,
         params: [10],
     },
-    scoringRule: (): number => 4,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [4],
+    },
 };
 
 /**
@@ -336,7 +387,10 @@ const Kraal: IHeroData = {
     suit: SuitNames.warrior,
     rank: 2,
     points: 7,
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -353,7 +407,10 @@ const Lokdur: IHeroData = {
     suit: SuitNames.miner,
     rank: 1,
     points: 3,
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -369,7 +426,10 @@ const Olwin: IHeroData = {
     game: GameNames.thingvellir,
     points: 9,
     stack: [StackData.placeMultiSuitsCards(MultiSuitCardNames.OlwinsDouble)],
-    scoringRule: (): number => 9,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [9],
+    },
 };
 
 /**
@@ -384,7 +444,10 @@ const Skaa: IHeroData = {
     description: `Прибавьте 17 очков к своему итоговому показателю храбрости.`,
     game: GameNames.basic,
     points: 17,
-    scoringRule: (): number => 17,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [17],
+    },
 };
 
 /**
@@ -401,7 +464,10 @@ const Tarah: IHeroData = {
     suit: SuitNames.warrior,
     rank: 1,
     points: 14,
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 // TODO For Solo Game `She is the most formidable opponent since she will always be present in your army to try to complete the guard lines and recruit the Dwerg brothers.During the countdown, she returns to the Command Zone and adds 13 points to the Final Bravery Value.`
@@ -421,7 +487,10 @@ const Thrud: IHeroData = {
     buff: {
         name: BuffNames.MoveThrud,
     },
-    scoringRule: (): number => 13,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [13],
+    },
 };
 
 /**
@@ -442,7 +511,10 @@ const Uline: IHeroData = {
     buff: {
         name: BuffNames.EveryTurn,
     },
-    scoringRule: (): number => 9,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [9],
+    },
 };
 
 /**
@@ -459,7 +531,10 @@ const Ylud: IHeroData = {
     buff: {
         name: BuffNames.EndTier,
     },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -477,7 +552,10 @@ const Zolkur: IHeroData = {
     buff: {
         name: BuffNames.UpgradeNextCoin,
     },
-    scoringRule: (): number => 10,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [10],
+    },
 };
 
 /**
@@ -494,7 +572,10 @@ const Zoral: IHeroData = {
     suit: SuitNames.miner,
     rank: 3,
     points: 1,
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: HeroScoringFunctionNames.BasicHeroScoring,
+        params: [0],
+    },
 };
 
 /**

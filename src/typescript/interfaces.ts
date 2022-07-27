@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, AutoActionFunctionNames, BuffNames, CoinTypeNames, ConfigNames, DrawNames, GameNames, GiantNames, GodNames, HeroNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, PickCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, SuitNames, TavernNames, ValkyryNames } from "./enums";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, BuffNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PickCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 export interface ISecret {
     readonly campDecks: CampDeckCardType[][];
@@ -52,12 +52,12 @@ export interface IGodCard {
     isPowerTokenUsed: CanBeNullType<boolean>;
 }
 
+// TODO Check actions
 /**
  * <h3>Интерфейс для данных карты Гиганта.</h3>
  */
-export interface IGiantData extends Omit<IGiantCard, `type` | `capturedCard`> {
-    readonly actions?: IAction;
-    readonly scoringRule: (player?: IPublicPlayer, giantName?: GiantNames) => number;
+export interface IGiantData extends Omit<IGiantCard, `type` | `capturedCard`>, Pick<ICardWithActionInfo, `actions`> {
+    readonly scoringRule: IAction<GiantScoringFunctionNames, ScoringArgsType>;
 }
 
 /**
@@ -75,7 +75,7 @@ export interface IGiantCard {
  */
 export interface IMythicalAnimalData extends PartialByType<Omit<IMythicalAnimalCard, `type`>, `rank` | `points`> {
     readonly buff?: IBuff;
-    readonly scoringRule?: (player: IPublicPlayer, mythicalAnimalName: MythicalAnimalNames) => number;
+    readonly scoringRule: IAction<MythicalAnimalScoringFunctionNames, ScoringArgsType>;
     readonly ability?: () => void;
 }
 
@@ -92,7 +92,7 @@ export interface IMythicalAnimalCard extends IBasicSuitableNonNullableCardInfo {
  */
 export interface IValkyryData extends Omit<IValkyryCard, `type` | `strengthTokenNotch`> {
     readonly buff: IBuff;
-    readonly scoringRule: (strengthTokenNotch: number, valkyryName: ValkyryNames) => number;
+    readonly scoringRule: IAction<ValkyryScoringFunctionNames, undefined>;
 }
 
 /**
@@ -157,7 +157,7 @@ export interface IRoyalOfferingCardValues {
  */
 export interface IArtefactData extends ITierInfo, Omit<IArtefactCampCard, `type` | `path`>,
     PartialByType<Omit<IArtefactPlayerCampCard, `type` | `path`>, `suit` | `rank` | `points`> {
-    readonly scoringRule: (G?: IMyGameState, player?: IPublicPlayer, artefactName?: ArtefactNames) => number;
+    readonly scoringRule: IAction<ArtefactScoringFunctionNames, ScoringArgsType>;
 }
 
 /**
@@ -190,7 +190,7 @@ export interface IMercenaryCampCard extends IPathCardInfo {
 /**
  * <h3>Интерфейс для карты наёмника на столе игрока.</h3>
  */
-export interface IMercenaryPlayerCard extends MercenaryType, IPathCardInfo {
+export interface IMercenaryPlayerCampCard extends MercenaryType, IPathCardInfo {
     // TODO Rework all cards name in Enums
     readonly name: string;
     readonly type: RusCardTypeNames.Mercenary_Player_Card;
@@ -201,7 +201,7 @@ export interface IMercenaryPlayerCard extends MercenaryType, IPathCardInfo {
  */
 export interface IHeroData extends PartialByType<Omit<IHeroCard, `type` | `active`>, `suit` | `rank` | `points`>,
     IExpansionCardInfo {
-    readonly scoringRule: (player?: IPublicPlayer, heroName?: HeroNames) => number;
+    readonly scoringRule: IAction<HeroScoringFunctionNames, ScoringArgsType>;
 }
 
 /**
@@ -234,9 +234,9 @@ export interface IDwarfCard extends IBasicSuitableNonNullableCardInfo {
 /**
  * <h3>Интерфейс для действия.</h3>
  */
-export interface IAction {
-    readonly name: AutoActionFunctionNames;
-    readonly params?: AutoActionArgsType;
+export interface IAction<TName, TParams> {
+    readonly name: TName;
+    readonly params?: TParams;
 }
 
 /**
@@ -263,7 +263,8 @@ export interface IStackData {
     readonly pickDiscardCardBrisingamens: (priority?: number) => IStack;
     readonly pickDistinctionCard: () => IStack;
     readonly pickDistinctionCardSoloBot: () => IStack;
-    readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3) => IStack;
+    readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3) =>
+        IStack;
     readonly placeThrudHero: () => IStack;
     readonly placeTradingCoinsUline: () => IStack;
     readonly placeYludHero: () => IStack;
@@ -351,7 +352,7 @@ export interface ICardWithActionInfo {
     readonly description: string;
     readonly buff?: IBuff;
     readonly validators?: ValidatorsConfigType;
-    readonly actions?: IAction;
+    readonly actions?: IAction<AutoActionFunctionNames, AutoActionArgsType>;
     readonly stack?: IStack[];
 }
 
@@ -394,6 +395,35 @@ export interface IAutoActionFunctionWithParams {
 
 export interface IAutoActionFunction {
     (G: IMyGameState, ctx: Ctx): void;
+}
+
+export interface ISuitScoringFunction {
+    (...params: SuitScoringArgsType): number;
+}
+
+export interface IArtefactScoringFunction {
+    (G: IMyGameState, player: IPublicPlayer, ...params: ScoringArgsType): number;
+}
+
+// TODO Rework common ScoringFunction interfaces!
+export interface IHeroScoringFunction {
+    (player: IPublicPlayer, ...params: ScoringArgsType): number;
+}
+
+export interface IMythicalAnimalScoringFunction {
+    (player: IPublicPlayer, ...params: ScoringArgsType): number;
+}
+
+export interface IGiantScoringFunction {
+    (player: IPublicPlayer, ...params: ScoringArgsType): number;
+}
+
+export interface IValkyryScoringFunction {
+    (...params: ScoringArgsType): number;
+}
+
+export interface IDistinctionAwardingFunction {
+    (G: IMyGameState, ctx: Ctx, ...params: ScoringArgsType): number;
 }
 
 export interface IMoveFunction {
@@ -849,14 +879,13 @@ export interface ISuit {
     readonly suitColor: string;
     readonly description: string;
     readonly pointsValues: () => IPointsValues;
-    readonly scoringRule: (cards: PlayerCardType[], suit: SuitNamesKeyofTypeofType, potentialCardValue?: number,
-        additionalScoring?: boolean) => number;
+    readonly scoringRule: IAction<SuitScoringFunctionNames, undefined>;
     readonly distinction: IDistinction;
 }
 
 export interface IDistinction {
     readonly description: string;
-    readonly awarding: (G: IMyGameState, ctx: Ctx, playerId: number) => number;
+    readonly awarding: IAction<DistinctionAwardingFunctionNames, undefined>;
 }
 
 /**
@@ -928,7 +957,7 @@ export type DeckCardTypes = IDwarfCard | IRoyalOfferingCard;
  */
 export type DiscardDeckCardType = DeckCardTypes;
 
-export type DiscardCampCardType = CampDeckCardType | IMercenaryPlayerCard;
+export type DiscardCampCardType = CampDeckCardType | IMercenaryPlayerCampCard;
 
 export type CardsHasStackType = IHeroCard | IArtefactCampCard | IRoyalOfferingCard;
 
@@ -940,7 +969,7 @@ export type PointsType = number | number[];
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
 export type PlayerCardType = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard
-    | IHeroPlayerCard | IMercenaryPlayerCard | IMythicalAnimalCard;
+    | IHeroPlayerCard | IMercenaryPlayerCampCard | IMythicalAnimalCard;
 
 // TODO CanBeUndef<DeckCardTypes>[] and CanBeUndef<MythologicalCreatureDeckCardTypes>[]?
 /**
@@ -1099,6 +1128,10 @@ export type ArgsType = (CoinTypeNames | SuitNamesKeyofTypeofType | number)[];
 
 export type AutoActionArgsType = [number] | [number, number, CoinTypeNames];
 
+export type ScoringArgsType = [number];
+
+export type SuitScoringArgsType = [PlayerCardType[], number?, boolean?];
+
 /**
  * <h3>Типы данных для преимуществ.</h3>
  */
@@ -1132,7 +1165,7 @@ export type CreateMercenaryCampCardType = PartialByType<IMercenaryCampCard, `typ
 /**
  * <h3>Тип для создания карты наёмника на столе игрока.</h3>
  */
-export type CreateMercenaryPlayerCardType = PartialByType<IMercenaryPlayerCard, `rank` | `type`>;
+export type CreateMercenaryPlayerCampCardType = PartialByType<IMercenaryPlayerCampCard, `rank` | `type`>;
 
 /**
  * <h3>Тип для создания карты дворфа.</h3>
@@ -1143,7 +1176,7 @@ export type DiscardCardType =
     PlayerCardType | IRoyalOfferingCard | IArtefactCampCard | MythologicalCreatureDeckCardType;
 
 export type AddCardToPlayerType =
-    NonNullable<TavernCardType> | IMercenaryPlayerCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard;
+    NonNullable<TavernCardType> | IMercenaryPlayerCampCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard;
 
 // TODO FIX ME!!
 /**
@@ -1201,8 +1234,8 @@ export type CreateMultiSuitCardType = PartialByType<IMultiSuitCard, `type`>;
 /**
  * <h3>Тип для создания монеты.</h3>
  */
-export type CreateCoinType =
-    PartialByType<Omit<ICoin, `isOpened`> & ReadonlyByType<ICoin, `isOpened`>, `isInitial` | `isOpened` | `isTriggerTrading`>;
+export type CreateCoinType = PartialByType<Omit<ICoin, `isOpened`> & ReadonlyByType<ICoin, `isOpened`>,
+    `isInitial` | `isOpened` | `isTriggerTrading`>;
 
 /**
 * <h3>Тип для конфига базовых монет.</h3>
@@ -1275,7 +1308,7 @@ export type CanBeNullType<T> = T | null;
  */
 export type ObjectEntriesType<T> = {
     [K in KeyofType<T>]: [K, T[K]];
-}[keyof T][];
+}[KeyofType<T>][];
 
 /**
  * <h3>Тип для того, чтобы сделать некоторые поля объекта опциональными.</h3>

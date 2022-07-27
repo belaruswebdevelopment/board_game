@@ -1,6 +1,9 @@
+import type { Ctx } from "boardgame.io";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
+import type { AutoActionArgsType, AutoActionFunctionType, IAction, IMyGameState } from "../typescript/interfaces";
+
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
  * <p>Применения:</p>
@@ -8,11 +11,12 @@ import { AutoActionFunctionNames } from "../typescript/enums";
  * <li>Срабатывает при вызове каждого автоматического действия.</li>
  * </ol>
  *
- * @param actionName Название автоматических действий.
- * @returns Автоматические действие.
+ * @param actionName Название автоматического действия.
+ * @returns Автоматическое действие.
  */
-const AutoActionDispatcherSwitcher = (actionName) => {
-    let action, _exhaustiveCheck;
+const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): AutoActionFunctionType => {
+    let action: AutoActionFunctionType,
+        _exhaustiveCheck: never;
     switch (actionName) {
         case AutoActionFunctionNames.AddPickHeroAction:
             action = AddPickHeroAction;
@@ -42,26 +46,26 @@ const AutoActionDispatcherSwitcher = (actionName) => {
     }
     return action;
 };
+
 /**
- * <h3>Начинает автоматические действия конкретной карты при их наличии.</h3>
+ * <h3>Начинает автоматическое действие конкретной карты при его наличии.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Выполняется при необходимости активировать автоматические действия карт.</li>
+ * <li>Выполняется при необходимости активировать автоматическое действие карты.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param action Объект автоматических действий.
+ * @param action Объект автоматического действия.
  */
-export const StartAutoAction = (G, ctx, action) => {
+export const StartAutoAction = (G: IMyGameState, ctx: Ctx,
+    action?: IAction<AutoActionFunctionNames, AutoActionArgsType>): void => {
     if (action !== undefined) {
-        const actionDispatcher = AutoActionDispatcherSwitcher(action.name);
+        const actionDispatcher: AutoActionFunctionType = AutoActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, ...action.params);
-        }
-        else {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx);
+            actionDispatcher?.(G, ctx, ...action.params);
+        } else {
+            actionDispatcher?.(G, ctx);
         }
     }
 };
-//# sourceMappingURL=ActionDispatcherHelpers.js.map

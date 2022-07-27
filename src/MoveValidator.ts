@@ -4,12 +4,13 @@ import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
 import { IsCoin } from "./Coin";
 import { ThrowMyError } from "./Error";
+import { IsMercenaryCampCard } from "./helpers/IsCampTypeHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, StageNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardType, CanBeNullType, CanBeUndefType, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -204,7 +205,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -227,7 +229,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -301,7 +304,8 @@ export const moveValidators: IMoveValidators = {
                     }
                     const uniqueArrLength: number = uniqueArr.length;
                     for (let j = 0; j < uniqueArrLength; j++) {
-                        const uniqueCard: CanBeUndefType<DeckCardTypes | MythologicalCreatureDeckCardType> = uniqueArr[j];
+                        const uniqueCard: CanBeUndefType<DeckCardTypes | MythologicalCreatureDeckCardType> =
+                            uniqueArr[j];
                         if (uniqueCard === undefined) {
                             throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
                         }
@@ -354,7 +358,8 @@ export const moveValidators: IMoveValidators = {
             ValidMoveIdParamType => {
             // TODO Add for Solo Bot!
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -402,7 +407,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -426,7 +432,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -450,7 +457,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -517,7 +525,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -540,7 +549,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -607,8 +617,7 @@ export const moveValidators: IMoveValidators = {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                     ctx.currentPlayer);
             }
-            const mercenariesCount = player.campCards.filter((card: CampDeckCardType): boolean =>
-                card.type === RusCardTypeNames.Mercenary_Card).length;
+            const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
             return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                 && mercenariesCount > 0;
         },

@@ -77,10 +77,10 @@ export const BuildCampCards = (tier) => {
     return campCards;
 };
 /**
- * <h3>Создание карты артефакта для лагеря.</h3>
+ * <h3>Создание карты лагеря Артефакт для лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт артефактов лагеря во время инициализации игры.</li>
+ * <li>Происходит при создании всех карт лагеря Артефакт лагеря во время инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
@@ -91,7 +91,7 @@ export const BuildCampCards = (tier) => {
  * @param validators Валидаторы карты.
  * @param actions Действия.
  * @param stack Действия.
- * @returns Карта лагеря артефакт.
+ * @returns Карта лагеря Артефакт.
  */
 const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, path, name, description, buff, validators, actions, stack, } = {}) => ({
     type,
@@ -104,10 +104,10 @@ const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, path, n
     stack,
 });
 /**
- * <h3>Создание карты артефакта на поле игрока.</h3>
+ * <h3>Создание карты лагеря Артефакт на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт артефактов лагеря во время инициализации игры.</li>
+ * <li>Происходит при создании всех карт лагеря Артефакт во время инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
@@ -117,7 +117,7 @@ const CreateArtefactCampCard = ({ type = RusCardTypeNames.Artefact_Card, path, n
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @returns Карта лагеря артефакт.
+ * @returns Карта лагеря Артефакт.
  */
 const CreateArtefactPlayerCampCard = ({ type = RusCardTypeNames.Artefact_Player_Card, path, name, description, suit, rank, points = null, } = {}) => ({
     type,
@@ -129,20 +129,20 @@ const CreateArtefactPlayerCampCard = ({ type = RusCardTypeNames.Artefact_Player_
     points,
 });
 /**
- * <h3>Создание карты наёмника для лагеря.</h3>
+ * <h3>Создание карты лагеря Наёмник для лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт наёмников лагеря во время инициализации игры.</li>
+ * <li>Происходит при создании всех карт лагеря Наёмник во время инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
  * @param path URL путь.
  * @param name Название.
- * @param variants Варианты расположения карты наёмника на поле игрока.
+ * @param variants Варианты расположения карты лагеря Наёмник на поле игрока.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @returns Карта лагеря наёмник.
+ * @returns Карта лагеря Наёмник.
  */
 const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, path, name, variants, } = {}) => ({
     type,
@@ -151,10 +151,10 @@ const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, path,
     variants,
 });
 /**
- * <h3>Создание карты наёмника на поле игрока.</h3>
+ * <h3>Создание карты лагеря Наёмник на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при размещении карты наёмника на поле игрока.</li>
+ * <li>Происходит при размещении карты лагеря Наёмник на поле игрока.</li>
  * </ol>
  *
  * @param type Тип.
@@ -163,10 +163,10 @@ const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, path,
  * @param points Очки.
  * @param name Название.
  * @param path URL путь.
- * @param variants Варианты расположения карты наёмника на поле игрока.
- * @returns Карта наёмника на поле игрока.
+ * @param variants Варианты расположения карты лагеря Наёмник на поле игрока.
+ * @returns Карта лагеря Наёмник на поле игрока.
  */
-export const CreateMercenaryPlayerCard = ({ type = RusCardTypeNames.Mercenary_Player_Card, suit, rank = 1, points, name, path, } = {}) => ({
+export const CreateMercenaryPlayerCampCard = ({ type = RusCardTypeNames.Mercenary_Player_Card, suit, rank = 1, points, name, path, } = {}) => ({
     type,
     suit,
     rank,

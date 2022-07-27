@@ -2,6 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { ThrowMyError } from "../Error";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
@@ -97,7 +98,7 @@ export const ClickDistinctionCardMove = (G, ctx, suit) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[suit].distinction.awarding(G, ctx, Number(ctx.currentPlayer));
+    StartDistinctionAwarding(G, ctx, suitsConfig[suit].distinction.awarding, [Number(ctx.currentPlayer)]);
 };
 /**
  * <h3>Убирает карту в колоду сброса в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>

@@ -152,3 +152,16 @@ export const CreateValkyryCard = ({
     name,
     strengthTokenNotch,
 });
+
+/**
+ * <h3>Проверка, является ли объект картой Мифического животного.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой Мифического животного.
+ */
+export const IsMythicalAnimalCard = (card: unknown): card is IMythicalAnimalCard =>
+    (card as IMythicalAnimalCard).type === RusCardTypeNames.Mythical_Animal_Card;

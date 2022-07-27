@@ -3,6 +3,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { ThrowMyError } from "../Error";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
@@ -72,7 +73,8 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const pickedCard: CanBeUndefType<DeckCardTypes> = G.explorerDistinctionCards.splice(cardId, 1)[0];
+    const pickedCard: CanBeUndefType<DeckCardTypes> =
+        G.explorerDistinctionCards.splice(cardId, 1)[0];
     if (pickedCard === undefined) {
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
@@ -109,7 +111,8 @@ export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ct
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[suit].distinction.awarding(G, ctx, Number(ctx.currentPlayer));
+    StartDistinctionAwarding(G, ctx, suitsConfig[suit].distinction.awarding,
+        [Number(ctx.currentPlayer)]);
 };
 
 /**

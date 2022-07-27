@@ -1,45 +1,26 @@
 import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { ArtefactNames, BuffNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import { IsMercenaryPlayerCampCard } from "../helpers/IsCampTypeHelpers";
+import { BuffNames } from "../typescript/enums";
+import type { CanBeUndefType, IArtefactScoringFunction, IBuffs, ICoin, IMyGameState, IPublicPlayer, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 /**
-* <h3>Получение победных очков по артефактам.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>В конце игры, когда получаются победные очки по артефактам.</li>
-* </ol>
-*
-* @param G
-* @param player Игрок.
-* @param artefactName Название артефакта.
-* @returns Количество очков по артефактам.
-*/
-export const ArtefactScoring = (G?: IMyGameState, player?: IPublicPlayer, artefactName?: ArtefactNames): number => {
-    if (G === undefined) {
-        throw new Error(`Function param 'G' is undefined.`);
+ * <h3>Получение победных очков по артефактам, не имеющим специфических вариантов подсчёта очков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце игры, когда получаются победные очки по артефактам, не имеющим специфических вариантов подсчёта очков.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @returns
+ */
+export const BasicArtefactScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer, value?: number):
+    number => {
+    if (value === undefined) {
+        throw new Error(`Function param 'value' is undefined.`);
     }
-    if (player === undefined) {
-        throw new Error(`Function param 'player' is undefined.`);
-    }
-    if (artefactName === undefined) {
-        throw new Error(`Function param 'artefactName' is undefined.`);
-    }
-    switch (artefactName) {
-        case ArtefactNames.Draupnir:
-            return DraupnirScoring(G, player);
-        case ArtefactNames.Hrafnsmerki:
-            return HrafnsmerkiScoring(player);
-        case ArtefactNames.Mjollnir:
-            return MjollnirScoring(player);
-        case ArtefactNames.Odroerir_The_Mythic_Cauldron:
-            return OdroerirTheMythicCauldronScoring(G);
-        case ArtefactNames.Svalinn:
-            return SvalinnScoring(player);
-        default:
-            throw new Error(`У карт с типом '${RusCardTypeNames.Artefact_Card}' отсутствует ${RusCardTypeNames.Artefact_Card} с названием '${artefactName}'.`);
-    }
+    return value;
 };
 
 /**
@@ -53,7 +34,8 @@ export const ArtefactScoring = (G?: IMyGameState, player?: IPublicPlayer, artefa
  * @param player Игрок.
  * @returns
  */
-export const DraupnirScoring = (G: IMyGameState, player: IPublicPlayer): number => {
+export const DraupnirScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number => {
+    // Rework to playerId?
     const basicScore: number =
         player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
             if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
@@ -76,12 +58,11 @@ export const DraupnirScoring = (G: IMyGameState, player: IPublicPlayer): number 
  * @param player Игрок.
  * @returns
  */
-export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
+export const HrafnsmerkiScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number => {
     let score = 0,
         suit: SuitNamesKeyofTypeofType;
     for (suit in player.cards) {
-        score += player.cards[suit].filter((card: PlayerCardType): boolean =>
-            card.type === RusCardTypeNames.Mercenary_Player_Card).length * 5;
+        score += player.cards[suit].filter(IsMercenaryPlayerCampCard).length * 5;
     }
     return score;
 };
@@ -96,7 +77,7 @@ export const HrafnsmerkiScoring = (player: IPublicPlayer): number => {
  * @param player Игрок.
  * @returns
  */
-export const MjollnirScoring = (player: IPublicPlayer): number => {
+export const MjollnirScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number => {
     const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = player.buffs.find((buff: IBuffs): boolean =>
         buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
     if (suit === undefined) {
@@ -115,7 +96,8 @@ export const MjollnirScoring = (player: IPublicPlayer): number => {
  * @param G
  * @returns
  */
-export const OdroerirTheMythicCauldronScoring = (G: IMyGameState): number => GetOdroerirTheMythicCauldronCoinsValues(G);
+export const OdroerirTheMythicCauldronScoring: IArtefactScoringFunction = (G: IMyGameState): number =>
+    GetOdroerirTheMythicCauldronCoinsValues(G);
 
 /**
  * <h3>Получение победных очков по артефакту Svalinn.</h3>
@@ -128,4 +110,5 @@ export const OdroerirTheMythicCauldronScoring = (G: IMyGameState): number => Get
  * @param player Игрок.
  * @returns
  */
-export const SvalinnScoring = (player: IPublicPlayer): number => player.heroes.length * 5;
+export const SvalinnScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number =>
+    player.heroes.length * 5;

@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, ICoin, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
+import type { CanBeUndefType, ICoin, IDistinctionAwardingFunction, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
 import { AddCardToPlayer } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -24,7 +24,8 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param playerId Id игрока.
  * @returns
  */
-export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx,
+    playerId: number): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
@@ -56,7 +57,7 @@ export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerI
  * @param playerId Id игрока.
  * @returns
  */
-export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
@@ -85,7 +86,7 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
  * @param playerId Id игрока.
  * @returns
  */
-export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const HunterDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     if (G.tierToEnd !== 0) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId],
             privatePlayer: CanBeUndefType<IPlayer> = G.players[playerId];
@@ -140,7 +141,7 @@ export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: n
  * @param playerId Id игрока.
  * @returns
  */
-export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const MinerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
@@ -174,7 +175,7 @@ export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: nu
  * @param playerId Id игрока.
  * @returns
  */
-export const WarriorDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);

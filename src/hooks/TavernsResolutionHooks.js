@@ -6,12 +6,13 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
  * <p>Применения:</p>
@@ -47,12 +48,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     if (boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.isTriggerTrading) {
         const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
         if (tradingCoinPlacesLength > 0) {
-            const handCoinsLength = handCoins.filter((coin, index) => {
-                if (coin !== null && !IsCoin(coin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${index}'.`);
-                }
-                return IsCoin(coin);
-            }).length;
+            const handCoinsLength = handCoins.filter(IsCoin).length;
             const actionsNum = G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
             if (actionsNum > handCoinsLength) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
@@ -136,7 +132,7 @@ export const EndTavernsResolutionActions = (G, ctx) => {
                     if (player === undefined) {
                         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                     }
-                    startThrud = player.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length === 0;
+                    startThrud = player.campCards.filter(IsMercenaryCampCard).length === 0;
                     if (!startThrud) {
                         break;
                     }

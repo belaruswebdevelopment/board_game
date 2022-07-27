@@ -125,4 +125,15 @@ export const CreateValkyryCard = ({ type = RusCardTypeNames.Valkyry_Card, name, 
     name,
     strengthTokenNotch,
 });
+/**
+ * <h3>Проверка, является ли объект картой Мифического животного.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой Мифического животного.
+ */
+export const IsMythicalAnimalCard = (card) => card.type === RusCardTypeNames.Mythical_Animal_Card;
 //# sourceMappingURL=MythologicalCreature.js.map

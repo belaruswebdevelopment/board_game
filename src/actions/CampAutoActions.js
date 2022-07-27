@@ -98,12 +98,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         handCoins = player.handCoins;
     }
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-        const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter((coin, index) => {
-            if (coin !== null && !IsCoin(coin)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
-            }
-            return IsCoin(coin);
-        }).length;
+        const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter(IsCoin).length;
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
                 AddActionsToStack(G, ctx, [StackData.addCoinToPouch()]);

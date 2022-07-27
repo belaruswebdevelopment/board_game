@@ -3,10 +3,18 @@ import { artefactsConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
 import { giantConfig, godConfig, mythicalAnimalConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { suitsConfig } from "./data/SuitData";
+import { StartArtefactScoring } from "./dispatchers/ArtefactScoringDispatcher";
+import { StartDistinctionAwarding } from "./dispatchers/DistinctionAwardingDispatcher";
+import { StartGiantScoring } from "./dispatchers/GiantScoringDispatcher";
+import { StartHeroScoring } from "./dispatchers/HeroScoringDispatcher";
+import { StartMythicalAnimalScoring } from "./dispatchers/MythicalAnimalDispatcher";
+import { StartSuitScoring } from "./dispatchers/SuitScoringDispatcher";
+import { StartValkyryScoring } from "./dispatchers/ValkyryScoringDispatcherHelpers";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helpers/CoinHelpers";
 import { AddDataToLog } from "./Logging";
+import { IsMythicalAnimalCard } from "./MythologicalCreature";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
 /**
@@ -29,7 +37,7 @@ export const CurrentScoring = (G, player) => {
         if (G.expansions.idavoll) {
             additionalScoring = CheckPlayerHasBuff(player, BuffNames.RatatoskFinalScoring);
         }
-        score += suitsConfig[suit].scoringRule(player.cards[suit], suit, undefined, additionalScoring);
+        score += StartSuitScoring(suitsConfig[suit].scoringRule, [player.cards[suit], undefined, additionalScoring]);
     }
     return score;
 };
@@ -73,13 +81,13 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
     score += coinsValue;
     AddDataToLog(G, LogTypeNames.Public, `Очки за монеты ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${coinsValue}';`);
     if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
-        const warriorDistinctionScore = suitsConfig[SuitNames.warrior].distinction.awarding(G, ctx, playerId);
+        const warriorDistinctionScore = StartDistinctionAwarding(G, ctx, suitsConfig[SuitNames.warrior].distinction.awarding, [playerId]);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
             AddDataToLog(G, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${warriorDistinctionScore}';`);
         }
     }
-    const minerDistinctionPriorityScore = suitsConfig[SuitNames.miner].distinction.awarding(G, ctx, playerId);
+    const minerDistinctionPriorityScore = StartDistinctionAwarding(G, ctx, suitsConfig[SuitNames.miner].distinction.awarding, [playerId]);
     score += minerDistinctionPriorityScore;
     if (minerDistinctionPriorityScore) {
         AddDataToLog(G, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${minerDistinctionPriorityScore}';`);
@@ -99,10 +107,10 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             continue;
         }
         if ((!G.solo || G.solo && playerId === 1) && hero.name.startsWith(`Dwerg`)) {
-            dwerg_brothers += heroData.scoringRule();
+            dwerg_brothers += StartHeroScoring(player, heroData.scoringRule);
         }
         else {
-            const currentHeroScore = heroData.scoringRule(player, heroData.name);
+            const currentHeroScore = StartHeroScoring(player, heroData.scoringRule);
             heroesScore += currentHeroScore;
             AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${hero.name}' ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}': '${currentHeroScore}';`);
         }
@@ -117,7 +125,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             if (heroData === undefined) {
                 throw new Error(`Не удалось найти карту '${RusCardTypeNames.Hero_Card}' '${HeroNames.Uline}'.`);
             }
-            const currentHeroScore = heroData.scoringRule(player);
+            const currentHeroScore = StartHeroScoring(player, heroData.scoringRule);
             heroesScore += currentHeroScore;
             AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${HeroNames.Uline}' у соло бота из-за нарушения им правил игры добавляются игроку '${player.nickname}': '${currentHeroScore}';`);
         }
@@ -144,7 +152,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             if (artefact === undefined) {
                 throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Artefact_Card}' с названием '${campCard.name}'.`);
             }
-            currentArtefactScore = artefact.scoringRule(G, player, artefact.name);
+            currentArtefactScore = StartArtefactScoring(G, player, artefact.scoringRule);
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
                 AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Artefact_Card}' '${campCard.name}' игрока '${player.nickname}': '${currentArtefactScore}';`);
@@ -175,7 +183,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
                     if (giantCard === undefined) {
                         throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Giant_Card}' с названием '${mythologicalCreatureCard.name}'.`);
                     }
-                    currentGiantScore = giantCard.scoringRule(player, giantCard.name);
+                    currentGiantScore = StartGiantScoring(player, giantCard.scoringRule);
                     giantsScore += currentGiantScore;
                     AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Giant_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentGiantScore}';`);
                     break;
@@ -187,7 +195,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
                     if (mythologicalCreatureCard.strengthTokenNotch === null) {
                         throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}' не может не быть выставлен токен силы.`);
                     }
-                    currentValkyryScore = valkyryCard.scoringRule(mythologicalCreatureCard.strengthTokenNotch, valkyryCard.name);
+                    currentValkyryScore = StartValkyryScoring(valkyryCard.scoringRule, [mythologicalCreatureCard.strengthTokenNotch]);
                     valkyriesScore += currentValkyryScore;
                     AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Valkyry_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentValkyryScore}';`);
                     break;
@@ -197,7 +205,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
                     return _exhaustiveCheck;
             }
         }
-        const cards = Object.values(player.cards).flat().filter((card) => card.type === RusCardTypeNames.Mythical_Animal_Card);
+        const cards = Object.values(player.cards).flat().filter(IsMythicalAnimalCard);
         for (let m = 0; m < cards.length; m++) {
             const playerMythicalAnimalCard = cards[m];
             if (playerMythicalAnimalCard === undefined) {
@@ -207,11 +215,9 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             if (mythicalAnimalCard === undefined) {
                 throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Mythical_Animal_Card}' с названием '${playerMythicalAnimalCard.name}'.`);
             }
-            if (typeof mythicalAnimalCard.scoringRule === 'function') {
-                const currentMythicalAnimalScore = mythicalAnimalCard.scoringRule(player, mythicalAnimalCard.name);
-                mythicalAnimalScore += currentMythicalAnimalScore;
-                AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Mythical_Animal_Card}' '${playerMythicalAnimalCard.name}' игрока '${player.nickname}': '${currentMythicalAnimalScore}';`);
-            }
+            const currentMythicalAnimalScore = StartMythicalAnimalScoring(player, mythicalAnimalCard.scoringRule);
+            mythicalAnimalScore += currentMythicalAnimalScore;
+            AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Mythical_Animal_Card}' '${playerMythicalAnimalCard.name}' игрока '${player.nickname}': '${currentMythicalAnimalScore}';`);
         }
         score += godsScore;
         AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.God_Card}' игрока '${player.nickname}': '${godsScore}';`);

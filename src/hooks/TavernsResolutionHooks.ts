@@ -7,13 +7,14 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, CoinType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
+import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, CoinType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -52,13 +53,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
             player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
                 index >= G.tavernsNum && coin === null).length;
         if (tradingCoinPlacesLength > 0) {
-            const handCoinsLength: number =
-                handCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
-                    if (coin !== null && !IsCoin(coin)) {
-                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${index}'.`);
-                    }
-                    return IsCoin(coin);
-                }).length;
+            const handCoinsLength: number = handCoins.filter(IsCoin).length;
             const actionsNum: number =
                 G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
             if (actionsNum > handCoinsLength) {
@@ -151,8 +146,7 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
                         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                             i);
                     }
-                    startThrud = player.campCards.filter((card: CampDeckCardType): boolean =>
-                        card.type === RusCardTypeNames.Mercenary_Card).length === 0;
+                    startThrud = player.campCards.filter(IsMercenaryCampCard).length === 0;
                     if (!startThrud) {
                         break;
                     }

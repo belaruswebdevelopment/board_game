@@ -1,11 +1,12 @@
 import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
+import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";
+import { IsMercenaryCampCard } from "./IsCampTypeHelpers";
 
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -177,8 +178,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): CanBeVoidType<st
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
-        if (player.campCards.filter((card: CampDeckCardType): boolean =>
-            card.type === RusCardTypeNames.Mercenary_Card).length) {
+        if (player.campCards.filter(IsMercenaryCampCard).length) {
             count = true;
             break;
         }

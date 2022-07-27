@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardType, DeckCardTypes, IArtefactCampCard, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardType, SuitPropertyType, TavernCardType } from "../../typescript/interfaces";
+import type { CampDeckCardType, DeckCardTypes, IArtefactCampCard, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardType, SuitPropertyType, TavernCardType } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -124,7 +124,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                             {
                                 name: `Test`,
                                 suit: SuitNames.warrior,
-                            } as IMercenaryPlayerCard,
+                            } as IMercenaryPlayerCampCard,
                         ],
                     },
                     buffs: [
@@ -154,7 +154,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 {
                     name: `Test`,
                     suit: SuitNames.warrior,
-                } as IMercenaryPlayerCard,
+                } as IMercenaryPlayerCampCard,
             ],
             logData: [
                 {
@@ -969,7 +969,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                                         points: 8,
                                     },
                                 },
-                            } as IMercenaryPlayerCard,
+                            } as IMercenaryPlayerCampCard,
                         ],
                     },
                     buffs: [

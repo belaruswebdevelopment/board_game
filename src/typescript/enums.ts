@@ -1,3 +1,11 @@
+export const enum DistinctionAwardingFunctionNames {
+    BlacksmithDistinctionAwarding = `BlacksmithDistinctionAwarding`,
+    ExplorerDistinctionAwarding = `ExplorerDistinctionAwarding`,
+    HunterDistinctionAwarding = `HunterDistinctionAwarding`,
+    MinerDistinctionAwarding = `MinerDistinctionAwarding`,
+    WarriorDistinctionAwarding = `WarriorDistinctionAwarding`,
+}
+
 /**
  * <h3>Перечисление для названий автоматических действий.</h3>
  */
@@ -9,6 +17,49 @@ export const enum AutoActionFunctionNames {
     StartDiscardSuitCardAction = `StartDiscardSuitCardAction`,
     StartVidofnirVedrfolnirAction = `StartVidofnirVedrfolnirAction`,
     UpgradeMinCoinAction = `UpgradeMinCoinAction`,
+}
+
+export const enum SuitScoringFunctionNames {
+    BlacksmithScoring = `BlacksmithScoring`,
+    ExplorerScoring = `ExplorerScoring`,
+    HunterScoring = `HunterScoring`,
+    MinerScoring = `MinerScoring`,
+    WarriorScoring = `WarriorScoring`,
+}
+
+export const enum ArtefactScoringFunctionNames {
+    BasicArtefactScoring = `BasicArtefactScoring`,
+    DraupnirScoring = `DraupnirScoring`,
+    HrafnsmerkiScoring = `HrafnsmerkiScoring`,
+    MjollnirScoring = `MjollnirScoring`,
+    OdroerirTheMythicCauldronScoring = `OdroerirTheMythicCauldronScoring`,
+    SvalinnScoring = `SvalinnScoring`,
+}
+
+export const enum HeroScoringFunctionNames {
+    BasicHeroScoring = `BasicHeroScoring`,
+    AstridScoring = `AstridScoring`,
+    IdunnScoring = `IdunnScoring`,
+}
+
+export const enum MythicalAnimalScoringFunctionNames {
+    BasicMythicalAnimalScoring = `BasicMythicalAnimalScoring`,
+    GarmScoring = `GarmScoring`,
+    NidhoggScoring = `NidhoggScoring`,
+}
+
+export const enum GiantScoringFunctionNames {
+    BasicGiantScoring = `BasicGiantScoring`,
+    GymirScoring = `GymirScoring`,
+    SurtScoring = `SurtScoring`,
+}
+
+export const enum ValkyryScoringFunctionNames {
+    BrynhildrScoring = `BrynhildrScoring`,
+    HildrScoring = `HildrScoring`,
+    OlrunScoring = `OlrunScoring`,
+    SigrdrifaScoring = `SigrdrifaScoring`,
+    SvafaScoring = `SvafaScoring`,
 }
 
 /**

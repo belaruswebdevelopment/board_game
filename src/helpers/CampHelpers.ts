@@ -46,7 +46,8 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
             throw new Error(`В массиве карт лагеря отсутствует карта лагеря с id '${i}'.`);
         }
         if (campCard !== null) {
-            const discardedCard: CanBeUndefType<CampCardType> = G.camp.splice(i, 1, null)[0];
+            const discardedCard: CanBeUndefType<CampCardType> =
+                G.camp.splice(i, 1, null)[0];
             if (discardedCard === undefined) {
                 throw new Error(`В массиве карт лагеря отсутствует карта лагеря с id '${i}' для сброса.`);
             }

@@ -3,7 +3,7 @@ import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IMyGameState, INumberValues, IPlayer, IPriority, IPublicPlayer, IResolveBoardCoins, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, ICoin, IMyGameState, INumberValues, IPlayer, IPriority, IPublicPlayer, IResolveBoardCoins, PublicPlayerCoinType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**
@@ -84,19 +84,13 @@ export const DiscardTradingCoin = (G: IMyGameState, ctx: Ctx, playerId: number):
  * @returns Максимальная монета игрока.
  */
 export const GetMaxCoinValue = (player: IPublicPlayer): number =>
-    Math.max(...player.boardCoins.filter((coin: PublicPlayerCoinType): boolean =>
-        IsCoin(coin)).map((coin: PublicPlayerCoinType, index: number): number => {
-            if (coin === null) {
-                throw new Error(`В массиве монет игрока '${player.nickname}' на поле отсутствует монета с id '${index}'.`);
-            }
-            if (coin !== null && !IsCoin(coin)) {
-                throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть закрыта монета с id '${index}'.`);
-            }
-            if (coin !== null && IsCoin(coin) && !coin.isOpened) {
-                throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
-            }
-            return coin.value;
-        }));
+    Math.max(...player.boardCoins.filter(IsCoin).map((coin: ICoin, index: number):
+        number => {
+        if (!coin.isOpened) {
+            throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
+        }
+        return coin.value;
+    }));
 
 /**
  * <h3>Открывает закрытые монеты на столе игроков.</h3>

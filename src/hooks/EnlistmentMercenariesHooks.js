@@ -3,8 +3,9 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { BuffNames, ErrorNames, RusCardTypeNames } from "../typescript/enums";
+import { BuffNames, ErrorNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
  * <p>Применения:</p>
@@ -29,7 +30,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
                 if (playerI === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
-                allMercenariesPlayed = playerI.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length === 0;
+                allMercenariesPlayed = playerI.campCards.filter(IsMercenaryCampCard).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }
@@ -60,7 +61,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
         return EndTurnActions(G, ctx);
     }
     else if (!player.stack.length) {
-        return player.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length === 0;
+        return player.campCards.filter(IsMercenaryCampCard).length === 0;
     }
 };
 /**
@@ -99,7 +100,7 @@ export const OnEnlistmentMercenariesMove = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length) {
-        const mercenariesCount = player.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length;
+        const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
         if (mercenariesCount) {
             AddActionsToStack(G, ctx, [StackData.enlistmentMercenaries()]);
             DrawCurrentProfit(G, ctx);
@@ -158,12 +159,12 @@ export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
 export const PrepareMercenaryPhaseOrders = (G) => {
     const sortedPlayers = Object.values(G.publicPlayers).map((player) => player), playersIndexes = [];
     sortedPlayers.sort((nextPlayer, currentPlayer) => {
-        if (nextPlayer.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length <
-            currentPlayer.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length) {
+        if (nextPlayer.campCards.filter(IsMercenaryCampCard).length <
+            currentPlayer.campCards.filter(IsMercenaryCampCard).length) {
             return 1;
         }
-        else if (nextPlayer.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length >
-            currentPlayer.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length) {
+        else if (nextPlayer.campCards.filter(IsMercenaryCampCard).length >
+            currentPlayer.campCards.filter(IsMercenaryCampCard).length) {
             return -1;
         }
         if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -175,7 +176,7 @@ export const PrepareMercenaryPhaseOrders = (G) => {
         return 0;
     });
     sortedPlayers.forEach((playerSorted) => {
-        if (playerSorted.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length) {
+        if (playerSorted.campCards.filter(IsMercenaryCampCard).length) {
             playersIndexes.push(String(Object.values(G.publicPlayers)
                 .findIndex((player) => player.nickname === playerSorted.nickname)));
         }

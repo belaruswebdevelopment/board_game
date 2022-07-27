@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { CreateMercenaryPlayerCard } from "../Camp";
+import { CreateMercenaryPlayerCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
@@ -11,7 +11,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -189,7 +189,7 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
     if (cardVariants === undefined) {
         throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }
-    const mercenaryPlayerCard: IMercenaryPlayerCard = CreateMercenaryPlayerCard({
+    const mercenaryPlayerCard: IMercenaryPlayerCampCard = CreateMercenaryPlayerCampCard({
         suit,
         points: cardVariants.points,
         name: mercenaryCard.name,

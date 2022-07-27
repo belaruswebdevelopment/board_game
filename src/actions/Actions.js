@@ -1,4 +1,4 @@
-import { CreateMercenaryPlayerCard } from "../Camp";
+import { CreateMercenaryPlayerCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
@@ -179,7 +179,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
     if (cardVariants === undefined) {
         throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }
-    const mercenaryPlayerCard = CreateMercenaryPlayerCard({
+    const mercenaryPlayerCard = CreateMercenaryPlayerCampCard({
         suit,
         points: cardVariants.points,
         name: mercenaryCard.name,

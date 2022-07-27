@@ -1,5 +1,4 @@
-import { GiantScoring, MythicalAnimalScoring, ValkyryScoring } from "../score_helpers/MythologicalCreatureScoringHelpers";
-import { AutoActionFunctionNames, BuffNames, GiantNames, GodNames, MythicalAnimalNames, SuitNames, ValkyryNames } from "../typescript/enums";
+import { AutoActionFunctionNames, BuffNames, GiantNames, GiantScoringFunctionNames, GodNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
 import type { GiantConfigType, GodConfigType, IGiantData, IGodData, IMythicalAnimalData, IValkyryData, MythicalAnimalConfigType, ValkyryConfigType } from "../typescript/interfaces";
 
 /**
@@ -12,7 +11,9 @@ import type { GiantConfigType, GodConfigType, IGiantData, IGodData, IMythicalAni
 const Gymir: IGiantData = {
     name: GiantNames.Gymir,
     placedSuit: SuitNames.explorer,
-    scoringRule: GiantScoring,
+    scoringRule: {
+        name: GiantScoringFunctionNames.GymirScoring,
+    },
 };
 
 /**
@@ -29,7 +30,10 @@ const Hrungnir: IGiantData = {
     // actions: {
     //     name: AddValueToCoin.name,
     // },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: GiantScoringFunctionNames.BasicGiantScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -46,7 +50,10 @@ const Skymir: IGiantData = {
     // actions: {
     //     name: GetMythologicalCreaturesCards.name,
     // },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: GiantScoringFunctionNames.BasicGiantScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -59,7 +66,10 @@ const Skymir: IGiantData = {
 const Surt: IGiantData = {
     name: GiantNames.Surt,
     placedSuit: SuitNames.warrior,
-    scoringRule: GiantScoring,
+    scoringRule: {
+        name: GiantScoringFunctionNames.SurtScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -75,7 +85,10 @@ const Thrivaldi: IGiantData = {
     actions: {
         name: AutoActionFunctionNames.AddPickHeroAction,
     },
-    scoringRule: (): number => 0,
+    scoringRule: {
+        name: GiantScoringFunctionNames.BasicGiantScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -166,6 +179,10 @@ const Durathor: IMythicalAnimalData = {
     buff: {
         name: BuffNames.DagdaDiscardOnlyOneCards,
     },
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -180,7 +197,9 @@ const Garm: IMythicalAnimalData = {
     points: 9,
     rank: 2,
     suit: SuitNames.explorer,
-    scoringRule: MythicalAnimalScoring,
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.GarmScoring,
+    },
 };
 
 /**
@@ -196,6 +215,10 @@ const Hraesvelg: IMythicalAnimalData = {
     ability: (): void => {
         // TODO Add Gullinbursti to your dwarf's player board
     },
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -209,7 +232,10 @@ const Nidhogg: IMythicalAnimalData = {
     name: MythicalAnimalNames.Nidhogg,
     points: 5,
     suit: SuitNames.warrior,
-    scoringRule: MythicalAnimalScoring,
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.NidhoggScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -226,6 +252,10 @@ const Ratatosk: IMythicalAnimalData = {
     buff: {
         name: BuffNames.RatatoskFinalScoring,
     },
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
+        params: [0],
+    },
 };
 
 /**
@@ -241,7 +271,9 @@ const Brynhildr: IValkyryData = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.BrynhildrScoring,
+    },
 };
 
 /**
@@ -256,7 +288,9 @@ const Hildr: IValkyryData = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.HildrScoring,
+    },
 };
 
 /**
@@ -272,7 +306,9 @@ const Olrun: IValkyryData = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.OlrunScoring,
+    },
 };
 
 /**
@@ -287,7 +323,9 @@ const Sigrdrifa: IValkyryData = {
     buff: {
         name: BuffNames.CountPickedHeroAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.SigrdrifaScoring,
+    },
 };
 
 /**
@@ -303,7 +341,9 @@ const Svafa: IValkyryData = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.SvafaScoring,
+    },
 };
 
 /**

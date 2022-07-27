@@ -3,6 +3,7 @@ import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
 import { IsCoin } from "./Coin";
 import { ThrowMyError } from "./Error";
+import { IsMercenaryCampCard } from "./helpers/IsCampTypeHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
@@ -543,7 +544,7 @@ export const moveValidators = {
             if (player === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
-            const mercenariesCount = player.campCards.filter((card) => card.type === RusCardTypeNames.Mercenary_Card).length;
+            const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
             return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                 && mercenariesCount > 0;
         },

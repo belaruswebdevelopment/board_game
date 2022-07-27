@@ -1,5 +1,4 @@
-import { GiantScoring, MythicalAnimalScoring, ValkyryScoring } from "../score_helpers/MythologicalCreatureScoringHelpers";
-import { AutoActionFunctionNames, BuffNames, GiantNames, GodNames, MythicalAnimalNames, SuitNames, ValkyryNames } from "../typescript/enums";
+import { AutoActionFunctionNames, BuffNames, GiantNames, GiantScoringFunctionNames, GodNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
 /**
  * <h3>Данные об Гиганте.</h3>
  * <p>Применения:</p>
@@ -10,7 +9,9 @@ import { AutoActionFunctionNames, BuffNames, GiantNames, GodNames, MythicalAnima
 const Gymir = {
     name: GiantNames.Gymir,
     placedSuit: SuitNames.explorer,
-    scoringRule: GiantScoring,
+    scoringRule: {
+        name: GiantScoringFunctionNames.GymirScoring,
+    },
 };
 /**
  * <h3>Данные об Гиганте.</h3>
@@ -26,7 +27,10 @@ const Hrungnir = {
     // actions: {
     //     name: AddValueToCoin.name,
     // },
-    scoringRule: () => 0,
+    scoringRule: {
+        name: GiantScoringFunctionNames.BasicGiantScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Гиганте.</h3>
@@ -42,7 +46,10 @@ const Skymir = {
     // actions: {
     //     name: GetMythologicalCreaturesCards.name,
     // },
-    scoringRule: () => 0,
+    scoringRule: {
+        name: GiantScoringFunctionNames.BasicGiantScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Гиганте.</h3>
@@ -54,7 +61,10 @@ const Skymir = {
 const Surt = {
     name: GiantNames.Surt,
     placedSuit: SuitNames.warrior,
-    scoringRule: GiantScoring,
+    scoringRule: {
+        name: GiantScoringFunctionNames.SurtScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Гиганте.</h3>
@@ -69,7 +79,10 @@ const Thrivaldi = {
     actions: {
         name: AutoActionFunctionNames.AddPickHeroAction,
     },
-    scoringRule: () => 0,
+    scoringRule: {
+        name: GiantScoringFunctionNames.BasicGiantScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Боге.</h3>
@@ -154,6 +167,10 @@ const Durathor = {
     buff: {
         name: BuffNames.DagdaDiscardOnlyOneCards,
     },
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -167,7 +184,9 @@ const Garm = {
     points: 9,
     rank: 2,
     suit: SuitNames.explorer,
-    scoringRule: MythicalAnimalScoring,
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.GarmScoring,
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -182,6 +201,10 @@ const Hraesvelg = {
     ability: () => {
         // TODO Add Gullinbursti to your dwarf's player board
     },
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -194,7 +217,10 @@ const Nidhogg = {
     name: MythicalAnimalNames.Nidhogg,
     points: 5,
     suit: SuitNames.warrior,
-    scoringRule: MythicalAnimalScoring,
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.NidhoggScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -210,6 +236,10 @@ const Ratatosk = {
     buff: {
         name: BuffNames.RatatoskFinalScoring,
     },
+    scoringRule: {
+        name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
+        params: [0],
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -224,7 +254,9 @@ const Brynhildr = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.BrynhildrScoring,
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -238,7 +270,9 @@ const Hildr = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.HildrScoring,
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -253,7 +287,9 @@ const Olrun = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.OlrunScoring,
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -267,7 +303,9 @@ const Sigrdrifa = {
     buff: {
         name: BuffNames.CountPickedHeroAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.SigrdrifaScoring,
+    },
 };
 /**
  * <h3>Данные об Мифическом животном.</h3>
@@ -282,7 +320,9 @@ const Svafa = {
     buff: {
         name: BuffNames.CountDistinctionAmount,
     },
-    scoringRule: ValkyryScoring,
+    scoringRule: {
+        name: ValkyryScoringFunctionNames.SvafaScoring,
+    },
 };
 /**
  * <h3>Конфиг Мифических существ.</h3>

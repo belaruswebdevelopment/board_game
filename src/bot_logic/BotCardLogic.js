@@ -1,5 +1,6 @@
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
+import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
@@ -155,10 +156,10 @@ const PotentialScoring = (G, ctx, playerId, card) => {
     for (suit in suitsConfig) {
         if (card !== null && card.type === RusCardTypeNames.Dwarf_Card && card.suit === suit) {
             score +=
-                suitsConfig[suit].scoringRule(player.cards[suit], suit, (_a = card.points) !== null && _a !== void 0 ? _a : 1);
+                StartSuitScoring(suitsConfig[suit].scoringRule, [player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1]);
         }
         else {
-            score += suitsConfig[suit].scoringRule(player.cards[suit], suit);
+            score += StartSuitScoring(suitsConfig[suit].scoringRule, [player.cards[suit]]);
         }
     }
     if (card !== null && card.type === RusCardTypeNames.Royal_Offering_Card) {
