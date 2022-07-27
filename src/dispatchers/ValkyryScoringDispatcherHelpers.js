@@ -13,7 +13,7 @@ import { ValkyryScoringFunctionNames } from "../typescript/enums";
  */
 export const StartValkyryScoring = (action, params) => {
     const actionDispatcher = ValkyryScoringDispatcherSwitcher(action.name);
-    if (action.params === undefined) {
+    if (params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
     }
     return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(...params);

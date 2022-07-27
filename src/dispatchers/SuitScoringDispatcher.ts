@@ -16,9 +16,6 @@ import type { IAction, ISuitScoringFunction, SuitScoringArgsType } from "../type
 export const StartSuitScoring = (action: IAction<SuitScoringFunctionNames, undefined>, params: SuitScoringArgsType):
     number => {
     const actionDispatcher: ISuitScoringFunction = HeroScoringDispatcherSwitcher(action.name);
-    if (action.params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
-    }
     return actionDispatcher?.(...params);
 };
 

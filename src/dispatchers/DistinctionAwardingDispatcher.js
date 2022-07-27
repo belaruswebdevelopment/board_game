@@ -14,9 +14,6 @@ import { DistinctionAwardingFunctionNames } from "../typescript/enums";
  */
 export const StartDistinctionAwarding = (G, ctx, action, params) => {
     const actionDispatcher = DistinctionAwardingDispatcherSwitcher(action.name);
-    if (action.params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
-    }
     return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, ...params);
 };
 /**

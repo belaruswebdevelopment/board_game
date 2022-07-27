@@ -402,12 +402,12 @@ export interface ISuitScoringFunction {
 }
 
 export interface IArtefactScoringFunction {
-    (G: IMyGameState, player: IPublicPlayer, ...params: ScoringArgsType): number;
+    (G: IMyGameState, player: IPublicPlayer, ...params: ScoringArgsCanBeUndefType): number;
 }
 
 // TODO Rework common ScoringFunction interfaces!
 export interface IHeroScoringFunction {
-    (player: IPublicPlayer, ...params: ScoringArgsType): number;
+    (player: IPublicPlayer, ...params: ScoringArgsCanBeUndefType): number;
 }
 
 export interface IMythicalAnimalScoringFunction {
@@ -1129,6 +1129,8 @@ export type ArgsType = (CoinTypeNames | SuitNamesKeyofTypeofType | number)[];
 export type AutoActionArgsType = [number] | [number, number, CoinTypeNames];
 
 export type ScoringArgsType = [number];
+
+export type ScoringArgsCanBeUndefType = [number?];
 
 export type SuitScoringArgsType = [PlayerCardType[], number?, boolean?];
 

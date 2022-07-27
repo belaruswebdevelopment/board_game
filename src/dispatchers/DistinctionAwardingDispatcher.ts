@@ -19,9 +19,6 @@ export const StartDistinctionAwarding = (G: IMyGameState, ctx: Ctx,
     action: IAction<DistinctionAwardingFunctionNames, undefined>, params: ScoringArgsType): number => {
     const actionDispatcher: IDistinctionAwardingFunction =
         DistinctionAwardingDispatcherSwitcher(action.name);
-    if (action.params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
-    }
     return actionDispatcher?.(G, ctx, ...params);
 };
 

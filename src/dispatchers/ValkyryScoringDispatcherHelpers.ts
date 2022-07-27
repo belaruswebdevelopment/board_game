@@ -16,7 +16,7 @@ import type { IAction, IValkyryScoringFunction, ScoringArgsType } from "../types
 export const StartValkyryScoring = (action: IAction<ValkyryScoringFunctionNames, undefined>,
     params: ScoringArgsType): number => {
     const actionDispatcher: IValkyryScoringFunction = ValkyryScoringDispatcherSwitcher(action.name);
-    if (action.params === undefined) {
+    if (params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
     }
     return actionDispatcher?.(...params);

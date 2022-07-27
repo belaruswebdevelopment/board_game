@@ -15,9 +15,11 @@ import { ArtefactScoringFunctionNames } from "../typescript/enums";
 export const StartArtefactScoring = (G, player, action) => {
     const actionDispatcher = ArtefactScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, player);
     }
-    return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, player, ...action.params);
+    else {
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, player, ...action.params);
+    }
 };
 /**
 * <h3>Диспетчер всех действий по получению победных очков по артефакту.</h3>

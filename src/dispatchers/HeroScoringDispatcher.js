@@ -14,9 +14,11 @@ import { HeroScoringFunctionNames } from "../typescript/enums";
 export const StartHeroScoring = (player, action) => {
     const actionDispatcher = HeroScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(player);
     }
-    return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(player, ...action.params);
+    else {
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(player, ...action.params);
+    }
 };
 /**
 * <h3>Диспетчер всех действий по получению победных очков по герою.</h3>

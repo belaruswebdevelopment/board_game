@@ -18,9 +18,10 @@ export const StartArtefactScoring = (G: IMyGameState, player: IPublicPlayer,
     action: IAction<ArtefactScoringFunctionNames, ScoringArgsType>): number => {
     const actionDispatcher: IArtefactScoringFunction = ArtefactScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
+        return actionDispatcher?.(G, player);
+    } else {
+        return actionDispatcher?.(G, player, ...action.params);
     }
-    return actionDispatcher?.(G, player, ...action.params);
 };
 
 /**

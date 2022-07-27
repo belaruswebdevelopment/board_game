@@ -17,9 +17,10 @@ export const StartHeroScoring = (player: IPublicPlayer, action: IAction<HeroScor
     number => {
     const actionDispatcher: IHeroScoringFunction = HeroScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
+        return actionDispatcher?.(player);
+    } else {
+        return actionDispatcher?.(player, ...action.params);
     }
-    return actionDispatcher?.(player, ...action.params);
 };
 
 /**
