@@ -1,6 +1,13 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
 import type { IMercenaryCampCard, IStack, IStackData, OneOrTwoStackPriorityType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
+/**
+ * <h3>Данные об стеке действий.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным об стеке действий.</li>
+ * </ol>
+ */
 export const StackData: IStackData = {
     addCoinToPouch: (): IStack => ({
         stageName: StageNames.addCoinToPouch,
@@ -70,7 +77,7 @@ export const StackData: IStackData = {
         stageName: StageNames.pickDiscardCard,
         drawName: DrawNames.Andumia,
     }),
-    pickDiscardCardBrisingamens: (priority?: number): IStack => ({
+    pickDiscardCardBrisingamens: (priority?: 3): IStack => ({
         stageName: StageNames.pickDiscardCard,
         drawName: DrawNames.Brisingamens,
         priority,

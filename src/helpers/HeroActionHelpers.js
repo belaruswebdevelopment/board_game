@@ -15,7 +15,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param card Карта.
  * @returns Нужно ли перемещать героя Труд.
  */
-export const CheckAndMoveThrud = (G, ctx, card) => {
+const CheckAndMoveThrud = (G, ctx, card) => {
     if (card.suit !== null) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {

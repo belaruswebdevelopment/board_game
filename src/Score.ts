@@ -61,7 +61,7 @@ export const CurrentScoring = (G: IMyGameState, player: IPublicPlayer): number =
  * @param warriorDistinctions Массив игроков с преимуществом по фракции воины.
  * @returns Финальный счёт указанного игрока.
  */
-export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warriorDistinctions: number[]): number => {
+const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warriorDistinctions: number[]): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);

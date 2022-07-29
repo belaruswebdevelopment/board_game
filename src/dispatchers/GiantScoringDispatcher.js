@@ -28,7 +28,7 @@ export const StartGiantScoring = (player, action) => {
 * @param actionName Название действия.
 * @returns Действие.
 */
-export const GiantScoringDispatcherSwitcher = (actionName) => {
+const GiantScoringDispatcherSwitcher = (actionName) => {
     let action, _exhaustiveCheck;
     switch (actionName) {
         case GiantScoringFunctionNames.BasicGiantScoring:

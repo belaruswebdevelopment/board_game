@@ -8,7 +8,7 @@ import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { AutoActionArgsType, CanBeUndefType, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoStackPriorityType, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { AutoActionArgsType, CanBeUndefType, IAutoActionFunction, IAutoActionFunctionWithParams, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoStackPriorityType, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -22,7 +22,8 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param ctx
  * @param args Аргументы действия.
  */
-export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx, ...args: AutoActionArgsType): void => {
+export const AddPickHeroAction: IAutoActionFunctionWithParams = (G: IMyGameState, ctx: Ctx,
+    ...args: AutoActionArgsType): void => {
     if (args.length > 1) {
         throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
     }
@@ -48,7 +49,7 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAction
  * @param G
  * @param ctx
  */
-export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): void => {
+export const GetClosedCoinIntoPlayerHandAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -73,7 +74,8 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
  * @param ctx
  * @param args Аргументы действия.
  */
-export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoActionArgsType): void => {
+export const UpgradeMinCoinAction: IAutoActionFunctionWithParams = (G: IMyGameState, ctx: Ctx,
+    ...args: AutoActionArgsType): void => {
     if (args.length !== 1) {
         throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
     }

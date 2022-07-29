@@ -37,7 +37,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -83,12 +82,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -138,7 +135,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -184,12 +180,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -251,7 +245,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -313,12 +306,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -368,7 +359,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -414,7 +404,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {
@@ -487,7 +476,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -550,7 +538,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                         {

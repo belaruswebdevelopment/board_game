@@ -1,7 +1,7 @@
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { ArtefactNamesKeyofTypeofType, CampDeckCardType, CanBeUndefType, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCampCardType, IArtefactCampCard, IArtefactData, IArtefactPlayerCampCard, IBasicSuitableNullableCardInfo, IMercenaryCampCard, IMercenaryPlayerCampCard, KeyofType, MercenaryType, SuitNamesKeyofTypeofType, SuitPropertyType } from "./typescript/interfaces";
+import type { ArtefactNamesKeyofTypeofType, CampDeckCardType, CanBeUndefType, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCampCardType, IArtefactCampCard, IArtefactData, IArtefactPlayerCampCard, IBasicSuitableNullableCardInfo, IMercenaryCampCard, IMercenaryPlayerCampCard, KeyofType, MercenaryType, SuitNamesKeyofTypeofType, SuitPropertyType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
@@ -13,7 +13,7 @@ import type { ArtefactNamesKeyofTypeofType, CampDeckCardType, CanBeUndefType, Cr
  * @param tier Эпоха.
  * @returns Все карты лагеря.
  */
-export const BuildCampCards = (tier: number): CampDeckCardType[] => {
+export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
     const campCards: CampDeckCardType[] = [];
     let artefactName: ArtefactNamesKeyofTypeofType;
     for (artefactName in artefactsConfig) {

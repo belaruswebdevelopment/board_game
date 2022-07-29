@@ -19,7 +19,7 @@ import { IsMercenaryCampCard } from "./IsCampTypeHelpers";
  * @param ctx
  * @returns
  */
-export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
+const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
     const isLastRound: boolean = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
         ((G.round === 2 || G.round === 5) ? true : false),
         currentDeck: CanBeUndefType<DeckCardTypes[]> =

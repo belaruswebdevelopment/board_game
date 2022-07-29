@@ -56,7 +56,8 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
             }
         }
     }
-    const campDeck: CanBeUndefType<CampDeckCardType[]> = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd - 1];
+    const campDeck: CanBeUndefType<CampDeckCardType[]> =
+        G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd - 1];
     if (campDeck === undefined) {
         throw new Error(`Отсутствует колода карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd - 1}'.`);
     }

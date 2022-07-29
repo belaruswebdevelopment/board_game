@@ -1,11 +1,30 @@
-import { BuffNames, RusCardTypeNames, ValkyryNames } from "../typescript/enums";
-import type { CanBeUndefType, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { Ctx } from "boardgame.io";
+import { ThrowMyError } from "../Error";
+import { BuffNames, ErrorNames, RusCardTypeNames, ValkyryNames } from "../typescript/enums";
+import type { CanBeUndefType, IMyGameState, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
-export const CheckValkyryRequirement = (player: IPublicPlayer, playerId: number, buffName: BuffNames): void => {
+/**
+ * <h3>Проверяет выполнение условия свойства валькирии.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при каждом действии, которое может выполнить условие свойства валькирии.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @param buffName Баф.
+ */
+export const CheckValkyryRequirement = (G: IMyGameState, ctx: Ctx, playerId: number, buffName: BuffNames): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
+    if (player === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
+    }
     if (CheckPlayerHasBuff(player, buffName)) {
         let valkyryName: ValkyryNames;
         switch (buffName) {
+            // TODO Fix all buffs!
             // case BuffNames.CountDistinctionAmount:
             //     valkyryName = ValkyryNames.Brynhildr;
             //     break;

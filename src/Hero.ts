@@ -67,7 +67,7 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], solo: boo
  * @param stack Действия.
  * @returns Герой.
  */
-export const CreateHero = ({
+const CreateHero = ({
     type = RusCardTypeNames.Hero_Card,
     name,
     description,

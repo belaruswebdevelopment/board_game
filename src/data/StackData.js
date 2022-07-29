@@ -1,4 +1,11 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
+/**
+ * <h3>Данные об стеке действий.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным об стеке действий.</li>
+ * </ol>
+ */
 export const StackData = {
     addCoinToPouch: () => ({
         stageName: StageNames.addCoinToPouch,

@@ -728,8 +728,9 @@ describe(`Test FinishOdroerirTheMythicCauldronAction method`, (): void => {
     it(`should finish odroerirTheMythicCauldron action`, (): void => {
         const G = {
             odroerirTheMythicCauldron: true,
-        } as Pick<IMyGameState, `odroerirTheMythicCauldron`>;
-        FinishOdroerirTheMythicCauldronAction(G as IMyGameState);
+        } as Pick<IMyGameState, `odroerirTheMythicCauldron`>,
+            ctx: Ctx = {} as Ctx;
+        FinishOdroerirTheMythicCauldronAction(G as IMyGameState, ctx);
         expect(G).toEqual({
             odroerirTheMythicCauldron: false,
         } as Pick<IMyGameState, `odroerirTheMythicCauldron`>);
@@ -1573,7 +1574,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -1668,7 +1668,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -1746,7 +1745,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 1,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],
@@ -1846,7 +1844,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 1,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],
@@ -1918,7 +1915,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 1,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],
@@ -2006,7 +2002,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 1,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],
@@ -2102,7 +2097,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 2,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],
@@ -2214,7 +2208,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 2,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],
@@ -2300,7 +2293,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 1,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],
@@ -2408,7 +2400,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [
                             {
                                 stageName: StageNames.addCoinToPouch,
-                                number: 1,
                                 drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             },
                         ],

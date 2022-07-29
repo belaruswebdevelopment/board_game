@@ -7,7 +7,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
-import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitNamesKeyofTypeofType, TavernCardType } from "../typescript/interfaces";
+import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, SuitNamesKeyofTypeofType, TavernCardType, TierType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -87,12 +87,13 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType
         }
     }
     if (data !== undefined) {
+        const tier: TierType = G.campDeckLength.length - G.tierToEnd + 1 > G.campDeckLength.length ?
+            1 : G.campDeckLength.length - G.tierToEnd as TierType;
         return (
             <table>
                 <caption>
                     <span style={Styles.Camp()} className="bg-top-camp-icon"></span>
-                    <span><span style={Styles.CampBack(G.campDeckLength.length - G.tierToEnd + 1 >
-                        G.campDeckLength.length ? 1 : G.campDeckLength.length - G.tierToEnd)}
+                    <span><span style={Styles.CampBack(tier)}
                         className="bg-top-card-back-icon"></span>Camp
                         ({G.campDeckLength[G.campDeckLength.length - G.tierToEnd] ?? 0}
                         {(G.campDeckLength.length - G.tierToEnd === 0 ? `/` +

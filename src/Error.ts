@@ -2,6 +2,18 @@ import type { Ctx } from "boardgame.io";
 import { ErrorNames } from "./typescript/enums";
 import type { ErrorArgsTypes, IMyGameState } from "./typescript/interfaces";
 
+/**
+ * <h3>Все возможные ошибки/исключения в игре.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при любой ошибке/исключении.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param error Ошибка.
+ * @param errorArgs Аргументы действия.
+ */
 export const ThrowMyError = (G: IMyGameState, ctx: Ctx, error: ErrorNames, ...errorArgs: ErrorArgsTypes): never => {
     let _exhaustiveCheck: never;
     switch (error) {

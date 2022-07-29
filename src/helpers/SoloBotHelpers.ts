@@ -4,6 +4,17 @@ import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames } from "../typescript/enums";
 import type { CanBeUndefType, IMoveArgumentsStage, IMoveCoinsArguments, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
+/**
+ * <h3>Определяет минимальную видимую монету соло бота.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при необходимости обмена минимальной видимой монеты соло ботом.</li>
+ * </ol>
+ *
+ * @param coins Все видимые монеты соло бота.
+ * @param minValue Минимальное видимое значение монеты соло бота.
+ * @returns Id минимальной видимой монеты соло бота.
+ */
 export const CheckMinCoinVisibleIndexForSoloBot = (coins: PublicPlayerCoinType[], minValue: number): number => {
     let coinId = -1;
     coins.forEach((coin: PublicPlayerCoinType, index: number): void => {
@@ -17,6 +28,19 @@ export const CheckMinCoinVisibleIndexForSoloBot = (coins: PublicPlayerCoinType[]
     return coinId;
 };
 
+/**
+ * <h3>Определяет значение минимальной видимой монеты соло бота.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при необходимости обмена минимальной видимой монеты соло ботом.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param moveArguments Аргументы действия соло бота.
+ * @param type Тип минимальной видимой монеты соло бота.
+ * @returns Значение минимальной видимой монеты соло бота
+ */
 export const CheckMinCoinVisibleValueForSoloBot = (G: IMyGameState, ctx: Ctx,
     moveArguments: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`], type: CoinTypeNames): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, IBackground, IStyles, MythologicalCreatureNameTypes, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { CanBeNullType, IBackground, IStyles, MythologicalCreatureNameTypes, SuitNamesKeyofTypeofType, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -44,7 +44,7 @@ export const Styles: IStyles = {
     Camp: (): IBackground => ({
         background: `${campCardsPath}.png) no-repeat 0px 3px / 24px 18px`,
     }),
-    CampBack: (tier: number): IBackground => ({
+    CampBack: (tier: TierType): IBackground => ({
         background: `url(/img/cards/camp/CampBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
     CampCard: (cardPath: string): IBackground => {
@@ -149,7 +149,7 @@ export const Styles: IStyles = {
                 throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
         }
     },
-    CardBack: (tier: number): IBackground => ({
+    CardBack: (tier: TierType): IBackground => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
     Card: (suit: SuitNamesKeyofTypeofType, name: string, points: CanBeNullType<number>): IBackground => {

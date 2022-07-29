@@ -81,8 +81,9 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
         }
     }
     if (data !== undefined) {
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: Styles.CampBack(G.campDeckLength.length - G.tierToEnd + 1 >
-                                        G.campDeckLength.length ? 1 : G.campDeckLength.length - G.tierToEnd), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDeckLength[G.campDeckLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
+        const tier = G.campDeckLength.length - G.tierToEnd + 1 > G.campDeckLength.length ?
+            1 : G.campDeckLength.length - G.tierToEnd;
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: Styles.CampBack(tier), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDeckLength[G.campDeckLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
                                     (G.campDeckLength[0] + G.campDeckLength[1]) : ``), " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
     else if (validatorName !== null) {

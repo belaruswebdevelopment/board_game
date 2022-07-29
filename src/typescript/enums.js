@@ -1,3 +1,6 @@
+/**
+ * <h3>Перечисление для названий действий по получению преимущества по фракции.</h3>
+ */
 export var DistinctionAwardingFunctionNames;
 (function (DistinctionAwardingFunctionNames) {
     DistinctionAwardingFunctionNames["BlacksmithDistinctionAwarding"] = "BlacksmithDistinctionAwarding";
@@ -19,6 +22,9 @@ export var AutoActionFunctionNames;
     AutoActionFunctionNames["StartVidofnirVedrfolnirAction"] = "StartVidofnirVedrfolnirAction";
     AutoActionFunctionNames["UpgradeMinCoinAction"] = "UpgradeMinCoinAction";
 })(AutoActionFunctionNames || (AutoActionFunctionNames = {}));
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по фракции дворфа.</h3>
+ */
 export var SuitScoringFunctionNames;
 (function (SuitScoringFunctionNames) {
     SuitScoringFunctionNames["BlacksmithScoring"] = "BlacksmithScoring";
@@ -27,6 +33,9 @@ export var SuitScoringFunctionNames;
     SuitScoringFunctionNames["MinerScoring"] = "MinerScoring";
     SuitScoringFunctionNames["WarriorScoring"] = "WarriorScoring";
 })(SuitScoringFunctionNames || (SuitScoringFunctionNames = {}));
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по артефакту.</h3>
+ */
 export var ArtefactScoringFunctionNames;
 (function (ArtefactScoringFunctionNames) {
     ArtefactScoringFunctionNames["BasicArtefactScoring"] = "BasicArtefactScoring";
@@ -36,24 +45,36 @@ export var ArtefactScoringFunctionNames;
     ArtefactScoringFunctionNames["OdroerirTheMythicCauldronScoring"] = "OdroerirTheMythicCauldronScoring";
     ArtefactScoringFunctionNames["SvalinnScoring"] = "SvalinnScoring";
 })(ArtefactScoringFunctionNames || (ArtefactScoringFunctionNames = {}));
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по герою.</h3>
+ */
 export var HeroScoringFunctionNames;
 (function (HeroScoringFunctionNames) {
     HeroScoringFunctionNames["BasicHeroScoring"] = "BasicHeroScoring";
     HeroScoringFunctionNames["AstridScoring"] = "AstridScoring";
     HeroScoringFunctionNames["IdunnScoring"] = "IdunnScoring";
 })(HeroScoringFunctionNames || (HeroScoringFunctionNames = {}));
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по мифическому животному.</h3>
+ */
 export var MythicalAnimalScoringFunctionNames;
 (function (MythicalAnimalScoringFunctionNames) {
     MythicalAnimalScoringFunctionNames["BasicMythicalAnimalScoring"] = "BasicMythicalAnimalScoring";
     MythicalAnimalScoringFunctionNames["GarmScoring"] = "GarmScoring";
     MythicalAnimalScoringFunctionNames["NidhoggScoring"] = "NidhoggScoring";
 })(MythicalAnimalScoringFunctionNames || (MythicalAnimalScoringFunctionNames = {}));
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по гиганту.</h3>
+ */
 export var GiantScoringFunctionNames;
 (function (GiantScoringFunctionNames) {
     GiantScoringFunctionNames["BasicGiantScoring"] = "BasicGiantScoring";
     GiantScoringFunctionNames["GymirScoring"] = "GymirScoring";
     GiantScoringFunctionNames["SurtScoring"] = "SurtScoring";
 })(GiantScoringFunctionNames || (GiantScoringFunctionNames = {}));
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по валькирии.</h3>
+ */
 export var ValkyryScoringFunctionNames;
 (function (ValkyryScoringFunctionNames) {
     ValkyryScoringFunctionNames["BrynhildrScoring"] = "BrynhildrScoring";
@@ -216,6 +237,9 @@ export var DrawNames;
     DrawNames["UpgradeCoinVidofnirVedrfolnir"] = "Upgrade coin Vidofnir Vedrfolnir";
     DrawNames["UpgradeCoinWarriorDistinction"] = "Upgrade coin Warrior distinction";
 })(DrawNames || (DrawNames = {}));
+/**
+ * <h3>Перечисление для названий ошибок.</h3>
+ */
 export var ErrorNames;
 (function (ErrorNames) {
     ErrorNames["CurrentTierDeckIsUndefined"] = "CurrentTierDeckIsUndefined";

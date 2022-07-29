@@ -1,4 +1,16 @@
 import { ErrorNames } from "./typescript/enums";
+/**
+ * <h3>Все возможные ошибки/исключения в игре.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при любой ошибке/исключении.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param error Ошибка.
+ * @param errorArgs Аргументы действия.
+ */
 export const ThrowMyError = (G, ctx, error, ...errorArgs) => {
     let _exhaustiveCheck;
     switch (error) {

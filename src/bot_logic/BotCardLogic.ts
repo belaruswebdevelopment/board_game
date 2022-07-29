@@ -125,6 +125,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCa
         }
     }
     totalPoints /= count;
+    // TODO Rework it to non-dwarf card?
     return CreateDwarfCard({
         suit: suitConfig.suit,
         points: totalPoints,

@@ -16,7 +16,7 @@ import { IsMercenaryCampCard } from "./IsCampTypeHelpers";
  * @param ctx
  * @returns
  */
-export const AfterLastTavernEmptyActions = (G, ctx) => {
+const AfterLastTavernEmptyActions = (G, ctx) => {
     const isLastRound = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
         ((G.round === 2 || G.round === 5) ? true : false), currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
     if (currentDeck === undefined) {

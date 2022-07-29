@@ -40,7 +40,7 @@ const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitNamesK
                 playerDistinctionIndex);
         }
         if (G.expansions.idavoll) {
-            CheckValkyryRequirement(playerDist, playerDistinctionIndex,
+            CheckValkyryRequirement(G, ctx, playerDistinctionIndex,
                 BuffNames.CountDistinctionAmount);
         }
         AddDataToLog(G, LogTypeNames.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerDist.nickname}'.`);

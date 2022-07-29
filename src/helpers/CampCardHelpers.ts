@@ -53,7 +53,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
  * @param ctx
  * @param card Карта лагеря.
  */
-export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardType): void => {
+const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardType): void => {
     if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
         throw new Error(`Не удалось добавить карту лагеря '${card.type}' '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
     }
@@ -77,7 +77,7 @@ export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCar
  * @param card Карта лагеря.
  * @returns Добавлен ли артефакт на планшет игрока.
  */
-export const AddArtefactPlayerCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactPlayerCampCard):
+const AddArtefactPlayerCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactPlayerCampCard):
     boolean => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

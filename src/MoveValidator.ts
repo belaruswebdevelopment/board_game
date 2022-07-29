@@ -331,7 +331,7 @@ export const moveValidators: IMoveValidators = {
                 }
                 // Todo Think about picking Royal Offering if other cards not LeastPresentOnPlayerBoard...
                 if (moveArgument === undefined) {
-                    moveArgument = SoloBotMustTakeRandomCard(G, moveArguments);
+                    moveArgument = SoloBotMustTakeRandomCard(moveArguments);
                 }
                 if (moveArgument !== undefined) {
                     return moveArgument;
@@ -878,7 +878,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -903,7 +904,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -927,7 +929,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -951,7 +954,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -974,7 +978,8 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType): number => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -996,7 +1001,8 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType): number => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -1143,7 +1149,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -1304,7 +1311,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -1363,10 +1371,10 @@ export const moveValidators: IMoveValidators = {
                         1);
                 }
                 const suit: CanBeUndefType<SuitNamesKeyofTypeofType> =
-                    CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
+                    CheckSoloBotCanPickHero(soloBotPublicPlayer);
                 if (suit === undefined) {
                     const [suits]: [SuitNamesKeyofTypeofType[], number] =
-                        CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
+                        CheckSuitsLeastPresentOnPlayerBoard(soloBotPublicPlayer);
                     if (suits.length === 0) {
                         throw new Error(`Не может не быть фракций с минимальным количеством карт.`);
                     } else if (suits.length === 1) {
@@ -1455,7 +1463,8 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeType):
             ValidMoveIdParamType => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+                moveArgument: CanBeUndefType<number> =
+                    moveArguments[Math.floor(Math.random() * moveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }

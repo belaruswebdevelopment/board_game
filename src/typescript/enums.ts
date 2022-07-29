@@ -1,3 +1,6 @@
+/**
+ * <h3>Перечисление для названий действий по получению преимущества по фракции.</h3>
+ */
 export const enum DistinctionAwardingFunctionNames {
     BlacksmithDistinctionAwarding = `BlacksmithDistinctionAwarding`,
     ExplorerDistinctionAwarding = `ExplorerDistinctionAwarding`,
@@ -19,6 +22,9 @@ export const enum AutoActionFunctionNames {
     UpgradeMinCoinAction = `UpgradeMinCoinAction`,
 }
 
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по фракции дворфа.</h3>
+ */
 export const enum SuitScoringFunctionNames {
     BlacksmithScoring = `BlacksmithScoring`,
     ExplorerScoring = `ExplorerScoring`,
@@ -27,6 +33,9 @@ export const enum SuitScoringFunctionNames {
     WarriorScoring = `WarriorScoring`,
 }
 
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по артефакту.</h3>
+ */
 export const enum ArtefactScoringFunctionNames {
     BasicArtefactScoring = `BasicArtefactScoring`,
     DraupnirScoring = `DraupnirScoring`,
@@ -36,24 +45,36 @@ export const enum ArtefactScoringFunctionNames {
     SvalinnScoring = `SvalinnScoring`,
 }
 
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по герою.</h3>
+ */
 export const enum HeroScoringFunctionNames {
     BasicHeroScoring = `BasicHeroScoring`,
     AstridScoring = `AstridScoring`,
     IdunnScoring = `IdunnScoring`,
 }
 
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по мифическому животному.</h3>
+ */
 export const enum MythicalAnimalScoringFunctionNames {
     BasicMythicalAnimalScoring = `BasicMythicalAnimalScoring`,
     GarmScoring = `GarmScoring`,
     NidhoggScoring = `NidhoggScoring`,
 }
 
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по гиганту.</h3>
+ */
 export const enum GiantScoringFunctionNames {
     BasicGiantScoring = `BasicGiantScoring`,
     GymirScoring = `GymirScoring`,
     SurtScoring = `SurtScoring`,
 }
 
+/**
+ * <h3>Перечисление для названий действий по получению победных очков по валькирии.</h3>
+ */
 export const enum ValkyryScoringFunctionNames {
     BrynhildrScoring = `BrynhildrScoring`,
     HildrScoring = `HildrScoring`,
@@ -216,6 +237,9 @@ export const enum DrawNames {
     UpgradeCoinWarriorDistinction = `Upgrade coin Warrior distinction`,
 }
 
+/**
+ * <h3>Перечисление для названий ошибок.</h3>
+ */
 export const enum ErrorNames {
     CurrentTierDeckIsUndefined = `CurrentTierDeckIsUndefined`,
     CurrentPrivatePlayerIsUndefined = `CurrentPrivatePlayerIsUndefined`,

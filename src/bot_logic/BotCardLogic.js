@@ -116,6 +116,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
         }
     }
     totalPoints /= count;
+    // TODO Rework it to non-dwarf card?
     return CreateDwarfCard({
         suit: suitConfig.suit,
         points: totalPoints,

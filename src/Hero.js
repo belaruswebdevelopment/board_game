@@ -62,7 +62,7 @@ export const BuildHeroes = (configOptions, solo) => {
  * @param stack Действия.
  * @returns Герой.
  */
-export const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, } = {}) => ({
+const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, } = {}) => ({
     type,
     name,
     description,

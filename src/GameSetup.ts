@@ -13,7 +13,7 @@ import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
-import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -83,7 +83,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         camp: CampDeckCardType[] = Array(campNum).fill(null);
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
-            secret.campDecks[i] = BuildCampCards(i);
+            secret.campDecks[i] = BuildCampCards(i as TierType);
             let campDeck: CanBeUndefType<CampDeckCardType[]> = secret.campDecks[i];
             if (campDeck === undefined) {
                 throw new Error(`Колода карт лагеря ${i} эпохи не может отсутствовать.`);
@@ -103,7 +103,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         secret.decks[i] = [];
         const data: IPlayersNumberTierCardData = {
             players: ctx.numPlayers,
-            tier: i,
+            tier: i as TierType,
         },
             dwarfDeck: IDwarfCard[] = BuildDwarfCards(data),
             royalOfferingDeck: IRoyalOfferingCard[] = BuildRoyalOfferingCards(data);

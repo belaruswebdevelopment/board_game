@@ -80,7 +80,7 @@ const priorities: IPriority[] = [
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
  */
-export const prioritiesConfig: IPrioritiesConfig = {
+const prioritiesConfig: IPrioritiesConfig = {
     1: priorities.slice(0, 2),
     2: priorities.slice(-2),
     3: priorities.slice(-3),

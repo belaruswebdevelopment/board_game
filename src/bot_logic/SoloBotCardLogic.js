@@ -3,7 +3,17 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-export const CheckSoloBotCanPickHero = (G, ctx, player) => {
+/**
+ * <h3>Проверяет возможность получения нового героя при выборе карты конкретной фракции из таверны соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора карты из таверны соло ботом.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @returns Фракция дворфов для выбора карты, чтобы получить нового героя.
+ */
+export const CheckSoloBotCanPickHero = (player) => {
     const playerCards = Object.values(player.cards), heroesLength = player.heroes.filter((hero) => hero.name.startsWith(`Dwerg`)).length, playerCardsCount = playerCards.map((item) => item.reduce(TotalRank, 0)), minLength = Math.min(...playerCardsCount), minLengthCount = playerCardsCount.filter((length) => length === minLength).length, isCanPickHero = minLength === heroesLength && minLengthCount === 1;
     if (isCanPickHero) {
         const suitIndex = playerCardsCount.indexOf(minLength);
@@ -18,7 +28,17 @@ export const CheckSoloBotCanPickHero = (G, ctx, player) => {
     }
     return undefined;
 };
-export const CheckSuitsLeastPresentOnPlayerBoard = (G, ctx, player) => {
+/**
+ * <h3>Проверяет наименее представленные фракции в армии соло бота при выборе карты из таверны соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора карты из таверны соло ботом.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @returns Фракции дворфов с наименьшим количеством карт для выбора карты/минимальное количество карт в наименьших фракциях.
+ */
+export const CheckSuitsLeastPresentOnPlayerBoard = (player) => {
     const playerCards = Object.values(player.cards), playerCardsCount = playerCards.map((item) => item.reduce(TotalRank, 0)), minLength = Math.min(...playerCardsCount), minLengthCount = playerCardsCount.filter((length) => length === minLength).length, availableSuitArguments = [];
     for (let i = 0; i < playerCardsCount.length; i++) {
         if (playerCardsCount[i] === minLength) {
@@ -32,6 +52,18 @@ export const CheckSuitsLeastPresentOnPlayerBoard = (G, ctx, player) => {
     }
     return [availableSuitArguments, minLengthCount];
 };
+/**
+ * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора карты из таверны соло ботом.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param moveArguments Аргументы действия соло бота.
+ * @returns Id карты из таверны, при выборе которой можно получить нового героя.
+ */
 export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
     const soloBotPublicPlayer = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
@@ -41,7 +73,7 @@ export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
     if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud)) {
         thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud);
     }
-    const suit = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer), availableMoveArguments = [], availableThrudArguments = [];
+    const suit = CheckSoloBotCanPickHero(soloBotPublicPlayer), availableMoveArguments = [], availableThrudArguments = [];
     if (suit !== undefined) {
         const currentTavern = G.taverns[G.currentTavern];
         if (currentTavern === undefined) {
@@ -90,6 +122,18 @@ export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
     }
     return undefined;
 };
+/**
+ * <h3>Проверяет наибольшее значение для получения карты при выборе карты из таверны соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора карты из таверны соло ботом.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param moveArguments Аргументы действия соло бота.
+ * @returns Id карты из таверны, при выборе которой можно получить карту с наибольшим значением.
+ */
 export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) => {
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
@@ -112,7 +156,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) 
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта обмена монет с id '${moveArgument}'.`);
         }
         if (tavernCard.points === null) {
-            return SoloBotMustTakeRandomCard(G, moveArguments);
+            return SoloBotMustTakeRandomCard(moveArguments);
         }
         else if (tavernCard.points !== null) {
             if (tavernCard.points > maxValue) {
@@ -127,13 +171,25 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) 
     }
     return finalMoveArgument;
 };
+/**
+ * <h3>Проверяет возможность получения карты наименее представленной в армии соло бота при выборе карты из таверны соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора карты из таверны соло ботом.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param moveArguments Аргументы действия соло бота.
+ * @returns Id карты из таверны, при выборе которой можно получить карту с наибольшим значением.
+ */
 export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ctx, moveArguments) => {
     // TODO Least present only if arguments < suit count => < 5(1,2,3,4) or all 5 too (if all suit cards equal count)!?
     const soloBotPublicPlayer = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
-    const [availableSuitArguments, minLengthCount] = CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
+    const [availableSuitArguments, minLengthCount] = CheckSuitsLeastPresentOnPlayerBoard(soloBotPublicPlayer);
     if (availableSuitArguments.length !== minLengthCount) {
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);
     }
@@ -173,9 +229,19 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
     else if (availableSuitArguments.length === 1 || !isNoPoints) {
         return CheckSoloBotMustTakeCardWithHighestValue(G, ctx, leastPresentArguments);
     }
-    return SoloBotMustTakeRandomCard(G, leastPresentArguments);
+    return SoloBotMustTakeRandomCard(leastPresentArguments);
 };
-export const SoloBotMustTakeRandomCard = (G, moveArguments) => {
+/**
+ * <h3>Проверяет получение случайной карты при выборе карты из таверны соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора карты из таверны соло ботом.</li>
+ * </ol>
+ *
+ * @param moveArguments Аргументы действия соло бота.
+ * @returns Id случайной карты из таверны.
+ */
+export const SoloBotMustTakeRandomCard = (moveArguments) => {
     // TODO Delete random cards with same suit but less points from random!
     const moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
     if (moveArgument === undefined) {

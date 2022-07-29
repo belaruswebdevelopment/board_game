@@ -57,7 +57,8 @@ export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = (G: I
  * @param playerId Id игрока.
  * @returns
  */
-export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number):
+    number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
@@ -86,7 +87,8 @@ export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMy
  * @param playerId Id игрока.
  * @returns
  */
-export const HunterDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const HunterDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number):
+    number => {
     if (G.tierToEnd !== 0) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId],
             privatePlayer: CanBeUndefType<IPlayer> = G.players[playerId];
@@ -141,7 +143,8 @@ export const HunterDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGa
  * @param playerId Id игрока.
  * @returns
  */
-export const MinerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const MinerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number):
+    number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
@@ -175,7 +178,8 @@ export const MinerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGam
  * @param playerId Id игрока.
  * @returns
  */
-export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
+export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGameState, ctx: Ctx, playerId: number):
+    number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);

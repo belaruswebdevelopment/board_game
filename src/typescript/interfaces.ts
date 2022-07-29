@@ -1,35 +1,56 @@
 import type { Ctx } from "boardgame.io";
 import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, BuffNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PickCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SpecialCardNames, StageNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
+/**
+ * <h3>Интерфейс для скрытых для всех игроков данных.</h3>
+ */
 export interface ISecret {
     readonly campDecks: CampDeckCardType[][];
     readonly decks: DeckCardTypes[][];
     mythologicalCreatureDecks: MythologicalCreatureDeckCardType[];
 }
 
-export interface IWeight {
+/**
+ * <h3>Интерфейс для веса цели ботов.</h3>
+ */
+interface IWeight {
     readonly weight: number;
 }
 
-export interface IHeuristic<T> extends IWeight {
+/**
+ * <h3>Интерфейс для эвристики для ботов.</h3>
+ */
+export interface IHeuristic<T extends unknown[]> extends IWeight {
     readonly heuristic: (array: T) => boolean;
 }
 
-export interface IObjective extends IWeight {
+/**
+ * <h3>Интерфейс для цели ботов.</h3>
+ */
+interface IObjective extends IWeight {
     readonly checker: (G: IMyGameState, ctx: Ctx) => boolean;
 }
 
+/**
+ * <h3>Интерфейс для всех цели ботов.</h3>
+ */
 export interface IObjectives {
     readonly isEarlyGame: IObjective;
     readonly isFirst: IObjective;
     readonly isStronger: IObjective;
 }
 
+/**
+ * <h3>Интерфейс для данных дебага.</h3>
+ */
 export interface IDebugData {
     readonly G: Partial<Record<KeyofType<IMyGameState>, IMyGameState[KeyofType<IMyGameState>]>>;
     readonly ctx: Partial<Record<KeyofType<Ctx>, Ctx[KeyofType<Ctx>]>>;
 }
 
+/**
+ * <h3>Интерфейс для характеристик карты для ботов.</h3>
+ */
 export interface ICardCharacteristics {
     readonly variation: number;
     readonly mean: number;
@@ -260,7 +281,7 @@ export interface IStackData {
     readonly pickCard: () => IStack;
     readonly pickConcreteCoinToUpgrade: (coinValue: number, value: number) => IStack;
     readonly pickDiscardCardAndumia: () => IStack;
-    readonly pickDiscardCardBrisingamens: (priority?: number) => IStack;
+    readonly pickDiscardCardBrisingamens: (priority?: 3) => IStack;
     readonly pickDistinctionCard: () => IStack;
     readonly pickDistinctionCardSoloBot: () => IStack;
     readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3) =>
@@ -285,7 +306,6 @@ export interface IStackData {
 export interface IStack {
     priority?: number;
     readonly playerId?: number;
-    readonly number?: number;
     readonly coinId?: number;
     readonly coinValue?: number;
     readonly suit?: SuitNamesKeyofTypeofType;
@@ -325,30 +345,48 @@ export interface IBotData {
     readonly deckLength: number;
 }
 
+/**
+ * <h3>Интерфейс для данных карты с основными характеристиками, которые могут и не присутствовать.</h3>
+ */
 export interface IBasicSuitableNullableCardInfo {
     readonly suit: CanBeNullType<SuitNamesKeyofTypeofType>;
     readonly rank: CanBeNullType<number>;
     readonly points: CanBeNullType<number>;
 }
 
-export interface IBasicSuitableNonNullableCardInfo extends Pick<IBasicSuitableNullableCardInfo, `points`> {
+/**
+ * <h3>Интерфейс для данных карты с основными характеристиками, которые могут должны присутствовать.</h3>
+ */
+interface IBasicSuitableNonNullableCardInfo extends Pick<IBasicSuitableNullableCardInfo, `points`> {
     readonly suit: NonNullable<IBasicSuitableNullableCardInfo[`suit`]>;
     readonly rank: NonNullable<IBasicSuitableNullableCardInfo[`rank`]>;
 }
 
+/**
+ * <h3>Интерфейс для данных путей карты.</h3>
+ */
 export interface IPathCardInfo {
     readonly path: string;
 }
 
-export interface ITierInfo {
-    readonly tier: number;
+/**
+ * <h3>Интерфейс для данных эпохи карты.</h3>
+ */
+interface ITierInfo {
+    readonly tier: TierType;
 }
 
-export interface IExpansionCardInfo {
+/**
+ * <h3>Интерфейс для данных базы/дополнения игры.</h3>
+ */
+interface IExpansionCardInfo {
     readonly game: GameNamesKeyofTypeofType;
 }
 
-export interface ICardWithActionInfo {
+/**
+ * <h3>Интерфейс для данных карты с возможными действиями.</h3>
+ */
+interface ICardWithActionInfo {
     readonly description: string;
     readonly buff?: IBuff;
     readonly validators?: ValidatorsConfigType;
@@ -389,47 +427,80 @@ export interface IMarketCoinConfig extends Pick<ICoin, `value`> {
     readonly count: () => INumberValues;
 }
 
+/**
+ * <h3>Интерфейс для автоматических действий с параметрами.</h3>
+ */
 export interface IAutoActionFunctionWithParams {
     (G: IMyGameState, ctx: Ctx, ...params: AutoActionArgsType): void;
 }
 
+/**
+ * <h3>Интерфейс для автоматических действий без параметров.</h3>
+ */
 export interface IAutoActionFunction {
     (G: IMyGameState, ctx: Ctx): void;
 }
 
+/**
+ * <h3>Интерфейс для функций подсчёта очков по фракциям дворфов.</h3>
+ */
 export interface ISuitScoringFunction {
     (...params: SuitScoringArgsType): number;
 }
 
+/**
+ * <h3>Интерфейс для функций подсчёта очков по артефактам.</h3>
+ */
 export interface IArtefactScoringFunction {
     (G: IMyGameState, player: IPublicPlayer, ...params: ScoringArgsCanBeUndefType): number;
 }
 
-// TODO Rework common ScoringFunction interfaces!
+// TODO Rework common ScoringFunction interfaces!?
+/**
+ * <h3>Интерфейс для функций подсчёта очков по героям.</h3>
+ */
 export interface IHeroScoringFunction {
     (player: IPublicPlayer, ...params: ScoringArgsCanBeUndefType): number;
 }
 
+/**
+ * <h3>Интерфейс для функций подсчёта очков по мифическим животным.</h3>
+ */
 export interface IMythicalAnimalScoringFunction {
     (player: IPublicPlayer, ...params: ScoringArgsType): number;
 }
 
+/**
+ * <h3>Интерфейс для функций подсчёта очков по гигантам.</h3>
+ */
 export interface IGiantScoringFunction {
     (player: IPublicPlayer, ...params: ScoringArgsType): number;
 }
 
+/**
+ * <h3>Интерфейс для функций подсчёта очков по валькириям.</h3>
+ */
 export interface IValkyryScoringFunction {
     (...params: ScoringArgsType): number;
 }
 
+/**
+ * <h3>Интерфейс для функций получения преимущества по фракциям дворфов.</h3>
+ */
 export interface IDistinctionAwardingFunction {
     (G: IMyGameState, ctx: Ctx, ...params: ScoringArgsType): number;
 }
 
+/**
+ * <h3>Интерфейс для функций мувов.</h3>
+ */
 export interface IMoveFunction {
     (...args: ArgsType): void;
 }
 
+/**
+ * <h3>Интерфейс для статуса дополнения игры.</h3>
+ */
 interface IExpansion {
     readonly active: boolean;
 }
@@ -439,6 +510,7 @@ interface IExpansion {
  */
 export interface ILogData {
     readonly type: LogTypeNames;
+    // Move to Log enums
     readonly value: string;
 }
 
@@ -489,7 +561,7 @@ export interface IMyGameState {
     tavernCardDiscarded2Players: boolean;
     readonly taverns: TavernCardType[][];
     readonly tavernsNum: number;
-    tierToEnd: number;
+    tierToEnd: TierToEndType;
     readonly totalScore: number[];
     readonly players: IPlayers;
     readonly publicPlayers: IPublicPlayers;
@@ -529,6 +601,9 @@ export interface IConditions {
     readonly suitCountMin: ICondition;
 }
 
+/**
+ * <h3>Интерфейс для карты сброса для валидатора выбора карт.</h3>
+ */
 interface IDiscardCard {
     readonly suit: CanBeNullType<SuitNamesKeyofTypeofType>;
     readonly number?: number;
@@ -542,20 +617,32 @@ export interface IMoves {
     readonly args: MoveArgsType;
 }
 
+/**
+ * <h3>Интерфейс для аргументов мува.</h3>
+ */
 export interface IMoveArgumentsStage<T> {
     readonly args: T;
 }
 
+/**
+ * <h3>Интерфейс для аргументов монет у мува.</h3>
+ */
 export interface IMoveCoinsArguments {
     readonly coinId: number;
     readonly type: CoinTypeNames;
 }
 
-export interface ICardId {
+/**
+ * <h3>Интерфейс для аргументов id карты у мува.</h3>
+ */
+interface ICardId {
     readonly cardId: number;
 }
 
-export interface IPlayerId {
+/**
+ * <h3>Интерфейс для аргументов id игрока у мува.</h3>
+ */
+interface IPlayerId {
     readonly playerId: number;
 }
 
@@ -566,6 +653,9 @@ export interface IMoveSuitCardCurrentId extends ICardId {
     readonly suit: SuitNamesKeyofTypeofType;
 }
 
+/**
+ * <h3>Интерфейс для аргументов карт и id игрока у мува.</h3>
+ */
 export interface IMoveCardsPlayerIdArguments extends IPlayerId {
     readonly cards: number[];
 }
@@ -585,6 +675,9 @@ export interface IMoveBy {
     readonly getMjollnirProfit: IMoveByGetMjollnirProfitOptions;
 }
 
+/**
+ * <h3>Интерфейс для возможных валидаторов у мува.</h3>
+ */
 export interface IMoveByChooseDifficultySoloModeOptions {
     readonly default1: IMoveValidator;
     readonly chooseHeroesForSoloMode: IMoveValidator;
@@ -608,10 +701,16 @@ export interface IMoveByBidUlineOptions {
     readonly default1: IMoveValidator;
 }
 
+/**
+ * <h3>Интерфейс для возможных валидаторов у мува.</h3>
+ */
 export interface IMoveBySoloBotOptions {
     readonly pickHeroSoloBot: IMoveValidator;
 }
 
+/**
+ * <h3>Интерфейс для возможных общих валидаторов у мува.</h3>
+ */
 interface IMoveByCommonOptions {
     readonly addCoinToPouch: IMoveValidator;
     readonly chooseCoinValueForVidofnirVedrfolnirUpgrade: IMoveValidator;
@@ -744,7 +843,7 @@ export interface IPickValidatorsConfig {
 /**
  * <h3>Интерфейс для числовых индексов и массивов числовых значений.</h3>
  */
-export interface INumberArrayValues {
+interface INumberArrayValues {
     readonly [index: number]: number[];
 }
 
@@ -850,9 +949,9 @@ export interface IBackground {
  */
 export interface IStyles {
     readonly Camp: () => IBackground;
-    readonly CampBack: (tier: number) => IBackground;
+    readonly CampBack: (tier: TierType) => IBackground;
     readonly CampCard: (cardPath: string) => IBackground;
-    readonly CardBack: (tier: number) => IBackground;
+    readonly CardBack: (tier: TierType) => IBackground;
     readonly Card: (suit: SuitNamesKeyofTypeofType, name: string, points: CanBeNullType<number>) => IBackground;
     readonly Coin: (value: number, initial: boolean) => IBackground;
     readonly CoinSmall: (value: number, initial: boolean) => IBackground;
@@ -883,7 +982,10 @@ export interface ISuit {
     readonly distinction: IDistinction;
 }
 
-export interface IDistinction {
+/**
+ * <h3>Интерфейс для преимущества по фракции дворфов.</h3>
+ */
+interface IDistinction {
     readonly description: string;
     readonly awarding: IAction<DistinctionAwardingFunctionNames, undefined>;
 }
@@ -902,25 +1004,46 @@ export interface ITavernsConfig {
     readonly [index: number]: ITavernInConfig;
 }
 
+/**
+ * <h3>Типы данных для дебага.</h3>
+ */
 export type DebugDrawDataType<T> = {
     readonly [K in KeyofType<T>]: T[K];
 };
 
+/**
+ * <h3>Типы данных для базовых значений обмена монеты по артефакту 'Vidofnir Vedrfolnir'.</h3>
+ */
 export type BasicVidofnirVedrfolnirUpgradeValueType = 2 | 3 | 5;
 
 export type AllHeroCardType = IHeroCard | IHeroPlayerCard;
 
+/**
+ * <h3>Типы данных для значений обмена монеты по артефакту 'Vidofnir Vedrfolnir' для стека.</h3>
+ */
 export type VidofnirVedrfolnirUpgradeValueType = [BasicVidofnirVedrfolnirUpgradeValueType]
-    | [BasicVidofnirVedrfolnirUpgradeValueType, 2 | 3];
+    | [BasicVidofnirVedrfolnirUpgradeValueType, Exclude<BasicVidofnirVedrfolnirUpgradeValueType, 5>];
 
+/**
+* <h3>Типы данных для значений бафов.</h3>
+*/
 export type BuffValueType = SuitNamesKeyofTypeofType | true;
 
+/**
+ * <h3>Типы данных для значений '1' или '2' приоритетов для стека.</h3>
+ */
 export type OneOrTwoStackPriorityType = 1 | 2;
 
+/**
+ * <h3>Типы данных для аргументов id карты и id игрока у мува.</h3>
+ */
 export type MoveCardPlayerCurrentIdType = ICardId & IPlayerId;
 
 // TODO Rework to + Enlistment mercenaries names - string
-export type StackNamesType = HeroNames | MultiSuitCardNames | string;
+/**
+ * <h3>Типы данных для названий стеков.</h3>
+ */
+type StackNamesType = HeroNames | MultiSuitCardNames | string;
 
 // TODO Idavoll
 /**
@@ -943,8 +1066,14 @@ export type CampCardType = CanBeNullType<CampDeckCardType>;
  */
 export type CampDeckCardType = IArtefactCampCard | IArtefactPlayerCampCard | IMercenaryCampCard;
 
-export type ClosedCoinType = Record<string, never>;
+/**
+ * <h3>Типы данных для закрытых монет.</h3>
+ */
+type ClosedCoinType = Record<string, never>;
 
+/**
+ * <h3>Типы данных для публичных монет.</h3>
+ */
 export type PublicPlayerCoinType = CoinType | ClosedCoinType;
 
 /**
@@ -957,13 +1086,35 @@ export type DeckCardTypes = IDwarfCard | IRoyalOfferingCard;
  */
 export type DiscardDeckCardType = DeckCardTypes;
 
+/**
+ * <h3>Типы данных для сброса карт лагеря.</h3>
+ */
 export type DiscardCampCardType = CampDeckCardType | IMercenaryPlayerCampCard;
 
+/**
+ * <h3>Типы данных для карт со стеком.</h3>
+ */
 export type CardsHasStackType = IHeroCard | IArtefactCampCard | IRoyalOfferingCard;
 
+/**
+ * <h3>Типы данных для карт для валидаторов добавления в стек.</h3>
+ */
 export type CardsHasStackValidatorsType = IHeroCard | IArtefactCampCard;
 
+/**
+ * <h3>Типы данных для очков у карт.</h3>
+ */
 export type PointsType = number | number[];
+
+/**
+ * <h3>Типы данных для эпох.</h3>
+ */
+export type TierType = 0 | 1;
+
+/**
+ * <h3>Типы данных для эпох до завершения игры.</h3>
+ */
+export type TierToEndType = 0 | 1 | 2;
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
@@ -977,15 +1128,30 @@ export type PlayerCardType = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | 
  */
 export type TavernCardType = CanBeNullType<DeckCardTypes | MythologicalCreatureDeckCardType>;
 
+/**
+ * <h3>Типы данных для всех типов карт.</h3>
+ */
 export type AllCardType = PlayerCardType | IHeroCard | IRoyalOfferingCard | IMercenaryCampCard
     | IArtefactCampCard | MythologicalCreatureDeckCardType;
 
+/**
+* <h3>Типы данных для значений очков карт.</h3>
+*/
 export type PointsValuesType = INumberValues | INumberArrayValues;
 
+/**
+ * <h3>Типы данных для конфигов монет.</h3>
+ */
 export type CoinConfigType = IMarketCoinConfig | InitialTradingCoinConfigType;
 
+/**
+ * <h3>Типы данных для массивов конфигов монет.</h3>
+ */
 export type CoinConfigArraysType = IMarketCoinConfig[] | InitialTradingCoinConfigType[];
 
+/**
+ * <h3>Типы данных для стадий игры для ботов.</h3>
+ */
 export type ActiveStageAIType = StageNames | `default`;
 
 /**
@@ -993,40 +1159,94 @@ export type ActiveStageAIType = StageNames | `default`;
  */
 export type CoinType = CanBeNullType<ICoin>;
 
+/**
+ * <h3>Типы данных для отрисовки профита.</h3>
+ */
 export type DrawProfitType = CanBeNullType<ConfigNames>;
 
+/**
+ * <h3>Типы данных для всех автоматических действий.</h3>
+ */
 export type AutoActionFunctionType = IAutoActionFunction | IAutoActionFunctionWithParams;
 
+/**
+ * <h3>Типы данных для всех мувов.</h3>
+ */
 export type MoveFunctionType = CanBeNullType<IMoveFunction>;
 
+/**
+ * <h3>Типы данных для количества и максимального значения шевронов для получения преимуществ по фракциям дворфов.</h3>
+ */
 export type PlayerRanksAndMaxRanksForDistinctionsType = [number[], number];
 
+/**
+ * <h3>Типы данных для значений дебага.</h3>
+ */
 export type DrawObjectDataType = IDebugData | IDebugData[KeyofType<IDebugData>];
 
+/**
+ * <h3>Типы данных для ключей перечислений названий валидаторов выбора карт.</h3>
+ */
 export type PickCardValidatorNamesKeyofTypeofType = KeyofType<typeof PickCardValidatorNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий артефактов.</h3>
+ */
 export type ArtefactNamesKeyofTypeofType = KeyofType<typeof ArtefactNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий фракций.</h3>
+ */
 export type SuitNamesKeyofTypeofType = KeyofType<typeof SuitNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий базы/дополнений игры.</h3>
+ */
 export type GameNamesKeyofTypeofType = KeyofType<typeof GameNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий героев.</h3>
+ */
 export type HeroNamesKeyofTypeofType = KeyofType<typeof HeroNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий особых карт.</h3>
+ */
 export type SpecialCardNamesKeyofTypeofType = KeyofType<typeof SpecialCardNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий гигантов.</h3>
+ */
 export type GiantNamesKeyofTypeofType = KeyofType<typeof GiantNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий богов.</h3>
+ */
 export type GodNamesKeyofTypeofType = KeyofType<typeof GodNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий мифических животных.</h3>
+ */
 export type MythicalAnimalNamesKeyofTypeofType = KeyofType<typeof MythicalAnimalNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий валькирий.</h3>
+ */
 export type ValkyryNamesKeyofTypeofType = KeyofType<typeof ValkyryNames>;
 
+/**
+ * <h3>Типы данных для ключей перечислений названий мультифракционных карт.</h3>
+ */
 export type MultiSuitCardNamesKeyofTypeofType = KeyofType<typeof MultiSuitCardNames>;
 
+/**
+ * <h3>Типы данных для ключей любого объекта.</h3>
+ */
 export type KeyofType<T> = keyof T;
 
+/**
+ * <h3>Типы данных для валидаторов значений для мувов.</h3>
+ */
 export type MoveValidatorGetRangeType = IMoveArgumentsStage<Partial<SuitPropertyType<number[]>>>[`args`]
     | IMoveArgumentsStage<IMoveCardsPlayerIdArguments>[`args`]
     | IMoveArgumentsStage<number[][]>[`args`]
@@ -1035,6 +1255,9 @@ export type MoveValidatorGetRangeType = IMoveArgumentsStage<Partial<SuitProperty
     | IMoveArgumentsStage<number[]>[`args`]
     | IMoveArgumentsStage<SuitNamesKeyofTypeofType[]>[`args`];
 
+/**
+* <h3>Типы данных для валидации значений для мувов.</h3>
+*/
 export type ValidMoveIdParamType = CanBeNullType<number | SuitNamesKeyofTypeofType | number[] | IMoveSuitCardCurrentId
     | MoveCardPlayerCurrentIdType | IMoveCoinsArguments>;
 
@@ -1094,6 +1317,9 @@ export type SpecialCardsConfigType = {
     readonly [Property in KeyofType<typeof SpecialCardNames>]: SpecialCardDataType;
 };
 
+/**
+ * <h3>Типы данных для свойств фракционных объектов.</h3>
+ */
 export type SuitPropertyType<Type> = {
     -readonly [Property in SuitNamesKeyofTypeofType]: Type;
 };
@@ -1119,6 +1345,9 @@ export type SuitConfigType = {
     readonly [Property in SuitNamesKeyofTypeofType]: ISuit;
 };
 
+/**
+ * <h3>Типы данных для всех имён мифологических существ.</h3>
+ */
 export type MythologicalCreatureNameTypes = GiantNames | GodNames | MythicalAnimalNames | ValkyryNames;
 
 /**
@@ -1126,12 +1355,24 @@ export type MythologicalCreatureNameTypes = GiantNames | GodNames | MythicalAnim
  */
 export type ArgsType = (CoinTypeNames | SuitNamesKeyofTypeofType | number)[];
 
+/**
+ * <h3>Типы данных для аргументов автоматических действий.</h3>
+ */
 export type AutoActionArgsType = [number] | [number, number, CoinTypeNames];
 
+/**
+ * <h3>Типы данных для аргументов функций подсчёта очков.</h3>
+ */
 export type ScoringArgsType = [number];
 
-export type ScoringArgsCanBeUndefType = [number?];
+/**
+ * <h3>Типы данных для аргументов функций подсчёта очков, которые могут отсутствовать.</h3>
+ */
+type ScoringArgsCanBeUndefType = [number?];
 
+/**
+ * <h3>Типы данных для аргументов функций подсчёта очков по фракциям.</h3>
+ */
 export type SuitScoringArgsType = [PlayerCardType[], number?, boolean?];
 
 /**
@@ -1139,8 +1380,14 @@ export type SuitScoringArgsType = [PlayerCardType[], number?, boolean?];
  */
 export type DistinctionType = CanBeUndefType<CanBeNullType<string>>;
 
+/**
+ * <h3>Типы данных для аргументов ошибок.</h3>
+ */
 export type ErrorArgsTypes = (string | number)[];
 
+/**
+ * <h3>Типы данных для аргументов мувов.</h3>
+ */
 export type MoveArgsType =
     number[][] | [SuitNamesKeyofTypeofType] | [number] | [SuitNamesKeyofTypeofType, number] | [number, CoinTypeNames];
 
@@ -1174,9 +1421,15 @@ export type CreateMercenaryPlayerCampCardType = PartialByType<IMercenaryPlayerCa
  */
 export type CreateDwarfCardType = PartialByType<IDwarfCard, `rank` | `type`>;
 
+/**
+ * <h3>Типы данных для всех карт сброса.</h3>
+ */
 export type DiscardCardType =
     PlayerCardType | IRoyalOfferingCard | IArtefactCampCard | MythologicalCreatureDeckCardType;
 
+/**
+* <h3>Типы данных для карт, которые добавляются на стол игрока.</h3>
+*/
 export type AddCardToPlayerType =
     NonNullable<TavernCardType> | IMercenaryPlayerCampCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard;
 
@@ -1254,8 +1507,14 @@ export type CreatePriorityType = PartialByType<IPriority, `isExchangeable`>;
  */
 export type MercenaryType = IBasicSuitableNonNullableCardInfo;
 
+/**
+ * <h3>Тип для данных особых карт.</h3>
+ */
 export type SpecialCardDataType = Omit<ISpecialCard, `type`>;
 
+/**
+ * <h3>Тип для данных мультифракционных карт.</h3>
+ */
 export type MultiSuitCardDataType = Omit<IMultiSuitCard, `type`> & IExpansionCardInfo;
 
 /**
@@ -1264,8 +1523,14 @@ export type MultiSuitCardDataType = Omit<IMultiSuitCard, `type`> & IExpansionCar
 export type VariantType = IBasicSuitableNonNullableCardInfo;
 
 // TODO Fix it!
+/**
+ * <h3>Тип для подсчёта очков по положению токена силы валькирии.</h3>
+ */
 export type StrengthTokenNotchPointsType = [number, number, number, number, number?];
 
+/**
+ * <h3>Тип для данных создания всех массивов карт героев.</h3>
+ */
 export type BuildHeroesArraysType = [IHeroCard[], IHeroCard[], IHeroCard[]];
 
 /**
@@ -1276,17 +1541,32 @@ export type CreatePublicPlayerType =
         & ReadonlyByType<IPublicPlayer, `priority` | `selectedCoin` | `stack`>,
         `heroes` | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs` | `selectedCoin`>;
 
+/**
+* <h3>Тип для конфига уровня сложности для соло игры.</h3>
+*/
 export type SoloGameDifficultyLevelHeroesConfigType =
     Pick<HeroConfigType, `Astrid` | `Grid` | `Skaa` | `Thrud` | `Uline` | `Ylud`>;
 
+/**
+* <h3>Тип для конфига героев для соло бота для соло игры.</h3>
+*/
 export type SoloGameHeroesForBotConfigType =
     Pick<HeroConfigType, `Dwerg_Aesir` | `Dwerg_Bergelmir` | `Dwerg_Jungir` | `Dwerg_Sigmir` | `Dwerg_Ymir`>;
 
+/**
+* <h3>Тип для конфига героев для игрока для соло игры.</h3>
+*/
 export type SoloGameHeroesForPlayerConfigType = Pick<HeroConfigType, `Kraal` | `Tarah` | `Aral` | `Dagda` | `Lokdur`
     | `Zoral` | `Aegur` | `Bonfur` | `Hourya` | `Idunn`>;
 
+/**
+* <h3>Тип для ключ/значение по ключу объекта ctx.</h3>
+*/
 export type ObjectEntriesCtxType = [KeyofType<Ctx>, Ctx[KeyofType<Ctx>]];
 
+/**
+* <h3>Тип для всех карт таверн.</h3>
+*/
 export type TavernAllCardType = DeckCardTypes[] | MythologicalCreatureDeckCardType[];
 
 // My Utilities types

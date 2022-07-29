@@ -716,8 +716,8 @@ describe(`Test FinishOdroerirTheMythicCauldronAction method`, () => {
     it(`should finish odroerirTheMythicCauldron action`, () => {
         const G = {
             odroerirTheMythicCauldron: true,
-        };
-        FinishOdroerirTheMythicCauldronAction(G);
+        }, ctx = {};
+        FinishOdroerirTheMythicCauldronAction(G, ctx);
         expect(G).toEqual({
             odroerirTheMythicCauldron: false,
         });
@@ -1552,7 +1552,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -1647,7 +1646,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -1724,7 +1722,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -1823,7 +1820,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -1894,7 +1890,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -1981,7 +1976,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -2076,7 +2070,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -2187,7 +2180,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 2,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -2272,7 +2264,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -2379,7 +2370,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             stageName: StageNames.addCoinToPouch,
-                            number: 1,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],

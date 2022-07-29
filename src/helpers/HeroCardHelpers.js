@@ -64,7 +64,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     hero.active = false;
     player.heroes.push(hero);
     if (G.expansions.idavoll) {
-        CheckValkyryRequirement(player, Number(ctx.currentPlayer), BuffNames.CountPickedHeroAmount);
+        CheckValkyryRequirement(G, ctx, Number(ctx.currentPlayer), BuffNames.CountPickedHeroAmount);
     }
     AddDataToLog(G, LogTypeNames.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };

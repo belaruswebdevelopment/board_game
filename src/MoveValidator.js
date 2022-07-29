@@ -304,7 +304,7 @@ export const moveValidators = {
                 }
                 // Todo Think about picking Royal Offering if other cards not LeastPresentOnPlayerBoard...
                 if (moveArgument === undefined) {
-                    moveArgument = SoloBotMustTakeRandomCard(G, moveArguments);
+                    moveArgument = SoloBotMustTakeRandomCard(moveArguments);
                 }
                 if (moveArgument !== undefined) {
                     return moveArgument;
@@ -1201,9 +1201,9 @@ export const moveValidators = {
                 if (soloBotPublicPlayer === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
                 }
-                const suit = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
+                const suit = CheckSoloBotCanPickHero(soloBotPublicPlayer);
                 if (suit === undefined) {
-                    const [suits] = CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
+                    const [suits] = CheckSuitsLeastPresentOnPlayerBoard(soloBotPublicPlayer);
                     if (suits.length === 0) {
                         throw new Error(`Не может не быть фракций с минимальным количеством карт.`);
                     }

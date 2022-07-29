@@ -32,7 +32,7 @@ const CheckCurrentSuitDistinction = (G, ctx, suit) => {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerDistinctionIndex);
         }
         if (G.expansions.idavoll) {
-            CheckValkyryRequirement(playerDist, playerDistinctionIndex, BuffNames.CountDistinctionAmount);
+            CheckValkyryRequirement(G, ctx, playerDistinctionIndex, BuffNames.CountDistinctionAmount);
         }
         AddDataToLog(G, LogTypeNames.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerDist.nickname}'.`);
         return String(playerDistinctionIndex);
