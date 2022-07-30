@@ -1,6 +1,6 @@
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
-import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
+import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSoloBotMustTakeRoyalOfferingCard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
 import { IsCoin } from "./Coin";
 import { ThrowMyError } from "./Error";
 import { IsMercenaryCampCard } from "./helpers/IsCampTypeHelpers";
@@ -297,12 +297,15 @@ export const moveValidators = {
                 }
             }
             else if (G.solo && ctx.currentPlayer === `1`) {
+                // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
                 let moveArgument;
                 moveArgument = CheckSoloBotMustTakeCardToPickHero(G, ctx, moveArguments);
                 if (moveArgument === undefined) {
                     moveArgument = CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard(G, ctx, moveArguments);
                 }
-                // Todo Think about picking Royal Offering if other cards not LeastPresentOnPlayerBoard...
+                if (moveArgument === undefined) {
+                    moveArgument = CheckSoloBotMustTakeRoyalOfferingCard(G, ctx, moveArguments);
+                }
                 if (moveArgument === undefined) {
                     moveArgument = SoloBotMustTakeRandomCard(moveArguments);
                 }
@@ -1211,7 +1214,7 @@ export const moveValidators = {
                         moveArgument = suits[0];
                     }
                     else {
-                        // TODO Move Thrud in most left suit from `suits`
+                        // TODO Move Thrud/Ylud in most left suit from `suits`
                     }
                 }
                 else {

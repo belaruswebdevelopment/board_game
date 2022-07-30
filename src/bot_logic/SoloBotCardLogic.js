@@ -39,7 +39,8 @@ export const CheckSoloBotCanPickHero = (player) => {
  * @returns Фракции дворфов с наименьшим количеством карт для выбора карты/минимальное количество карт в наименьших фракциях.
  */
 export const CheckSuitsLeastPresentOnPlayerBoard = (player) => {
-    const playerCards = Object.values(player.cards), playerCardsCount = playerCards.map((item) => item.reduce(TotalRank, 0)), minLength = Math.min(...playerCardsCount), minLengthCount = playerCardsCount.filter((length) => length === minLength).length, availableSuitArguments = [];
+    const playerCards = Object.values(player.cards), playerCardsCount = playerCards.map((item) => item.reduce(TotalRank, 0)), minLength = Math.min(...playerCardsCount), minLengthCount = minLength === 0 ? 0 :
+        playerCardsCount.filter((length) => length === minLength).length, availableSuitArguments = [];
     for (let i = 0; i < playerCardsCount.length; i++) {
         if (playerCardsCount[i] === minLength) {
             const suits = Object.keys(player.cards), suit = suits[i];
@@ -184,7 +185,6 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) 
  * @returns Id карты из таверны, при выборе которой можно получить карту с наибольшим значением.
  */
 export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ctx, moveArguments) => {
-    // TODO Least present only if arguments < suit count => < 5(1,2,3,4) or all 5 too (if all suit cards equal count)!?
     const soloBotPublicPlayer = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
@@ -193,12 +193,54 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
     if (availableSuitArguments.length !== minLengthCount) {
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);
     }
+    if (!minLengthCount || minLengthCount !== ctx.numPlayers) {
+        const currentTavern = G.taverns[G.currentTavern];
+        if (currentTavern === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
+        }
+        const leastPresentArguments = [];
+        let isNoPoints = false;
+        for (let i = 0; i < moveArguments.length; i++) {
+            const moveArgument = moveArguments[i];
+            if (moveArgument === undefined) {
+                throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
+            }
+            const tavernCard = currentTavern[moveArgument];
+            if (tavernCard === undefined) {
+                throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+            }
+            if (tavernCard === null) {
+                throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
+            }
+            if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
+                continue;
+            }
+            if (availableSuitArguments.includes(tavernCard.suit)) {
+                if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
+                    leastPresentArguments.push(i);
+                    if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
+                        isNoPoints = true;
+                    }
+                }
+            }
+        }
+        if (leastPresentArguments.length === 0) {
+            return undefined;
+        }
+        else if (availableSuitArguments.length === 1 || !isNoPoints) {
+            return CheckSoloBotMustTakeCardWithHighestValue(G, ctx, leastPresentArguments);
+        }
+        return SoloBotMustTakeRandomCard(leastPresentArguments);
+    }
+    else {
+        return undefined;
+    }
+};
+export const CheckSoloBotMustTakeRoyalOfferingCard = (G, ctx, moveArguments) => {
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
     }
-    const leastPresentArguments = [];
-    let isNoPoints = false;
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument = moveArguments[i];
         if (moveArgument === undefined) {
@@ -212,24 +254,10 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
         }
         if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
-            continue;
-        }
-        if (availableSuitArguments.includes(tavernCard.suit)) {
-            if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
-                leastPresentArguments.push(i);
-                if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
-                    isNoPoints = true;
-                }
-            }
+            return i;
         }
     }
-    if (leastPresentArguments.length === 0) {
-        return undefined;
-    }
-    else if (availableSuitArguments.length === 1 || !isNoPoints) {
-        return CheckSoloBotMustTakeCardWithHighestValue(G, ctx, leastPresentArguments);
-    }
-    return SoloBotMustTakeRandomCard(leastPresentArguments);
+    return undefined;
 };
 /**
  * <h3>Проверяет получение случайной карты при выборе карты из таверны соло ботом.</h3>
