@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, IBackground, IStyles, MythologicalCreatureNameTypes, SuitNamesKeyofTypeofType, TierType } from "../typescript/interfaces";
+import type { CanBeNullType, CardNamesForStylesType, IBackground, IStyles, MythologicalCreatureNameTypes, SuitNamesKeyofTypeofType, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -152,7 +152,8 @@ export const Styles: IStyles = {
     CardBack: (tier: TierType): IBackground => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    Card: (suit: SuitNamesKeyofTypeofType, name: string, points: CanBeNullType<number>): IBackground => {
+    Card: (suit: SuitNamesKeyofTypeofType, name: CardNamesForStylesType, points: CanBeNullType<number>):
+        IBackground => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             switch (name) {
                 case SpecialCardNames.ChiefBlacksmith:

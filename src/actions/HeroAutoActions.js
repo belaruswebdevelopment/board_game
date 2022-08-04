@@ -20,8 +20,12 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param args Аргументы действия.
  */
 export const AddPickHeroAction = (G, ctx, ...args) => {
-    if (args.length > 1) {
-        throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
+    if (args.length !== 1) {
+        throw new Error(`В массиве параметров функции количество аргументов не равно '1'.`);
+    }
+    const priority = args[0];
+    if (priority === undefined) {
+        throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -31,7 +35,7 @@ export const AddPickHeroAction = (G, ctx, ...args) => {
         AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
     }
     else {
-        AddActionsToStack(G, ctx, [StackData.pickHero(args[0])]);
+        AddActionsToStack(G, ctx, [StackData.pickHero(priority)]);
     }
     AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
@@ -71,7 +75,11 @@ export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
  */
 export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     if (args.length !== 1) {
-        throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
+        throw new Error(`В массиве параметров функции количество аргументов не равно '1'.`);
+    }
+    const value = args[0];
+    if (value === undefined) {
+        throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
     const currentPlayer = G.solo ? 1 : Number(ctx.currentPlayer), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
     if (player === undefined) {
@@ -149,10 +157,10 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 }
                 type = CoinTypeNames.Board;
             }
-            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, value, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStack(G, ctx, [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
+            AddActionsToStack(G, ctx, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
             DrawCurrentProfit(G, ctx);
         }
         else if (upgradingCoinsValue <= 0) {
@@ -179,10 +187,10 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
             type = CoinTypeNames.Board;
-            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, value, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStack(G, ctx, [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
+            AddActionsToStack(G, ctx, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
             DrawCurrentProfit(G, ctx);
         }
         else if (upgradingCoinsValue <= 0) {

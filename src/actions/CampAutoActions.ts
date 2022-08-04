@@ -7,7 +7,7 @@ import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IAutoActionFunction, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, IActionFunctionWithoutParams, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
@@ -19,7 +19,7 @@ import type { CanBeUndefType, IAutoActionFunction, IMyGameState, IPlayer, IPubli
  * @param G
  * @param ctx
  */
-export const DiscardTradingCoinAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx): void => {
+export const DiscardTradingCoinAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -37,7 +37,7 @@ export const DiscardTradingCoinAction: IAutoActionFunction = (G: IMyGameState, c
  *
  * @param G
  */
-export const FinishOdroerirTheMythicCauldronAction: IAutoActionFunction = (G: IMyGameState): void => {
+export const FinishOdroerirTheMythicCauldronAction: IActionFunctionWithoutParams = (G: IMyGameState): void => {
     G.odroerirTheMythicCauldron = false;
 };
 
@@ -51,7 +51,7 @@ export const FinishOdroerirTheMythicCauldronAction: IAutoActionFunction = (G: IM
  * @param G
  * @param ctx
  */
-export const StartDiscardSuitCardAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx): void => {
+export const StartDiscardSuitCardAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const value: Record<string, StageArg> = {};
     let results = 0;
     for (let i = 0; i < ctx.numPlayers; i++) {
@@ -87,7 +87,7 @@ export const StartDiscardSuitCardAction: IAutoActionFunction = (G: IMyGameState,
  * @param G
  * @param ctx
  */
-export const StartVidofnirVedrfolnirAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx): void => {
+export const StartVidofnirVedrfolnirAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {

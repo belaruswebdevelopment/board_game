@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { CoinTypeNames, ErrorNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Check moves with solo mode!
 /**
@@ -21,7 +21,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPlayer, IPublicPlaye
  * @returns
  */
 export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
-    CanBeVoidType<string> => {
+    CanBeVoidType<InvalidMoveType> => {
     // TODO Add Place coins async
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2, coinId);
@@ -112,7 +112,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @returns
  */
 export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
-    type: CoinTypeNames): CanBeVoidType<string> => {
+    type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.upgradeCoin, {
             coinId,
@@ -148,7 +148,7 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @returns
  */
 export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
-    type: CoinTypeNames): CanBeVoidType<string> => {
+    type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickConcreteCoinToUpgrade, {
             coinId,
@@ -173,7 +173,7 @@ export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameSta
  * @returns
  */
 export const ClickHandCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
-    CanBeVoidType<string> => {
+    CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
     if (!isValidMove) {
@@ -199,7 +199,7 @@ export const ClickHandCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @returns
  */
 export const ClickHandCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
-    CanBeVoidType<string> => {
+    CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
     if (!isValidMove) {
@@ -261,7 +261,7 @@ export const ClickHandCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @returns
  */
 export const ClickHandTradingCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
-    CanBeVoidType<string> => {
+    CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeTradingCoinsUline, coinId);
     if (!isValidMove) {

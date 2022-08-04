@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { ThrowMyError } from "../Error";
 import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, IStack, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -21,8 +21,8 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  */
 export const ChooseDifficultyLevelForSoloModeProfit = (G: IMyGameState, ctx: Ctx,
     validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
-    CanBeVoidType<IMoveArgumentsStage<number[]>[`args`]> => {
-    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
+    CanBeVoidType<MoveArgumentsType<number[]>> => {
+    const moveMainArgs: MoveArgumentsType<number[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -57,8 +57,8 @@ export const ChooseDifficultyLevelForSoloModeProfit = (G: IMyGameState, ctx: Ctx
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameState, ctx: Ctx,
     validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
-    CanBeVoidType<IMoveArgumentsStage<number[]>[`args`]> => {
-    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
+    CanBeVoidType<MoveArgumentsType<number[]>> => {
+    const moveMainArgs: MoveArgumentsType<number[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -104,8 +104,8 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameStat
  */
 export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
-    CanBeVoidType<IMoveArgumentsStage<number[]>[`args`]> => {
-    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
+    CanBeVoidType<MoveArgumentsType<number[]>> => {
+    const moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
         const card: CanBeUndefType<DeckCardTypes> = G.explorerDistinctionCards[j];
         if (card === undefined) {
@@ -150,8 +150,8 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
  */
 export const PickHeroesForSoloModeProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
-    CanBeVoidType<IMoveArgumentsStage<number[]>[`args`]> => {
-    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
+    CanBeVoidType<MoveArgumentsType<number[]>> => {
+    const moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
         if (G.heroesForSoloGameDifficultyLevel === null) {
             throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);

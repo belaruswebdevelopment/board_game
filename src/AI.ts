@@ -1,10 +1,11 @@
 import type { Ctx } from "boardgame.io";
 import { CompareCards } from "./bot_logic/BotCardLogic";
 import { ThrowMyError } from "./Error";
+import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
-import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import { BuffNames, ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
+import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, DeckCardTypes, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -28,9 +29,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage: CanBeUndefType<StageNames> =
-            ctx.activePlayers?.[Number(ctx.currentPlayer)] as StageNames;
-        let activeStageOfCurrentPlayer: ActiveStageAIType =
-            currentStage !== undefined ? currentStage : `default`;
+            ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>;
+        let activeStageOfCurrentPlayer: ActiveStageAIType = currentStage ?? `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             let _exhaustiveCheck: never;
             switch (phase) {
@@ -52,8 +52,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     if (ctx.activePlayers === null) {
                         let pickCardOrCampCard = `card`;
                         if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                            || (!G.campPicked && player.buffs.find((buff: IBuffs): boolean =>
-                                buff.goCamp !== undefined) !== undefined))) {
+                            || (!G.campPicked && CheckPlayerHasBuff(player, BuffNames.GoCamp)))) {
                             pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                         }
                         if (pickCardOrCampCard === `card`) {
@@ -111,7 +110,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator: CanBeNullType<IMoveValidator> =
+        const validator: IMoveValidator<MoveValidatorGetRangeType> =
             GetValidator(phase, activeStageOfCurrentPlayer);
         if (validator !== null) {
             const moveName: MoveNames = validator.moveName,

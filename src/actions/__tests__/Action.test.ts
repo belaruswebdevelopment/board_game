@@ -681,7 +681,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.hunter,
                         },
                     ],
                 } as IPublicPlayer,
@@ -753,7 +753,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.hunter,
                         },
                     ],
                 } as IPublicPlayer,
@@ -894,7 +894,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.warrior,
                         },
                     ],
                 } as IPublicPlayer,
@@ -974,7 +974,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.warrior,
                         },
                     ],
                 } as IPublicPlayer,

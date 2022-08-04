@@ -2,9 +2,9 @@ import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
-import { TotalRank } from "../score_helpers/ScoreHelpers";
+import { TotalRank, TotalRankWithoutThrud } from "../score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IHeroCard, IMyGameState, IPublicPlayer, MoveArgumentsType, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты конкретной фракции из таверны соло ботом.</h3>
@@ -13,10 +13,13 @@ import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IHeroCard, IMoveArgu
  * <li>При необходимости выбора карты из таверны соло ботом.</li>
  * </ol>
  *
+ * @param G
+ * @param ctx
  * @param player Игрок.
  * @returns Фракция дворфов для выбора карты, чтобы получить нового героя.
  */
-export const CheckSoloBotCanPickHero = (player: IPublicPlayer): CanBeUndefType<SuitNamesKeyofTypeofType> => {
+export const CheckSoloBotCanPickHero = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer):
+    CanBeUndefType<SuitNamesKeyofTypeofType> => {
     const playerCards: PlayerCardType[][] = Object.values(player.cards),
         heroesLength: number = player.heroes.filter((hero: IHeroCard): boolean =>
             hero.name.startsWith(`Dwerg`)).length,
@@ -48,13 +51,16 @@ export const CheckSoloBotCanPickHero = (player: IPublicPlayer): CanBeUndefType<S
  * <li>При необходимости выбора карты из таверны соло ботом.</li>
  * </ol>
  *
+ * @param G
+ * @param ctx
  * @param player Игрок.
  * @returns Фракции дворфов с наименьшим количеством карт для выбора карты/минимальное количество карт в наименьших фракциях.
  */
-export const CheckSuitsLeastPresentOnPlayerBoard = (player: IPublicPlayer): [SuitNamesKeyofTypeofType[], number] => {
+export const CheckSuitsLeastPresentOnPlayerBoard = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer):
+    [SuitNamesKeyofTypeofType[], number] => {
     const playerCards: PlayerCardType[][] = Object.values(player.cards),
         playerCardsCount: number[] = playerCards.map((item: PlayerCardType[]): number =>
-            item.reduce(TotalRank, 0)),
+            item.reduce(TotalRankWithoutThrud, 0)),
         minLength: number = Math.min(...playerCardsCount),
         minLengthCount: number = minLength === 0 ? 0 :
             playerCardsCount.filter((length: number): boolean => length === minLength).length,
@@ -86,18 +92,18 @@ export const CheckSuitsLeastPresentOnPlayerBoard = (player: IPublicPlayer): [Sui
  * @returns Id карты из таверны, при выборе которой можно получить нового героя.
  */
 export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
-    moveArguments: IMoveArgumentsStage<number[]>[`args`]): CanBeUndefType<number> => {
+    moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
-    let thrudSuit: CanBeNullType<SuitNames> = null;
+    let thrudSuit: CanBeUndefType<SuitNamesKeyofTypeofType>;
     if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud)) {
-        thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud) as SuitNames;
+        thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud) as SuitNamesKeyofTypeofType;
     }
-    const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = CheckSoloBotCanPickHero(soloBotPublicPlayer),
-        availableMoveArguments: IMoveArgumentsStage<number[]>[`args`] = [],
-        availableThrudArguments: IMoveArgumentsStage<number[]>[`args`] = [];
+    const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer),
+        availableMoveArguments: MoveArgumentsType<number[]> = [],
+        availableThrudArguments: MoveArgumentsType<number[]> = [];
     if (suit !== undefined) {
         const currentTavern: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
             G.taverns[G.currentTavern] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
@@ -158,7 +164,7 @@ export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
  * @returns Id карты из таверны, при выборе которой можно получить карту с наибольшим значением.
  */
 export const CheckSoloBotMustTakeCardWithHighestValue = (G: IMyGameState, ctx: Ctx,
-    moveArguments: IMoveArgumentsStage<number[]>[`args`]): number => {
+    moveArguments: MoveArgumentsType<number[]>): number => {
     const currentTavern: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
         G.taverns[G.currentTavern] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
     if (currentTavern === undefined) {
@@ -182,7 +188,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G: IMyGameState, ctx: C
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта обмена монет с id '${moveArgument}'.`);
         }
         if (tavernCard.points === null) {
-            return SoloBotMustTakeRandomCard(moveArguments);
+            return SoloBotMustTakeRandomCard(G, ctx, moveArguments);
         } else if (tavernCard.points !== null) {
             if (tavernCard.points > maxValue) {
                 maxValue = tavernCard.points;
@@ -210,13 +216,13 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G: IMyGameState, ctx: C
  * @returns Id карты из таверны, при выборе которой можно получить карту с наибольшим значением.
  */
 export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IMyGameState, ctx: Ctx,
-    moveArguments: IMoveArgumentsStage<number[]>[`args`]): CanBeUndefType<number> => {
+    moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
     const [availableSuitArguments, minLengthCount]: [SuitNamesKeyofTypeofType[], number] =
-        CheckSuitsLeastPresentOnPlayerBoard(soloBotPublicPlayer);
+        CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
     if (availableSuitArguments.length !== minLengthCount) {
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);
     }
@@ -226,7 +232,12 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
         if (currentTavern === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
         }
-        const leastPresentArguments: IMoveArgumentsStage<number[]>[`args`] = [];
+        const soloBotHasThrud: boolean = CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud);
+        let thrudSuit: CanBeUndefType<SuitNamesKeyofTypeofType>;
+        if (soloBotHasThrud) {
+            thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud) as SuitNamesKeyofTypeofType;
+        }
+        const leastPresentArguments: MoveArgumentsType<number[]> = [];
         let isNoPoints = false;
         for (let i = 0; i < moveArguments.length; i++) {
             const moveArgument: CanBeUndefType<number> = moveArguments[i];
@@ -243,7 +254,9 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
             if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
                 continue;
             }
-            if (availableSuitArguments.includes(tavernCard.suit)) {
+            const cardSuit: SuitNamesKeyofTypeofType =
+                thrudSuit && minLengthCount === 1 && thrudSuit === tavernCard.suit ? thrudSuit : tavernCard.suit;
+            if (availableSuitArguments.includes(cardSuit) && cardSuit === tavernCard.suit) {
                 if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
                     leastPresentArguments.push(i);
                     if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
@@ -257,14 +270,26 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
         } else if (availableSuitArguments.length === 1 || !isNoPoints) {
             return CheckSoloBotMustTakeCardWithHighestValue(G, ctx, leastPresentArguments);
         }
-        return SoloBotMustTakeRandomCard(leastPresentArguments);
+        return SoloBotMustTakeRandomCard(G, ctx, leastPresentArguments);
     } else {
         return undefined;
     }
 };
 
+/**
+ * <h3>Проверяет получение карты Королевской награды при выборе карты из таверны соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора карты из таверны соло ботом.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param moveArguments Аргументы действия соло бота.
+ * @returns Id карты Королевской награды из таверны.
+ */
 export const CheckSoloBotMustTakeRoyalOfferingCard = (G: IMyGameState, ctx: Ctx,
-    moveArguments: IMoveArgumentsStage<number[]>[`args`]): CanBeUndefType<number> => {
+    moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     const currentTavern: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
         G.taverns[G.currentTavern] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
     if (currentTavern === undefined) {
@@ -296,10 +321,13 @@ export const CheckSoloBotMustTakeRoyalOfferingCard = (G: IMyGameState, ctx: Ctx,
  * <li>При необходимости выбора карты из таверны соло ботом.</li>
  * </ol>
  *
+ * @param G
+ * @param ctx
  * @param moveArguments Аргументы действия соло бота.
  * @returns Id случайной карты из таверны.
  */
-export const SoloBotMustTakeRandomCard = (moveArguments: IMoveArgumentsStage<number[]>[`args`]): number => {
+export const SoloBotMustTakeRandomCard = (G: IMyGameState, ctx: Ctx, moveArguments: MoveArgumentsType<number[]>):
+    number => {
     // TODO Delete random cards with same suit but less points from random!
     const moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
     if (moveArgument === undefined) {

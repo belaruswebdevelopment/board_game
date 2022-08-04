@@ -9,7 +9,7 @@ import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BuffNames, CoinTypeNames, ErrorNames, HeroNames, MoveNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeNullType, CanBeUndefType, CoinType, IHeroCard, IMoveArgumentsStage, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveFunctionType, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeNullType, CanBeUndefType, CoinType, IHeroCard, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveArgumentsType, MoveFunctionType, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -27,14 +27,11 @@ import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
  * @returns Игровые поля для планшета всех карт игрока.
  */
 export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    playerId: CanBeNullType<number>, data?: BoardProps<IMyGameState>): JSX.Element[]
-    | (IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<SuitNames[]>[`args`]
-        | IMoveArgumentsStage<IMoveCardsPlayerIdArguments>[`args`]
-        | IMoveArgumentsStage<Partial<SuitPropertyType<number[]>>>[`args`]) => {
+    playerId: CanBeNullType<number> = null, data?: BoardProps<IMyGameState>): JSX.Element[]
+    | MoveArgumentsType<number[] | SuitNames[] | IMoveCardsPlayerIdArguments | Partial<SuitPropertyType<number[]>>> => {
     const playersBoards: JSX.Element[] = [];
-    let moveMainArgs: CanBeUndefType<IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<SuitNames[]>[`args`]
-        | IMoveArgumentsStage<Partial<SuitPropertyType<number[]>>>[`args`]
-        | IMoveArgumentsStage<IMoveCardsPlayerIdArguments>[`args`]>;
+    let moveMainArgs: CanBeUndefType<MoveArgumentsType<number[] | SuitNames[] | IMoveCardsPlayerIdArguments
+        | Partial<SuitPropertyType<number[]>>>>;
     if (validatorName !== null) {
         switch (validatorName) {
             case MoveValidatorNames.PlaceThrudHeroMoveValidator:
@@ -68,7 +65,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
             playerHeaders: JSX.Element[] = [],
             playerHeadersCount: JSX.Element[] = [],
             player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p],
-            stage: CanBeUndefType<string> = ctx.activePlayers?.[p];
+            stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p] as StageNames;
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
         }
@@ -94,7 +91,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                     if (!Array.isArray(moveMainArgs)) {
                         throw new Error(`Аргумент валидатора '${validatorName}' должен быть массивом`);
                     }
-                    (moveMainArgs as IMoveArgumentsStage<SuitNamesKeyofTypeofType[]>[`args`]).push(suitTop);
+                    (moveMainArgs as MoveArgumentsType<SuitNamesKeyofTypeofType[]>).push(suitTop);
                 }
             } else {
                 if (data !== undefined) {
@@ -270,7 +267,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                         || validatorName === MoveValidatorNames.PlaceMultiSuitCardMoveValidator
                         || (validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
                             && cardVariants !== undefined && suit === cardVariants.suit)) {
-                        (moveMainArgs as IMoveArgumentsStage<SuitNamesKeyofTypeofType[]>[`args`]).push(suit);
+                        (moveMainArgs as MoveArgumentsType<SuitNamesKeyofTypeofType[]>).push(suit);
                     }
                 } else {
                     if (data !== undefined) {
@@ -319,7 +316,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                                 if (!Array.isArray(moveMainArgs)) {
                                     throw new Error(`Аргумент валидатора '${validatorName}' должен быть массивом.`);
                                 }
-                                (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(i);
+                                (moveMainArgs as MoveArgumentsType<number[]>).push(i);
                             }
                         } else {
                             if (data !== undefined) {
@@ -349,7 +346,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
                                 if (!Array.isArray(moveMainArgs)) {
                                     throw new Error(`Аргумент валидатора '${validatorName}' должен быть массивом.`);
                                 }
-                                (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(i);
+                                (moveMainArgs as MoveArgumentsType<number[]>).push(i);
                             }
                         } else {
                             if (data !== undefined) {
@@ -414,13 +411,12 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
  * @returns Игровые поля для пользовательских монет на столе | данные для списка доступных аргументов мува.
  */
 export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element[]
-    | (IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]) => {
+    data?: BoardProps<IMyGameState>): JSX.Element[] | MoveArgumentsType<number[] | IMoveCoinsArguments[]> => {
     const playersBoardsCoins: JSX.Element[] = [],
-        moveMainArgs: IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] = [];
+        moveMainArgs: MoveArgumentsType<number[] | IMoveCoinsArguments[]> = [];
     let moveName: CanBeUndefType<MoveNames>;
     for (let p = 0; p < ctx.numPlayers; p++) {
-        const stage: CanBeUndefType<string> = ctx.activePlayers?.[p];
+        const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p] as StageNames;
         switch (ctx.phase) {
             case PhaseNames.Bids:
                 moveName = MoveNames.ClickBoardCoinMove;
@@ -510,7 +506,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                 DrawCoin(data, playerCells, `coin`, privateBoardCoin ?? publicBoardCoin,
                                     id, player, null, null, moveName, id);
                             } else if (validatorName === MoveValidatorNames.ClickBoardCoinMoveValidator) {
-                                (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(id);
+                                (moveMainArgs as MoveArgumentsType<number[]>).push(id);
                             }
                         } else if (Number(ctx.currentPlayer) === p && IsCoin(publicBoardCoin)
                             && !publicBoardCoin.isTriggerTrading && ((stage === StageNames.upgradeCoin)
@@ -528,7 +524,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                             } else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
                                 || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator
                                 || validatorName === MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) {
-                                (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]).push({
+                                (moveMainArgs as MoveArgumentsType<IMoveCoinsArguments[]>).push({
                                     coinId: id,
                                     type: CoinTypeNames.Board,
                                 });
@@ -574,7 +570,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                                 validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
                                                 || validatorName ===
                                                 MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
-                                                (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`])
+                                                (moveMainArgs as MoveArgumentsType<IMoveCoinsArguments[]>)
                                                     .push({
                                                         coinId: id,
                                                         type: CoinTypeNames.Board,
@@ -616,7 +612,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                         id, player, null, null, moveName, id);
                                 }
                             } else if (validatorName === MoveValidatorNames.ClickBoardCoinMoveValidator) {
-                                (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(id);
+                                (moveMainArgs as MoveArgumentsType<number[]>).push(id);
                             }
                         } else {
                             if (data !== undefined) {
@@ -681,12 +677,12 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
  */
 export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element[]
-    | (IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]) => {
+    | MoveArgumentsType<number[][] | number[] | IMoveCoinsArguments[]> => {
     const playersHandsCoins: JSX.Element[] = [],
-        moveMainArgs: IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] = [];
+        moveMainArgs: MoveArgumentsType<number[][] | number[] | IMoveCoinsArguments[]> = [];
     let moveName: CanBeUndefType<MoveNames>;
     for (let p = 0; p < ctx.numPlayers; p++) {
-        const stage: CanBeUndefType<string> = ctx.activePlayers?.[p];
+        const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p] as StageNames;
         switch (ctx.phase) {
             case PhaseNames.Bids:
                 moveName = MoveNames.ClickHandCoinMove;
@@ -745,7 +741,7 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                             || validatorName === MoveValidatorNames.ClickHandCoinUlineMoveValidator
                             || validatorName === MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator
                             || validatorName === MoveValidatorNames.AddCoinToPouchMoveValidator) {
-                            (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(j);
+                            (moveMainArgs as MoveArgumentsType<number[]>).push(j);
                         }
                     } else if (((!G.solo && Number(ctx.currentPlayer) === p
                         && CheckPlayerHasBuff(player, BuffNames.EveryTurn))
@@ -758,7 +754,7 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                                 null, moveName, j, CoinTypeNames.Hand);
                         } else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
                             || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
-                            (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]).push({
+                            (moveMainArgs as MoveArgumentsType<IMoveCoinsArguments[]>).push({
                                 coinId: j,
                                 type: CoinTypeNames.Hand,
                             });
@@ -788,7 +784,13 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `back`, publicHandCoin, j, player);
                         } else if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator) {
-                            (moveMainArgs as IMoveArgumentsStage<number[]>[`args`]).push(j);
+                            let moveMainArg: CanBeUndefType<MoveArgumentsType<number[]>> =
+                                (moveMainArgs as MoveArgumentsType<number[][]>)[0];
+                            if (moveMainArg === undefined) {
+                                moveMainArg = [];
+                            } else {
+                                moveMainArg.push(j);
+                            }
                         }
                     } else if (G.multiplayer && privateHandCoin === undefined) {
                         if (data !== undefined) {

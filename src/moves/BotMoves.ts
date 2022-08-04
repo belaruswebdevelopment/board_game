@@ -4,7 +4,7 @@ import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Add Bot place all coins for human player opened in solo game
 /**
@@ -20,7 +20,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPlayer, IPublicPlaye
  * @returns
  */
 export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
-    CanBeVoidType<string> => {
+    CanBeVoidType<InvalidMoveType> => {
     // TODO Check it bot can't play in multiplayer now...
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, coinsOrder);

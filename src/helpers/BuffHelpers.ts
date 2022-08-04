@@ -17,7 +17,7 @@ import type { BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPubli
  * @param buff Баф.
  * @param value Значение бафа.
  */
-export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: string): void => {
+export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: BuffValueType): void => {
     if (buff !== undefined) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {

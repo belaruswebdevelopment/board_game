@@ -1,6 +1,9 @@
+import type { Ctx } from "boardgame.io";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
+import type { AutoActionArgsType, AutoActionFunctionType, IAction, IMyGameState } from "../typescript/interfaces";
+
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
  * <p>Применения:</p>
@@ -11,8 +14,9 @@ import { AutoActionFunctionNames } from "../typescript/enums";
  * @param actionName Название автоматического действия.
  * @returns Автоматическое действие.
  */
-const AutoActionDispatcherSwitcher = (actionName) => {
-    let action, _exhaustiveCheck;
+const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): AutoActionFunctionType => {
+    let action: AutoActionFunctionType,
+        _exhaustiveCheck: never;
     switch (actionName) {
         case AutoActionFunctionNames.AddPickHeroAction:
             action = AddPickHeroAction;
@@ -42,6 +46,7 @@ const AutoActionDispatcherSwitcher = (actionName) => {
     }
     return action;
 };
+
 /**
  * <h3>Начинает автоматическое действие конкретной карты при его наличии.</h3>
  * <p>Применения:</p>
@@ -53,15 +58,14 @@ const AutoActionDispatcherSwitcher = (actionName) => {
  * @param ctx
  * @param action Объект автоматического действия.
  */
-export const StartAutoAction = (G, ctx, action) => {
+export const StartAutoAction = (G: IMyGameState, ctx: Ctx,
+    action?: IAction<AutoActionFunctionNames, AutoActionArgsType>): void => {
     if (action !== undefined) {
-        const actionDispatcher = AutoActionDispatcherSwitcher(action.name);
-        if (action.params !== undefined) {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, ...action.params);
-        }
-        else {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx);
+        const actionDispatcher: AutoActionFunctionType = AutoActionDispatcherSwitcher(action.name);
+        if (action.params === undefined) {
+            actionDispatcher?.(G, ctx);
+        } else {
+            actionDispatcher?.(G, ctx, ...action.params);
         }
     }
 };
-//# sourceMappingURL=ActionDispatcher.js.map

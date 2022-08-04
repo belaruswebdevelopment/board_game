@@ -104,8 +104,9 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
  * @returns Поле информации о текущей фазе и стадии игры.
  */
 export const DrawCurrentPhaseStage = (ctx) => {
-    var _a, _b, _c;
-    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_a = RusPhaseNames[ctx.phase]) !== null && _a !== void 0 ? _a : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: (_c = RusStageNames[(_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]]) !== null && _c !== void 0 ? _c : `none` }), ")"] }));
+    var _a, _b;
+    const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)], stageText = stage !== undefined ? RusStageNames[stage] : `none`;
+    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_b = RusPhaseNames[ctx.phase]) !== null && _b !== void 0 ? _b : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: stageText }), ")"] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>

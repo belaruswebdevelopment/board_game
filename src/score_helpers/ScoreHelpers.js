@@ -1,4 +1,4 @@
-import { SuitNames } from "../typescript/enums";
+import { HeroNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
  * <p>Применения:</p>
@@ -55,6 +55,23 @@ export const TotalPoints = (accumulator, currentValue) => {
  */
 export const TotalRank = (accumulator, currentValue) => {
     if (currentValue.rank !== null) {
+        return accumulator + currentValue.rank;
+    }
+    return accumulator;
+};
+/**
+ * <h3>Высчитывает суммарное количество шевронов фракции.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется при подсчёте шевронов фракций, не зависящих от количества очков.</li>
+ * </ol>
+ *
+ * @param accumulator Аккумулятивное значение шевронов.
+ * @param currentValue Текущее значение шевронов.
+ * @returns Суммарное количество шевронов фракции.
+ */
+export const TotalRankWithoutThrud = (accumulator, currentValue) => {
+    if (currentValue.name !== HeroNames.Thrud && currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }
     return accumulator;

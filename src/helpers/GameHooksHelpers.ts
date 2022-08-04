@@ -19,7 +19,7 @@ import { IsMercenaryCampCard } from "./IsCampTypeHelpers";
  * @param ctx
  * @returns
  */
-const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
+const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => {
     const isLastRound: boolean = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
         ((G.round === 2 || G.round === 5) ? true : false),
         currentDeck: CanBeUndefType<DeckCardTypes[]> =
@@ -48,7 +48,7 @@ const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<s
  * @param G
  * @returns
  */
-export const StartGetMjollnirProfitPhase = (G: IMyGameState): CanBeVoidType<string> => {
+export const StartGetMjollnirProfitPhase = (G: IMyGameState): CanBeVoidType<PhaseNames> => {
     const buffIndex: number =
         Object.values(G.publicPlayers).findIndex((playerB: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
@@ -67,7 +67,7 @@ export const StartGetMjollnirProfitPhase = (G: IMyGameState): CanBeVoidType<stri
  * @param G
  * @returns
  */
-export const StartBidUlineOrTavernsResolutionPhase = (G: IMyGameState): string => {
+export const StartBidUlineOrTavernsResolutionPhase = (G: IMyGameState): PhaseNames => {
     const ulinePlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(player, BuffNames.EveryTurn));
@@ -90,7 +90,7 @@ export const StartBidUlineOrTavernsResolutionPhase = (G: IMyGameState): string =
  * @returns
  */
 export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase = (G: IMyGameState, ctx: Ctx):
-    CanBeVoidType<string> => {
+    CanBeVoidType<PhaseNames> => {
     const isLastTavern: boolean = G.tavernsNum - 1 === G.currentTavern;
     if (isLastTavern) {
         return AfterLastTavernEmptyActions(G, ctx);
@@ -110,7 +110,7 @@ export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsP
  * @param ctx
  * @returns Название новой фазы игры.
  */
-export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
+export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => {
     const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[0],
         deck2: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
     if (deck1 === undefined) {
@@ -151,7 +151,7 @@ export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidTyp
 * @param ctx
 * @returns
 */
-export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
+export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => {
     const yludIndex: number = Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
@@ -171,7 +171,7 @@ export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx)
  * @param G
  * @returns
  */
-const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => {
+const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => {
     let count = false;
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];

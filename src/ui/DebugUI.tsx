@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { CanBeNullType, CanBeUndefType, DebugDrawDataType, DrawObjectDataType, IDebugData, IMyGameState, KeyofType, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DebugDrawDataType, IDebugData, IMyGameState, KeyofType, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -36,7 +36,7 @@ export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNullType<JSX.Elem
  * @param obj Информация.
  * @returns
  */
-const DrawObjectData = (obj: DebugDrawDataType<DrawObjectDataType>): JSX.Element => {
+const DrawObjectData = (obj: DebugDrawDataType): JSX.Element => {
     const values: JSX.Element[] = [];
     for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {

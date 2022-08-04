@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
-import { StartAutoAction } from "../dispatchers/ActionDispatcher";
+import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";

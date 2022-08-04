@@ -8,7 +8,7 @@ import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { AutoActionArgsType, CanBeUndefType, IAutoActionFunction, IAutoActionFunctionWithParams, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoStackPriorityType, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { AutoActionArgsType, CanBeUndefType, IActionFunctionWithoutParams, IAutoActionFunction, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoStackPriorityType, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -22,10 +22,14 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param ctx
  * @param args Аргументы действия.
  */
-export const AddPickHeroAction: IAutoActionFunctionWithParams = (G: IMyGameState, ctx: Ctx,
-    ...args: AutoActionArgsType): void => {
-    if (args.length > 1) {
-        throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
+export const AddPickHeroAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx, ...args: AutoActionArgsType):
+    void => {
+    if (args.length !== 1) {
+        throw new Error(`В массиве параметров функции количество аргументов не равно '1'.`);
+    }
+    const priority: CanBeUndefType<OneOrTwoStackPriorityType> = args[0] as CanBeUndefType<OneOrTwoStackPriorityType>;
+    if (priority === undefined) {
+        throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -34,7 +38,7 @@ export const AddPickHeroAction: IAutoActionFunctionWithParams = (G: IMyGameState
     if (G.solo && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
     } else {
-        AddActionsToStack(G, ctx, [StackData.pickHero(args[0] as OneOrTwoStackPriorityType)]);
+        AddActionsToStack(G, ctx, [StackData.pickHero(priority)]);
     }
     AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
@@ -49,7 +53,7 @@ export const AddPickHeroAction: IAutoActionFunctionWithParams = (G: IMyGameState
  * @param G
  * @param ctx
  */
-export const GetClosedCoinIntoPlayerHandAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx): void => {
+export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -74,10 +78,14 @@ export const GetClosedCoinIntoPlayerHandAction: IAutoActionFunction = (G: IMyGam
  * @param ctx
  * @param args Аргументы действия.
  */
-export const UpgradeMinCoinAction: IAutoActionFunctionWithParams = (G: IMyGameState, ctx: Ctx,
-    ...args: AutoActionArgsType): void => {
+export const UpgradeMinCoinAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx, ...args: AutoActionArgsType):
+    void => {
     if (args.length !== 1) {
-        throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
+        throw new Error(`В массиве параметров функции количество аргументов не равно '1'.`);
+    }
+    const value: CanBeUndefType<number> = args[0];
+    if (value === undefined) {
+        throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
     const currentPlayer: number = G.solo ? 1 : Number(ctx.currentPlayer),
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[currentPlayer],
@@ -163,10 +171,10 @@ export const UpgradeMinCoinAction: IAutoActionFunctionWithParams = (G: IMyGameSt
                 }
                 type = CoinTypeNames.Board;
             }
-            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, value, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStack(G, ctx,
-                [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
+                [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
             DrawCurrentProfit(G, ctx);
         } else if (upgradingCoinsValue <= 0) {
             throw new Error(`Количество возможных монет для обмена не может быть меньше либо равно нулю.`);
@@ -200,10 +208,10 @@ export const UpgradeMinCoinAction: IAutoActionFunctionWithParams = (G: IMyGameSt
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
             type = CoinTypeNames.Board;
-            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, value, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStack(G, ctx,
-                [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
+                [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
             DrawCurrentProfit(G, ctx);
         } else if (upgradingCoinsValue <= 0) {
             throw new Error(`Количество возможных монет для обмена не может быть меньше либо равно нулю.`);

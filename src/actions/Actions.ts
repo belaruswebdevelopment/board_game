@@ -11,7 +11,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IActionFunctionWithoutParams, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -125,7 +125,7 @@ export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitNam
  * @param G
  * @param ctx
  */
-export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void => {
+export const PassEnlistmentMercenariesAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

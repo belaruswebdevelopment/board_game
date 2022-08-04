@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, IMoveArgumentsStage, IMoveCoinsArguments, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, IMoveCoinsArguments, IMyGameState, IPublicPlayer, MoveArgumentsType, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет минимальную видимую монету соло бота.</h3>
@@ -42,7 +42,7 @@ export const CheckMinCoinVisibleIndexForSoloBot = (coins: PublicPlayerCoinType[]
  * @returns Значение минимальной видимой монеты соло бота
  */
 export const CheckMinCoinVisibleValueForSoloBot = (G: IMyGameState, ctx: Ctx,
-    moveArguments: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`], type: CoinTypeNames): number => {
+    moveArguments: MoveArgumentsType<IMoveCoinsArguments[]>, type: CoinTypeNames): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,

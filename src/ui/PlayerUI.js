@@ -23,7 +23,7 @@ import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
  * @param data Глобальные параметры.
  * @returns Игровые поля для планшета всех карт игрока.
  */
-export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
+export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) => {
     var _a, _b, _c, _d, _e;
     const playersBoards = [];
     let moveMainArgs;
@@ -706,7 +706,13 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                             DrawCoin(data, playerCells, `back`, publicHandCoin, j, player);
                         }
                         else if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator) {
-                            moveMainArgs.push(j);
+                            let moveMainArg = moveMainArgs[0];
+                            if (moveMainArg === undefined) {
+                                moveMainArg = [];
+                            }
+                            else {
+                                moveMainArg.push(j);
+                            }
                         }
                     }
                     else if (G.multiplayer && privateHandCoin === undefined) {

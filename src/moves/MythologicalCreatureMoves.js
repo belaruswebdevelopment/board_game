@@ -1,6 +1,8 @@
+import { INVALID_MOVE } from "boardgame.io/core";
 import { godConfig } from "../data/MythologicalCreatureData";
 import { ThrowMyError } from "../Error";
-import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
+import { IsValidMove } from "../MoveValidator";
+import { ErrorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
 /**
  * <h3>Использование способности карты Бога.</h3>
  * <p>Применения:</p>
@@ -14,6 +16,11 @@ import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
  * @returns
  */
 export const UseGodPowerMove = (G, ctx, cardId) => {
+    // TODO Check/Fix StageNames.default3
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, cardId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

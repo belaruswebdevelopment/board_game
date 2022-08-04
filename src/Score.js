@@ -16,7 +16,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helper
 import { AddDataToLog } from "./Logging";
 import { IsMythicalAnimalCard } from "./MythologicalCreature";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
-import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
+import { BuffNames, ErrorNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>
@@ -103,9 +103,6 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         if (heroData === undefined) {
             throw new Error(`Не удалось найти героя '${hero.name}'.`);
         }
-        if (G.solo && playerId === 1 && hero.name === HeroNames.Uline) {
-            continue;
-        }
         if ((!G.solo || G.solo && playerId === 1) && hero.name.startsWith(`Dwerg`)) {
             dwerg_brothers += StartHeroScoring(player, heroData.scoringRule);
         }
@@ -113,21 +110,6 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             const currentHeroScore = StartHeroScoring(player, heroData.scoringRule);
             heroesScore += currentHeroScore;
             AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${hero.name}' ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}': '${currentHeroScore}';`);
-        }
-    }
-    if (G.solo && playerId === 0) {
-        const soloBotPublicPlayer = G.publicPlayers[1];
-        if (soloBotPublicPlayer === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
-        }
-        if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.EveryTurn)) {
-            const heroData = Object.values(heroesConfig).find((heroObj) => heroObj.name === HeroNames.Uline);
-            if (heroData === undefined) {
-                throw new Error(`Не удалось найти карту '${RusCardTypeNames.Hero_Card}' '${HeroNames.Uline}'.`);
-            }
-            const currentHeroScore = StartHeroScoring(player, heroData.scoringRule);
-            heroesScore += currentHeroScore;
-            AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${HeroNames.Uline}' у соло бота из-за нарушения им правил игры добавляются игроку '${player.nickname}': '${currentHeroScore}';`);
         }
     }
     if ((!G.solo || G.solo && playerId === 1) && dwerg_brothers) {

@@ -669,7 +669,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.hunter,
                         },
                     ],
                 },
@@ -741,7 +741,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.hunter,
                         },
                     ],
                 },
@@ -881,7 +881,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.warrior,
                         },
                     ],
                 },
@@ -961,7 +961,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     },
                     buffs: [
                         {
-                            moveThrud: true,
+                            moveThrud: SuitNames.warrior,
                         },
                     ],
                 },

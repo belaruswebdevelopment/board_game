@@ -1,8 +1,10 @@
 import type { Ctx, Move } from "boardgame.io";
+import { INVALID_MOVE } from "boardgame.io/core";
 import { godConfig } from "../data/MythologicalCreatureData";
 import { ThrowMyError } from "../Error";
-import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IGodData, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import { IsValidMove } from "../MoveValidator";
+import { ErrorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, IGodData, IMyGameState, InvalidMoveType, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Использование способности карты Бога.</h3>
@@ -17,7 +19,13 @@ import type { CanBeUndefType, CanBeVoidType, IGodData, IMyGameState, IPublicPlay
  * @returns
  */
 export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
-    CanBeVoidType<string> => {
+    CanBeVoidType<InvalidMoveType> => {
+    // TODO Check/Fix StageNames.default3
+    const isValidMove: boolean =
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, cardId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

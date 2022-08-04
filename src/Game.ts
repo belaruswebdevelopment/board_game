@@ -92,7 +92,7 @@ export const BoardGame: Game<IMyGameState> = {
                 BotsPlaceAllCoinsMove,
                 SoloBotPlaceAllCoinsMove,
             },
-            next: (G: IMyGameState): string => StartBidUlineOrTavernsResolutionPhase(G),
+            next: (G: IMyGameState): PhaseNames => StartBidUlineOrTavernsResolutionPhase(G),
             onBegin: (G: IMyGameState, ctx: Ctx): void => PreparationPhaseActions(G, ctx),
             endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => CheckEndBidsPhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndBidsActions(G),
@@ -203,7 +203,7 @@ export const BoardGame: Game<IMyGameState> = {
                 ClickCampCardMove,
                 UseGodPowerMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> =>
+            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> =>
                 StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase(G, ctx),
             onBegin: (G: IMyGameState, ctx: Ctx): void => ResolveCurrentTavernOrders(G, ctx),
             endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndTavernsResolutionPhase(G, ctx),
@@ -286,7 +286,8 @@ export const BoardGame: Game<IMyGameState> = {
                 PassEnlistmentMercenariesMove,
                 GetEnlistmentMercenariesMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => StartEndTierPhaseOrEndGameLastActions(G, ctx),
+            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> =>
+                StartEndTierPhaseOrEndGameLastActions(G, ctx),
             onBegin: (G: IMyGameState): void => PrepareMercenaryPhaseOrders(G),
             endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndEnlistmentMercenariesPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndEnlistmentMercenariesActions(G, ctx),
@@ -367,7 +368,7 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 PlaceYludHeroMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<string> => StartEndGameLastActions(G, ctx),
+            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => StartEndGameLastActions(G, ctx),
             onBegin: (G: IMyGameState, ctx: Ctx): void => CheckPlaceYludOrder(G, ctx),
             endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndPlaceYludPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndPlaceYludActions(G, ctx),
@@ -469,7 +470,7 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
-            next: (G: IMyGameState): CanBeVoidType<string> => StartGetMjollnirProfitPhase(G),
+            next: (G: IMyGameState): CanBeVoidType<PhaseNames> => StartGetMjollnirProfitPhase(G),
             onBegin: (G: IMyGameState): void => CheckBrisingamensEndGameOrder(G),
             endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndBrisingamensEndGamePhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndBrisingamensEndGameActions(G),

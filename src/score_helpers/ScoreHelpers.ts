@@ -1,4 +1,4 @@
-import { SuitNames } from "../typescript/enums";
+import { HeroNames, SuitNames } from "../typescript/enums";
 import type { IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 
 /**
@@ -62,6 +62,24 @@ export const TotalPoints = (accumulator: number, currentValue: PlayerCardType): 
  */
 export const TotalRank = (accumulator: number, currentValue: PlayerCardType): number => {
     if (currentValue.rank !== null) {
+        return accumulator + currentValue.rank;
+    }
+    return accumulator;
+};
+
+/**
+ * <h3>Высчитывает суммарное количество шевронов фракции.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется при подсчёте шевронов фракций, не зависящих от количества очков.</li>
+ * </ol>
+ *
+ * @param accumulator Аккумулятивное значение шевронов.
+ * @param currentValue Текущее значение шевронов.
+ * @returns Суммарное количество шевронов фракции.
+ */
+export const TotalRankWithoutThrud = (accumulator: number, currentValue: PlayerCardType): number => {
+    if (currentValue.name !== HeroNames.Thrud && currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }
     return accumulator;

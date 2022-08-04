@@ -192,7 +192,7 @@ export const GetMjollnirProfitMove = (G, ctx, suit) => {
  * @returns
  */
 export const PassEnlistmentMercenariesMove = (G, ctx) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -250,7 +250,7 @@ export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
  * @returns
  */
 export const StartEnlistmentMercenariesMove = (G, ctx) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

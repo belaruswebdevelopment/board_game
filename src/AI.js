@@ -1,8 +1,9 @@
 import { CompareCards } from "./bot_logic/BotCardLogic";
 import { ThrowMyError } from "./Error";
+import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
+import { BuffNames, ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -25,7 +26,7 @@ export const enumerate = (G, ctx) => {
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
-        let activeStageOfCurrentPlayer = currentStage !== undefined ? currentStage : `default`;
+        let activeStageOfCurrentPlayer = currentStage !== null && currentStage !== void 0 ? currentStage : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             let _exhaustiveCheck;
             switch (phase) {
@@ -48,7 +49,7 @@ export const enumerate = (G, ctx) => {
                     if (ctx.activePlayers === null) {
                         let pickCardOrCampCard = `card`;
                         if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                            || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined))) {
+                            || (!G.campPicked && CheckPlayerHasBuff(player, BuffNames.GoCamp)))) {
                             pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                         }
                         if (pickCardOrCampCard === `card`) {
