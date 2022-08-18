@@ -81,9 +81,6 @@ export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
     const suit = CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer), availableMoveArguments = [], availableThrudArguments = [];
     if (suit !== undefined) {
         const currentTavern = G.taverns[G.currentTavern];
-        if (currentTavern === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-        }
         for (let i = 0; i < moveArguments.length; i++) {
             const moveArgument = moveArguments[i];
             if (moveArgument === undefined) {
@@ -141,9 +138,6 @@ export const CheckSoloBotMustTakeCardToPickHero = (G, ctx, moveArguments) => {
  */
 export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) => {
     const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
     let maxValue = 0, index = 0;
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument = moveArguments[i];
@@ -198,11 +192,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);
     }
     if (!minLengthCount || minLengthCount !== ctx.numPlayers) {
-        const currentTavern = G.taverns[G.currentTavern];
-        if (currentTavern === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-        }
-        const soloBotHasThrud = CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud);
+        const currentTavern = G.taverns[G.currentTavern], soloBotHasThrud = CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud);
         let thrudSuit;
         if (soloBotHasThrud) {
             thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud);
@@ -260,9 +250,6 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
  */
 export const CheckSoloBotMustTakeRoyalOfferingCard = (G, ctx, moveArguments) => {
     const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument = moveArguments[i];
         if (moveArgument === undefined) {

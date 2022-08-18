@@ -383,7 +383,7 @@ export const DrawProfit = (G, ctx, data) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const option = G.drawProfit;
-    let caption = ``;
+    let caption = ``, _exhaustiveCheck;
     switch (option) {
         case ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade:
             caption += `Get value of coin upgrade.`;
@@ -405,8 +405,12 @@ export const DrawProfit = (G, ctx, data) => {
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
             StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
             break;
+        case null:
+            throw new Error(`Не задан обязательный параметр '${option}'.`);
         default:
-            throw new Error(`Не задан обязательный параметр 'drawProfit'.`);
+            _exhaustiveCheck = option;
+            throw new Error(`Не существует обязательный параметр 'drawProfit'.`);
+            return _exhaustiveCheck;
     }
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), _jsx("span", { children: caption })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
@@ -429,17 +433,10 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
     const tavernsBoards = [], moveMainArgs = [];
     for (let t = 0; t < G.tavernsNum; t++) {
         const currentTavernConfig = tavernsConfig[t];
-        if (currentTavernConfig === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined, t);
-        }
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
             for (let j = 0; j < G.drawSize; j++) {
-                const tavern = G.taverns[t];
-                if (tavern === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, t);
-                }
-                const tavernCard = tavern[j];
+                const tavern = G.taverns[t], tavernCard = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
                 }

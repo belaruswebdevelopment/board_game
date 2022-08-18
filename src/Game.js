@@ -279,7 +279,7 @@ export const BoardGame = {
                 PassEnlistmentMercenariesMove,
                 GetEnlistmentMercenariesMove,
             },
-            next: (G, ctx) => StartEndTierPhaseOrEndGameLastActions(G, ctx),
+            next: (G) => StartEndTierPhaseOrEndGameLastActions(G),
             onBegin: (G) => PrepareMercenaryPhaseOrders(G),
             endIf: (G, ctx) => CheckEndEnlistmentMercenariesPhase(G, ctx),
             onEnd: (G, ctx) => EndEnlistmentMercenariesActions(G, ctx),
@@ -360,7 +360,7 @@ export const BoardGame = {
             moves: {
                 PlaceYludHeroMove,
             },
-            next: (G, ctx) => StartEndGameLastActions(G, ctx),
+            next: (G) => StartEndGameLastActions(G),
             onBegin: (G, ctx) => CheckPlaceYludOrder(G, ctx),
             endIf: (G, ctx) => CheckEndPlaceYludPhase(G, ctx),
             onEnd: (G, ctx) => EndPlaceYludActions(G, ctx),

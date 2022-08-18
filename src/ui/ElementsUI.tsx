@@ -4,7 +4,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, MoveNames, RusCardTypeNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, CanBeNullType, IBackground, IMyGameState, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { AllCardType, ArgsType, CanBeNullType, IBackground, IMyGameState, IndexOf, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -298,7 +298,8 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
                 span = (<span style={Styles.Exchange()} className="bg-small-market-coin"></span>);
             } else if (type === `back-tavern-icon`) {
                 if (additionalParam !== null && additionalParam !== undefined) {
-                    span = (<span style={Styles.Tavern(additionalParam)} className="bg-tavern-icon"></span>);
+                    span = (<span style={Styles.Tavern(additionalParam as IndexOf<TavernsConfigType>)}
+                        className="bg-tavern-icon"></span>);
                 }
             }
         }

@@ -7,7 +7,7 @@ import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -32,7 +32,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
     }
     let handCoins;
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -51,7 +51,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
     if (!handCoin.isOpened) {
         ChangeIsOpenedCoinStatus(handCoin, true);
     }
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         player.handCoins[coinId] = null;
         privatePlayer.boardCoins[tempId] = handCoin;
     }

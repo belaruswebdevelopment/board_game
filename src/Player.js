@@ -3,7 +3,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { BuffNames, ErrorNames, PhaseNames } from "./typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, PhaseNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
  * <p>Применения:</p>
@@ -76,12 +76,15 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (ctx.phase !== PhaseNames.BidUline) {
-            if (G.solo || (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+            if (G.mode === GameModeNames.Solo1
+                || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                    && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
         else {
-            if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }

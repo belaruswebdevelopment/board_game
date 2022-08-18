@@ -4,7 +4,7 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CoinTypeNames, ErrorNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, ICoin, IDistinctionAwardingFunction, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
 import { AddCardToPlayer } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
@@ -64,7 +64,7 @@ export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMy
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        if (G.solo && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
         } else {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCard()]);
@@ -108,20 +108,20 @@ export const HunterDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyGa
         let _exhaustiveCheck: never;
         switch (type) {
             case CoinTypeNames.Hand:
-                if (G.multiplayer) {
+                if (G.mode === GameModeNames.Multiplayer) {
                     privatePlayer.handCoins[tradingCoinIndex] = coin;
                 }
                 player.handCoins[tradingCoinIndex] = coin;
                 break;
             case CoinTypeNames.Board:
-                if (G.multiplayer) {
+                if (G.mode === GameModeNames.Multiplayer) {
                     privatePlayer.boardCoins[tradingCoinIndex] = coin;
                 }
                 player.boardCoins[tradingCoinIndex] = coin;
                 break;
             default:
                 _exhaustiveCheck = type;
-                throw new Error(`Не существует типа монеты - '${type}'.`);
+                throw new Error(`Не существует такого типа монеты.`);
                 return _exhaustiveCheck;
         }
         G.distinctions[SuitNames.hunter] = undefined;

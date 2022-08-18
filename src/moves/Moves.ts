@@ -10,7 +10,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, InvalidMoveType, IPublicPlayer, TavernCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, InvalidMoveType, IPublicPlayer, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -31,11 +31,8 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const currentTavern: CanBeUndefType<TavernCardType[]> = G.taverns[G.currentTavern];
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
-    const card: CanBeUndefType<TavernCardType> = currentTavern[cardId];
+    const currentTavern: TavernAllCardType = G.taverns[G.currentTavern],
+        card: CanBeUndefType<TavernCardType> = currentTavern[cardId];
     if (card === undefined) {
         throw new Error(`Отсутствует карта с id '${cardId}' текущей таверны с id '${G.currentTavern}'.`);
     }

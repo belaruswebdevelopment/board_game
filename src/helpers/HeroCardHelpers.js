@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -52,21 +52,21 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
  */
 export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (G.solo && player === undefined && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo1 && player === undefined && ctx.currentPlayer === `1`) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
     }
     else if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!hero.active) {
-        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${G.solo && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
+        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
     }
     hero.active = false;
     player.heroes.push(hero);
     if (G.expansions.idavoll) {
         CheckValkyryRequirement(G, ctx, Number(ctx.currentPlayer), BuffNames.CountPickedHeroAmount);
     }
-    AddDataToLog(G, LogTypeNames.Public, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 /**
  * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>

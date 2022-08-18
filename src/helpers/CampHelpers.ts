@@ -1,8 +1,7 @@
 import type { Ctx } from "boardgame.io";
-import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
-import { ArtefactNames, ErrorNames, LogTypeNames } from "../typescript/enums";
+import { ArtefactNames, LogTypeNames } from "../typescript/enums";
 import type { CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, IMyGameState, ITavernInConfig } from "../typescript/interfaces";
 
 /**
@@ -81,10 +80,7 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void => {
-    const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[G.currentTavern];
-    if (currentTavernConfig === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined, G.currentTavern);
-    }
+    const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
     AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
     const isCardDiscarded: boolean = DiscardCardFromTavern(G, ctx);
     if (!isCardDiscarded) {
@@ -105,11 +101,7 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void 
  */
 export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => {
     if (G.campPicked) {
-        const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[G.currentTavern];
-        if (currentTavernConfig === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined,
-                G.currentTavern);
-        }
+        const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
         AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
         const isCardDiscarded: boolean = DiscardCardFromTavern(G, ctx);
         if (!isCardDiscarded) {
@@ -130,12 +122,9 @@ export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => 
  */
 export const RefillCamp = (G: IMyGameState): void => {
     AddRemainingCampCardsToDiscard(G);
-    const campDeck1: CanBeUndefType<CampDeckCardType[]> = G.secret.campDecks[1];
-    if (campDeck1 === undefined) {
-        throw new Error(`Колода карт лагеря '2' эпохи не может отсутствовать.`);
-    }
-    const index: number = campDeck1.findIndex((card: CampDeckCardType): boolean =>
-        card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
+    const campDeck1: CampDeckCardType[] = G.secret.campDecks[1],
+        index: number = campDeck1.findIndex((card: CampDeckCardType): boolean =>
+            card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
     if (index === -1) {
         throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '2' эпохи.`);
     }

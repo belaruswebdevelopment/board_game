@@ -8,7 +8,7 @@ import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CoinTypeNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardType, CanBeUndefType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -39,7 +39,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
     }
     let handCoins: PublicPlayerCoinType[];
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -57,7 +57,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
     if (!handCoin.isOpened) {
         ChangeIsOpenedCoinStatus(handCoin, true);
     }
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         player.handCoins[coinId] = null;
         privatePlayer.boardCoins[tempId] = handCoin;
     }

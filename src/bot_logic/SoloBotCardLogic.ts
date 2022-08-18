@@ -105,11 +105,8 @@ export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
         availableMoveArguments: MoveArgumentsType<number[]> = [],
         availableThrudArguments: MoveArgumentsType<number[]> = [];
     if (suit !== undefined) {
-        const currentTavern: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
-            G.taverns[G.currentTavern] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
-        if (currentTavern === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-        }
+        const currentTavern: CanBeNullType<DeckCardTypes>[] =
+            G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[];
         for (let i = 0; i < moveArguments.length; i++) {
             const moveArgument: CanBeUndefType<number> = moveArguments[i];
             if (moveArgument === undefined) {
@@ -165,11 +162,7 @@ export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
  */
 export const CheckSoloBotMustTakeCardWithHighestValue = (G: IMyGameState, ctx: Ctx,
     moveArguments: MoveArgumentsType<number[]>): number => {
-    const currentTavern: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
-        G.taverns[G.currentTavern] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
+    const currentTavern: CanBeNullType<DeckCardTypes>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[];
     let maxValue = 0,
         index = 0;
     for (let i = 0; i < moveArguments.length; i++) {
@@ -227,12 +220,9 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);
     }
     if (!minLengthCount || minLengthCount !== ctx.numPlayers) {
-        const currentTavern: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
-            G.taverns[G.currentTavern] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
-        if (currentTavern === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-        }
-        const soloBotHasThrud: boolean = CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud);
+        const currentTavern: CanBeNullType<DeckCardTypes>[] =
+            G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[],
+            soloBotHasThrud: boolean = CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud);
         let thrudSuit: CanBeUndefType<SuitNamesKeyofTypeofType>;
         if (soloBotHasThrud) {
             thrudSuit = GetBuffValue(G, ctx, BuffNames.MoveThrud) as SuitNamesKeyofTypeofType;
@@ -290,11 +280,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
  */
 export const CheckSoloBotMustTakeRoyalOfferingCard = (G: IMyGameState, ctx: Ctx,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
-    const currentTavern: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
-        G.taverns[G.currentTavern] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
+    const currentTavern: CanBeNullType<DeckCardTypes>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[];
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument: CanBeUndefType<number> = moveArguments[i];
         if (moveArgument === undefined) {

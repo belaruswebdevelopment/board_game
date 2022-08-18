@@ -23,6 +23,7 @@ export const CheckValkyryRequirement = (G: IMyGameState, ctx: Ctx, playerId: num
     }
     if (CheckPlayerHasBuff(player, buffName)) {
         let valkyryName: ValkyryNames;
+        // TODO Add _exhaustiveCheck!
         switch (buffName) {
             // TODO Fix all buffs!
             // case BuffNames.CountDistinctionAmount:

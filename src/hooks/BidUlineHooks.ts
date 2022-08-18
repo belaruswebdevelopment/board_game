@@ -3,7 +3,7 @@ import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -27,7 +27,7 @@ export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<
         const ulinePlayerIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                 CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-        if (!G.solo && ulinePlayerIndex !== - 1) {
+        if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== - 1) {
             const ulinePlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,

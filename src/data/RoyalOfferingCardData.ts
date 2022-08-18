@@ -1,5 +1,5 @@
 import { RoyalOfferingNames } from "../typescript/enums";
-import type { IRoyalOfferingCardConfig, IRoyalOfferingCardValues } from "../typescript/interfaces";
+import type { IRoyalOfferingCardConfig, IRoyalOfferingCardValues, RoyalOfferingsConfigType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**
@@ -79,4 +79,4 @@ const upgradeCoinUpTo5: IRoyalOfferingCardConfig = {
  * <li>Происходит при создании всех карт улучшения монет в ходе инициализации игры.</li>
  * </ol>
  */
-export const actionCardsConfigArray: IRoyalOfferingCardConfig[] = [upgradeCoinUpTo3, upgradeCoinUpTo5];
+export const actionCardsConfigArray: RoyalOfferingsConfigType = [upgradeCoinUpTo3, upgradeCoinUpTo5];

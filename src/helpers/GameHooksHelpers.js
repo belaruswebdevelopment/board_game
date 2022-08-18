@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";
@@ -27,7 +27,7 @@ const AfterLastTavernEmptyActions = (G, ctx) => {
             return CheckEnlistmentMercenaries(G, ctx);
         }
         else {
-            return StartEndTierPhaseOrEndGameLastActions(G, ctx);
+            return StartEndTierPhaseOrEndGameLastActions(G);
         }
     }
     else {
@@ -62,7 +62,7 @@ export const StartGetMjollnirProfitPhase = (G) => {
  */
 export const StartBidUlineOrTavernsResolutionPhase = (G) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-    if (!G.solo && ulinePlayerIndex !== -1) {
+    if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== -1) {
         return PhaseNames.BidUline;
     }
     else {
@@ -97,18 +97,10 @@ export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsP
  * </ol>
  *
  * @param G
- * @param ctx
  * @returns Название новой фазы игры.
  */
-export const StartEndGameLastActions = (G, ctx) => {
-    const deck1 = G.secret.decks[0], deck2 = G.secret.decks[1];
-    if (deck1 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
-    }
-    if (deck2 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-    }
-    if (!deck1.length && deck2.length) {
+export const StartEndGameLastActions = (G) => {
+    if (!G.secret.decks[0].length && G.secret.decks[1].length) {
         return PhaseNames.TroopEvaluation;
     }
     else {
@@ -133,16 +125,15 @@ export const StartEndGameLastActions = (G, ctx) => {
 * </ol>
 *
 * @param G
-* @param ctx
 * @returns
 */
-export const StartEndTierPhaseOrEndGameLastActions = (G, ctx) => {
+export const StartEndTierPhaseOrEndGameLastActions = (G) => {
     const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         return PhaseNames.PlaceYlud;
     }
     else {
-        return StartEndGameLastActions(G, ctx);
+        return StartEndGameLastActions(G);
     }
 };
 /**
@@ -171,7 +162,7 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
         return PhaseNames.EnlistmentMercenaries;
     }
     else {
-        return StartEndTierPhaseOrEndGameLastActions(G, ctx);
+        return StartEndTierPhaseOrEndGameLastActions(G);
     }
 };
 /**

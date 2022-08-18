@@ -28,7 +28,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
     if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
+    if (card.type === RusCardTypeNames.Artefact_Player_Card) {
         AddArtefactPlayerCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudAction(G, ctx, card);
     }
@@ -51,9 +51,6 @@ export const AddCampCardToCards = (G, ctx, card) => {
  * @param card Карта лагеря.
  */
 const AddCampCardToPlayer = (G, ctx, card) => {
-    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
-        throw new Error(`Не удалось добавить карту лагеря '${card.type}' '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
-    }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

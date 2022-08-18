@@ -4,7 +4,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { BuffNames, ErrorNames, PhaseNames } from "./typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, PhaseNames } from "./typescript/enums";
 import type { CanBeNullType, CanBeUndefType, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
@@ -81,11 +81,14 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (ctx.phase !== PhaseNames.BidUline) {
-            if (G.solo || (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+            if (G.mode === GameModeNames.Solo1
+                || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                    && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
-            if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }

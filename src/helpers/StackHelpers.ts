@@ -22,17 +22,17 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
         if (card !== undefined && `validators` in card) {
             const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;
             if (validators !== undefined) {
-                let validator: PickCardValidatorNamesKeyofTypeofType;
+                let validator: PickCardValidatorNamesKeyofTypeofType,
+                    _exhaustiveCheck: never;
                 for (validator in validators) {
-                    switch (validator) {
-                        case PickCardValidatorNames.pickDiscardCardToStack:
-                            isValid = IsCanPickPickDiscardCardToStack(G, card);
-                            break;
-                        case PickCardValidatorNames.pickCampCardToStack:
-                            isValid = IsCanPickPickCampCardToStack(G, card);
-                            break;
-                        default:
-                            throw new Error(`Отсутствует валидатор ${validator} для выбора карты.`);
+                    if (validator === PickCardValidatorNames.pickDiscardCardToStack) {
+                        isValid = IsCanPickPickDiscardCardToStack(G, card);
+                    } else if (validator === PickCardValidatorNames.pickCampCardToStack) {
+                        isValid = IsCanPickPickCampCardToStack(G, card);
+                    } else {
+                        _exhaustiveCheck = validator;
+                        throw new Error(`Отсутствует валидатор для выбора карты.`);
+                        return _exhaustiveCheck;
                     }
                 }
             } else {

@@ -130,11 +130,7 @@ const CountPlayerRanksAndMaxRanksForDistinctions = (G, ctx, suit) => {
  */
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G, ctx, suit, result) => {
     if (suit === SuitNames.explorer && result === undefined) {
-        const deck1 = G.secret.decks[1];
-        if (deck1 === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-        }
-        const discardedCard = deck1.splice(0, 1)[0];
+        const deck1 = G.secret.decks[1], discardedCard = deck1.splice(0, 1)[0];
         if (discardedCard === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);
         }

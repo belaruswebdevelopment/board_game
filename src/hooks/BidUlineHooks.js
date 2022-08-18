@@ -2,7 +2,7 @@ import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>
@@ -21,7 +21,7 @@ export const CheckEndBidUlinePhase = (G, ctx) => {
             return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-        if (!G.solo && ulinePlayerIndex !== -1) {
+        if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== -1) {
             const ulinePlayer = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ulinePlayerIndex);

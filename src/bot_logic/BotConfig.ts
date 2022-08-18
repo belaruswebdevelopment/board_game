@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, ICardCharacteristics, IHeuristic, IMyGameState, TavernCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, ICardCharacteristics, IHeuristic, IMyGameState, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
 /**
@@ -16,9 +16,9 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @returns
  */
 export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): number[] => {
-    const taverns: TavernCardType[][] = G.taverns,
-        temp: number[] = taverns.map((tavern: TavernCardType[]): number =>
-            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernCardType[]>):
+    const taverns: TavernsType = G.taverns,
+        temp: number[] = taverns.map((tavern: TavernAllCardType): number =>
+            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernAllCardType>):
                 number => acc + (item.heuristic(tavern) ? item.weight : 0), 0)),
         result: number[] =
             Array(taverns.length).fill(0).map((value: number, index: number):
@@ -29,8 +29,8 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
                 }
                 return value + num;
             }),
-        tempNumbers: number[][] = taverns.map((tavern: TavernCardType[]): number[] =>
-            tavern.map((card: TavernCardType, index: number, arr: TavernCardType[]): number =>
+        tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
+            tavern.map((card: TavernCardType, index: number, arr: TavernAllCardType): number =>
                 EvaluateCard(G, ctx, card, index, arr))),
         tempChars: ICardCharacteristics[] = tempNumbers.map((element: number[]): ICardCharacteristics =>
             GetCharacteristics(element))/*,
@@ -147,7 +147,7 @@ const GetCharacteristics = (array: number[]): ICardCharacteristics => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: IHeuristic<TavernCardType[]> = {
+const isAllCardsEqual: IHeuristic<TavernAllCardType> = {
     // TODO Add errors for undefined
     heuristic: (cards: TavernCardType[]): boolean => cards.every((card: TavernCardType): boolean =>
     (card !== null && card.type === RusCardTypeNames.Dwarf_Card && cards[0] !== undefined && cards[0] !== null
@@ -314,7 +314,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: IHeuristic<TavernCardType[]>[] = [isAllCardsEqual];
+const absoluteHeuristicsForTradingCoin: IHeuristic<TavernAllCardType>[] = [isAllCardsEqual];
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

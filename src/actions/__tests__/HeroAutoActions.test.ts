@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { DrawNames, LogTypeNames, StageNames } from "../../typescript/enums";
+import { DrawNames, GameModeNames, LogTypeNames, StageNames } from "../../typescript/enums";
 import type { IMyGameState, IPlayer, IPublicPlayer, IStack } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
@@ -42,7 +42,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
 describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
     it(`should return all board coins to hand (multiplayer=false)`, (): void => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             players: {
                 0: {} as IPlayer,
             },
@@ -62,12 +62,12 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `multiplayer`>;
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>;
         GetClosedCoinIntoPlayerHandAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx);
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             players: {
                 0: {} as IPlayer,
             },
@@ -87,11 +87,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `multiplayer`>);
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
     });
     it(`should return all closed board coins to hand (multiplayer=true)`, (): void => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
@@ -122,12 +122,12 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `multiplayer`>;
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>;
         GetClosedCoinIntoPlayerHandAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx);
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
@@ -158,11 +158,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `multiplayer`>);
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
     });
     it(`should return all isOpened=true board coins to hand (multiplayer=true)`, (): void => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
@@ -196,12 +196,12 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `multiplayer`>;
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>;
         GetClosedCoinIntoPlayerHandAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx);
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
@@ -235,7 +235,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `multiplayer`>);
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
     });
 });
 

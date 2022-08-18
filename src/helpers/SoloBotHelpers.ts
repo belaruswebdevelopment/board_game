@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { CoinTypeNames, ErrorNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
 import type { CanBeUndefType, IMoveCoinsArguments, IMyGameState, IPublicPlayer, MoveArgumentsType, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -65,17 +65,17 @@ export const CheckMinCoinVisibleValueForSoloBot = (G: IMyGameState, ctx: Ctx,
                 break;
             default:
                 _exhaustiveCheck = type;
-                throw new Error(`Не существует типа монеты - '${type}'.`);
+                throw new Error(`Не существует такого типа монеты.`);
                 return _exhaustiveCheck;
         }
         if (coin === undefined) {
-            throw new Error(`В массиве монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} отсутствует монета с id '${currentMoveArgument.coinId}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} отсутствует монета с id '${currentMoveArgument.coinId}'.`);
         }
         if (coin === null) {
-            throw new Error(`В массиве монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может отсутствовать монета с id '${currentMoveArgument.coinId}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может отсутствовать монета с id '${currentMoveArgument.coinId}'.`);
         }
         if (!IsCoin(coin)) {
-            throw new Error(`В массиве монет ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть закрытой для него монета с id '${ctx.currentPlayer}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть закрытой для него монета с id '${ctx.currentPlayer}'.`);
         }
         if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !coin.isInitial)) {
             minValue = coin.value;

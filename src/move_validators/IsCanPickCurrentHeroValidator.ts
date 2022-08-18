@@ -71,7 +71,7 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
     }
     const conditions: CanBeUndefType<IConditions> = hero.pickValidators?.conditions;
     if (conditions === undefined) {
-        throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.Conditions}'.`);
+        throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.conditions}'.`);
     }
     let isValidMove = false,
         condition: KeyofType<IConditions>;

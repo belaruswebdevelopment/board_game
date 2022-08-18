@@ -16,7 +16,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helper
 import { AddDataToLog } from "./Logging";
 import { IsMythicalAnimalCard } from "./MythologicalCreature";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
-import { BuffNames, ErrorNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>
@@ -60,37 +60,37 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
-    AddDataToLog(G, LogTypeNames.Game, `Результаты игры ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}:`);
+    AddDataToLog(G, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}:`);
     let score = CurrentScoring(G, player), coinsValue = 0;
-    AddDataToLog(G, LogTypeNames.Public, `Очки за карты дворфов ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: ${score}`);
+    AddDataToLog(G, LogTypeNames.Public, `Очки за карты дворфов ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет ${(G.solo || (G.solo && playerId === 0)) ? `игрока` : `соло бота`} с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
         if (boardCoin !== null && !IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет ${(G.solo || (G.solo && playerId === 0)) ? `игрока` : `соло бота`} с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
         }
         if (IsCoin(boardCoin) && !boardCoin.isOpened) {
-            throw new Error(`В массиве монет ${(G.solo || (G.solo && playerId === 0)) ? `игрока` : `соло бота`} с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
         }
         if (IsCoin(boardCoin)) {
             coinsValue += boardCoin.value;
         }
     }
     score += coinsValue;
-    AddDataToLog(G, LogTypeNames.Public, `Очки за монеты ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${coinsValue}';`);
+    AddDataToLog(G, LogTypeNames.Public, `Очки за монеты ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${coinsValue}';`);
     if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
         const warriorDistinctionScore = StartDistinctionAwarding(G, ctx, suitsConfig[SuitNames.warrior].distinction.awarding, [playerId]);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
-            AddDataToLog(G, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${warriorDistinctionScore}';`);
+            AddDataToLog(G, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${warriorDistinctionScore}';`);
         }
     }
     const minerDistinctionPriorityScore = StartDistinctionAwarding(G, ctx, suitsConfig[SuitNames.miner].distinction.awarding, [playerId]);
     score += minerDistinctionPriorityScore;
     if (minerDistinctionPriorityScore) {
-        AddDataToLog(G, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${minerDistinctionPriorityScore}';`);
+        AddDataToLog(G, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${minerDistinctionPriorityScore}';`);
     }
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
@@ -99,29 +99,29 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         if (hero === undefined) {
             throw new Error(`Не существует карта героя с id '${i}'.`);
         }
-        const heroData = Object.values(heroesConfig).find((heroObj) => heroObj.name === hero.name);
-        if (heroData === undefined) {
-            throw new Error(`Не удалось найти героя '${hero.name}'.`);
-        }
-        if ((!G.solo || G.solo && playerId === 1) && hero.name.startsWith(`Dwerg`)) {
+        const heroData = heroesConfig[hero.name];
+        if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+            || G.mode === GameModeNames.Solo1 && playerId === 1)
+            && hero.name.startsWith(`Dwerg`)) {
             dwerg_brothers += StartHeroScoring(player, heroData.scoringRule);
         }
         else {
             const currentHeroScore = StartHeroScoring(player, heroData.scoringRule);
             heroesScore += currentHeroScore;
-            AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${hero.name}' ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}': '${currentHeroScore}';`);
+            AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${hero.name}' ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}': '${currentHeroScore}';`);
         }
     }
-    if ((!G.solo || G.solo && playerId === 1) && dwerg_brothers) {
+    if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+        || (G.mode === GameModeNames.Solo1 && playerId === 1)) && dwerg_brothers) {
         const dwerg_brother_value = dwerg_brothers_scoring[dwerg_brothers];
         if (dwerg_brother_value === undefined) {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
         }
         heroesScore += dwerg_brother_value;
-        AddDataToLog(G, LogTypeNames.Private, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) ${G.solo ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwerg_brothers]}';`);
+        AddDataToLog(G, LogTypeNames.Private, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) ${G.mode === GameModeNames.Solo1 ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwerg_brothers]}';`);
     }
     score += heroesScore;
-    AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Hero_Card}' ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: ;${heroesScore};'`);
+    AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Hero_Card}' ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
@@ -129,15 +129,22 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             if (campCard === undefined) {
                 throw new Error(`В массиве карт лагеря игрока отсутствует карта с id '${i}'.`);
             }
-            const artefact = Object.values(artefactsConfig).find((artefact) => artefact.name === campCard.name);
-            let currentArtefactScore = 0;
-            if (artefact === undefined) {
-                throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Artefact_Card}' с названием '${campCard.name}'.`);
-            }
-            currentArtefactScore = StartArtefactScoring(G, player, artefact.scoringRule);
-            if (currentArtefactScore) {
-                artifactsScore += currentArtefactScore;
-                AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Artefact_Card}' '${campCard.name}' игрока '${player.nickname}': '${currentArtefactScore}';`);
+            let currentArtefactScore = 0, _exhaustiveCheck;
+            switch (campCard.type) {
+                case RusCardTypeNames.Artefact_Card:
+                    currentArtefactScore =
+                        StartArtefactScoring(G, player, artefactsConfig[campCard.name].scoringRule);
+                    if (currentArtefactScore) {
+                        artifactsScore += currentArtefactScore;
+                        AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Artefact_Card}' '${campCard.name}' игрока '${player.nickname}': '${currentArtefactScore}';`);
+                    }
+                    break;
+                case RusCardTypeNames.Mercenary_Card:
+                    throw new Error(`В командной зоне карт лагеря игрока не может в конце игры быть карта c типом '${RusCardTypeNames.Mercenary_Card}' с id '${i}'.`);
+                default:
+                    _exhaustiveCheck = campCard;
+                    throw new Error(`В командной зоне карт лагеря игрока не может быть карта запрещённого типа с id '${i}'.`);
+                    return _exhaustiveCheck;
             }
         }
         score += artifactsScore;
@@ -153,27 +160,18 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             let godCard, giantCard, valkyryCard, currentGiantScore, currentValkyryScore, _exhaustiveCheck;
             switch (mythologicalCreatureCard.type) {
                 case RusCardTypeNames.God_Card:
-                    godCard = Object.values(godConfig).find((god) => god.name === mythologicalCreatureCard.name);
-                    if (godCard === undefined) {
-                        throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.God_Card}' с названием '${mythologicalCreatureCard.name}'.`);
-                    }
+                    godCard = godConfig[mythologicalCreatureCard.name];
                     godsScore += godCard.points;
                     AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.God_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${godCard.points}';`);
                     break;
                 case RusCardTypeNames.Giant_Card:
-                    giantCard = Object.values(giantConfig).find((giant) => giant.name === mythologicalCreatureCard.name);
-                    if (giantCard === undefined) {
-                        throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Giant_Card}' с названием '${mythologicalCreatureCard.name}'.`);
-                    }
+                    giantCard = giantConfig[mythologicalCreatureCard.name];
                     currentGiantScore = StartGiantScoring(player, giantCard.scoringRule);
                     giantsScore += currentGiantScore;
                     AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Giant_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentGiantScore}';`);
                     break;
                 case RusCardTypeNames.Valkyry_Card:
-                    valkyryCard = Object.values(valkyryConfig).find((valkyry) => valkyry.name === mythologicalCreatureCard.name);
-                    if (valkyryCard === undefined) {
-                        throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}'.`);
-                    }
+                    valkyryCard = valkyryConfig[mythologicalCreatureCard.name];
                     if (mythologicalCreatureCard.strengthTokenNotch === null) {
                         throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}' не может не быть выставлен токен силы.`);
                     }
@@ -193,11 +191,7 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             if (playerMythicalAnimalCard === undefined) {
                 throw new Error(`В массиве карт мифических существ игрока с id '${playerId}' отсутствует карта с id '${m}'.`);
             }
-            const mythicalAnimalCard = Object.values(mythicalAnimalConfig).find((mythicalAnimal) => mythicalAnimal.name === playerMythicalAnimalCard.name);
-            if (mythicalAnimalCard === undefined) {
-                throw new Error(`Не удалось найти карту типа '${RusCardTypeNames.Mythical_Animal_Card}' с названием '${playerMythicalAnimalCard.name}'.`);
-            }
-            const currentMythicalAnimalScore = StartMythicalAnimalScoring(player, mythicalAnimalCard.scoringRule);
+            const mythicalAnimalCard = mythicalAnimalConfig[playerMythicalAnimalCard.name], currentMythicalAnimalScore = StartMythicalAnimalScoring(player, mythicalAnimalCard.scoringRule);
             mythicalAnimalScore += currentMythicalAnimalScore;
             AddDataToLog(G, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Mythical_Animal_Card}' '${playerMythicalAnimalCard.name}' игрока '${player.nickname}': '${currentMythicalAnimalScore}';`);
         }
@@ -209,7 +203,7 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Valkyry_Card}' игрока '${player.nickname}': '${valkyriesScore}';`);
         AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Mythical_Animal_Card}' игрока '${player.nickname}': '${mythicalAnimalScore}';`);
     }
-    AddDataToLog(G, LogTypeNames.Public, `Итоговый счёт ${(G.solo || (G.solo && playerId === 0)) ? `игрока '${player.nickname}'` : `соло бота`}: '${score}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `Итоговый счёт ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${score}'.`);
     return score;
 };
 /**
@@ -225,7 +219,9 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
  */
 export const ScoreWinner = (G, ctx) => {
     Object.values(G.publicPlayers).forEach((player, index) => {
-        if (G.solo || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+        if (G.mode === GameModeNames.Solo1
+            || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
             ReturnCoinsToPlayerBoard(G, ctx, index);
         }
         OpenClosedCoinsOnPlayerBoard(G, ctx, index);
@@ -238,7 +234,7 @@ export const ScoreWinner = (G, ctx) => {
     }
     const maxScore = Math.max(...G.totalScore), maxPlayers = G.totalScore.filter((score) => score === maxScore).length;
     let winners = 0;
-    for (let i = ctx.numPlayers - 1; i >= 0; i--) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);

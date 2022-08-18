@@ -4,7 +4,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { BuffNames, ConfigNames, ErrorNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
+import { BuffNames, ConfigNames, ErrorNames, GameModeNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
 import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, DeckCardTypes, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
@@ -38,9 +38,10 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 case PhaseNames.Bids:
-                    if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
+                    if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                        || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `0`)) {
                         activeStageOfCurrentPlayer = StageNames.default3;
-                    } else if (G.solo && ctx.currentPlayer === `1`) {
+                    } else if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
                         activeStageOfCurrentPlayer = StageNames.default4;
                     }
                     break;
@@ -87,7 +88,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     break;
                 default:
                     _exhaustiveCheck = phase;
-                    throw new Error(`Нет такой фазы '${phase}'.`);
+                    throw new Error(`Нет такой фазы.`);
                     return _exhaustiveCheck;
             }
             if (ctx.activePlayers !== null) {
@@ -161,10 +162,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
 export const iterations = (G: IMyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
     if (ctx.phase === PhaseNames.TavernsResolution) {
-        const currentTavern: CanBeUndefType<TavernCardType[]> = G.taverns[G.currentTavern];
-        if (currentTavern === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-        }
+        const currentTavern: TavernCardType[] = G.taverns[G.currentTavern];
         if (currentTavern.filter((card: TavernCardType): boolean => card !== null).length === 1) {
             return 1;
         }
@@ -194,10 +192,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
                 CompareCards(tavernCard, card) === -1)) {
                 continue;
             }
-            const deck0 = G.secret.decks[0];
-            if (deck0 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
-            }
+            const deck0: DeckCardTypes[] = G.secret.decks[0];
             if (deck0.length > 18) {
                 if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
@@ -219,6 +214,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
     return maxIter;
 };
 
+// TODO Move same logic in one place?!
 /**
  * <h3>Возвращает цели игры для ботов.</h3>
  * <p>Применения:</p>
@@ -230,13 +226,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
  */
 export const objectives = (): IObjectives => ({
     isEarlyGame: {
-        checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            const deck0: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[0];
-            if (deck0 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
-            }
-            return deck0.length > 0;
-        },
+        checker: (G: IMyGameState): boolean => G.secret.decks[0].length > 0,
         weight: -100.0,
     },
     // TODO Move same logic in one func?!
@@ -245,15 +235,8 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
-            if (deck1 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-            }
-            const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
-            if (tavern0 === undefined) {
-                return ThrowError(G, ctx, Errors.TavernWithCurrentIdIsUndefined, 0);
-            }
-            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
             if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
@@ -285,15 +268,8 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
-            if (deck1 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-            }
-            const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
-            if (tavern0 === undefined) {
-                return ThrowError(G, ctx, Errors.TavernWithCurrentIdIsUndefined, 0);
-            }
-            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
             if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
@@ -325,15 +301,8 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const deck1: CanBeUndef<DeckCardTypes[]> = G.secret.decks[1];
-            if (deck1 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-            }
-            const tavern0: CanBeUndef<TavernCardTypes[]> = G.taverns[0];
-            if (tavern0 === undefined) {
-                return ThrowError(G, ctx, Errors.TavernWithCurrentIdIsUndefined, 0);
-            }
-            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
             if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
@@ -366,16 +335,8 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
-            if (deck1 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-            }
-            const tavern0: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
-                G.taverns[0] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
-            if (tavern0 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
-            }
-            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
             if (tavern0.some((card: CanBeNullType<DeckCardTypes>): boolean => card === null)) {
@@ -411,16 +372,8 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
-            if (deck1 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-            }
-            const tavern0: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
-                G.taverns[0] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
-            if (tavern0 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
-            }
-            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
             if (tavern0.some((card: CanBeNullType<DeckCardTypes>): boolean => card === null)) {
@@ -466,16 +419,8 @@ export const objectives = (): IObjectives => ({
  * @returns
  */
 export const playoutDepth = (G: IMyGameState, ctx: Ctx): number => {
-    const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
-    if (deck1 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-    }
-    const tavern0: CanBeUndefType<CanBeNullType<DeckCardTypes>[]> =
-        G.taverns[0] as CanBeUndefType<CanBeNullType<DeckCardTypes>[]>;
-    if (tavern0 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, 0);
-    }
-    if (deck1.length < G.botData.deckLength) {
+    const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+    if (G.secret.decks[1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;
     }
     return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 2;

@@ -1,4 +1,14 @@
 /**
+ * <h3>Перечисление для названий режимов игры.</h3>
+ */
+export const enum GameModeNames {
+    Basic = `Basic`,
+    Multiplayer = `Multiplayer`,
+    Solo1 = `Solo1`,
+    SoloAndvari = `Solo Andvari`,
+}
+
+/**
  * <h3>Перечисление для названий действий по получению преимущества по фракции.</h3>
  */
 export const enum DistinctionAwardingFunctionNames {
@@ -245,8 +255,6 @@ export const enum ErrorNames {
     CurrentPrivatePlayerIsUndefined = `CurrentPrivatePlayerIsUndefined`,
     CurrentPublicPlayerIsUndefined = `CurrentPublicPlayerIsUndefined`,
     CurrentSuitDistinctionPlayerIndexIsUndefined = `CurrentSuitDistinctionPlayerIndexIsUndefined`,
-    CurrentTavernConfigIsUndefined = `CurrentTavernConfigIsUndefined`,
-    CurrentTavernIsUndefined = `CurrentTavernIsUndefined`,
     DeckIsUndefined = `DeckIsUndefined`,
     DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined =
     `DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined`,
@@ -262,8 +270,6 @@ export const enum ErrorNames {
     PublicPlayerWithCurrentIdIsUndefined = `PublicPlayerWithCurrentIdIsUndefined`,
     SuitDistinctionMustBePresent = `SuitDistinctionMustBePresent`,
     TavernCanNotBeRefilledBecauseNotEnoughCards = `TavernCanNotBeRefilledBecauseNotEnoughCards`,
-    TavernConfigWithCurrentIdIsUndefined = `TavernConfigWithCurrentIdIsUndefined`,
-    TavernWithCurrentIdIsUndefined = `TavernWithCurrentIdIsUndefined`,
 }
 
 /**
@@ -621,8 +627,8 @@ export const enum SuitNames {
  * <h3>Перечисление для названия валидаторов для выбора карты героя.</h3>
  */
 export const enum PickHeroCardValidatorNames {
-    Conditions = `conditions`,
-    DiscardCard = `discardCard`,
+    conditions = `conditions`,
+    discardCard = `discardCard`,
 }
 
 /**

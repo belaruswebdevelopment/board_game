@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CoinTypeNames, ErrorNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
 import { AddCardToPlayer } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -57,7 +57,7 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        if (G.solo && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
         }
         else {
@@ -97,20 +97,20 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
         let _exhaustiveCheck;
         switch (type) {
             case CoinTypeNames.Hand:
-                if (G.multiplayer) {
+                if (G.mode === GameModeNames.Multiplayer) {
                     privatePlayer.handCoins[tradingCoinIndex] = coin;
                 }
                 player.handCoins[tradingCoinIndex] = coin;
                 break;
             case CoinTypeNames.Board:
-                if (G.multiplayer) {
+                if (G.mode === GameModeNames.Multiplayer) {
                     privatePlayer.boardCoins[tradingCoinIndex] = coin;
                 }
                 player.boardCoins[tradingCoinIndex] = coin;
                 break;
             default:
                 _exhaustiveCheck = type;
-                throw new Error(`Не существует типа монеты - '${type}'.`);
+                throw new Error(`Не существует такого типа монеты.`);
                 return _exhaustiveCheck;
         }
         G.distinctions[SuitNames.hunter] = undefined;

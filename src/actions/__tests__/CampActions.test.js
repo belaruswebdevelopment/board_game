@@ -1,9 +1,9 @@
-import { ArtefactNames, DrawNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
+import { ArtefactNames, DrawNames, GameModeNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 describe(`Test AddCoinToPouchAction method`, () => {
     it(`should add first coin isOpened=false to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -48,7 +48,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -101,7 +101,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`should add first coin isOpened=true to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -146,7 +146,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -199,7 +199,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`should add first coin to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=true)`, () => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -256,7 +256,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -325,7 +325,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`should add last coin to pouch and start VidofnirVedrfolnir action (multiplayer=false)`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -370,7 +370,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -425,7 +425,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`should add last coin to pouch and start VidofnirVedrfolnir action (multiplayer=true)`, () => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -487,7 +487,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -560,7 +560,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     // Unreal Errors to reproduce
     it(`shouldn't add coin to pouch because all coins are on the pouch and must throw Error`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -581,7 +581,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`shouldn't add undefined coin to pouch (multiplayer=false) and must throw Error`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -608,7 +608,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`shouldn't add undefined coin to pouch (multiplayer=true) and must throw Error`, () => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -642,7 +642,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},
@@ -671,7 +671,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`shouldn't add null coin to pouch (multiplayer=true) and must throw Error`, () => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -707,7 +707,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
     });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {},

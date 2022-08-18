@@ -215,6 +215,8 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                         suit: SuitNames.warrior,
                     },
                 ],
+                [],
+                [],
             ],
             discardCardsDeck: [],
             tavernCardDiscarded2Players: false,
@@ -232,6 +234,8 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             currentTavern: 0,
             taverns: [
                 [null],
+                [],
+                [],
             ],
             discardCardsDeck: [
                 {
@@ -266,6 +270,8 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             currentTavern: 0,
             taverns: [
                 [null],
+                [],
+                [],
             ],
             logData: [],
         };
@@ -284,6 +290,8 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             },
             currentTavern: 0,
             taverns: [
+                [],
+                [],
                 [],
             ],
             logData: [],

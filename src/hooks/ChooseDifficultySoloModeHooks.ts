@@ -6,7 +6,7 @@ import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { ErrorNames, HeroNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -33,7 +33,7 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
  * @returns
  */
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
-    if (G.solo) {
+    if (G.mode === GameModeNames.Solo1) {
         if (ctx.currentPlayer === `1`) {
             const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
             if (soloBotPublicPlayer === undefined) {

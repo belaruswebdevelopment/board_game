@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, ErrorNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
@@ -91,7 +91,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -112,7 +112,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
             let boardCoin;
-            if (G.multiplayer) {
+            if (G.mode === GameModeNames.Multiplayer) {
                 boardCoin = privatePlayer.boardCoins[j];
                 if (boardCoin === undefined) {
                     throw new Error(`В массиве приватных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);

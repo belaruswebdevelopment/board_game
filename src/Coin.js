@@ -14,6 +14,7 @@ import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 export const BuildCoins = (coinConfig, options) => {
     const coins = [];
     for (let i = 0; i < coinConfig.length; i++) {
+        // TODO Rework in tuple to remove config === undefined?
         const config = coinConfig[i];
         if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);

@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, RusCardTypeNames } from "../typescript/enums";
 // Check all types in this file!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -50,19 +50,11 @@ export const CompareCards = (card1, card2) => {
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
     if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
-        const deckTier1 = G.secret.decks[0];
-        if (deckTier1 === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
-        }
-        if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+        if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
-    const deckTier2 = G.secret.decks[1];
-    if (deckTier2 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-    }
-    if (deckTier2.length < G.botData.deckLength) {
+    if (G.secret.decks[1].length < G.botData.deckLength) {
         const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring(G, ctx, index, card))), tavernCardResults = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
@@ -147,7 +139,7 @@ const PotentialScoring = (G, ctx, playerId, card) => {
         return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     let handCoins;
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {

@@ -5,7 +5,7 @@ import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
-import { BuffNames, ErrorNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
  * <p>Применения:</p>
@@ -20,16 +20,16 @@ import { BuffNames, ErrorNames } from "../typescript/enums";
 export const CheckEndBidsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty = Object.values(G.publicPlayers).map((player) => player).every((player, playerIndex) => {
-            if ((G.solo && playerIndex === 1)
-                || (G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+            if ((G.mode === GameModeNames.Solo1 && playerIndex === 1) || (G.mode === GameModeNames.Multiplayer
+                && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 const privatePlayer = G.players[playerIndex];
                 if (privatePlayer === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerIndex);
                 }
                 return privatePlayer.handCoins.every((coin) => coin === null);
             }
-            else if ((G.solo && playerIndex === 0)
-                || (!G.multiplayer && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+            else if ((G.mode === GameModeNames.Solo1 && playerIndex === 0) || (G.mode === GameModeNames.Basic
+                && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 return player.handCoins.every((coin, coinIndex) => {
                     if (coin !== null && !IsCoin(coin)) {
                         throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
@@ -62,7 +62,7 @@ export const CheckEndBidsTurn = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
-    if ((G.solo && ctx.currentPlayer === `1`) || G.multiplayer) {
+    if ((G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) || G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -101,7 +101,7 @@ export const EndBidsActions = (G) => {
  * @param ctx
  */
 export const PreparationPhaseActions = (G, ctx) => {
-    G.currentTavern = -1;
+    G.currentTavern = 0;
     ReturnCoinsToPlayerHands(G, ctx);
     if (G.expansions.thingvellir.active) {
         RefillEmptyCampCards(G);

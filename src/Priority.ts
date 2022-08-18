@@ -1,4 +1,4 @@
-import type { CanBeUndefType, CreatePriorityType, IPrioritiesConfig, IPriority } from "./typescript/interfaces";
+import type { CreatePriorityType, IPriority, NumPlayersType, PrioritiesConfigType, ZeroOrOneOrTwoOrThreeOrFour } from "./typescript/interfaces";
 
 /**
  * <h3>Создание кристаллов.</h3>
@@ -32,12 +32,9 @@ export const CreatePriority = ({
  * @param solo Является ли режим игры соло игрой.
  * @returns Массив базовых кристаллов.
  */
-export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number, solo: boolean): IPriority[] => {
-    const priorityConfig: CanBeUndefType<IPriority[]> = prioritiesConfig[solo ? 1 : numPlayers];
-    if (priorityConfig === undefined) {
-        throw new Error(`В массиве конфига приоритетов отсутствует конфиг для количества игроков - '${numPlayers}'.`);
-    }
-    return priorityConfig.map((priority: IPriority): IPriority => priority);
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers: NumPlayersType, solo: boolean): IPriority[] => {
+    const priorityNum: ZeroOrOneOrTwoOrThreeOrFour = ((solo ? 1 : numPlayers) - 1) as ZeroOrOneOrTwoOrThreeOrFour;
+    return prioritiesConfig[priorityNum].map((priority: IPriority): IPriority => priority);
 };
 
 /**
@@ -80,10 +77,10 @@ const priorities: IPriority[] = [
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
  */
-const prioritiesConfig: IPrioritiesConfig = {
-    1: priorities.slice(0, 2),
-    2: priorities.slice(-2),
-    3: priorities.slice(-3),
-    4: priorities.slice(-4),
-    5: priorities.slice(-5),
-};
+const prioritiesConfig: PrioritiesConfigType = [
+    priorities.slice(0, 2),
+    priorities.slice(-2),
+    priorities.slice(-3),
+    priorities.slice(-4),
+    priorities.slice(-5),
+];

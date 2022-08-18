@@ -41,11 +41,13 @@ export const BuildCampCards = (tier) => {
             }
         }
     }
+    // TODO Rework in tuple to remove mercenariesConfigTier === undefined?
     const mercenariesConfigTier = mercenariesConfig[tier];
     if (mercenariesConfigTier === undefined) {
         throw new Error(`Отсутствует массив значений карт наёмников в указанной эпохе - '${tier}'.`);
     }
     for (let i = 0; i < mercenariesConfigTier.length; i++) {
+        // TODO Rework in tuple to remove mercenaryData === undefined?
         const mercenaryData = mercenariesConfigTier[i];
         if (mercenaryData === undefined) {
             throw new Error(`Отсутствует массив значений карты наёмника с id '${i}' в указанной эпохе - '${tier}'.`);

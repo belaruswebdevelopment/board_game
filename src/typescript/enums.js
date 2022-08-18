@@ -1,4 +1,14 @@
 /**
+ * <h3>Перечисление для названий режимов игры.</h3>
+ */
+export var GameModeNames;
+(function (GameModeNames) {
+    GameModeNames["Basic"] = "Basic";
+    GameModeNames["Multiplayer"] = "Multiplayer";
+    GameModeNames["Solo1"] = "Solo1";
+    GameModeNames["SoloAndvari"] = "Solo Andvari";
+})(GameModeNames || (GameModeNames = {}));
+/**
  * <h3>Перечисление для названий действий по получению преимущества по фракции.</h3>
  */
 export var DistinctionAwardingFunctionNames;
@@ -246,8 +256,6 @@ export var ErrorNames;
     ErrorNames["CurrentPrivatePlayerIsUndefined"] = "CurrentPrivatePlayerIsUndefined";
     ErrorNames["CurrentPublicPlayerIsUndefined"] = "CurrentPublicPlayerIsUndefined";
     ErrorNames["CurrentSuitDistinctionPlayerIndexIsUndefined"] = "CurrentSuitDistinctionPlayerIndexIsUndefined";
-    ErrorNames["CurrentTavernConfigIsUndefined"] = "CurrentTavernConfigIsUndefined";
-    ErrorNames["CurrentTavernIsUndefined"] = "CurrentTavernIsUndefined";
     ErrorNames["DeckIsUndefined"] = "DeckIsUndefined";
     ErrorNames["DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined"] = "DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined";
     ErrorNames["DoNotDiscardCardFromCurrentTavernIfNoCardInTavern"] = "DoNotDiscardCardFromCurrentTavernIfNoCardInTavern";
@@ -261,8 +269,6 @@ export var ErrorNames;
     ErrorNames["PublicPlayerWithCurrentIdIsUndefined"] = "PublicPlayerWithCurrentIdIsUndefined";
     ErrorNames["SuitDistinctionMustBePresent"] = "SuitDistinctionMustBePresent";
     ErrorNames["TavernCanNotBeRefilledBecauseNotEnoughCards"] = "TavernCanNotBeRefilledBecauseNotEnoughCards";
-    ErrorNames["TavernConfigWithCurrentIdIsUndefined"] = "TavernConfigWithCurrentIdIsUndefined";
-    ErrorNames["TavernWithCurrentIdIsUndefined"] = "TavernWithCurrentIdIsUndefined";
 })(ErrorNames || (ErrorNames = {}));
 /**
  * <h3>Перечисление для названия игры и дополнений.</h3>
@@ -620,8 +626,8 @@ export var SuitNames;
  */
 export var PickHeroCardValidatorNames;
 (function (PickHeroCardValidatorNames) {
-    PickHeroCardValidatorNames["Conditions"] = "conditions";
-    PickHeroCardValidatorNames["DiscardCard"] = "discardCard";
+    PickHeroCardValidatorNames["conditions"] = "conditions";
+    PickHeroCardValidatorNames["discardCard"] = "discardCard";
 })(PickHeroCardValidatorNames || (PickHeroCardValidatorNames = {}));
 /**
  * <h3>Перечисление для названия валидаторов для выбора карты при выборе героя.</h3>

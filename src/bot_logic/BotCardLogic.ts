@@ -4,8 +4,8 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { ErrorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, DeckCardTypes, IDwarfCard, IMyGameState, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PointsType, PointsValuesType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernCardType } from "../typescript/interfaces";
+import { ErrorNames, GameModeNames, RusCardTypeNames } from "../typescript/enums";
+import type { CanBeUndefType, IDwarfCard, IMyGameState, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PointsType, PointsValuesType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -52,21 +52,13 @@ export const CompareCards = (card1: TavernCardType, card2: TavernCardType): numb
  * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardType, cardId: number,
-    tavern: TavernCardType[]): number => {
+    tavern: TavernAllCardType): number => {
     if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
-        const deckTier1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[0];
-        if (deckTier1 === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
-        }
-        if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+        if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
-    const deckTier2: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
-    if (deckTier2 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-    }
-    if (deckTier2.length < G.botData.deckLength) {
+    if (G.secret.decks[1].length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardType): number[] =>
             Object.values(G.publicPlayers).map((player: IPublicPlayer, index: number): number =>
                 PotentialScoring(G, ctx, index, card))),
@@ -158,7 +150,7 @@ const PotentialScoring = (G: IMyGameState, ctx: Ctx, playerId: number, card: Tav
             playerId);
     }
     let handCoins: PublicPlayerCoinType[];
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;

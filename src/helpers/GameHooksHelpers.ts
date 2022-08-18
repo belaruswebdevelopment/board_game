@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
@@ -31,7 +31,7 @@ const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<P
         if (G.expansions.thingvellir.active) {
             return CheckEnlistmentMercenaries(G, ctx);
         } else {
-            return StartEndTierPhaseOrEndGameLastActions(G, ctx);
+            return StartEndTierPhaseOrEndGameLastActions(G);
         }
     } else {
         return PhaseNames.Bids;
@@ -71,7 +71,7 @@ export const StartBidUlineOrTavernsResolutionPhase = (G: IMyGameState): PhaseNam
     const ulinePlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-    if (!G.solo && ulinePlayerIndex !== -1) {
+    if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== -1) {
         return PhaseNames.BidUline;
     } else {
         return PhaseNames.TavernsResolution;
@@ -107,19 +107,10 @@ export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsP
  * </ol>
  *
  * @param G
- * @param ctx
  * @returns Название новой фазы игры.
  */
-export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => {
-    const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[0],
-        deck2: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
-    if (deck1 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 0);
-    }
-    if (deck2 === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-    }
-    if (!deck1.length && deck2.length) {
+export const StartEndGameLastActions = (G: IMyGameState): CanBeVoidType<PhaseNames> => {
+    if (!G.secret.decks[0].length && G.secret.decks[1].length) {
         return PhaseNames.TroopEvaluation;
     } else {
         if (G.expansions.thingvellir.active) {
@@ -148,16 +139,15 @@ export const StartEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidTyp
 * </ol>
 *
 * @param G
-* @param ctx
 * @returns
 */
-export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => {
+export const StartEndTierPhaseOrEndGameLastActions = (G: IMyGameState): CanBeVoidType<PhaseNames> => {
     const yludIndex: number = Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         return PhaseNames.PlaceYlud;
     } else {
-        return StartEndGameLastActions(G, ctx);
+        return StartEndGameLastActions(G);
     }
 };
 
@@ -186,7 +176,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): CanBeVoidType<Ph
     if (count) {
         return PhaseNames.EnlistmentMercenaries;
     } else {
-        return StartEndTierPhaseOrEndGameLastActions(G, ctx);
+        return StartEndTierPhaseOrEndGameLastActions(G);
     }
 };
 

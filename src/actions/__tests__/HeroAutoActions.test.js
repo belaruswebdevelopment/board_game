@@ -1,4 +1,4 @@
-import { DrawNames, LogTypeNames, StageNames } from "../../typescript/enums";
+import { DrawNames, GameModeNames, LogTypeNames, StageNames } from "../../typescript/enums";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 describe(`Test AddPickHeroAction method`, () => {
     it(`should add pick hero action to stack`, () => {
@@ -38,7 +38,7 @@ describe(`Test AddPickHeroAction method`, () => {
 describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
     it(`should return all board coins to hand (multiplayer=false)`, () => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             players: {
                 0: {},
             },
@@ -63,7 +63,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             players: {
                 0: {},
             },
@@ -87,7 +87,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
     });
     it(`should return all closed board coins to hand (multiplayer=true)`, () => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
@@ -123,7 +123,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
@@ -158,7 +158,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
     });
     it(`should return all isOpened=true board coins to hand (multiplayer=true)`, () => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
@@ -197,7 +197,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [

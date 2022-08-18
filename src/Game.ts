@@ -286,8 +286,7 @@ export const BoardGame: Game<IMyGameState> = {
                 PassEnlistmentMercenariesMove,
                 GetEnlistmentMercenariesMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> =>
-                StartEndTierPhaseOrEndGameLastActions(G, ctx),
+            next: (G: IMyGameState): CanBeVoidType<PhaseNames> => StartEndTierPhaseOrEndGameLastActions(G),
             onBegin: (G: IMyGameState): void => PrepareMercenaryPhaseOrders(G),
             endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndEnlistmentMercenariesPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndEnlistmentMercenariesActions(G, ctx),
@@ -368,7 +367,7 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 PlaceYludHeroMove,
             },
-            next: (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => StartEndGameLastActions(G, ctx),
+            next: (G: IMyGameState): CanBeVoidType<PhaseNames> => StartEndGameLastActions(G),
             onBegin: (G: IMyGameState, ctx: Ctx): void => CheckPlaceYludOrder(G, ctx),
             endIf: (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => CheckEndPlaceYludPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndPlaceYludActions(G, ctx),

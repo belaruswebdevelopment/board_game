@@ -4,7 +4,7 @@ import { godConfig } from "../data/MythologicalCreatureData";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IGodData, IMyGameState, InvalidMoveType, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Использование способности карты Бога.</h3>
@@ -37,11 +37,6 @@ export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, c
     if (card.type !== RusCardTypeNames.God_Card) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God_Card}', а не с типом '${card.type}'.`);
     }
-    const godCard: CanBeUndefType<IGodData> =
-        Object.values(godConfig).find((god: IGodData): boolean => god.name === card.name);
-    if (godCard === undefined) {
-        throw new Error(`Не удалось найти Бога '${card.name}'.`);
-    }
     // TODO Use God power ability!?
-    godCard.godPower();
+    godConfig[card.name].godPower();
 };

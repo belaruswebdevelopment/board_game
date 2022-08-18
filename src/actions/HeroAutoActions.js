@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } from "../typescript/enums";
 import { UpgradeCoinAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -31,13 +31,13 @@ export const AddPickHeroAction = (G, ctx, ...args) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    if (G.solo && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
     }
     else {
         AddActionsToStack(G, ctx, [StackData.pickHero(priority)]);
     }
-    AddDataToLog(G, LogTypeNames.Game, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
+    AddDataToLog(G, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>
@@ -81,7 +81,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     if (value === undefined) {
         throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
-    const currentPlayer = G.solo ? 1 : Number(ctx.currentPlayer), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
+    const currentPlayer = G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, currentPlayer);
     }
@@ -89,9 +89,10 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
         return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, currentPlayer);
     }
     let type;
-    if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+    if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+        && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         let handCoins;
-        if (G.multiplayer) {
+        if (G.mode === GameModeNames.Multiplayer) {
             handCoins = privatePlayer.handCoins;
         }
         else {
@@ -117,11 +118,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 allCoins.push(boardCoin);
             }
         }
-        const minCoinValue = Math.min(...allCoins.filter((coin) => !coin.isTriggerTrading).map((coin) => coin.value));
-        if (G.solo && minCoinValue !== 2) {
-            throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
-        }
-        const upgradingCoinsArray = allCoins.filter((coin) => coin.value === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
+        const minCoinValue = Math.min(...allCoins.filter((coin) => !coin.isTriggerTrading).map((coin) => coin.value)), upgradingCoinsArray = allCoins.filter((coin) => coin.value === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
@@ -169,7 +166,11 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     }
     else {
         const minCoinValue = Math.min(...player.boardCoins.filter((coin) => IsCoin(coin) && !coin.isTriggerTrading)
-            .map((coin) => coin.value)), upgradingCoinsArray = player.boardCoins.filter((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
+            .map((coin) => coin.value));
+        if (G.mode === GameModeNames.Solo1 && minCoinValue !== 2) {
+            throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
+        }
+        const upgradingCoinsArray = player.boardCoins.filter((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =

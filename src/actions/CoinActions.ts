@@ -3,7 +3,7 @@ import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypeNames, ErrorNames, LogTypeNames } from "../typescript/enums";
+import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } from "../typescript/enums";
 import type { CanBeUndefType, CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -33,7 +33,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
     }
     let handCoins: PublicPlayerCoinType[],
         boardCoins: PublicPlayerCoinType[];
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     } else {
@@ -71,7 +71,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             break;
         default:
             _exhaustiveCheck = type;
-            throw new Error(`Не существует типа монеты - '${type}'.`);
+            throw new Error(`Не существует такого типа монеты.`);
             return _exhaustiveCheck;
     }
     // TODO Split into different functions!?
@@ -113,29 +113,32 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
     }
     AddDataToLog(G, LogTypeNames.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
     AddDataToLog(G, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
-    if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
+    if (!upgradedCoin.isOpened
+        && !(G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
         ChangeIsOpenedCoinStatus(upgradedCoin, true);
     }
-    if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2))
-        && type === CoinTypeNames.Hand) || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
+    if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+        || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1` && upgradingCoin.value === 2))
+        && type === CoinTypeNames.Hand) || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+            && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
             && type === CoinTypeNames.Board && isTrading)) {
         if (isTrading) {
             const handCoinId: number = player.handCoins.indexOf(null);
-            if (G.multiplayer) {
+            if (G.mode === GameModeNames.Multiplayer) {
                 boardCoins[upgradingCoinId] = null;
                 player.handCoins[handCoinId] = upgradedCoin;
             }
             player.boardCoins[upgradingCoinId] = null;
             handCoins[handCoinId] = upgradedCoin;
         } else {
-            if (G.multiplayer) {
+            if (G.mode === GameModeNames.Multiplayer) {
                 player.handCoins[upgradingCoinId] = upgradedCoin;
             }
             handCoins[upgradingCoinId] = upgradedCoin;
         }
         AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
     } else if (type === CoinTypeNames.Board) {
-        if (G.multiplayer) {
+        if (G.mode === GameModeNames.Multiplayer) {
             boardCoins[upgradingCoinId] = upgradedCoin;
         }
         player.boardCoins[upgradingCoinId] = upgradedCoin;

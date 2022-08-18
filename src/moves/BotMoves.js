@@ -1,8 +1,8 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, StageNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
 // TODO Add Bot place all coins for human player opened in solo game
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -30,7 +30,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -58,17 +58,12 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
             if (IsCoin(handCoin) && handCoin.isOpened) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
             }
-            if (G.multiplayer) {
+            if (G.mode === GameModeNames.Multiplayer) {
                 privatePlayer.boardCoins[i] = handCoin;
                 player.boardCoins[i] = {};
                 player.handCoins[i] = null;
             }
             else {
-                if (G.solo) {
-                    if (handCoin !== null) {
-                        ChangeIsOpenedCoinStatus(handCoin, true);
-                    }
-                }
                 player.boardCoins[i] = handCoin;
             }
             handCoins[coinId] = null;

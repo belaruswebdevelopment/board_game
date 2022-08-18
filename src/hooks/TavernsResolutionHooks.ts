@@ -13,7 +13,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { BuffNames, ErrorNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, CoinType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -36,7 +36,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinType[];
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -84,7 +84,7 @@ export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): CanBe
                 ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
-            && CheckIfCurrentTavernEmpty(G, ctx)) {
+            && CheckIfCurrentTavernEmpty(G)) {
             return true;
         }
     }
@@ -114,15 +114,11 @@ export const CheckEndTavernsResolutionTurn = (G: IMyGameState, ctx: Ctx): CanBeV
  * @param ctx
  */
 export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => {
-    const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[G.currentTavern];
-    if (currentTavernConfig === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined,
-            G.currentTavern);
-    }
-    if (!CheckIfCurrentTavernEmpty(G, ctx)) {
+    const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
+    if (!CheckIfCurrentTavernEmpty(G)) {
         throw new Error(`Таверна '${currentTavernConfig.name}' не может не быть пустой в конце фазы '${PhaseNames.TavernsResolution}'.`);
     }
-    if (G.solo && (G.currentTavern === (G.tavernsNum - 1))) {
+    if (G.mode === GameModeNames.Solo1 && (G.currentTavern === (G.tavernsNum - 1))) {
         StartTrading(G, ctx, true);
     }
     AddDataToLog(G, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
@@ -164,8 +160,11 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
         G.tavernCardDiscarded2Players = false;
     }
     G.publicPlayersOrder = [];
-    if (!G.solo) {
+    if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) {
         ChangePlayersPriorities(G, ctx);
+    }
+    if (G.currentTavern !== G.tavernsNum - 1) {
+        G.currentTavern++;
     }
 };
 
@@ -186,12 +185,14 @@ export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
     }
     StartOrEndActions(G, ctx);
     if (!player.stack.length) {
-        if (!G.solo && ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
-            && !CheckIfCurrentTavernEmpty(G, ctx) && !G.tavernCardDiscarded2Players) {
+        if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+            && ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
+            && !CheckIfCurrentTavernEmpty(G) && !G.tavernCardDiscarded2Players) {
             AddActionsToStack(G, ctx, [StackData.discardTavernCard()]);
             DrawCurrentProfit(G, ctx);
         } else {
-            if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 // TODO Need it every time or 1 time add 0-2 AddCoinsToPouch actions to stack
                 CheckAndStartUlineActionsOrContinue(G, ctx);
             }
@@ -230,7 +231,7 @@ export const OnTavernsResolutionTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
 export const OnTavernsResolutionTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
     if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        if (ctx.numPlayers === 2 && !CheckIfCurrentTavernEmpty(G, ctx)) {
+        if (ctx.numPlayers === 2 && !CheckIfCurrentTavernEmpty(G)) {
             DiscardCardIfTavernHasCardFor2Players(G, ctx);
         }
         if (G.expansions.thingvellir.active) {
@@ -262,9 +263,8 @@ export const OnTavernsResolutionTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const ResolveCurrentTavernOrders = (G: IMyGameState, ctx: Ctx): void => {
-    G.currentTavern++;
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
-        if (G.multiplayer || (G.solo && index === 1)) {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)) {
             const privatePlayer: CanBeUndefType<IPlayer> = G.players[index];
             if (privatePlayer === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,

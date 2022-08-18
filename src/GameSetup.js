@@ -12,6 +12,7 @@ import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
+import { GameModeNames } from "./typescript/enums";
 /**
  * <h3>Инициализация игры.</h3>
  * <p>Применения:</p>
@@ -23,60 +24,45 @@ import { BuildSpecialCards } from "./SpecialCard";
  * @returns Данные игры.
  */
 export const SetupGame = (ctx) => {
-    const suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, soloGameDifficultyLevel = null, explorerDistinctionCardId = null, multiplayer = false, 
     // TODO Rework it!
-    solo = ctx.numPlayers === 2, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = null, expansions = {
+    const mode = ctx.numPlayers === 1 ? GameModeNames.SoloAndvari : ctx.numPlayers === 2 ? GameModeNames.Solo1 : ctx.numPlayers === 3 ? GameModeNames.Basic : GameModeNames.Multiplayer, suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, soloGameDifficultyLevel = null, explorerDistinctionCardId = null, 
+    // TODO Rework it!
+    odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = null, expansions = {
         basic: {
             active: true,
         },
         thingvellir: {
-            active: solo ? false : true,
+            active: mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari ? false : true,
         },
         // TODO Fix me to "true" after expansion finished
         idavoll: {
-            active: solo ? false : false,
+            active: mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari ? false : false,
         },
     }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
-        campDecks: [],
-        decks: [],
+        campDecks: [[], []],
+        decks: [[], []],
         mythologicalCreatureDecks: [],
     };
-    if (solo && multiplayer) {
-        throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
-    }
     let suit;
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
-    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null);
-    if (expansions.thingvellir.active) {
-        for (let i = 0; i < tierToEnd; i++) {
+    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null), deckLength = [0, 0];
+    for (let i = 0; i < tierToEnd; i++) {
+        if (expansions.thingvellir.active) {
             secret.campDecks[i] = BuildCampCards(i);
             let campDeck = secret.campDecks[i];
-            if (campDeck === undefined) {
-                throw new Error(`Колода карт лагеря ${i} эпохи не может отсутствовать.`);
-            }
             campDeck = ctx.random.Shuffle(campDeck);
             secret.campDecks[i] = campDeck;
             campDeckLength[i] = campDeck.length;
+            campDeckLength[0] = secret.campDecks[0].length;
         }
-        const campDeck0 = secret.campDecks[0];
-        if (campDeck0 === undefined) {
-            throw new Error(`Колода карт лагеря 1 эпохи не может отсутствовать.`);
-        }
-        campDeckLength[0] = campDeck0.length;
-    }
-    const deckLength = [0, 0];
-    for (let i = 0; i < tierToEnd; i++) {
         secret.decks[i] = [];
         const data = {
             players: ctx.numPlayers,
             tier: i,
         }, dwarfDeck = BuildDwarfCards(data), royalOfferingDeck = BuildRoyalOfferingCards(data);
         let deck = secret.decks[i];
-        if (deck === undefined) {
-            throw new Error(`Колода карт ${i} эпохи не может отсутствовать.`);
-        }
         deck = deck.concat(dwarfDeck, royalOfferingDeck);
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random.Shuffle(deck);
@@ -87,10 +73,8 @@ export const SetupGame = (ctx) => {
             configOptions.push(expansion);
         }
     }
-    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(configOptions, solo), multiCardsDeck = BuildMultiSuitCards(configOptions), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, deck0 = secret.decks[0];
-    if (deck0 === undefined) {
-        throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
-    }
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(configOptions, mode === GameModeNames.Solo1), multiCardsDeck = BuildMultiSuitCards(configOptions), taverns = [[], [], []], tavernsNum = 3, currentTavern = 0;
+    deckLength[0] = secret.decks[0].length;
     let mythologicalCreatureDeckLength = 0;
     if (expansions.idavoll.active) {
         secret.mythologicalCreatureDecks = BuildMythologicalCreatureCards();
@@ -99,19 +83,18 @@ export const SetupGame = (ctx) => {
         mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
     }
     for (let i = 0; i < tavernsNum; i++) {
-        taverns[i] = [];
-        deckLength[0] = deck0.length;
+        taverns[i] = Array(drawSize).fill(null);
     }
-    const players = {}, publicPlayers = {}, publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, solo);
+    const players = {}, publicPlayers = {}, publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, mode === GameModeNames.Solo1);
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const randomPriorityIndex = solo ? 0 : Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
+        const randomPriorityIndex = mode === GameModeNames.Solo1 ? 0 : Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
         players[i] = BuildPlayer();
-        const soloBot = solo && i === 1;
+        const soloBot = (mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari) && i === 1;
         publicPlayers[i] =
-            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan` + i, priority, multiplayer);
+            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan` + i, priority, mode === GameModeNames.Multiplayer);
     }
     const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
@@ -133,19 +116,14 @@ export const SetupGame = (ctx) => {
         }
         allCoinsOrder = allCoinsOrder.concat(Permute(coinsOrder));
     }
-    const cardDeck0 = secret.decks[0];
-    if (cardDeck0 === undefined) {
-        throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
-    }
     const botData = {
         allCoinsOrder,
         allPicks: GetAllPicks(tavernsNum, ctx.numPlayers),
         maxIter: 1000,
-        deckLength: cardDeck0.length,
+        deckLength: secret.decks[0].length,
     };
     return {
-        multiplayer,
-        solo,
+        mode,
         soloGameDifficultyLevel,
         odroerirTheMythicCauldron,
         tavernCardDiscarded2Players,

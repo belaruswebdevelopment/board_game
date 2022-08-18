@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -31,7 +31,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
     if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
+    if (card.type === RusCardTypeNames.Artefact_Player_Card) {
         AddArtefactPlayerCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudAction(G, ctx, card);
     } else {
@@ -53,10 +53,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
  * @param ctx
  * @param card Карта лагеря.
  */
-const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardType): void => {
-    if (card.type === RusCardTypeNames.Artefact_Player_Card && card.suit !== null) {
-        throw new Error(`Не удалось добавить карту лагеря '${card.type}' '${card.name}' в массив карт лагеря игрока с id '${ctx.currentPlayer}' из-за её принадлежности к фракции '${card.suit}'.`);
-    }
+const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampCreatureCommandZoneCardType): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

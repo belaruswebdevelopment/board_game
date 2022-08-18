@@ -32,11 +32,7 @@ export const UseGodPowerMove = (G, ctx, cardId) => {
     if (card.type !== RusCardTypeNames.God_Card) {
         throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне карта с id '${cardId}' должна быть с типом '${RusCardTypeNames.God_Card}', а не с типом '${card.type}'.`);
     }
-    const godCard = Object.values(godConfig).find((god) => god.name === card.name);
-    if (godCard === undefined) {
-        throw new Error(`Не удалось найти Бога '${card.name}'.`);
-    }
     // TODO Use God power ability!?
-    godCard.godPower();
+    godConfig[card.name].godPower();
 };
 //# sourceMappingURL=MythologicalCreatureMoves.js.map

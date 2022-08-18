@@ -7,7 +7,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
-import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernCardType, TierType } from "../typescript/interfaces";
+import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -490,7 +490,8 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const option: DrawProfitType = G.drawProfit;
-    let caption = ``;
+    let caption = ``,
+        _exhaustiveCheck: never;
     switch (option) {
         case ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade:
             caption += `Get value of coin upgrade.`;
@@ -512,8 +513,12 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
             StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
             break;
+        case null:
+            throw new Error(`Не задан обязательный параметр '${option}'.`);
         default:
-            throw new Error(`Не задан обязательный параметр 'drawProfit'.`);
+            _exhaustiveCheck = option;
+            throw new Error(`Не существует обязательный параметр 'drawProfit'.`);
+            return _exhaustiveCheck;
     }
     return (
         <table>
@@ -547,18 +552,12 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let t = 0; t < G.tavernsNum; t++) {
-        const currentTavernConfig: CanBeUndefType<ITavernInConfig> = tavernsConfig[t];
-        if (currentTavernConfig === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined, t);
-        }
+        const currentTavernConfig: ITavernInConfig = tavernsConfig[t as IndexOf<TavernsConfigType>];
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
-                const tavern: CanBeUndefType<TavernCardType[]> = G.taverns[t];
-                if (tavern === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, t);
-                }
-                const tavernCard: CanBeUndefType<TavernCardType> = tavern[j];
+                const tavern: TavernAllCardType = G.taverns[t as IndexOf<TavernsConfigType>],
+                    tavernCard: CanBeUndefType<TavernCardType> = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
                 }
@@ -566,7 +565,8 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
                     if (data !== undefined) {
                         boardCells.push(
                             <td key={`${currentTavernConfig.name} ${j}`}>
-                                <span style={Styles.Tavern(t)} className="bg-tavern-icon"></span>
+                                <span style={Styles.Tavern(t as IndexOf<TavernsConfigType>)}
+                                    className="bg-tavern-icon"></span>
                             </td>
                         );
                     }
@@ -619,7 +619,8 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
                     <table className={`${gridClass} justify-self-center`}
                         key={`Tavern ${currentTavernConfig.name} board`}>
                         <caption className="whitespace-nowrap">
-                            <span style={Styles.Tavern(t)} className="bg-top-tavern-icon"></span>
+                            <span style={Styles.Tavern(t as IndexOf<TavernsConfigType>)}
+                                className="bg-top-tavern-icon"></span>
                             <b>{currentTavernConfig.name}</b>
                         </caption>
                         <tbody>

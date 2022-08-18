@@ -1,12 +1,12 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, DrawNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
+import { ArtefactNames, DrawNames, GameModeNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
 import type { DeckCardTypes, DiscardCampCardType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 
 describe(`Test AddCoinToPouchAction method`, (): void => {
     it(`should add first coin isOpened=false to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, (): void => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {} as IPlayer,
@@ -46,12 +46,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
         AddCoinToPouchAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {} as IPlayer,
@@ -100,11 +100,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `multiplayer` | `logData`>);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
     });
     it(`should add first coin isOpened=true to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, (): void => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {} as IPlayer,
@@ -144,12 +144,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
         AddCoinToPouchAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {} as IPlayer,
@@ -198,11 +198,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `multiplayer` | `logData`>);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
     });
     it(`should add first coin to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=true)`, (): void => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -254,12 +254,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
         AddCoinToPouchAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -324,11 +324,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `multiplayer` | `logData`>);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
     });
     it(`should add last coin to pouch and start VidofnirVedrfolnir action (multiplayer=false)`, (): void => {
         const G = {
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {} as IPlayer,
@@ -368,12 +368,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
         AddCoinToPouchAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
-            multiplayer: false,
+            mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
                 0: {} as IPlayer,
@@ -424,11 +424,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `multiplayer` | `logData`>);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
     });
     it(`should add last coin to pouch and start VidofnirVedrfolnir action (multiplayer=true)`, (): void => {
         const G = {
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -485,12 +485,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
         AddCoinToPouchAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
-            multiplayer: true,
+            mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
@@ -558,13 +558,13 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `multiplayer` | `logData`>);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
     });
     // Unreal Errors to reproduce
     it(`shouldn't add coin to pouch because all coins are on the pouch and must throw Error`,
         (): void => {
             const G = {
-                multiplayer: false,
+                mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
                     0: {} as IPlayer,
@@ -576,7 +576,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
             expect((): void => {
                 AddCoinToPouchAction(G as IMyGameState, {
                     currentPlayer: `0`,
@@ -586,7 +586,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
     it(`shouldn't add undefined coin to pouch (multiplayer=false) and must throw Error`,
         (): void => {
             const G = {
-                multiplayer: false,
+                mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
                     0: {} as IPlayer,
@@ -604,7 +604,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
             expect((): void => {
                 AddCoinToPouchAction(G as IMyGameState, {
                     currentPlayer: `0`,
@@ -614,7 +614,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
     it(`shouldn't add undefined coin to pouch (multiplayer=true) and must throw Error`,
         (): void => {
             const G = {
-                multiplayer: true,
+                mode: GameModeNames.Multiplayer,
                 tavernsNum: 3,
                 players: {
                     0: {
@@ -639,7 +639,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
             expect((): void => {
                 AddCoinToPouchAction(G as IMyGameState, {
                     currentPlayer: `0`,
@@ -649,7 +649,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`,
         (): void => {
             const G = {
-                multiplayer: false,
+                mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
                     0: {} as IPlayer,
@@ -669,7 +669,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
             expect((): void => {
                 AddCoinToPouchAction(G as IMyGameState, {
                     currentPlayer: `0`,
@@ -679,7 +679,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
     it(`shouldn't add null coin to pouch (multiplayer=true) and must throw Error`,
         (): void => {
             const G = {
-                multiplayer: true,
+                mode: GameModeNames.Multiplayer,
                 tavernsNum: 3,
                 players: {
                     0: {
@@ -706,7 +706,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
             expect((): void => {
                 AddCoinToPouchAction(G as IMyGameState, {
                     currentPlayer: `0`,
@@ -716,7 +716,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`,
         (): void => {
             const G = {
-                multiplayer: false,
+                mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
                     0: {} as IPlayer,
@@ -736,7 +736,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
             expect((): void => {
                 AddCoinToPouchAction(G as IMyGameState, {
                     currentPlayer: `0`,

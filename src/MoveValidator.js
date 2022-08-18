@@ -9,7 +9,7 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { BuffNames, CoinTypeNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, StageNames, SuitNames } from "./typescript/enums";
+import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, StageNames, SuitNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -35,7 +35,7 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins, boardCoins;
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     }
@@ -76,7 +76,7 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
             break;
         default:
             _exhaustiveCheck = coinData.type;
-            throw new Error(`Не существует типа монеты - '${coinData.type}'.`);
+            throw new Error(`Не существует такого типа монеты.`);
             return _exhaustiveCheck;
     }
     return false;
@@ -169,7 +169,7 @@ export const GetValidator = (phase, stage) => {
             break;
         default:
             _exhaustiveCheck = phase;
-            throw new Error(`Нет валидатора для фазы '${phase}'.`);
+            throw new Error(`Нет валидатора для такой фазы.`);
             return _exhaustiveCheck;
     }
     return validator;
@@ -219,11 +219,9 @@ export const moveValidators = {
         getRange: (G, ctx) => DrawTaverns(G, ctx, MoveValidatorNames.ClickCardMoveValidator),
         getValue: (G, ctx, currentMoveArguments) => {
             // TODO Get MythologicalCreature cards for bots...
-            if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
+            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `0`)) {
                 const uniqueArr = [], currentTavern = G.taverns[G.currentTavern];
-                if (currentTavern === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-                }
                 let flag = true;
                 for (let i = 0; i < currentMoveArguments.length; i++) {
                     const moveArgument = currentMoveArguments[i];
@@ -266,7 +264,7 @@ export const moveValidators = {
                     flag = true;
                 }
             }
-            else if (G.solo && ctx.currentPlayer === `1`) {
+            else if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
                 // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
                 let moveArgument;
                 moveArgument = CheckSoloBotMustTakeCardToPickHero(G, ctx, currentMoveArguments);
@@ -484,11 +482,7 @@ export const moveValidators = {
             if (hasLowestPriority) {
                 resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
             }
-            const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins), deck = G.secret.decks[G.secret.decks.length - 1];
-            if (deck === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '${G.secret.decks.length - 1}' эпохи.`);
-            }
-            const tradingProfit = deck.length > 9 ? 1 : 0;
+            const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins), tradingProfit = G.secret.decks[1].length > 9 ? 1 : 0;
             let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
             if (minResultForCoins <= 0) {
                 positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
@@ -505,7 +499,7 @@ export const moveValidators = {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
             }
             let handCoins;
-            if (G.multiplayer) {
+            if (G.mode === GameModeNames.Multiplayer) {
                 handCoins = privatePlayer.handCoins;
             }
             else {
@@ -723,24 +717,13 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: MoveNames.ClickConcreteCoinToUpgradeMove,
-        validate: (G, ctx, id) => {
-            if (typeof id !== `object`) {
-                throw new Error(`Function param 'id' isn't object.`);
-            }
-            if (id === null) {
-                throw new Error(`Function param 'id' is null.`);
-            }
-            if (!(`coinId` in id)) {
-                throw new Error(`Function param 'id' hasn't 'coinId'.`);
-            }
-            return CoinUpgradeValidation(G, ctx, id);
-        },
+        validate: (G, ctx, id) => CoinUpgradeValidation(G, ctx, id),
     },
     ClickCoinToUpgradeMoveValidator: {
         getRange: (G, ctx) => DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator)),
         getValue: (G, ctx, currentMoveArguments) => {
             let moveArgument;
-            if (G.solo && ctx.currentPlayer === `1`) {
+            if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -773,18 +756,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: MoveNames.ClickCoinToUpgradeMove,
-        validate: (G, ctx, id) => {
-            if (typeof id !== `object`) {
-                throw new Error(`Function param 'id' isn't object.`);
-            }
-            if (id === null) {
-                throw new Error(`Function param 'id' is null.`);
-            }
-            if (!(`coinId` in id)) {
-                throw new Error(`Function param 'id' hasn't field 'coinId'.`);
-            }
-            return CoinUpgradeValidation(G, ctx, id);
-        },
+        validate: (G, ctx, id) => CoinUpgradeValidation(G, ctx, id),
     },
     ClickHeroCardMoveValidator: {
         getRange: (G, ctx) => DrawHeroes(G, ctx, MoveValidatorNames.ClickHeroCardMoveValidator),
@@ -797,9 +769,6 @@ export const moveValidators = {
         },
         moveName: MoveNames.ClickHeroCardMove,
         validate: (G, ctx, id) => {
-            if (typeof id !== `number`) {
-                throw new Error(`Function param 'id' isn't number.`);
-            }
             let isValid = false;
             const hero = G.heroes[id];
             if (hero === undefined) {
@@ -807,17 +776,18 @@ export const moveValidators = {
             }
             const validators = hero.pickValidators;
             if (validators !== undefined) {
-                let validator;
+                let validator, _exhaustiveCheck;
                 for (validator in validators) {
-                    switch (validator) {
-                        case PickHeroCardValidatorNames.Conditions:
-                            isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
-                            break;
-                        case PickHeroCardValidatorNames.DiscardCard:
-                            isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
-                            break;
-                        default:
-                            throw new Error(`Отсутствует валидатор ${validator} для выбора карт героя.`);
+                    if (validator === PickHeroCardValidatorNames.conditions) {
+                        isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
+                    }
+                    else if (validator === PickHeroCardValidatorNames.discardCard) {
+                        isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
+                    }
+                    else {
+                        _exhaustiveCheck = validator;
+                        throw new Error(`Отсутствует валидатор для выбора карты героя.`);
+                        return _exhaustiveCheck;
                     }
                 }
             }
@@ -929,7 +899,7 @@ export const moveValidators = {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
             // TODO Same logic for Ylud placement!
             let moveArgument;
-            if (G.solo && ctx.currentPlayer === `1`) {
+            if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
                 const soloBotPublicPlayer = G.publicPlayers[1];
                 if (soloBotPublicPlayer === undefined) {
                     return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
@@ -974,15 +944,6 @@ export const moveValidators = {
         moveName: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         validate: (G, ctx, id) => {
             var _a;
-            if (typeof id !== `object`) {
-                throw new Error(`Function param 'id' isn't object.`);
-            }
-            if (id === null) {
-                throw new Error(`Function param 'id' is null.`);
-            }
-            if (!(`coinId` in id)) {
-                throw new Error(`Function param 'id' hasn't 'coinId'.`);
-            }
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -1122,6 +1083,7 @@ export const moveBy = {
         default1: moveValidators.GetMjollnirProfitMoveValidator,
     },
 };
+// TODO Move to function generic type with extends number & SuitNamesKeyofTypeofType
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>

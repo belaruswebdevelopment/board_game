@@ -1,6 +1,6 @@
 import { actionCardsConfigArray } from "./data/RoyalOfferingCardData";
 import { RusCardTypeNames } from "./typescript/enums";
-import type { CanBeUndefType, CreateRoyalOfferingCardType, INumberValues, IPlayersNumberTierCardData, IRoyalOfferingCard, IRoyalOfferingCardConfig } from "./typescript/interfaces";
+import type { CanBeUndefType, CreateRoyalOfferingCardType, IndexOf, INumberValues, IPlayersNumberTierCardData, IRoyalOfferingCard, IRoyalOfferingCardConfig, RoyalOfferingsConfigType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты королевских наград.</h3>
@@ -16,11 +16,9 @@ import type { CanBeUndefType, CreateRoyalOfferingCardType, INumberValues, IPlaye
 export const BuildRoyalOfferingCards = (data: IPlayersNumberTierCardData): IRoyalOfferingCard[] => {
     const cards: IRoyalOfferingCard[] = [];
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
-        const currentActionCardConfig: CanBeUndefType<IRoyalOfferingCardConfig> = actionCardsConfigArray[i];
-        if (currentActionCardConfig === undefined) {
-            throw new Error(`В массиве конфигов карт '${RusCardTypeNames.Royal_Offering_Card}' отсутствует значение с id '${i}'.`);
-        }
-        const amountPlayersValue: CanBeUndefType<INumberValues> = currentActionCardConfig.amount()[data.players];
+        const currentActionCardConfig: IRoyalOfferingCardConfig =
+            actionCardsConfigArray[i as IndexOf<RoyalOfferingsConfigType>],
+            amountPlayersValue: CanBeUndefType<INumberValues> = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
             throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}'.`);
         }

@@ -1,7 +1,6 @@
-import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
-import { ArtefactNames, ErrorNames, LogTypeNames } from "../typescript/enums";
+import { ArtefactNames, LogTypeNames } from "../typescript/enums";
 /**
 * <h3>Заполняет лагерь новой картой из карт лагерь деки текущей эпохи.</h3>
 * <p>Применения:</p>
@@ -75,9 +74,6 @@ const AddRemainingCampCardsToDiscard = (G) => {
  */
 export const DiscardCardFromTavernJarnglofi = (G, ctx) => {
     const currentTavernConfig = tavernsConfig[G.currentTavern];
-    if (currentTavernConfig === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined, G.currentTavern);
-    }
     AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
     const isCardDiscarded = DiscardCardFromTavern(G, ctx);
     if (!isCardDiscarded) {
@@ -98,9 +94,6 @@ export const DiscardCardFromTavernJarnglofi = (G, ctx) => {
 export const DiscardCardIfCampCardPicked = (G, ctx) => {
     if (G.campPicked) {
         const currentTavernConfig = tavernsConfig[G.currentTavern];
-        if (currentTavernConfig === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined, G.currentTavern);
-        }
         AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
         const isCardDiscarded = DiscardCardFromTavern(G, ctx);
         if (!isCardDiscarded) {
@@ -120,11 +113,7 @@ export const DiscardCardIfCampCardPicked = (G, ctx) => {
  */
 export const RefillCamp = (G) => {
     AddRemainingCampCardsToDiscard(G);
-    const campDeck1 = G.secret.campDecks[1];
-    if (campDeck1 === undefined) {
-        throw new Error(`Колода карт лагеря '2' эпохи не может отсутствовать.`);
-    }
-    const index = campDeck1.findIndex((card) => card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
+    const campDeck1 = G.secret.campDecks[1], index = campDeck1.findIndex((card) => card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
     if (index === -1) {
         throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '2' эпохи.`);
     }

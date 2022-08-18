@@ -112,11 +112,7 @@ export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         for (let j = 0; j < 3; j++) {
-            const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
-            if (deck1 === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-            }
-            const card: CanBeUndefType<DeckCardTypes> = deck1[j];
+            const card: CanBeUndefType<DeckCardTypes> = G.secret.decks[1][j];
             if (card === undefined) {
                 throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
             }
@@ -138,13 +134,9 @@ export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
 export const OnTroopEvaluationTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        const deck1: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[1];
-        if (deck1 === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.DeckIsUndefined, 1);
-        }
-        deck1.splice(G.explorerDistinctionCardId, 1);
-        G.deckLength[1] = deck1.length;
-        G.secret.decks[1] = ctx.random!.Shuffle(deck1);
+        G.secret.decks[1].splice(G.explorerDistinctionCardId, 1);
+        G.deckLength[1] = G.secret.decks[1].length;
+        G.secret.decks[1] = ctx.random!.Shuffle(G.secret.decks[1]);
         G.explorerDistinctionCardId = null;
     }
 };

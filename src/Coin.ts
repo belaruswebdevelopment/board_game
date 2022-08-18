@@ -16,6 +16,7 @@ import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinTy
 export const BuildCoins = (coinConfig: CoinConfigArraysType, options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
+        // TODO Rework in tuple to remove config === undefined?
         const config: CanBeUndefType<CoinConfigType> = coinConfig[i];
         if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);

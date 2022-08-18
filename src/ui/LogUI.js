@@ -29,7 +29,7 @@ export const DrawLogData = (G) => {
                         break;
                     default:
                         _exhaustiveCheck = log.type;
-                        throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
+                        throw new Error(`Попытка отобразить недопустимый тип логов.`);
                         return _exhaustiveCheck;
                 }
                 loggingData.push(_jsx("li", { className: className, children: log.value }, `Log ${i}`));

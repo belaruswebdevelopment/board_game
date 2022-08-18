@@ -46,7 +46,7 @@ const DistinctionAwardingDispatcherSwitcher = (actionName) => {
             break;
         default:
             _exhaustiveCheck = actionName;
-            throw new Error(`Нет такого действия '${actionName}'.`);
+            throw new Error(`Нет такого действия.`);
             return _exhaustiveCheck;
     }
     return action;

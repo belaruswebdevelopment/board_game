@@ -27,11 +27,8 @@ export const CreatePriority = ({ isExchangeable = true, value, } = {}) => ({
  * @returns Массив базовых кристаллов.
  */
 export const GeneratePrioritiesForPlayerNumbers = (numPlayers, solo) => {
-    const priorityConfig = prioritiesConfig[solo ? 1 : numPlayers];
-    if (priorityConfig === undefined) {
-        throw new Error(`В массиве конфига приоритетов отсутствует конфиг для количества игроков - '${numPlayers}'.`);
-    }
-    return priorityConfig.map((priority) => priority);
+    const priorityNum = ((solo ? 1 : numPlayers) - 1);
+    return prioritiesConfig[priorityNum].map((priority) => priority);
 };
 /**
  * <h3>Массив кристаллов приоритетов.</h3>
@@ -72,11 +69,11 @@ const priorities = [
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
  */
-const prioritiesConfig = {
-    1: priorities.slice(0, 2),
-    2: priorities.slice(-2),
-    3: priorities.slice(-3),
-    4: priorities.slice(-4),
-    5: priorities.slice(-5),
-};
+const prioritiesConfig = [
+    priorities.slice(0, 2),
+    priorities.slice(-2),
+    priorities.slice(-3),
+    priorities.slice(-4),
+    priorities.slice(-5),
+];
 //# sourceMappingURL=Priority.js.map

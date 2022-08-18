@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, ErrorNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, IActionFunctionWithoutParams, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -98,7 +98,7 @@ export const StartVidofnirVedrfolnirAction: IActionFunctionWithoutParams = (G: I
             ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinType[];
-    if (G.multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -120,7 +120,7 @@ export const StartVidofnirVedrfolnirAction: IActionFunctionWithoutParams = (G: I
             stack: IStack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
             let boardCoin: CanBeUndefType<PublicPlayerCoinType>;
-            if (G.multiplayer) {
+            if (G.mode === GameModeNames.Multiplayer) {
                 boardCoin = privatePlayer.boardCoins[j];
                 if (boardCoin === undefined) {
                     throw new Error(`В массиве приватных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);

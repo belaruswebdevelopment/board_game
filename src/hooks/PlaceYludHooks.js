@@ -4,7 +4,7 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
  * <p>Применения:</p>
@@ -18,7 +18,7 @@ import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
  */
 export const CheckEndPlaceYludPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
-        if (G.solo && G.tierToEnd === 0) {
+        if (G.mode === GameModeNames.Solo1 && G.tierToEnd === 0) {
             // TODO Check it!
             return true;
         }

@@ -6,7 +6,7 @@ import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, InvalidMoveType, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, InvalidMoveType, IPublicPlayer, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
@@ -20,8 +20,8 @@ import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, InvalidMov
  * @param level Уровень сложности в режиме соло игры.
  * @returns
  */
-export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, level: number):
-    CanBeVoidType<InvalidMoveType> => {
+export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
+    level: SoloGameDifficultyLevelArgType): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.default1, level);
     if (!isValidMove) {

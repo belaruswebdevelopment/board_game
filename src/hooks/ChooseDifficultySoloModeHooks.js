@@ -5,7 +5,7 @@ import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { ErrorNames, HeroNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
  * <p>Применения:</p>
@@ -29,7 +29,7 @@ export const CheckChooseDifficultySoloModeOrder = (G, ctx) => CheckPlayersBasicO
  * @returns
  */
 export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
-    if (G.solo) {
+    if (G.mode === GameModeNames.Solo1) {
         if (ctx.currentPlayer === `1`) {
             const soloBotPublicPlayer = G.publicPlayers[1];
             if (soloBotPublicPlayer === undefined) {

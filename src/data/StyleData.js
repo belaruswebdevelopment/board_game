@@ -24,6 +24,7 @@ const promosPath = `url(/img/cards/promos/promo_thingvellir.png)`;
  * <h3>Путь к изображениям таверн.</h3>
  */
 const tavernsPath = `url(/img/taverns/Taverns.png)`;
+// TODO Add _exhaustiveCheck where possible!
 /**
  * <h3>Стилизация при отображении всех картинок в игре.</h3>
  * <p>Применения:</p>
@@ -145,6 +146,7 @@ export const Styles = {
     }),
     Card: (suit, name, points) => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
+            // TODO Fix it to use _exhaustiveCheck!
             switch (name) {
                 case SpecialCardNames.ChiefBlacksmith:
                     return {
@@ -428,7 +430,7 @@ export const Styles = {
                 };
             default:
                 _exhaustiveCheck = heroName;
-                throw new Error(`Нет такого героя '${heroName}'.`);
+                throw new Error(`Нет такого героя.`);
                 return _exhaustiveCheck;
         }
     },
@@ -546,7 +548,7 @@ export const Styles = {
                 };
             default:
                 _exhaustiveCheck = name;
-                throw new Error(`Нет такой карты '${name}' улучшения монеты.`);
+                throw new Error(`Нет такой карты Королевской награды.`);
                 return _exhaustiveCheck;
         }
     },

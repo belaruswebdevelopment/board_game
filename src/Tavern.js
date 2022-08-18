@@ -1,7 +1,7 @@
 import { ThrowMyError } from "./Error";
 import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
-import { ErrorNames, LogTypeNames, TavernNames } from "./typescript/enums";
+import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
 /**
  * <h3>Проверяет не осталось ли карт в текущей таверне.</h1>
  * <p>Применения:</p>
@@ -13,14 +13,10 @@ import { ErrorNames, LogTypeNames, TavernNames } from "./typescript/enums";
  * </ol>
  *
  * @param G
- * @param ctx
  * @returns Нет ли карт в текущей таверне.
  */
-export const CheckIfCurrentTavernEmpty = (G, ctx) => {
+export const CheckIfCurrentTavernEmpty = (G) => {
     const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
     return currentTavern.every((card) => card === null);
 };
 /**
@@ -34,14 +30,11 @@ export const CheckIfCurrentTavernEmpty = (G, ctx) => {
  * @param ctx
  */
 export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
-    if (!G.solo && ctx.numPlayers !== 2) {
+    if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ctx.numPlayers !== 2) {
         return ThrowMyError(G, ctx, ErrorNames.OnlyInSoloOrTwoPlayersGame);
     }
     const currentTavernConfig = tavernsConfig[G.currentTavern];
-    if (currentTavernConfig === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined, G.currentTavern);
-    }
-    AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при игре ${G.solo ? `в соло режиме` : `на двух игроков в игре`}.`);
+    AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при игре ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) ? `в соло режиме` : `на двух игроков в игре`}.`);
     const isCardDiscarded = DiscardCardFromTavern(G, ctx);
     if (!isCardDiscarded) {
         return ThrowMyError(G, ctx, ErrorNames.DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame, G.currentTavern);
@@ -61,11 +54,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = (G, ctx) => {
-    const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
-    const cardIndex = currentTavern.findIndex((card) => card !== null);
+    const currentTavern = G.taverns[G.currentTavern], cardIndex = currentTavern.findIndex((card) => card !== null);
     if (cardIndex === -1) {
         return ThrowMyError(G, ctx, ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern, G.currentTavern);
     }
@@ -85,11 +74,7 @@ export const DiscardCardFromTavern = (G, ctx) => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardConcreteCardFromTavern = (G, ctx, discardCardIndex) => {
-    const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentTavernIsUndefined, G.currentTavern);
-    }
-    const discardedCard = currentTavern[discardCardIndex];
+    const currentTavern = G.taverns[G.currentTavern], discardedCard = currentTavern[discardCardIndex];
     if (discardedCard === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined, G.currentTavern, discardCardIndex);
     }
@@ -97,9 +82,6 @@ export const DiscardConcreteCardFromTavern = (G, ctx, discardCardIndex) => {
         DiscardPickedCard(G, discardedCard);
         currentTavern.splice(discardCardIndex, 1, null);
         const currentTavernConfig = tavernsConfig[G.currentTavern];
-        if (currentTavernConfig === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentTavernConfigIsUndefined, G.currentTavern);
-        }
         AddDataToLog(G, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
         return true;
     }
@@ -135,14 +117,8 @@ export const RefillTaverns = (G, ctx) => {
             return ThrowMyError(G, ctx, ErrorNames.TavernCanNotBeRefilledBecauseNotEnoughCards, t);
         }
         const tavern = G.taverns[t];
-        if (tavern === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.TavernWithCurrentIdIsUndefined, t);
-        }
         tavern.splice(0, tavern.length, ...refillDeck);
         const tavernConfig = tavernsConfig[t];
-        if (tavernConfig === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.TavernConfigWithCurrentIdIsUndefined, t);
-        }
         AddDataToLog(G, LogTypeNames.Game, `Таверна ${tavernConfig.name} заполнена новыми картами.`);
     }
     AddDataToLog(G, LogTypeNames.Game, `Все таверны заполнены новыми картами.`);
@@ -155,15 +131,15 @@ export const RefillTaverns = (G, ctx) => {
  * <li>При описании названия таверн в уникальных ключах.</li>
  * </ol>
  */
-export const tavernsConfig = {
-    0: {
+export const tavernsConfig = [
+    {
         name: TavernNames.LaughingGoblin,
     },
-    1: {
+    {
         name: TavernNames.DancingDragon,
     },
-    2: {
+    {
         name: TavernNames.ShiningHorse,
     },
-};
+];
 //# sourceMappingURL=Tavern.js.map

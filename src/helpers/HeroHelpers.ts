@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, ErrorNames, StageNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
 import type { CanBeUndefType, IHeroCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
@@ -27,8 +27,9 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     }
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
         const playerCards: PlayerCardType[][] = Object.values(player.cards),
-            heroesLength: number = G.solo ? player.heroes.filter((hero: IHeroCard): boolean =>
-                hero.name.startsWith(`Dwerg`)).length : player.heroes.length,
+            heroesLength: number =
+                G.mode === GameModeNames.Solo1 ? player.heroes.filter((hero: IHeroCard): boolean =>
+                    hero.name.startsWith(`Dwerg`)).length : player.heroes.length,
             isCanPickHero: boolean =
                 Math.min(...playerCards.map((item: PlayerCardType[]): number =>
                     item.reduce(TotalRank, 0))) > heroesLength,

@@ -66,7 +66,7 @@ export const IsCanPickHeroWithConditionsValidator = (G, ctx, id) => {
     }
     const conditions = (_a = hero.pickValidators) === null || _a === void 0 ? void 0 : _a.conditions;
     if (conditions === undefined) {
-        throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.Conditions}'.`);
+        throw new Error(`У карты ${RusCardTypeNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.conditions}'.`);
     }
     let isValidMove = false, condition;
     for (condition in conditions) {

@@ -31,7 +31,7 @@ export const DrawLogData = (G: IMyGameState): CanBeNullType<JSX.Element> => {
                         break;
                     default:
                         _exhaustiveCheck = log.type;
-                        throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
+                        throw new Error(`Попытка отобразить недопустимый тип логов.`);
                         return _exhaustiveCheck;
                 }
                 loggingData.push(

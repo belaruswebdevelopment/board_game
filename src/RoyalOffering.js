@@ -14,11 +14,7 @@ import { RusCardTypeNames } from "./typescript/enums";
 export const BuildRoyalOfferingCards = (data) => {
     const cards = [];
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
-        const currentActionCardConfig = actionCardsConfigArray[i];
-        if (currentActionCardConfig === undefined) {
-            throw new Error(`В массиве конфигов карт '${RusCardTypeNames.Royal_Offering_Card}' отсутствует значение с id '${i}'.`);
-        }
-        const amountPlayersValue = currentActionCardConfig.amount()[data.players];
+        const currentActionCardConfig = actionCardsConfigArray[i], amountPlayersValue = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
             throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}'.`);
         }
