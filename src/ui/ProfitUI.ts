@@ -1,9 +1,106 @@
 import type { Ctx } from "boardgame.io";
-import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import type { BoardProps } from "boardgame.io/react";
 import { ThrowMyError } from "../Error";
-import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
+
+/**
+ * <h3>Отрисовка для выбора уровня сложности стратегий соло бота Андвари соло игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Поле для выбора уровня сложности стратегий соло бота Андвари соло игры.
+ */
+export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, ctx: Ctx,
+    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
+    CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyNames[]>> => {
+    const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyNames[]> = [],
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+    }
+    for (let j = 0; j < 3; j++) {
+        if (j === 0) {
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, ButtonNames.NoHeroEasyStrategy, player,
+                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
+            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+                moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
+            }
+        } else if (j === 1) {
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, ButtonNames.NoHeroHardStrategy, player,
+                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    SoloGameAndvariStrategyNames.NoHeroHardStrategy);
+            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+                moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroHardStrategy);
+            }
+        } else if (j === 2) {
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, ButtonNames.WithHeroEasyStrategy, player,
+                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
+            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+                moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
+            }
+        } else {
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, ButtonNames.WithHeroHardStrategy, player,
+                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    SoloGameAndvariStrategyNames.WithHeroHardStrategy);
+            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+                moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroHardStrategy);
+            }
+        }
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
+};
+
+/**
+ * <h3>Отрисовка для выбора варианта уровня сложности стратегий соло бота Андвари соло игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Поле для выбора варианта уровня сложности стратегий соло бота Андвари соло игры.
+ */
+export const ChooseDifficultyVariantLevelForSoloModeAndvariProfit = (G: IMyGameState, ctx: Ctx,
+    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
+    CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>> => {
+    const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]> = [],
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+    }
+    for (let j = 0; j < 3; j++) {
+        if (data !== undefined && boardCells !== undefined) {
+            DrawButton(data, boardCells, String(j + 1), player,
+                MoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
+        } else if (validatorName === MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
+            moveMainArgs.push(j + 1);
+        }
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
+};
 
 /**
  * <h3>Отрисовка для выбора уровня сложности соло игры.</h3>
@@ -21,8 +118,8 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  */
 export const ChooseDifficultyLevelForSoloModeProfit = (G: IMyGameState, ctx: Ctx,
     validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
-    CanBeVoidType<MoveArgumentsType<number[]>> => {
-    const moveMainArgs: MoveArgumentsType<number[]> = [],
+    CanBeVoidType<MoveArgumentsType<SoloGameDifficultyLevelArgType[]>> => {
+    const moveMainArgs: MoveArgumentsType<SoloGameDifficultyLevelArgType[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -106,6 +203,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<number[]>> => {
     const moveMainArgs: MoveArgumentsType<number[]> = [];
+    // TODO Draw only one for Solo bot Andvari?
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
         const card: CanBeUndefType<DeckCardTypes> = G.explorerDistinctionCards[j];
         if (card === undefined) {
@@ -123,7 +221,9 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
         if (data !== undefined && boardCells !== undefined) {
             DrawCard(data, boardCells, card, j, player, suit,
                 MoveNames.ClickCardToPickDistinctionMove, j);
-        } else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator) {
+        } else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator
+            || MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator
+            || MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
             moveMainArgs.push(j);
         } else {
             throw new Error(`Функция должна иметь один из ключевых параметров.`);

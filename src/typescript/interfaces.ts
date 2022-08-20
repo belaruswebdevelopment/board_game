@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, BuffNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SpecialCardNames, StageNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, BuffNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 /**
  * <h3>Интерфейс для скрытых от всех игроков данных.</h3>
@@ -266,6 +266,8 @@ export interface IAction<TName extends ActionNamesType, TParams extends ActionPa
 export interface IStackData {
     readonly addCoinToPouch: () => IStack;
     readonly brisingamensEndGameAction: () => IStack;
+    readonly chooseStrategyLevelForSoloModeAndvari: () => IStack;
+    readonly chooseStrategyVariantLevelForSoloModeAndvari: () => IStack;
     readonly discardCardFromBoardBonfur: () => IStack;
     readonly discardCardFromBoardCrovaxTheDoppelganger: () => IStack;
     readonly discardCardFromBoardDagda: (pickedSuit?: SuitNamesKeyofTypeofType) => IStack;
@@ -285,6 +287,7 @@ export interface IStackData {
     readonly pickDiscardCardBrisingamens: (priority?: 3) => IStack;
     readonly pickDistinctionCard: () => IStack;
     readonly pickDistinctionCardSoloBot: () => IStack;
+    readonly pickDistinctionCardSoloBotAndvari: () => IStack;
     readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3) =>
         IStack;
     readonly placeThrudHero: () => IStack;
@@ -292,6 +295,7 @@ export interface IStackData {
     readonly placeYludHero: () => IStack;
     readonly pickHero: (priority: OneOrTwoStackPriorityType) => IStack;
     readonly pickHeroSoloBot: () => IStack;
+    readonly pickHeroSoloBotAndvari: () => IStack;
     readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
     readonly startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueType,
         coinId?: number, priority?: 3) => IStack;
@@ -521,6 +525,8 @@ export interface ILogData {
 export interface IMyGameState {
     readonly mode: GameModeNames;
     soloGameDifficultyLevel: CanBeNullType<SoloGameDifficultyLevelType>;
+    soloGameAndvariStrategyVariantLevel: CanBeNullType<SoloGameAndvariStrategyVariantLevelType>;
+    soloGameAndvariStrategyLevel: CanBeNullType<SoloGameAndvariStrategyNames>;
     odroerirTheMythicCauldron: boolean;
     readonly odroerirTheMythicCauldronCoins: ICoin[];
     readonly averageCards: SuitPropertyType<IDwarfCard>;
@@ -550,8 +556,11 @@ export interface IMyGameState {
     exchangeOrder: CanBeUndefType<number>[];
     readonly expansions: ExpansionsType;
     readonly heroes: IHeroCard[];
-    readonly heroesForSoloBot: IHeroCard[];
+    readonly heroesForSoloBot: CanBeNullType<HeroesForSoloGameArrayType>;
     heroesForSoloGameDifficultyLevel: CanBeNullType<IHeroCard[]>;
+    heroesInitialForSoloGameForBotAndvari: CanBeNullType<HeroesInitialForSoloGameForBotAndvariArrayType>;
+    heroesForSoloGameForStrategyBotAndvari: CanBeNullType<HeroesForSoloGameForStrategyBotAndvariArrayType>;
+    readonly strategyForSoloBotAndvari: IStrategyForSoloBotAndvari;
     readonly log: boolean;
     readonly logData: ILogData[];
     readonly marketCoins: ICoin[];
@@ -568,6 +577,19 @@ export interface IMyGameState {
     readonly publicPlayers: IPublicPlayers;
     publicPlayersOrder: string[];
     readonly winner: number[];
+}
+
+/**
+ * <h3>Интерфейс для стратегий соло бота Андвари.</h3>
+ */
+export interface IStrategyForSoloBotAndvari {
+    general: {
+        [index: number]: SuitNamesKeyofTypeofType;
+    },
+    reserve: {
+        [index: number]: SuitNamesKeyofTypeofType;
+    };
+
 }
 
 /**
@@ -658,6 +680,7 @@ export interface IMoveCardsPlayerIdArguments extends IPlayerId {
  * <h3>Интерфейс для возможных валидаторов у мувов.</h3>
  */
 export interface IMoveBy {
+    readonly chooseDifficultySoloModeAndvari: IMoveByChooseDifficultySoloModeAndvariOptions;
     readonly chooseDifficultySoloMode: IMoveByChooseDifficultySoloModeOptions;
     readonly bids: IMoveByBidOptions;
     readonly bidUline: IMoveByBidUlineOptions;
@@ -681,11 +704,20 @@ export interface IMoveByChooseDifficultySoloModeOptions {
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
+export interface IMoveByChooseDifficultySoloModeAndvariOptions {
+    readonly default1: IMoveValidator<MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>>;
+    readonly default2: IMoveValidator<MoveArgumentsType<SoloGameAndvariStrategyNames[]>>;
+}
+
+/**
+ * <h3>Интерфейс для возможных валидаторов у мува.</h3>
+ */
 export interface IMoveByBidOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly default2: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly default3: IMoveValidator<MoveArgumentsType<number[][]>>;
     readonly default4: IMoveValidator<MoveArgumentsType<number[][]>>;
+    readonly default5: IMoveValidator<MoveArgumentsType<number[][]>>;
 }
 
 /**
@@ -700,6 +732,13 @@ export interface IMoveByBidUlineOptions {
  */
 export interface IMoveBySoloBotOptions {
     readonly pickHeroSoloBot: IMoveValidator<MoveArgumentsType<number[]>>;
+}
+
+/**
+ * <h3>Интерфейс для возможных валидаторов у мува.</h3>
+ */
+export interface IMoveBySoloBotAndvariOptions {
+    readonly pickHeroSoloBotAndvari: IMoveValidator<MoveArgumentsType<number[]>>;
 }
 
 /**
@@ -724,7 +763,8 @@ interface IMoveByCommonOptions {
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByTavernsResolutionOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions {
+export interface IMoveByTavernsResolutionOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions,
+    IMoveBySoloBotAndvariOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly default2: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly discardCard: IMoveValidator<MoveArgumentsType<number[]>>;
@@ -744,16 +784,20 @@ export interface IMoveByEnlistmentMercenariesOptions extends IMoveByCommonOption
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByPlaceYludOptions extends IMoveByCommonOptions {
+export interface IMoveByPlaceYludOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions,
+    IMoveBySoloBotAndvariOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByTroopEvaluationOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions {
+export interface IMoveByTroopEvaluationOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions,
+    IMoveBySoloBotAndvariOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
     readonly pickDistinctionCard: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly pickDistinctionCardSoloBot: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly pickDistinctionCardSoloBotAndvari: IMoveValidator<MoveArgumentsType<number[]>>;
 }
 
 /**
@@ -780,6 +824,7 @@ export interface IMoveValidator<GetRangeType extends MoveValidatorGetRangeType> 
         : GetRangeType extends IMoveCardsPlayerIdArguments ? MoveCardPlayerCurrentIdType
         : GetRangeType extends IMoveCoinsArguments[] ? IMoveCoinsArguments
         : GetRangeType extends SuitNamesKeyofTypeofType[] ? SuitNamesKeyofTypeofType
+        : GetRangeType extends SoloGameAndvariStrategyNames[] ? SoloGameAndvariStrategyNames
         : GetRangeType extends number[][] ? number[]
         : GetRangeType extends number[] ? number
         : GetRangeType extends null ? null
@@ -790,6 +835,7 @@ export interface IMoveValidator<GetRangeType extends MoveValidatorGetRangeType> 
         : GetRangeType extends IMoveCardsPlayerIdArguments ? MoveCardPlayerCurrentIdType
         : GetRangeType extends IMoveCoinsArguments[] ? IMoveCoinsArguments
         : GetRangeType extends SuitNamesKeyofTypeofType[] ? SuitNamesKeyofTypeofType
+        : GetRangeType extends SoloGameAndvariStrategyNames[] ? SoloGameAndvariStrategyNames
         : GetRangeType extends number[][] ? number[]
         : GetRangeType extends number[] ? number
         : GetRangeType extends null ? null
@@ -822,9 +868,18 @@ export interface IMoveValidators {
     // Solo Bot
     readonly SoloBotPlaceAllCoinsMoveValidator: IMoveValidator<MoveArgumentsType<number[][]>>;
     readonly SoloBotClickHeroCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly SoloBotClickCardToPickDistinctionMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     // Solo Mode
     readonly ChooseDifficultyLevelForSoloModeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ChooseHeroesForSoloModeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
+    // Solo Mode Andvari
+    readonly ChooseStrategyForSoloModeAndvariMoveValidator:
+    IMoveValidator<MoveArgumentsType<SoloGameAndvariStrategyNames[]>>;
+    readonly ChooseStrategyVariantForSoloModeAndvariMoveValidator:
+    IMoveValidator<MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>>;
+    readonly SoloBotAndvariPlaceAllCoinsMoveValidator: IMoveValidator<MoveArgumentsType<number[][]>>;
+    readonly SoloBotAndvariClickHeroCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly SoloBotAndvariClickCardToPickDistinctionMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     // start
     readonly AddCoinToPouchMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
@@ -1159,7 +1214,7 @@ type ZeroOrOne = 0 | 1;
 /**
  * <h3>Типы данных для 0 | 1 | 2.</h3>
  */
-type ZeroOrOneOrTwo = ZeroOrOne | 2;
+export type ZeroOrOneOrTwo = ZeroOrOne | 2;
 
 /**
  * <h3>Типы данных для 3 | 4 | 5.</h3>
@@ -1202,6 +1257,11 @@ export type SoloGameDifficultyLevelType = ZeroOrOneOrTwo | ThreeOrFourOrFive | 6
  * <h3>Типы данных для значений аргументов уровня сложности соло режима.</h3>
  */
 export type SoloGameDifficultyLevelArgType = Exclude<SoloGameDifficultyLevelType, 6>;
+
+/**
+ * <h3>Типы данных для вариантов значений уровня сложности стратегий соло бота Андвари для соло режима.</h3>
+ */
+export type SoloGameAndvariStrategyVariantLevelType = 1 | 2 | 3;
 
 /**
  * <h3>Типы данных для всех типов карт.</h3>
@@ -1290,6 +1350,16 @@ export type GameNamesKeyofTypeofType = KeyofType<typeof GameNames>;
 export type HeroNamesKeyofTypeofType = KeyofType<typeof HeroNames>;
 
 /**
+ * <h3>Типы данных для ключей перечислений названий героев для лёгкого уровня сложности стратегий соло бота Андвари.</h3>
+ */
+export type HeroNamesForEasyStrategyAndvariKeyofTypeofType = KeyofType<SoloGameAndvariEasyStrategyHeroesConfigType>;
+
+/**
+ * <h3>Типы данных для ключей перечислений названий героев для сложного уровня сложности стратегий соло бота Андвари.</h3>
+ */
+export type HeroNamesForHardStrategyAndvariKeyofTypeofType = KeyofType<SoloGameAndvariHardStrategyHeroesConfigType>;
+
+/**
  * <h3>Типы данных для ключей перечислений названий особых карт.</h3>
  */
 export type SpecialCardNamesKeyofTypeofType = KeyofType<typeof SpecialCardNames>;
@@ -1332,6 +1402,7 @@ export type MoveArgumentsType<T extends MoveArgumentsArgsType> =
     : T extends IMoveCardsPlayerIdArguments ? IMoveCardsPlayerIdArguments
     : T extends IMoveCoinsArguments[] ? IMoveCoinsArguments[]
     : T extends SuitNamesKeyofTypeofType[] ? SuitNamesKeyofTypeofType[]
+    : T extends SoloGameAndvariStrategyNames[] ? SoloGameAndvariStrategyNames[]
     : T extends number[][] ? number[][]
     : T extends number[] ? number[]
     : T extends null ? null
@@ -1344,6 +1415,7 @@ export type MoveValidatorGetRangeType = MoveArgumentsType<Partial<SuitPropertyTy
     | MoveArgumentsType<IMoveCardsPlayerIdArguments>
     | MoveArgumentsType<IMoveCoinsArguments[]>
     | MoveArgumentsType<SuitNamesKeyofTypeofType[]>
+    | MoveArgumentsType<SoloGameAndvariStrategyNames[]>
     | MoveArgumentsType<number[][]>
     | MoveArgumentsType<number[]>
     | MoveArgumentsType<null>;
@@ -1352,13 +1424,13 @@ export type MoveValidatorGetRangeType = MoveArgumentsType<Partial<SuitPropertyTy
 * <h3>Типы данных для типов аргументов мува.</h3>
 */
 type MoveArgumentsArgsType = CanBeNullType<Partial<SuitPropertyType<number[]>> | IMoveCardsPlayerIdArguments
-    | IMoveCoinsArguments[] | SuitNamesKeyofTypeofType[] | number[][] | number[]>;
+    | IMoveCoinsArguments[] | SuitNamesKeyofTypeofType[] | SoloGameAndvariStrategyNames[] | number[][] | number[]>;
 
 /**
 * <h3>Типы данных для валидации значений для мувов.</h3>
 */
 export type ValidMoveIdParamType = CanBeNullType<number | SuitNamesKeyofTypeofType | number[] | IMoveSuitCardCurrentId
-    | MoveCardPlayerCurrentIdType | IMoveCoinsArguments>;
+    | MoveCardPlayerCurrentIdType | IMoveCoinsArguments | SoloGameAndvariStrategyNames>;
 
 /**
  * <h3>Типы данных для конфига валидаторов карт.</h3>
@@ -1460,7 +1532,7 @@ export type MythologicalCreatureNameTypes = GiantNames | GodNames | MythicalAnim
 /**
  * <h3>Типы данных для остаточных аргументов функций.</h3>
  */
-export type ArgsType = (CoinTypeNames | SuitNamesKeyofTypeofType | number)[];
+export type ArgsType = (CoinTypeNames | SuitNamesKeyofTypeofType | number | SoloGameAndvariStrategyNames)[];
 
 /**
  * <h3>Типы данных для аргументов автоматических действий.</h3>
@@ -1495,8 +1567,8 @@ export type ErrorArgsTypes = (string | number)[];
 /**
  * <h3>Типы данных для аргументов мувов.</h3>
  */
-export type MoveArgsType =
-    number[][] | [SuitNamesKeyofTypeofType] | [number] | [SuitNamesKeyofTypeofType, number] | [number, CoinTypeNames];
+export type MoveArgsType = [SoloGameAndvariStrategyNames] | number[][] | [SuitNamesKeyofTypeofType] | [number]
+    | [SuitNamesKeyofTypeofType, number] | [number, CoinTypeNames];
 
 /**
  * <h3>Тип для создания карты улучшения монеты.</h3>
@@ -1654,7 +1726,24 @@ export type StrengthTokenNotchPointsType = [number, number, number, number, numb
 /**
  * <h3>Тип для данных создания всех массивов карт героев.</h3>
  */
-export type BuildHeroesArraysType = [IHeroCard[], IHeroCard[], IHeroCard[]];
+export type BuildHeroesArraysType = [IHeroCard[], CanBeNullType<HeroesForSoloGameArrayType>, CanBeNullType<IHeroCard[]>,
+    CanBeNullType<HeroesInitialForSoloGameForBotAndvariArrayType>];
+
+/**
+ * <h3>Тип для данных массива всех карт героев для стратегий соло бота Андвари в соло игре.</h3>
+ */
+export type HeroesForSoloGameForStrategyBotAndvariArrayType = [IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard];
+
+/**
+ * <h3>Тип для данных массива всех карт героев для соло бота.</h3>
+ */
+export type HeroesForSoloGameArrayType = [IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard];
+
+/**
+ * <h3>Тип для данных массива всех карт героев для выбора уровня сложности для соло бота.</h3>
+ */
+export type HeroesInitialForSoloGameForBotAndvariArrayType =
+    [IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard];
 
 /**
  * <h3>Тип для названий действий.</h3>
@@ -1681,6 +1770,20 @@ export type CreatePublicPlayerType =
 */
 export type SoloGameDifficultyLevelHeroesConfigType =
     Pick<HeroConfigType, `Astrid` | `Grid` | `Skaa` | `Thrud` | `Uline` | `Ylud`>;
+
+/**
+* <h3>Тип для конфига лёгких стратегий соло бота Андвари для соло игры.</h3>
+*/
+export type SoloGameAndvariEasyStrategyHeroesConfigType =
+    Pick<HeroConfigType, `Bonfur` | `Hourya` | `Kraal` | `Zoral` | `Dagda`>;
+
+/**
+* <h3>Тип для конфига сложных стратегий соло бота Андвари для соло игры.</h3>
+*/
+export type SoloGameAndvariHardStrategyHeroesConfigType =
+    Pick<HeroConfigType, `Lokdur` | `Idunn` | `Tarah` | `Aral` | `Aegur`>;
+
+export type SoloGameAndvariHeroesForPlayersConfigType = Pick<HeroConfigType, `Astrid` | `Dwerg_Aesir` | `Dwerg_Bergelmir` | `Dwerg_Jungir` | `Dwerg_Sigmir` | `Dwerg_Ymir` | `Grid` | `Skaa` | `Thrud` | `Uline` | `Ylud`>;
 
 /**
 * <h3>Тип для конфига героев для соло бота для соло игры.</h3>

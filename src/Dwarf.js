@@ -44,7 +44,7 @@ export const BuildDwarfCards = (data) => {
             cards.push(CreateDwarfCard({
                 suit: suitsConfig[suit].suit,
                 points: currentPoints,
-                name: `(фракция: ${suitsConfig[suitsConfig[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                name: `(фракция: ${suitsConfig[suitsConfig[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
             }));
         }
     }

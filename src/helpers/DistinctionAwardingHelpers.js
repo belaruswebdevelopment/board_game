@@ -60,6 +60,9 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
         if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
         }
+        else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+            AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBotAndvari()]);
+        }
         else {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCard()]);
         }

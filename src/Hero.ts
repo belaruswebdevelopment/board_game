@@ -1,6 +1,6 @@
-import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { RusCardTypeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CreateHeroCardType, CreateHeroPlayerCardType, GameNamesKeyofTypeofType, HeroNamesKeyofTypeofType, IHeroCard, IHeroData, IHeroPlayerCard } from "./typescript/interfaces";
+import { heroesConfig, soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig, soloGameAndvariHeroesForPlayersConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
+import { GameModeNames, RusCardTypeNames } from "./typescript/enums";
+import type { BuildHeroesArraysType, CanBeNullType, CreateHeroCardType, CreateHeroPlayerCardType, GameNamesKeyofTypeofType, HeroesForSoloGameArrayType, HeroesInitialForSoloGameForBotAndvariArrayType, HeroNamesKeyofTypeofType, IHeroCard, IHeroData, IHeroPlayerCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -10,17 +10,20 @@ import type { BuildHeroesArraysType, CreateHeroCardType, CreateHeroPlayerCardTyp
  * </ol>
  *
  * @param configOptions Конфиг опций героев.
- * @param solo Является ли режим игры соло игрой.
+ * @param mode Режим игры.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], solo: boolean): BuildHeroesArraysType => {
-    const heroes: IHeroCard[] = [],
-        heroesForSoloBot: IHeroCard[] = [],
-        heroesForSoloGameDifficultyLevel: IHeroCard[] = [];
-    let heroName: HeroNamesKeyofTypeofType;
+export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: GameModeNames): BuildHeroesArraysType => {
+    const heroes: IHeroCard[] = [];
+    let heroesForSoloBot: CanBeNullType<IHeroCard[]> = [],
+        heroesForSoloGameDifficultyLevel: CanBeNullType<IHeroCard[]> = [],
+        heroesInitialForSoloGameForBotAndvari: CanBeNullType<IHeroCard[]> = [],
+        heroName: HeroNamesKeyofTypeofType;
     for (heroName in heroesConfig) {
         const heroData: IHeroData = heroesConfig[heroName];
-        if (solo || (!solo && configOptions.includes(heroData.game))) {
+        if ((mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari)
+            || ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
+                && configOptions.includes(heroData.game))) {
             const hero: IHeroCard = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
@@ -32,18 +35,40 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], solo: boo
                 actions: heroData.actions,
                 stack: heroData.stack,
             });
-            if (!solo || solo && heroName in soloGameHeroesForPlayerConfig) {
+            if ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
+                || (mode === GameModeNames.Solo1 && heroName in soloGameHeroesForPlayerConfig)
+                || (mode === GameModeNames.SoloAndvari && heroName in soloGameAndvariHeroesForPlayersConfig)) {
                 heroes.push(hero);
             }
-            if (solo && heroName in soloGameHeroesForBotConfig) {
+            if (mode === GameModeNames.Solo1 && heroName in soloGameHeroesForBotConfig) {
+                if (heroesForSoloBot === null) {
+                    throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
+                }
                 heroesForSoloBot.push(hero);
+            } else {
+                heroesForSoloBot = null;
             }
-            if (solo && heroName in soloGameDifficultyLevelHeroesConfig) {
+            if (mode === GameModeNames.Solo1 && heroName in soloGameDifficultyLevelHeroesConfig) {
+                if (heroesForSoloGameDifficultyLevel === null) {
+                    throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
+                }
                 heroesForSoloGameDifficultyLevel.push(hero);
+            } else {
+                heroesForSoloGameDifficultyLevel = null;
+            }
+            if (mode === GameModeNames.SoloAndvari && (heroName in soloGameAndvariEasyStrategyHeroesConfig
+                || heroName in soloGameAndvariHardStrategyHeroesConfig)) {
+                if (heroesInitialForSoloGameForBotAndvari === null) {
+                    throw new Error(`Набор стартовых героев и героев для стратегии соло бота Андвари не может быть ранее использован.`);
+                }
+                heroesInitialForSoloGameForBotAndvari.push(hero);
+            } else {
+                heroesInitialForSoloGameForBotAndvari = null;
             }
         }
     }
-    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel];
+    return [heroes, heroesForSoloBot as CanBeNullType<HeroesForSoloGameArrayType>, heroesForSoloGameDifficultyLevel,
+        heroesInitialForSoloGameForBotAndvari as CanBeNullType<HeroesInitialForSoloGameForBotAndvariArrayType>];
 };
 
 /**

@@ -6,7 +6,7 @@ import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
+import { ErrorNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -33,16 +33,12 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
  * @returns
  */
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
-    if (G.mode === GameModeNames.Solo1) {
-        if (ctx.currentPlayer === `1`) {
-            const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
-            if (soloBotPublicPlayer === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
-            }
-            return G.heroesForSoloGameDifficultyLevel === null && !soloBotPublicPlayer.stack.length;
+    if (ctx.currentPlayer === `1`) {
+        const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
+        if (soloBotPublicPlayer === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
-    } else {
-        return true;
+        return G.heroesForSoloGameDifficultyLevel === null && !soloBotPublicPlayer.stack.length;
     }
 };
 
@@ -50,7 +46,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx)
  * <h3>Проверяет необходимость завершения хода в фазе 'chooseDifficultySoloMode'.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При каждом действии с монеткой в фазе 'chooseDifficultySoloMode'.</li>
+ * <li>При каждом действии в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
  * @param G

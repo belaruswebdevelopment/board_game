@@ -264,7 +264,8 @@ export const OnTavernsResolutionTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
  */
 export const ResolveCurrentTavernOrders = (G: IMyGameState, ctx: Ctx): void => {
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)) {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)
+            || (G.mode === GameModeNames.SoloAndvari && index === 1)) {
             const privatePlayer: CanBeUndefType<IPlayer> = G.players[index];
             if (privatePlayer === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,

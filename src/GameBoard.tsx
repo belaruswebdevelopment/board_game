@@ -1,9 +1,9 @@
-import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import type { BoardProps } from "boardgame.io/react";
 import React from "react";
 import { GameModeNames } from "./typescript/enums";
 import type { CanBeNullType, IMyGameState } from "./typescript/interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
-import { DrawCamp, DrawCurrentPhaseStage, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
+import { DrawCamp, DrawCurrentPhaseStage, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawMarketCoins, DrawProfit, DrawStrategyForSoloBotAndvariUI, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 
@@ -29,6 +29,10 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             marketCoinsUI: JSX.Element = DrawMarketCoins(this.props.G, this.props),
             drawHeroesUI: JSX.Element =
                 DrawHeroes(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
+            drawStrategyForSoloBotAndvariUI: CanBeNullType<JSX.Element> =
+                this.props.G.mode === GameModeNames.SoloAndvari ?
+                    DrawStrategyForSoloBotAndvariUI(this.props.G, this.props.ctx, this.props) as
+                    JSX.Element : null,
             drawHeroesForSoloBotUI: CanBeNullType<JSX.Element> = this.props.G.mode === GameModeNames.Solo1 ?
                 DrawHeroesForSoloBotUI(this.props.G, this.props.ctx, null, this.props) as
                 JSX.Element : null,
@@ -76,6 +80,7 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                     <div className={`${gridClasses} ${gridColClasses}`}>
                         {drawHeroesUI}
                         {drawHeroesForSoloBotUI}
+                        {drawStrategyForSoloBotAndvariUI}
                     </div>
                     <div className={`${gridClasses} ${gridColClasses}`}>
                         {drawDistinctionsUI}

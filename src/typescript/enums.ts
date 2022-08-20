@@ -156,8 +156,12 @@ export const enum BuffNames {
  * <h3>Перечисление для названия кнопок.</h3>
  */
 export const enum ButtonNames {
-    Start = `Старт`,
+    NoHeroEasyStrategy = `Без стартовых героев (лёгкая стратегия)`,
+    NoHeroHardStrategy = `Без стартовых героев (сложная стратегия)`,
+    WithHeroEasyStrategy = `Со стартовыми героями (лёгкая стратегия)`,
+    WithHeroHardStrategy = `Со стартовыми героями (сложная стратегия)`,
     Pass = `Пас`,
+    Start = `Старт`,
 }
 
 /**
@@ -203,6 +207,8 @@ export const enum CoinTypeNames {
  */
 export const enum ConfigNames {
     ChooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
+    ChooseStrategyLevelForSoloModeAndvari = `ChooseStrategyLevelForSoloModeAndvari`,
+    ChooseStrategyVariantLevelForSoloModeAndvari = `ChooseStrategyVariantLevelForSoloModeAndvari`,
     ExplorerDistinction = `explorerDistinction`,
     GetDifficultyLevelForSoloMode = `getDifficultyLevelForSoloMode`,
     GetHeroesForSoloMode = `getHeroesForSoloMode`,
@@ -219,6 +225,8 @@ export const enum DrawNames {
     Bonfur = `Bonfur`,
     Brisingamens = `Brisingamens`,
     BrisingamensEndGame = `Brisingamens end game`,
+    ChooseStrategyLevelForSoloModeAndvari = `Choose strategy level for solo mode Andvari`,
+    ChooseStrategyVariantLevelForSoloModeAndvari = `Choose strategy variant level for solo mode Andvari`,
     CrovaxTheDoppelganger = `Crovax the Doppelganger`,
     Dagda = `Dagda`,
     DiscardTavernCard = `Discard tavern card`,
@@ -233,9 +241,11 @@ export const enum DrawNames {
     PickCard = `Pick card or camp card`,
     PickCardByExplorerDistinction = `Pick card by Explorer distinction`,
     PickCardByExplorerDistinctionSoloBot = `Pick card by Explorer distinction Solo Bot`,
+    PickCardByExplorerDistinctionSoloBotAndvari = `Pick card by Explorer distinction Solo Bot Andvari`,
     PickConcreteCoinToUpgrade = `Pick concrete coin to upgrade`,
     PickHero = `Pick hero card`,
     PickHeroSoloBot = `Pick hero card Solo Bot`,
+    PickHeroSoloBotAndvari = `Pick hero card Solo Bot Andvari`,
     PlaceEnlistmentMercenaries = `Place Enlistment Mercenaries`,
     PlaceTradingCoinsUline = `Place Trading Coins Uline`,
     PlaceYludHero = `Place Ylud`,
@@ -471,9 +481,16 @@ export const enum MoveNames {
     // Solo Bot
     SoloBotClickHeroCardMove = `SoloBotClickHeroCardMove`,
     SoloBotPlaceAllCoinsMove = `SoloBotPlaceAllCoinsMove`,
+    SoloBotClickCardToPickDistinctionMove = `SoloBotClickCardToPickDistinctionMove`,
     // Solo Mode
     ChooseDifficultyLevelForSoloModeMove = `ChooseDifficultyLevelForSoloModeMove`,
     ChooseHeroForDifficultySoloModeMove = `ChooseHeroForDifficultySoloModeMove`,
+    //Solo Mode Andvari
+    ChooseStrategyForSoloModeAndvariMove = `ChooseStrategyForSoloModeAndvariMove`,
+    ChooseStrategyVariantForSoloModeAndvariMove = `ChooseStrategyVariantForSoloModeAndvariMove`,
+    SoloBotAndvariPlaceAllCoinsMove = `SoloBotAndvariPlaceAllCoinsMove`,
+    SoloBotAndvariClickHeroCardMove = `SoloBotAndvariClickHeroCardMove`,
+    SoloBotAndvariClickCardToPickDistinctionMove = `SoloBotAndvariClickCardToPickDistinctionMove`,
     // start
     AddCoinToPouchMove = `AddCoinToPouchMove`,
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = `ChooseCoinValueForVidofnirVedrfolnirUpgradeMove`,
@@ -497,6 +514,7 @@ export const enum MoveNames {
 export const enum PhaseNames {
     BrisingamensEndGame = `brisingamensEndGame`,
     ChooseDifficultySoloMode = `chooseDifficultySoloMode`,
+    ChooseDifficultySoloModeAndvari = `chooseDifficultySoloModeAndvari`,
     PlaceYlud = `placeYlud`,
     EnlistmentMercenaries = `enlistmentMercenaries`,
     TroopEvaluation = `troopEvaluation`,
@@ -512,6 +530,7 @@ export const enum PhaseNames {
 export enum RusPhaseNames {
     brisingamensEndGame = `brisingamensEndGame`,
     chooseDifficultySoloMode = `Выбор сложности соло режима`,
+    chooseDifficultySoloModeAndvari = `Выбор сложности соло режима Андвари`,
     placeYlud = `Поместить Илуд`,
     enlistmentMercenaries = `enlistmentMercenaries`,
     troopEvaluation = `Смотр войск`,
@@ -564,6 +583,7 @@ export const enum StageNames {
     default2 = `default2`,
     default3 = `default3`,
     default4 = `default4`,
+    default5 = `default5`,
     discardCard = `discardCard`,
     discardBoardCard = `discardBoardCard`,
     discardSuitCard = `discardSuitCard`,
@@ -572,8 +592,10 @@ export const enum StageNames {
     pickDiscardCard = `pickDiscardCard`,
     pickDistinctionCard = `pickDistinctionCard`,
     pickDistinctionCardSoloBot = `pickDistinctionCardSoloBot`,
+    pickDistinctionCardSoloBotAndvari = `pickDistinctionCardSoloBotAndvari`,
     pickHero = `pickHero`,
     pickHeroSoloBot = `pickHeroSoloBot`,
+    pickHeroSoloBotAndvari = `pickHeroSoloBotAndvari`,
     placeEnlistmentMercenaries = `placeEnlistmentMercenaries`,
     placeMultiSuitsCards = `placeMultiSuitsCards`,
     placeTradingCoinsUline = `placeTradingCoinsUline`,
@@ -593,6 +615,7 @@ export enum RusStageNames {
     default2 = `default2`,
     default3 = `default3`,
     default4 = `default4`,
+    default5 = `default5`,
     discardCard = `discardCard`,
     discardBoardCard = `discardBoardCard`,
     discardSuitCard = `discardSuitCard`,
@@ -601,8 +624,10 @@ export enum RusStageNames {
     pickDiscardCard = `pickDiscardCard`,
     pickDistinctionCard = `pickDistinctionCard`,
     pickDistinctionCardSoloBot = `pickDistinctionCardSoloBot`,
+    pickDistinctionCardSoloBotAndvari = `pickDistinctionCardSoloBotAndvari`,
     pickHero = `pickHero`,
     pickHeroSoloBot = `pickHeroSoloBot`,
+    pickHeroSoloBotAndvari = `pickHeroSoloBotAndvari`,
     placeEnlistmentMercenaries = `placeEnlistmentMercenaries`,
     placeMultiSuitsCards = `placeMultiSuitsCards`,
     placeTradingCoinsUline = `placeTradingCoinsUline`,
@@ -629,6 +654,16 @@ export const enum SuitNames {
 export const enum PickHeroCardValidatorNames {
     conditions = `conditions`,
     discardCard = `discardCard`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов для выбора карты героя.</h3>
+ */
+export const enum SoloGameAndvariStrategyNames {
+    NoHeroEasyStrategy = `Без стартовых героев (лёгкая стратегия)`,
+    NoHeroHardStrategy = `Без стартовых героев (сложная стратегия)`,
+    WithHeroEasyStrategy = `Со стартовыми героями (лёгкая стратегия)`,
+    WithHeroHardStrategy = `Со стартовыми героями (сложная стратегия)`,
 }
 
 /**
@@ -681,9 +716,16 @@ export const enum MoveValidatorNames {
     // Solo Bot
     SoloBotClickHeroCardMoveValidator = `SoloBotClickHeroCardMoveValidator`,
     SoloBotPlaceAllCoinsMoveValidator = `SoloBotPlaceAllCoinsMoveValidator`,
+    SoloBotClickCardToPickDistinctionMoveValidator = `SoloBotClickCardToPickDistinctionMoveValidator`,
     // Solo Mode
     ChooseDifficultyLevelForSoloModeMoveValidator = `ChooseDifficultyLevelForSoloModeMoveValidator`,
     ChooseHeroesForSoloModeMoveValidator = `ChooseHeroesForSoloModeMoveValidator`,
+    // Solo Mode Andvari
+    ChooseStrategyForSoloModeAndvariMoveValidator = `ChooseStrategyForSoloModeAndvariMoveValidator`,
+    ChooseStrategyVariantForSoloModeAndvariMoveValidator = `ChooseStrategyVariantForSoloModeAndvariMoveValidator`,
+    SoloBotAndvariPlaceAllCoinsMoveValidator = `SoloBotAndvariPlaceAllCoinsMoveValidator`,
+    SoloBotAndvariClickHeroCardMoveValidator = `SoloBotAndvariClickHeroCardMoveValidator`,
+    SoloBotAndvariClickCardToPickDistinctionMoveValidator = `SoloBotAndvariClickCardToPickDistinctionMoveValidator`,
     // start
     AddCoinToPouchMoveValidator = `AddCoinToPouchMoveValidator`,
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator =

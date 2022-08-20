@@ -81,7 +81,7 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (ctx.phase !== PhaseNames.BidUline) {
-            if (G.mode === GameModeNames.Solo1
+            if (G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari
                 || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                     && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));

@@ -57,7 +57,8 @@ export const StartTrading = (G, ctx, isSoloBotEndRound = false) => {
     }
     const tradingCoins = [];
     for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)) {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)
+            || (G.mode === GameModeNames.SoloAndvari && index === 1)) {
             const privateBoardCoin = privatePlayer.boardCoins[i];
             if (privateBoardCoin === undefined) {
                 throw new Error(`В массиве монет приватного игрока с id '${index}' на поле отсутствует монета с id '${i}'.`);
@@ -89,10 +90,11 @@ export const StartTrading = (G, ctx, isSoloBotEndRound = false) => {
                     throw new Error(`В массиве монет игрока с id '${index}' на поле не может быть обменная монета с id '${i}'.`);
                 }
             }
-            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                || (G.mode === GameModeNames.Solo1 && (index === 1 && isSoloBotEndRound && !boardCoin.isTriggerTrading)
-                    || (index === 1 && !isSoloBotEndRound && !boardCoin.isTriggerTrading)
-                    || index === 0 && !isSoloBotEndRound)) {
+            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
+                || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo1
+                && (index === 1 && isSoloBotEndRound && !boardCoin.isTriggerTrading)
+                || (index === 1 && !isSoloBotEndRound && !boardCoin.isTriggerTrading)
+                || index === 0 && !isSoloBotEndRound)) {
                 tradingCoins.push(boardCoin);
             }
         }

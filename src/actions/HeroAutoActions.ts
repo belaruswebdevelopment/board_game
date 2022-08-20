@@ -37,6 +37,8 @@ export const AddPickHeroAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx
     }
     if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
+    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBotAndvari()]);
     } else {
         AddActionsToStack(G, ctx, [StackData.pickHero(priority)]);
     }
@@ -54,13 +56,17 @@ export const AddPickHeroAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx
  * @param ctx
  */
 export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
-    }
-    for (let i = 0; i < player.boardCoins.length; i++) {
-        if (i > G.currentTavern) {
-            ReturnCoinToPlayerHands(G, ctx, Number(ctx.currentPlayer), i, false);
+    if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
+        || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `0`)
+        || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `0`)) {
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        }
+        for (let i = 0; i < player.boardCoins.length; i++) {
+            if (i > G.currentTavern) {
+                ReturnCoinToPlayerHands(G, ctx, Number(ctx.currentPlayer), i, false);
+            }
         }
     }
 };
@@ -87,6 +93,7 @@ export const UpgradeMinCoinAction: IAutoActionFunction = (G: IMyGameState, ctx: 
     if (value === undefined) {
         throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
+    // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bo always upgrade Grid `2` in his turn during setup!
     const currentPlayer: number = G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer),
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[currentPlayer],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[currentPlayer];

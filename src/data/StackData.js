@@ -14,6 +14,14 @@ export const StackData = {
     brisingamensEndGameAction: () => ({
         drawName: DrawNames.BrisingamensEndGame,
     }),
+    chooseStrategyLevelForSoloModeAndvari: () => ({
+        configName: ConfigNames.ChooseStrategyLevelForSoloModeAndvari,
+        drawName: DrawNames.ChooseStrategyLevelForSoloModeAndvari,
+    }),
+    chooseStrategyVariantLevelForSoloModeAndvari: () => ({
+        configName: ConfigNames.ChooseStrategyVariantLevelForSoloModeAndvari,
+        drawName: DrawNames.ChooseStrategyVariantLevelForSoloModeAndvari,
+    }),
     discardCardFromBoardBonfur: () => ({
         stageName: StageNames.discardBoardCard,
         drawName: DrawNames.Bonfur,
@@ -86,8 +94,14 @@ export const StackData = {
         drawName: DrawNames.PickCardByExplorerDistinction,
     }),
     pickDistinctionCardSoloBot: () => ({
+        configName: ConfigNames.ExplorerDistinction,
         stageName: StageNames.pickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
+    }),
+    pickDistinctionCardSoloBotAndvari: () => ({
+        configName: ConfigNames.ExplorerDistinction,
+        stageName: StageNames.pickDistinctionCardSoloBotAndvari,
+        drawName: DrawNames.PickCardByExplorerDistinctionSoloBotAndvari,
     }),
     placeMultiSuitsCards: (name, pickedSuit, priority) => ({
         stageName: StageNames.placeMultiSuitsCards,
@@ -118,6 +132,10 @@ export const StackData = {
     pickHeroSoloBot: () => ({
         stageName: StageNames.pickHeroSoloBot,
         drawName: DrawNames.PickHeroSoloBot,
+    }),
+    pickHeroSoloBotAndvari: () => ({
+        stageName: StageNames.pickHeroSoloBotAndvari,
+        drawName: DrawNames.PickHeroSoloBotAndvari,
     }),
     placeEnlistmentMercenaries: (card) => ({
         stageName: StageNames.placeEnlistmentMercenaries,

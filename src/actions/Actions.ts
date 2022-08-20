@@ -11,7 +11,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DiscardDeckCardType, IActionFunctionWithoutParams, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, DeckCardTypes, DiscardDeckCardType, IActionFunctionWithoutParams, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -159,6 +159,39 @@ export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
     if (isAdded && card.type === RusCardTypeNames.Dwarf_Card) {
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     }
+};
+
+/**
+ * <h3>Действия, связанные с взятием базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков игроком.</li>
+ * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</li>
+ * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом Андвари.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const PickCardToPickDistinctionAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
+    const pickedCard: CanBeUndefType<DeckCardTypes> =
+        G.explorerDistinctionCards.splice(cardId, 1)[0];
+    if (pickedCard === undefined) {
+        throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
+    }
+    G.explorerDistinctionCards.splice(0);
+    const isAdded: boolean = PickCardOrActionCardActions(G, ctx, pickedCard);
+    if (isAdded && pickedCard.type === RusCardTypeNames.Dwarf_Card) {
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                ctx.currentPlayer);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
+        G.distinctions[SuitNames.explorer] = undefined;
+    }
+    G.explorerDistinctionCardId = cardId;
 };
 
 /**

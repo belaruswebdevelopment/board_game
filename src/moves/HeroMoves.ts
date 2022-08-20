@@ -1,12 +1,9 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
-import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
-import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
-import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
 import { StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, InvalidMoveType } from "../typescript/interfaces";
+import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор героя.</h3>
@@ -18,7 +15,6 @@ import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, InvalidMov
  * @param G
  * @param ctx
  * @param heroId Id героя.
- * @returns
  */
 export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
@@ -27,13 +23,7 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const hero: CanBeUndefType<IHeroCard> = G.heroes[heroId];
-    if (hero === undefined) {
-        throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
-    }
-    AddHeroToPlayerCards(G, ctx, hero);
-    AddActionsToStack(G, ctx, hero.stack, hero);
-    StartAutoAction(G, ctx, hero.actions);
+    AddHeroToPlayerCardsAction(G, ctx, heroId);
 };
 
 /**

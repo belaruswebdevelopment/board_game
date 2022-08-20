@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import type { BoardProps } from "boardgame.io/react";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -7,9 +7,9 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
-import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType } from "../typescript/interfaces";
-import { DrawCard, DrawCoin } from "./ElementsUI";
-import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType } from "../typescript/interfaces";
+import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
+import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
 // TODO Check Solo Bot & multiplayer actions!
 /**
@@ -323,7 +323,8 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullTy
                 if (data !== undefined) {
                     DrawCard(data, boardCells, hero, increment, player, suit,
                         MoveNames.ClickHeroCardMove, increment);
-                } else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                } else if ((validatorName === MoveValidatorNames.ClickHeroCardMoveValidator
+                    || validatorName === MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) && hero.active) {
                     moveMainArgs.push(increment);
                 }
             } else {
@@ -375,14 +376,14 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullTy
  */
 export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
     data?: BoardProps<IMyGameState>): JSX.Element | MoveArgumentsType<number[]> => {
+    if (G.heroesForSoloBot === null) {
+        throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
+    }
     const boardCells: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
-            const hero: CanBeUndefType<IHeroCard> = G.heroesForSoloBot[j];
-            if (hero === undefined) {
-                throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
-            }
+            const hero: IHeroCard = G.heroesForSoloBot[j as IndexOf<HeroesForSoloGameArrayType>];
             if (hero.active && Number(ctx.currentPlayer) === 1
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickHeroSoloBot) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -505,6 +506,14 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
             caption += `Get difficulty level for Solo mode.`;
             ChooseDifficultyLevelForSoloModeProfit(G, ctx, null, data, boardCells);
             break;
+        case ConfigNames.ChooseStrategyLevelForSoloModeAndvari:
+            caption += `Get strategy level for Solo mode Andvari.`;
+            ChooseDifficultyLevelForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
+            break;
+        case ConfigNames.ChooseStrategyVariantLevelForSoloModeAndvari:
+            caption += `Get strategy variant level for Solo mode Andvari.`;
+            ChooseDifficultyVariantLevelForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
+            break;
         case ConfigNames.GetHeroesForSoloMode:
             caption += `Get ${G.soloGameDifficultyLevel} hero${G.soloGameDifficultyLevel === 1 ? `` : `es`} to Solo Bot.`;
             PickHeroesForSoloModeProfit(G, ctx, null, data, boardCells);
@@ -528,6 +537,54 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
             </caption>
             <tbody>
                 <tr>{boardCells}</tr>
+            </tbody>
+        </table>
+    );
+};
+
+/**
+ * <h3>Отрисовка стратегий соло бота Андвари.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param data Глобальные параметры.
+ * @returns Поле стратегий соло бота Андвари.
+ */
+export const DrawStrategyForSoloBotAndvariUI = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>):
+    JSX.Element => {
+    if (G.soloGameAndvariStrategyVariantLevel === null) {
+        throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
+    }
+    const playerHeadersGeneral: JSX.Element[] = [],
+        playerHeadersReserve: JSX.Element[] = [];
+    for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
+        const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = G.strategyForSoloBotAndvari.general[i];
+        if (suit === undefined) {
+            throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        DrawSuit(data, playerHeadersGeneral, suit);
+    }
+    for (let i = G.soloGameAndvariStrategyVariantLevel; i < 5; i++) {
+        const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = G.strategyForSoloBotAndvari.reserve[i];
+        if (suit === undefined) {
+            throw new Error(`В объекте резервных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        DrawSuit(data, playerHeadersReserve, suit);
+    }
+    // TODO Add different colors or dividers for different strategies and draw their names!
+    return (
+        <table>
+            <caption>
+                <span style={Styles.HeroBack()} className="bg-top-hero-icon"></span>
+                <span>Bot strategy</span>
+            </caption>
+            <tbody>
+                <tr key={`Strategy general`}>{playerHeadersGeneral}</tr>
+                <tr key={`Strategy reserve`}>{playerHeadersReserve}</tr>
             </tbody>
         </table>
     );

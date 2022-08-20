@@ -52,10 +52,7 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
  */
 export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (G.mode === GameModeNames.Solo1 && player === undefined && ctx.currentPlayer === `1`) {
-        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
-    }
-    else if (player === undefined) {
+    if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!hero.active) {

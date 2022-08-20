@@ -64,8 +64,8 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
         let suitTop;
         // TODO Draw Giant Capture token on suit if needed!
         for (suitTop in suitsConfig) {
-            if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                || (G.mode === GameModeNames.Solo1 && p === 0)) && p === Number(ctx.currentPlayer)
+            if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer))
+                && p === Number(ctx.currentPlayer)
                 && validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
                 if (player.cards[suitTop].length) {
                     if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
@@ -75,9 +75,8 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     moveMainArgs[suitTop] = [];
                 }
             }
-            if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                || (G.mode === GameModeNames.Solo1 && p === 0)) && p === Number(ctx.currentPlayer)
-                && ctx.phase === PhaseNames.GetMjollnirProfit) {
+            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+                && p === Number(ctx.currentPlayer) && ctx.phase === PhaseNames.GetMjollnirProfit) {
                 if (data !== undefined) {
                     DrawSuit(data, playerHeaders, suitTop, player, MoveNames.GetMjollnirProfitMove);
                 }
@@ -90,7 +89,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
             }
             else {
                 if (data !== undefined) {
-                    DrawSuit(data, playerHeaders, suitTop, player, null);
+                    DrawSuit(data, playerHeaders, suitTop, player);
                 }
             }
             if (data !== undefined) {
@@ -200,7 +199,8 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                         // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
                         // TODO Can Ylud be placed in old place because of "suit !== pickedCard.suit"? Thrud can be placed same suit in solo game!
                         let action;
-                        if ((G.mode === GameModeNames.Solo1
+                        if (((G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`)
+                            || G.mode === GameModeNames.SoloAndvari
                             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                                 && (stack.name !== MultiSuitCardNames.OlwinsDouble
                                     || (stack.name === MultiSuitCardNames.OlwinsDouble && suit !== stack.pickedSuit))))
@@ -465,6 +465,7 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                         }
                         else {
                             if (G.winner.length || (G.mode === GameModeNames.Solo1 && p === 0)
+                                || (G.mode === GameModeNames.SoloAndvari && p === 0)
                                 || (ctx.phase !== PhaseNames.Bids && i === 0 && G.currentTavern >= t)) {
                                 if (data !== undefined) {
                                     if (!IsCoin(publicBoardCoin)) {
@@ -639,7 +640,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                 if ((G.mode === GameModeNames.Multiplayer && privateHandCoin !== undefined
                     && IsCoin(privateHandCoin))
                     || (((G.mode === GameModeNames.Basic && Number(ctx.currentPlayer) === p)
-                        || (G.mode === GameModeNames.Solo1
+                        || ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari)
                             && (p === 0 || ctx.phase === PhaseNames.ChooseDifficultySoloMode)))
                         && IsCoin(publicHandCoin))) {
                     let coinClasses = `border-2`;
@@ -669,8 +670,9 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                     else if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                         && Number(ctx.currentPlayer) === p
                         && CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                        || (G.mode === GameModeNames.Solo1 && Number(ctx.currentPlayer) === p
-                            && ctx.currentPlayer === `1` && ctx.phase === PhaseNames.ChooseDifficultySoloMode))
+                        || ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari)
+                            && Number(ctx.currentPlayer) === p && ctx.currentPlayer === `1`
+                            && ctx.phase === PhaseNames.ChooseDifficultySoloMode))
                         && (stage === StageNames.upgradeCoin || (stage === StageNames.pickConcreteCoinToUpgrade
                             && ((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.coinValue) === handCoin.value))) {
                         if (data !== undefined) {
@@ -690,7 +692,8 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                         }
                     }
                 }
-                else if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Solo1)
+                else if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Solo1
+                    || G.mode === GameModeNames.SoloAndvari)
                     || (G.mode === GameModeNames.Multiplayer && privateHandCoin === undefined))
                     && IsCoin(publicHandCoin) && publicHandCoin.isOpened) {
                     if (data !== undefined) {
@@ -708,12 +711,13 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                             DrawCoin(data, playerCells, `back`, handCoin, j, player);
                         }
                     }
-                    else if (G.mode === GameModeNames.Solo1 && p === 1 && !IsCoin(publicHandCoin)
-                        && publicHandCoin !== null) {
+                    else if ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari)
+                        && p === 1 && !IsCoin(publicHandCoin) && publicHandCoin !== null) {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `back`, publicHandCoin, j, player);
                         }
-                        else if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator) {
+                        else if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator
+                            || validatorName === MoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator) {
                             let moveMainArg = moveMainArgs[0];
                             if (moveMainArg === undefined) {
                                 moveMainArg = [];

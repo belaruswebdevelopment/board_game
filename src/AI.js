@@ -33,13 +33,40 @@ export const enumerate = (G, ctx) => {
                 case PhaseNames.ChooseDifficultySoloMode:
                     activeStageOfCurrentPlayer = StageNames.default1;
                     break;
-                case PhaseNames.Bids:
-                    if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                        || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `0`)) {
-                        activeStageOfCurrentPlayer = StageNames.default3;
+                case PhaseNames.ChooseDifficultySoloModeAndvari:
+                    if (G.soloGameAndvariStrategyVariantLevel === null) {
+                        activeStageOfCurrentPlayer = StageNames.default1;
                     }
-                    else if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
-                        activeStageOfCurrentPlayer = StageNames.default4;
+                    else if (G.soloGameAndvariStrategyLevel === null) {
+                        activeStageOfCurrentPlayer = StageNames.default2;
+                    }
+                    break;
+                case PhaseNames.Bids:
+                    switch (G.mode) {
+                        case GameModeNames.Basic:
+                        case GameModeNames.Multiplayer:
+                            activeStageOfCurrentPlayer = StageNames.default3;
+                            break;
+                        case GameModeNames.Solo1:
+                            if (ctx.currentPlayer === `0`) {
+                                activeStageOfCurrentPlayer = StageNames.default3;
+                            }
+                            else if (ctx.currentPlayer === `1`) {
+                                activeStageOfCurrentPlayer = StageNames.default4;
+                            }
+                            break;
+                        case GameModeNames.SoloAndvari:
+                            if (ctx.currentPlayer === `0`) {
+                                activeStageOfCurrentPlayer = StageNames.default3;
+                            }
+                            else if (ctx.currentPlayer === `1`) {
+                                activeStageOfCurrentPlayer = StageNames.default5;
+                            }
+                            break;
+                        default:
+                            _exhaustiveCheck = G.mode;
+                            throw new Error(`Нет такого режима игры.`);
+                            return _exhaustiveCheck;
                     }
                     break;
                 case PhaseNames.BidUline:

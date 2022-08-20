@@ -401,7 +401,8 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
         return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     let handCoins: PublicPlayerCoinType[];
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)) {
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+        || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -415,7 +416,8 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
         throw new Error(`В массиве монет игрока с id '${playerId}' на поле отсутствует нужная монета с id '${coinId}'.`);
     }
     if (IsCoin(coin)) {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)) {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+            || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
             if (!coin.isOpened) {
                 throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть ранее не открыта монета с id '${coinId}'.`);
             }
@@ -425,7 +427,8 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
         }
         handCoins[tempCoinId] = coin;
     } else {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)) {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+            || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
             const privateBoardCoin: CanBeUndefType<PublicPlayerCoinType> = privatePlayer.boardCoins[coinId];
             if (privateBoardCoin === undefined) {
                 throw new Error(`В массиве монет приватного игрока с id '${playerId}' на поле отсутствует монета с id '${coinId}'.`);
@@ -438,7 +441,8 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
             }
         }
     }
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)) {
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+        || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
         if (close) {
             player.handCoins[tempCoinId] = {};
         } else {
@@ -484,7 +488,7 @@ export const MixUpCoinsInPlayerHands = (G: IMyGameState, ctx: Ctx): void => {
         for (let p = 0; p < ctx.numPlayers; p++) {
             MixUpCoins(G, ctx, p);
         }
-    } else if (G.mode === GameModeNames.Solo1) {
+    } else if (G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) {
         MixUpCoins(G, ctx, 1);
     }
 };

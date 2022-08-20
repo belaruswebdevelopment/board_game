@@ -28,6 +28,9 @@ export const DrawButton = (data, boardCells, name, player, moveName, ...args) =>
         case MoveNames.ChooseDifficultyLevelForSoloModeMove:
             action = data.moves.ChooseDifficultyLevelForSoloModeMove;
             break;
+        case MoveNames.ChooseStrategyForSoloModeAndvariMove:
+            action = data.moves.ChooseStrategyForSoloModeAndvariMove;
+            break;
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
             break;
@@ -291,7 +294,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
  * @param player Игрок.
  * @param moveName Название действия.
  */
-export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
+export const DrawSuit = (data, playerHeaders, suit, player, moveName = null) => {
     let action;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
@@ -317,6 +320,6 @@ export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
     if (action !== null) {
         className += ` cursor-pointer`;
     }
-    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}${className}`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suit(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
+    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}${className}`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suit(suit), className: "bg-suit-icon" }) }, `${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`));
 };
 //# sourceMappingURL=ElementsUI.js.map

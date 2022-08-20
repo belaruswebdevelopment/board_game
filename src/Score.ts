@@ -110,8 +110,8 @@ const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warriorDistin
             throw new Error(`Не существует карта героя с id '${i}'.`);
         }
         const heroData: IHeroData = heroesConfig[hero.name];
-        if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-            || G.mode === GameModeNames.Solo1 && playerId === 1)
+        if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
+            || G.mode === GameModeNames.SoloAndvari) || G.mode === GameModeNames.Solo1 && playerId === 1)
             && hero.name.startsWith(`Dwerg`)) {
             dwerg_brothers += StartHeroScoring(player, heroData.scoringRule);
         } else {
@@ -121,8 +121,9 @@ const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warriorDistin
 
         }
     }
-    if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-        || (G.mode === GameModeNames.Solo1 && playerId === 1)) && dwerg_brothers) {
+    if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
+        || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo1 && playerId === 1))
+        && dwerg_brothers) {
         const dwerg_brother_value: CanBeUndefType<number> = dwerg_brothers_scoring[dwerg_brothers];
         if (dwerg_brother_value === undefined) {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
@@ -244,8 +245,10 @@ const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warriorDistin
  */
 export const ScoreWinner = (G: IMyGameState, ctx: Ctx): CanBeVoidType<IMyGameState> => {
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
-        if (G.mode === GameModeNames.Solo1
-            || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+        if ((G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`)
+            || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
+            || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
+                || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `0`))
                 && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
             ReturnCoinsToPlayerBoard(G, ctx, index);
         }

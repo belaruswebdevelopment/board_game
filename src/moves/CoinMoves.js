@@ -80,6 +80,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
             player.handCoins[tempSelectedId] = null;
         }
         else {
+            // TODO Check why i need it and delete or add for solo bot andvari & ctx.currentPlayer === `0`?
             if (G.mode === GameModeNames.Solo1) {
                 ChangeIsOpenedCoinStatus(handCoin, true);
             }

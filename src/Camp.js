@@ -54,7 +54,7 @@ export const BuildCampCards = (tier) => {
         }
         let name = ``, path = ``, campMercenarySuit;
         for (campMercenarySuit in mercenaryData) {
-            path += campMercenarySuit + ` `;
+            path += `${campMercenarySuit} `;
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
             let campMercenaryCardProperty;
             for (campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
@@ -64,8 +64,8 @@ export const BuildCampCards = (tier) => {
                         name += `шевронов: ${mercenaryVariant.rank}, `;
                     }
                     if (campMercenaryCardProperty === `points`) {
-                        path += mercenaryVariant.points ? mercenaryVariant.points + ` ` : ``;
-                        name += `очков: ${mercenaryVariant.points ? mercenaryVariant.points + `) ` : `нет) `}`;
+                        path += mercenaryVariant.points ? `${mercenaryVariant.points} ` : ``;
+                        name += `очков: ${mercenaryVariant.points ? `${mercenaryVariant.points}) ` : `нет) `}`;
                     }
                 }
             }

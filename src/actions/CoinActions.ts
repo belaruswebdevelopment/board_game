@@ -113,10 +113,12 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
     }
     AddDataToLog(G, LogTypeNames.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
     AddDataToLog(G, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
+    // TODO Check it && check is it need for solo bot Andvari?!
     if (!upgradedCoin.isOpened
         && !(G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
         ChangeIsOpenedCoinStatus(upgradedCoin, true);
     }
+    // TODO Check it && check is it need for solo bot Andvari?!
     if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
         || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1` && upgradingCoin.value === 2))
         && type === CoinTypeNames.Hand) || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)

@@ -1,6 +1,6 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickCardToPickDistinctionAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
@@ -9,8 +9,8 @@ import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, InvalidMoveType, IPublicPlayer, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import { ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPublicPlayer, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -62,7 +62,6 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
  * @param G
  * @param ctx
  * @param cardId Id карты.
- * @returns
  */
 export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
@@ -71,23 +70,7 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const pickedCard: CanBeUndefType<DeckCardTypes> =
-        G.explorerDistinctionCards.splice(cardId, 1)[0];
-    if (pickedCard === undefined) {
-        throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
-    }
-    G.explorerDistinctionCards.splice(0);
-    const isAdded: boolean = PickCardOrActionCardActions(G, ctx, pickedCard);
-    if (isAdded && pickedCard.type === RusCardTypeNames.Dwarf_Card) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
-                ctx.currentPlayer);
-        }
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
-        G.distinctions[SuitNames.explorer] = undefined;
-    }
-    G.explorerDistinctionCardId = cardId;
+    PickCardToPickDistinctionAction(G, ctx, cardId);
 };
 
 /**

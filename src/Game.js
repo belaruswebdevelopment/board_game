@@ -6,6 +6,7 @@ import { CheckEndBidsPhase, CheckEndBidsTurn, EndBidsActions, PreparationPhaseAc
 import { CheckBidUlineOrder, CheckEndBidUlinePhase, EndBidUlineActions } from "./hooks/BidUlineHooks";
 import { CheckBrisingamensEndGameOrder, CheckEndBrisingamensEndGamePhase, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin } from "./hooks/BrisingamensEndGameHooks";
 import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, CheckEndChooseDifficultySoloModeTurn, EndChooseDifficultySoloModeActions, OnChooseDifficultySoloModeMove, OnChooseDifficultySoloModeTurnBegin } from "./hooks/ChooseDifficultySoloModeHooks";
+import { CheckChooseStrategyForSoloModeAndvariOrder, CheckChooseStrategyForSoloModeAndvariPhase, EndChooseStrategyForSoloModeAndvariActions, OnChooseStrategyForSoloModeAndvariMove, OnChooseStrategyForSoloModeAndvariTurnBegin } from "./hooks/ChooseStrategyForSoloModeAndvariHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
 import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitMove, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
@@ -15,11 +16,12 @@ import { CheckAndResolveTroopEvaluationOrders, CheckEndTroopEvaluationPhase, Che
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
 import { AddCoinToPouchMove, ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
 import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove } from "./moves/CoinMoves";
-import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
+import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove, ChooseStrategyForSoloModeAndvariMove, ChooseStrategyVariantForSoloModeAndvariMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceMultiSuitCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { UseGodPowerMove } from "./moves/MythologicalCreatureMoves";
-import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
+import { SoloBotAndvariClickCardToPickDistinctionMove, SoloBotAndvariClickHeroCardMove, SoloBotAndvariPlaceAllCoinsMove } from "./moves/SoloBotAndvariMoves";
+import { SoloBotClickCardToPickDistinctionMove, SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add Log data fo Solo Bot fo all files!
@@ -76,6 +78,22 @@ export const BoardGame = {
             endIf: (G, ctx) => CheckEndChooseDifficultySoloModePhase(G, ctx),
             onEnd: (G) => EndChooseDifficultySoloModeActions(G),
         },
+        chooseDifficultySoloModeAndvari: {
+            turn: {
+                order,
+                onBegin: (G, ctx) => OnChooseStrategyForSoloModeAndvariTurnBegin(G, ctx),
+                onMove: (G, ctx) => OnChooseStrategyForSoloModeAndvariMove(G, ctx),
+                endIf: (G, ctx) => CheckEndChooseDifficultySoloModeTurn(G, ctx),
+            },
+            moves: {
+                ChooseStrategyVariantForSoloModeAndvariMove,
+                ChooseStrategyForSoloModeAndvariMove,
+            },
+            next: PhaseNames.Bids,
+            onBegin: (G, ctx) => CheckChooseStrategyForSoloModeAndvariOrder(G, ctx),
+            endIf: (G, ctx) => CheckChooseStrategyForSoloModeAndvariPhase(G, ctx),
+            onEnd: (G) => EndChooseStrategyForSoloModeAndvariActions(G),
+        },
         bids: {
             turn: {
                 order,
@@ -86,6 +104,7 @@ export const BoardGame = {
                 ClickBoardCoinMove,
                 BotsPlaceAllCoinsMove,
                 SoloBotPlaceAllCoinsMove,
+                SoloBotAndvariPlaceAllCoinsMove,
             },
             next: (G) => StartBidUlineOrTavernsResolutionPhase(G),
             onBegin: (G, ctx) => PreparationPhaseActions(G, ctx),
@@ -184,6 +203,12 @@ export const BoardGame = {
                     pickHeroSoloBot: {
                         moves: {
                             SoloBotClickHeroCardMove,
+                        },
+                    },
+                    // Solo Mode Andvari
+                    pickHeroSoloBotAndvari: {
+                        moves: {
+                            SoloBotAndvariClickHeroCardMove,
                         },
                     },
                 },
@@ -351,6 +376,12 @@ export const BoardGame = {
                             SoloBotClickHeroCardMove,
                         },
                     },
+                    // Solo Mode Andvari
+                    pickHeroSoloBotAndvari: {
+                        moves: {
+                            SoloBotAndvariClickHeroCardMove,
+                        },
+                    },
                 },
                 onBegin: (G, ctx) => OnPlaceYludTurnBegin(G, ctx),
                 onMove: (G, ctx) => OnPlaceYludMove(G, ctx),
@@ -432,9 +463,25 @@ export const BoardGame = {
                         },
                     },
                     // Solo Mode
+                    pickDistinctionCardSoloBot: {
+                        moves: {
+                            SoloBotClickCardToPickDistinctionMove,
+                        },
+                    },
+                    pickDistinctionCardSoloBotAndvari: {
+                        moves: {
+                            SoloBotAndvariClickCardToPickDistinctionMove,
+                        },
+                    },
                     pickHeroSoloBot: {
                         moves: {
                             SoloBotClickHeroCardMove,
+                        },
+                    },
+                    // Solo Mode Andvari
+                    pickHeroSoloBotAndvari: {
+                        moves: {
+                            SoloBotAndvariClickHeroCardMove,
                         },
                     },
                 },

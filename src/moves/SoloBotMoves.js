@@ -1,10 +1,29 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { IsCoin } from "../Coin";
-import { ThrowMyError } from "../Error";
+import { PickCardToPickDistinctionAction } from "../actions/Actions";
 import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
+import { PlaceAllCoinsInCurrentOrderForSoloBot } from "../helpers/SoloBotHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, StageNames } from "../typescript/enums";
+import { StageNames } from "../typescript/enums";
 // TODO Add all solo bot moves!
+/**
+ * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const SoloBotClickCardToPickDistinctionMove = (G, ctx, cardId) => {
+    const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
+        && IsValidMove(G, ctx, StageNames.pickDistinctionCardSoloBot, cardId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    PickCardToPickDistinctionAction(G, ctx, cardId);
+};
 /**
  * <h3>Выбор героя соло ботом.</h3>
  * <p>Применения:</p>
@@ -23,11 +42,10 @@ export const SoloBotClickHeroCardMove = (G, ctx, heroId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const hero = G.heroesForSoloBot[heroId];
-    if (hero === undefined) {
-        throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
+    if (G.heroesForSoloBot === null) {
+        throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
     }
-    AddHeroCardToPlayerHeroCards(G, ctx, hero);
+    AddHeroCardToPlayerHeroCards(G, ctx, G.heroesForSoloBot[heroId]);
 };
 /**
  * <h3>Выкладка монет соло ботом.</h3>
@@ -47,29 +65,6 @@ export const SoloBotPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
-    }
-    if (privatePlayer === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
-    }
-    const handCoins = privatePlayer.handCoins;
-    for (let i = 0; i < handCoins.length; i++) {
-        const handCoin = handCoins[i];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${i}'.`);
-        }
-        if (handCoin === null) {
-            throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' в руке не может не быть монеты с id '${i}'.`);
-        }
-        if (IsCoin(handCoin) && handCoin.isOpened) {
-            throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${i}'.`);
-        }
-        privatePlayer.boardCoins[i] = handCoin;
-        player.boardCoins[i] = {};
-        handCoins[i] = null;
-        player.handCoins[i] = null;
-    }
+    PlaceAllCoinsInCurrentOrderForSoloBot(G, ctx);
 };
 //# sourceMappingURL=SoloBotMoves.js.map

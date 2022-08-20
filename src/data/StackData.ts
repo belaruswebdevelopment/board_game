@@ -16,6 +16,14 @@ export const StackData: IStackData = {
     brisingamensEndGameAction: (): IStack => ({
         drawName: DrawNames.BrisingamensEndGame,
     }),
+    chooseStrategyLevelForSoloModeAndvari: (): IStack => ({
+        configName: ConfigNames.ChooseStrategyLevelForSoloModeAndvari,
+        drawName: DrawNames.ChooseStrategyLevelForSoloModeAndvari,
+    }),
+    chooseStrategyVariantLevelForSoloModeAndvari: (): IStack => ({
+        configName: ConfigNames.ChooseStrategyVariantLevelForSoloModeAndvari,
+        drawName: DrawNames.ChooseStrategyVariantLevelForSoloModeAndvari,
+    }),
     discardCardFromBoardBonfur: (): IStack => ({
         stageName: StageNames.discardBoardCard,
         drawName: DrawNames.Bonfur,
@@ -88,8 +96,14 @@ export const StackData: IStackData = {
         drawName: DrawNames.PickCardByExplorerDistinction,
     }),
     pickDistinctionCardSoloBot: (): IStack => ({
+        configName: ConfigNames.ExplorerDistinction,
         stageName: StageNames.pickDistinctionCardSoloBot,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
+    }),
+    pickDistinctionCardSoloBotAndvari: (): IStack => ({
+        configName: ConfigNames.ExplorerDistinction,
+        stageName: StageNames.pickDistinctionCardSoloBotAndvari,
+        drawName: DrawNames.PickCardByExplorerDistinctionSoloBotAndvari,
     }),
     placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3): IStack => ({
         stageName: StageNames.placeMultiSuitsCards,
@@ -120,6 +134,10 @@ export const StackData: IStackData = {
     pickHeroSoloBot: (): IStack => ({
         stageName: StageNames.pickHeroSoloBot,
         drawName: DrawNames.PickHeroSoloBot,
+    }),
+    pickHeroSoloBotAndvari: (): IStack => ({
+        stageName: StageNames.pickHeroSoloBotAndvari,
+        drawName: DrawNames.PickHeroSoloBotAndvari,
     }),
     placeEnlistmentMercenaries: (card: IMercenaryCampCard): IStack => ({
         stageName: StageNames.placeEnlistmentMercenaries,

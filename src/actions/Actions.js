@@ -152,6 +152,36 @@ export const PickDiscardCardAction = (G, ctx, cardId) => {
     }
 };
 /**
+ * <h3>Действия, связанные с взятием базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков игроком.</li>
+ * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</li>
+ * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом Андвари.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const PickCardToPickDistinctionAction = (G, ctx, cardId) => {
+    const pickedCard = G.explorerDistinctionCards.splice(cardId, 1)[0];
+    if (pickedCard === undefined) {
+        throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
+    }
+    G.explorerDistinctionCards.splice(0);
+    const isAdded = PickCardOrActionCardActions(G, ctx, pickedCard);
+    if (isAdded && pickedCard.type === RusCardTypeNames.Dwarf_Card) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
+        G.distinctions[SuitNames.explorer] = undefined;
+    }
+    G.explorerDistinctionCardId = cardId;
+};
+/**
  * <h3>Игрок выбирает фракцию для вербовки указанного наёмника.</h3>
  * <p>Применения:</p>
  * <ol>

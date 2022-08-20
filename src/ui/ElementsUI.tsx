@@ -1,4 +1,4 @@
-import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import type { BoardProps } from "boardgame.io/react";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -30,6 +30,9 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
             break;
         case MoveNames.ChooseDifficultyLevelForSoloModeMove:
             action = data.moves.ChooseDifficultyLevelForSoloModeMove!;
+            break;
+        case MoveNames.ChooseStrategyForSoloModeAndvariMove:
+            action = data.moves.ChooseStrategyForSoloModeAndvariMove!;
             break;
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove!;
@@ -328,7 +331,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param moveName Название действия.
  */
 export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitNamesKeyofTypeofType,
-    player: IPublicPlayer, moveName: CanBeNullType<MoveNames>): void => {
+    player?: IPublicPlayer, moveName: CanBeNullType<MoveNames> = null): void => {
     let action: MoveFunctionType;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
@@ -356,7 +359,7 @@ export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Elem
     }
     playerHeaders.push(
         <th className={`${suitsConfig[suit].suitColor}${className}`}
-            key={`${player.nickname} ${suitsConfig[suit].suitName}`}
+            key={`${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`}
             onClick={() => action?.(suit)}>
             <span style={Styles.Suit(suit)} className="bg-suit-icon"></span>
         </th>

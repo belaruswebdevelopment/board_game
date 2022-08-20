@@ -1,5 +1,5 @@
-import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { RusCardTypeNames } from "./typescript/enums";
+import { heroesConfig, soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig, soloGameAndvariHeroesForPlayersConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
+import { GameModeNames, RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -8,15 +8,17 @@ import { RusCardTypeNames } from "./typescript/enums";
  * </ol>
  *
  * @param configOptions Конфиг опций героев.
- * @param solo Является ли режим игры соло игрой.
+ * @param mode Режим игры.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions, solo) => {
-    const heroes = [], heroesForSoloBot = [], heroesForSoloGameDifficultyLevel = [];
-    let heroName;
+export const BuildHeroes = (configOptions, mode) => {
+    const heroes = [];
+    let heroesForSoloBot = [], heroesForSoloGameDifficultyLevel = [], heroesInitialForSoloGameForBotAndvari = [], heroName;
     for (heroName in heroesConfig) {
         const heroData = heroesConfig[heroName];
-        if (solo || (!solo && configOptions.includes(heroData.game))) {
+        if ((mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari)
+            || ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
+                && configOptions.includes(heroData.game))) {
             const hero = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
@@ -28,18 +30,43 @@ export const BuildHeroes = (configOptions, solo) => {
                 actions: heroData.actions,
                 stack: heroData.stack,
             });
-            if (!solo || solo && heroName in soloGameHeroesForPlayerConfig) {
+            if ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
+                || (mode === GameModeNames.Solo1 && heroName in soloGameHeroesForPlayerConfig)
+                || (mode === GameModeNames.SoloAndvari && heroName in soloGameAndvariHeroesForPlayersConfig)) {
                 heroes.push(hero);
             }
-            if (solo && heroName in soloGameHeroesForBotConfig) {
+            if (mode === GameModeNames.Solo1 && heroName in soloGameHeroesForBotConfig) {
+                if (heroesForSoloBot === null) {
+                    throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
+                }
                 heroesForSoloBot.push(hero);
             }
-            if (solo && heroName in soloGameDifficultyLevelHeroesConfig) {
+            else {
+                heroesForSoloBot = null;
+            }
+            if (mode === GameModeNames.Solo1 && heroName in soloGameDifficultyLevelHeroesConfig) {
+                if (heroesForSoloGameDifficultyLevel === null) {
+                    throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
+                }
                 heroesForSoloGameDifficultyLevel.push(hero);
+            }
+            else {
+                heroesForSoloGameDifficultyLevel = null;
+            }
+            if (mode === GameModeNames.SoloAndvari && (heroName in soloGameAndvariEasyStrategyHeroesConfig
+                || heroName in soloGameAndvariHardStrategyHeroesConfig)) {
+                if (heroesInitialForSoloGameForBotAndvari === null) {
+                    throw new Error(`Набор стартовых героев и героев для стратегии соло бота Андвари не может быть ранее использован.`);
+                }
+                heroesInitialForSoloGameForBotAndvari.push(hero);
+            }
+            else {
+                heroesInitialForSoloGameForBotAndvari = null;
             }
         }
     }
-    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel];
+    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel,
+        heroesInitialForSoloGameForBotAndvari];
 };
 /**
  * <h3>Создание героя.</h3>

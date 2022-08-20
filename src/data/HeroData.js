@@ -633,4 +633,52 @@ export const soloGameDifficultyLevelHeroesConfig = {
     Uline,
     Ylud,
 };
+/**
+ * <h3>Конфиг героев для лёгких стратегий соло бота Андвари.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при выборе лёгких стратегий для соло бота Андвари при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameAndvariEasyStrategyHeroesConfig = {
+    Bonfur,
+    Hourya,
+    Kraal,
+    Zoral,
+    Dagda,
+};
+/**
+ * <h3>Конфиг героев для сложных стратегий соло бота Андвари.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при выборе сложных стратегий для соло бота Андвари при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameAndvariHardStrategyHeroesConfig = {
+    Lokdur,
+    Idunn,
+    Tarah,
+    Aral,
+    Aegur,
+};
+/**
+ * <h3>Конфиг героев для выбора игроками в соло игре с соло ботом Андвари.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании героев для выбора игроками в соло игре с соло ботом Андвари при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameAndvariHeroesForPlayersConfig = {
+    Astrid,
+    Dwerg_Aesir,
+    Dwerg_Bergelmir,
+    Dwerg_Jungir,
+    Dwerg_Sigmir,
+    Dwerg_Ymir,
+    Grid,
+    Skaa,
+    Thrud,
+    Uline,
+    Ylud,
+};
 //# sourceMappingURL=HeroData.js.map

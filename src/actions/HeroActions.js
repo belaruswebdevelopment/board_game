@@ -1,17 +1,39 @@
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { ChangeBuffValue, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
-import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
+import { AddHeroCardToPlayerCards, AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { CreateMultiSuitPlayerCard } from "../MultiSuitCard";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, MultiSuitCardNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
+/**
+ * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора героя игроком.</li>
+ * <li>При необходимости выбора героя соло ботом Андвари.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param heroId Id героя.
+ */
+export const AddHeroToPlayerCardsAction = (G, ctx, heroId) => {
+    const hero = G.heroes[heroId];
+    if (hero === undefined) {
+        throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
+    }
+    AddHeroToPlayerCards(G, ctx, hero);
+    AddActionsToStack(G, ctx, hero.stack, hero);
+    StartAutoAction(G, ctx, hero.actions);
+};
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
  * <p>Применения:</p>

@@ -1,8 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
-import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
-import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
-import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
 import { StageNames, SuitNames } from "../typescript/enums";
 /**
@@ -15,20 +12,13 @@ import { StageNames, SuitNames } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param heroId Id героя.
- * @returns
  */
 export const ClickHeroCardMove = (G, ctx, heroId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickHero, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const hero = G.heroes[heroId];
-    if (hero === undefined) {
-        throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
-    }
-    AddHeroToPlayerCards(G, ctx, hero);
-    AddActionsToStack(G, ctx, hero.stack, hero);
-    StartAutoAction(G, ctx, hero.actions);
+    AddHeroToPlayerCardsAction(G, ctx, heroId);
 };
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>

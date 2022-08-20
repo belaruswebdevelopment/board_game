@@ -14,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -35,6 +35,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         round = -1,
         drawSize: DrawSizeType = ctx.numPlayers === 2 ? 3 : ctx.numPlayers as DrawSizeType,
         soloGameDifficultyLevel = null,
+        soloGameAndvariStrategyLevel = null,
+        soloGameAndvariStrategyVariantLevel = null,
         explorerDistinctionCardId = null,
         // TODO Rework it!
         odroerirTheMythicCauldron = false,
@@ -62,6 +64,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
         distinctions: SuitPropertyType<DistinctionType> = {} as SuitPropertyType<DistinctionType>,
+        strategyForSoloBotAndvari: IStrategyForSoloBotAndvari = {} as IStrategyForSoloBotAndvari,
         secret: ISecret = {
             campDecks: [[], []],
             decks: [[], []],
@@ -108,8 +111,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             configOptions.push(expansion);
         }
     }
-    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: BuildHeroesArraysType =
-        BuildHeroes(configOptions, mode === GameModeNames.Solo1),
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari]:
+        BuildHeroesArraysType = BuildHeroes(configOptions, mode),
+        heroesForSoloGameForStrategyBotAndvari = null,
         multiCardsDeck: IMultiSuitCard[] = BuildMultiSuitCards(configOptions),
         taverns: TavernsType = [[], [], []],
         tavernsNum = 3,
@@ -141,7 +145,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         players[i] = BuildPlayer();
         const soloBot: boolean = (mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari) && i === 1;
         publicPlayers[i] =
-            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan` + i, priority,
+            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority,
                 mode === GameModeNames.Multiplayer);
     }
     const marketCoinsUnique: ICoin[] = [],
@@ -176,6 +180,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     return {
         mode,
         soloGameDifficultyLevel,
+        soloGameAndvariStrategyLevel,
+        soloGameAndvariStrategyVariantLevel,
         odroerirTheMythicCauldron,
         tavernCardDiscarded2Players,
         averageCards,
@@ -208,6 +214,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         heroes,
         heroesForSoloBot,
         heroesForSoloGameDifficultyLevel,
+        heroesInitialForSoloGameForBotAndvari,
+        heroesForSoloGameForStrategyBotAndvari,
+        strategyForSoloBotAndvari,
         log,
         logData,
         marketCoins,

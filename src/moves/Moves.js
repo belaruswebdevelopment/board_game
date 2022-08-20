@@ -1,5 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickCardToPickDistinctionAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
@@ -8,7 +8,7 @@ import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -54,28 +54,13 @@ export const ClickCardMove = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
- * @returns
  */
 export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickDistinctionCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const pickedCard = G.explorerDistinctionCards.splice(cardId, 1)[0];
-    if (pickedCard === undefined) {
-        throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
-    }
-    G.explorerDistinctionCards.splice(0);
-    const isAdded = PickCardOrActionCardActions(G, ctx, pickedCard);
-    if (isAdded && pickedCard.type === RusCardTypeNames.Dwarf_Card) {
-        const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
-        }
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
-        G.distinctions[SuitNames.explorer] = undefined;
-    }
-    G.explorerDistinctionCardId = cardId;
+    PickCardToPickDistinctionAction(G, ctx, cardId);
 };
 /**
  * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>

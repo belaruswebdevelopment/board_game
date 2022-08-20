@@ -5,8 +5,53 @@ import { ThrowMyError } from "../Error";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, InvalidMoveType, IPublicPlayer, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
+import { ErrorNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, InvalidMoveType, IPublicPlayer, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
+
+/**
+ * <h3>Выбор уровня сложности в режиме соло игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Когда игрок выбирает уровень сложности в режиме соло игры.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param level Уровень сложности в режиме соло игры.
+ * @returns
+ */
+export const ChooseStrategyForSoloModeAndvariMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
+    level: SoloGameAndvariStrategyNames): CanBeVoidType<InvalidMoveType> => {
+    const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
+        && IsValidMove(G, ctx, StageNames.default2, level);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    G.soloGameAndvariStrategyLevel = level;
+};
+
+/**
+ * <h3>Выбор варианта уровня сложности в режиме соло игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Когда игрок выбирает вариант уровня сложности в режиме соло игры.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param level Вариант уровня сложности в режиме соло игры.
+ * @returns
+ */
+export const ChooseStrategyVariantForSoloModeAndvariMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
+    level: SoloGameAndvariStrategyVariantLevelType): CanBeVoidType<InvalidMoveType> => {
+    const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
+        && IsValidMove(G, ctx, StageNames.default1, level);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    G.soloGameAndvariStrategyVariantLevel = level;
+    AddActionsToStack(G, ctx, [StackData.chooseStrategyLevelForSoloModeAndvari()]);
+};
 
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>

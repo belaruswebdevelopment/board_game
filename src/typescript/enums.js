@@ -157,8 +157,12 @@ export var BuffNames;
  */
 export var ButtonNames;
 (function (ButtonNames) {
-    ButtonNames["Start"] = "\u0421\u0442\u0430\u0440\u0442";
+    ButtonNames["NoHeroEasyStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+    ButtonNames["NoHeroHardStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+    ButtonNames["WithHeroEasyStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+    ButtonNames["WithHeroHardStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
     ButtonNames["Pass"] = "\u041F\u0430\u0441";
+    ButtonNames["Start"] = "\u0421\u0442\u0430\u0440\u0442";
 })(ButtonNames || (ButtonNames = {}));
 /**
  * <h3>Перечисление для названия мультифракционных карт.</h3>
@@ -204,6 +208,8 @@ export var CoinTypeNames;
 export var ConfigNames;
 (function (ConfigNames) {
     ConfigNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "chooseCoinValueForVidofnirVedrfolnirUpgrade";
+    ConfigNames["ChooseStrategyLevelForSoloModeAndvari"] = "ChooseStrategyLevelForSoloModeAndvari";
+    ConfigNames["ChooseStrategyVariantLevelForSoloModeAndvari"] = "ChooseStrategyVariantLevelForSoloModeAndvari";
     ConfigNames["ExplorerDistinction"] = "explorerDistinction";
     ConfigNames["GetDifficultyLevelForSoloMode"] = "getDifficultyLevelForSoloMode";
     ConfigNames["GetHeroesForSoloMode"] = "getHeroesForSoloMode";
@@ -220,6 +226,8 @@ export var DrawNames;
     DrawNames["Bonfur"] = "Bonfur";
     DrawNames["Brisingamens"] = "Brisingamens";
     DrawNames["BrisingamensEndGame"] = "Brisingamens end game";
+    DrawNames["ChooseStrategyLevelForSoloModeAndvari"] = "Choose strategy level for solo mode Andvari";
+    DrawNames["ChooseStrategyVariantLevelForSoloModeAndvari"] = "Choose strategy variant level for solo mode Andvari";
     DrawNames["CrovaxTheDoppelganger"] = "Crovax the Doppelganger";
     DrawNames["Dagda"] = "Dagda";
     DrawNames["DiscardTavernCard"] = "Discard tavern card";
@@ -234,9 +242,11 @@ export var DrawNames;
     DrawNames["PickCard"] = "Pick card or camp card";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
     DrawNames["PickCardByExplorerDistinctionSoloBot"] = "Pick card by Explorer distinction Solo Bot";
+    DrawNames["PickCardByExplorerDistinctionSoloBotAndvari"] = "Pick card by Explorer distinction Solo Bot Andvari";
     DrawNames["PickConcreteCoinToUpgrade"] = "Pick concrete coin to upgrade";
     DrawNames["PickHero"] = "Pick hero card";
     DrawNames["PickHeroSoloBot"] = "Pick hero card Solo Bot";
+    DrawNames["PickHeroSoloBotAndvari"] = "Pick hero card Solo Bot Andvari";
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
     DrawNames["PlaceTradingCoinsUline"] = "Place Trading Coins Uline";
     DrawNames["PlaceYludHero"] = "Place Ylud";
@@ -470,9 +480,16 @@ export var MoveNames;
     // Solo Bot
     MoveNames["SoloBotClickHeroCardMove"] = "SoloBotClickHeroCardMove";
     MoveNames["SoloBotPlaceAllCoinsMove"] = "SoloBotPlaceAllCoinsMove";
+    MoveNames["SoloBotClickCardToPickDistinctionMove"] = "SoloBotClickCardToPickDistinctionMove";
     // Solo Mode
     MoveNames["ChooseDifficultyLevelForSoloModeMove"] = "ChooseDifficultyLevelForSoloModeMove";
     MoveNames["ChooseHeroForDifficultySoloModeMove"] = "ChooseHeroForDifficultySoloModeMove";
+    //Solo Mode Andvari
+    MoveNames["ChooseStrategyForSoloModeAndvariMove"] = "ChooseStrategyForSoloModeAndvariMove";
+    MoveNames["ChooseStrategyVariantForSoloModeAndvariMove"] = "ChooseStrategyVariantForSoloModeAndvariMove";
+    MoveNames["SoloBotAndvariPlaceAllCoinsMove"] = "SoloBotAndvariPlaceAllCoinsMove";
+    MoveNames["SoloBotAndvariClickHeroCardMove"] = "SoloBotAndvariClickHeroCardMove";
+    MoveNames["SoloBotAndvariClickCardToPickDistinctionMove"] = "SoloBotAndvariClickCardToPickDistinctionMove";
     // start
     MoveNames["AddCoinToPouchMove"] = "AddCoinToPouchMove";
     MoveNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMove"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMove";
@@ -496,6 +513,7 @@ export var PhaseNames;
 (function (PhaseNames) {
     PhaseNames["BrisingamensEndGame"] = "brisingamensEndGame";
     PhaseNames["ChooseDifficultySoloMode"] = "chooseDifficultySoloMode";
+    PhaseNames["ChooseDifficultySoloModeAndvari"] = "chooseDifficultySoloModeAndvari";
     PhaseNames["PlaceYlud"] = "placeYlud";
     PhaseNames["EnlistmentMercenaries"] = "enlistmentMercenaries";
     PhaseNames["TroopEvaluation"] = "troopEvaluation";
@@ -511,6 +529,7 @@ export var RusPhaseNames;
 (function (RusPhaseNames) {
     RusPhaseNames["brisingamensEndGame"] = "brisingamensEndGame";
     RusPhaseNames["chooseDifficultySoloMode"] = "\u0412\u044B\u0431\u043E\u0440 \u0441\u043B\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u043E\u043B\u043E \u0440\u0435\u0436\u0438\u043C\u0430";
+    RusPhaseNames["chooseDifficultySoloModeAndvari"] = "\u0412\u044B\u0431\u043E\u0440 \u0441\u043B\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u043E\u043B\u043E \u0440\u0435\u0436\u0438\u043C\u0430 \u0410\u043D\u0434\u0432\u0430\u0440\u0438";
     RusPhaseNames["placeYlud"] = "\u041F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0418\u043B\u0443\u0434";
     RusPhaseNames["enlistmentMercenaries"] = "enlistmentMercenaries";
     RusPhaseNames["troopEvaluation"] = "\u0421\u043C\u043E\u0442\u0440 \u0432\u043E\u0439\u0441\u043A";
@@ -563,6 +582,7 @@ export var StageNames;
     StageNames["default2"] = "default2";
     StageNames["default3"] = "default3";
     StageNames["default4"] = "default4";
+    StageNames["default5"] = "default5";
     StageNames["discardCard"] = "discardCard";
     StageNames["discardBoardCard"] = "discardBoardCard";
     StageNames["discardSuitCard"] = "discardSuitCard";
@@ -571,8 +591,10 @@ export var StageNames;
     StageNames["pickDiscardCard"] = "pickDiscardCard";
     StageNames["pickDistinctionCard"] = "pickDistinctionCard";
     StageNames["pickDistinctionCardSoloBot"] = "pickDistinctionCardSoloBot";
+    StageNames["pickDistinctionCardSoloBotAndvari"] = "pickDistinctionCardSoloBotAndvari";
     StageNames["pickHero"] = "pickHero";
     StageNames["pickHeroSoloBot"] = "pickHeroSoloBot";
+    StageNames["pickHeroSoloBotAndvari"] = "pickHeroSoloBotAndvari";
     StageNames["placeEnlistmentMercenaries"] = "placeEnlistmentMercenaries";
     StageNames["placeMultiSuitsCards"] = "placeMultiSuitsCards";
     StageNames["placeTradingCoinsUline"] = "placeTradingCoinsUline";
@@ -592,6 +614,7 @@ export var RusStageNames;
     RusStageNames["default2"] = "default2";
     RusStageNames["default3"] = "default3";
     RusStageNames["default4"] = "default4";
+    RusStageNames["default5"] = "default5";
     RusStageNames["discardCard"] = "discardCard";
     RusStageNames["discardBoardCard"] = "discardBoardCard";
     RusStageNames["discardSuitCard"] = "discardSuitCard";
@@ -600,8 +623,10 @@ export var RusStageNames;
     RusStageNames["pickDiscardCard"] = "pickDiscardCard";
     RusStageNames["pickDistinctionCard"] = "pickDistinctionCard";
     RusStageNames["pickDistinctionCardSoloBot"] = "pickDistinctionCardSoloBot";
+    RusStageNames["pickDistinctionCardSoloBotAndvari"] = "pickDistinctionCardSoloBotAndvari";
     RusStageNames["pickHero"] = "pickHero";
     RusStageNames["pickHeroSoloBot"] = "pickHeroSoloBot";
+    RusStageNames["pickHeroSoloBotAndvari"] = "pickHeroSoloBotAndvari";
     RusStageNames["placeEnlistmentMercenaries"] = "placeEnlistmentMercenaries";
     RusStageNames["placeMultiSuitsCards"] = "placeMultiSuitsCards";
     RusStageNames["placeTradingCoinsUline"] = "placeTradingCoinsUline";
@@ -629,6 +654,16 @@ export var PickHeroCardValidatorNames;
     PickHeroCardValidatorNames["conditions"] = "conditions";
     PickHeroCardValidatorNames["discardCard"] = "discardCard";
 })(PickHeroCardValidatorNames || (PickHeroCardValidatorNames = {}));
+/**
+ * <h3>Перечисление для названия валидаторов для выбора карты героя.</h3>
+ */
+export var SoloGameAndvariStrategyNames;
+(function (SoloGameAndvariStrategyNames) {
+    SoloGameAndvariStrategyNames["NoHeroEasyStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+    SoloGameAndvariStrategyNames["NoHeroHardStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+    SoloGameAndvariStrategyNames["WithHeroEasyStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+    SoloGameAndvariStrategyNames["WithHeroHardStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+})(SoloGameAndvariStrategyNames || (SoloGameAndvariStrategyNames = {}));
 /**
  * <h3>Перечисление для названия валидаторов для выбора карты при выборе героя.</h3>
  */
@@ -680,9 +715,16 @@ export var MoveValidatorNames;
     // Solo Bot
     MoveValidatorNames["SoloBotClickHeroCardMoveValidator"] = "SoloBotClickHeroCardMoveValidator";
     MoveValidatorNames["SoloBotPlaceAllCoinsMoveValidator"] = "SoloBotPlaceAllCoinsMoveValidator";
+    MoveValidatorNames["SoloBotClickCardToPickDistinctionMoveValidator"] = "SoloBotClickCardToPickDistinctionMoveValidator";
     // Solo Mode
     MoveValidatorNames["ChooseDifficultyLevelForSoloModeMoveValidator"] = "ChooseDifficultyLevelForSoloModeMoveValidator";
     MoveValidatorNames["ChooseHeroesForSoloModeMoveValidator"] = "ChooseHeroesForSoloModeMoveValidator";
+    // Solo Mode Andvari
+    MoveValidatorNames["ChooseStrategyForSoloModeAndvariMoveValidator"] = "ChooseStrategyForSoloModeAndvariMoveValidator";
+    MoveValidatorNames["ChooseStrategyVariantForSoloModeAndvariMoveValidator"] = "ChooseStrategyVariantForSoloModeAndvariMoveValidator";
+    MoveValidatorNames["SoloBotAndvariPlaceAllCoinsMoveValidator"] = "SoloBotAndvariPlaceAllCoinsMoveValidator";
+    MoveValidatorNames["SoloBotAndvariClickHeroCardMoveValidator"] = "SoloBotAndvariClickHeroCardMoveValidator";
+    MoveValidatorNames["SoloBotAndvariClickCardToPickDistinctionMoveValidator"] = "SoloBotAndvariClickCardToPickDistinctionMoveValidator";
     // start
     MoveValidatorNames["AddCoinToPouchMoveValidator"] = "AddCoinToPouchMoveValidator";
     MoveValidatorNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator";
