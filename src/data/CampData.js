@@ -17,10 +17,12 @@ const Brisingamens = {
     validators: {
         pickDiscardCardToStack: {},
     },
-    stack: [
-        StackData.pickDiscardCardBrisingamens(),
-        StackData.pickDiscardCardBrisingamens(3),
-    ],
+    stack: {
+        player: [
+            StackData.pickDiscardCardBrisingamens(),
+            StackData.pickDiscardCardBrisingamens(3),
+        ],
+    },
     scoringRule: {
         name: ArtefactScoringFunctionNames.BasicArtefactScoring,
         params: [0],
@@ -94,7 +96,9 @@ const Hofud = {
     actions: {
         name: AutoActionFunctionNames.StartDiscardSuitCardAction,
     },
-    stack: [StackData.discardSuitCardHofud()],
+    stack: {
+        player: [StackData.discardSuitCardHofud()],
+    },
     scoringRule: {
         name: ArtefactScoringFunctionNames.BasicArtefactScoring,
         params: [0],
@@ -171,6 +175,13 @@ const Mjollnir = {
         name: ArtefactScoringFunctionNames.MjollnirScoring,
     },
 };
+/**
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
+ */
 const Odroerir_The_Mythic_Cauldron = {
     name: ArtefactNames.Odroerir_The_Mythic_Cauldron,
     description: `Во время подготовки отложите Одрерир в сторону. Перемешайте карты Лагеря 2-й эпохи, затем положите Одрерир на верх колоды. Таким образом, в начале Эпохи 2 Одрерир будет среди 5 доступных карт лагеря. Как только эльвеланд берет карту из лагеря, положите самую маленькую монету из Королевской сокровищницы на Одрерир. Делайте это до тех пор, пока эльвеланд не возьмет карту Одрерир с монетами на ней. Карта Одрерир с ее монетами находится в командной зоне. В конце игры Одрерир прибавляет сумму всех монет к вашему итоговому значению храбрости.`,

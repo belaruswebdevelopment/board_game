@@ -34,7 +34,13 @@ export const AddHeroToPlayerCardsAction = (G: IMyGameState, ctx: Ctx, heroId: nu
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }
     AddHeroToPlayerCards(G, ctx, hero);
-    AddActionsToStack(G, ctx, hero.stack, hero);
+    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, hero.stack?.soloBot ?? hero.stack?.player, hero);
+    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, hero.stack?.soloBotAndvari ?? hero.stack?.player, hero);
+    } else {
+        AddActionsToStack(G, ctx, hero.stack?.player, hero);
+    }
     StartAutoAction(G, ctx, hero.actions);
 };
 

@@ -4,10 +4,11 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CanBeVoidType, HeroesForSoloGameForStrategyBotAndvariArrayType, HeroNamesForEasyStrategyAndvariKeyofTypeofType, HeroNamesForHardStrategyAndvariKeyofTypeofType, IHeroCard, IMyGameState, IndexOf, IPublicPlayer, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CanBeVoidType, HeroesForSoloGameForStrategyBotAndvariArrayType, HeroNamesForEasyStrategyAndvariKeyofTypeofType, HeroNamesForHardStrategyAndvariKeyofTypeofType, IHeroCard, IMyGameState, IndexOf, IPublicPlayer, OneOrTwoOrThreeOrFour, SuitNamesKeyofTypeofType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloModeAndvari'.</h3>
@@ -41,7 +42,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = (G: IMyGameState, ctx:
         }
         return G.heroesForSoloGameForStrategyBotAndvari !== null
             && G.heroesForSoloGameForStrategyBotAndvari.length === 5
-            && G.soloGameAndvariStrategyVariantLevel === null && G.heroesInitialForSoloGameForBotAndvari === null;
+            && G.heroesInitialForSoloGameForBotAndvari === null;
     }
 };
 
@@ -56,7 +57,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = (G: IMyGameState, ctx:
  * @param ctx
  * @returns
  */
-export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
+export const CheckEndChooseStrategyForSoloModeAndvariTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (ctx.currentPlayer === `0`) {
         return G.soloGameAndvariStrategyVariantLevel !== null && G.soloGameAndvariStrategyLevel !== null;
     }
@@ -109,10 +110,6 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G: IMyGameState, ctx
         }
         if (G.soloGameAndvariStrategyVariantLevel === null) {
             throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
-        }
-        const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
-        if (soloBotPublicPlayer === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         const heroesForSoloGameForStrategyBotAndvari: IHeroCard[] = [];
         let heroNameEasyStrategy: HeroNamesForEasyStrategyAndvariKeyofTypeofType,
@@ -176,7 +173,7 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G: IMyGameState, ctx
                     if (heroCard === undefined) {
                         throw new Error(`В массиве героев для соло бот Андвари отсутствует '${RusCardTypeNames.Hero_Card}' с названием '${heroNameHardStrategy}'.`);
                     }
-                    soloBotPublicPlayer.heroes.push(heroCard);
+                    AddHeroToPlayerCards(G, ctx, heroCard);
                 }
                 break;
             case SoloGameAndvariStrategyNames.WithHeroHardStrategy:
@@ -196,12 +193,11 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G: IMyGameState, ctx
                     if (heroCard === undefined) {
                         throw new Error(`В массиве героев для соло бот Андвари отсутствует '${RusCardTypeNames.Hero_Card}' с названием '${heroNameEasyStrategy}'.`);
                     }
-                    soloBotPublicPlayer.heroes.push(heroCard);
+                    AddHeroToPlayerCards(G, ctx, heroCard);
                 }
                 break;
             case null:
                 throw new Error(`Уровень сложности стратегий для соло бота Андвари не может быть не выбран.`);
-                break;
             default:
                 _exhaustiveCheck = G.soloGameAndvariStrategyLevel;
                 throw new Error(`Не существует такого уровня сложности стратегий для соло бота Андвари.`);
@@ -212,20 +208,63 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G: IMyGameState, ctx
         G.heroesForSoloGameForStrategyBotAndvari =
             ctx.random!.Shuffle(G.heroesForSoloGameForStrategyBotAndvari) as
             HeroesForSoloGameForStrategyBotAndvariArrayType;
+        switch (G.soloGameAndvariStrategyVariantLevel) {
+            case 1:
+                G.strategyForSoloBotAndvari = {
+                    general: {
+                        0: undefined,
+                    },
+                    reserve: {
+                        1: undefined,
+                        2: undefined,
+                        3: undefined,
+                        4: undefined,
+                    },
+                };
+                break;
+            case 2:
+                G.strategyForSoloBotAndvari = {
+                    general: {
+                        0: undefined,
+                        1: undefined,
+                    },
+                    reserve: {
+                        2: undefined,
+                        3: undefined,
+                        4: undefined,
+                    },
+                };
+                break;
+            case 3:
+                G.strategyForSoloBotAndvari = {
+                    general: {
+                        0: undefined,
+                        1: undefined,
+                        2: undefined,
+                    },
+                    reserve: {
+                        3: undefined,
+                        4: undefined,
+                    },
+                };
+                break;
+            default:
+                _exhaustiveCheck = G.soloGameAndvariStrategyVariantLevel;
+                throw new Error(`Нет такого варианта стратегий соло бота Андвари.`);
+                return _exhaustiveCheck;
+        }
         for (let i = 0; i < G.heroesForSoloGameForStrategyBotAndvari.length; i++) {
             const suit: CanBeNullType<SuitNamesKeyofTypeofType> = G.heroesForSoloGameForStrategyBotAndvari[i as
                 IndexOf<HeroesForSoloGameForStrategyBotAndvariArrayType>].suit;
             if (suit === null) {
-                throw new Error(`В массиве героев для стратегий соло бота Андвари не должно быть героев без принадлежности к фракции дворфов с названием '${G.heroesForSoloGameForStrategyBotAndvari[i as
-                    IndexOf<HeroesForSoloGameForStrategyBotAndvariArrayType>].name}'.`);
+                throw new Error(`В массиве героев для стратегий соло бота Андвари не должно быть героев без принадлежности к фракции дворфов с названием '${G.heroesForSoloGameForStrategyBotAndvari[i as IndexOf<HeroesForSoloGameForStrategyBotAndvariArrayType>].name}'.`);
             }
             if (i < G.soloGameAndvariStrategyVariantLevel) {
-                G.strategyForSoloBotAndvari.general[i] = suit;
+                G.strategyForSoloBotAndvari.general[i as ZeroOrOneOrTwoType] = suit;
             } else {
-                G.strategyForSoloBotAndvari.reserve[i] = suit;
+                G.strategyForSoloBotAndvari.reserve[i as OneOrTwoOrThreeOrFour] = suit;
             }
         }
-        G.soloGameAndvariStrategyVariantLevel = null;
         G.heroesInitialForSoloGameForBotAndvari = null;
     }
 };

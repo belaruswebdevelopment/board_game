@@ -91,6 +91,7 @@ export const CheckEndBidsTurn = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @param ctx
  */
 export const EndBidsActions = (G) => {
     G.publicPlayersOrder = [];
@@ -106,8 +107,11 @@ export const EndBidsActions = (G) => {
  * @param ctx
  */
 export const PreparationPhaseActions = (G, ctx) => {
+    G.round++;
     G.currentTavern = 0;
-    ReturnCoinsToPlayerHands(G, ctx);
+    if (G.round !== 0) {
+        ReturnCoinsToPlayerHands(G, ctx);
+    }
     if (G.expansions.thingvellir.active) {
         RefillEmptyCampCards(G);
     }

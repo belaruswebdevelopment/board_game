@@ -1,5 +1,5 @@
 import { ThrowMyError } from "../Error";
-import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 /**
  * <h3>Отрисовка для выбора уровня сложности стратегий соло бота Андвари соло игры.</h3>
@@ -20,7 +20,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G, ctx, validatorN
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < 4; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.NoHeroEasyStrategy, player, MoveNames.ChooseStrategyForSoloModeAndvariMove, SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
@@ -45,7 +45,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G, ctx, validatorN
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             }
         }
-        else {
+        else if (j === 3) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.WithHeroHardStrategy, player, MoveNames.ChooseStrategyForSoloModeAndvariMove, SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             }
@@ -179,8 +179,10 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G, ctx, valida
  * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
  */
 export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCells) => {
+    if (G.explorerDistinctionCards === null) {
+        throw new Error(`В массиве карт для получения преимущества по фракции '${RusSuitNames.explorer}' не может не быть карт.`);
+    }
     const moveMainArgs = [];
-    // TODO Draw only one for Solo bot Andvari?
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
         const card = G.explorerDistinctionCards[j];
         if (card === undefined) {

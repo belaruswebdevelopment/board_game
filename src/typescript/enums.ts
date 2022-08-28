@@ -239,6 +239,8 @@ export const enum DrawNames {
     Holda = `Holda`,
     PlaceMultiSuitsCards = `Place multi suits cards`,
     PickCard = `Pick card or camp card`,
+    PickCardSoloBot = `Pick card or camp card Solo Bot`,
+    PickCardSoloBotAndvari = `Pick card or camp card Solo Bot Andvari`,
     PickCardByExplorerDistinction = `Pick card by Explorer distinction`,
     PickCardByExplorerDistinctionSoloBot = `Pick card by Explorer distinction Solo Bot`,
     PickCardByExplorerDistinctionSoloBotAndvari = `Pick card by Explorer distinction Solo Bot Andvari`,
@@ -249,12 +251,20 @@ export const enum DrawNames {
     PlaceEnlistmentMercenaries = `Place Enlistment Mercenaries`,
     PlaceTradingCoinsUline = `Place Trading Coins Uline`,
     PlaceYludHero = `Place Ylud`,
+    PlaceYludHeroSoloBot = `Place Ylud Solo Bot`,
+    PlaceYludHeroSoloBotAndvari = `Place Ylud Solo Bot Andvari`,
     StartChooseCoinValueForVidofnirVedrfolnirUpgrade = `Start choose coin value for Vidofnir Vedrfolnir upgrade`,
     StartOrPassEnlistmentMercenaries = `Start or Pass Enlistment Mercenaries`,
     PlaceThrudHero = `Place Thrud Hero`,
+    PlaceThrudHeroSoloBot = `Place Thrud Hero Solo Bot`,
+    PlaceThrudHeroSoloBotAndvari = `Place Thrud Hero Solo Bot Andvari`,
     UpgradeCoin = `Upgrade coin`,
+    UpgradeCoinSoloBot = `Upgrade coin Solo Bot`,
+    UpgradeCoinSoloBotAndvari = `Upgrade coin Solo Bot Andvari`,
     UpgradeCoinVidofnirVedrfolnir = `Upgrade coin Vidofnir Vedrfolnir`,
     UpgradeCoinWarriorDistinction = `Upgrade coin Warrior distinction`,
+    UpgradeCoinWarriorDistinctionSoloBot = `Upgrade coin Warrior distinction Solo Bot`,
+    UpgradeCoinWarriorDistinctionSoloBotAndvari = `Upgrade coin Warrior distinction Solo Bot Andvari`,
 }
 
 /**
@@ -479,18 +489,26 @@ export const enum MoveNames {
     // Bots
     BotsPlaceAllCoinsMove = `BotsPlaceAllCoinsMove`,
     // Solo Bot
+    SoloBotClickCardMove = `SoloBotClickCardMove`,
     SoloBotClickHeroCardMove = `SoloBotClickHeroCardMove`,
     SoloBotPlaceAllCoinsMove = `SoloBotPlaceAllCoinsMove`,
     SoloBotClickCardToPickDistinctionMove = `SoloBotClickCardToPickDistinctionMove`,
+    SoloBotPlaceThrudHeroMove = `SoloBotPlaceThrudHeroMove`,
+    SoloBotPlaceYludHeroMove = `SoloBotPlaceYludHeroMove`,
+    SoloBotClickCoinToUpgradeMove = `SoloBotClickCoinToUpgradeMove`,
     // Solo Mode
     ChooseDifficultyLevelForSoloModeMove = `ChooseDifficultyLevelForSoloModeMove`,
     ChooseHeroForDifficultySoloModeMove = `ChooseHeroForDifficultySoloModeMove`,
     //Solo Mode Andvari
+    SoloBotAndvariClickCardMove = `SoloBotAndvariClickCardMove`,
     ChooseStrategyForSoloModeAndvariMove = `ChooseStrategyForSoloModeAndvariMove`,
     ChooseStrategyVariantForSoloModeAndvariMove = `ChooseStrategyVariantForSoloModeAndvariMove`,
     SoloBotAndvariPlaceAllCoinsMove = `SoloBotAndvariPlaceAllCoinsMove`,
     SoloBotAndvariClickHeroCardMove = `SoloBotAndvariClickHeroCardMove`,
     SoloBotAndvariClickCardToPickDistinctionMove = `SoloBotAndvariClickCardToPickDistinctionMove`,
+    SoloBotAndvariPlaceThrudHeroMove = `SoloBotAndvariPlaceThrudHeroMove`,
+    SoloBotAndvariPlaceYludHeroMove = `SoloBotAndvariPlaceYludHeroMove`,
+    SoloBotAndvariClickCoinToUpgradeMove = `SoloBotAndvariClickCoinToUpgradeMove`,
     // start
     AddCoinToPouchMove = `AddCoinToPouchMove`,
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = `ChooseCoinValueForVidofnirVedrfolnirUpgradeMove`,
@@ -505,7 +523,7 @@ export const enum MoveNames {
     PlaceThrudHeroMove = `PlaceThrudHeroMove`,
     UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
     // TODO Is it here?
-    UseGodPowerMove = `UseGodPowerMove`,
+    UseGodCardPowerMove = `UseGodCardPowerMove`,
 }
 
 /**
@@ -600,8 +618,12 @@ export const enum StageNames {
     placeMultiSuitsCards = `placeMultiSuitsCards`,
     placeTradingCoinsUline = `placeTradingCoinsUline`,
     placeThrudHero = `placeThrudHero`,
+    placeThrudHeroSoloBot = `placeThrudHeroSoloBot`,
+    placeThrudHeroSoloBotAndvari = `placeThrudHeroSoloBotAndvari`,
     chooseHeroesForSoloMode = `chooseHeroesForSoloMode`,
     upgradeCoin = `upgradeCoin`,
+    upgradeCoinSoloBot = `upgradeCoinSoloBot`,
+    upgradeCoinSoloBotAndvari = `upgradeCoinSoloBotAndvari`,
     upgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
 }
 
@@ -632,8 +654,12 @@ export enum RusStageNames {
     placeMultiSuitsCards = `placeMultiSuitsCards`,
     placeTradingCoinsUline = `placeTradingCoinsUline`,
     placeThrudHero = `placeThrudHero`,
+    placeThrudHeroSoloBot = `placeThrudHeroSoloBot`,
+    placeThrudHeroSoloBotAndvari = `placeThrudHeroSoloBotAndvari`,
     chooseHeroesForSoloMode = `chooseHeroesForSoloMode`,
     upgradeCoin = `upgradeCoin`,
+    upgradeCoinSoloBot = `upgradeCoinSoloBot`,
+    upgradeCoinSoloBotAndvari = `upgradeCoinSoloBotAndvari`,
     upgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
 }
 
@@ -714,18 +740,26 @@ export const enum MoveValidatorNames {
     // Bots
     BotsPlaceAllCoinsMoveValidator = `BotsPlaceAllCoinsMoveValidator`,
     // Solo Bot
+    SoloBotClickCardMoveValidator = `SoloBotClickCardMoveValidator`,
     SoloBotClickHeroCardMoveValidator = `SoloBotClickHeroCardMoveValidator`,
     SoloBotPlaceAllCoinsMoveValidator = `SoloBotPlaceAllCoinsMoveValidator`,
     SoloBotClickCardToPickDistinctionMoveValidator = `SoloBotClickCardToPickDistinctionMoveValidator`,
+    SoloBotPlaceYludHeroMoveValidator = `SoloBotPlaceYludHeroMoveValidator`,
+    SoloBotPlaceThrudHeroMoveValidator = `SoloBotPlaceThrudHeroMoveValidator`,
+    SoloBotClickCoinToUpgradeMoveValidator = `SoloBotClickCoinToUpgradeMoveValidator`,
     // Solo Mode
     ChooseDifficultyLevelForSoloModeMoveValidator = `ChooseDifficultyLevelForSoloModeMoveValidator`,
     ChooseHeroesForSoloModeMoveValidator = `ChooseHeroesForSoloModeMoveValidator`,
     // Solo Mode Andvari
+    SoloBotAndvariClickCardMoveValidator = `SoloBotAndvariClickCardMoveValidator`,
     ChooseStrategyForSoloModeAndvariMoveValidator = `ChooseStrategyForSoloModeAndvariMoveValidator`,
     ChooseStrategyVariantForSoloModeAndvariMoveValidator = `ChooseStrategyVariantForSoloModeAndvariMoveValidator`,
     SoloBotAndvariPlaceAllCoinsMoveValidator = `SoloBotAndvariPlaceAllCoinsMoveValidator`,
     SoloBotAndvariClickHeroCardMoveValidator = `SoloBotAndvariClickHeroCardMoveValidator`,
     SoloBotAndvariClickCardToPickDistinctionMoveValidator = `SoloBotAndvariClickCardToPickDistinctionMoveValidator`,
+    SoloBotAndvariPlaceYludHeroMoveValidator = `SoloBotAndvariPlaceYludHeroMoveValidator`,
+    SoloBotAndvariPlaceThrudHeroMoveValidator = `SoloBotAndvariPlaceThrudHeroMoveValidator`,
+    SoloBotAndvariClickCoinToUpgradeMoveValidator = `SoloBotAndvariClickCoinToUpgradeMoveValidator`,
     // start
     AddCoinToPouchMoveValidator = `AddCoinToPouchMoveValidator`,
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator =

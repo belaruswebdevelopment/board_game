@@ -117,6 +117,7 @@ export const DiscardSuitCardAction = (G, ctx, cardId) => {
  * @param cardId Id выбранной карты.
  */
 export const PickCampCardAction = (G, ctx, cardId) => {
+    var _a;
     const campCard = G.camp[cardId];
     if (campCard === undefined) {
         throw new Error(`Отсутствует кликнутая карта лагеря с id '${cardId}': это должно проверяться в MoveValidator.`);
@@ -127,7 +128,7 @@ export const PickCampCardAction = (G, ctx, cardId) => {
     G.camp.splice(cardId, 1, null);
     AddCampCardToCards(G, ctx, campCard);
     if (campCard.type === RusCardTypeNames.Artefact_Card) {
-        AddActionsToStack(G, ctx, campCard.stack, campCard);
+        AddActionsToStack(G, ctx, (_a = campCard.stack) === null || _a === void 0 ? void 0 : _a.player, campCard);
         StartAutoAction(G, ctx, campCard.actions);
     }
     if (campCard.type === RusCardTypeNames.Mercenary_Card && ctx.phase === PhaseNames.EnlistmentMercenaries) {

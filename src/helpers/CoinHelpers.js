@@ -132,6 +132,48 @@ export const OpenClosedCoinsOnPlayerBoard = (G, ctx, playerId) => {
     }
 };
 /**
+ * <h3>Открывает закрытые монеты текущей таверны на столе игроков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В момент игры, когда нужно открыть все закрытые монеты текущей таверны всех игроков в фазу 'Смотр войск'.</li>
+ * <li>В момент игры, когда нужно открыть все закрытые монеты текущей таверны всех игроков в фазу 'Ставки Улина'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const OpenCurrentTavernClosedCoinsOnPlayerBoard = (G, ctx) => {
+    Object.values(G.publicPlayers).forEach((player, index) => {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)
+            || (G.mode === GameModeNames.SoloAndvari && index === 1)) {
+            const privatePlayer = G.players[index];
+            if (privatePlayer === undefined) {
+                return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, index);
+            }
+            const privateBoardCoin = privatePlayer.boardCoins[G.currentTavern];
+            if (privateBoardCoin === undefined) {
+                throw new Error(`В массиве монет приватного игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
+            }
+            if (privateBoardCoin !== null && !privateBoardCoin.isOpened) {
+                ChangeIsOpenedCoinStatus(privateBoardCoin, true);
+            }
+            player.boardCoins[G.currentTavern] = privateBoardCoin;
+        }
+        else {
+            const publicBoardCoin = player.boardCoins[G.currentTavern];
+            if (publicBoardCoin === undefined) {
+                throw new Error(`В массиве монет игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
+            }
+            if (publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
+                throw new Error(`В массиве монет игрока с id '${index}' в руке не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
+            }
+            if (publicBoardCoin !== null && !publicBoardCoin.isOpened) {
+                ChangeIsOpenedCoinStatus(publicBoardCoin, true);
+            }
+        }
+    });
+};
+/**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>
  * <p>Применения:</p>
  * <ol>

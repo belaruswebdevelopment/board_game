@@ -26,12 +26,21 @@ import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, MultiSui
  * @param heroId Id героя.
  */
 export const AddHeroToPlayerCardsAction = (G, ctx, heroId) => {
+    var _a, _b, _c, _d, _e, _f, _g;
     const hero = G.heroes[heroId];
     if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }
     AddHeroToPlayerCards(G, ctx, hero);
-    AddActionsToStack(G, ctx, hero.stack, hero);
+    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, (_b = (_a = hero.stack) === null || _a === void 0 ? void 0 : _a.soloBot) !== null && _b !== void 0 ? _b : (_c = hero.stack) === null || _c === void 0 ? void 0 : _c.player, hero);
+    }
+    else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, (_e = (_d = hero.stack) === null || _d === void 0 ? void 0 : _d.soloBotAndvari) !== null && _e !== void 0 ? _e : (_f = hero.stack) === null || _f === void 0 ? void 0 : _f.player, hero);
+    }
+    else {
+        AddActionsToStack(G, ctx, (_g = hero.stack) === null || _g === void 0 ? void 0 : _g.player, hero);
+    }
     StartAutoAction(G, ctx, hero.actions);
 };
 /**

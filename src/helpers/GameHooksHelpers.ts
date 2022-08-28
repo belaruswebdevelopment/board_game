@@ -1,6 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
+import { CheckIfCurrentTavernEmpty } from "../Tavern";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
@@ -65,7 +66,7 @@ export const StartGetMjollnirProfitPhase = (G: IMyGameState): CanBeVoidType<Phas
  * </ol>
  *
  * @param G
- * @returns
+ * @returns Следующая фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionPhase = (G: IMyGameState): PhaseNames => {
     const ulinePlayerIndex: number =
@@ -91,7 +92,7 @@ export const StartBidUlineOrTavernsResolutionPhase = (G: IMyGameState): PhaseNam
  */
 export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase = (G: IMyGameState, ctx: Ctx):
     CanBeVoidType<PhaseNames> => {
-    const isLastTavern: boolean = G.tavernsNum - 1 === G.currentTavern;
+    const isLastTavern: boolean = G.tavernsNum - 1 === G.currentTavern && CheckIfCurrentTavernEmpty(G);
     if (isLastTavern) {
         return AfterLastTavernEmptyActions(G, ctx);
     } else {

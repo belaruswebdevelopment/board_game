@@ -1,6 +1,6 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
@@ -68,6 +68,10 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
                 player.boardCoins[i] = {};
                 player.handCoins[i] = null;
             } else {
+                if (handCoin !== null && (G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari)
+                    && ctx.currentPlayer === `0`) {
+                    ChangeIsOpenedCoinStatus(handCoin, true);
+                }
                 player.boardCoins[i] = handCoin;
             }
             handCoins[coinId] = null;

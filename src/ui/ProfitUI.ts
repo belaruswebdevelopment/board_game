@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/react";
 import { ThrowMyError } from "../Error";
-import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
 import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
@@ -27,7 +27,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < 4; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.NoHeroEasyStrategy, player,
@@ -52,7 +52,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             }
-        } else {
+        } else if (j === 3) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.WithHeroHardStrategy, player,
                     MoveNames.ChooseStrategyForSoloModeAndvariMove,
@@ -200,10 +200,11 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameStat
  * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
  */
 export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
-    CanBeVoidType<MoveArgumentsType<number[]>> => {
+    data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): CanBeVoidType<MoveArgumentsType<number[]>> => {
+    if (G.explorerDistinctionCards === null) {
+        throw new Error(`В массиве карт для получения преимущества по фракции '${RusSuitNames.explorer}' не может не быть карт.`);
+    }
     const moveMainArgs: MoveArgumentsType<number[]> = [];
-    // TODO Draw only one for Solo bot Andvari?
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
         const card: CanBeUndefType<DeckCardTypes> = G.explorerDistinctionCards[j];
         if (card === undefined) {

@@ -5,8 +5,8 @@ import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
-import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, DistinctionType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, DistinctionType, ExplorerDistinctionCardsArrayType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -111,13 +111,21 @@ export const OnTroopEvaluationMove = (G: IMyGameState, ctx: Ctx): void => {
 export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        for (let j = 0; j < 3; j++) {
+        let length: number;
+        if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+            length = 1;
+        } else {
+            length = 3;
+        }
+        const explorerDistinctionCards: DeckCardTypes[] = [];
+        for (let j = 0; j < length; j++) {
             const card: CanBeUndefType<DeckCardTypes> = G.secret.decks[1][j];
             if (card === undefined) {
                 throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
             }
-            G.explorerDistinctionCards.push(card);
+            explorerDistinctionCards.push(card);
         }
+        G.explorerDistinctionCards = explorerDistinctionCards as ExplorerDistinctionCardsArrayType;
     }
 };
 

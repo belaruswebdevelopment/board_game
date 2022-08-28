@@ -1,5 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
+import { CheckIfCurrentTavernEmpty } from "../Tavern";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
@@ -58,7 +59,7 @@ export const StartGetMjollnirProfitPhase = (G) => {
  * </ol>
  *
  * @param G
- * @returns
+ * @returns Следующая фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionPhase = (G) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
@@ -81,7 +82,7 @@ export const StartBidUlineOrTavernsResolutionPhase = (G) => {
  * @returns
  */
 export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase = (G, ctx) => {
-    const isLastTavern = G.tavernsNum - 1 === G.currentTavern;
+    const isLastTavern = G.tavernsNum - 1 === G.currentTavern && CheckIfCurrentTavernEmpty(G);
     if (isLastTavern) {
         return AfterLastTavernEmptyActions(G, ctx);
     }

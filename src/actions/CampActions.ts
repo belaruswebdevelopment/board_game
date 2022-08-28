@@ -140,7 +140,7 @@ export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): v
     G.camp.splice(cardId, 1, null);
     AddCampCardToCards(G, ctx, campCard);
     if (campCard.type === RusCardTypeNames.Artefact_Card) {
-        AddActionsToStack(G, ctx, campCard.stack, campCard);
+        AddActionsToStack(G, ctx, campCard.stack?.player, campCard);
         StartAutoAction(G, ctx, campCard.actions);
     }
     if (campCard.type === RusCardTypeNames.Mercenary_Card && ctx.phase === PhaseNames.EnlistmentMercenaries) {

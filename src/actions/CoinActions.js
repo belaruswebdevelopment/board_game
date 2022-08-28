@@ -26,7 +26,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins, boardCoins;
-    if (G.mode === GameModeNames.Multiplayer) {
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     }
@@ -135,7 +135,8 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
     }
     else if (type === CoinTypeNames.Board) {
-        if (G.mode === GameModeNames.Multiplayer) {
+        if (G.mode === GameModeNames.Multiplayer
+            || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)) {
             boardCoins[upgradingCoinId] = upgradedCoin;
         }
         player.boardCoins[upgradingCoinId] = upgradedCoin;

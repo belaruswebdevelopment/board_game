@@ -100,6 +100,7 @@ export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true>
  * </ol>
  *
  * @param G
+ * @param ctx
  */
 export const EndBidsActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
@@ -116,8 +117,11 @@ export const EndBidsActions = (G: IMyGameState): void => {
  * @param ctx
  */
 export const PreparationPhaseActions = (G: IMyGameState, ctx: Ctx): void => {
+    G.round++;
     G.currentTavern = 0;
-    ReturnCoinsToPlayerHands(G, ctx);
+    if (G.round !== 0) {
+        ReturnCoinsToPlayerHands(G, ctx);
+    }
     if (G.expansions.thingvellir.active) {
         RefillEmptyCampCards(G);
     }

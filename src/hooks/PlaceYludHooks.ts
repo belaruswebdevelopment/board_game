@@ -164,7 +164,13 @@ export const OnPlaceYludMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const OnPlaceYludTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStack(G, ctx, [StackData.placeYludHero()]);
+    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, [StackData.placeYludHeroSoloBot()]);
+    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, [StackData.placeYludHeroSoloBotAndvari()]);
+    } else {
+        AddActionsToStack(G, ctx, [StackData.placeYludHero()]);
+    }
     DrawCurrentProfit(G, ctx);
 };
 

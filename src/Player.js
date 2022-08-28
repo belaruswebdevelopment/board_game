@@ -28,11 +28,10 @@ export const BuildPlayer = () => CreatePlayer({
  *
  * @param nickname Никнейм.
  * @param priority Кристалл.
- * @param multiplayer Является ли игра мультиплеером.
- * @param soloBot Является ли игрок соло ботом.
+ * @param isPrivate Должны ли монеты быть приватными.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
+export const BuildPublicPlayer = (nickname, priority, isPrivate) => {
     const cards = {}, giantTokenSuits = {};
     let suit;
     for (suit in suitsConfig) {
@@ -40,7 +39,7 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
         giantTokenSuits[suit] = null;
     }
     let handCoins = [];
-    if (multiplayer) {
+    if (isPrivate) {
         handCoins = Array(initialPlayerCoinsConfig.length).fill({});
     }
     else {

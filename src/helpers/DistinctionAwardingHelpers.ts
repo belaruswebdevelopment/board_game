@@ -187,10 +187,29 @@ export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyG
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
+        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+            AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
+        } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+            AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
+        } else {
+            AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
+        }
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
     } else {
         return GetMaxCoinValue(player);
     }
     return 0;
+};
+
+export const EndWarriorOrExplorerDistinctionIfCoinUpgraded = (G: IMyGameState): void => {
+    // todo Move to distinction phase hook?
+    if (Object.values(G.distinctions).length) {
+        // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
+        const isDistinctionWarrior: boolean = G.distinctions[SuitNames.warrior] !== undefined;
+        if (isDistinctionWarrior) {
+            G.distinctions[SuitNames.warrior] = undefined;
+        } else if (!isDistinctionWarrior && G.distinctions[SuitNames.explorer] !== undefined) {
+            G.distinctions[SuitNames.explorer] = undefined;
+        }
+    }
 };

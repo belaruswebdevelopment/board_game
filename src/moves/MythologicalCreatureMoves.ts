@@ -18,7 +18,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPub
  * @param cardId Id выбираемой карты Бога.
  * @returns
  */
-export const UseGodPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const UseGodCardPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Check/Fix StageNames.default3
     const isValidMove: boolean =

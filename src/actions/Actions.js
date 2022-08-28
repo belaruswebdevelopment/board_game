@@ -11,6 +11,37 @@ import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
 /**
+ * <h3>Действия, связанные с выбором карты из таверны.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется при выборе карты из таверны игроком.</li>
+ * <li>Применяется при выборе карты из таверны соло ботом.</li>
+ * <li>Применяется при выборе карты из таверны соло ботом Андвари.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const ClickCardAction = (G, ctx, cardId) => {
+    const currentTavern = G.taverns[G.currentTavern], card = currentTavern[cardId];
+    if (card === undefined) {
+        throw new Error(`Отсутствует карта с id '${cardId}' текущей таверны с id '${G.currentTavern}'.`);
+    }
+    if (card === null) {
+        throw new Error(`Не существует кликнутая карта с id '${cardId}'.`);
+    }
+    currentTavern.splice(cardId, 1, null);
+    const isAdded = PickCardOrActionCardActions(G, ctx, card);
+    if (isAdded && `suit` in card) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player === undefined) {
+            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        }
+        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+    }
+};
+/**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -165,6 +196,9 @@ export const PickDiscardCardAction = (G, ctx, cardId) => {
  * @param cardId Id карты.
  */
 export const PickCardToPickDistinctionAction = (G, ctx, cardId) => {
+    if (G.explorerDistinctionCards === null) {
+        throw new Error(`В массиве карт для получения преимущества по фракции '${RusSuitNames.explorer}' не может не быть карт.`);
+    }
     const pickedCard = G.explorerDistinctionCards.splice(cardId, 1)[0];
     if (pickedCard === undefined) {
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);

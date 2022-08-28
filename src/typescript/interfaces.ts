@@ -281,6 +281,8 @@ export interface IStackData {
     readonly getMjollnirProfit: () => IStack;
     readonly pickCampCardHolda: () => IStack;
     readonly pickCard: () => IStack;
+    readonly pickCardSoloBot: () => IStack;
+    readonly pickCardSoloBotAndvari: () => IStack;
     // TODO Add types for coinValue & value
     readonly pickConcreteCoinToUpgrade: (coinValue: number, value: number) => IStack;
     readonly pickDiscardCardAndumia: () => IStack;
@@ -291,22 +293,30 @@ export interface IStackData {
     readonly placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3) =>
         IStack;
     readonly placeThrudHero: () => IStack;
+    readonly placeThrudHeroSoloBot: () => IStack;
+    readonly placeThrudHeroSoloBotAndvari: () => IStack;
     readonly placeTradingCoinsUline: () => IStack;
     readonly placeYludHero: () => IStack;
-    readonly pickHero: (priority: OneOrTwoStackPriorityType) => IStack;
-    readonly pickHeroSoloBot: () => IStack;
-    readonly pickHeroSoloBotAndvari: () => IStack;
+    readonly placeYludHeroSoloBot: () => IStack;
+    readonly placeYludHeroSoloBotAndvari: () => IStack;
+    readonly pickHero: (priority: OneOrTwoType) => IStack;
+    readonly pickHeroSoloBot: (priority: OneOrTwoType) => IStack;
+    readonly pickHeroSoloBotAndvari: (priority: OneOrTwoType) => IStack;
     readonly placeEnlistmentMercenaries: (card: IMercenaryCampCard) => IStack;
     readonly startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueType,
         coinId?: number, priority?: 3) => IStack;
     readonly startOrPassEnlistmentMercenaries: () => IStack;
     readonly upgradeCoin: (value: number) => IStack;
+    readonly upgradeCoinSoloBot: (value: number) => IStack;
+    readonly upgradeCoinSoloBotAndvari: (value: number) => IStack;
     readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3) => IStack;
     readonly upgradeCoinWarriorDistinction: () => IStack;
+    readonly upgradeCoinWarriorDistinctionSoloBot: () => IStack;
+    readonly upgradeCoinWarriorDistinctionSoloBotAndvari: () => IStack;
 }
 
 /**
- * <h3>Интерфейс для стека у карт.</h3>
+ * <h3>Интерфейс для стека действия.</h3>
  */
 export interface IStack {
     priority?: number;
@@ -396,7 +406,16 @@ interface ICardWithActionInfo {
     readonly buff?: IBuff;
     readonly validators?: ValidatorsConfigType;
     readonly actions?: IAction<AutoActionFunctionNames, AutoActionArgsType>;
-    readonly stack?: IStack[];
+    readonly stack?: IStackCard;
+}
+
+/**
+ * <h3>Интерфейс для стека у карт.</h3>
+ */
+interface IStackCard {
+    player?: IStack[];
+    soloBot?: IStack[];
+    soloBotAndvari?: IStack[];
 }
 
 /**
@@ -535,7 +554,7 @@ export interface IMyGameState {
     readonly campDeckLength: [number, number];
     mythologicalCreatureDeckLength: number;
     explorerDistinctionCardId: CanBeNullType<number>,
-    readonly explorerDistinctionCards: DeckCardTypes[];
+    explorerDistinctionCards: CanBeNullType<ExplorerDistinctionCardsArrayType>;
     readonly camp: CampCardType[];
     readonly secret: ISecret;
     readonly campNum: 5;
@@ -560,7 +579,7 @@ export interface IMyGameState {
     heroesForSoloGameDifficultyLevel: CanBeNullType<IHeroCard[]>;
     heroesInitialForSoloGameForBotAndvari: CanBeNullType<HeroesInitialForSoloGameForBotAndvariArrayType>;
     heroesForSoloGameForStrategyBotAndvari: CanBeNullType<HeroesForSoloGameForStrategyBotAndvariArrayType>;
-    readonly strategyForSoloBotAndvari: IStrategyForSoloBotAndvari;
+    strategyForSoloBotAndvari: IStrategyForSoloBotAndvari;
     readonly log: boolean;
     readonly logData: ILogData[];
     readonly marketCoins: ICoin[];
@@ -583,11 +602,16 @@ export interface IMyGameState {
  * <h3>Интерфейс для стратегий соло бота Андвари.</h3>
  */
 export interface IStrategyForSoloBotAndvari {
-    general: {
-        [index: number]: SuitNamesKeyofTypeofType;
+    readonly general: {
+        0?: SuitNamesKeyofTypeofType;
+        1?: SuitNamesKeyofTypeofType;
+        2?: SuitNamesKeyofTypeofType;
     },
-    reserve: {
-        [index: number]: SuitNamesKeyofTypeofType;
+    readonly reserve: {
+        1?: SuitNamesKeyofTypeofType;
+        2?: SuitNamesKeyofTypeofType;
+        3?: SuitNamesKeyofTypeofType;
+        4?: SuitNamesKeyofTypeofType;
     };
 
 }
@@ -698,7 +722,7 @@ export interface IMoveBy {
 export interface IMoveByChooseDifficultySoloModeOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly chooseHeroesForSoloMode: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly upgradeCoin: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
+    readonly upgradeCoinSoloBot: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
 }
 
 /**
@@ -730,15 +754,19 @@ export interface IMoveByBidUlineOptions {
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveBySoloBotOptions {
+export interface IMoveBySoloBotCommonOptions {
+    readonly placeThrudHeroSoloBot: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
     readonly pickHeroSoloBot: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly upgradeCoinSoloBot: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveBySoloBotAndvariOptions {
+export interface IMoveBySoloBotAndvariCommonOptions {
+    readonly placeThrudHeroSoloBotAndvari: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
     readonly pickHeroSoloBotAndvari: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly upgradeCoinSoloBotAndvari: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
 }
 
 /**
@@ -763,10 +791,12 @@ interface IMoveByCommonOptions {
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByTavernsResolutionOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions,
-    IMoveBySoloBotAndvariOptions {
+export interface IMoveByTavernsResolutionOptions extends IMoveByCommonOptions, IMoveBySoloBotCommonOptions,
+    IMoveBySoloBotAndvariCommonOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly default2: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly default3: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly default4: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly discardCard: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly placeTradingCoinsUline: IMoveValidator<MoveArgumentsType<number[]>>;
 }
@@ -784,16 +814,18 @@ export interface IMoveByEnlistmentMercenariesOptions extends IMoveByCommonOption
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByPlaceYludOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions,
-    IMoveBySoloBotAndvariOptions {
+export interface IMoveByPlaceYludOptions extends IMoveByCommonOptions, IMoveBySoloBotCommonOptions,
+    IMoveBySoloBotAndvariCommonOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly default2: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly default3: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByTroopEvaluationOptions extends IMoveByCommonOptions, IMoveBySoloBotOptions,
-    IMoveBySoloBotAndvariOptions {
+export interface IMoveByTroopEvaluationOptions extends IMoveByCommonOptions, IMoveBySoloBotCommonOptions,
+    IMoveBySoloBotAndvariCommonOptions {
     readonly default1: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
     readonly pickDistinctionCard: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly pickDistinctionCardSoloBot: IMoveValidator<MoveArgumentsType<number[]>>;
@@ -866,13 +898,18 @@ export interface IMoveValidators {
     // Bots
     readonly BotsPlaceAllCoinsMoveValidator: IMoveValidator<MoveArgumentsType<number[][]>>;
     // Solo Bot
+    readonly SoloBotClickCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly SoloBotPlaceAllCoinsMoveValidator: IMoveValidator<MoveArgumentsType<number[][]>>;
     readonly SoloBotClickHeroCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly SoloBotClickCardToPickDistinctionMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly SoloBotPlaceThrudHeroMoveValidator: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly SoloBotPlaceYludHeroMoveValidator: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly SoloBotClickCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     // Solo Mode
     readonly ChooseDifficultyLevelForSoloModeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ChooseHeroesForSoloModeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     // Solo Mode Andvari
+    readonly SoloBotAndvariClickCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ChooseStrategyForSoloModeAndvariMoveValidator:
     IMoveValidator<MoveArgumentsType<SoloGameAndvariStrategyNames[]>>;
     readonly ChooseStrategyVariantForSoloModeAndvariMoveValidator:
@@ -880,6 +917,9 @@ export interface IMoveValidators {
     readonly SoloBotAndvariPlaceAllCoinsMoveValidator: IMoveValidator<MoveArgumentsType<number[][]>>;
     readonly SoloBotAndvariClickHeroCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly SoloBotAndvariClickCardToPickDistinctionMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly SoloBotAndvariPlaceThrudHeroMoveValidator: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly SoloBotAndvariPlaceYludHeroMoveValidator: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly SoloBotAndvariClickCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     // start
     readonly AddCoinToPouchMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
@@ -1065,7 +1105,7 @@ export type TavernsConfigType = readonly [ITavernInConfig, ITavernInConfig, ITav
 /**
  * <h3>Типы данных для количества всех игроков.</h3>
  */
-export type NumPlayersType = 2 | ThreeOrFourOrFive;
+export type NumPlayersType = 2 | ThreeOrFourOrFiveType;
 
 /**
  * <h3>Типы данных для конфига всех Королевских наград.</h3>
@@ -1117,7 +1157,7 @@ export type BuffValueType = SuitNamesKeyofTypeofType | true;
 /**
  * <h3>Типы данных для значений '1' или '2' приоритетов для стека.</h3>
  */
-export type OneOrTwoStackPriorityType = 1 | 2;
+export type OneOrTwoType = 1 | 2;
 
 /**
  * <h3>Типы данных для аргументов id карты и id игрока у мува.</h3>
@@ -1199,32 +1239,37 @@ export type PointsType = number | number[];
 /**
  * <h3>Типы данных для эпох.</h3>
  */
-export type TierType = ZeroOrOne;
+export type TierType = ZeroOrOneType;
 
 /**
  * <h3>Типы данных для эпох до завершения игры.</h3>
  */
-type TierToEndType = ZeroOrOneOrTwo;
+type TierToEndType = ZeroOrOneOrTwoType;
 
 /**
  * <h3>Типы данных для 0 | 1.</h3>
  */
-type ZeroOrOne = 0 | 1;
+type ZeroOrOneType = 0 | 1;
 
 /**
  * <h3>Типы данных для 0 | 1 | 2.</h3>
  */
-export type ZeroOrOneOrTwo = ZeroOrOne | 2;
+export type ZeroOrOneOrTwoType = ZeroOrOneType | 2;
 
 /**
  * <h3>Типы данных для 3 | 4 | 5.</h3>
  */
-type ThreeOrFourOrFive = 3 | 4 | 5;
+type ThreeOrFourOrFiveType = 3 | 4 | 5;
 
 /**
  * <h3>Типы данных для 0 | 1 | 2 | 3 | 4.</h3>
  */
-export type ZeroOrOneOrTwoOrThreeOrFour = ZeroOrOneOrTwo | Exclude<ThreeOrFourOrFive, 5>;
+export type ZeroOrOneOrTwoOrThreeOrFour = ZeroOrOneOrTwoType | Exclude<ThreeOrFourOrFiveType, 5>;
+
+/**
+ * <h3>Типы данных для 1 | 2 | 3 | 4.</h3>
+ */
+export type OneOrTwoOrThreeOrFour = Exclude<ZeroOrOneOrTwoOrThreeOrFour, 0>;
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
@@ -1241,17 +1286,17 @@ export type TavernCardType = CanBeNullType<DeckCardTypes | MythologicalCreatureD
 /**
  * <h3>Типы данных для номера текущей таверны.</h3>
  */
-type CurrentTavernType = ZeroOrOneOrTwo;
+type CurrentTavernType = ZeroOrOneOrTwoType;
 
 /**
  * <h3>Типы данных для отрисовки количества карт в таверне.</h3>
  */
-export type DrawSizeType = ThreeOrFourOrFive;
+export type DrawSizeType = ThreeOrFourOrFiveType;
 
 /**
  * <h3>Типы данных для значений уровня сложности соло режима.</h3>
  */
-export type SoloGameDifficultyLevelType = ZeroOrOneOrTwo | ThreeOrFourOrFive | 6;
+export type SoloGameDifficultyLevelType = ZeroOrOneOrTwoType | ThreeOrFourOrFiveType | 6;
 
 /**
  * <h3>Типы данных для значений аргументов уровня сложности соло режима.</h3>
@@ -1537,7 +1582,7 @@ export type ArgsType = (CoinTypeNames | SuitNamesKeyofTypeofType | number | Solo
 /**
  * <h3>Типы данных для аргументов автоматических действий.</h3>
  */
-export type AutoActionArgsType = [(number | OneOrTwoStackPriorityType)?];
+export type AutoActionArgsType = [(number | OneOrTwoType)?];
 
 /**
  * <h3>Типы данных для аргументов функций подсчёта очков.</h3>
@@ -1738,6 +1783,11 @@ export type HeroesForSoloGameForStrategyBotAndvariArrayType = [IHeroCard, IHeroC
  * <h3>Тип для данных массива всех карт героев для соло бота.</h3>
  */
 export type HeroesForSoloGameArrayType = [IHeroCard, IHeroCard, IHeroCard, IHeroCard, IHeroCard];
+
+/**
+ * <h3>Тип для данных массива всех карт героев для соло бота.</h3>
+ */
+export type ExplorerDistinctionCardsArrayType = [DeckCardTypes, DeckCardTypes?, DeckCardTypes?];
 
 /**
  * <h3>Тип для данных массива всех карт героев для выбора уровня сложности для соло бота.</h3>

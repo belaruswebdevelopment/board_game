@@ -28,16 +28,18 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
         const playerCards: PlayerCardType[][] = Object.values(player.cards),
             heroesLength: number =
-                G.mode === GameModeNames.Solo1 ? player.heroes.filter((hero: IHeroCard): boolean =>
-                    hero.name.startsWith(`Dwerg`)).length : player.heroes.length -
-                ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.NoHeroEasyStrategy
-                    || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.NoHeroHardStrategy) ? 0 : 5),
+                G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`
+                    ? player.heroes.filter((hero: IHeroCard): boolean =>
+                        hero.name.startsWith(`Dwerg`)).length : player.heroes.length -
+                    ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
+                        || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy)
+                        && ctx.currentPlayer === `1` ? 5 : 0),
             isCanPickHero: boolean =
                 (Math.min(...playerCards.map((item: PlayerCardType[]): number =>
                     item.reduce(TotalRank, 0))) -
-                    ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.NoHeroEasyStrategy
-                        || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.NoHeroHardStrategy) ?
-                        0 : 1)) > heroesLength,
+                    ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
+                        || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy) ?
+                        1 : 0)) > heroesLength,
             playerPickHeroActionInStackIndex: number = player.stack.findIndex((stack: IStack): boolean =>
                 stack.stageName === StageNames.pickHero);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {

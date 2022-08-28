@@ -74,18 +74,43 @@ export const enumerate = (G, ctx) => {
                     activeStageOfCurrentPlayer = StageNames.default1;
                     break;
                 case PhaseNames.TavernsResolution:
-                    if (ctx.activePlayers === null) {
-                        let pickCardOrCampCard = `card`;
-                        if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                            || (!G.campPicked && CheckPlayerHasBuff(player, BuffNames.GoCamp)))) {
-                            pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
-                        }
-                        if (pickCardOrCampCard === `card`) {
-                            activeStageOfCurrentPlayer = StageNames.default1;
-                        }
-                        else {
-                            activeStageOfCurrentPlayer = StageNames.default2;
-                        }
+                    switch (G.mode) {
+                        case GameModeNames.Basic:
+                        case GameModeNames.Multiplayer:
+                            if (ctx.activePlayers === null) {
+                                let pickCardOrCampCard = `card`;
+                                if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                                    || (!G.campPicked && CheckPlayerHasBuff(player, BuffNames.GoCamp)))) {
+                                    pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
+                                }
+                                if (pickCardOrCampCard === `card`) {
+                                    activeStageOfCurrentPlayer = StageNames.default1;
+                                }
+                                else {
+                                    activeStageOfCurrentPlayer = StageNames.default2;
+                                }
+                            }
+                            break;
+                        case GameModeNames.Solo1:
+                            if (ctx.currentPlayer === `0`) {
+                                activeStageOfCurrentPlayer = StageNames.default1;
+                            }
+                            else if (ctx.currentPlayer === `1`) {
+                                activeStageOfCurrentPlayer = StageNames.default3;
+                            }
+                            break;
+                        case GameModeNames.SoloAndvari:
+                            if (ctx.currentPlayer === `0`) {
+                                activeStageOfCurrentPlayer = StageNames.default1;
+                            }
+                            else if (ctx.currentPlayer === `1`) {
+                                activeStageOfCurrentPlayer = StageNames.default4;
+                            }
+                            break;
+                        default:
+                            _exhaustiveCheck = G.mode;
+                            throw new Error(`Нет такого режима игры.`);
+                            return _exhaustiveCheck;
                     }
                     break;
                 case PhaseNames.EnlistmentMercenaries:

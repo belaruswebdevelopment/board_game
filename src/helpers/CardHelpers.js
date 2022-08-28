@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { ErrorNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -94,6 +94,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G, ctx, card) => {
  * @returns
  */
 export const PickCardOrActionCardActions = (G, ctx, card) => {
+    var _a, _b, _c;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -109,7 +110,15 @@ export const PickCardOrActionCardActions = (G, ctx, card) => {
             break;
         case RusCardTypeNames.Royal_Offering_Card:
             AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
-            AddActionsToStack(G, ctx, card.stack, card);
+            if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+                AddActionsToStack(G, ctx, (_a = card.stack) === null || _a === void 0 ? void 0 : _a.soloBot, card);
+            }
+            else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+                AddActionsToStack(G, ctx, (_b = card.stack) === null || _b === void 0 ? void 0 : _b.soloBotAndvari, card);
+            }
+            else {
+                AddActionsToStack(G, ctx, (_c = card.stack) === null || _c === void 0 ? void 0 : _c.player, card);
+            }
             DiscardPickedCard(G, card);
             break;
         case RusCardTypeNames.God_Card:

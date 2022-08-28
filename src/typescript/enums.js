@@ -240,6 +240,8 @@ export var DrawNames;
     DrawNames["Holda"] = "Holda";
     DrawNames["PlaceMultiSuitsCards"] = "Place multi suits cards";
     DrawNames["PickCard"] = "Pick card or camp card";
+    DrawNames["PickCardSoloBot"] = "Pick card or camp card Solo Bot";
+    DrawNames["PickCardSoloBotAndvari"] = "Pick card or camp card Solo Bot Andvari";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
     DrawNames["PickCardByExplorerDistinctionSoloBot"] = "Pick card by Explorer distinction Solo Bot";
     DrawNames["PickCardByExplorerDistinctionSoloBotAndvari"] = "Pick card by Explorer distinction Solo Bot Andvari";
@@ -250,12 +252,20 @@ export var DrawNames;
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
     DrawNames["PlaceTradingCoinsUline"] = "Place Trading Coins Uline";
     DrawNames["PlaceYludHero"] = "Place Ylud";
+    DrawNames["PlaceYludHeroSoloBot"] = "Place Ylud Solo Bot";
+    DrawNames["PlaceYludHeroSoloBotAndvari"] = "Place Ylud Solo Bot Andvari";
     DrawNames["StartChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "Start choose coin value for Vidofnir Vedrfolnir upgrade";
     DrawNames["StartOrPassEnlistmentMercenaries"] = "Start or Pass Enlistment Mercenaries";
     DrawNames["PlaceThrudHero"] = "Place Thrud Hero";
+    DrawNames["PlaceThrudHeroSoloBot"] = "Place Thrud Hero Solo Bot";
+    DrawNames["PlaceThrudHeroSoloBotAndvari"] = "Place Thrud Hero Solo Bot Andvari";
     DrawNames["UpgradeCoin"] = "Upgrade coin";
+    DrawNames["UpgradeCoinSoloBot"] = "Upgrade coin Solo Bot";
+    DrawNames["UpgradeCoinSoloBotAndvari"] = "Upgrade coin Solo Bot Andvari";
     DrawNames["UpgradeCoinVidofnirVedrfolnir"] = "Upgrade coin Vidofnir Vedrfolnir";
     DrawNames["UpgradeCoinWarriorDistinction"] = "Upgrade coin Warrior distinction";
+    DrawNames["UpgradeCoinWarriorDistinctionSoloBot"] = "Upgrade coin Warrior distinction Solo Bot";
+    DrawNames["UpgradeCoinWarriorDistinctionSoloBotAndvari"] = "Upgrade coin Warrior distinction Solo Bot Andvari";
 })(DrawNames || (DrawNames = {}));
 /**
  * <h3>Перечисление для названий ошибок.</h3>
@@ -478,18 +488,26 @@ export var MoveNames;
     // Bots
     MoveNames["BotsPlaceAllCoinsMove"] = "BotsPlaceAllCoinsMove";
     // Solo Bot
+    MoveNames["SoloBotClickCardMove"] = "SoloBotClickCardMove";
     MoveNames["SoloBotClickHeroCardMove"] = "SoloBotClickHeroCardMove";
     MoveNames["SoloBotPlaceAllCoinsMove"] = "SoloBotPlaceAllCoinsMove";
     MoveNames["SoloBotClickCardToPickDistinctionMove"] = "SoloBotClickCardToPickDistinctionMove";
+    MoveNames["SoloBotPlaceThrudHeroMove"] = "SoloBotPlaceThrudHeroMove";
+    MoveNames["SoloBotPlaceYludHeroMove"] = "SoloBotPlaceYludHeroMove";
+    MoveNames["SoloBotClickCoinToUpgradeMove"] = "SoloBotClickCoinToUpgradeMove";
     // Solo Mode
     MoveNames["ChooseDifficultyLevelForSoloModeMove"] = "ChooseDifficultyLevelForSoloModeMove";
     MoveNames["ChooseHeroForDifficultySoloModeMove"] = "ChooseHeroForDifficultySoloModeMove";
     //Solo Mode Andvari
+    MoveNames["SoloBotAndvariClickCardMove"] = "SoloBotAndvariClickCardMove";
     MoveNames["ChooseStrategyForSoloModeAndvariMove"] = "ChooseStrategyForSoloModeAndvariMove";
     MoveNames["ChooseStrategyVariantForSoloModeAndvariMove"] = "ChooseStrategyVariantForSoloModeAndvariMove";
     MoveNames["SoloBotAndvariPlaceAllCoinsMove"] = "SoloBotAndvariPlaceAllCoinsMove";
     MoveNames["SoloBotAndvariClickHeroCardMove"] = "SoloBotAndvariClickHeroCardMove";
     MoveNames["SoloBotAndvariClickCardToPickDistinctionMove"] = "SoloBotAndvariClickCardToPickDistinctionMove";
+    MoveNames["SoloBotAndvariPlaceThrudHeroMove"] = "SoloBotAndvariPlaceThrudHeroMove";
+    MoveNames["SoloBotAndvariPlaceYludHeroMove"] = "SoloBotAndvariPlaceYludHeroMove";
+    MoveNames["SoloBotAndvariClickCoinToUpgradeMove"] = "SoloBotAndvariClickCoinToUpgradeMove";
     // start
     MoveNames["AddCoinToPouchMove"] = "AddCoinToPouchMove";
     MoveNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMove"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMove";
@@ -504,7 +522,7 @@ export var MoveNames;
     MoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
     MoveNames["UpgradeCoinVidofnirVedrfolnirMove"] = "UpgradeCoinVidofnirVedrfolnirMove";
     // TODO Is it here?
-    MoveNames["UseGodPowerMove"] = "UseGodPowerMove";
+    MoveNames["UseGodCardPowerMove"] = "UseGodCardPowerMove";
 })(MoveNames || (MoveNames = {}));
 /**
  * <h3>Перечисление для фаз игры.</h3>
@@ -599,8 +617,12 @@ export var StageNames;
     StageNames["placeMultiSuitsCards"] = "placeMultiSuitsCards";
     StageNames["placeTradingCoinsUline"] = "placeTradingCoinsUline";
     StageNames["placeThrudHero"] = "placeThrudHero";
+    StageNames["placeThrudHeroSoloBot"] = "placeThrudHeroSoloBot";
+    StageNames["placeThrudHeroSoloBotAndvari"] = "placeThrudHeroSoloBotAndvari";
     StageNames["chooseHeroesForSoloMode"] = "chooseHeroesForSoloMode";
     StageNames["upgradeCoin"] = "upgradeCoin";
+    StageNames["upgradeCoinSoloBot"] = "upgradeCoinSoloBot";
+    StageNames["upgradeCoinSoloBotAndvari"] = "upgradeCoinSoloBotAndvari";
     StageNames["upgradeVidofnirVedrfolnirCoin"] = "upgradeVidofnirVedrfolnirCoin";
 })(StageNames || (StageNames = {}));
 /**
@@ -631,8 +653,12 @@ export var RusStageNames;
     RusStageNames["placeMultiSuitsCards"] = "placeMultiSuitsCards";
     RusStageNames["placeTradingCoinsUline"] = "placeTradingCoinsUline";
     RusStageNames["placeThrudHero"] = "placeThrudHero";
+    RusStageNames["placeThrudHeroSoloBot"] = "placeThrudHeroSoloBot";
+    RusStageNames["placeThrudHeroSoloBotAndvari"] = "placeThrudHeroSoloBotAndvari";
     RusStageNames["chooseHeroesForSoloMode"] = "chooseHeroesForSoloMode";
     RusStageNames["upgradeCoin"] = "upgradeCoin";
+    RusStageNames["upgradeCoinSoloBot"] = "upgradeCoinSoloBot";
+    RusStageNames["upgradeCoinSoloBotAndvari"] = "upgradeCoinSoloBotAndvari";
     RusStageNames["upgradeVidofnirVedrfolnirCoin"] = "upgradeVidofnirVedrfolnirCoin";
 })(RusStageNames || (RusStageNames = {}));
 /**
@@ -713,18 +739,26 @@ export var MoveValidatorNames;
     // Bots
     MoveValidatorNames["BotsPlaceAllCoinsMoveValidator"] = "BotsPlaceAllCoinsMoveValidator";
     // Solo Bot
+    MoveValidatorNames["SoloBotClickCardMoveValidator"] = "SoloBotClickCardMoveValidator";
     MoveValidatorNames["SoloBotClickHeroCardMoveValidator"] = "SoloBotClickHeroCardMoveValidator";
     MoveValidatorNames["SoloBotPlaceAllCoinsMoveValidator"] = "SoloBotPlaceAllCoinsMoveValidator";
     MoveValidatorNames["SoloBotClickCardToPickDistinctionMoveValidator"] = "SoloBotClickCardToPickDistinctionMoveValidator";
+    MoveValidatorNames["SoloBotPlaceYludHeroMoveValidator"] = "SoloBotPlaceYludHeroMoveValidator";
+    MoveValidatorNames["SoloBotPlaceThrudHeroMoveValidator"] = "SoloBotPlaceThrudHeroMoveValidator";
+    MoveValidatorNames["SoloBotClickCoinToUpgradeMoveValidator"] = "SoloBotClickCoinToUpgradeMoveValidator";
     // Solo Mode
     MoveValidatorNames["ChooseDifficultyLevelForSoloModeMoveValidator"] = "ChooseDifficultyLevelForSoloModeMoveValidator";
     MoveValidatorNames["ChooseHeroesForSoloModeMoveValidator"] = "ChooseHeroesForSoloModeMoveValidator";
     // Solo Mode Andvari
+    MoveValidatorNames["SoloBotAndvariClickCardMoveValidator"] = "SoloBotAndvariClickCardMoveValidator";
     MoveValidatorNames["ChooseStrategyForSoloModeAndvariMoveValidator"] = "ChooseStrategyForSoloModeAndvariMoveValidator";
     MoveValidatorNames["ChooseStrategyVariantForSoloModeAndvariMoveValidator"] = "ChooseStrategyVariantForSoloModeAndvariMoveValidator";
     MoveValidatorNames["SoloBotAndvariPlaceAllCoinsMoveValidator"] = "SoloBotAndvariPlaceAllCoinsMoveValidator";
     MoveValidatorNames["SoloBotAndvariClickHeroCardMoveValidator"] = "SoloBotAndvariClickHeroCardMoveValidator";
     MoveValidatorNames["SoloBotAndvariClickCardToPickDistinctionMoveValidator"] = "SoloBotAndvariClickCardToPickDistinctionMoveValidator";
+    MoveValidatorNames["SoloBotAndvariPlaceYludHeroMoveValidator"] = "SoloBotAndvariPlaceYludHeroMoveValidator";
+    MoveValidatorNames["SoloBotAndvariPlaceThrudHeroMoveValidator"] = "SoloBotAndvariPlaceThrudHeroMoveValidator";
+    MoveValidatorNames["SoloBotAndvariClickCoinToUpgradeMoveValidator"] = "SoloBotAndvariClickCoinToUpgradeMoveValidator";
     // start
     MoveValidatorNames["AddCoinToPouchMoveValidator"] = "AddCoinToPouchMoveValidator";
     MoveValidatorNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator";

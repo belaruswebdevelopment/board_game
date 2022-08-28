@@ -32,10 +32,10 @@ export const AddPickHeroAction = (G, ctx, ...args) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
-        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
+        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot(priority)]);
     }
     else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBotAndvari()]);
+        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBotAndvari(priority)]);
     }
     else {
         AddActionsToStack(G, ctx, [StackData.pickHero(priority)]);
@@ -88,7 +88,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     if (value === undefined) {
         throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
-    // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bo always upgrade Grid `2` in his turn during setup!
+    // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
     const currentPlayer = G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, currentPlayer);

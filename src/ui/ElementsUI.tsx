@@ -24,21 +24,26 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
     player: IPublicPlayer, moveName?: MoveNames, ...args: ArgsType): void => {
     let action: MoveFunctionType;
     switch (moveName) {
+        // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove! -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
         case MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
-            // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove! -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
             action = data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove!;
-            break;
-        case MoveNames.ChooseDifficultyLevelForSoloModeMove:
-            action = data.moves.ChooseDifficultyLevelForSoloModeMove!;
-            break;
-        case MoveNames.ChooseStrategyForSoloModeAndvariMove:
-            action = data.moves.ChooseStrategyForSoloModeAndvariMove!;
             break;
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove!;
             break;
         case MoveNames.PassEnlistmentMercenariesMove:
             action = data.moves.PassEnlistmentMercenariesMove!;
+            break;
+        // Solo Mode
+        case MoveNames.ChooseDifficultyLevelForSoloModeMove:
+            action = data.moves.ChooseDifficultyLevelForSoloModeMove!;
+            break;
+        // Solo Mode Andvari
+        case MoveNames.ChooseStrategyVariantForSoloModeAndvariMove:
+            action = data.moves.ChooseStrategyVariantForSoloModeAndvariMove!;
+            break;
+        case MoveNames.ChooseStrategyForSoloModeAndvariMove:
+            action = data.moves.ChooseStrategyForSoloModeAndvariMove!;
             break;
         default:
             throw new Error(`Нет такого мува '${moveName}'.`);
@@ -86,47 +91,65 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     }
     if (moveName !== undefined) {
         switch (moveName) {
-            case MoveNames.ClickHeroCardMove:
-                action = data.moves.ClickHeroCardMove!;
-                break;
-            case MoveNames.ClickCampCardMove:
-                action = data.moves.ClickCampCardMove!;
-                break;
             case MoveNames.ClickCardMove:
                 action = data.moves.ClickCardMove!;
                 break;
             case MoveNames.ClickCardToPickDistinctionMove:
                 action = data.moves.ClickCardToPickDistinctionMove!;
                 break;
-            case MoveNames.DiscardCardMove:
-                action = data.moves.DiscardCardMove!;
-                break;
-            case MoveNames.PickDiscardCardMove:
-                action = data.moves.PickDiscardCardMove!;
-                break;
-            case MoveNames.DiscardCard2PlayersMove:
-                action = data.moves.DiscardCard2PlayersMove!;
-                break;
-            case MoveNames.DiscardCardFromPlayerBoardMove:
-                action = data.moves.DiscardCardFromPlayerBoardMove!;
-                break;
-            case MoveNames.DiscardSuitCardFromPlayerBoardMove:
-                action = data.moves.DiscardSuitCardFromPlayerBoardMove!;
+            case MoveNames.ClickCampCardMove:
+                action = data.moves.ClickCampCardMove!;
                 break;
             case MoveNames.ClickCampCardHoldaMove:
                 action = data.moves.ClickCampCardHoldaMove!;
                 break;
+            case MoveNames.ClickHeroCardMove:
+                action = data.moves.ClickHeroCardMove!;
+                break;
+            case MoveNames.DiscardCardMove:
+                action = data.moves.DiscardCardMove!;
+                break;
+            case MoveNames.DiscardCardFromPlayerBoardMove:
+                action = data.moves.DiscardCardFromPlayerBoardMove!;
+                break;
+            case MoveNames.DiscardCard2PlayersMove:
+                action = data.moves.DiscardCard2PlayersMove!;
+                break;
+            case MoveNames.DiscardSuitCardFromPlayerBoardMove:
+                action = data.moves.DiscardSuitCardFromPlayerBoardMove!;
+                break;
             case MoveNames.GetEnlistmentMercenariesMove:
                 action = data.moves.GetEnlistmentMercenariesMove!;
                 break;
+            case MoveNames.PickDiscardCardMove:
+                action = data.moves.PickDiscardCardMove!;
+                break;
+            case MoveNames.UseGodCardPowerMove:
+                action = data.moves.UseGodPowerMove!;
+                break;
+            // Solo Mode
             case MoveNames.ChooseHeroForDifficultySoloModeMove:
                 action = data.moves.ChooseHeroForDifficultySoloModeMove!;
                 break;
-            case MoveNames.UseGodPowerMove:
-                action = data.moves.UseGodPowerMove!;
-                break;
+            // Solo Bot
             case MoveNames.SoloBotClickHeroCardMove:
                 action = data.moves.SoloBotClickHeroCardMove!;
+                break;
+            case MoveNames.SoloBotClickCardMove:
+                action = data.moves.SoloBotClickCardMove!;
+                break;
+            case MoveNames.SoloBotClickCardToPickDistinctionMove:
+                action = data.moves.SoloBotClickCardMove!;
+                break;
+            // Solo Bot Andvari
+            case MoveNames.SoloBotAndvariClickCardMove:
+                action = data.moves.SoloBotAndvariClickCardMove!;
+                break;
+            case MoveNames.SoloBotAndvariClickHeroCardMove:
+                action = data.moves.SoloBotAndvariClickHeroCardMove!;
+                break;
+            case MoveNames.SoloBotAndvariClickCardToPickDistinctionMove:
+                action = data.moves.SoloBotAndvariClickCardToPickDistinctionMove!;
                 break;
             default:
                 throw new Error(`Нет такого мува '${moveName}'.`);
@@ -252,6 +275,14 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             case MoveNames.UpgradeCoinVidofnirVedrfolnirMove:
                 action = data.moves.UpgradeCoinVidofnirVedrfolnirMove!;
                 break;
+            // Solo Bot
+            case MoveNames.SoloBotClickCoinToUpgradeMove:
+                action = data.moves.SoloBotClickCoinToUpgradeMove!;
+                break;
+            // Solo Bot Andvari
+            case MoveNames.SoloBotAndvariClickCoinToUpgradeMove:
+                action = data.moves.SoloBotAndvariClickCoinToUpgradeMove!;
+                break;
             default:
                 throw new Error(`Нет такого мува '${moveName}'.`);
         }
@@ -348,6 +379,20 @@ export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Elem
             break;
         case MoveNames.PlaceEnlistmentMercenariesMove:
             action = data.moves.PlaceEnlistmentMercenariesMove!;
+            break;
+        // Solo Bot
+        case MoveNames.SoloBotPlaceThrudHeroMove:
+            action = data.moves.SoloBotPlaceThrudHeroMove!;
+            break;
+        case MoveNames.SoloBotPlaceYludHeroMove:
+            action = data.moves.SoloBotPlaceYludHeroMove!;
+            break;
+        // Solo Bot Andvari
+        case MoveNames.SoloBotAndvariPlaceThrudHeroMove:
+            action = data.moves.SoloBotAndvariPlaceThrudHeroMove!;
+            break;
+        case MoveNames.SoloBotAndvariPlaceYludHeroMove:
+            action = data.moves.SoloBotAndvariPlaceYludHeroMove!;
             break;
         default:
             action = null;

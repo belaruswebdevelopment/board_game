@@ -2,8 +2,9 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
+import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypeNames, ErrorNames, GameModeNames, StageNames, SuitNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
 // TODO Check moves with solo mode!
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
@@ -80,8 +81,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
             player.handCoins[tempSelectedId] = null;
         }
         else {
-            // TODO Check why i need it and delete or add for solo bot andvari & ctx.currentPlayer === `0`?
-            if (G.mode === GameModeNames.Solo1) {
+            if ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `0`) {
                 ChangeIsOpenedCoinStatus(handCoin, true);
             }
             player.boardCoins[coinId] = handCoin;
@@ -114,17 +114,7 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // todo Move to distinction phase hook?
-    if (Object.values(G.distinctions).length) {
-        // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionWarrior = G.distinctions[SuitNames.warrior] !== undefined;
-        if (isDistinctionWarrior) {
-            G.distinctions[SuitNames.warrior] = undefined;
-        }
-        else if (!isDistinctionWarrior && G.distinctions[SuitNames.explorer] !== undefined) {
-            G.distinctions[SuitNames.explorer] = undefined;
-        }
-    }
+    EndWarriorOrExplorerDistinctionIfCoinUpgraded(G);
     UpgradeCoinActions(G, ctx, coinId, type);
 };
 /**
@@ -272,6 +262,9 @@ export const ClickHandTradingCoinUlineMove = (G, ctx, coinId) => {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${coinId}'.`);
         }
     }
+    if (IsCoin(handCoin) && !handCoin.isOpened) {
+        ChangeIsOpenedCoinStatus(handCoin, true);
+    }
     const firstTradingBoardCoin = player.boardCoins[G.tavernsNum];
     if (firstTradingBoardCoin === undefined) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует нужная монета с id '${G.tavernsNum}'.`);
@@ -284,13 +277,7 @@ export const ClickHandTradingCoinUlineMove = (G, ctx, coinId) => {
             if (!IsCoin(handCoin)) {
                 throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
             }
-            if (IsCoin(handCoin) && !handCoin.isOpened) {
-                ChangeIsOpenedCoinStatus(handCoin, true);
-            }
             privatePlayer.boardCoins[G.tavernsNum] = handCoin;
-        }
-        if (IsCoin(handCoin) && !handCoin.isOpened) {
-            ChangeIsOpenedCoinStatus(handCoin, true);
         }
         player.boardCoins[G.tavernsNum] = handCoin;
     }
@@ -302,13 +289,7 @@ export const ClickHandTradingCoinUlineMove = (G, ctx, coinId) => {
             if (!IsCoin(handCoin)) {
                 throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
             }
-            if (IsCoin(handCoin) && !handCoin.isOpened) {
-                ChangeIsOpenedCoinStatus(handCoin, true);
-            }
             privatePlayer.boardCoins[G.tavernsNum + 1] = handCoin;
-        }
-        if (IsCoin(handCoin) && !handCoin.isOpened) {
-            ChangeIsOpenedCoinStatus(handCoin, true);
         }
         player.boardCoins[G.tavernsNum + 1] = handCoin;
     }

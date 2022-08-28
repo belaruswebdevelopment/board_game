@@ -15,7 +15,7 @@ import { ErrorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
  * @param cardId Id выбираемой карты Бога.
  * @returns
  */
-export const UseGodPowerMove = (G, ctx, cardId) => {
+export const UseGodCardPowerMove = (G, ctx, cardId) => {
     // TODO Check/Fix StageNames.default3
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, cardId);
     if (!isValidMove) {

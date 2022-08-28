@@ -3,8 +3,9 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
+import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypeNames, ErrorNames, GameModeNames, StageNames, SuitNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Check moves with solo mode!
@@ -84,8 +85,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
             player.boardCoins[coinId] = {};
             player.handCoins[tempSelectedId] = null;
         } else {
-            // TODO Check why i need it and delete or add for solo bot andvari & ctx.currentPlayer === `0`?
-            if (G.mode === GameModeNames.Solo1) {
+            if ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `0`) {
                 ChangeIsOpenedCoinStatus(handCoin, true);
             }
             player.boardCoins[coinId] = handCoin;
@@ -120,16 +120,7 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // todo Move to distinction phase hook?
-    if (Object.values(G.distinctions).length) {
-        // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionWarrior: boolean = G.distinctions[SuitNames.warrior] !== undefined;
-        if (isDistinctionWarrior) {
-            G.distinctions[SuitNames.warrior] = undefined;
-        } else if (!isDistinctionWarrior && G.distinctions[SuitNames.explorer] !== undefined) {
-            G.distinctions[SuitNames.explorer] = undefined;
-        }
-    }
+    EndWarriorOrExplorerDistinctionIfCoinUpgraded(G);
     UpgradeCoinActions(G, ctx, coinId, type);
 };
 
@@ -289,6 +280,9 @@ export const ClickHandTradingCoinUlineMove: Move<IMyGameState> = (G: IMyGameStat
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${coinId}'.`);
         }
     }
+    if (IsCoin(handCoin) && !handCoin.isOpened) {
+        ChangeIsOpenedCoinStatus(handCoin, true);
+    }
     const firstTradingBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.tavernsNum];
     if (firstTradingBoardCoin === undefined) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует нужная монета с id '${G.tavernsNum}'.`);
@@ -301,13 +295,7 @@ export const ClickHandTradingCoinUlineMove: Move<IMyGameState> = (G: IMyGameStat
             if (!IsCoin(handCoin)) {
                 throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
             }
-            if (IsCoin(handCoin) && !handCoin.isOpened) {
-                ChangeIsOpenedCoinStatus(handCoin, true);
-            }
             privatePlayer.boardCoins[G.tavernsNum] = handCoin;
-        }
-        if (IsCoin(handCoin) && !handCoin.isOpened) {
-            ChangeIsOpenedCoinStatus(handCoin, true);
         }
         player.boardCoins[G.tavernsNum] = handCoin;
     } else {
@@ -318,13 +306,7 @@ export const ClickHandTradingCoinUlineMove: Move<IMyGameState> = (G: IMyGameStat
             if (!IsCoin(handCoin)) {
                 throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
             }
-            if (IsCoin(handCoin) && !handCoin.isOpened) {
-                ChangeIsOpenedCoinStatus(handCoin, true);
-            }
             privatePlayer.boardCoins[G.tavernsNum + 1] = handCoin;
-        }
-        if (IsCoin(handCoin) && !handCoin.isOpened) {
-            ChangeIsOpenedCoinStatus(handCoin, true);
         }
         player.boardCoins[G.tavernsNum + 1] = handCoin;
     }

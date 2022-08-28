@@ -45,16 +45,12 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
                     throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
                 }
                 heroesForSoloBot.push(hero);
-            } else {
-                heroesForSoloBot = null;
             }
             if (mode === GameModeNames.Solo1 && heroName in soloGameDifficultyLevelHeroesConfig) {
                 if (heroesForSoloGameDifficultyLevel === null) {
                     throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
                 }
                 heroesForSoloGameDifficultyLevel.push(hero);
-            } else {
-                heroesForSoloGameDifficultyLevel = null;
             }
             if (mode === GameModeNames.SoloAndvari && (heroName in soloGameAndvariEasyStrategyHeroesConfig
                 || heroName in soloGameAndvariHardStrategyHeroesConfig)) {
@@ -62,10 +58,17 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
                     throw new Error(`Набор стартовых героев и героев для стратегии соло бота Андвари не может быть ранее использован.`);
                 }
                 heroesInitialForSoloGameForBotAndvari.push(hero);
-            } else {
-                heroesInitialForSoloGameForBotAndvari = null;
             }
         }
+    }
+    if (!heroesForSoloBot.length) {
+        heroesForSoloBot = null;
+    }
+    if (!heroesForSoloGameDifficultyLevel?.length) {
+        heroesForSoloGameDifficultyLevel = null;
+    }
+    if (!heroesInitialForSoloGameForBotAndvari?.length) {
+        heroesInitialForSoloGameForBotAndvari = null;
     }
     return [heroes, heroesForSoloBot as CanBeNullType<HeroesForSoloGameArrayType>, heroesForSoloGameDifficultyLevel,
         heroesInitialForSoloGameForBotAndvari as CanBeNullType<HeroesInitialForSoloGameForBotAndvariArrayType>];

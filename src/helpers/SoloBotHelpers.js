@@ -25,6 +25,29 @@ export const CheckMinCoinVisibleIndexForSoloBot = (coins, minValue) => {
     return coinId;
 };
 /**
+ * <h3>Определяет минимальную монету соло бота Андвари.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при необходимости обмена минимальной монеты соло ботом Андвари.</li>
+ * </ol>
+ *
+ * @param coins Все монеты соло бота Андвари.
+ * @param minValue Минимальное значение монеты соло бота Андвари.
+ * @returns Id минимальной монеты соло бота Андвари.
+ */
+export const CheckMinCoinIndexForSoloBotAndvari = (coins, minValue) => {
+    let coinId = -1;
+    coins.forEach((coin, index) => {
+        if (IsCoin(coin)) {
+            if ((coinId === -1 && coin.value === minValue)
+                || (coinId !== -1 && coin.value === minValue && !coin.isInitial)) {
+                coinId = index;
+            }
+        }
+    });
+    return coinId;
+};
+/**
  * <h3>Определяет значение минимальной видимой монеты соло бота.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -35,7 +58,7 @@ export const CheckMinCoinVisibleIndexForSoloBot = (coins, minValue) => {
  * @param ctx
  * @param moveArguments Аргументы действия соло бота.
  * @param type Тип минимальной видимой монеты соло бота.
- * @returns Значение минимальной видимой монеты соло бота
+ * @returns Значение минимальной видимой монеты соло бота.
  */
 export const CheckMinCoinVisibleValueForSoloBot = (G, ctx, moveArguments, type) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -65,10 +88,46 @@ export const CheckMinCoinVisibleValueForSoloBot = (G, ctx, moveArguments, type) 
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} отсутствует монета с id '${currentMoveArgument.coinId}'.`);
         }
         if (coin === null) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может отсутствовать монета с id '${currentMoveArgument.coinId}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может не быть монеты с id '${currentMoveArgument.coinId}'.`);
         }
         if (!IsCoin(coin)) {
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть закрытой для него монета с id '${ctx.currentPlayer}'.`);
+        }
+        if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !coin.isInitial)) {
+            minValue = coin.value;
+        }
+    }
+    return minValue;
+};
+/**
+ * <h3>Определяет значение минимальной монеты соло бота Андвари.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при необходимости обмена минимальной монеты соло ботом Андвари.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param moveArguments Аргументы действия соло бота.
+ * @returns Значение минимальной монеты соло бота Андвари.
+ */
+export const CheckMinCoinVisibleValueForSoloBotAndvari = (G, ctx, moveArguments) => {
+    const player = G.players[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+    }
+    let minValue = 0;
+    for (let i = 0; i < moveArguments.length; i++) {
+        const currentMoveArgument = moveArguments[i];
+        if (currentMoveArgument === undefined) {
+            throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
+        }
+        const coin = player.boardCoins[currentMoveArgument.coinId];
+        if (coin === undefined) {
+            throw new Error(`В массиве монет соло бота Андвари с id '1' отсутствует монета с id '${currentMoveArgument.coinId}'.`);
+        }
+        if (coin === null) {
+            throw new Error(`В массиве монет соло бота Андвари с id '1' не может не быть монеты с id '${currentMoveArgument.coinId}'.`);
         }
         if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !coin.isInitial)) {
             minValue = coin.value;
@@ -123,7 +182,7 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = (G, ctx) => {
  * @param G
  * @param ctx
  */
-export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBot = (G, ctx) => {
+export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);

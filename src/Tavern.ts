@@ -110,7 +110,6 @@ export const DiscardConcreteCardFromTavern = (G: IMyGameState, ctx: Ctx, discard
  * @param ctx
  */
 export const RefillTaverns = (G: IMyGameState, ctx: Ctx): void => {
-    G.round++;
     for (let t = 0; t < G.tavernsNum; t++) {
         let refillDeck: TavernAllCardType;
         if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {

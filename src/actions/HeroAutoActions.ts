@@ -8,7 +8,7 @@ import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } from "../typescript/enums";
-import type { AutoActionArgsType, CanBeUndefType, IActionFunctionWithoutParams, IAutoActionFunction, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoStackPriorityType, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { AutoActionArgsType, CanBeUndefType, IActionFunctionWithoutParams, IAutoActionFunction, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoType, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -27,7 +27,7 @@ export const AddPickHeroAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx
     if (args.length !== 1) {
         throw new Error(`В массиве параметров функции количество аргументов не равно '1'.`);
     }
-    const priority: CanBeUndefType<OneOrTwoStackPriorityType> = args[0] as CanBeUndefType<OneOrTwoStackPriorityType>;
+    const priority: CanBeUndefType<OneOrTwoType> = args[0] as CanBeUndefType<OneOrTwoType>;
     if (priority === undefined) {
         throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
@@ -36,9 +36,9 @@ export const AddPickHeroAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
-        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot()]);
+        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot(priority)]);
     } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBotAndvari()]);
+        AddActionsToStack(G, ctx, [StackData.pickHeroSoloBotAndvari(priority)]);
     } else {
         AddActionsToStack(G, ctx, [StackData.pickHero(priority)]);
     }
@@ -93,7 +93,7 @@ export const UpgradeMinCoinAction: IAutoActionFunction = (G: IMyGameState, ctx: 
     if (value === undefined) {
         throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
-    // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bo always upgrade Grid `2` in his turn during setup!
+    // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
     const currentPlayer: number = G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer),
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[currentPlayer],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[currentPlayer];

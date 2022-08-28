@@ -32,11 +32,10 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  *
  * @param nickname Никнейм.
  * @param priority Кристалл.
- * @param multiplayer Является ли игра мультиплеером.
- * @param soloBot Является ли игрок соло ботом.
+ * @param isPrivate Должны ли монеты быть приватными.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
+export const BuildPublicPlayer = (nickname: string, priority: IPriority, isPrivate: boolean): IPublicPlayer => {
     const cards: SuitPropertyType<PlayerCardType[]> = {} as SuitPropertyType<PlayerCardType[]>,
         giantTokenSuits: SuitPropertyType<CanBeNullType<boolean>> = {} as SuitPropertyType<CanBeNullType<boolean>>;
     let suit: SuitNamesKeyofTypeofType;
@@ -45,7 +44,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
         giantTokenSuits[suit] = null;
     }
     let handCoins: ICoin[] = [];
-    if (multiplayer) {
+    if (isPrivate) {
         handCoins = Array(initialPlayerCoinsConfig.length).fill({});
     } else {
         handCoins = BuildCoins(initialPlayerCoinsConfig, {

@@ -6,7 +6,7 @@ import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { ErrorNames, HeroNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroNames, PhaseNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -33,7 +33,11 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
  * @returns
  */
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
-    if (ctx.currentPlayer === `1`) {
+    if (ctx.currentPlayer === `0`) {
+        if (G.mode !== GameModeNames.Solo1) {
+            return true;
+        }
+    } else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
@@ -112,10 +116,28 @@ export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): 
         soloBotPublicPlayer.heroes.forEach((hero: IHeroCard): void => {
             AddBuffToPlayer(G, ctx, hero.buff);
             if (hero.name !== HeroNames.Thrud && hero.name !== HeroNames.Ylud) {
-                AddActionsToStack(G, ctx, hero.stack, hero);
+                AddActionsToStack(G, ctx, hero.stack?.soloBot, hero);
                 DrawCurrentProfit(G, ctx);
             }
         });
         G.heroesForSoloGameDifficultyLevel = null;
+    }
+};
+
+/**
+ * <h3>Проверяет необходимость начала фазы 'Ставки' или фазы 'ChooseDifficultySoloModeAndvari'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При действиях, после которых может начаться фаза 'Ставки' или фаза 'ChooseDifficultySoloModeAndvari'.</li>
+ * </ol>
+ *
+ * @param G
+ * @returns Следующая фаза игры.
+ */
+export const StartChooseDifficultySoloModeAndvariOrBidsPhase = (G: IMyGameState): PhaseNames => {
+    if (G.mode === GameModeNames.SoloAndvari) {
+        return PhaseNames.ChooseDifficultySoloModeAndvari;
+    } else {
+        return PhaseNames.Bids;
     }
 };

@@ -73,6 +73,13 @@ export const StackData = {
     pickCard: () => ({
         drawName: DrawNames.PickCard,
     }),
+    pickCardSoloBot: () => ({
+        drawName: DrawNames.PickCardSoloBot,
+    }),
+    pickCardSoloBotAndvari: () => ({
+        drawName: DrawNames.PickCardSoloBotAndvari,
+    }),
+    // TODO Is it need for solo bot & Andvari?
     pickConcreteCoinToUpgrade: (coinValue, value) => ({
         stageName: StageNames.pickConcreteCoinToUpgrade,
         drawName: DrawNames.PickConcreteCoinToUpgrade,
@@ -116,6 +123,18 @@ export const StackData = {
         priority: 2,
         name: HeroNames.Thrud,
     }),
+    placeThrudHeroSoloBot: () => ({
+        stageName: StageNames.placeThrudHeroSoloBot,
+        drawName: DrawNames.PlaceThrudHeroSoloBot,
+        priority: 2,
+        name: HeroNames.Thrud,
+    }),
+    placeThrudHeroSoloBotAndvari: () => ({
+        stageName: StageNames.placeThrudHeroSoloBotAndvari,
+        drawName: DrawNames.PlaceThrudHeroSoloBotAndvari,
+        priority: 2,
+        name: HeroNames.Thrud,
+    }),
     placeTradingCoinsUline: () => ({
         stageName: StageNames.placeTradingCoinsUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
@@ -124,18 +143,28 @@ export const StackData = {
         drawName: DrawNames.PlaceYludHero,
         name: HeroNames.Ylud,
     }),
+    placeYludHeroSoloBot: () => ({
+        drawName: DrawNames.PlaceYludHero,
+        name: HeroNames.Ylud,
+    }),
+    placeYludHeroSoloBotAndvari: () => ({
+        drawName: DrawNames.PlaceYludHero,
+        name: HeroNames.Ylud,
+    }),
     pickHero: (priority) => ({
         stageName: StageNames.pickHero,
         drawName: DrawNames.PickHero,
         priority,
     }),
-    pickHeroSoloBot: () => ({
+    pickHeroSoloBot: (priority) => ({
         stageName: StageNames.pickHeroSoloBot,
         drawName: DrawNames.PickHeroSoloBot,
+        priority,
     }),
-    pickHeroSoloBotAndvari: () => ({
+    pickHeroSoloBotAndvari: (priority) => ({
         stageName: StageNames.pickHeroSoloBotAndvari,
         drawName: DrawNames.PickHeroSoloBotAndvari,
+        priority,
     }),
     placeEnlistmentMercenaries: (card) => ({
         stageName: StageNames.placeEnlistmentMercenaries,
@@ -159,6 +188,16 @@ export const StackData = {
         value,
         drawName: DrawNames.UpgradeCoin,
     }),
+    upgradeCoinSoloBot: (value) => ({
+        stageName: StageNames.upgradeCoinSoloBot,
+        value,
+        drawName: DrawNames.UpgradeCoinSoloBot,
+    }),
+    upgradeCoinSoloBotAndvari: (value) => ({
+        stageName: StageNames.upgradeCoinSoloBotAndvari,
+        value,
+        drawName: DrawNames.UpgradeCoinSoloBotAndvari,
+    }),
     upgradeCoinVidofnirVedrfolnir: (value, coinId, priority) => ({
         coinId,
         stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
@@ -170,6 +209,16 @@ export const StackData = {
         stageName: StageNames.upgradeCoin,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinction,
+    }),
+    upgradeCoinWarriorDistinctionSoloBot: () => ({
+        stageName: StageNames.upgradeCoinSoloBot,
+        value: 5,
+        drawName: DrawNames.UpgradeCoinWarriorDistinctionSoloBot,
+    }),
+    upgradeCoinWarriorDistinctionSoloBotAndvari: () => ({
+        stageName: StageNames.upgradeCoinSoloBotAndvari,
+        value: 5,
+        drawName: DrawNames.UpgradeCoinWarriorDistinctionSoloBotAndvari,
     }),
 };
 //# sourceMappingURL=StackData.js.map

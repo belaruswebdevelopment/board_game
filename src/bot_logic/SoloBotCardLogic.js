@@ -166,7 +166,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G, ctx, moveArguments) 
     }
     const finalMoveArgument = moveArguments[index];
     if (finalMoveArgument === undefined) {
-        throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта обмена монет с id '${index}'.`);
+        throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карты с id '${index}'.`);
     }
     return finalMoveArgument;
 };
@@ -216,11 +216,9 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G, ct
             }
             const cardSuit = thrudSuit && minLengthCount === 1 && thrudSuit === tavernCard.suit ? thrudSuit : tavernCard.suit;
             if (availableSuitArguments.includes(cardSuit) && cardSuit === tavernCard.suit) {
-                if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
-                    leastPresentArguments.push(i);
-                    if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
-                        isNoPoints = true;
-                    }
+                leastPresentArguments.push(moveArgument);
+                if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
+                    isNoPoints = true;
                 }
             }
         }
@@ -263,7 +261,7 @@ export const CheckSoloBotMustTakeRoyalOfferingCard = (G, ctx, moveArguments) => 
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
         }
         if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
-            return i;
+            return moveArgument;
         }
     }
     return undefined;

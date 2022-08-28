@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
-import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndefType, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -57,6 +57,12 @@ const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardType): boo
 export const CheckAndMoveThrudAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardType): void => {
     const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
-        AddActionsToStack(G, ctx, [StackData.placeThrudHero()]);
+        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+            AddActionsToStack(G, ctx, [StackData.placeThrudHeroSoloBot()]);
+        } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+            AddActionsToStack(G, ctx, [StackData.placeThrudHeroSoloBotAndvari()]);
+        } else {
+            AddActionsToStack(G, ctx, [StackData.placeThrudHero()]);
+        }
     }
 };

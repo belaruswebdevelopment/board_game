@@ -25,7 +25,8 @@ import { GameModeNames } from "./typescript/enums";
  */
 export const SetupGame = (ctx) => {
     // TODO Rework it!
-    const mode = ctx.numPlayers === 1 ? GameModeNames.SoloAndvari : ctx.numPlayers === 2 ? GameModeNames.Solo1 : ctx.numPlayers === 3 ? GameModeNames.Basic : GameModeNames.Multiplayer, suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, soloGameDifficultyLevel = null, soloGameAndvariStrategyLevel = null, soloGameAndvariStrategyVariantLevel = null, explorerDistinctionCardId = null, 
+    const mode = ctx.numPlayers === 1 ? GameModeNames.Solo1 : ctx.numPlayers === 2
+        ? GameModeNames.SoloAndvari : ctx.numPlayers === 3 ? GameModeNames.Multiplayer : GameModeNames.Basic, suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, soloGameDifficultyLevel = null, soloGameAndvariStrategyLevel = null, soloGameAndvariStrategyVariantLevel = null, explorerDistinctionCardId = null, 
     // TODO Rework it!
     odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = null, expansions = {
         basic: {
@@ -38,7 +39,7 @@ export const SetupGame = (ctx) => {
         idavoll: {
             active: mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari ? false : false,
         },
-    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, strategyForSoloBotAndvari = {}, secret = {
+    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = null, distinctions = {}, strategyForSoloBotAndvari = {}, secret = {
         campDecks: [[], []],
         decks: [[], []],
         mythologicalCreatureDecks: [],
@@ -94,7 +95,7 @@ export const SetupGame = (ctx) => {
         players[i] = BuildPlayer();
         const soloBot = (mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari) && i === 1;
         publicPlayers[i] =
-            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority, mode === GameModeNames.Multiplayer);
+            BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority, soloBot || mode === GameModeNames.Multiplayer);
     }
     const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,

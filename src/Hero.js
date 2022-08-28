@@ -41,17 +41,11 @@ export const BuildHeroes = (configOptions, mode) => {
                 }
                 heroesForSoloBot.push(hero);
             }
-            else {
-                heroesForSoloBot = null;
-            }
             if (mode === GameModeNames.Solo1 && heroName in soloGameDifficultyLevelHeroesConfig) {
                 if (heroesForSoloGameDifficultyLevel === null) {
                     throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
                 }
                 heroesForSoloGameDifficultyLevel.push(hero);
-            }
-            else {
-                heroesForSoloGameDifficultyLevel = null;
             }
             if (mode === GameModeNames.SoloAndvari && (heroName in soloGameAndvariEasyStrategyHeroesConfig
                 || heroName in soloGameAndvariHardStrategyHeroesConfig)) {
@@ -60,10 +54,16 @@ export const BuildHeroes = (configOptions, mode) => {
                 }
                 heroesInitialForSoloGameForBotAndvari.push(hero);
             }
-            else {
-                heroesInitialForSoloGameForBotAndvari = null;
-            }
         }
+    }
+    if (!heroesForSoloBot.length) {
+        heroesForSoloBot = null;
+    }
+    if (!(heroesForSoloGameDifficultyLevel === null || heroesForSoloGameDifficultyLevel === void 0 ? void 0 : heroesForSoloGameDifficultyLevel.length)) {
+        heroesForSoloGameDifficultyLevel = null;
+    }
+    if (!(heroesInitialForSoloGameForBotAndvari === null || heroesInitialForSoloGameForBotAndvari === void 0 ? void 0 : heroesInitialForSoloGameForBotAndvari.length)) {
+        heroesInitialForSoloGameForBotAndvari = null;
     }
     return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel,
         heroesInitialForSoloGameForBotAndvari];

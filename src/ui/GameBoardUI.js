@@ -521,6 +521,8 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                             DrawCard(data, boardCells, tavernCard, j, player, suit, moveName, j);
                         }
                         else if (validatorName === MoveValidatorNames.ClickCardMoveValidator
+                            || validatorName === MoveValidatorNames.SoloBotClickCardMoveValidator
+                            || validatorName === MoveValidatorNames.SoloBotAndvariClickCardMoveValidator
                             || validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
                             moveMainArgs.push(j);
                         }

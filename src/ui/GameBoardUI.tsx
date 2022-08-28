@@ -7,7 +7,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
-import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType } from "../typescript/interfaces";
+import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -562,7 +562,8 @@ export const DrawStrategyForSoloBotAndvariUI = (G: IMyGameState, ctx: Ctx, data:
     const playerHeadersGeneral: JSX.Element[] = [],
         playerHeadersReserve: JSX.Element[] = [];
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
-        const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = G.strategyForSoloBotAndvari.general[i];
+        const suit: CanBeUndefType<SuitNamesKeyofTypeofType> =
+            G.strategyForSoloBotAndvari.general[i as ZeroOrOneOrTwoType];
         if (suit === undefined) {
             throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
         }
@@ -661,6 +662,8 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
                             DrawCard(data, boardCells, tavernCard, j, player, suit, moveName,
                                 j);
                         } else if (validatorName === MoveValidatorNames.ClickCardMoveValidator
+                            || validatorName === MoveValidatorNames.SoloBotClickCardMoveValidator
+                            || validatorName === MoveValidatorNames.SoloBotAndvariClickCardMoveValidator
                             || validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
                             moveMainArgs.push(j);
                         }

@@ -182,9 +182,15 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[], soloBotOnlyOn
             [StackData.pickConcreteCoinToUpgrade(coinsMaxValue, coinsMaxValue)]);
         DrawCurrentProfit(G, ctx);
     } else {
-        if (soloBotOnlyOneCoinTrading || CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
+        if (((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && index === 1)
+            || CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
             upgradingCoinId = G.tavernsNum + coinMinIndex;
-            value = soloBotOnlyOneCoinTrading ? 1 : coinsMaxValue;
+            if ((G.mode === GameModeNames.SoloAndvari && index === 1) && (minTradingCoin.value + coinsMaxValue) > 25) {
+                value = 5;
+            } else {
+                value = soloBotOnlyOneCoinTrading ? 1 : coinsMaxValue;
+
+            }
             if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
                 DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
             }

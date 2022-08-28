@@ -30,7 +30,11 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
     if (validatorName !== null) {
         switch (validatorName) {
             case MoveValidatorNames.PlaceThrudHeroMoveValidator:
+            case MoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator:
+            case MoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator:
             case MoveValidatorNames.PlaceYludHeroMoveValidator:
+            case MoveValidatorNames.SoloBotPlaceYludHeroMoveValidator:
+            case MoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator:
             case MoveValidatorNames.PlaceMultiSuitCardMoveValidator:
             case MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator:
             case MoveValidatorNames.GetEnlistmentMercenariesMoveValidator:
@@ -236,7 +240,11 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                         }
                     }
                     else if (validatorName === MoveValidatorNames.PlaceThrudHeroMoveValidator
+                        || validatorName === MoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator
+                        || validatorName === MoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator
                         || validatorName === MoveValidatorNames.PlaceYludHeroMoveValidator
+                        || validatorName === MoveValidatorNames.SoloBotPlaceYludHeroMoveValidator
+                        || validatorName === MoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator
                         || validatorName === MoveValidatorNames.PlaceMultiSuitCardMoveValidator
                         || (validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
                             && cardVariants !== undefined && suit === cardVariants.suit)) {
@@ -307,7 +315,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                         if (mythologicalCreatureCommandZoneCard.type === RusCardTypeNames.God_Card
                             && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
-                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player, null, MoveNames.UseGodPowerMove, i);
+                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player, null, MoveNames.UseGodCardPowerMove, i);
                             }
                             else if (validatorName === MoveValidatorNames.UseGodPowerMoveValidator) {
                                 if (!Array.isArray(moveMainArgs)) {
@@ -378,7 +386,15 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                 break;
             default:
                 if (stage === StageNames.upgradeCoin) {
-                    moveName = MoveNames.ClickCoinToUpgradeMove;
+                    if (G.mode === GameModeNames.Solo1 && p === 1 && ctx.currentPlayer === `1`) {
+                        moveName = MoveNames.SoloBotClickCoinToUpgradeMove;
+                    }
+                    else if (G.mode === GameModeNames.SoloAndvari && p === 1 && ctx.currentPlayer === `1`) {
+                        moveName = MoveNames.SoloBotAndvariClickCoinToUpgradeMove;
+                    }
+                    else {
+                        moveName = MoveNames.ClickCoinToUpgradeMove;
+                    }
                 }
                 else if (stage === StageNames.pickConcreteCoinToUpgrade) {
                     moveName = MoveNames.ClickConcreteCoinToUpgradeMove;
@@ -455,6 +471,8 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player, `border-2`, null, moveName, id, CoinTypeNames.Board);
                             }
                             else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
+                                || validatorName === MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator
+                                || validatorName === MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator
                                 || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator
                                 || validatorName === MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) {
                                 moveMainArgs.push({
@@ -464,8 +482,8 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                             }
                         }
                         else {
-                            if (G.winner.length || (G.mode === GameModeNames.Solo1 && p === 0)
-                                || (G.mode === GameModeNames.SoloAndvari && p === 0)
+                            if (G.winner.length || ((G.mode === GameModeNames.Solo1)
+                                || (G.mode === GameModeNames.SoloAndvari) && p === 0)
                                 || (ctx.phase !== PhaseNames.Bids && i === 0 && G.currentTavern >= t)) {
                                 if (data !== undefined) {
                                     if (!IsCoin(publicBoardCoin)) {
@@ -539,7 +557,9 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                         if (ctx.phase === PhaseNames.Bids && player.selectedCoin !== null
                             && ((G.mode === GameModeNames.Basic && (Number(ctx.currentPlayer) === p))
                                 || (G.mode === GameModeNames.Multiplayer
-                                    && (Number(ctx.currentPlayer) === p)))) {
+                                    && (Number(ctx.currentPlayer) === p))
+                                || ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari)
+                                    && ctx.currentPlayer === `0`))) {
                             if (data !== undefined) {
                                 if (i === 0) {
                                     DrawCoin(data, playerCells, `back-tavern-icon`, publicBoardCoin, id, player, null, id, moveName, id);
@@ -599,6 +619,10 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
 export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
     var _a, _b;
     const playersHandsCoins = [], moveMainArgs = [];
+    if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator
+        || validatorName === MoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator) {
+        moveMainArgs[0] = [];
+    }
     let moveName;
     for (let p = 0; p < ctx.numPlayers; p++) {
         const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[p];
@@ -611,7 +635,12 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                 break;
             default:
                 if (stage === StageNames.upgradeCoin) {
-                    moveName = MoveNames.ClickCoinToUpgradeMove;
+                    if (G.mode === GameModeNames.Solo1 && p === 1 && ctx.currentPlayer === `1`) {
+                        moveName = MoveNames.SoloBotClickCoinToUpgradeMove;
+                    }
+                    else {
+                        moveName = MoveNames.ClickCoinToUpgradeMove;
+                    }
                 }
                 else if (stage === StageNames.placeTradingCoinsUline) {
                     moveName = MoveNames.ClickHandTradingCoinUlineMove;
@@ -679,6 +708,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses, null, moveName, j, CoinTypeNames.Hand);
                         }
                         else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
+                            || validatorName === MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator
                             || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                             moveMainArgs.push({
                                 coinId: j,
@@ -718,13 +748,11 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                         }
                         else if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator
                             || validatorName === MoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator) {
-                            let moveMainArg = moveMainArgs[0];
+                            const moveMainArg = moveMainArgs[0];
                             if (moveMainArg === undefined) {
-                                moveMainArg = [];
+                                throw new Error(`В массиве аргументов мува отсутствует значение аргумента с id '0'.`);
                             }
-                            else {
-                                moveMainArg.push(j);
-                            }
+                            moveMainArg.push(j);
                         }
                     }
                     else if (G.mode === GameModeNames.Multiplayer && privateHandCoin === undefined) {

@@ -1,6 +1,7 @@
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 /**
@@ -49,7 +50,10 @@ export const CheckEndBidUlinePhase = (G, ctx) => {
  * @param G
  * @param ctx
  */
-export const CheckBidUlineOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
+export const CheckBidUlineOrder = (G, ctx) => {
+    OpenCurrentTavernClosedCoinsOnPlayerBoard(G, ctx);
+    CheckPlayersBasicOrder(G, ctx);
+};
 /**
  * <h3>Действия при завершении фазы 'Ставки Улина'.</h3>
  * <p>Применения:</p>

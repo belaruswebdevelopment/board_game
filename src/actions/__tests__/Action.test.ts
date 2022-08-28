@@ -537,13 +537,15 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             },
             discardCardsDeck: [
                 {
-                    stack: [
-                        {
-                            stageName: StageNames.upgradeCoin,
-                            value: 5,
-                            drawName: DrawNames.UpgradeCoin,
-                        }
-                    ],
+                    stack: {
+                        player: [
+                            {
+                                stageName: StageNames.upgradeCoin,
+                                value: 5,
+                                drawName: DrawNames.UpgradeCoin,
+                            },
+                        ],
+                    },
                     name: RoyalOfferingNames.PlusFive,
                     value: 5,
 
@@ -572,13 +574,15 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             },
             discardCardsDeck: [
                 {
-                    stack: [
-                        {
-                            stageName: StageNames.upgradeCoin,
-                            value: 5,
-                            drawName: DrawNames.UpgradeCoin,
-                        }
-                    ],
+                    stack: {
+                        player: [
+                            {
+                                stageName: StageNames.upgradeCoin,
+                                value: 5,
+                                drawName: DrawNames.UpgradeCoin,
+                            },
+                        ],
+                    },
                     name: RoyalOfferingNames.PlusFive,
                     value: 5,
 

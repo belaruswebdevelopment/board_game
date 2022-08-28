@@ -4,7 +4,7 @@ import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
-import { ErrorNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
  * <p>Применения:</p>
@@ -97,13 +97,22 @@ export const OnTroopEvaluationMove = (G, ctx) => {
 export const OnTroopEvaluationTurnBegin = (G, ctx) => {
     AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        for (let j = 0; j < 3; j++) {
+        let length;
+        if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+            length = 1;
+        }
+        else {
+            length = 3;
+        }
+        const explorerDistinctionCards = [];
+        for (let j = 0; j < length; j++) {
             const card = G.secret.decks[1][j];
             if (card === undefined) {
                 throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
             }
-            G.explorerDistinctionCards.push(card);
+            explorerDistinctionCards.push(card);
         }
+        G.explorerDistinctionCards = explorerDistinctionCards;
     }
 };
 /**

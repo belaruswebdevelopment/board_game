@@ -2,6 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
@@ -57,7 +58,10 @@ export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<
  * @param G
  * @param ctx
  */
-export const CheckBidUlineOrder = (G: IMyGameState, ctx: Ctx): void => CheckPlayersBasicOrder(G, ctx);
+export const CheckBidUlineOrder = (G: IMyGameState, ctx: Ctx): void => {
+    OpenCurrentTavernClosedCoinsOnPlayerBoard(G, ctx);
+    CheckPlayersBasicOrder(G, ctx);
+};
 
 /**
  * <h3>Действия при завершении фазы 'Ставки Улина'.</h3>

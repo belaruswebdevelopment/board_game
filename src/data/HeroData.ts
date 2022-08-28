@@ -36,7 +36,9 @@ const Andumia: IHeroData = {
     validators: {
         pickDiscardCardToStack: {},
     },
-    stack: [StackData.pickDiscardCardAndumia()],
+    stack: {
+        player: [StackData.pickDiscardCardAndumia()],
+    },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
         params: [12],
@@ -96,7 +98,9 @@ const Bonfur: IHeroData = {
             suit: SuitNames.blacksmith,
         },
     },
-    stack: [StackData.discardCardFromBoardBonfur()],
+    stack: {
+        player: [StackData.discardCardFromBoardBonfur()],
+    },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
         params: [0],
@@ -120,7 +124,9 @@ const Crovax_The_Doppelganger: IHeroData = {
             suit: null,
         },
     },
-    stack: [StackData.discardCardFromBoardCrovaxTheDoppelganger()],
+    stack: {
+        player: [StackData.discardCardFromBoardCrovaxTheDoppelganger()],
+    },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
         params: [25],
@@ -146,7 +152,9 @@ const Dagda: IHeroData = {
             number: 2,
         },
     },
-    stack: [StackData.discardCardFromBoardDagda()],
+    stack: {
+        player: [StackData.discardCardFromBoardDagda()],
+    },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
         params: [0],
@@ -251,7 +259,11 @@ const Grid: IHeroData = {
     description: `Прибавьте 7 очков к своему итоговому показателю храбрости. Когда вы призвали Грид и положили её карту в свою командную зону, сразу же улучшите на + 7 номинал одной из своих монет.`,
     game: GameNames.basic,
     points: 7,
-    stack: [StackData.upgradeCoin(7)],
+    stack: {
+        player: [StackData.upgradeCoin(7)],
+        soloBot: [StackData.upgradeCoinSoloBot(7)],
+        soloBotAndvari: [StackData.upgradeCoinSoloBotAndvari(7)],
+    },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
         params: [7],
@@ -276,7 +288,9 @@ const Holda: IHeroData = {
     validators: {
         pickCampCardToStack: {},
     },
-    stack: [StackData.pickCampCardHolda()],
+    stack: {
+        player: [StackData.pickCampCardHolda()],
+    },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
         params: [12],
@@ -425,7 +439,9 @@ const Olwin: IHeroData = {
     description: `Прибавьте 9 победных очков к итоговому показателю храбрости. Как только вы призвали Ольвюна, сразу же возьмите две карты «Двойник Ольвюна» и положите их в две разные колонки своей армии. В результате размещения Двойников Ольвюна могут возникнуть новые линии 5 шевронов, в этом случае игрок может призвать новых героев. Призрачные двойники обладают значением храбрости 0, но могут стать дворфами любого воинского класса. Они могут быть отправлены в сброс эффектами карт «Дагда», «Бонфур», «Брисингамен» и «Хёфуд». Двойники Ольвюна не являются героями. Если карта «Двойник Ольвюна» единственная в колонке, то положите на неё жетон воинского класса для напоминания о воинском классе колонки.`,
     game: GameNames.thingvellir,
     points: 9,
-    stack: [StackData.placeMultiSuitsCards(MultiSuitCardNames.OlwinsDouble)],
+    stack: {
+        player: [StackData.placeMultiSuitsCards(MultiSuitCardNames.OlwinsDouble)],
+    },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
         params: [9],
@@ -483,7 +499,11 @@ const Thrud: IHeroData = {
     description: `Призвав этого героя, поместите её карту по своему выбору в любую колонку класса своей армии. На карту Труд нельзя положить никакую другую карту дворфа. Если карта дворфа или героя помещается в колонку, где расположена Труд, то игрок должен взять карту Труд в руку, поместить карту дворфа или героя и затем вернуть карту Труд в армию, в любую колонку по своему выбору. Игрок получает право призвать нового героя, если, разместив карту Труд, создал необходимую для этого новую линию 5 шевронов. В конце эпохи 1, при распределении карт знаков отличия, шеврон Труд учитывается в том воинском классе, где она расположена. В эпоху 2, после посещения последней таверны, но перед подсчётом итогового показателя храбрости, карта Труд перемещается из армии в командную зону. Труд прибавляет 13 очков к итоговому показателю храбрости игрока.`,
     game: GameNames.basic,
     points: 13,
-    stack: [StackData.placeThrudHero()],
+    stack: {
+        player: [StackData.placeThrudHero()],
+        soloBot: [StackData.placeThrudHeroSoloBot()],
+        soloBotAndvari: [StackData.placeThrudHeroSoloBotAndvari()],
+    },
     buff: {
         name: BuffNames.MoveThrud,
     },

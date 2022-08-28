@@ -1,17 +1,18 @@
 import type { Ctx } from "boardgame.io";
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
+import { CheckSoloBotAndvariMustTakeCardFromGeneralStrategy, CheckSoloBotAndvariMustTakeCardToPickHero, CheckSoloBotAndvariMustTakeRoyalOfferingCard, SoloBotMustTakeCardFromReserveStrategy } from "./bot_logic/SoloBotAndvariCardLogic";
 import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSoloBotMustTakeRoyalOfferingCard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
 import { IsCoin } from "./Coin";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { IsMercenaryCampCard } from "./helpers/IsCampTypeHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
-import { CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot } from "./helpers/SoloBotHelpers";
+import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CoinType, DeckCardTypes, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -206,7 +207,8 @@ export const GetValidator = (phase: PhaseNames, stage: StageNames): IMoveValidat
  */
 export const moveValidators: IMoveValidators = {
     ClickBoardCoinMoveValidator: {
-        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<number[]> => DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickBoardCoinMoveValidator) as MoveArgumentsType<number[]>,
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<number[]> => DrawPlayersBoardsCoins(G, ctx,
+            MoveValidatorNames.ClickBoardCoinMoveValidator) as MoveArgumentsType<number[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -244,78 +246,55 @@ export const moveValidators: IMoveValidators = {
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<number[]> => DrawTaverns(G, ctx,
             MoveValidatorNames.ClickCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
-            // TODO Get MythologicalCreature cards for bots...
-            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `0`)
-                || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `0`)) {
-                const uniqueArr: (DeckCardTypes | MythologicalCreatureDeckCardType)[] = [],
-                    currentTavern: TavernAllCardType = G.taverns[G.currentTavern];
-                let flag = true;
-                for (let i = 0; i < currentMoveArguments.length; i++) {
-                    const moveArgument: CanBeUndefType<number> = currentMoveArguments[i];
-                    if (moveArgument === undefined) {
-                        throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
-                    }
-                    const tavernCard: CanBeUndefType<TavernCardType> = currentTavern[moveArgument];
-                    if (tavernCard === undefined) {
-                        throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
-                    }
-                    if (tavernCard === null) {
-                        throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${moveArgument}'.`);
-                    }
-                    if (currentTavern.some((card: TavernCardType): boolean =>
-                        CompareCards(tavernCard, card) < 0)) {
-                        continue;
-                    }
-                    const isCurrentCardWorse: boolean =
-                        EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) < 0,
-                        isExistCardNotWorse: boolean =
-                            currentTavern.some((card: TavernCardType): boolean => (card !== null)
-                                && (EvaluateCard(G, ctx, tavernCard, moveArgument,
-                                    currentTavern) >= 0));
-                    if (isCurrentCardWorse && isExistCardNotWorse) {
-                        continue;
-                    }
-                    const uniqueArrLength: number = uniqueArr.length;
-                    for (let j = 0; j < uniqueArrLength; j++) {
-                        const uniqueCard: CanBeUndefType<DeckCardTypes | MythologicalCreatureDeckCardType> =
-                            uniqueArr[j];
-                        if (uniqueCard === undefined) {
-                            throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
-                        }
-                        if (tavernCard.type === RusCardTypeNames.Dwarf_Card
-                            && uniqueCard.type === RusCardTypeNames.Dwarf_Card
-                            && tavernCard.suit === uniqueCard.suit
-                            && CompareCards(tavernCard, uniqueCard) === 0) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        uniqueArr.push(tavernCard);
-                        return moveArgument;
-                    }
-                    flag = true;
-                }
-            } else if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
-                // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
-                let moveArgument: CanBeUndefType<number>;
-                moveArgument = CheckSoloBotMustTakeCardToPickHero(G, ctx, currentMoveArguments);
+            // TODO Get MythologicalCreature cards for AI bots...
+            const uniqueArr: (DeckCardTypes | MythologicalCreatureDeckCardType)[] = [],
+                currentTavern: TavernAllCardType = G.taverns[G.currentTavern];
+            let flag = true;
+            for (let i = 0; i < currentMoveArguments.length; i++) {
+                const moveArgument: CanBeUndefType<number> = currentMoveArguments[i];
                 if (moveArgument === undefined) {
-                    moveArgument = CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard(G, ctx,
-                        currentMoveArguments);
+                    throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
                 }
-                if (moveArgument === undefined) {
-                    moveArgument = CheckSoloBotMustTakeRoyalOfferingCard(G, ctx, currentMoveArguments);
+                const tavernCard: CanBeUndefType<TavernCardType> = currentTavern[moveArgument];
+                if (tavernCard === undefined) {
+                    throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
                 }
-                if (moveArgument === undefined) {
-                    moveArgument = SoloBotMustTakeRandomCard(G, ctx, currentMoveArguments);
+                if (tavernCard === null) {
+                    throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${moveArgument}'.`);
                 }
-                if (moveArgument !== undefined) {
+                if (currentTavern.some((card: TavernCardType): boolean =>
+                    CompareCards(tavernCard, card) < 0)) {
+                    continue;
+                }
+                const isCurrentCardWorse: boolean =
+                    EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) < 0,
+                    isExistCardNotWorse: boolean =
+                        currentTavern.some((card: TavernCardType): boolean => (card !== null)
+                            && (EvaluateCard(G, ctx, tavernCard, moveArgument,
+                                currentTavern) >= 0));
+                if (isCurrentCardWorse && isExistCardNotWorse) {
+                    continue;
+                }
+                const uniqueArrLength: number = uniqueArr.length;
+                for (let j = 0; j < uniqueArrLength; j++) {
+                    const uniqueCard: CanBeUndefType<DeckCardTypes | MythologicalCreatureDeckCardType> =
+                        uniqueArr[j];
+                    if (uniqueCard === undefined) {
+                        throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
+                    }
+                    if (tavernCard.type === RusCardTypeNames.Dwarf_Card
+                        && uniqueCard.type === RusCardTypeNames.Dwarf_Card
+                        && tavernCard.suit === uniqueCard.suit
+                        && CompareCards(tavernCard, uniqueCard) === 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    uniqueArr.push(tavernCard);
                     return moveArgument;
                 }
-            } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-                // TODO Add logic for solo bot Andvari!
+                flag = true;
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
@@ -327,7 +306,6 @@ export const moveValidators: IMoveValidators = {
             MoveValidatorNames.ClickCardToPickDistinctionMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
-            // TODO Add for Solo Bot!
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
@@ -528,7 +506,6 @@ export const moveValidators: IMoveValidators = {
             MoveArgumentsType<SuitNamesKeyofTypeofType[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<SuitNamesKeyofTypeofType[]>):
             SuitNamesKeyofTypeofType => {
-            // TODO Add for Solo Bot and for solo bot Andvari!
             const moveArgument: CanBeUndefType<SuitNamesKeyofTypeofType> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
@@ -715,6 +692,31 @@ export const moveValidators: IMoveValidators = {
         moveName: MoveNames.SoloBotPlaceAllCoinsMove,
         validate: (): boolean => true,
     },
+    SoloBotClickCardMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<number[]> => DrawTaverns(G, ctx,
+            MoveValidatorNames.SoloBotClickCardMoveValidator) as MoveArgumentsType<number[]>,
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
+            // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
+            let moveArgument: CanBeUndefType<number>;
+            moveArgument = CheckSoloBotMustTakeCardToPickHero(G, ctx, currentMoveArguments);
+            if (moveArgument === undefined) {
+                moveArgument = CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard(G, ctx,
+                    currentMoveArguments);
+            }
+            if (moveArgument === undefined) {
+                moveArgument = CheckSoloBotMustTakeRoyalOfferingCard(G, ctx, currentMoveArguments);
+            }
+            if (moveArgument === undefined) {
+                moveArgument = SoloBotMustTakeRandomCard(G, ctx, currentMoveArguments);
+            }
+            if (moveArgument !== undefined) {
+                return moveArgument;
+            }
+            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
+        },
+        moveName: MoveNames.SoloBotClickCardMove,
+        validate: (): boolean => true,
+    },
     SoloBotClickHeroCardMoveValidator: {
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<number[]> => DrawHeroesForSoloBotUI(G, ctx,
             MoveValidatorNames.SoloBotClickHeroCardMoveValidator) as MoveArgumentsType<number[]>,
@@ -734,7 +736,6 @@ export const moveValidators: IMoveValidators = {
             MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
-            // TODO Add for Solo Bot!
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
@@ -744,6 +745,107 @@ export const moveValidators: IMoveValidators = {
         },
         moveName: MoveNames.SoloBotClickCardToPickDistinctionMove,
         validate: (): boolean => true,
+    },
+    SoloBotPlaceThrudHeroMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<SuitNamesKeyofTypeofType[]> =>
+            DrawPlayersBoards(G, ctx, MoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator) as
+            MoveArgumentsType<SuitNamesKeyofTypeofType[]>,
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<SuitNamesKeyofTypeofType[]>):
+            SuitNamesKeyofTypeofType => {
+            // TODO Move same logic for SuitTypes & number to functions and use it in getValue
+            // TODO Same logic for Ylud placement and move in one func!?
+            let moveArgument: CanBeUndefType<SuitNamesKeyofTypeofType>;
+            const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
+            if (soloBotPublicPlayer === undefined) {
+                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    1);
+            }
+            const suit: CanBeUndefType<SuitNamesKeyofTypeofType> =
+                CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
+            if (suit === undefined) {
+                const [suits]: [SuitNamesKeyofTypeofType[], number] =
+                    CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
+                if (suits.length === 0) {
+                    // TODO Move Thrud/Ylud in most left suit from `suits`
+                    throw new Error(`Не может не быть фракций с минимальным количеством карт.`);
+                } else if (suits.length === 1) {
+                    const leastPresentSuit: CanBeUndefType<SuitNamesKeyofTypeofType> = suits[0];
+                    if (leastPresentSuit === undefined) {
+                        throw new Error(`В массиве возможных аргументов мува для соло бота отсутствует нужное значение наименее представленной фракции.`);
+                    }
+                    moveArgument = currentMoveArguments[currentMoveArguments.indexOf(leastPresentSuit)];
+                } else {
+                    // TODO Move Thrud/Ylud in most left suit from least present `suits`!
+                }
+            } else {
+                moveArgument = suit;
+            }
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.SoloBotPlaceThrudHeroMove,
+        validate: (): boolean => true,
+    },
+    SoloBotPlaceYludHeroMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<SuitNamesKeyofTypeofType[]> =>
+            DrawPlayersBoards(G, ctx, MoveValidatorNames.SoloBotPlaceYludHeroMoveValidator) as
+            MoveArgumentsType<SuitNamesKeyofTypeofType[]>,
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<SuitNamesKeyofTypeofType[]>):
+            SuitNamesKeyofTypeofType => {
+            // TODO Same logic from Thrud placement and move in one func!?
+            const moveArgument: CanBeUndefType<SuitNamesKeyofTypeofType> =
+                currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.SoloBotPlaceYludHeroMove,
+        validate: (): boolean => true,
+    },
+    SoloBotClickCoinToUpgradeMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<IMoveCoinsArguments[]> =>
+            (DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator) as
+                MoveArgumentsType<IMoveCoinsArguments[]>).concat(DrawPlayersHandsCoins(G, ctx,
+                    MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator) as
+                    MoveArgumentsType<IMoveCoinsArguments[]>),
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
+            IMoveCoinsArguments => {
+            const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    ctx.currentPlayer);
+            }
+            let type: CoinTypeNames,
+                coins: PublicPlayerCoinType[];
+            if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
+                type = CoinTypeNames.Hand;
+                coins = player.handCoins;
+
+            } else {
+                type = CoinTypeNames.Board;
+                coins = player.boardCoins;
+            }
+            const minValue: number =
+                CheckMinCoinVisibleValueForSoloBot(G, ctx, currentMoveArguments, type);
+            if (minValue === 0) {
+                throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть минимальная монета для улучшения с значением '${minValue}'.`);
+            }
+            const coinId: number = CheckMinCoinVisibleIndexForSoloBot(coins, minValue);
+            if (coinId === -1) {
+                throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не найдена минимальная монета с значением '${minValue}'.`);
+            }
+            const moveArgument: CanBeUndefType<IMoveCoinsArguments> = currentMoveArguments[coinId];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.SoloBotClickCoinToUpgradeMove,
+        validate: (G: IMyGameState, ctx: Ctx, id: IMoveCoinsArguments): boolean =>
+            CoinUpgradeValidation(G, ctx, id),
     },
     // Solo Mode
     ChooseDifficultyLevelForSoloModeMoveValidator: {
@@ -831,6 +933,32 @@ export const moveValidators: IMoveValidators = {
         moveName: MoveNames.SoloBotAndvariPlaceAllCoinsMove,
         validate: (): boolean => true,
     },
+    SoloBotAndvariClickCardMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<number[]> => DrawTaverns(G, ctx,
+            MoveValidatorNames.SoloBotAndvariClickCardMoveValidator) as MoveArgumentsType<number[]>,
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
+            let moveArgument: CanBeUndefType<number>;
+            moveArgument =
+                CheckSoloBotAndvariMustTakeCardFromGeneralStrategy(G, ctx, currentMoveArguments);
+            if (moveArgument === undefined) {
+                moveArgument =
+                    CheckSoloBotAndvariMustTakeCardToPickHero(G, ctx, currentMoveArguments);
+            }
+            if (moveArgument === undefined) {
+                moveArgument =
+                    CheckSoloBotAndvariMustTakeRoyalOfferingCard(G, ctx, currentMoveArguments);
+            }
+            if (moveArgument === undefined) {
+                moveArgument = SoloBotMustTakeCardFromReserveStrategy(G, ctx, currentMoveArguments);
+            }
+            if (moveArgument !== undefined) {
+                return moveArgument;
+            }
+            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
+        },
+        moveName: MoveNames.SoloBotAndvariClickCardMove,
+        validate: (): boolean => true,
+    },
     SoloBotAndvariClickHeroCardMoveValidator: {
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<number[]> => DrawHeroes(G, ctx,
             MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) as MoveArgumentsType<number[]>,
@@ -856,7 +984,6 @@ export const moveValidators: IMoveValidators = {
             MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
-            // TODO Check for solo bot Andvari!
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
@@ -865,7 +992,86 @@ export const moveValidators: IMoveValidators = {
             return moveArgument;
         },
         moveName: MoveNames.SoloBotAndvariClickCardToPickDistinctionMove,
+        validate: (G: IMyGameState, ctx: Ctx, id: number): boolean => id === 0,
+    },
+    SoloBotAndvariPlaceThrudHeroMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<SuitNamesKeyofTypeofType[]> =>
+            DrawPlayersBoards(G, ctx, MoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator) as
+            MoveArgumentsType<SuitNamesKeyofTypeofType[]>,
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<SuitNamesKeyofTypeofType[]>):
+            SuitNamesKeyofTypeofType => {
+            // TODO Move same logic for SuitTypes & number to functions and use it in getValue
+            // TODO Move same logic for Ylud placement in one func!
+            const strategySuitIndex: number =
+                currentMoveArguments.findIndex((suit: SuitNamesKeyofTypeofType): boolean =>
+                    suit === G.strategyForSoloBotAndvari.general[0]);
+            if (strategySuitIndex === -1) {
+                throw new Error(`В массиве возможных аргументов мува для соло бота отсутствует нужное значение главной стратегии фракции '${G.strategyForSoloBotAndvari.general[0]}'.`);
+            }
+            const moveArgument: CanBeUndefType<SuitNamesKeyofTypeofType> =
+                currentMoveArguments[strategySuitIndex];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.SoloBotAndvariPlaceThrudHeroMove,
         validate: (): boolean => true,
+    },
+    SoloBotAndvariPlaceYludHeroMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<SuitNamesKeyofTypeofType[]> =>
+            DrawPlayersBoards(G, ctx, MoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator) as
+            MoveArgumentsType<SuitNamesKeyofTypeofType[]>,
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<SuitNamesKeyofTypeofType[]>):
+            SuitNamesKeyofTypeofType => {
+            // TODO Move same logic for Thrud placement in one func!
+            const strategySuitIndex: number =
+                currentMoveArguments.findIndex((suit: SuitNamesKeyofTypeofType): boolean =>
+                    suit === G.strategyForSoloBotAndvari.general[0]);
+            if (strategySuitIndex === -1) {
+                throw new Error(`В массиве возможных аргументов мува для соло бота отсутствует нужное значение главной стратегии фракции '${G.strategyForSoloBotAndvari.general[0]}'.`);
+            }
+            const moveArgument: CanBeUndefType<SuitNamesKeyofTypeofType> =
+                currentMoveArguments[strategySuitIndex];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.SoloBotAndvariPlaceYludHeroMove,
+        validate: (): boolean => true,
+    },
+    SoloBotAndvariClickCoinToUpgradeMoveValidator: {
+        getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<IMoveCoinsArguments[]> =>
+            DrawPlayersBoardsCoins(G, ctx,
+                MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator) as
+            MoveArgumentsType<IMoveCoinsArguments[]>,
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
+            IMoveCoinsArguments => {
+            const player: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined,
+                    ctx.currentPlayer);
+            }
+            const coins: CoinType[] = player.boardCoins,
+                minValue: number =
+                    CheckMinCoinVisibleValueForSoloBotAndvari(G, ctx, currentMoveArguments);
+            if (minValue === 0) {
+                throw new Error(`В массиве монет соло бота Андвари с id '${ctx.currentPlayer}' не может быть минимальная монета для улучшения с значением '${minValue}'.`);
+            }
+            const coinId: number = CheckMinCoinIndexForSoloBotAndvari(coins, minValue);
+            if (coinId === -1) {
+                throw new Error(`В массиве монет соло бота Андвари с id '${ctx.currentPlayer}' не найдена минимальная монета с значением '${minValue}'.`);
+            }
+            const moveArgument: CanBeUndefType<IMoveCoinsArguments> = currentMoveArguments[coinId];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.SoloBotAndvariClickCoinToUpgradeMove,
+        validate: (G: IMyGameState, ctx: Ctx, id: IMoveCoinsArguments): boolean =>
+            CoinUpgradeValidation(G, ctx, id),
     },
     // start
     AddCoinToPouchMoveValidator: {
@@ -912,6 +1118,7 @@ export const moveValidators: IMoveValidators = {
         moveName: MoveNames.ClickCampCardHoldaMove,
         validate: (): boolean => true,
     },
+    // TODO Is it need for solo bot and andvari!?
     PickConcreteCoinToUpgradeMoveValidator: {
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<IMoveCoinsArguments[]> =>
             (DrawPlayersBoardsCoins(G, ctx,
@@ -940,38 +1147,8 @@ export const moveValidators: IMoveValidators = {
                     MoveArgumentsType<IMoveCoinsArguments[]>),
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
             IMoveCoinsArguments => {
-            let moveArgument: CanBeUndefType<IMoveCoinsArguments>;
-            if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
-                        ctx.currentPlayer);
-                }
-                let type: CoinTypeNames,
-                    coins: PublicPlayerCoinType[];
-                if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
-                    type = CoinTypeNames.Hand;
-                    coins = player.handCoins;
-
-                } else {
-                    type = CoinTypeNames.Board;
-                    coins = player.boardCoins;
-                }
-                const minValue: number =
-                    CheckMinCoinVisibleValueForSoloBot(G, ctx, currentMoveArguments, type);
-                if (minValue === 0) {
-                    throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть минимальная монета для улучшения с значением '${minValue}'.`);
-                }
-                const coinId: number = CheckMinCoinVisibleIndexForSoloBot(coins, minValue);
-                if (coinId === -1) {
-                    throw new Error(`В массиве монет соло бота с id '${ctx.currentPlayer}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не найдена минимальная монета с значением '${minValue}'.`);
-                }
-                moveArgument = currentMoveArguments[coinId];
-            } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-                // TODO Add logic for solo bot Andvari upgraded lowest coin among all closed and opened coins!
-            } else {
-                moveArgument = currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
-            }
+            const moveArgument: CanBeUndefType<IMoveCoinsArguments> =
+                currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -1140,33 +1317,8 @@ export const moveValidators: IMoveValidators = {
             SuitNamesKeyofTypeofType => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
             // TODO Same logic for Ylud placement!
-            let moveArgument: CanBeUndefType<SuitNamesKeyofTypeofType>;
-            if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
-                const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
-                if (soloBotPublicPlayer === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-                        1);
-                }
-                const suit: CanBeUndefType<SuitNamesKeyofTypeofType> =
-                    CheckSoloBotCanPickHero(G, ctx, soloBotPublicPlayer);
-                if (suit === undefined) {
-                    const [suits]: [SuitNamesKeyofTypeofType[], number] =
-                        CheckSuitsLeastPresentOnPlayerBoard(G, ctx, soloBotPublicPlayer);
-                    if (suits.length === 0) {
-                        throw new Error(`Не может не быть фракций с минимальным количеством карт.`);
-                    } else if (suits.length === 1) {
-                        moveArgument = suits[0];
-                    } else {
-                        // TODO Move Thrud/Ylud in most left suit from `suits`
-                    }
-                } else {
-                    moveArgument = suit;
-                }
-            } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-                // TODO Add logic for solo bot Andvari to move Thrud to pick hero first but if cant't by main strategy!?
-            } else {
-                moveArgument = currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
-            }
+            const moveArgument: CanBeUndefType<SuitNamesKeyofTypeofType> =
+                currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
@@ -1211,7 +1363,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.UseGodPowerMove,
+        moveName: MoveNames.UseGodCardPowerMove,
         validate: (): boolean => true,
     },
     // end
@@ -1229,7 +1381,8 @@ export const moveBy: IMoveBy = {
     chooseDifficultySoloMode: {
         default1: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
         chooseHeroesForSoloMode: moveValidators.ChooseHeroesForSoloModeMoveValidator,
-        upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
+        // Not Solo
+        upgradeCoinSoloBot: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
     },
     chooseDifficultySoloModeAndvari: {
         default1: moveValidators.ChooseStrategyVariantForSoloModeAndvariMoveValidator,
@@ -1272,9 +1425,19 @@ export const moveBy: IMoveBy = {
         discardCard: moveValidators.DiscardCard2PlayersMoveValidator,
         placeTradingCoinsUline: moveValidators.ClickHandTradingCoinUlineMoveValidator,
         // Solo Bot
+        default3: moveValidators.SoloBotClickCardMoveValidator,
+        // Common Solo Bot Start
         pickHeroSoloBot: moveValidators.SoloBotClickHeroCardMoveValidator,
+        placeThrudHeroSoloBot: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
+        upgradeCoinSoloBot: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
+        // Common Solo Bot End
         // Solo Bot Andvari
+        default4: moveValidators.SoloBotAndvariClickCardMoveValidator,
+        // Common Solo Bot Andvari Start
         pickHeroSoloBotAndvari: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
+        placeThrudHeroSoloBotAndvari: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
+        upgradeCoinSoloBotAndvari: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
+        // Common Solo Bot Andvari End
     },
     enlistmentMercenaries: {
         default1: moveValidators.StartEnlistmentMercenariesMoveValidator,
@@ -1317,9 +1480,19 @@ export const moveBy: IMoveBy = {
         useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         // Solo Bot
+        default2: moveValidators.SoloBotPlaceYludHeroMoveValidator,
+        // Common Solo Bot Start
         pickHeroSoloBot: moveValidators.SoloBotClickHeroCardMoveValidator,
+        placeThrudHeroSoloBot: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
+        upgradeCoinSoloBot: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
+        // Common Solo Bot End
         // Solo Bot Andvari
+        default3: moveValidators.SoloBotAndvariPlaceYludHeroMoveValidator,
+        // Common Solo Bot Andvari Start
         pickHeroSoloBotAndvari: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
+        placeThrudHeroSoloBotAndvari: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
+        upgradeCoinSoloBotAndvari: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
+        // Common Solo Bot Andvari End
     },
     troopEvaluation: {
         default1: moveValidators.ClickDistinctionCardMoveValidator,
@@ -1342,10 +1515,18 @@ export const moveBy: IMoveBy = {
         pickDistinctionCard: moveValidators.ClickCardToPickDistinctionMoveValidator,
         // Solo Bot
         pickDistinctionCardSoloBot: moveValidators.SoloBotClickCardToPickDistinctionMoveValidator,
+        // Common Solo Bot Start
         pickHeroSoloBot: moveValidators.SoloBotClickHeroCardMoveValidator,
+        placeThrudHeroSoloBot: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
+        upgradeCoinSoloBot: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
+        // Common Solo Bot End
         // Solo Bot Andvari
         pickDistinctionCardSoloBotAndvari: moveValidators.SoloBotAndvariClickCardToPickDistinctionMoveValidator,
+        // Common Solo Bot Andvari Start
         pickHeroSoloBotAndvari: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
+        placeThrudHeroSoloBotAndvari: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
+        upgradeCoinSoloBotAndvari: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
+        // Common Solo Bot Andvari End
     },
     brisingamensEndGame: {
         default1: moveValidators.DiscardCardFromPlayerBoardMoveValidator,

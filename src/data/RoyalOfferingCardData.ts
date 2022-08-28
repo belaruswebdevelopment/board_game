@@ -12,7 +12,11 @@ import { StackData } from "./StackData";
 const upgradeCoinUpTo3: IRoyalOfferingCardConfig = {
     name: RoyalOfferingNames.PlusThree,
     value: 3,
-    stack: [StackData.upgradeCoin(3)],
+    stack: {
+        player: [StackData.upgradeCoin(3)],
+        soloBot: [StackData.upgradeCoinSoloBot(3)],
+        soloBotAndvari: [StackData.upgradeCoinSoloBotAndvari(3)],
+    },
     amount: (): IRoyalOfferingCardValues => ({
         1: {
             0: 1,
@@ -47,7 +51,11 @@ const upgradeCoinUpTo3: IRoyalOfferingCardConfig = {
 const upgradeCoinUpTo5: IRoyalOfferingCardConfig = {
     name: RoyalOfferingNames.PlusFive,
     value: 5,
-    stack: [StackData.upgradeCoin(5)],
+    stack: {
+        player: [StackData.upgradeCoin(5)],
+        soloBot: [StackData.upgradeCoinSoloBot(5)],
+        soloBotAndvari: [StackData.upgradeCoinSoloBotAndvari(5)],
+    },
     amount: (): IRoyalOfferingCardValues => ({
         1: {
             0: 0,

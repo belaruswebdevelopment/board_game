@@ -1,6 +1,6 @@
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
-import { BuffNames, ErrorNames, HeroNames } from "../typescript/enums";
+import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 /**
@@ -50,7 +50,15 @@ const CheckAndMoveThrud = (G, ctx, card) => {
 export const CheckAndMoveThrudAction = (G, ctx, card) => {
     const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
-        AddActionsToStack(G, ctx, [StackData.placeThrudHero()]);
+        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+            AddActionsToStack(G, ctx, [StackData.placeThrudHeroSoloBot()]);
+        }
+        else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+            AddActionsToStack(G, ctx, [StackData.placeThrudHeroSoloBotAndvari()]);
+        }
+        else {
+            AddActionsToStack(G, ctx, [StackData.placeThrudHero()]);
+        }
     }
 };
 //# sourceMappingURL=HeroActionHelpers.js.map

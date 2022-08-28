@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { ErrorNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
 import type { AddCardToPlayerType, CanBeUndefType, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType, TavernCardType } from "../typescript/interfaces";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -115,7 +115,13 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Non
             break;
         case RusCardTypeNames.Royal_Offering_Card:
             AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
-            AddActionsToStack(G, ctx, card.stack, card);
+            if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+                AddActionsToStack(G, ctx, card.stack?.soloBot, card);
+            } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+                AddActionsToStack(G, ctx, card.stack?.soloBotAndvari, card);
+            } else {
+                AddActionsToStack(G, ctx, card.stack?.player, card);
+            }
             DiscardPickedCard(G, card);
             break;
         case RusCardTypeNames.God_Card:

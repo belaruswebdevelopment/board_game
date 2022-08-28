@@ -28,7 +28,8 @@ import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardT
  */
 export const SetupGame = (ctx: Ctx): IMyGameState => {
     // TODO Rework it!
-    const mode: GameModeNames = ctx.numPlayers === 1 ? GameModeNames.SoloAndvari : ctx.numPlayers === 2 ? GameModeNames.Solo1 : ctx.numPlayers === 3 ? GameModeNames.Basic : GameModeNames.Multiplayer,
+    const mode: GameModeNames = ctx.numPlayers === 1 ? GameModeNames.Solo1 : ctx.numPlayers === 2
+        ? GameModeNames.SoloAndvari : ctx.numPlayers === 3 ? GameModeNames.Multiplayer : GameModeNames.Basic,
         suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
@@ -62,7 +63,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         specialCardsDeck: ISpecialCard[] = BuildSpecialCards(),
         configOptions: GameNamesKeyofTypeofType[] = [],
         discardCardsDeck: DeckCardTypes[] = [],
-        explorerDistinctionCards: DeckCardTypes[] = [],
+        explorerDistinctionCards = null,
         distinctions: SuitPropertyType<DistinctionType> = {} as SuitPropertyType<DistinctionType>,
         strategyForSoloBotAndvari: IStrategyForSoloBotAndvari = {} as IStrategyForSoloBotAndvari,
         secret: ISecret = {
@@ -146,7 +147,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         const soloBot: boolean = (mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari) && i === 1;
         publicPlayers[i] =
             BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority,
-                mode === GameModeNames.Multiplayer);
+                soloBot || mode === GameModeNames.Multiplayer);
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {

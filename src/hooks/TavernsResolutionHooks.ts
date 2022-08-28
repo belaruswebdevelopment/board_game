@@ -1,11 +1,11 @@
 import type { Ctx } from "boardgame.io";
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
-import { ResolveBoardCoins } from "../helpers/CoinHelpers";
+import { OpenCurrentTavernClosedCoinsOnPlayerBoard, ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
@@ -14,7 +14,7 @@ import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { BuffNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, CoinType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -215,7 +215,13 @@ export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const OnTavernsResolutionTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStack(G, ctx, [StackData.pickCard()]);
+    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, [StackData.pickCardSoloBot()]);
+    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        AddActionsToStack(G, ctx, [StackData.pickCardSoloBotAndvari()]);
+    } else {
+        AddActionsToStack(G, ctx, [StackData.pickCard()]);
+    }
 };
 
 /**
@@ -263,35 +269,12 @@ export const OnTavernsResolutionTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const ResolveCurrentTavernOrders = (G: IMyGameState, ctx: Ctx): void => {
-    Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)
-            || (G.mode === GameModeNames.SoloAndvari && index === 1)) {
-            const privatePlayer: CanBeUndefType<IPlayer> = G.players[index];
-            if (privatePlayer === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
-                    index);
-            }
-            const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[G.currentTavern];
-            if (privateBoardCoin === undefined) {
-                throw new Error(`В массиве монет приватного игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-            }
-            if (privateBoardCoin !== null && !privateBoardCoin.isOpened) {
-                ChangeIsOpenedCoinStatus(privateBoardCoin, true);
-            }
-            player.boardCoins[G.currentTavern] = privateBoardCoin;
-        } else {
-            const publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
-            if (publicBoardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-            }
-            if (publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
-                throw new Error(`В массиве монет игрока с id '${index}' в руке не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
-            }
-            if (publicBoardCoin !== null && !publicBoardCoin.isOpened) {
-                ChangeIsOpenedCoinStatus(publicBoardCoin, true);
-            }
-        }
-    });
+    const ulinePlayerIndex: number =
+        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+            CheckPlayerHasBuff(player, BuffNames.EveryTurn));
+    if (ulinePlayerIndex === -1) {
+        OpenCurrentTavernClosedCoinsOnPlayerBoard(G, ctx);
+    }
     const { playersOrder, exchangeOrder }: IResolveBoardCoins = ResolveBoardCoins(G, ctx);
     [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
 };

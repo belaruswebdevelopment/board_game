@@ -1,14 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickCardToPickDistinctionAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import { ClickCardAction, DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickCardToPickDistinctionAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
-import { ThrowMyError } from "../Error";
-import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { StageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -19,30 +16,13 @@ import { ErrorNames, LogTypeNames, StageNames, SuitNames } from "../typescript/e
  * @param G
  * @param ctx
  * @param cardId Id карты.
- * @returns
  */
 export const ClickCardMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const currentTavern = G.taverns[G.currentTavern], card = currentTavern[cardId];
-    if (card === undefined) {
-        throw new Error(`Отсутствует карта с id '${cardId}' текущей таверны с id '${G.currentTavern}'.`);
-    }
-    if (card === null) {
-        throw new Error(`Не существует кликнутая карта с id '${cardId}'.`);
-    }
-    currentTavern.splice(cardId, 1, null);
-    const isAdded = PickCardOrActionCardActions(G, ctx, card);
-    // TODO Rework it!?
-    if (isAdded && `suit` in card) {
-        const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
-        }
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
-    }
+    ClickCardAction(G, ctx, cardId);
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
