@@ -5,7 +5,7 @@ import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "./typescript/enums";
-import type { CanBeUndefType, DeckCardTypes, DistinctionType, IMyGameState, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType, SuitNamesKeyofTypeofType } from "./typescript/interfaces";
+import type { CanBeUndefType, DeckCardType, DistinctionType, IMyGameState, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType, SuitNamesKeyofTypeofType } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
@@ -150,8 +150,8 @@ const CountPlayerRanksAndMaxRanksForDistinctions = (G: IMyGameState, ctx: Ctx, s
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitNamesKeyofTypeofType,
     result: DistinctionType): void => {
     if (suit === SuitNames.explorer && result === undefined) {
-        const deck1: DeckCardTypes[] = G.secret.decks[1],
-            discardedCard: CanBeUndefType<DeckCardTypes> = deck1.splice(0, 1)[0];
+        const deck1: DeckCardType[] = G.secret.decks[1],
+            discardedCard: CanBeUndefType<DeckCardType> = deck1.splice(0, 1)[0];
         if (discardedCard === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);
         }

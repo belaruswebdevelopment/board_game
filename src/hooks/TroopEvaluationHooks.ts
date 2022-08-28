@@ -6,7 +6,7 @@ import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../hel
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, DistinctionType, ExplorerDistinctionCardsArrayType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, ExplorerDistinctionCardsArrayType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -117,9 +117,9 @@ export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
         } else {
             length = 3;
         }
-        const explorerDistinctionCards: DeckCardTypes[] = [];
+        const explorerDistinctionCards: DeckCardType[] = [];
         for (let j = 0; j < length; j++) {
-            const card: CanBeUndefType<DeckCardTypes> = G.secret.decks[1][j];
+            const card: CanBeUndefType<DeckCardType> = G.secret.decks[1][j];
             if (card === undefined) {
                 throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
             }

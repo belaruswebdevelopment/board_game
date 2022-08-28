@@ -10,7 +10,7 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitNames } from "./typescript/enums";
+import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -197,7 +197,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickBoardCoinMove,
+        moveName: CoinMoveNames.ClickBoardCoinMove,
         validate: () => true,
     },
     ClickCampCardMoveValidator: {
@@ -209,7 +209,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCampCardMove,
+        moveName: CardMoveNames.ClickCampCardMove,
         validate: (G, ctx) => {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
@@ -267,7 +267,7 @@ export const moveValidators = {
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
-        moveName: MoveNames.ClickCardMove,
+        moveName: CardMoveNames.ClickCardMove,
         validate: () => true,
     },
     ClickCardToPickDistinctionMoveValidator: {
@@ -279,7 +279,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCardToPickDistinctionMove,
+        moveName: CardMoveNames.ClickCardToPickDistinctionMove,
         validate: () => true,
     },
     ClickDistinctionCardMoveValidator: {
@@ -291,7 +291,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickDistinctionCardMove,
+        moveName: CardMoveNames.ClickDistinctionCardMove,
         validate: () => true,
     },
     ClickHandCoinMoveValidator: {
@@ -303,7 +303,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHandCoinMove,
+        moveName: CoinMoveNames.ClickHandCoinMove,
         validate: () => true,
     },
     ClickHandCoinUlineMoveValidator: {
@@ -315,7 +315,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHandCoinUlineMove,
+        moveName: CoinMoveNames.ClickHandCoinUlineMove,
         validate: () => true,
     },
     ClickHandTradingCoinUlineMoveValidator: {
@@ -327,7 +327,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHandTradingCoinUlineMove,
+        moveName: CoinMoveNames.ClickHandTradingCoinUlineMove,
         validate: () => true,
     },
     DiscardCardFromPlayerBoardMoveValidator: {
@@ -355,7 +355,7 @@ export const moveValidators = {
                 cardId: moveArgument,
             };
         },
-        moveName: MoveNames.DiscardCardFromPlayerBoardMove,
+        moveName: CardMoveNames.DiscardCardFromPlayerBoardMove,
         validate: () => true,
     },
     DiscardCard2PlayersMoveValidator: {
@@ -367,7 +367,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.DiscardCard2PlayersMove,
+        moveName: CardMoveNames.DiscardCard2PlayersMove,
         validate: () => true,
     },
     GetEnlistmentMercenariesMoveValidator: {
@@ -379,7 +379,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.GetEnlistmentMercenariesMove,
+        moveName: CardMoveNames.GetEnlistmentMercenariesMove,
         validate: () => true,
     },
     GetMjollnirProfitMoveValidator: {
@@ -408,13 +408,13 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.GetMjollnirProfitMove,
+        moveName: SuitMoveNames.GetMjollnirProfitMove,
         validate: () => true,
     },
     PassEnlistmentMercenariesMoveValidator: {
         getRange: () => null,
         getValue: () => null,
-        moveName: MoveNames.PassEnlistmentMercenariesMove,
+        moveName: ButtonMoveNames.PassEnlistmentMercenariesMove,
         validate: (G, ctx) => {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
@@ -434,7 +434,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceEnlistmentMercenariesMove,
+        moveName: SuitMoveNames.PlaceEnlistmentMercenariesMove,
         validate: () => true,
     },
     PlaceYludHeroMoveValidator: {
@@ -446,13 +446,13 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceYludHeroMove,
+        moveName: SuitMoveNames.PlaceYludHeroMove,
         validate: () => true,
     },
     StartEnlistmentMercenariesMoveValidator: {
         getRange: () => null,
         getValue: () => null,
-        moveName: MoveNames.StartEnlistmentMercenariesMove,
+        moveName: ButtonMoveNames.StartEnlistmentMercenariesMove,
         validate: () => true,
     },
     // Bots
@@ -599,7 +599,7 @@ export const moveValidators = {
             }
             throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
         },
-        moveName: MoveNames.BotsPlaceAllCoinsMove,
+        moveName: AutoBotsMoveNames.BotsPlaceAllCoinsMove,
         validate: () => true,
     },
     // Solo Bot
@@ -612,7 +612,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotPlaceAllCoinsMove,
+        moveName: AutoBotsMoveNames.SoloBotPlaceAllCoinsMove,
         validate: () => true,
     },
     SoloBotClickCardMoveValidator: {
@@ -635,7 +635,7 @@ export const moveValidators = {
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
-        moveName: MoveNames.SoloBotClickCardMove,
+        moveName: CardMoveNames.SoloBotClickCardMove,
         validate: () => true,
     },
     SoloBotClickHeroCardMoveValidator: {
@@ -647,7 +647,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotClickHeroCardMove,
+        moveName: CardMoveNames.SoloBotClickHeroCardMove,
         validate: () => true,
     },
     SoloBotClickCardToPickDistinctionMoveValidator: {
@@ -659,7 +659,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotClickCardToPickDistinctionMove,
+        moveName: CardMoveNames.SoloBotClickCardToPickDistinctionMove,
         validate: () => true,
     },
     SoloBotPlaceThrudHeroMoveValidator: {
@@ -698,7 +698,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotPlaceThrudHeroMove,
+        moveName: SuitMoveNames.SoloBotPlaceThrudHeroMove,
         validate: () => true,
     },
     SoloBotPlaceYludHeroMoveValidator: {
@@ -711,7 +711,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotPlaceYludHeroMove,
+        moveName: SuitMoveNames.SoloBotPlaceYludHeroMove,
         validate: () => true,
     },
     SoloBotClickCoinToUpgradeMoveValidator: {
@@ -744,7 +744,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotClickCoinToUpgradeMove,
+        moveName: CoinMoveNames.SoloBotClickCoinToUpgradeMove,
         validate: (G, ctx, id) => CoinUpgradeValidation(G, ctx, id),
     },
     // Solo Mode
@@ -757,7 +757,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseDifficultyLevelForSoloModeMove,
+        moveName: ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove,
         validate: () => true,
     },
     ChooseHeroesForSoloModeMoveValidator: {
@@ -769,7 +769,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseHeroForDifficultySoloModeMove,
+        moveName: CardMoveNames.ChooseHeroForDifficultySoloModeMove,
         validate: () => true,
     },
     // Solo Mode Andvari
@@ -782,7 +782,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseStrategyVariantForSoloModeAndvariMove,
+        moveName: ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove,
         validate: () => true,
     },
     ChooseStrategyForSoloModeAndvariMoveValidator: {
@@ -794,7 +794,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseStrategyForSoloModeAndvariMove,
+        moveName: ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
         validate: () => true,
     },
     SoloBotAndvariPlaceAllCoinsMoveValidator: {
@@ -806,7 +806,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariPlaceAllCoinsMove,
+        moveName: AutoBotsMoveNames.SoloBotAndvariPlaceAllCoinsMove,
         validate: () => true,
     },
     SoloBotAndvariClickCardMoveValidator: {
@@ -831,7 +831,7 @@ export const moveValidators = {
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
-        moveName: MoveNames.SoloBotAndvariClickCardMove,
+        moveName: CardMoveNames.SoloBotAndvariClickCardMove,
         validate: () => true,
     },
     SoloBotAndvariClickHeroCardMoveValidator: {
@@ -850,7 +850,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariClickHeroCardMove,
+        moveName: CardMoveNames.SoloBotAndvariClickHeroCardMove,
         validate: () => true,
     },
     SoloBotAndvariClickCardToPickDistinctionMoveValidator: {
@@ -862,7 +862,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariClickCardToPickDistinctionMove,
+        moveName: CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove,
         validate: (G, ctx, id) => id === 0,
     },
     SoloBotAndvariPlaceThrudHeroMoveValidator: {
@@ -880,7 +880,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariPlaceThrudHeroMove,
+        moveName: SuitMoveNames.SoloBotAndvariPlaceThrudHeroMove,
         validate: () => true,
     },
     SoloBotAndvariPlaceYludHeroMoveValidator: {
@@ -897,7 +897,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariPlaceYludHeroMove,
+        moveName: SuitMoveNames.SoloBotAndvariPlaceYludHeroMove,
         validate: () => true,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
@@ -921,7 +921,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariClickCoinToUpgradeMove,
+        moveName: CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove,
         validate: (G, ctx, id) => CoinUpgradeValidation(G, ctx, id),
     },
     // start
@@ -934,7 +934,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.AddCoinToPouchMove,
+        moveName: CoinMoveNames.AddCoinToPouchMove,
         validate: () => true,
     },
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: {
@@ -946,7 +946,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
+        moveName: ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
         validate: () => true,
     },
     ClickCampCardHoldaMoveValidator: {
@@ -958,7 +958,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCampCardHoldaMove,
+        moveName: CardMoveNames.ClickCampCardHoldaMove,
         validate: () => true,
     },
     // TODO Is it need for solo bot and andvari!?
@@ -971,7 +971,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickConcreteCoinToUpgradeMove,
+        moveName: CoinMoveNames.ClickConcreteCoinToUpgradeMove,
         validate: (G, ctx, id) => CoinUpgradeValidation(G, ctx, id),
     },
     ClickCoinToUpgradeMoveValidator: {
@@ -983,7 +983,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCoinToUpgradeMove,
+        moveName: CoinMoveNames.ClickCoinToUpgradeMove,
         validate: (G, ctx, id) => CoinUpgradeValidation(G, ctx, id),
     },
     ClickHeroCardMoveValidator: {
@@ -995,7 +995,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHeroCardMove,
+        moveName: CardMoveNames.ClickHeroCardMove,
         validate: (G, ctx, id) => {
             let isValid = false;
             const hero = G.heroes[id];
@@ -1050,7 +1050,7 @@ export const moveValidators = {
                 cardId: moveArgument,
             };
         },
-        moveName: MoveNames.DiscardCardMove,
+        moveName: CardMoveNames.DiscardCardMove,
         validate: () => true,
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
@@ -1093,7 +1093,7 @@ export const moveValidators = {
                 cardId: cardIndex,
             };
         },
-        moveName: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+        moveName: CardMoveNames.DiscardSuitCardFromPlayerBoardMove,
         // TODO validate Not bot playerId === ctx.currentPlayer & for Bot playerId exists in playersNum and card not hero?
         validate: () => true,
     },
@@ -1106,7 +1106,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PickDiscardCardMove,
+        moveName: CardMoveNames.PickDiscardCardMove,
         validate: () => true,
     },
     PlaceMultiSuitCardMoveValidator: {
@@ -1118,7 +1118,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceMultiSuitCardMove,
+        moveName: SuitMoveNames.PlaceMultiSuitCardMove,
         validate: () => true,
     },
     PlaceThrudHeroMoveValidator: {
@@ -1132,7 +1132,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceThrudHeroMove,
+        moveName: SuitMoveNames.PlaceThrudHeroMove,
         validate: () => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
@@ -1144,7 +1144,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
+        moveName: CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         validate: (G, ctx, id) => {
             var _a;
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -1164,7 +1164,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.UseGodCardPowerMove,
+        moveName: CardMoveNames.UseGodCardPowerMove,
         validate: () => true,
     },
     // end

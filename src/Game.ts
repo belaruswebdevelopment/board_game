@@ -289,6 +289,11 @@ export const BoardGame: Game<IMyGameState> = {
                             ClickCampCardHoldaMove,
                         },
                     },
+                    pickConcreteCoinToUpgrade: {
+                        moves: {
+                            ClickConcreteCoinToUpgradeMove,
+                        },
+                    },
                     pickDiscardCard: {
                         moves: {
                             PickDiscardCardMove,
@@ -369,6 +374,11 @@ export const BoardGame: Game<IMyGameState> = {
                     pickCampCardHolda: {
                         moves: {
                             ClickCampCardHoldaMove,
+                        },
+                    },
+                    pickConcreteCoinToUpgrade: {
+                        moves: {
+                            ClickConcreteCoinToUpgradeMove,
                         },
                     },
                     pickDiscardCard: {
@@ -480,6 +490,11 @@ export const BoardGame: Game<IMyGameState> = {
                     pickCampCardHolda: {
                         moves: {
                             ClickCampCardHoldaMove,
+                        },
+                    },
+                    pickConcreteCoinToUpgrade: {
+                        moves: {
+                            ClickConcreteCoinToUpgradeMove,
                         },
                     },
                     pickDiscardCard: {

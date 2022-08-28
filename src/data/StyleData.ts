@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CardNamesForStylesType, IBackground, IndexOf, IStyles, MythologicalCreatureNameTypes, SuitNamesKeyofTypeofType, TavernsConfigType, TierType } from "../typescript/interfaces";
+import type { CanBeNullType, CardNamesForStylesType, IBackground, IndexOf, IStyles, MythologicalCreatureNameType, SuitNamesKeyofTypeofType, TavernsConfigType, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -446,7 +446,7 @@ export const Styles: IStyles = {
     HeroBack: (): IBackground => ({
         background: `url(/img/cards/heroes/HeroBack.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    MythologicalCreature: (name: MythologicalCreatureNameTypes): IBackground => {
+    MythologicalCreature: (name: MythologicalCreatureNameType): IBackground => {
         // TODO Add  _exhaustiveCheck = heroName;
         switch (name) {
             // case GiantNames.Gymir:

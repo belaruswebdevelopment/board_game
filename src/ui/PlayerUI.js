@@ -7,7 +7,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, HeroNames, MoveNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, RusCardTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GameModeNames, HeroNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, RusCardTypeNames, StageNames, SuitMoveNames, SuitNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 // TODO Check Solo Bot & multiplayer actions!
 // TODO Move strings coins names to enum!
@@ -82,7 +82,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
             if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                 && p === Number(ctx.currentPlayer) && ctx.phase === PhaseNames.GetMjollnirProfit) {
                 if (data !== undefined) {
-                    DrawSuit(data, playerHeaders, suitTop, player, MoveNames.GetMjollnirProfitMove);
+                    DrawSuit(data, playerHeaders, suitTop, player, SuitMoveNames.GetMjollnirProfitMove);
                 }
                 else if (validatorName === MoveValidatorNames.GetMjollnirProfitMoveValidator) {
                     if (!Array.isArray(moveMainArgs)) {
@@ -123,7 +123,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     if (p !== Number(ctx.currentPlayer) && stage === StageNames.discardSuitCard
                         && suit === SuitNames.warrior && card.type !== RusCardTypeNames.Hero_Player_Card) {
                         if (data !== undefined) {
-                            DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
+                            DrawCard(data, playerCells, card, id, player, suit, CardMoveNames.DiscardSuitCardFromPlayerBoardMove, i);
                         }
                         else if (validatorName === MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator
                             && p === playerId) {
@@ -142,7 +142,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                         const stackSuit = stack.suit;
                         if (suit !== stackSuit && suit !== stack.pickedSuit) {
                             if (data !== undefined) {
-                                DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardMove, suit, last);
+                                DrawCard(data, playerCells, card, id, player, suit, CardMoveNames.DiscardCardMove, suit, last);
                             }
                             else if (validatorName === MoveValidatorNames.DiscardCardMoveValidator) {
                                 if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
@@ -161,7 +161,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     else if (p === Number(ctx.currentPlayer) && ctx.phase === PhaseNames.BrisingamensEndGame
                         && card.type !== RusCardTypeNames.Hero_Player_Card) {
                         if (data !== undefined) {
-                            DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
+                            DrawCard(data, playerCells, card, id, player, suit, CardMoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                         }
                         else if (validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
                             if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
@@ -286,7 +286,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                             && ctx.phase === PhaseNames.EnlistmentMercenaries
                             && ctx.activePlayers === null && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
-                                DrawCard(data, playerCells, campCard, id, player, null, MoveNames.GetEnlistmentMercenariesMove, i);
+                                DrawCard(data, playerCells, campCard, id, player, null, CardMoveNames.GetEnlistmentMercenariesMove, i);
                             }
                             else if (validatorName === MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) {
                                 if (!Array.isArray(moveMainArgs)) {
@@ -315,7 +315,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                         if (mythologicalCreatureCommandZoneCard.type === RusCardTypeNames.God_Card
                             && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
-                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player, null, MoveNames.UseGodCardPowerMove, i);
+                                DrawCard(data, playerCells, mythologicalCreatureCommandZoneCard, id, player, null, CardMoveNames.UseGodCardPowerMove, i);
                             }
                             else if (validatorName === MoveValidatorNames.UseGodPowerMoveValidator) {
                                 if (!Array.isArray(moveMainArgs)) {
@@ -382,25 +382,49 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
         const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[p];
         switch (ctx.phase) {
             case PhaseNames.Bids:
-                moveName = MoveNames.ClickBoardCoinMove;
+                moveName = CoinMoveNames.ClickBoardCoinMove;
                 break;
             default:
                 if (stage === StageNames.upgradeCoin) {
-                    if (G.mode === GameModeNames.Solo1 && p === 1 && ctx.currentPlayer === `1`) {
-                        moveName = MoveNames.SoloBotClickCoinToUpgradeMove;
-                    }
-                    else if (G.mode === GameModeNames.SoloAndvari && p === 1 && ctx.currentPlayer === `1`) {
-                        moveName = MoveNames.SoloBotAndvariClickCoinToUpgradeMove;
-                    }
-                    else {
-                        moveName = MoveNames.ClickCoinToUpgradeMove;
+                    let _exhaustiveCheck;
+                    switch (G.mode) {
+                        case GameModeNames.Basic:
+                        case GameModeNames.Multiplayer:
+                            moveName = CoinMoveNames.ClickCoinToUpgradeMove;
+                            break;
+                        case GameModeNames.Solo1:
+                            if (ctx.currentPlayer === `0`) {
+                                moveName = CoinMoveNames.ClickCoinToUpgradeMove;
+                            }
+                            else if (ctx.currentPlayer === `1`) {
+                                moveName = CoinMoveNames.SoloBotClickCoinToUpgradeMove;
+                            }
+                            else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                            }
+                            break;
+                        case GameModeNames.SoloAndvari:
+                            if (ctx.currentPlayer === `0`) {
+                                moveName = CoinMoveNames.ClickCoinToUpgradeMove;
+                            }
+                            else if (p === 1 && ctx.currentPlayer === `1`) {
+                                moveName = CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove;
+                            }
+                            else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                            }
+                            break;
+                        default:
+                            _exhaustiveCheck = G.mode;
+                            throw new Error(`Нет такого режима игры.`);
+                            return _exhaustiveCheck;
                     }
                 }
                 else if (stage === StageNames.pickConcreteCoinToUpgrade) {
-                    moveName = MoveNames.ClickConcreteCoinToUpgradeMove;
+                    moveName = CoinMoveNames.ClickConcreteCoinToUpgradeMove;
                 }
                 else if (stage === StageNames.upgradeVidofnirVedrfolnirCoin) {
-                    moveName = MoveNames.UpgradeCoinVidofnirVedrfolnirMove;
+                    moveName = CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove;
                 }
                 else {
                     moveName = undefined;
@@ -628,28 +652,49 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
         const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[p];
         switch (ctx.phase) {
             case PhaseNames.Bids:
-                moveName = MoveNames.ClickHandCoinMove;
+                moveName = CoinMoveNames.ClickHandCoinMove;
                 break;
             case PhaseNames.BidUline:
-                moveName = MoveNames.ClickHandCoinUlineMove;
+                moveName = CoinMoveNames.ClickHandCoinUlineMove;
                 break;
             default:
                 if (stage === StageNames.upgradeCoin) {
-                    if (G.mode === GameModeNames.Solo1 && p === 1 && ctx.currentPlayer === `1`) {
-                        moveName = MoveNames.SoloBotClickCoinToUpgradeMove;
-                    }
-                    else {
-                        moveName = MoveNames.ClickCoinToUpgradeMove;
+                    let _exhaustiveCheck;
+                    switch (G.mode) {
+                        case GameModeNames.Basic:
+                        case GameModeNames.Multiplayer:
+                            moveName = CoinMoveNames.ClickCoinToUpgradeMove;
+                            break;
+                        case GameModeNames.Solo1:
+                            if (ctx.currentPlayer === `0`) {
+                                moveName = CoinMoveNames.ClickCoinToUpgradeMove;
+                            }
+                            else if (ctx.currentPlayer === `1`) {
+                                moveName = CoinMoveNames.SoloBotClickCoinToUpgradeMove;
+                            }
+                            else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                            }
+                            break;
+                        case GameModeNames.SoloAndvari:
+                            if (ctx.currentPlayer === `0`) {
+                                moveName = CoinMoveNames.ClickCoinToUpgradeMove;
+                            }
+                            break;
+                        default:
+                            _exhaustiveCheck = G.mode;
+                            throw new Error(`Нет такого режима игры.`);
+                            return _exhaustiveCheck;
                     }
                 }
                 else if (stage === StageNames.placeTradingCoinsUline) {
-                    moveName = MoveNames.ClickHandTradingCoinUlineMove;
+                    moveName = CoinMoveNames.ClickHandTradingCoinUlineMove;
                 }
                 else if (stage === StageNames.pickConcreteCoinToUpgrade) {
-                    moveName = MoveNames.ClickConcreteCoinToUpgradeMove;
+                    moveName = CoinMoveNames.ClickConcreteCoinToUpgradeMove;
                 }
                 else if (stage === StageNames.addCoinToPouch) {
-                    moveName = MoveNames.AddCoinToPouchMove;
+                    moveName = CoinMoveNames.AddCoinToPouchMove;
                 }
                 else {
                     moveName = undefined;

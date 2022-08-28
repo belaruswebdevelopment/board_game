@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
-import type { CanBeUndefType, DeckCardTypes, IMyGameState, IndexOf, ITavernInConfig, TavernAllCardType, TavernCardType, TavernsConfigType, TavernsType } from "./typescript/interfaces";
+import type { CanBeUndefType, DeckCardType, IMyGameState, IndexOf, ITavernInConfig, TavernAllCardType, TavernCardType, TavernsConfigType, TavernsType } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет не осталось ли карт в текущей таверне.</h1>
@@ -116,7 +116,7 @@ export const RefillTaverns = (G: IMyGameState, ctx: Ctx): void => {
             refillDeck = G.secret.mythologicalCreatureDecks.splice(0, G.drawSize);
             G.mythologicalCreatureDeckLength = G.secret.mythologicalCreatureDecks.length;
         } else {
-            const currentDeck: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
+            const currentDeck: CanBeUndefType<DeckCardType[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
             if (currentDeck === undefined) {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentTierDeckIsUndefined);
             }

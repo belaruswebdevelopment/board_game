@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty } from "../Tavern";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, DeckCardType, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";
@@ -23,7 +23,7 @@ import { IsMercenaryCampCard } from "./IsCampTypeHelpers";
 const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): CanBeVoidType<PhaseNames> => {
     const isLastRound: boolean = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
         ((G.round === 2 || G.round === 5) ? true : false),
-        currentDeck: CanBeUndefType<DeckCardTypes[]> =
+        currentDeck: CanBeUndefType<DeckCardType[]> =
             G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
     if (currentDeck === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTierDeckIsUndefined);

@@ -14,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardTypes, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -62,7 +62,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         odroerirTheMythicCauldronCoins: ICoin[] = [],
         specialCardsDeck: ISpecialCard[] = BuildSpecialCards(),
         configOptions: GameNamesKeyofTypeofType[] = [],
-        discardCardsDeck: DeckCardTypes[] = [],
+        discardCardsDeck: DeckCardType[] = [],
         explorerDistinctionCards = null,
         distinctions: SuitPropertyType<DistinctionType> = {} as SuitPropertyType<DistinctionType>,
         strategyForSoloBotAndvari: IStrategyForSoloBotAndvari = {} as IStrategyForSoloBotAndvari,
@@ -101,7 +101,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         },
             dwarfDeck: IDwarfCard[] = BuildDwarfCards(data),
             royalOfferingDeck: IRoyalOfferingCard[] = BuildRoyalOfferingCards(data);
-        let deck: DeckCardTypes[] = secret.decks[i as IndexOf<SecretDecksType>];
+        let deck: DeckCardType[] = secret.decks[i as IndexOf<SecretDecksType>];
         deck = deck.concat(dwarfDeck, royalOfferingDeck);
         deckLength[i] = deck.length;
         secret.decks[i] = ctx.random!.Shuffle(deck);

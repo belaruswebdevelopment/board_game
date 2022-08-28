@@ -467,63 +467,98 @@ export const enum LogTypeNames {
 }
 
 /**
- * <h3>Перечисление для описаний отображения действий.</h3>
+ * <h3>Перечисление для описаний отображения действий на кнопках.</h3>
  */
-export const enum MoveNames {
-    ClickBoardCoinMove = `ClickBoardCoinMove`,
-    ClickCampCardMove = `ClickCampCardMove`,
+export const enum ButtonMoveNames {
+    PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
+    StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
+    // start
+    ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = `ChooseCoinValueForVidofnirVedrfolnirUpgradeMove`,
+    // Solo Mode
+    ChooseDifficultyLevelForSoloModeMove = `ChooseDifficultyLevelForSoloModeMove`,
+    // Solo Mode Andvari
+    ChooseStrategyForSoloModeAndvariMove = `ChooseStrategyForSoloModeAndvariMove`,
+    ChooseStrategyVariantForSoloModeAndvariMove = `ChooseStrategyVariantForSoloModeAndvariMove`,
+}
+
+/**
+ * <h3>Перечисление для описаний отображения действий на картах.</h3>
+ */
+export const enum CardMoveNames {
     ClickCardMove = `ClickCardMove`,
     ClickCardToPickDistinctionMove = `ClickCardToPickDistinctionMove`,
+    ClickCampCardMove = `ClickCampCardMove`,
     ClickDistinctionCardMove = `ClickDistinctionCardMove`,
-    ClickHandCoinMove = `ClickHandCoinMove`,
-    ClickHandCoinUlineMove = `ClickHandCoinUlineMove`,
-    ClickHandTradingCoinUlineMove = `ClickHandTradingCoinUlineMove`,
     DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
-    DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
     GetEnlistmentMercenariesMove = `GetEnlistmentMercenariesMove`,
-    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
-    PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
-    PlaceYludHeroMove = `PlaceYludHeroMove`,
-    PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
-    StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
-    // Bots
-    BotsPlaceAllCoinsMove = `BotsPlaceAllCoinsMove`,
+    // start
+    ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
+    ClickHeroCardMove = `ClickHeroCardMove`,
+    DiscardCardMove = `DiscardCardMove`,
+    DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
+    DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
+    PickDiscardCardMove = `PickDiscardCardMove`,
+    // TODO Is it here?
+    UseGodCardPowerMove = `UseGodCardPowerMove`,
+    // Solo Mode
+    ChooseHeroForDifficultySoloModeMove = `ChooseHeroForDifficultySoloModeMove`,
     // Solo Bot
     SoloBotClickCardMove = `SoloBotClickCardMove`,
     SoloBotClickHeroCardMove = `SoloBotClickHeroCardMove`,
-    SoloBotPlaceAllCoinsMove = `SoloBotPlaceAllCoinsMove`,
     SoloBotClickCardToPickDistinctionMove = `SoloBotClickCardToPickDistinctionMove`,
-    SoloBotPlaceThrudHeroMove = `SoloBotPlaceThrudHeroMove`,
-    SoloBotPlaceYludHeroMove = `SoloBotPlaceYludHeroMove`,
-    SoloBotClickCoinToUpgradeMove = `SoloBotClickCoinToUpgradeMove`,
-    // Solo Mode
-    ChooseDifficultyLevelForSoloModeMove = `ChooseDifficultyLevelForSoloModeMove`,
-    ChooseHeroForDifficultySoloModeMove = `ChooseHeroForDifficultySoloModeMove`,
-    //Solo Mode Andvari
+    // Solo Bot Andvari
     SoloBotAndvariClickCardMove = `SoloBotAndvariClickCardMove`,
-    ChooseStrategyForSoloModeAndvariMove = `ChooseStrategyForSoloModeAndvariMove`,
-    ChooseStrategyVariantForSoloModeAndvariMove = `ChooseStrategyVariantForSoloModeAndvariMove`,
-    SoloBotAndvariPlaceAllCoinsMove = `SoloBotAndvariPlaceAllCoinsMove`,
     SoloBotAndvariClickHeroCardMove = `SoloBotAndvariClickHeroCardMove`,
     SoloBotAndvariClickCardToPickDistinctionMove = `SoloBotAndvariClickCardToPickDistinctionMove`,
-    SoloBotAndvariPlaceThrudHeroMove = `SoloBotAndvariPlaceThrudHeroMove`,
-    SoloBotAndvariPlaceYludHeroMove = `SoloBotAndvariPlaceYludHeroMove`,
-    SoloBotAndvariClickCoinToUpgradeMove = `SoloBotAndvariClickCoinToUpgradeMove`,
-    // start
+}
+
+/**
+ * <h3>Перечисление для описаний отображения действий на монетах.</h3>
+ */
+export const enum CoinMoveNames {
+    ClickBoardCoinMove = `ClickBoardCoinMove`,
+    ClickHandCoinMove = `ClickHandCoinMove`,
+    ClickHandCoinUlineMove = `ClickHandCoinUlineMove`,
+    ClickHandTradingCoinUlineMove = `ClickHandTradingCoinUlineMove`,
+    // Start
     AddCoinToPouchMove = `AddCoinToPouchMove`,
-    ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = `ChooseCoinValueForVidofnirVedrfolnirUpgradeMove`,
-    ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
     ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
-    ClickHeroCardMove = `ClickHeroCardMove`,
-    DiscardCardMove = `DiscardCardMove`,
-    DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
     ClickConcreteCoinToUpgradeMove = `ClickConcreteCoinToUpgradeMove`,
-    PickDiscardCardMove = `PickDiscardCardMove`,
+    UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
+    // Solo Bot
+    SoloBotClickCoinToUpgradeMove = `SoloBotClickCoinToUpgradeMove`,
+    // Solo Bot Andvari
+    SoloBotAndvariClickCoinToUpgradeMove = `SoloBotAndvariClickCoinToUpgradeMove`,
+}
+
+/**
+ * <h3>Перечисление для описаний отображения действий на фракциях дворфов.</h3>
+ */
+export const enum SuitMoveNames {
+    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
+    PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
+    PlaceYludHeroMove = `PlaceYludHeroMove`,
+    // Start
     PlaceMultiSuitCardMove = `PlaceMultiSuitCardMove`,
     PlaceThrudHeroMove = `PlaceThrudHeroMove`,
-    UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
-    // TODO Is it here?
-    UseGodCardPowerMove = `UseGodCardPowerMove`,
+    // Solo Bot
+    SoloBotPlaceThrudHeroMove = `SoloBotPlaceThrudHeroMove`,
+    SoloBotPlaceYludHeroMove = `SoloBotPlaceYludHeroMove`,
+    // Solo Bot Andvari
+    SoloBotAndvariPlaceThrudHeroMove = `SoloBotAndvariPlaceThrudHeroMove`,
+    SoloBotAndvariPlaceYludHeroMove = `SoloBotAndvariPlaceYludHeroMove`,
+}
+
+/**
+ * <h3>Перечисление для описаний отображения действий.</h3>
+ */
+export const enum AutoBotsMoveNames {
+    // Bots
+    BotsPlaceAllCoinsMove = `BotsPlaceAllCoinsMove`,
+    // Solo Bot
+    SoloBotPlaceAllCoinsMove = `SoloBotPlaceAllCoinsMove`,
+    //Solo Bot Andvari
+    SoloBotAndvariPlaceAllCoinsMove = `SoloBotAndvariPlaceAllCoinsMove`,
 }
 
 /**

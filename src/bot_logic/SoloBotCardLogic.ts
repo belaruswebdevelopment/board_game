@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
 import { TotalRank, TotalRankWithoutThrud } from "../score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DeckCardTypes, IHeroCard, IMyGameState, IPublicPlayer, MoveArgumentsType, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DeckCardType, IHeroCard, IMyGameState, IPublicPlayer, MoveArgumentsType, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты конкретной фракции из таверны соло ботом.</h3>
@@ -105,15 +105,15 @@ export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
         availableMoveArguments: MoveArgumentsType<number[]> = [],
         availableThrudArguments: MoveArgumentsType<number[]> = [];
     if (suit !== undefined) {
-        const currentTavern: CanBeNullType<DeckCardTypes>[] =
-            G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[];
+        const currentTavern: CanBeNullType<DeckCardType>[] =
+            G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[];
         for (let i = 0; i < moveArguments.length; i++) {
             const moveArgument: CanBeUndefType<number> = moveArguments[i];
             if (moveArgument === undefined) {
                 throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
             }
-            const tavernCard: CanBeUndefType<CanBeNullType<DeckCardTypes>> =
-                currentTavern[moveArgument] as CanBeUndefType<CanBeNullType<DeckCardTypes>>;
+            const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> =
+                currentTavern[moveArgument] as CanBeUndefType<CanBeNullType<DeckCardType>>;
             if (tavernCard === undefined) {
                 throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
             }
@@ -162,7 +162,7 @@ export const CheckSoloBotMustTakeCardToPickHero = (G: IMyGameState, ctx: Ctx,
  */
 export const CheckSoloBotMustTakeCardWithHighestValue = (G: IMyGameState, ctx: Ctx,
     moveArguments: MoveArgumentsType<number[]>): number => {
-    const currentTavern: CanBeNullType<DeckCardTypes>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[];
+    const currentTavern: CanBeNullType<DeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[];
     let maxValue = 0,
         index = 0;
     for (let i = 0; i < moveArguments.length; i++) {
@@ -170,7 +170,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = (G: IMyGameState, ctx: C
         if (moveArgument === undefined) {
             throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
         }
-        const tavernCard: CanBeUndefType<CanBeNullType<DeckCardTypes>> = currentTavern[moveArgument];
+        const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> = currentTavern[moveArgument];
         if (tavernCard === undefined) {
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
         }
@@ -220,8 +220,8 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);
     }
     if (!minLengthCount || minLengthCount !== ctx.numPlayers) {
-        const currentTavern: CanBeNullType<DeckCardTypes>[] =
-            G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[],
+        const currentTavern: CanBeNullType<DeckCardType>[] =
+            G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[],
             soloBotHasThrud: boolean = CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.MoveThrud);
         let thrudSuit: CanBeUndefType<SuitNamesKeyofTypeofType>;
         if (soloBotHasThrud) {
@@ -234,7 +234,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
             if (moveArgument === undefined) {
                 throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
             }
-            const tavernCard: CanBeUndefType<CanBeNullType<DeckCardTypes>> = currentTavern[moveArgument];
+            const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> = currentTavern[moveArgument];
             if (tavernCard === undefined) {
                 throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
             }
@@ -278,13 +278,13 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = (G: IM
  */
 export const CheckSoloBotMustTakeRoyalOfferingCard = (G: IMyGameState, ctx: Ctx,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
-    const currentTavern: CanBeNullType<DeckCardTypes>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardTypes>[];
+    const currentTavern: CanBeNullType<DeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[];
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument: CanBeUndefType<number> = moveArguments[i];
         if (moveArgument === undefined) {
             throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
         }
-        const tavernCard: CanBeUndefType<CanBeNullType<DeckCardTypes>> = currentTavern[moveArgument];
+        const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> = currentTavern[moveArgument];
         if (tavernCard === undefined) {
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
         }

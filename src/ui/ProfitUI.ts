@@ -1,8 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/react";
 import { ThrowMyError } from "../Error";
-import { ButtonNames, ErrorNames, MoveNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardTypes, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import { ButtonMoveNames, ButtonNames, CardMoveNames, ErrorNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardType, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -31,7 +31,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.NoHeroEasyStrategy, player,
-                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
@@ -39,7 +39,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
         } else if (j === 1) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.NoHeroHardStrategy, player,
-                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.NoHeroHardStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroHardStrategy);
@@ -47,7 +47,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
         } else if (j === 2) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.WithHeroEasyStrategy, player,
-                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
@@ -55,7 +55,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
         } else if (j === 3) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.WithHeroHardStrategy, player,
-                    MoveNames.ChooseStrategyForSoloModeAndvariMove,
+                    ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroHardStrategy);
@@ -92,7 +92,7 @@ export const ChooseDifficultyVariantLevelForSoloModeAndvariProfit = (G: IMyGameS
     for (let j = 0; j < 3; j++) {
         if (data !== undefined && boardCells !== undefined) {
             DrawButton(data, boardCells, String(j + 1), player,
-                MoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
+                ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
         } else if (validatorName === MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
             moveMainArgs.push(j + 1);
         }
@@ -128,7 +128,7 @@ export const ChooseDifficultyLevelForSoloModeProfit = (G: IMyGameState, ctx: Ctx
         for (let j = 0; j < 6; j++) {
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, String(j + 1), player,
-                    MoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
+                    ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
             } else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
                 moveMainArgs.push(j);
             }
@@ -175,7 +175,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameStat
         }
         if (data !== undefined && boardCells !== undefined) {
             DrawButton(data, boardCells, String(value), player,
-                MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
+                ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
         } else if (validatorName === MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
             moveMainArgs.push(value);
         }
@@ -206,7 +206,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
     }
     const moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
-        const card: CanBeUndefType<DeckCardTypes> = G.explorerDistinctionCards[j];
+        const card: CanBeUndefType<DeckCardType> = G.explorerDistinctionCards[j];
         if (card === undefined) {
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
@@ -220,8 +220,23 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
                 ctx.currentPlayer);
         }
         if (data !== undefined && boardCells !== undefined) {
-            DrawCard(data, boardCells, card, j, player, suit,
-                MoveNames.ClickCardToPickDistinctionMove, j);
+            const stage: CanBeUndefType<StageNames> =
+                ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>;
+            let moveName: CardMoveNames;
+            switch (stage) {
+                case StageNames.pickDistinctionCard:
+                    moveName = CardMoveNames.ClickCardToPickDistinctionMove;
+                    break;
+                case StageNames.pickDistinctionCardSoloBot:
+                    moveName = CardMoveNames.SoloBotClickCardToPickDistinctionMove;
+                    break;
+                case StageNames.pickDistinctionCardSoloBotAndvari:
+                    moveName = CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove;
+                    break;
+                default:
+                    throw new Error(`Нет такого мува.`);
+            }
+            DrawCard(data, boardCells, card, j, player, suit, moveName, j);
         } else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator
             || MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator
             || MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
@@ -271,7 +286,7 @@ export const PickHeroesForSoloModeProfit = (G: IMyGameState, ctx: Ctx, validator
                 }
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null,
-                        MoveNames.ChooseHeroForDifficultySoloModeMove, j);
+                        CardMoveNames.ChooseHeroForDifficultySoloModeMove, j);
                 } else if (validatorName === MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator && hero.active) {
                     moveMainArgs.push(j);
                 }
@@ -305,10 +320,10 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
             DrawButton(data, boardCells, ButtonNames.Start, player,
-                MoveNames.StartEnlistmentMercenariesMove);
+                ButtonMoveNames.StartEnlistmentMercenariesMove);
         } else if (G.publicPlayersOrder.length > 1) {
             DrawButton(data, boardCells, ButtonNames.Pass, player,
-                MoveNames.PassEnlistmentMercenariesMove);
+                ButtonMoveNames.PassEnlistmentMercenariesMove);
         }
     }
 };

@@ -465,65 +465,100 @@ export var LogTypeNames;
     LogTypeNames["Public"] = "public";
 })(LogTypeNames || (LogTypeNames = {}));
 /**
+ * <h3>Перечисление для описаний отображения действий на кнопках.</h3>
+ */
+export var ButtonMoveNames;
+(function (ButtonMoveNames) {
+    ButtonMoveNames["PassEnlistmentMercenariesMove"] = "PassEnlistmentMercenariesMove";
+    ButtonMoveNames["StartEnlistmentMercenariesMove"] = "StartEnlistmentMercenariesMove";
+    // start
+    ButtonMoveNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMove"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMove";
+    // Solo Mode
+    ButtonMoveNames["ChooseDifficultyLevelForSoloModeMove"] = "ChooseDifficultyLevelForSoloModeMove";
+    // Solo Mode Andvari
+    ButtonMoveNames["ChooseStrategyForSoloModeAndvariMove"] = "ChooseStrategyForSoloModeAndvariMove";
+    ButtonMoveNames["ChooseStrategyVariantForSoloModeAndvariMove"] = "ChooseStrategyVariantForSoloModeAndvariMove";
+})(ButtonMoveNames || (ButtonMoveNames = {}));
+/**
+ * <h3>Перечисление для описаний отображения действий на картах.</h3>
+ */
+export var CardMoveNames;
+(function (CardMoveNames) {
+    CardMoveNames["ClickCardMove"] = "ClickCardMove";
+    CardMoveNames["ClickCardToPickDistinctionMove"] = "ClickCardToPickDistinctionMove";
+    CardMoveNames["ClickCampCardMove"] = "ClickCampCardMove";
+    CardMoveNames["ClickDistinctionCardMove"] = "ClickDistinctionCardMove";
+    CardMoveNames["DiscardCardFromPlayerBoardMove"] = "DiscardCardFromPlayerBoardMove";
+    CardMoveNames["GetEnlistmentMercenariesMove"] = "GetEnlistmentMercenariesMove";
+    // start
+    CardMoveNames["ClickCampCardHoldaMove"] = "ClickCampCardHoldaMove";
+    CardMoveNames["ClickHeroCardMove"] = "ClickHeroCardMove";
+    CardMoveNames["DiscardCardMove"] = "DiscardCardMove";
+    CardMoveNames["DiscardCard2PlayersMove"] = "DiscardCard2PlayersMove";
+    CardMoveNames["DiscardSuitCardFromPlayerBoardMove"] = "DiscardSuitCardFromPlayerBoardMove";
+    CardMoveNames["PickDiscardCardMove"] = "PickDiscardCardMove";
+    // TODO Is it here?
+    CardMoveNames["UseGodCardPowerMove"] = "UseGodCardPowerMove";
+    // Solo Mode
+    CardMoveNames["ChooseHeroForDifficultySoloModeMove"] = "ChooseHeroForDifficultySoloModeMove";
+    // Solo Bot
+    CardMoveNames["SoloBotClickCardMove"] = "SoloBotClickCardMove";
+    CardMoveNames["SoloBotClickHeroCardMove"] = "SoloBotClickHeroCardMove";
+    CardMoveNames["SoloBotClickCardToPickDistinctionMove"] = "SoloBotClickCardToPickDistinctionMove";
+    // Solo Bot Andvari
+    CardMoveNames["SoloBotAndvariClickCardMove"] = "SoloBotAndvariClickCardMove";
+    CardMoveNames["SoloBotAndvariClickHeroCardMove"] = "SoloBotAndvariClickHeroCardMove";
+    CardMoveNames["SoloBotAndvariClickCardToPickDistinctionMove"] = "SoloBotAndvariClickCardToPickDistinctionMove";
+})(CardMoveNames || (CardMoveNames = {}));
+/**
+ * <h3>Перечисление для описаний отображения действий на монетах.</h3>
+ */
+export var CoinMoveNames;
+(function (CoinMoveNames) {
+    CoinMoveNames["ClickBoardCoinMove"] = "ClickBoardCoinMove";
+    CoinMoveNames["ClickHandCoinMove"] = "ClickHandCoinMove";
+    CoinMoveNames["ClickHandCoinUlineMove"] = "ClickHandCoinUlineMove";
+    CoinMoveNames["ClickHandTradingCoinUlineMove"] = "ClickHandTradingCoinUlineMove";
+    // Start
+    CoinMoveNames["AddCoinToPouchMove"] = "AddCoinToPouchMove";
+    CoinMoveNames["ClickCoinToUpgradeMove"] = "ClickCoinToUpgradeMove";
+    CoinMoveNames["ClickConcreteCoinToUpgradeMove"] = "ClickConcreteCoinToUpgradeMove";
+    CoinMoveNames["UpgradeCoinVidofnirVedrfolnirMove"] = "UpgradeCoinVidofnirVedrfolnirMove";
+    // Solo Bot
+    CoinMoveNames["SoloBotClickCoinToUpgradeMove"] = "SoloBotClickCoinToUpgradeMove";
+    // Solo Bot Andvari
+    CoinMoveNames["SoloBotAndvariClickCoinToUpgradeMove"] = "SoloBotAndvariClickCoinToUpgradeMove";
+})(CoinMoveNames || (CoinMoveNames = {}));
+/**
+ * <h3>Перечисление для описаний отображения действий на фракциях дворфов.</h3>
+ */
+export var SuitMoveNames;
+(function (SuitMoveNames) {
+    SuitMoveNames["GetMjollnirProfitMove"] = "GetMjollnirProfitMove";
+    SuitMoveNames["PlaceEnlistmentMercenariesMove"] = "PlaceEnlistmentMercenariesMove";
+    SuitMoveNames["PlaceYludHeroMove"] = "PlaceYludHeroMove";
+    // Start
+    SuitMoveNames["PlaceMultiSuitCardMove"] = "PlaceMultiSuitCardMove";
+    SuitMoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
+    // Solo Bot
+    SuitMoveNames["SoloBotPlaceThrudHeroMove"] = "SoloBotPlaceThrudHeroMove";
+    SuitMoveNames["SoloBotPlaceYludHeroMove"] = "SoloBotPlaceYludHeroMove";
+    // Solo Bot Andvari
+    SuitMoveNames["SoloBotAndvariPlaceThrudHeroMove"] = "SoloBotAndvariPlaceThrudHeroMove";
+    SuitMoveNames["SoloBotAndvariPlaceYludHeroMove"] = "SoloBotAndvariPlaceYludHeroMove";
+})(SuitMoveNames || (SuitMoveNames = {}));
+/**
  * <h3>Перечисление для описаний отображения действий.</h3>
  */
-export var MoveNames;
-(function (MoveNames) {
-    MoveNames["ClickBoardCoinMove"] = "ClickBoardCoinMove";
-    MoveNames["ClickCampCardMove"] = "ClickCampCardMove";
-    MoveNames["ClickCardMove"] = "ClickCardMove";
-    MoveNames["ClickCardToPickDistinctionMove"] = "ClickCardToPickDistinctionMove";
-    MoveNames["ClickDistinctionCardMove"] = "ClickDistinctionCardMove";
-    MoveNames["ClickHandCoinMove"] = "ClickHandCoinMove";
-    MoveNames["ClickHandCoinUlineMove"] = "ClickHandCoinUlineMove";
-    MoveNames["ClickHandTradingCoinUlineMove"] = "ClickHandTradingCoinUlineMove";
-    MoveNames["DiscardCardFromPlayerBoardMove"] = "DiscardCardFromPlayerBoardMove";
-    MoveNames["DiscardCard2PlayersMove"] = "DiscardCard2PlayersMove";
-    MoveNames["GetEnlistmentMercenariesMove"] = "GetEnlistmentMercenariesMove";
-    MoveNames["GetMjollnirProfitMove"] = "GetMjollnirProfitMove";
-    MoveNames["PassEnlistmentMercenariesMove"] = "PassEnlistmentMercenariesMove";
-    MoveNames["PlaceYludHeroMove"] = "PlaceYludHeroMove";
-    MoveNames["PlaceEnlistmentMercenariesMove"] = "PlaceEnlistmentMercenariesMove";
-    MoveNames["StartEnlistmentMercenariesMove"] = "StartEnlistmentMercenariesMove";
+export var AutoBotsMoveNames;
+(function (AutoBotsMoveNames) {
     // Bots
-    MoveNames["BotsPlaceAllCoinsMove"] = "BotsPlaceAllCoinsMove";
+    AutoBotsMoveNames["BotsPlaceAllCoinsMove"] = "BotsPlaceAllCoinsMove";
     // Solo Bot
-    MoveNames["SoloBotClickCardMove"] = "SoloBotClickCardMove";
-    MoveNames["SoloBotClickHeroCardMove"] = "SoloBotClickHeroCardMove";
-    MoveNames["SoloBotPlaceAllCoinsMove"] = "SoloBotPlaceAllCoinsMove";
-    MoveNames["SoloBotClickCardToPickDistinctionMove"] = "SoloBotClickCardToPickDistinctionMove";
-    MoveNames["SoloBotPlaceThrudHeroMove"] = "SoloBotPlaceThrudHeroMove";
-    MoveNames["SoloBotPlaceYludHeroMove"] = "SoloBotPlaceYludHeroMove";
-    MoveNames["SoloBotClickCoinToUpgradeMove"] = "SoloBotClickCoinToUpgradeMove";
-    // Solo Mode
-    MoveNames["ChooseDifficultyLevelForSoloModeMove"] = "ChooseDifficultyLevelForSoloModeMove";
-    MoveNames["ChooseHeroForDifficultySoloModeMove"] = "ChooseHeroForDifficultySoloModeMove";
-    //Solo Mode Andvari
-    MoveNames["SoloBotAndvariClickCardMove"] = "SoloBotAndvariClickCardMove";
-    MoveNames["ChooseStrategyForSoloModeAndvariMove"] = "ChooseStrategyForSoloModeAndvariMove";
-    MoveNames["ChooseStrategyVariantForSoloModeAndvariMove"] = "ChooseStrategyVariantForSoloModeAndvariMove";
-    MoveNames["SoloBotAndvariPlaceAllCoinsMove"] = "SoloBotAndvariPlaceAllCoinsMove";
-    MoveNames["SoloBotAndvariClickHeroCardMove"] = "SoloBotAndvariClickHeroCardMove";
-    MoveNames["SoloBotAndvariClickCardToPickDistinctionMove"] = "SoloBotAndvariClickCardToPickDistinctionMove";
-    MoveNames["SoloBotAndvariPlaceThrudHeroMove"] = "SoloBotAndvariPlaceThrudHeroMove";
-    MoveNames["SoloBotAndvariPlaceYludHeroMove"] = "SoloBotAndvariPlaceYludHeroMove";
-    MoveNames["SoloBotAndvariClickCoinToUpgradeMove"] = "SoloBotAndvariClickCoinToUpgradeMove";
-    // start
-    MoveNames["AddCoinToPouchMove"] = "AddCoinToPouchMove";
-    MoveNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMove"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMove";
-    MoveNames["ClickCampCardHoldaMove"] = "ClickCampCardHoldaMove";
-    MoveNames["ClickCoinToUpgradeMove"] = "ClickCoinToUpgradeMove";
-    MoveNames["ClickHeroCardMove"] = "ClickHeroCardMove";
-    MoveNames["DiscardCardMove"] = "DiscardCardMove";
-    MoveNames["DiscardSuitCardFromPlayerBoardMove"] = "DiscardSuitCardFromPlayerBoardMove";
-    MoveNames["ClickConcreteCoinToUpgradeMove"] = "ClickConcreteCoinToUpgradeMove";
-    MoveNames["PickDiscardCardMove"] = "PickDiscardCardMove";
-    MoveNames["PlaceMultiSuitCardMove"] = "PlaceMultiSuitCardMove";
-    MoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
-    MoveNames["UpgradeCoinVidofnirVedrfolnirMove"] = "UpgradeCoinVidofnirVedrfolnirMove";
-    // TODO Is it here?
-    MoveNames["UseGodCardPowerMove"] = "UseGodCardPowerMove";
-})(MoveNames || (MoveNames = {}));
+    AutoBotsMoveNames["SoloBotPlaceAllCoinsMove"] = "SoloBotPlaceAllCoinsMove";
+    //Solo Bot Andvari
+    AutoBotsMoveNames["SoloBotAndvariPlaceAllCoinsMove"] = "SoloBotAndvariPlaceAllCoinsMove";
+})(AutoBotsMoveNames || (AutoBotsMoveNames = {}));
 /**
  * <h3>Перечисление для фаз игры.</h3>
  */

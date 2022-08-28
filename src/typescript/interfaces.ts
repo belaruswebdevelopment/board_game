@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, BuffNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MoveNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 /**
  * <h3>Интерфейс для скрытых от всех игроков данных.</h3>
@@ -660,7 +660,7 @@ interface IDiscardCard {
  * <h3>Интерфейс для возможных мувов у ботов.</h3>
  */
 export interface IMoves {
-    readonly move: MoveNames;
+    readonly move: MoveNamesType;
     readonly args: MoveArgsType;
 }
 
@@ -861,7 +861,7 @@ export interface IMoveValidator<GetRangeType extends MoveValidatorGetRangeType> 
         : GetRangeType extends number[] ? number
         : GetRangeType extends null ? null
         : never;
-    readonly moveName: MoveNames;
+    readonly moveName: MoveNamesType;
     readonly validate: (G: IMyGameState, ctx: Ctx, id:
         GetRangeType extends Partial<SuitPropertyType<number[]>> ? IMoveSuitCardCurrentId
         : GetRangeType extends IMoveCardsPlayerIdArguments ? MoveCardPlayerCurrentIdType
@@ -1061,7 +1061,7 @@ export interface IStyles {
     readonly Exchange: () => IBackground;
     readonly Hero: (heroName: HeroNames) => IBackground;
     readonly HeroBack: () => IBackground;
-    readonly MythologicalCreature: (name: MythologicalCreatureNameTypes) => IBackground;
+    readonly MythologicalCreature: (name: MythologicalCreatureNameType) => IBackground;
     readonly Priorities: (priority: number) => IBackground;
     readonly Priority: () => IBackground;
     readonly RoyalOffering: (name: RoyalOfferingNames) => IBackground;
@@ -1097,6 +1097,8 @@ export interface ITavernInConfig {
     readonly name: TavernNames;
 }
 
+export type MoveNamesType = ButtonMoveNames | CardMoveNames | CoinMoveNames | SuitMoveNames | AutoBotsMoveNames;
+
 /**
  * <h3>Типы данных для конфига всех таверн.</h3>
  */
@@ -1120,12 +1122,12 @@ export type PrioritiesConfigType = [IPriority[], IPriority[], IPriority[], IPrio
 /**
  * <h3>Типы данных для всех таверн.</h3>
  */
-export type TavernsType = [CanBeNullType<DeckCardTypes>[], TavernAllCardType, CanBeNullType<DeckCardTypes>[]];
+export type TavernsType = [CanBeNullType<DeckCardType>[], TavernAllCardType, CanBeNullType<DeckCardType>[]];
 
 /**
  * <h3>Типы данных для скрытых для всех игроков данных всех дек.</h3>
  */
-export type SecretDecksType = [DeckCardTypes[], DeckCardTypes[]];
+export type SecretDecksType = [DeckCardType[], DeckCardType[]];
 
 export type SecretCampDecksType = [CampDeckCardType[], CampDeckCardType[]];
 
@@ -1209,12 +1211,12 @@ export type PublicPlayerCoinType = CoinType | ClosedCoinType;
 /**
  * <h3>Типы данных для дек карт.</h3>
  */
-export type DeckCardTypes = IDwarfCard | IRoyalOfferingCard;
+export type DeckCardType = IDwarfCard | IRoyalOfferingCard;
 
 /**
  * <h3>Типы данных для карт колоды сброса.</h3>
  */
-export type DiscardDeckCardType = DeckCardTypes;
+export type DiscardDeckCardType = DeckCardType;
 
 /**
  * <h3>Типы данных для сброса карт лагеря.</h3>
@@ -1277,11 +1279,11 @@ export type OneOrTwoOrThreeOrFour = Exclude<ZeroOrOneOrTwoOrThreeOrFour, 0>;
 export type PlayerCardType = IDwarfCard | ISpecialCard | IMultiSuitPlayerCard | IArtefactPlayerCampCard
     | IHeroPlayerCard | IMercenaryPlayerCampCard | IMythicalAnimalCard;
 
-// TODO CanBeUndef<DeckCardTypes>[] and CanBeUndef<MythologicalCreatureDeckCardTypes>[]?
+// TODO CanBeUndef<DeckCardType>[] and CanBeUndef<MythologicalCreatureDeckCardType>[]?
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
-export type TavernCardType = CanBeNullType<DeckCardTypes | MythologicalCreatureDeckCardType>;
+export type TavernCardType = CanBeNullType<DeckCardType | MythologicalCreatureDeckCardType>;
 
 /**
  * <h3>Типы данных для номера текущей таверны.</h3>
@@ -1572,7 +1574,7 @@ export type SuitConfigType = {
 /**
  * <h3>Типы данных для всех имён мифологических существ.</h3>
  */
-export type MythologicalCreatureNameTypes = GiantNames | GodNames | MythicalAnimalNames | ValkyryNames;
+export type MythologicalCreatureNameType = GiantNames | GodNames | MythicalAnimalNames | ValkyryNames;
 
 /**
  * <h3>Типы данных для остаточных аргументов функций.</h3>
@@ -1607,7 +1609,7 @@ export type DistinctionType = CanBeUndefType<CanBeNullType<string>>;
 /**
  * <h3>Типы данных для аргументов ошибок.</h3>
  */
-export type ErrorArgsTypes = (string | number)[];
+export type ErrorArgsType = (string | number)[];
 
 /**
  * <h3>Типы данных для аргументов мувов.</h3>
@@ -1787,7 +1789,7 @@ export type HeroesForSoloGameArrayType = [IHeroCard, IHeroCard, IHeroCard, IHero
 /**
  * <h3>Тип для данных массива всех карт героев для соло бота.</h3>
  */
-export type ExplorerDistinctionCardsArrayType = [DeckCardTypes, DeckCardTypes?, DeckCardTypes?];
+export type ExplorerDistinctionCardsArrayType = [DeckCardType, DeckCardType?, DeckCardType?];
 
 /**
  * <h3>Тип для данных массива всех карт героев для выбора уровня сложности для соло бота.</h3>
@@ -1855,7 +1857,7 @@ export type ObjectEntriesCtxType = [KeyofType<Ctx>, Ctx[KeyofType<Ctx>]];
 /**
 * <h3>Тип для всех карт таверн.</h3>
 */
-export type TavernAllCardType = CanBeNullType<DeckCardTypes>[] | CanBeNullType<MythologicalCreatureDeckCardType>[];
+export type TavernAllCardType = CanBeNullType<DeckCardType>[] | CanBeNullType<MythologicalCreatureDeckCardType>[];
 
 // My Utilities types
 /**

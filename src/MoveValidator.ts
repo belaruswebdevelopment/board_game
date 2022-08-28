@@ -11,8 +11,8 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, MoveNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CoinType, DeckCardTypes, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
+import type { CanBeNullType, CanBeUndefType, CoinType, DeckCardType, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -217,7 +217,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickBoardCoinMove,
+        moveName: CoinMoveNames.ClickBoardCoinMove,
         validate: (): boolean => true,
     },
     ClickCampCardMoveValidator: {
@@ -231,7 +231,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCampCardMove,
+        moveName: CardMoveNames.ClickCampCardMove,
         validate: (G: IMyGameState, ctx: Ctx): boolean => {
             const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
@@ -247,7 +247,7 @@ export const moveValidators: IMoveValidators = {
             MoveValidatorNames.ClickCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             // TODO Get MythologicalCreature cards for AI bots...
-            const uniqueArr: (DeckCardTypes | MythologicalCreatureDeckCardType)[] = [],
+            const uniqueArr: (DeckCardType | MythologicalCreatureDeckCardType)[] = [],
                 currentTavern: TavernAllCardType = G.taverns[G.currentTavern];
             let flag = true;
             for (let i = 0; i < currentMoveArguments.length; i++) {
@@ -277,7 +277,7 @@ export const moveValidators: IMoveValidators = {
                 }
                 const uniqueArrLength: number = uniqueArr.length;
                 for (let j = 0; j < uniqueArrLength; j++) {
-                    const uniqueCard: CanBeUndefType<DeckCardTypes | MythologicalCreatureDeckCardType> =
+                    const uniqueCard: CanBeUndefType<DeckCardType | MythologicalCreatureDeckCardType> =
                         uniqueArr[j];
                     if (uniqueCard === undefined) {
                         throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
@@ -298,7 +298,7 @@ export const moveValidators: IMoveValidators = {
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
-        moveName: MoveNames.ClickCardMove,
+        moveName: CardMoveNames.ClickCardMove,
         validate: (): boolean => true,
     },
     ClickCardToPickDistinctionMoveValidator: {
@@ -313,7 +313,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCardToPickDistinctionMove,
+        moveName: CardMoveNames.ClickCardToPickDistinctionMove,
         validate: (): boolean => true,
     },
     ClickDistinctionCardMoveValidator: {
@@ -329,7 +329,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickDistinctionCardMove,
+        moveName: CardMoveNames.ClickDistinctionCardMove,
         validate: (): boolean => true,
     },
     ClickHandCoinMoveValidator: {
@@ -343,7 +343,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHandCoinMove,
+        moveName: CoinMoveNames.ClickHandCoinMove,
         validate: (): boolean => true,
     },
     ClickHandCoinUlineMoveValidator: {
@@ -357,7 +357,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHandCoinUlineMove,
+        moveName: CoinMoveNames.ClickHandCoinUlineMove,
         validate: (): boolean => true,
     },
     ClickHandTradingCoinUlineMoveValidator: {
@@ -372,7 +372,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHandTradingCoinUlineMove,
+        moveName: CoinMoveNames.ClickHandTradingCoinUlineMove,
         validate: (): boolean => true,
     },
     DiscardCardFromPlayerBoardMoveValidator: {
@@ -405,7 +405,7 @@ export const moveValidators: IMoveValidators = {
                 cardId: moveArgument,
             };
         },
-        moveName: MoveNames.DiscardCardFromPlayerBoardMove,
+        moveName: CardMoveNames.DiscardCardFromPlayerBoardMove,
         validate: (): boolean => true,
     },
     DiscardCard2PlayersMoveValidator: {
@@ -419,7 +419,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.DiscardCard2PlayersMove,
+        moveName: CardMoveNames.DiscardCard2PlayersMove,
         validate: (): boolean => true,
     },
     GetEnlistmentMercenariesMoveValidator: {
@@ -433,7 +433,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.GetEnlistmentMercenariesMove,
+        moveName: CardMoveNames.GetEnlistmentMercenariesMove,
         validate: (): boolean => true,
     },
     GetMjollnirProfitMoveValidator: {
@@ -466,13 +466,13 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.GetMjollnirProfitMove,
+        moveName: SuitMoveNames.GetMjollnirProfitMove,
         validate: (): boolean => true,
     },
     PassEnlistmentMercenariesMoveValidator: {
         getRange: (): MoveArgumentsType<null> => null,
         getValue: (): null => null,
-        moveName: MoveNames.PassEnlistmentMercenariesMove,
+        moveName: ButtonMoveNames.PassEnlistmentMercenariesMove,
         validate: (G: IMyGameState, ctx: Ctx): boolean => {
             const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
@@ -497,7 +497,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceEnlistmentMercenariesMove,
+        moveName: SuitMoveNames.PlaceEnlistmentMercenariesMove,
         validate: (): boolean => true,
     },
     PlaceYludHeroMoveValidator: {
@@ -513,13 +513,13 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceYludHeroMove,
+        moveName: SuitMoveNames.PlaceYludHeroMove,
         validate: (): boolean => true,
     },
     StartEnlistmentMercenariesMoveValidator: {
         getRange: (): MoveArgumentsType<null> => null,
         getValue: (): null => null,
-        moveName: MoveNames.StartEnlistmentMercenariesMove,
+        moveName: ButtonMoveNames.StartEnlistmentMercenariesMove,
         validate: (): boolean => true,
     },
     // Bots
@@ -675,7 +675,7 @@ export const moveValidators: IMoveValidators = {
             }
             throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
         },
-        moveName: MoveNames.BotsPlaceAllCoinsMove,
+        moveName: AutoBotsMoveNames.BotsPlaceAllCoinsMove,
         validate: (): boolean => true,
     },
     // Solo Bot
@@ -689,7 +689,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotPlaceAllCoinsMove,
+        moveName: AutoBotsMoveNames.SoloBotPlaceAllCoinsMove,
         validate: (): boolean => true,
     },
     SoloBotClickCardMoveValidator: {
@@ -714,7 +714,7 @@ export const moveValidators: IMoveValidators = {
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
-        moveName: MoveNames.SoloBotClickCardMove,
+        moveName: CardMoveNames.SoloBotClickCardMove,
         validate: (): boolean => true,
     },
     SoloBotClickHeroCardMoveValidator: {
@@ -728,7 +728,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotClickHeroCardMove,
+        moveName: CardMoveNames.SoloBotClickHeroCardMove,
         validate: (): boolean => true,
     },
     SoloBotClickCardToPickDistinctionMoveValidator: {
@@ -743,7 +743,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotClickCardToPickDistinctionMove,
+        moveName: CardMoveNames.SoloBotClickCardToPickDistinctionMove,
         validate: (): boolean => true,
     },
     SoloBotPlaceThrudHeroMoveValidator: {
@@ -785,7 +785,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotPlaceThrudHeroMove,
+        moveName: SuitMoveNames.SoloBotPlaceThrudHeroMove,
         validate: (): boolean => true,
     },
     SoloBotPlaceYludHeroMoveValidator: {
@@ -802,7 +802,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotPlaceYludHeroMove,
+        moveName: SuitMoveNames.SoloBotPlaceYludHeroMove,
         validate: (): boolean => true,
     },
     SoloBotClickCoinToUpgradeMoveValidator: {
@@ -843,7 +843,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotClickCoinToUpgradeMove,
+        moveName: CoinMoveNames.SoloBotClickCoinToUpgradeMove,
         validate: (G: IMyGameState, ctx: Ctx, id: IMoveCoinsArguments): boolean =>
             CoinUpgradeValidation(G, ctx, id),
     },
@@ -864,7 +864,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseDifficultyLevelForSoloModeMove,
+        moveName: ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove,
         validate: (): boolean => true,
     },
     ChooseHeroesForSoloModeMoveValidator: {
@@ -878,7 +878,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseHeroForDifficultySoloModeMove,
+        moveName: CardMoveNames.ChooseHeroForDifficultySoloModeMove,
         validate: (): boolean => true,
     },
     // Solo Mode Andvari
@@ -898,7 +898,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseStrategyVariantForSoloModeAndvariMove,
+        moveName: ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove,
         validate: (): boolean => true,
     },
     ChooseStrategyForSoloModeAndvariMoveValidator: {
@@ -916,7 +916,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseStrategyForSoloModeAndvariMove,
+        moveName: ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariPlaceAllCoinsMoveValidator: {
@@ -930,7 +930,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariPlaceAllCoinsMove,
+        moveName: AutoBotsMoveNames.SoloBotAndvariPlaceAllCoinsMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariClickCardMoveValidator: {
@@ -956,7 +956,7 @@ export const moveValidators: IMoveValidators = {
             }
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
-        moveName: MoveNames.SoloBotAndvariClickCardMove,
+        moveName: CardMoveNames.SoloBotAndvariClickCardMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariClickHeroCardMoveValidator: {
@@ -976,7 +976,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariClickHeroCardMove,
+        moveName: CardMoveNames.SoloBotAndvariClickHeroCardMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariClickCardToPickDistinctionMoveValidator: {
@@ -991,7 +991,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariClickCardToPickDistinctionMove,
+        moveName: CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove,
         validate: (G: IMyGameState, ctx: Ctx, id: number): boolean => id === 0,
     },
     SoloBotAndvariPlaceThrudHeroMoveValidator: {
@@ -1015,7 +1015,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariPlaceThrudHeroMove,
+        moveName: SuitMoveNames.SoloBotAndvariPlaceThrudHeroMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariPlaceYludHeroMoveValidator: {
@@ -1038,7 +1038,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariPlaceYludHeroMove,
+        moveName: SuitMoveNames.SoloBotAndvariPlaceYludHeroMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
@@ -1069,7 +1069,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.SoloBotAndvariClickCoinToUpgradeMove,
+        moveName: CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove,
         validate: (G: IMyGameState, ctx: Ctx, id: IMoveCoinsArguments): boolean =>
             CoinUpgradeValidation(G, ctx, id),
     },
@@ -1085,7 +1085,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.AddCoinToPouchMove,
+        moveName: CoinMoveNames.AddCoinToPouchMove,
         validate: (): boolean => true,
     },
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: {
@@ -1101,7 +1101,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
+        moveName: ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
         validate: (): boolean => true,
     },
     ClickCampCardHoldaMoveValidator: {
@@ -1115,7 +1115,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCampCardHoldaMove,
+        moveName: CardMoveNames.ClickCampCardHoldaMove,
         validate: (): boolean => true,
     },
     // TODO Is it need for solo bot and andvari!?
@@ -1135,7 +1135,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickConcreteCoinToUpgradeMove,
+        moveName: CoinMoveNames.ClickConcreteCoinToUpgradeMove,
         validate: (G: IMyGameState, ctx: Ctx, id: IMoveCoinsArguments): boolean =>
             CoinUpgradeValidation(G, ctx, id),
     },
@@ -1154,7 +1154,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickCoinToUpgradeMove,
+        moveName: CoinMoveNames.ClickCoinToUpgradeMove,
         validate: (G: IMyGameState, ctx: Ctx, id: IMoveCoinsArguments): boolean =>
             CoinUpgradeValidation(G, ctx, id),
     },
@@ -1169,7 +1169,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.ClickHeroCardMove,
+        moveName: CardMoveNames.ClickHeroCardMove,
         validate: (G: IMyGameState, ctx: Ctx, id: number): boolean => {
             let isValid = false;
             const hero: CanBeUndefType<IHeroCard> = G.heroes[id];
@@ -1227,7 +1227,7 @@ export const moveValidators: IMoveValidators = {
                 cardId: moveArgument,
             };
         },
-        moveName: MoveNames.DiscardCardMove,
+        moveName: CardMoveNames.DiscardCardMove,
         validate: (): boolean => true,
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
@@ -1275,7 +1275,7 @@ export const moveValidators: IMoveValidators = {
                 cardId: cardIndex,
             };
         },
-        moveName: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+        moveName: CardMoveNames.DiscardSuitCardFromPlayerBoardMove,
         // TODO validate Not bot playerId === ctx.currentPlayer & for Bot playerId exists in playersNum and card not hero?
         validate: (): boolean => true,
     },
@@ -1290,7 +1290,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PickDiscardCardMove,
+        moveName: CardMoveNames.PickDiscardCardMove,
         validate: (): boolean => true,
     },
     PlaceMultiSuitCardMoveValidator: {
@@ -1306,7 +1306,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceMultiSuitCardMove,
+        moveName: SuitMoveNames.PlaceMultiSuitCardMove,
         validate: (): boolean => true,
     },
     PlaceThrudHeroMoveValidator: {
@@ -1324,7 +1324,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.PlaceThrudHeroMove,
+        moveName: SuitMoveNames.PlaceThrudHeroMove,
         validate: (): boolean => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
@@ -1341,7 +1341,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
+        moveName: CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         validate: (G: IMyGameState, ctx: Ctx, id: IMoveCoinsArguments): boolean => {
             const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
@@ -1363,7 +1363,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: MoveNames.UseGodCardPowerMove,
+        moveName: CardMoveNames.UseGodCardPowerMove,
         validate: (): boolean => true,
     },
     // end

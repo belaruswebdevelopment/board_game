@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardType, CanBeNullType, DeckCardTypes, IArtefactCampCard, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardType, SuitPropertyType } from "../../typescript/interfaces";
+import type { CampDeckCardType, CanBeNullType, DeckCardType, IArtefactCampCard, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardType, SuitPropertyType } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -46,7 +46,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
-            ] as DeckCardTypes[],
+            ] as DeckCardType[],
             logData: [
                 {
                     type: LogTypeNames.Game,
@@ -219,7 +219,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                         name: `Test`,
                         suit: SuitNames.warrior,
                     },
-                ] as CanBeNullType<DeckCardTypes>[],
+                ] as CanBeNullType<DeckCardType>[],
                 [],
                 [],
             ],
@@ -239,7 +239,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             },
             currentTavern: 0,
             taverns: [
-                [null] as CanBeNullType<DeckCardTypes>[],
+                [null] as CanBeNullType<DeckCardType>[],
                 [],
                 [],
             ],
@@ -248,7 +248,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
-            ] as DeckCardTypes[],
+            ] as DeckCardType[],
             tavernCardDiscarded2Players: true,
             logData: [
                 {
@@ -275,7 +275,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             },
             currentTavern: 0,
             taverns: [
-                [null] as CanBeNullType<DeckCardTypes>[],
+                [null] as CanBeNullType<DeckCardType>[],
                 [],
                 [],
             ],
@@ -490,7 +490,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
-            ] as DeckCardTypes[],
+            ] as DeckCardType[],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
         PickDiscardCardAction(G as IMyGameState, {

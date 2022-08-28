@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { ErrorNames, GameModeNames } from "./typescript/enums";
-import type { ErrorArgsTypes, IMyGameState } from "./typescript/interfaces";
+import type { ErrorArgsType, IMyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Все возможные ошибки/исключения в игре.</h3>
@@ -14,7 +14,7 @@ import type { ErrorArgsTypes, IMyGameState } from "./typescript/interfaces";
  * @param error Ошибка.
  * @param errorArgs Аргументы действия.
  */
-export const ThrowMyError = (G: IMyGameState, ctx: Ctx, error: ErrorNames, ...errorArgs: ErrorArgsTypes): never => {
+export const ThrowMyError = (G: IMyGameState, ctx: Ctx, error: ErrorNames, ...errorArgs: ErrorArgsType): never => {
     let _exhaustiveCheck: never;
     switch (error) {
         case ErrorNames.CurrentTierDeckIsUndefined:

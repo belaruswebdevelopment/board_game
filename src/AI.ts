@@ -4,8 +4,8 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { BuffNames, ConfigNames, ErrorNames, GameModeNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
-import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, DeckCardTypes, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import { BuffNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
+import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, DeckCardType, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -55,6 +55,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                                 activeStageOfCurrentPlayer = StageNames.default3;
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default4;
+                            } else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
                             }
                             break;
                         case GameModeNames.SoloAndvari:
@@ -62,6 +64,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                                 activeStageOfCurrentPlayer = StageNames.default3;
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default5;
+                            } else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
                             }
                             break;
                         default:
@@ -96,6 +100,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                                 activeStageOfCurrentPlayer = StageNames.default1;
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default3;
+                            } else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
                             }
                             break;
                         case GameModeNames.SoloAndvari:
@@ -103,6 +109,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                                 activeStageOfCurrentPlayer = StageNames.default1;
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default4;
+                            } else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
                             }
                             break;
                         default:
@@ -162,7 +170,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
         const validator: IMoveValidator<MoveValidatorGetRangeType> =
             GetValidator(phase, activeStageOfCurrentPlayer);
         if (validator !== null) {
-            const moveName: MoveNames = validator.moveName,
+            const moveName: MoveNamesType = validator.moveName,
                 moveRangeData: MoveValidatorGetRangeType = validator.getRange(G, ctx, playerId),
                 moveValue: ValidMoveIdParamType = validator.getValue(G, ctx, moveRangeData);
             let moveValues: MoveArgsType = [];
@@ -240,7 +248,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
                 CompareCards(tavernCard, card) === -1)) {
                 continue;
             }
-            const deck0: DeckCardTypes[] = G.secret.decks[0];
+            const deck0: DeckCardType[] = G.secret.decks[0];
             if (deck0.length > 18) {
                 if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
@@ -383,11 +391,11 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: CanBeNullType<DeckCardTypes>): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<DeckCardType>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
@@ -420,11 +428,11 @@ export const objectives = (): IObjectives => ({
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: CanBeNullType<DeckCardTypes>): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<DeckCardType>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
@@ -467,7 +475,7 @@ export const objectives = (): IObjectives => ({
  * @returns
  */
 export const playoutDepth = (G: IMyGameState, ctx: Ctx): number => {
-    const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+    const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];
     if (G.secret.decks[1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;
     }

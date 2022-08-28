@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { BuffNames, ConfigNames, ErrorNames, GameModeNames, MoveNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
+import { BuffNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -54,6 +54,9 @@ export const enumerate = (G, ctx) => {
                             else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default4;
                             }
+                            else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                            }
                             break;
                         case GameModeNames.SoloAndvari:
                             if (ctx.currentPlayer === `0`) {
@@ -61,6 +64,9 @@ export const enumerate = (G, ctx) => {
                             }
                             else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default5;
+                            }
+                            else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
                             }
                             break;
                         default:
@@ -98,6 +104,9 @@ export const enumerate = (G, ctx) => {
                             else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default3;
                             }
+                            else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                            }
                             break;
                         case GameModeNames.SoloAndvari:
                             if (ctx.currentPlayer === `0`) {
@@ -105,6 +114,9 @@ export const enumerate = (G, ctx) => {
                             }
                             else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = StageNames.default4;
+                            }
+                            else {
+                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
                             }
                             break;
                         default:

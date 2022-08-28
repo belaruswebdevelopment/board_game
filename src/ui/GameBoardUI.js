@@ -5,7 +5,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, ErrorNames, MoveNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
+import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -52,11 +52,11 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                         let moveName;
                         switch (stage) {
                             case StageNames.pickCampCardHolda:
-                                moveName = MoveNames.ClickCampCardHoldaMove;
+                                moveName = CardMoveNames.ClickCampCardHoldaMove;
                                 break;
                             case undefined:
                                 if (ctx.activePlayers === null) {
-                                    moveName = MoveNames.ClickCampCardMove;
+                                    moveName = CardMoveNames.ClickCampCardMove;
                                     break;
                                 }
                                 else {
@@ -202,7 +202,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
                 return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
             if (data !== undefined) {
-                DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove, j);
+                DrawCard(data, boardCells, card, j, player, suit, CardMoveNames.PickDiscardCardMove, j);
             }
             else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
                 moveMainArgs.push(j);
@@ -238,7 +238,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
  * @returns Поле героев.
  */
 export const DrawHeroes = (G, ctx, validatorName, data) => {
-    var _a;
+    var _a, _b;
     const boardRows = [], drawData = DrawBoard(G.heroes.length), moveMainArgs = [];
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
@@ -254,7 +254,19 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined) {
-                    DrawCard(data, boardCells, hero, increment, player, suit, MoveNames.ClickHeroCardMove, increment);
+                    const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
+                    let moveName;
+                    switch (stage) {
+                        case StageNames.pickHero:
+                            moveName = CardMoveNames.ClickHeroCardMove;
+                            break;
+                        case StageNames.pickHeroSoloBotAndvari:
+                            moveName = CardMoveNames.SoloBotAndvariClickHeroCardMove;
+                            break;
+                        default:
+                            throw new Error(`Нет такого мува.`);
+                    }
+                    DrawCard(data, boardCells, hero, increment, player, suit, moveName, increment);
                 }
                 else if ((validatorName === MoveValidatorNames.ClickHeroCardMoveValidator
                     || validatorName === MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) && hero.active) {
@@ -313,7 +325,7 @@ export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
                     return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined) {
-                    DrawCard(data, boardCells, hero, j, player, null, MoveNames.SoloBotClickHeroCardMove, j);
+                    DrawCard(data, boardCells, hero, j, player, null, CardMoveNames.SoloBotClickHeroCardMove, j);
                 }
                 else if (validatorName === MoveValidatorNames.SoloBotClickHeroCardMoveValidator && hero.active) {
                     moveMainArgs.push(j);
@@ -502,19 +514,50 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                             || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.discardCard))) {
                         if (data !== undefined) {
                             const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
-                            let moveName;
+                            let moveName, _exhaustiveCheck;
                             switch (stage) {
                                 case StageNames.discardCard:
-                                    moveName = MoveNames.DiscardCard2PlayersMove;
+                                    moveName = CardMoveNames.DiscardCard2PlayersMove;
                                     break;
                                 case undefined:
                                     if (ctx.activePlayers === null) {
-                                        moveName = MoveNames.ClickCardMove;
-                                        break;
+                                        switch (G.mode) {
+                                            case GameModeNames.Basic:
+                                            case GameModeNames.Multiplayer:
+                                                moveName = CardMoveNames.ClickCardMove;
+                                                break;
+                                            case GameModeNames.Solo1:
+                                                if (ctx.currentPlayer === `0`) {
+                                                    moveName = CardMoveNames.ClickCardMove;
+                                                }
+                                                else if (ctx.currentPlayer === `1`) {
+                                                    moveName = CardMoveNames.SoloBotClickCardMove;
+                                                }
+                                                else {
+                                                    throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                                }
+                                                break;
+                                            case GameModeNames.SoloAndvari:
+                                                if (ctx.currentPlayer === `0`) {
+                                                    moveName = CardMoveNames.ClickCardMove;
+                                                }
+                                                else if (ctx.currentPlayer === `1`) {
+                                                    moveName = CardMoveNames.SoloBotAndvariClickCardMove;
+                                                }
+                                                else {
+                                                    throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                                }
+                                                break;
+                                            default:
+                                                _exhaustiveCheck = G.mode;
+                                                throw new Error(`Нет такого режима игры.`);
+                                                return _exhaustiveCheck;
+                                        }
                                     }
                                     else {
                                         throw new Error(`Нет такого мува '1'.`);
                                     }
+                                    break;
                                 default:
                                     throw new Error(`Нет такого мува '2'.`);
                             }

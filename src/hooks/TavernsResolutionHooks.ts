@@ -14,7 +14,7 @@ import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { BuffNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardTypes, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, DeckCardType, IMyGameState, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -122,7 +122,7 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
         StartTrading(G, ctx, true);
     }
     AddDataToLog(G, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
-    const currentDeck: CanBeUndefType<DeckCardTypes[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
+    const currentDeck: CanBeUndefType<DeckCardType[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (currentDeck === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentTierDeckIsUndefined);
     }
