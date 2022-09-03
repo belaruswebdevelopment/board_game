@@ -26,7 +26,7 @@ export const CheckChooseDifficultySoloModeOrder = (G, ctx) => CheckPlayersBasicO
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
     if (ctx.currentPlayer === `0`) {
@@ -51,7 +51,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseDifficultySoloModeTurn = (G, ctx) => {
     if (ctx.currentPlayer === `0`) {
@@ -70,6 +70,7 @@ export const CheckEndChooseDifficultySoloModeTurn = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndChooseDifficultySoloModeActions = (G) => {
     G.publicPlayersOrder = [];
@@ -83,6 +84,7 @@ export const EndChooseDifficultySoloModeActions = (G) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnChooseDifficultySoloModeMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
@@ -96,6 +98,7 @@ export const OnChooseDifficultySoloModeMove = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
     if (ctx.currentPlayer === `0`) {
@@ -126,7 +129,7 @@ export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
  * </ol>
  *
  * @param G
- * @returns Следующая фаза игры.
+ * @returns Фаза игры.
  */
 export const StartChooseDifficultySoloModeAndvariOrBidsPhase = (G) => {
     if (G.mode === GameModeNames.SoloAndvari) {

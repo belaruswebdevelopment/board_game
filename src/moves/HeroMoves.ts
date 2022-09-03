@@ -15,6 +15,7 @@ import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript
  * @param G
  * @param ctx
  * @param heroId Id героя.
+ * @returns
  */
 export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
     CanBeVoidType<InvalidMoveType> => {

@@ -57,6 +57,7 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: AddCardToPlayer
  * @param G
  * @param ctx
  * @param card Карта.
+ * @returns
  */
 const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ctx,
     card: MythologicalCreatureCommandZoneCardType): void => {
@@ -97,7 +98,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G: IMyGameState, ctx: Ct
  * @param G
  * @param ctx
  * @param card Выбранная карта дворфа или улучшения монет.
- * @returns
+ * @returns Добавлена ли карта на планшет игрока.
  */
 export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: NonNullable<TavernCardType>): boolean => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

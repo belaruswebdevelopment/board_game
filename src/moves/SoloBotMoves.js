@@ -18,6 +18,7 @@ import { CoinTypeNames, StageNames, SuitNames } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotClickCardMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default4, cardId);
@@ -36,6 +37,7 @@ export const SoloBotClickCardMove = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
@@ -98,6 +100,7 @@ export const SoloBotPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const SoloBotPlaceThrudHeroMove = (G, ctx, suit) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
@@ -138,6 +141,7 @@ export const SoloBotPlaceYludHeroMove = (G, ctx, suit) => {
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
+ * @returns
  */
 export const SoloBotClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer

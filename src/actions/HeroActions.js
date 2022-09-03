@@ -24,6 +24,7 @@ import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, MultiSui
  * @param G
  * @param ctx
  * @param heroId Id героя.
+ * @returns
  */
 export const AddHeroToPlayerCardsAction = (G, ctx, heroId) => {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -54,6 +55,7 @@ export const AddHeroToPlayerCardsAction = (G, ctx, heroId) => {
  * @param ctx
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     var _a, _b;
@@ -80,6 +82,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -148,6 +151,7 @@ export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceThrudAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -181,6 +185,7 @@ export const PlaceThrudAction = (G, ctx, suit) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceYludAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

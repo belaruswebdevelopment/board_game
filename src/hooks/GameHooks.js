@@ -12,7 +12,7 @@ import { BuffNames, ErrorNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
- * @returns Должна ли быть завершена игра.
+ * @returns Необходимость завершения игры.
  */
 export const CheckEndGame = (G, ctx) => {
     if (G.tierToEnd === 0) {

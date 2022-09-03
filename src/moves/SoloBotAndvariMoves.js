@@ -16,6 +16,7 @@ import { CoinTypeNames, StageNames, SuitNames } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotAndvariClickCardMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
@@ -35,6 +36,7 @@ export const SoloBotAndvariClickCardMove = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotAndvariClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
@@ -54,6 +56,7 @@ export const SoloBotAndvariClickCardToPickDistinctionMove = (G, ctx, cardId) => 
  * @param G
  * @param ctx
  * @param heroId Id героя.
+ * @returns
  */
 export const SoloBotAndvariClickHeroCardMove = (G, ctx, heroId) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
@@ -98,6 +101,7 @@ export const SoloBotAndvariPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const SoloBotAndvariPlaceThrudHeroMove = (G, ctx, suit) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
@@ -117,6 +121,7 @@ export const SoloBotAndvariPlaceThrudHeroMove = (G, ctx, suit) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const SoloBotAndvariPlaceYludHeroMove = (G, ctx, suit) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
@@ -137,6 +142,7 @@ export const SoloBotAndvariPlaceYludHeroMove = (G, ctx, suit) => {
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
+ * @returns
  */
 export const SoloBotAndvariClickCoinToUpgradeMove = (G, ctx, coinId, type) => {
     const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer

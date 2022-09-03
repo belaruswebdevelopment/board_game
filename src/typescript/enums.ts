@@ -532,10 +532,9 @@ export const enum CoinMoveNames {
 }
 
 /**
- * <h3>Перечисление для описаний отображения действий на фракциях дворфов.</h3>
+ * <h3>Перечисление для описаний отображения действий на пустых ячейках для карт.</h3>
  */
-export const enum SuitMoveNames {
-    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
+export const enum EmptyCardMoveNames {
     PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
     PlaceYludHeroMove = `PlaceYludHeroMove`,
     // Start
@@ -547,6 +546,13 @@ export const enum SuitMoveNames {
     // Solo Bot Andvari
     SoloBotAndvariPlaceThrudHeroMove = `SoloBotAndvariPlaceThrudHeroMove`,
     SoloBotAndvariPlaceYludHeroMove = `SoloBotAndvariPlaceYludHeroMove`,
+}
+
+/**
+ * <h3>Перечисление для описаний отображения действий на фракциях дворфов.</h3>
+ */
+export const enum SuitMoveNames {
+    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
 }
 
 /**
@@ -613,6 +619,11 @@ export const enum RusCardTypeNames {
     Mythical_Animal_Card = `Мифическое животное`,
     Special_Card = `Особая`,
     Valkyry_Card = `Валькирия`,
+    // Common
+    Player_Board_Card = `Карта на поле игрока`,
+    Command_Zone_Hero_Card = `Карта героя в командной зоне игрока`,
+    Command_Zone_Camp_Card = `Карта лагеря в командной зоне игрока`,
+    Command_Zone_Mythological_Creature_Card = `Карта мифического существа в командной зоне игрока`,
 }
 
 /**

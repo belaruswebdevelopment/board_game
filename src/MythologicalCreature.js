@@ -96,7 +96,6 @@ const CreateGodCard = ({ type = RusCardTypeNames.God_Card, name, points, isPower
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param ability Способность Мифического животного.
  * @returns Карта Мифического животного.
  */
 const CreateMythicalAnimalCard = ({ type = RusCardTypeNames.Mythical_Animal_Card, name, suit, rank = 1, points = null, } = {}) => ({
@@ -116,8 +115,6 @@ const CreateMythicalAnimalCard = ({ type = RusCardTypeNames.Mythical_Animal_Card
  * @param type Тип.
  * @param name Название.
  * @param strengthTokenNotch Метка токена силы.
- * @param valkyriesRequirements Требования Валькирии.
- * @param finalPoints Финальные очки.
  * @returns Карта Валькирии.
  */
 const CreateValkyryCard = ({ type = RusCardTypeNames.Valkyry_Card, name, strengthTokenNotch = null, } = {}) => ({

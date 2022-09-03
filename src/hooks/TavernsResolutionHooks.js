@@ -22,6 +22,7 @@ import { BuffNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames } from "
  *
  * @param G
  * @param ctx
+ * @returns
  */
 const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
@@ -67,7 +68,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndTavernsResolutionPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -90,7 +91,7 @@ export const CheckEndTavernsResolutionPhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndTavernsResolutionTurn = (G, ctx) => EndTurnActions(G, ctx);
 /**
@@ -102,6 +103,7 @@ export const CheckEndTavernsResolutionTurn = (G, ctx) => EndTurnActions(G, ctx);
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const EndTavernsResolutionActions = (G, ctx) => {
     const currentTavernConfig = tavernsConfig[G.currentTavern];
@@ -163,6 +165,7 @@ export const EndTavernsResolutionActions = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTavernsResolutionMove = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -199,6 +202,7 @@ export const OnTavernsResolutionMove = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTavernsResolutionTurnBegin = (G, ctx) => {
     if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
@@ -220,6 +224,7 @@ export const OnTavernsResolutionTurnBegin = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTavernsResolutionTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);
@@ -254,6 +259,7 @@ export const OnTavernsResolutionTurnEnd = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ResolveCurrentTavernOrders = (G, ctx) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));

@@ -18,6 +18,7 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  * @param G
  * @param ctx
  * @param card Карта.
+ * @returns
  */
 export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCardType): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -52,6 +53,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
  * @param G
  * @param ctx
  * @param card Карта лагеря.
+ * @returns
  */
 const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampCreatureCommandZoneCardType): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -93,6 +95,7 @@ const AddArtefactPlayerCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IAr
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G: IMyGameState): void => {
     const minCoinValue: number = G.marketCoins.reduceRight((prev: ICoin, curr: ICoin): ICoin =>

@@ -21,6 +21,7 @@ import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardType, CanBeUndefT
  * @param G
  * @param ctx
  * @param coinId Id монеты.
+ * @returns
  */
 export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
@@ -76,6 +77,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  * @param G
  * @param ctx
  * @param value Значение улучшения монеты.
+ * @returns
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G: IMyGameState, ctx: Ctx,
     value: BasicVidofnirVedrfolnirUpgradeValueType): void => {
@@ -101,6 +103,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G: IMyGameStat
  * @param G
  * @param ctx
  * @param cardId Id сбрасываемой карты.
+ * @returns
  */
 export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.playerID)];
@@ -128,6 +131,7 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
  * @param G
  * @param ctx
  * @param cardId Id выбранной карты.
+ * @returns
  */
 export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const campCard: CanBeUndefType<CampCardType> = G.camp[cardId];
@@ -162,6 +166,7 @@ export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): v
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
+ * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypeNames):
     void => {

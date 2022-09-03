@@ -11,6 +11,7 @@ import { DistinctionAwardingFunctionNames } from "../typescript/enums";
  * @param ctx
  * @param action Объект действия.
  * @param params Параметры действия.
+ * @returns Количество очков по преимуществу по фракции.
  */
 export const StartDistinctionAwarding = (G, ctx, action, params) => {
     const actionDispatcher = DistinctionAwardingDispatcherSwitcher(action.name);

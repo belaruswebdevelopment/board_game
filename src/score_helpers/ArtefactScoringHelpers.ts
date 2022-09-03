@@ -13,7 +13,7 @@ import { TotalRank } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const BasicArtefactScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer, value?: number):
     number => {
@@ -32,7 +32,7 @@ export const BasicArtefactScoring: IArtefactScoringFunction = (G: IMyGameState, 
  *
  * @param G
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const DraupnirScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number => {
     // Rework to playerId?
@@ -56,7 +56,7 @@ export const DraupnirScoring: IArtefactScoringFunction = (G: IMyGameState, playe
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const HrafnsmerkiScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number => {
     let score = 0,
@@ -75,7 +75,7 @@ export const HrafnsmerkiScoring: IArtefactScoringFunction = (G: IMyGameState, pl
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const MjollnirScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number => {
     const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = player.buffs.find((buff: IBuffs): boolean =>
@@ -94,7 +94,7 @@ export const MjollnirScoring: IArtefactScoringFunction = (G: IMyGameState, playe
  * </ol>
  *
  * @param G
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const OdroerirTheMythicCauldronScoring: IArtefactScoringFunction = (G: IMyGameState): number =>
     GetOdroerirTheMythicCauldronCoinsValues(G);
@@ -108,7 +108,7 @@ export const OdroerirTheMythicCauldronScoring: IArtefactScoringFunction = (G: IM
  *
  * @param G
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const SvalinnScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number =>
     player.heroes.length * 5;

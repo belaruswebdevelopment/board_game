@@ -18,7 +18,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, IStack
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
@@ -56,7 +56,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): C
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -79,6 +79,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): Ca
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
     if (G.tierToEnd === 0) {
@@ -101,6 +102,7 @@ export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
@@ -126,6 +128,7 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -153,6 +156,7 @@ export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): voi
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnEnlistmentMercenariesTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);

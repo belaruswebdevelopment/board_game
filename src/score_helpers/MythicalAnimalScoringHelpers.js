@@ -8,7 +8,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному мифическому животному.
  */
 export const BasicMythicalAnimalScoring = (player, value) => {
     if (value === undefined) {
@@ -24,7 +24,7 @@ export const BasicMythicalAnimalScoring = (player, value) => {
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по мифическому существу Garm.
+ * @returns Количество очков по конкретному мифическому животному.
  */
 export const GarmScoring = (player) => GetRanksValueMultiplier(player, SuitNames.explorer, 1);
 /**
@@ -35,7 +35,7 @@ export const GarmScoring = (player) => GetRanksValueMultiplier(player, SuitNames
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по мифическому существу Nidhogg.
+ * @returns Количество очков по конкретному мифическому животному.
  */
 export const NidhoggScoring = (player) => GetRanksValueMultiplier(player, SuitNames.warrior, 2);
 //# sourceMappingURL=MythicalAnimalScoringHelpers.js.map

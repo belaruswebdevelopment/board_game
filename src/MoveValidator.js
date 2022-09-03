@@ -10,10 +10,10 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
+import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
+import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -25,7 +25,7 @@ import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLeve
  * @param G
  * @param ctx
  * @param coinData Данные монеты.
- * @returns
+ * @returns Валидация обмена монет.
  */
 export const CoinUpgradeValidation = (G, ctx, coinData) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
@@ -136,7 +136,7 @@ export const IsValidMove = (G, ctx, stage, id) => {
  * @TODO Саше: сделать описание функции и параметров.
  * @param phase Фаза игры.
  * @param stage Стадия игры.
- * @returns
+ * @returns Валидатор.
  */
 export const GetValidator = (phase, stage) => {
     let validator, _exhaustiveCheck;
@@ -434,7 +434,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceEnlistmentMercenariesMove,
+        moveName: EmptyCardMoveNames.PlaceEnlistmentMercenariesMove,
         validate: () => true,
     },
     PlaceYludHeroMoveValidator: {
@@ -446,7 +446,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceYludHeroMove,
+        moveName: EmptyCardMoveNames.PlaceYludHeroMove,
         validate: () => true,
     },
     StartEnlistmentMercenariesMoveValidator: {
@@ -698,7 +698,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotPlaceThrudHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotPlaceThrudHeroMove,
         validate: () => true,
     },
     SoloBotPlaceYludHeroMoveValidator: {
@@ -711,7 +711,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotPlaceYludHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotPlaceYludHeroMove,
         validate: () => true,
     },
     SoloBotClickCoinToUpgradeMoveValidator: {
@@ -774,7 +774,7 @@ export const moveValidators = {
     },
     // Solo Mode Andvari
     ChooseStrategyVariantForSoloModeAndvariMoveValidator: {
-        getRange: (G, ctx) => ChooseDifficultyVariantLevelForSoloModeAndvariProfit(G, ctx, MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator),
+        getRange: (G, ctx) => ChooseStrategyVariantForSoloModeAndvariProfit(G, ctx, MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator),
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArgument = currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
@@ -786,7 +786,7 @@ export const moveValidators = {
         validate: () => true,
     },
     ChooseStrategyForSoloModeAndvariMoveValidator: {
-        getRange: (G, ctx) => ChooseDifficultyLevelForSoloModeAndvariProfit(G, ctx, MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator),
+        getRange: (G, ctx) => ChooseStrategyForSoloModeAndvariProfit(G, ctx, MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator),
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArgument = currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
             if (moveArgument === undefined) {
@@ -880,7 +880,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotAndvariPlaceThrudHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove,
         validate: () => true,
     },
     SoloBotAndvariPlaceYludHeroMoveValidator: {
@@ -897,10 +897,11 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotAndvariPlaceYludHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove,
         validate: () => true,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
+        // TODO Bot Andvari can't update closed coins........!
         getRange: (G, ctx) => DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator),
         getValue: (G, ctx, currentMoveArguments) => {
             const player = G.players[Number(ctx.currentPlayer)];
@@ -1118,7 +1119,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceMultiSuitCardMove,
+        moveName: EmptyCardMoveNames.PlaceMultiSuitCardMove,
         validate: () => true,
     },
     PlaceThrudHeroMoveValidator: {
@@ -1132,7 +1133,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceThrudHeroMove,
+        moveName: EmptyCardMoveNames.PlaceThrudHeroMove,
         validate: () => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
@@ -1178,6 +1179,7 @@ export const moveValidators = {
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveBy = {
+    default: null,
     chooseDifficultySoloMode: {
         default1: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
         chooseHeroesForSoloMode: moveValidators.ChooseHeroesForSoloModeMoveValidator,
@@ -1219,7 +1221,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         discardCard: moveValidators.DiscardCard2PlayersMoveValidator,
         placeTradingCoinsUline: moveValidators.ClickHandTradingCoinUlineMoveValidator,
@@ -1256,7 +1258,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
     },
     placeYlud: {
@@ -1274,7 +1276,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         // Solo Bot
         default2: moveValidators.SoloBotPlaceYludHeroMoveValidator,
@@ -1306,7 +1308,7 @@ export const moveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         pickDistinctionCard: moveValidators.ClickCardToPickDistinctionMoveValidator,
         // Solo Bot
@@ -1342,7 +1344,7 @@ export const moveBy = {
  * @TODO Саше: сделать описание функции и параметров.
  * @param value Значение для валидации.
  * @param values Массив значений, допустимых для прохождения валидации.
- * @returns
+ * @returns Валидация значений мувов.
  */
 const ValidateByValues = (value, values) => values.includes(value);
 /**
@@ -1355,7 +1357,7 @@ const ValidateByValues = (value, values) => values.includes(value);
  * @TODO Саше: сделать описание функции и параметров.
  * @param value
  * @param values
- * @returns
+ * @returns Валидация монет.
  */
 const ValidateByObjectCoinIdTypeIsInitialValues = (value, values) => values.findIndex((coin) => value.coinId === coin.coinId && value.type === coin.type) !== -1;
 /**
@@ -1368,7 +1370,7 @@ const ValidateByObjectCoinIdTypeIsInitialValues = (value, values) => values.find
  * @TODO Саше: сделать описание функции и параметров.
  * @param value
  * @param values
- * @returns
+ * @returns Валидация карт.
  */
 const ValidateByObjectSuitCardIdValues = (value, values) => {
     const objectSuitCardIdValues = values[value.suit];
@@ -1384,7 +1386,7 @@ const ValidateByObjectSuitCardIdValues = (value, values) => {
  * @TODO Саше: сделать описание функции и параметров.
  * @param value
  * @param values
- * @returns
+ * @returns Валидация карт.
  */
 const ValidateByObjectSuitCardIdPlayerIdValues = (value, values) => values.playerId === value.playerId && values.cards.includes(value.cardId);
 //# sourceMappingURL=MoveValidator.js.map

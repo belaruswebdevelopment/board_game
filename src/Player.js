@@ -66,6 +66,7 @@ export const BuildPublicPlayer = (nickname, priority, isPrivate) => {
 *
 * @param G
 * @param ctx
+* @returns
 */
 export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
@@ -115,6 +116,7 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param cards Массив карт.
  * @param heroes Массив героев.
  * @param campCards Массив карт лагеря.
+ * @param mythologicalCreatureCards Массив карт мифических существ.
  * @param handCoins Массив монет в руке.
  * @param boardCoins Массив монет на столе.
  * @param stack Стэк действий.

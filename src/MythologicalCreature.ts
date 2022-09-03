@@ -11,8 +11,7 @@ import type { CreateGiantCardType, CreateGodCardType, CreateMythicalAnimalCardTy
  *.
  * @returns Все карты Мифических существ.
  */
-export const BuildMythologicalCreatureCards = ():
-    MythologicalCreatureDeckCardType[] => {
+export const BuildMythologicalCreatureCards = (): MythologicalCreatureDeckCardType[] => {
     const cards: MythologicalCreatureDeckCardType[] = [];
     let giantName: GiantNamesKeyofTypeofType;
     for (giantName in giantConfig) {
@@ -112,7 +111,6 @@ const CreateGodCard = ({
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param ability Способность Мифического животного.
  * @returns Карта Мифического животного.
  */
 const CreateMythicalAnimalCard = ({
@@ -139,8 +137,6 @@ const CreateMythicalAnimalCard = ({
  * @param type Тип.
  * @param name Название.
  * @param strengthTokenNotch Метка токена силы.
- * @param valkyriesRequirements Требования Валькирии.
- * @param finalPoints Финальные очки.
  * @returns Карта Валькирии.
  */
 const CreateValkyryCard = ({

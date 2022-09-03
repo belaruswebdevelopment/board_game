@@ -19,9 +19,11 @@ import type { CanBeNullType, CanBeUndefType, CanBeVoidType, HeroesForSoloGameFor
  *
  * @param G
  * @param ctx
+ * @returns
  */
-export const CheckChooseStrategyForSoloModeAndvariOrder = (G: IMyGameState, ctx: Ctx): void =>
+export const CheckChooseStrategyForSoloModeAndvariOrder = (G: IMyGameState, ctx: Ctx): void => {
     CheckPlayersBasicOrder(G, ctx);
+};
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'chooseDifficultySoloModeAndvari'.</h3>
@@ -32,7 +34,7 @@ export const CheckChooseStrategyForSoloModeAndvariOrder = (G: IMyGameState, ctx:
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckChooseStrategyForSoloModeAndvariPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (ctx.currentPlayer === `1`) {
@@ -55,7 +57,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = (G: IMyGameState, ctx:
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseStrategyForSoloModeAndvariTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (ctx.currentPlayer === `0`) {
@@ -71,6 +73,7 @@ export const CheckEndChooseStrategyForSoloModeAndvariTurn = (G: IMyGameState, ct
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndChooseStrategyForSoloModeAndvariActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
@@ -85,6 +88,7 @@ export const EndChooseStrategyForSoloModeAndvariActions = (G: IMyGameState): voi
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);

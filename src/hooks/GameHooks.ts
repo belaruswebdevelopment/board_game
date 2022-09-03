@@ -15,7 +15,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from 
  *
  * @param G
  * @param ctx
- * @returns Должна ли быть завершена игра.
+ * @returns Необходимость завершения игры.
  */
 export const CheckEndGame = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.tierToEnd === 0) {

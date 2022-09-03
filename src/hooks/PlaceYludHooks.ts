@@ -17,7 +17,7 @@ import type { CanBeNullType, CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameSt
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndPlaceYludPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
@@ -66,6 +66,7 @@ export const CheckEndPlaceYludPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckPlaceYludOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
@@ -114,7 +115,7 @@ export const CheckPlaceYludOrder = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndPlaceYludTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => EndTurnActions(G, ctx);
 
@@ -148,6 +149,7 @@ export const EndPlaceYludActions = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnPlaceYludMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
@@ -162,6 +164,7 @@ export const OnPlaceYludMove = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnPlaceYludTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
@@ -183,6 +186,7 @@ export const OnPlaceYludTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnPlaceYludTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);

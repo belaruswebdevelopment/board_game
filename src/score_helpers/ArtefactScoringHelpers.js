@@ -11,7 +11,7 @@ import { TotalRank } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const BasicArtefactScoring = (G, player, value) => {
     if (value === undefined) {
@@ -28,7 +28,7 @@ export const BasicArtefactScoring = (G, player, value) => {
  *
  * @param G
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const DraupnirScoring = (G, player) => {
     // Rework to playerId?
@@ -48,7 +48,7 @@ export const DraupnirScoring = (G, player) => {
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const HrafnsmerkiScoring = (G, player) => {
     let score = 0, suit;
@@ -65,7 +65,7 @@ export const HrafnsmerkiScoring = (G, player) => {
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const MjollnirScoring = (G, player) => {
     var _a;
@@ -83,7 +83,7 @@ export const MjollnirScoring = (G, player) => {
  * </ol>
  *
  * @param G
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const OdroerirTheMythicCauldronScoring = (G) => GetOdroerirTheMythicCauldronCoinsValues(G);
 /**
@@ -95,7 +95,7 @@ export const OdroerirTheMythicCauldronScoring = (G) => GetOdroerirTheMythicCauld
  *
  * @param G
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному артефакту.
  */
 export const SvalinnScoring = (G, player) => player.heroes.length * 5;
 //# sourceMappingURL=ArtefactScoringHelpers.js.map

@@ -9,7 +9,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному гиганту.
  */
 export const BasicGiantScoring = (player, value) => {
     if (value === undefined) {
@@ -25,7 +25,7 @@ export const BasicGiantScoring = (player, value) => {
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по Гиганту Gymir.
+ * @returns Количество очков по конкретному гиганту.
  */
 export const GymirScoring = (player) => GetRanksValueMultiplier(player, SuitNames.explorer, 3);
 /**
@@ -36,7 +36,7 @@ export const GymirScoring = (player) => GetRanksValueMultiplier(player, SuitName
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по Гиганту Surt.
+ * @returns Количество очков по конкретному гиганту.
  */
 export const SurtScoring = (player) => GetMaxCoinValue(player);
 //# sourceMappingURL=GiantScoringHelpers.js.map

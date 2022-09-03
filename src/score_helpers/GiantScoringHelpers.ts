@@ -11,7 +11,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному гиганту.
  */
 export const BasicGiantScoring: IGiantScoringFunction = (player: IPublicPlayer, value?: number): number => {
     if (value === undefined) {
@@ -28,7 +28,7 @@ export const BasicGiantScoring: IGiantScoringFunction = (player: IPublicPlayer, 
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по Гиганту Gymir.
+ * @returns Количество очков по конкретному гиганту.
  */
 export const GymirScoring = (player: IPublicPlayer): number =>
     GetRanksValueMultiplier(player, SuitNames.explorer, 3);
@@ -41,6 +41,6 @@ export const GymirScoring = (player: IPublicPlayer): number =>
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по Гиганту Surt.
+ * @returns Количество очков по конкретному гиганту.
  */
 export const SurtScoring = (player: IPublicPlayer): number => GetMaxCoinValue(player);

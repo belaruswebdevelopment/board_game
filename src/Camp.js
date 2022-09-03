@@ -165,7 +165,6 @@ const CreateMercenaryCampCard = ({ type = RusCardTypeNames.Mercenary_Card, path,
  * @param points Очки.
  * @param name Название.
  * @param path URL путь.
- * @param variants Варианты расположения карты лагеря Наёмник на поле игрока.
  * @returns Карта лагеря Наёмник на поле игрока.
  */
 export const CreateMercenaryPlayerCampCard = ({ type = RusCardTypeNames.Mercenary_Player_Card, suit, rank = 1, points, name, path, } = {}) => ({

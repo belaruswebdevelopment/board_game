@@ -14,7 +14,7 @@ import { BuffNames, ErrorNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -35,6 +35,7 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckGetMjollnirProfitOrder = (G) => {
     const mjollnirPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
@@ -52,6 +53,7 @@ export const CheckGetMjollnirProfitOrder = (G) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnGetMjollnirProfitMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
@@ -65,6 +67,7 @@ export const OnGetMjollnirProfitMove = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnGetMjollnirProfitTurnBegin = (G, ctx) => {
     AddActionsToStack(G, ctx, [StackData.getMjollnirProfit()]);
@@ -79,6 +82,7 @@ export const OnGetMjollnirProfitTurnBegin = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartEndGame = (G, ctx) => {
     G.publicPlayersOrder = [];

@@ -35,7 +35,7 @@
  * @TODO Саше: Добавить описание для функции и параметров.
  * @param G
  * @param playerId Id игрока.
- * @returns
+ * @returns Является ли игроком с самым большим количеством очков.
  */
 /* const IsTopPlayer = (G: MyGameState, playerId: number): boolean =>
     G.publicPlayers.every((player: IPublicPlayer): boolean =>
@@ -51,7 +51,7 @@
  * @TODO Саше: Добавить описание для функции и параметров
  * @param G
  * @param currentPlayerId Id текущего игрока.
- * @returns
+ * @returns Id игрока с самым большим количеством очков.
  */
 /*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
     let top1PlayerId: number =
@@ -71,8 +71,8 @@
  *
  * @TODO Саше: Добавить описание для функции и параметров.
  * @param G
- * @param top1PlayerId Id текущего игрока.
- * @returns
+ * @param top2PlayerId Id текущего игрока.
+ * @returns Id игрока с вторым показателем наибольшего количества очков.
  */
 /*export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
     const playersScore: number[] = Object.values(G.publicPlayers).map((player: IPublicPlayer): number => CurrentScoring(player)),

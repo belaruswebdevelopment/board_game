@@ -157,6 +157,7 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = (G: IMyGameState, ctx: 
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PlaceAllCoinsInCurrentOrderForSoloBot = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
@@ -195,6 +196,7 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = (G: IMyGameState, ctx: Ctx)
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],

@@ -15,6 +15,7 @@ import type { CanBeUndefType, CardsHasStackType, IMyGameState, IPublicPlayer, IS
  * @param ctx
  * @param stack Стэк действий.
  * @param card Карта.
+ * @returns
  */
 export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], card?: CardsHasStackType): void => {
     let isValid = false;
@@ -83,7 +84,7 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
  * </ol>
  *
 * @param array The source array to search in
-* @param predicate find calls predicate once for each element of the array, in descending order, until it finds one where predicate returns true. If such an element is found, findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
+* @param predicate Find calls predicate once for each element of the array, in descending order, until it finds one where predicate returns true. If such an element is found, findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
 */
 const FindLastIndex = <T>(array: Array<T>, predicate: (value: T, index: number, obj: T[]) => boolean): number => {
     let l: number = array.length;

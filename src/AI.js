@@ -222,7 +222,7 @@ export const enumerate = (G, ctx) => {
 * @TODO Саше: сделать описание функции и параметров.
 * @param G
 * @param ctx
-* @returns
+* @returns Итерации.
 */
 export const iterations = (G, ctx) => {
     const maxIter = G.botData.maxIter;
@@ -281,7 +281,7 @@ export const iterations = (G, ctx) => {
  * <li>Используется ботами для определения целей.</li>
  * </ol>
  *
- * @returns
+ * @returns Цели.
  */
 export const objectives = () => ({
     isEarlyGame: {
@@ -468,7 +468,7 @@ export const objectives = () => ({
  * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
- * @returns
+ * @returns Глубина.
  */
 export const playoutDepth = (G, ctx) => {
     const tavern0 = G.taverns[0];

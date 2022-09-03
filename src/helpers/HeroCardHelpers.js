@@ -16,6 +16,7 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * @param G
  * @param ctx
  * @param hero Герой.
+ * @returns
  */
 export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
     if (hero.suit !== null && hero.rank !== null) {
@@ -49,6 +50,7 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
  * @param G
  * @param ctx
  * @param hero Герой.
+ * @returns
  */
 export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -75,6 +77,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
  * @param G
  * @param ctx
  * @param hero Карта героя.
+ * @returns
  */
 export const AddHeroToPlayerCards = (G, ctx, hero) => {
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
@@ -91,6 +94,7 @@ export const AddHeroToPlayerCards = (G, ctx, hero) => {
  * @param G
  * @param ctx
  * @param hero Карта героя.
+ * @returns
  */
 export const AddHeroForDifficultyToSoloBotCards = (G, ctx, hero) => {
     const soloBotPublicPlayer = G.publicPlayers[1], player = G.publicPlayers[Number(ctx.currentPlayer)];

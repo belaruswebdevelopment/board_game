@@ -103,6 +103,7 @@ export const GetMaxCoinValue = (player: IPublicPlayer): number =>
  * @param G
  * @param ctx
  * @param playerId Id игрока.
+ * @returns
  */
 export const OpenClosedCoinsOnPlayerBoard = (G: IMyGameState, ctx: Ctx, playerId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId],
@@ -151,6 +152,7 @@ export const OpenClosedCoinsOnPlayerBoard = (G: IMyGameState, ctx: Ctx, playerId
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OpenCurrentTavernClosedCoinsOnPlayerBoard = (G: IMyGameState, ctx: Ctx): void => {
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
@@ -328,6 +330,7 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
  * @param G
  * @param ctx
  * @param playerId Id игрока.
+ * @returns
  */
 export const ReturnCoinsToPlayerBoard = (G: IMyGameState, ctx: Ctx, playerId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId],
@@ -379,6 +382,7 @@ export const ReturnCoinsToPlayerBoard = (G: IMyGameState, ctx: Ctx, playerId: nu
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ReturnCoinsToPlayerHands = (G: IMyGameState, ctx: Ctx): void => {
     for (let i = 0; i < ctx.numPlayers; i++) {
@@ -507,6 +511,7 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
  * @param G
  * @param ctx
  * @param playerId Id игрока.
+ * @returns
  */
 const MixUpCoins = (G: IMyGameState, ctx: Ctx, playerId: number): void => {
     const privatePlayer: CanBeUndefType<IPlayer> = G.players[playerId];
@@ -525,6 +530,7 @@ const MixUpCoins = (G: IMyGameState, ctx: Ctx, playerId: number): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const MixUpCoinsInPlayerHands = (G: IMyGameState, ctx: Ctx): void => {
     if (G.mode === GameModeNames.Multiplayer) {

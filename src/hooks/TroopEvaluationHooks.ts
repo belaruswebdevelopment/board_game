@@ -17,6 +17,7 @@ import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, Expl
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx): void => {
     CheckDistinction(G, ctx);
@@ -38,7 +39,7 @@ export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx):
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
@@ -64,7 +65,7 @@ export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): CanBeVo
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndTroopEvaluationTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => EndTurnActions(G, ctx);
 
@@ -76,6 +77,7 @@ export const CheckEndTroopEvaluationTurn = (G: IMyGameState, ctx: Ctx): CanBeVoi
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndTroopEvaluationPhaseActions = (G: IMyGameState): void => {
     if (G.expansions.thingvellir.active) {
@@ -93,6 +95,7 @@ export const EndTroopEvaluationPhaseActions = (G: IMyGameState): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTroopEvaluationMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
@@ -107,6 +110,7 @@ export const OnTroopEvaluationMove = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
@@ -138,6 +142,7 @@ export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTroopEvaluationTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);

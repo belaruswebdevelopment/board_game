@@ -14,6 +14,7 @@ import type { CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, IMy
 *
 * @param G
 * @param cardIndex Индекс карты.
+* @returns
 */
 const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
     const campDeck: CanBeUndefType<CampDeckCardType[]> = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
@@ -36,6 +37,7 @@ const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
@@ -77,7 +79,7 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  *
  * @param G
  * @param ctx
- * @returns Сброшена ли карта из таверны.
+ * @returns
  */
 export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void => {
     const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
@@ -98,6 +100,7 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void 
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => {
     if (G.campPicked) {
@@ -119,6 +122,7 @@ export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => 
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const RefillCamp = (G: IMyGameState): void => {
     AddRemainingCampCardsToDiscard(G);
@@ -153,6 +157,7 @@ export const RefillCamp = (G: IMyGameState): void => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const RefillEmptyCampCards = (G: IMyGameState): void => {
     const emptyCampCards: (CanBeNullType<number>)[] =

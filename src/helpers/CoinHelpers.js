@@ -95,6 +95,7 @@ export const GetMaxCoinValue = (player) => Math.max(...player.boardCoins.filter(
  * @param G
  * @param ctx
  * @param playerId Id игрока.
+ * @returns
  */
 export const OpenClosedCoinsOnPlayerBoard = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
@@ -141,6 +142,7 @@ export const OpenClosedCoinsOnPlayerBoard = (G, ctx, playerId) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OpenCurrentTavernClosedCoinsOnPlayerBoard = (G, ctx) => {
     Object.values(G.publicPlayers).forEach((player, index) => {
@@ -299,6 +301,7 @@ export const ResolveBoardCoins = (G, ctx) => {
  * @param G
  * @param ctx
  * @param playerId Id игрока.
+ * @returns
  */
 export const ReturnCoinsToPlayerBoard = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
@@ -349,6 +352,7 @@ export const ReturnCoinsToPlayerBoard = (G, ctx, playerId) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ReturnCoinsToPlayerHands = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
@@ -475,6 +479,7 @@ export const ReturnCoinToPlayerHands = (G, ctx, playerId, coinId, close) => {
  * @param G
  * @param ctx
  * @param playerId Id игрока.
+ * @returns
  */
 const MixUpCoins = (G, ctx, playerId) => {
     const privatePlayer = G.players[playerId];
@@ -492,6 +497,7 @@ const MixUpCoins = (G, ctx, playerId) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const MixUpCoinsInPlayerHands = (G, ctx) => {
     if (G.mode === GameModeNames.Multiplayer) {

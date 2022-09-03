@@ -12,6 +12,7 @@ import { StageNames, SuitNames } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param heroId Id героя.
+ * @returns
  */
 export const ClickHeroCardMove = (G, ctx, heroId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickHero, heroId);

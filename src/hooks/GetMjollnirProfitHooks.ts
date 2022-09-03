@@ -17,7 +17,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from 
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
@@ -40,6 +40,7 @@ export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): CanBe
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
     const mjollnirPlayerIndex: number =
@@ -60,6 +61,7 @@ export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
@@ -74,6 +76,7 @@ export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStack(G, ctx, [StackData.getMjollnirProfit()]);
@@ -89,6 +92,7 @@ export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartEndGame = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];

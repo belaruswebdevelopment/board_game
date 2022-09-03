@@ -7,7 +7,7 @@
  *
  * @param G
  * @param card Карта.
- * @returns
+ * @returns Возможен ли выбор карты из лагеря.
  */
 export const IsCanPickPickCampCardToStack = (G, card) => {
     const validators = card.validators;
@@ -29,7 +29,7 @@ export const IsCanPickPickCampCardToStack = (G, card) => {
  *
  * @param G
  * @param card Карта.
- * @returns
+ * @returns Возможен ли выбор карты из колоды сброса.
  */
 export const IsCanPickPickDiscardCardToStack = (G, card) => {
     const validators = card.validators;

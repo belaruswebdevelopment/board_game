@@ -48,6 +48,7 @@ export const BuildCoins = (coinConfig, options) => {
  *
  * @param coin Монета.
  * @param status Статус, который показывает нужно ли открыть или закрыть монету.
+ * @returns
  */
 export const ChangeIsOpenedCoinStatus = (coin, status) => {
     if (coin.isOpened === status) {

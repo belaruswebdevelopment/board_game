@@ -37,6 +37,7 @@ export const HasLowestPriority = (G: IMyGameState, ctx: Ctx, playerId: number): 
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ChangePlayersPriorities = (G: IMyGameState, ctx: Ctx): void => {
     const tempPriorities: CanBeUndefType<IPriority>[] = [];

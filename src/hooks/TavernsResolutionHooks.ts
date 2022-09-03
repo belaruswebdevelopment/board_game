@@ -25,6 +25,7 @@ import type { CanBeUndefType, CanBeVoidType, DeckCardType, IMyGameState, IPlayer
  *
  * @param G
  * @param ctx
+ * @returns
  */
 const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
@@ -74,7 +75,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
@@ -99,7 +100,7 @@ export const CheckEndTavernsResolutionPhase = (G: IMyGameState, ctx: Ctx): CanBe
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndTavernsResolutionTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => EndTurnActions(G, ctx);
 
@@ -112,6 +113,7 @@ export const CheckEndTavernsResolutionTurn = (G: IMyGameState, ctx: Ctx): CanBeV
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => {
     const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
@@ -177,6 +179,7 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -213,6 +216,7 @@ export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTavernsResolutionTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
@@ -233,6 +237,7 @@ export const OnTavernsResolutionTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTavernsResolutionTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
@@ -267,6 +272,7 @@ export const OnTavernsResolutionTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ResolveCurrentTavernOrders = (G: IMyGameState, ctx: Ctx): void => {
     const ulinePlayerIndex: number =

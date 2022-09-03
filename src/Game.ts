@@ -1,4 +1,4 @@
-import type { Ctx, Game } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
@@ -24,7 +24,7 @@ import { UseGodCardPowerMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotAndvariClickCardMove, SoloBotAndvariClickCardToPickDistinctionMove, SoloBotAndvariClickCoinToUpgradeMove, SoloBotAndvariClickHeroCardMove, SoloBotAndvariPlaceAllCoinsMove, SoloBotAndvariPlaceThrudHeroMove, SoloBotAndvariPlaceYludHeroMove } from "./moves/SoloBotAndvariMoves";
 import { SoloBotClickCardMove, SoloBotClickCardToPickDistinctionMove, SoloBotClickCoinToUpgradeMove, SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove, SoloBotPlaceThrudHeroMove, SoloBotPlaceYludHeroMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
-import type { CanBeVoidType, IMyGameState, IOrder } from "./typescript/interfaces";
+import type { CanBeVoidType, Game, IMyGameState, IOrder } from "./typescript/interfaces";
 
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add Log data fo Solo Bot fo all files!
@@ -47,7 +47,7 @@ const order: IOrder = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
  * <li>При инициализации игрового стола.</li>
  * </ol>
  */
-export const BoardGame: Game<IMyGameState> = {
+export const BoardGame: Game<IMyGameState, Ctx> = {
     name: `nidavellir`,
     minPlayers: 1,
     maxPlayers: 5,
@@ -63,9 +63,9 @@ export const BoardGame: Game<IMyGameState> = {
                             ChooseHeroForDifficultySoloModeMove,
                         },
                     },
-                    upgradeCoin: {
+                    upgradeCoinSoloBot: {
                         moves: {
-                            ClickCoinToUpgradeMove,
+                            SoloBotClickCoinToUpgradeMove,
                         },
                     },
                 },

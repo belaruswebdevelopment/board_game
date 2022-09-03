@@ -16,6 +16,7 @@ import { AddActionsToStack } from "./StackHelpers";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ActivateTrading = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -45,6 +46,7 @@ export const ActivateTrading = (G, ctx) => {
  * @param G
  * @param ctx
  * @param isSoloBotEndRound Является ли данное действие в конце хода соло бота.
+ * @returns
  */
 export const StartTrading = (G, ctx, isSoloBotEndRound = false) => {
     // TODO For solo mode check coins openings
@@ -116,6 +118,7 @@ export const StartTrading = (G, ctx, isSoloBotEndRound = false) => {
  * @param ctx
  * @param tradingCoins Монеты для обмена.
  * @param soloBotOnlyOneCoinTrading У соло бота доступна только 1 монета для обмена с рынка.
+ * @returns
  */
 const Trading = (G, ctx, tradingCoins, soloBotOnlyOneCoinTrading = false) => {
     const length = tradingCoins.length, index = soloBotOnlyOneCoinTrading ? 1 : Number(ctx.currentPlayer);

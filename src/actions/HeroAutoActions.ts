@@ -21,6 +21,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param G
  * @param ctx
  * @param args Аргументы действия.
+ * @returns
  */
 export const AddPickHeroAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx, ...args: AutoActionArgsType):
     void => {
@@ -54,6 +55,7 @@ export const AddPickHeroAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
@@ -65,7 +67,11 @@ export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = (
         }
         for (let i = 0; i < player.boardCoins.length; i++) {
             if (i > G.currentTavern) {
-                ReturnCoinToPlayerHands(G, ctx, Number(ctx.currentPlayer), i, false);
+                const isCoinReturned: boolean = ReturnCoinToPlayerHands(G, ctx,
+                    Number(ctx.currentPlayer), i, false);
+                if (!isCoinReturned) {
+                    break;
+                }
             }
         }
     }
@@ -83,6 +89,7 @@ export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = (
  * @param G
  * @param ctx
  * @param args Аргументы действия.
+ * @returns
  */
 export const UpgradeMinCoinAction: IAutoActionFunction = (G: IMyGameState, ctx: Ctx, ...args: AutoActionArgsType):
     void => {

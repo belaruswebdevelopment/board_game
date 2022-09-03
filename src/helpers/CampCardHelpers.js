@@ -15,6 +15,7 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  * @param G
  * @param ctx
  * @param card Карта.
+ * @returns
  */
 export const AddCampCardToCards = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -49,6 +50,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
  * @param G
  * @param ctx
  * @param card Карта лагеря.
+ * @returns
  */
 const AddCampCardToPlayer = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -87,6 +89,7 @@ const AddArtefactPlayerCardToPlayerCards = (G, ctx, card) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G) => {
     const minCoinValue = G.marketCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value, minCoinIndex = G.marketCoins.findIndex((coin) => coin.value === minCoinValue);

@@ -15,7 +15,7 @@ import { BuffNames, ErrorNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -50,7 +50,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -73,6 +73,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
     if (G.tierToEnd === 0) {
@@ -92,6 +93,7 @@ export const EndEnlistmentMercenariesActions = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnEnlistmentMercenariesMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
@@ -116,6 +118,7 @@ export const OnEnlistmentMercenariesMove = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -143,6 +146,7 @@ export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);

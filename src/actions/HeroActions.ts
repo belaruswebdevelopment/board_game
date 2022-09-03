@@ -27,6 +27,7 @@ import type { CanBeUndefType, IHeroCard, IHeroPlayerCard, IMultiSuitCard, IMulti
  * @param G
  * @param ctx
  * @param heroId Id героя.
+ * @returns
  */
 export const AddHeroToPlayerCardsAction = (G: IMyGameState, ctx: Ctx, heroId: number): void => {
     const hero: CanBeUndefType<IHeroCard> = G.heroes[heroId];
@@ -55,6 +56,7 @@ export const AddHeroToPlayerCardsAction = (G: IMyGameState, ctx: Ctx, heroId: nu
  * @param ctx
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames, cardId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -81,6 +83,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -153,6 +156,7 @@ export const PlaceMultiSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitNa
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -187,6 +191,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): vo
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

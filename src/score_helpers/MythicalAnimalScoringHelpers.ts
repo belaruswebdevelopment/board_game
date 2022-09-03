@@ -10,7 +10,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному мифическому животному.
  */
 export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = (player: IPublicPlayer, value?: number): number => {
     if (value === undefined) {
@@ -27,7 +27,7 @@ export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = (playe
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по мифическому существу Garm.
+ * @returns Количество очков по конкретному мифическому животному.
  */
 export const GarmScoring: IMythicalAnimalScoringFunction = (player: IPublicPlayer): number =>
     GetRanksValueMultiplier(player, SuitNames.explorer, 1);
@@ -40,7 +40,7 @@ export const GarmScoring: IMythicalAnimalScoringFunction = (player: IPublicPlaye
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по мифическому существу Nidhogg.
+ * @returns Количество очков по конкретному мифическому животному.
  */
 export const NidhoggScoring: IMythicalAnimalScoringFunction = (player: IPublicPlayer): number =>
     GetRanksValueMultiplier(player, SuitNames.warrior, 2);

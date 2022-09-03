@@ -13,6 +13,7 @@ import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/en
  * @param ctx
  * @param buff Баф.
  * @param value Значение бафа.
+ * @returns
  */
 export const AddBuffToPlayer = (G, ctx, buff, value) => {
     if (buff !== undefined) {
@@ -26,6 +27,19 @@ export const AddBuffToPlayer = (G, ctx, buff, value) => {
         AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
     }
 };
+/**
+ * <h3>Действия, связанные с изменением значения бафа игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости изменить значение бафа игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param buffName Баф.
+ * @param value Новое значение бафа.
+ * @returns
+ */
 export const ChangeBuffValue = (G, ctx, buffName, value) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -62,6 +76,7 @@ export const CheckPlayerHasBuff = (player, buffName) => player.buffs.find((buff)
 * @param G
 * @param ctx
 * @param buffName Баф.
+* @returns
 */
 export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -75,6 +90,18 @@ export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
     player.buffs.splice(buffIndex, 1);
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
+/**
+ * <h3>Действия, связанные с получением значения бафа игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости получения значения бафа игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param buffName Баф.
+ * @returns
+ */
 export const GetBuffValue = (G, ctx, buffName) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

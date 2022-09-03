@@ -15,7 +15,7 @@ import { BuffNames, ErrorNames, GameModeNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBidsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
@@ -54,7 +54,7 @@ export const CheckEndBidsPhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndBidsTurn = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
@@ -91,7 +91,7 @@ export const CheckEndBidsTurn = (G, ctx) => {
  * </ol>
  *
  * @param G
- * @param ctx
+ * @returns
  */
 export const EndBidsActions = (G) => {
     G.publicPlayersOrder = [];
@@ -105,6 +105,7 @@ export const EndBidsActions = (G) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PreparationPhaseActions = (G, ctx) => {
     G.round++;

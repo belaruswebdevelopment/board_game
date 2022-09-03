@@ -21,6 +21,7 @@ import type { CanBeVoidType, HeroesForSoloGameArrayType, IMyGameState, IndexOf, 
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
@@ -42,6 +43,7 @@ export const SoloBotClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: C
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
@@ -110,6 +112,7 @@ export const SoloBotPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const SoloBotPlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
@@ -154,6 +157,7 @@ export const SoloBotPlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
+ * @returns
  */
 export const SoloBotClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {

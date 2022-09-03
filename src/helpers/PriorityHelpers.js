@@ -30,6 +30,7 @@ export const HasLowestPriority = (G, ctx, playerId) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ChangePlayersPriorities = (G, ctx) => {
     const tempPriorities = [];

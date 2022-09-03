@@ -1,5 +1,8 @@
-import type { Ctx } from "boardgame.io";
-import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import type { ActionPayload, ActionShape, ActivePlayersArg, Ctx, Move, PlayerID, Plugin, State, TurnOrderConfig } from "boardgame.io";
+import { INVALID_MOVE } from "boardgame.io/core";
+// eslint-disable-next-line import/no-unresolved
+import { Flow } from "boardgame.io/dist/types/src/core/flow";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BuffNames, ButtonMoveNames, ButtonNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 /**
  * <h3>Интерфейс для скрытых от всех игроков данных.</h3>
@@ -704,6 +707,7 @@ export interface IMoveCardsPlayerIdArguments extends IPlayerId {
  * <h3>Интерфейс для возможных валидаторов у мувов.</h3>
  */
 export interface IMoveBy {
+    readonly default: null;
     readonly chooseDifficultySoloModeAndvari: IMoveByChooseDifficultySoloModeAndvariOptions;
     readonly chooseDifficultySoloMode: IMoveByChooseDifficultySoloModeOptions;
     readonly bids: IMoveByBidOptions;
@@ -785,7 +789,7 @@ interface IMoveByCommonOptions {
     readonly placeThrudHero: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
     readonly upgradeCoin: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
-    readonly useGodPower: IMoveValidator<MoveArgumentsType<number[]>>;
+    // readonly useGodPower: IMoveValidator<MoveArgumentsType<number[]>>;
 }
 
 /**
@@ -1097,7 +1101,8 @@ export interface ITavernInConfig {
     readonly name: TavernNames;
 }
 
-export type MoveNamesType = ButtonMoveNames | CardMoveNames | CoinMoveNames | SuitMoveNames | AutoBotsMoveNames;
+export type MoveNamesType =
+    ButtonMoveNames | CardMoveNames | EmptyCardMoveNames | CoinMoveNames | SuitMoveNames | AutoBotsMoveNames;
 
 /**
  * <h3>Типы данных для конфига всех таверн.</h3>
@@ -1345,6 +1350,12 @@ export type CoinType = CanBeNullType<ICoin>;
  * <h3>Типы данных для отрисовки профита.</h3>
  */
 export type DrawProfitType = CanBeNullType<ConfigNames>;
+
+// TODO Can rework "| string"?
+/**
+ * <h3>Типы данных для названий кнопок.</h3>
+ */
+export type ButtonNameType = ButtonNames | string;
 
 /**
  * <h3>Типы данных для всех автоматических действий.</h3>
@@ -1897,3 +1908,107 @@ type ReadonlyByType<T extends object, K extends KeyofType<T>> = Omit<T, K> & Rea
  */
 export type IndexOf<T extends readonly unknown[], S extends number[] = []> =
     T[`length`] extends S[`length`] ? S[number] : IndexOf<T, [S[`length`], ...S]>;
+
+// My Implementations
+export interface Game<G, CtxWithPlugins extends Ctx, SetupData = unknown> {
+    name?: string;
+    minPlayers?: 1;
+    maxPlayers?: 5;
+    deltaState?: boolean;
+    disableUndo?: boolean;
+    seed?: string | number;
+    setup?: (ctx: CtxWithPlugins, setupData?: SetupData) => G;
+    validateSetupData?: (setupData: SetupData | undefined, numPlayers: number) => string | undefined;
+    moves?: MoveMap<G, CtxWithPlugins>;
+    phases?: PhaseMap<G, CtxWithPlugins>;
+    turn?: TurnConfig<G, CtxWithPlugins, null>;
+    events?: {
+        endGame?: boolean;
+        endPhase?: boolean;
+        endTurn?: boolean;
+        setPhase?: boolean;
+        endStage?: boolean;
+        setStage?: boolean;
+        pass?: boolean;
+        setActivePlayers?: boolean;
+    };
+    endIf?: (G: G, ctx: CtxWithPlugins) => unknown;
+    onEnd?: (G: G, ctx: CtxWithPlugins) => unknown;
+    playerView?: (G: G, ctx: CtxWithPlugins, playerID: PlayerID | null) => unknown;
+    plugins?: Array<Plugin<unknown, unknown, G>>;
+    ai?: {
+        enumerate: (G: G, ctx: Ctx, playerID: PlayerID) => Array<{
+            event: string;
+            args?: unknown[];
+        } | {
+            move: string;
+            args?: unknown[];
+        } | ActionShape.MakeMove | ActionShape.GameEvent>;
+    };
+    processMove?: (state: State<G, Ctx | CtxWithPlugins>, action: ActionPayload.MakeMove) =>
+        State<G, CtxWithPlugins> | typeof INVALID_MOVE;
+    flow?: ReturnType<typeof Flow>;
+}
+
+export type PhaseMap<G, CtxWithPlugins extends Ctx> = {
+    [key in KeyofType<IMoveBy> as key extends `default` ? never : key]: PhaseConfig<G, CtxWithPlugins, key>;
+};
+
+export interface PhaseConfig<G, CtxWithPlugins extends Ctx, phase extends KeyofType<IMoveBy>> {
+    start?: boolean;
+    next?: ((G: G, ctx: CtxWithPlugins) => PhaseNames | void) | PhaseNames;
+    onBegin?: (G: G, ctx: CtxWithPlugins) => unknown;
+    onEnd?: (G: G, ctx: CtxWithPlugins) => unknown;
+    endIf?: (G: G, ctx: CtxWithPlugins) => boolean | void | {
+        next: PhaseNames;
+    };
+    moves?: MoveMap<G, CtxWithPlugins>;
+    turn?: TurnConfig<G, CtxWithPlugins, phase>;
+    wrapped?: {
+        endIf?: (state: State<G, CtxWithPlugins>) => boolean | void | {
+            next: PhaseNames;
+        };
+        onBegin?: (state: State<G, CtxWithPlugins>) => unknown;
+        onEnd?: (state: State<G, CtxWithPlugins>) => unknown;
+        next?: (state: State<G, CtxWithPlugins>) => PhaseNames | void;
+    };
+}
+
+export type MoveMap<G, CtxWithPlugins extends Ctx> = {
+    // TODO it!
+    [moveName: string]: Move<G, CtxWithPlugins>;
+};
+
+export interface TurnConfig<G, CtxWithPlugins extends Ctx, phase extends CanBeNullType<KeyofType<IMoveBy>>> {
+    activePlayers?: ActivePlayersArg;
+    minMoves?: number;
+    maxMoves?: number;
+    /** @deprecated Use `minMoves` and `maxMoves` instead. */
+    moveLimit?: number;
+    onBegin?: (G: G, ctx: CtxWithPlugins) => unknown;
+    onEnd?: (G: G, ctx: CtxWithPlugins) => unknown;
+    endIf?: (G: G, ctx: CtxWithPlugins) => boolean | void | {
+        next: PlayerID;
+    };
+    onMove?: (G: G, ctx: CtxWithPlugins) => unknown;
+    stages?: StageMap<G, CtxWithPlugins, phase>;
+    order?: TurnOrderConfig<G, CtxWithPlugins>;
+    wrapped?: {
+        endIf?: (state: State<G, CtxWithPlugins>) => boolean | void | {
+            next: PlayerID;
+        };
+        onBegin?: (state: State<G, CtxWithPlugins>) => unknown;
+        onEnd?: (state: State<G, CtxWithPlugins>) => unknown;
+        onMove?: (state: State<G, CtxWithPlugins>) => unknown;
+    };
+}
+
+export type StageMap<G, CtxWithPlugins extends Ctx, phase extends CanBeNullType<KeyofType<IMoveBy>>> = {
+    [key in KeyofType<IMoveBy[phase extends null ? `default` : phase]> as
+    key extends `${`default`}${string}` ? never : key]: StageConfig<G, CtxWithPlugins>;
+};
+
+export interface StageConfig<G, CtxWithPlugins extends Ctx> {
+    moves?: MoveMap<G, CtxWithPlugins>;
+    next?: PhaseNames;
+}

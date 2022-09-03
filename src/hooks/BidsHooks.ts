@@ -18,7 +18,7 @@ import type { CanBeUndefType, CanBeVoidType, CoinType, IMyGameState, IPlayer, IP
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
@@ -61,7 +61,7 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<bool
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
@@ -100,7 +100,7 @@ export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true>
  * </ol>
  *
  * @param G
- * @param ctx
+ * @returns
  */
 export const EndBidsActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
@@ -115,6 +115,7 @@ export const EndBidsActions = (G: IMyGameState): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PreparationPhaseActions = (G: IMyGameState, ctx: Ctx): void => {
     G.round++;

@@ -14,6 +14,7 @@ import type { IAction, IDistinctionAwardingFunction, IMyGameState, ScoringArgsTy
  * @param ctx
  * @param action Объект действия.
  * @param params Параметры действия.
+ * @returns Количество очков по преимуществу по фракции.
  */
 export const StartDistinctionAwarding = (G: IMyGameState, ctx: Ctx,
     action: IAction<DistinctionAwardingFunctionNames, undefined>, params: ScoringArgsType): number => {

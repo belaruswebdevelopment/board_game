@@ -11,6 +11,7 @@ import { ArtefactNames, LogTypeNames } from "../typescript/enums";
 *
 * @param G
 * @param cardIndex Индекс карты.
+* @returns
 */
 const AddCardToCamp = (G, cardIndex) => {
     const campDeck = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
@@ -32,6 +33,7 @@ const AddCardToCamp = (G, cardIndex) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 const AddRemainingCampCardsToDiscard = (G) => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
@@ -70,7 +72,7 @@ const AddRemainingCampCardsToDiscard = (G) => {
  *
  * @param G
  * @param ctx
- * @returns Сброшена ли карта из таверны.
+ * @returns
  */
 export const DiscardCardFromTavernJarnglofi = (G, ctx) => {
     const currentTavernConfig = tavernsConfig[G.currentTavern];
@@ -90,6 +92,7 @@ export const DiscardCardFromTavernJarnglofi = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const DiscardCardIfCampCardPicked = (G, ctx) => {
     if (G.campPicked) {
@@ -110,6 +113,7 @@ export const DiscardCardIfCampCardPicked = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const RefillCamp = (G) => {
     AddRemainingCampCardsToDiscard(G);
@@ -141,6 +145,7 @@ export const RefillCamp = (G) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const RefillEmptyCampCards = (G) => {
     const emptyCampCards = G.camp.map((card, index) => {

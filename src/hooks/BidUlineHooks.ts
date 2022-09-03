@@ -16,7 +16,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, Public
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
@@ -57,6 +57,7 @@ export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckBidUlineOrder = (G: IMyGameState, ctx: Ctx): void => {
     OpenCurrentTavernClosedCoinsOnPlayerBoard(G, ctx);
@@ -71,6 +72,7 @@ export const CheckBidUlineOrder = (G: IMyGameState, ctx: Ctx): void => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndBidUlineActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];

@@ -15,6 +15,7 @@ import { ArtefactNames, BuffNames, ErrorNames, GameModeNames, LogTypeNames, Stag
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const DiscardTradingCoinAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -32,6 +33,7 @@ export const DiscardTradingCoinAction = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const FinishOdroerirTheMythicCauldronAction = (G) => {
     G.odroerirTheMythicCauldron = false;
@@ -45,6 +47,7 @@ export const FinishOdroerirTheMythicCauldronAction = (G) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartDiscardSuitCardAction = (G, ctx) => {
     var _a;
@@ -81,6 +84,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];

@@ -13,6 +13,7 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const DrawCurrentProfit = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -44,6 +45,7 @@ export const DrawCurrentProfit = (G, ctx) => {
  * @param G
  * @param ctx
  * @param stack Стек действий героя.
+ * @returns
  */
 const StartOrEndActionStage = (G, ctx, stack) => {
     var _a, _b, _c;

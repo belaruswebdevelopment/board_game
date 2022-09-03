@@ -12,6 +12,7 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * @param ctx
  * @param playerId Id игрока.
  * @param buffName Баф.
+ * @returns
  */
 export const CheckValkyryRequirement = (G, ctx, playerId, buffName) => {
     const player = G.publicPlayers[playerId];

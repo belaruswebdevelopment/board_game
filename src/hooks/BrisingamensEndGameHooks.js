@@ -13,6 +13,7 @@ import { BuffNames, ErrorNames } from "../typescript/enums";
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckBrisingamensEndGameOrder = (G) => {
     const brisingamensPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
@@ -29,7 +30,7 @@ export const CheckBrisingamensEndGameOrder = (G) => {
  * </ol>
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBrisingamensEndGamePhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.playOrder.length === 1 && G.publicPlayersOrder[0] === ctx.playOrder[0]
@@ -54,6 +55,7 @@ export const CheckEndBrisingamensEndGamePhase = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndBrisingamensEndGameActions = (G) => {
     G.publicPlayersOrder = [];
@@ -67,6 +69,7 @@ export const EndBrisingamensEndGameActions = (G) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnBrisingamensEndGameMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
@@ -80,6 +83,7 @@ export const OnBrisingamensEndGameMove = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
     AddActionsToStack(G, ctx, [StackData.brisingamensEndGameAction()]);

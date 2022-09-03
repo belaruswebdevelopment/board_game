@@ -15,7 +15,7 @@ import { IsMercenaryCampCard } from "./IsCampTypeHelpers";
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Фаза игры.
  */
 const AfterLastTavernEmptyActions = (G, ctx) => {
     const isLastRound = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
@@ -43,7 +43,7 @@ const AfterLastTavernEmptyActions = (G, ctx) => {
  * </ol>
  *
  * @param G
- * @returns
+ * @returns Фаза игры.
  */
 export const StartGetMjollnirProfitPhase = (G) => {
     const buffIndex = Object.values(G.publicPlayers).findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
@@ -59,7 +59,7 @@ export const StartGetMjollnirProfitPhase = (G) => {
  * </ol>
  *
  * @param G
- * @returns Следующая фаза игры.
+ * @returns Фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionPhase = (G) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
@@ -79,7 +79,7 @@ export const StartBidUlineOrTavernsResolutionPhase = (G) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase = (G, ctx) => {
     const isLastTavern = G.tavernsNum - 1 === G.currentTavern && CheckIfCurrentTavernEmpty(G);
@@ -98,7 +98,7 @@ export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsP
  * </ol>
  *
  * @param G
- * @returns Название новой фазы игры.
+ * @returns Фаза игры.
  */
 export const StartEndGameLastActions = (G) => {
     if (!G.secret.decks[0].length && G.secret.decks[1].length) {
@@ -126,7 +126,7 @@ export const StartEndGameLastActions = (G) => {
 * </ol>
 *
 * @param G
-* @returns
+* @returns Фаза игры.
 */
 export const StartEndTierPhaseOrEndGameLastActions = (G) => {
     const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
@@ -145,7 +145,7 @@ export const StartEndTierPhaseOrEndGameLastActions = (G) => {
  * </ol>
  *
  * @param G
- * @returns
+ * @returns Фаза игры.
  */
 const CheckEnlistmentMercenaries = (G, ctx) => {
     let count = false;
@@ -175,6 +175,7 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const ClearPlayerPickedCard = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -190,6 +191,7 @@ export const ClearPlayerPickedCard = (G, ctx) => {
  * </ol>
  *
  * @param ctx
+ * @returns
  */
 export const EndGame = (ctx) => {
     var _a;
@@ -204,6 +206,7 @@ export const EndGame = (ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns Должна ли быть завершена фаза.
  */
 export const EndTurnActions = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -223,6 +226,7 @@ export const EndTurnActions = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     const thrudPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.MoveThrud));
@@ -251,6 +255,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartOrEndActions = (G, ctx) => {
     var _a, _b, _c, _d;

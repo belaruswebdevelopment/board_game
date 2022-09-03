@@ -3,7 +3,7 @@ import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, RusCardTypeNames, SuitMoveNames } from "../typescript/enums";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -17,6 +17,7 @@ import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, RusCardTy
  * @param player Игрок.
  * @param moveName Название действия.
  * @param args Аргументы действия.
+ * @returns
  */
 export const DrawButton = (data, boardCells, name, player, moveName, ...args) => {
     let action, _exhaustiveCheck;
@@ -68,6 +69,7 @@ export const DrawButton = (data, boardCells, name, player, moveName, ...args) =>
  * @param suit Название фракции дворфов.
  * @param moveName Название действия.
  * @param args Аргументы действия.
+ * @returns
  */
 export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ...args) => {
     let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, value = ``, action;
@@ -151,7 +153,9 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             throw new Error(`Нет такого мува на картах.`);
             return _exhaustiveCheck;
     }
-    tdClasses += ` cursor-pointer`;
+    if (action !== null) {
+        tdClasses += ` cursor-pointer`;
+    }
     switch (card.type) {
         case RusCardTypeNames.Hero_Card:
         case RusCardTypeNames.Hero_Player_Card:
@@ -210,6 +214,70 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
 };
 /**
+ * <h3>Отрисовка пустых ячеек для карт.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка пустых ячеек для карт на игровом поле.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param playerCells Ячейки для отрисовки.
+ * @param cardType Тип карты.
+ * @param id Id карты.
+ * @param player Игрок.
+ * @param suit Название фракции дворфов.
+ * @param moveName Название действия.
+ * @param args Аргументы действия.
+ * @returns
+ */
+export const DrawEmptyCard = (data, playerCells, cardType, id, player, suit, moveName, ...args) => {
+    let tdClasses = ``, action;
+    if (suit !== null) {
+        tdClasses += suitsConfig[suit].suitColor;
+    }
+    let _exhaustiveCheck;
+    switch (moveName) {
+        case EmptyCardMoveNames.PlaceThrudHeroMove:
+            action = data.moves.PlaceThrudHeroMove;
+            break;
+        case EmptyCardMoveNames.PlaceYludHeroMove:
+            action = data.moves.PlaceYludHeroMove;
+            break;
+        case EmptyCardMoveNames.PlaceMultiSuitCardMove:
+            action = data.moves.PlaceMultiSuitCardMove;
+            break;
+        case EmptyCardMoveNames.PlaceEnlistmentMercenariesMove:
+            action = data.moves.PlaceEnlistmentMercenariesMove;
+            break;
+        // Solo Bot
+        case EmptyCardMoveNames.SoloBotPlaceThrudHeroMove:
+            action = data.moves.SoloBotPlaceThrudHeroMove;
+            break;
+        case EmptyCardMoveNames.SoloBotPlaceYludHeroMove:
+            action = data.moves.SoloBotPlaceYludHeroMove;
+            break;
+        // Solo Bot Andvari
+        case EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove:
+            action = data.moves.SoloBotAndvariPlaceThrudHeroMove;
+            break;
+        case EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove:
+            action = data.moves.SoloBotAndvariPlaceYludHeroMove;
+            break;
+        case undefined:
+            action = null;
+            break;
+        default:
+            _exhaustiveCheck = moveName;
+            throw new Error(`Нет такого мува на картах.`);
+            return _exhaustiveCheck;
+    }
+    if (action !== null) {
+        tdClasses += ` cursor-pointer`;
+    }
+    // TODO Check colors of empty camp & others cards!
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} empty ${cardType} ${id}`));
+};
+/**
  * <h3>Отрисовка монет.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -226,6 +294,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
  * @param additionalParam Дополнительные параметры.
  * @param moveName Название действия.
  * @param args Аргументы действия.
+ * @returns
  */
 export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, moveName, ...args) => {
     let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action, _exhaustiveCheck;
@@ -335,39 +404,13 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
  * @param suit Фракция.
  * @param player Игрок.
  * @param moveName Название действия.
+ * @returns
  */
 export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
-    let action, _exhaustiveCheck;
+    let className = ``, action, _exhaustiveCheck;
     switch (moveName) {
         case SuitMoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove;
-            break;
-        case SuitMoveNames.PlaceEnlistmentMercenariesMove:
-            action = data.moves.PlaceEnlistmentMercenariesMove;
-            break;
-        case SuitMoveNames.PlaceYludHeroMove:
-            action = data.moves.PlaceYludHeroMove;
-            break;
-        // Start
-        case SuitMoveNames.PlaceMultiSuitCardMove:
-            action = data.moves.PlaceMultiSuitCardMove;
-            break;
-        case SuitMoveNames.PlaceThrudHeroMove:
-            action = data.moves.PlaceThrudHeroMove;
-            break;
-        // Solo Bot
-        case SuitMoveNames.SoloBotPlaceThrudHeroMove:
-            action = data.moves.SoloBotPlaceThrudHeroMove;
-            break;
-        case SuitMoveNames.SoloBotPlaceYludHeroMove:
-            action = data.moves.SoloBotPlaceYludHeroMove;
-            break;
-        // Solo Bot Andvari
-        case SuitMoveNames.SoloBotAndvariPlaceThrudHeroMove:
-            action = data.moves.SoloBotAndvariPlaceThrudHeroMove;
-            break;
-        case SuitMoveNames.SoloBotAndvariPlaceYludHeroMove:
-            action = data.moves.SoloBotAndvariPlaceYludHeroMove;
             break;
         case undefined:
             action = null;
@@ -377,7 +420,6 @@ export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
             throw new Error(`Нет такого мува на фракциях дворфов.`);
             return _exhaustiveCheck;
     }
-    let className = ``;
     if (action !== null) {
         className += ` cursor-pointer`;
     }

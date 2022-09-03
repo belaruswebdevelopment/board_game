@@ -16,8 +16,11 @@ import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames } from "../t
  *
  * @param G
  * @param ctx
+ * @returns
  */
-export const CheckChooseStrategyForSoloModeAndvariOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
+export const CheckChooseStrategyForSoloModeAndvariOrder = (G, ctx) => {
+    CheckPlayersBasicOrder(G, ctx);
+};
 /**
  * <h3>Проверяет необходимость завершения фазы 'chooseDifficultySoloModeAndvari'.</h3>
  * <p>Применения:</p>
@@ -27,7 +30,7 @@ export const CheckChooseStrategyForSoloModeAndvariOrder = (G, ctx) => CheckPlaye
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckChooseStrategyForSoloModeAndvariPhase = (G, ctx) => {
     if (ctx.currentPlayer === `1`) {
@@ -49,7 +52,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseStrategyForSoloModeAndvariTurn = (G, ctx) => {
     if (ctx.currentPlayer === `0`) {
@@ -64,6 +67,7 @@ export const CheckEndChooseStrategyForSoloModeAndvariTurn = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndChooseStrategyForSoloModeAndvariActions = (G) => {
     G.publicPlayersOrder = [];
@@ -77,6 +81,7 @@ export const EndChooseStrategyForSoloModeAndvariActions = (G) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariMove = (G, ctx) => {
     StartOrEndActions(G, ctx);

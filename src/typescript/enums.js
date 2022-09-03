@@ -530,22 +530,28 @@ export var CoinMoveNames;
     CoinMoveNames["SoloBotAndvariClickCoinToUpgradeMove"] = "SoloBotAndvariClickCoinToUpgradeMove";
 })(CoinMoveNames || (CoinMoveNames = {}));
 /**
+ * <h3>Перечисление для описаний отображения действий на пустых ячейках для карт.</h3>
+ */
+export var EmptyCardMoveNames;
+(function (EmptyCardMoveNames) {
+    EmptyCardMoveNames["PlaceEnlistmentMercenariesMove"] = "PlaceEnlistmentMercenariesMove";
+    EmptyCardMoveNames["PlaceYludHeroMove"] = "PlaceYludHeroMove";
+    // Start
+    EmptyCardMoveNames["PlaceMultiSuitCardMove"] = "PlaceMultiSuitCardMove";
+    EmptyCardMoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
+    // Solo Bot
+    EmptyCardMoveNames["SoloBotPlaceThrudHeroMove"] = "SoloBotPlaceThrudHeroMove";
+    EmptyCardMoveNames["SoloBotPlaceYludHeroMove"] = "SoloBotPlaceYludHeroMove";
+    // Solo Bot Andvari
+    EmptyCardMoveNames["SoloBotAndvariPlaceThrudHeroMove"] = "SoloBotAndvariPlaceThrudHeroMove";
+    EmptyCardMoveNames["SoloBotAndvariPlaceYludHeroMove"] = "SoloBotAndvariPlaceYludHeroMove";
+})(EmptyCardMoveNames || (EmptyCardMoveNames = {}));
+/**
  * <h3>Перечисление для описаний отображения действий на фракциях дворфов.</h3>
  */
 export var SuitMoveNames;
 (function (SuitMoveNames) {
     SuitMoveNames["GetMjollnirProfitMove"] = "GetMjollnirProfitMove";
-    SuitMoveNames["PlaceEnlistmentMercenariesMove"] = "PlaceEnlistmentMercenariesMove";
-    SuitMoveNames["PlaceYludHeroMove"] = "PlaceYludHeroMove";
-    // Start
-    SuitMoveNames["PlaceMultiSuitCardMove"] = "PlaceMultiSuitCardMove";
-    SuitMoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
-    // Solo Bot
-    SuitMoveNames["SoloBotPlaceThrudHeroMove"] = "SoloBotPlaceThrudHeroMove";
-    SuitMoveNames["SoloBotPlaceYludHeroMove"] = "SoloBotPlaceYludHeroMove";
-    // Solo Bot Andvari
-    SuitMoveNames["SoloBotAndvariPlaceThrudHeroMove"] = "SoloBotAndvariPlaceThrudHeroMove";
-    SuitMoveNames["SoloBotAndvariPlaceYludHeroMove"] = "SoloBotAndvariPlaceYludHeroMove";
 })(SuitMoveNames || (SuitMoveNames = {}));
 /**
  * <h3>Перечисление для описаний отображения действий.</h3>
@@ -612,6 +618,11 @@ export var RusCardTypeNames;
     RusCardTypeNames["Mythical_Animal_Card"] = "\u041C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435";
     RusCardTypeNames["Special_Card"] = "\u041E\u0441\u043E\u0431\u0430\u044F";
     RusCardTypeNames["Valkyry_Card"] = "\u0412\u0430\u043B\u044C\u043A\u0438\u0440\u0438\u044F";
+    // Common
+    RusCardTypeNames["Player_Board_Card"] = "\u041A\u0430\u0440\u0442\u0430 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypeNames["Command_Zone_Hero_Card"] = "\u041A\u0430\u0440\u0442\u0430 \u0433\u0435\u0440\u043E\u044F \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u043E\u0439 \u0437\u043E\u043D\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypeNames["Command_Zone_Camp_Card"] = "\u041A\u0430\u0440\u0442\u0430 \u043B\u0430\u0433\u0435\u0440\u044F \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u043E\u0439 \u0437\u043E\u043D\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypeNames["Command_Zone_Mythological_Creature_Card"] = "\u041A\u0430\u0440\u0442\u0430 \u043C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u043E\u0439 \u0437\u043E\u043D\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
 })(RusCardTypeNames || (RusCardTypeNames = {}));
 /**
  * <h3>Перечисление для русских названий фракций.</h3>

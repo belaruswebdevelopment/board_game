@@ -13,7 +13,7 @@ import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/e
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBidUlinePhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -49,6 +49,7 @@ export const CheckEndBidUlinePhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckBidUlineOrder = (G, ctx) => {
     OpenCurrentTavernClosedCoinsOnPlayerBoard(G, ctx);
@@ -62,6 +63,7 @@ export const CheckBidUlineOrder = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndBidUlineActions = (G) => {
     G.publicPlayersOrder = [];

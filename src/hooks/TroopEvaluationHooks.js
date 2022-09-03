@@ -14,6 +14,7 @@ import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckAndResolveTroopEvaluationOrders = (G, ctx) => {
     CheckDistinction(G, ctx);
@@ -31,7 +32,7 @@ export const CheckAndResolveTroopEvaluationOrders = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndTroopEvaluationPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -53,7 +54,7 @@ export const CheckEndTroopEvaluationPhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndTroopEvaluationTurn = (G, ctx) => EndTurnActions(G, ctx);
 /**
@@ -64,6 +65,7 @@ export const CheckEndTroopEvaluationTurn = (G, ctx) => EndTurnActions(G, ctx);
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndTroopEvaluationPhaseActions = (G) => {
     if (G.expansions.thingvellir.active) {
@@ -80,6 +82,7 @@ export const EndTroopEvaluationPhaseActions = (G) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTroopEvaluationMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
@@ -93,6 +96,7 @@ export const OnTroopEvaluationMove = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTroopEvaluationTurnBegin = (G, ctx) => {
     AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
@@ -124,6 +128,7 @@ export const OnTroopEvaluationTurnBegin = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnTroopEvaluationTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);

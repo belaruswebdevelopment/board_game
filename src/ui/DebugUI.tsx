@@ -34,7 +34,7 @@ export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNullType<JSX.Elem
  * </ol>
  *
  * @param obj Информация.
- * @returns
+ * @returns Данные дебаг панели.
  */
 const DrawObjectData = (obj: DebugDrawDataType): JSX.Element => {
     const values: JSX.Element[] = [];

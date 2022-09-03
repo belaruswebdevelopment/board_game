@@ -18,6 +18,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param G
  * @param ctx
  * @param args Аргументы действия.
+ * @returns
  */
 export const AddPickHeroAction = (G, ctx, ...args) => {
     if (args.length !== 1) {
@@ -51,6 +52,7 @@ export const AddPickHeroAction = (G, ctx, ...args) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
     if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
@@ -62,7 +64,10 @@ export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
         }
         for (let i = 0; i < player.boardCoins.length; i++) {
             if (i > G.currentTavern) {
-                ReturnCoinToPlayerHands(G, ctx, Number(ctx.currentPlayer), i, false);
+                const isCoinReturned = ReturnCoinToPlayerHands(G, ctx, Number(ctx.currentPlayer), i, false);
+                if (!isCoinReturned) {
+                    break;
+                }
             }
         }
     }
@@ -79,6 +84,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
  * @param G
  * @param ctx
  * @param args Аргументы действия.
+ * @returns
  */
 export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     if (args.length !== 1) {

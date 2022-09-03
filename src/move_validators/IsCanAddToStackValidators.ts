@@ -9,7 +9,7 @@ import type { CanBeUndefType, CardsHasStackValidatorsType, IMyGameState, Validat
  *
  * @param G
  * @param card Карта.
- * @returns
+ * @returns Возможен ли выбор карты из лагеря.
  */
 export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStackValidatorsType): boolean => {
     const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;
@@ -32,7 +32,7 @@ export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStac
  *
  * @param G
  * @param card Карта.
- * @returns
+ * @returns Возможен ли выбор карты из колоды сброса.
  */
 export const IsCanPickPickDiscardCardToStack = (G: IMyGameState, card: CardsHasStackValidatorsType): boolean => {
     const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;

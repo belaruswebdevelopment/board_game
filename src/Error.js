@@ -10,6 +10,7 @@ import { ErrorNames, GameModeNames } from "./typescript/enums";
  * @param ctx
  * @param error Ошибка.
  * @param errorArgs Аргументы действия.
+ * @returns
  */
 export const ThrowMyError = (G, ctx, error, ...errorArgs) => {
     let _exhaustiveCheck;

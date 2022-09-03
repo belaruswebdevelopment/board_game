@@ -19,6 +19,7 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * @param G
  * @param ctx
  * @param hero Герой.
+ * @returns
  */
 export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: AllHeroCardType): void => {
     if (hero.suit !== null && hero.rank !== null) {
@@ -54,6 +55,7 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: AllHer
  * @param G
  * @param ctx
  * @param hero Герой.
+ * @returns
  */
 export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -82,6 +84,7 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
  * @param G
  * @param ctx
  * @param hero Карта героя.
+ * @returns
  */
 export const AddHeroToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
@@ -99,6 +102,7 @@ export const AddHeroToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard)
  * @param G
  * @param ctx
  * @param hero Карта героя.
+ * @returns
  */
 export const AddHeroForDifficultyToSoloBotCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1],

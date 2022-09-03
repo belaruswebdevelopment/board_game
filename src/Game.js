@@ -59,9 +59,9 @@ export const BoardGame = {
                             ChooseHeroForDifficultySoloModeMove,
                         },
                     },
-                    upgradeCoin: {
+                    upgradeCoinSoloBot: {
                         moves: {
-                            ClickCoinToUpgradeMove,
+                            SoloBotClickCoinToUpgradeMove,
                         },
                     },
                 },

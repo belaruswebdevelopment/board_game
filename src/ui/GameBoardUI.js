@@ -7,7 +7,7 @@ import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
-import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
 /**
  * <h3>Отрисовка карт лагеря.</h3>
@@ -60,16 +60,19 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                                     break;
                                 }
                                 else {
-                                    throw new Error(`Нет такого мува '1'.`);
+                                    throw new Error(`Не может не быть доступного мува.`);
                                 }
                             default:
-                                throw new Error(`Нет такого мува '2'.`);
+                                throw new Error(`Нет такого мува.`);
                         }
                         DrawCard(data, boardCells, campCard, j, player, suit, moveName, j);
                     }
                     else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
                         || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
                         moveMainArgs.push(j);
+                    }
+                    else {
+                        throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                     }
                 }
                 else {
@@ -146,16 +149,19 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
             if (ctx.phase === PhaseNames.TroopEvaluation && ctx.activePlayers === null
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
-                    // TODO Move to DrawDistinction
+                    // TODO Move to DrawDistinction?
                     boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suit); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
                 else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
                     moveMainArgs.push(suit);
                 }
+                else {
+                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                }
             }
             else {
                 if (data !== undefined) {
-                    // TODO Move to DrawDistinction
+                    // TODO Move to DrawDistinction?
                     boardCells.push(_jsx("td", { className: "bg-green-500", title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
             }
@@ -206,6 +212,9 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
             }
             else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
                 moveMainArgs.push(j);
+            }
+            else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
             }
         }
         else {
@@ -272,6 +281,9 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
                     || validatorName === MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) && hero.active) {
                     moveMainArgs.push(increment);
                 }
+                else {
+                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                }
             }
             else {
                 if (data !== undefined) {
@@ -327,8 +339,13 @@ export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
                 if (data !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null, CardMoveNames.SoloBotClickHeroCardMove, j);
                 }
-                else if (validatorName === MoveValidatorNames.SoloBotClickHeroCardMoveValidator && hero.active) {
-                    moveMainArgs.push(j);
+                else if (validatorName === MoveValidatorNames.SoloBotClickHeroCardMoveValidator) {
+                    if (hero.active) {
+                        moveMainArgs.push(j);
+                    }
+                }
+                else {
+                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                 }
             }
             else {
@@ -412,11 +429,11 @@ export const DrawProfit = (G, ctx, data) => {
             break;
         case ConfigNames.ChooseStrategyLevelForSoloModeAndvari:
             caption += `Get strategy level for Solo mode Andvari.`;
-            ChooseDifficultyLevelForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
+            ChooseStrategyForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.ChooseStrategyVariantLevelForSoloModeAndvari:
             caption += `Get strategy variant level for Solo mode Andvari.`;
-            ChooseDifficultyVariantLevelForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
+            ChooseStrategyVariantForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.GetHeroesForSoloMode:
             caption += `Get ${G.soloGameDifficultyLevel} hero${G.soloGameDifficultyLevel === 1 ? `` : `es`} to Solo Bot.`;
@@ -568,6 +585,9 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                             || validatorName === MoveValidatorNames.SoloBotAndvariClickCardMoveValidator
                             || validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
                             moveMainArgs.push(j);
+                        }
+                        else {
+                            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                         }
                     }
                     else {

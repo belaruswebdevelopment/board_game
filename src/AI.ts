@@ -213,7 +213,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
 * @TODO Саше: сделать описание функции и параметров.
 * @param G
 * @param ctx
-* @returns
+* @returns Итерации.
 */
 export const iterations = (G: IMyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
@@ -278,7 +278,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
  * <li>Используется ботами для определения целей.</li>
  * </ol>
  *
- * @returns
+ * @returns Цели.
  */
 export const objectives = (): IObjectives => ({
     isEarlyGame: {
@@ -472,7 +472,7 @@ export const objectives = (): IObjectives => ({
  * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
- * @returns
+ * @returns Глубина.
  */
 export const playoutDepth = (G: IMyGameState, ctx: Ctx): number => {
     const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];

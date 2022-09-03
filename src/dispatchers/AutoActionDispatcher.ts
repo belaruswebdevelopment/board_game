@@ -57,6 +57,7 @@ const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): Auto
  * @param G
  * @param ctx
  * @param action Объект автоматического действия.
+ * @returns
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx,
     action?: IAction<AutoActionFunctionNames, AutoActionArgsType>): void => {

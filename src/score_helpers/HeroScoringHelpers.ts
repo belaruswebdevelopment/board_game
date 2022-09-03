@@ -11,7 +11,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному герою.
  */
 export const BasicHeroScoring: IHeroScoringFunction = (player: IPublicPlayer, value?: number): number => {
     if (value === undefined) {
@@ -28,7 +28,7 @@ export const BasicHeroScoring: IHeroScoringFunction = (player: IPublicPlayer, va
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по герою Astrid.
+ * @returns Количество очков по конкретному герою.
  */
 export const AstridScoring: IHeroScoringFunction = (player: IPublicPlayer): number => GetMaxCoinValue(player);
 
@@ -40,7 +40,7 @@ export const AstridScoring: IHeroScoringFunction = (player: IPublicPlayer): numb
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по герою Idunn.
+ * @returns Количество очков по конкретному герою.
  */
 export const IdunnScoring: IHeroScoringFunction = (player: IPublicPlayer): number =>
     GetRanksValueMultiplier(player, SuitNames.explorer, 2);

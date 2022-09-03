@@ -19,6 +19,7 @@ import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotAndvariClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
@@ -40,6 +41,7 @@ export const SoloBotAndvariClickCardMove: Move<IMyGameState> = (G: IMyGameState,
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const SoloBotAndvariClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     cardId: number): CanBeVoidType<InvalidMoveType> => {
@@ -61,6 +63,7 @@ export const SoloBotAndvariClickCardToPickDistinctionMove: Move<IMyGameState> = 
  * @param G
  * @param ctx
  * @param heroId Id героя.
+ * @returns
  */
 export const SoloBotAndvariClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
@@ -108,6 +111,7 @@ export const SoloBotAndvariPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameSt
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const SoloBotAndvariPlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
@@ -129,6 +133,7 @@ export const SoloBotAndvariPlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameS
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const SoloBotAndvariPlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
@@ -151,6 +156,7 @@ export const SoloBotAndvariPlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameSt
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
+ * @returns
  */
 export const SoloBotAndvariClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {

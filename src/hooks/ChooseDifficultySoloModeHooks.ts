@@ -30,7 +30,7 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (ctx.currentPlayer === `0`) {
@@ -55,7 +55,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx)
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (ctx.currentPlayer === `0`) {
@@ -75,6 +75,7 @@ export const CheckEndChooseDifficultySoloModeTurn = (G: IMyGameState, ctx: Ctx):
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndChooseDifficultySoloModeActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
@@ -89,6 +90,7 @@ export const EndChooseDifficultySoloModeActions = (G: IMyGameState): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnChooseDifficultySoloModeMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
@@ -103,6 +105,7 @@ export const OnChooseDifficultySoloModeMove = (G: IMyGameState, ctx: Ctx): void 
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     if (ctx.currentPlayer === `0`) {
@@ -132,7 +135,7 @@ export const OnChooseDifficultySoloModeTurnBegin = (G: IMyGameState, ctx: Ctx): 
  * </ol>
  *
  * @param G
- * @returns Следующая фаза игры.
+ * @returns Фаза игры.
  */
 export const StartChooseDifficultySoloModeAndvariOrBidsPhase = (G: IMyGameState): PhaseNames => {
     if (G.mode === GameModeNames.SoloAndvari) {

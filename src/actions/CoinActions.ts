@@ -19,6 +19,7 @@ import type { CanBeUndefType, CoinType, ICoin, IMyGameState, IPlayer, IPublicPla
  * @param value Значение улучшения монеты.
  * @param upgradingCoinId Id обменной монеты.
  * @param type Тип обменной монеты.
+ * @returns
  */
 export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean, value: number,
     upgradingCoinId: number, type: CoinTypeNames): void => {

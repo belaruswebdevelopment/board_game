@@ -52,6 +52,7 @@ const AutoActionDispatcherSwitcher = (actionName) => {
  * @param G
  * @param ctx
  * @param action Объект автоматического действия.
+ * @returns
  */
 export const StartAutoAction = (G, ctx, action) => {
     if (action !== undefined) {

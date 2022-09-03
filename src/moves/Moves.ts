@@ -19,6 +19,7 @@ import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
@@ -40,6 +41,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {

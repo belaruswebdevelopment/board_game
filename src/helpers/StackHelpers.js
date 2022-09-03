@@ -12,6 +12,7 @@ import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
  * @param ctx
  * @param stack Стэк действий.
  * @param card Карта.
+ * @returns
  */
 export const AddActionsToStack = (G, ctx, stack, card) => {
     var _a, _b;
@@ -81,7 +82,7 @@ export const AddActionsToStack = (G, ctx, stack, card) => {
  * </ol>
  *
 * @param array The source array to search in
-* @param predicate find calls predicate once for each element of the array, in descending order, until it finds one where predicate returns true. If such an element is found, findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
+* @param predicate Find calls predicate once for each element of the array, in descending order, until it finds one where predicate returns true. If such an element is found, findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
 */
 const FindLastIndex = (array, predicate) => {
     let l = array.length;

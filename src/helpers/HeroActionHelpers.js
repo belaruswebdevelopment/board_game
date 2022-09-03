@@ -46,6 +46,7 @@ const CheckAndMoveThrud = (G, ctx, card) => {
  * @param G
  * @param ctx
  * @param card Карта, помещающаяся на карту героя Труд.
+ * @returns
  */
 export const CheckAndMoveThrudAction = (G, ctx, card) => {
     const isMoveThrud = CheckAndMoveThrud(G, ctx, card);

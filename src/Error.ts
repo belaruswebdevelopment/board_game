@@ -13,6 +13,7 @@ import type { ErrorArgsType, IMyGameState } from "./typescript/interfaces";
  * @param ctx
  * @param error Ошибка.
  * @param errorArgs Аргументы действия.
+ * @returns
  */
 export const ThrowMyError = (G: IMyGameState, ctx: Ctx, error: ErrorNames, ...errorArgs: ErrorArgsType): never => {
     let _exhaustiveCheck: never;

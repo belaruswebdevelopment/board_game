@@ -53,6 +53,7 @@ export const AddCardToPlayer = (G, ctx, card) => {
  * @param G
  * @param ctx
  * @param card Карта.
+ * @returns
  */
 const AddMythologicalCreatureCardToPlayerCommandZone = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -91,7 +92,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = (G, ctx, card) => {
  * @param G
  * @param ctx
  * @param card Выбранная карта дворфа или улучшения монет.
- * @returns
+ * @returns Добавлена ли карта на планшет игрока.
  */
 export const PickCardOrActionCardActions = (G, ctx, card) => {
     var _a, _b, _c;

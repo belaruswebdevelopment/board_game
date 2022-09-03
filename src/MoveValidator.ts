@@ -11,11 +11,11 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
+import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
 import type { CanBeNullType, CanBeUndefType, CoinType, DeckCardType, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeAndvariProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseDifficultyVariantLevelForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
+import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -28,7 +28,7 @@ import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLeve
  * @param G
  * @param ctx
  * @param coinData Данные монеты.
- * @returns
+ * @returns Валидация обмена монет.
  */
 export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMoveCoinsArguments): boolean => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
@@ -142,7 +142,7 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageNames, id: Va
  * @TODO Саше: сделать описание функции и параметров.
  * @param phase Фаза игры.
  * @param stage Стадия игры.
- * @returns
+ * @returns Валидатор.
  */
 export const GetValidator = (phase: PhaseNames, stage: StageNames): IMoveValidator<MoveValidatorGetRangeType> => {
     let validator: IMoveValidator<MoveValidatorGetRangeType>,
@@ -497,7 +497,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceEnlistmentMercenariesMove,
+        moveName: EmptyCardMoveNames.PlaceEnlistmentMercenariesMove,
         validate: (): boolean => true,
     },
     PlaceYludHeroMoveValidator: {
@@ -513,7 +513,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceYludHeroMove,
+        moveName: EmptyCardMoveNames.PlaceYludHeroMove,
         validate: (): boolean => true,
     },
     StartEnlistmentMercenariesMoveValidator: {
@@ -785,7 +785,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotPlaceThrudHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotPlaceThrudHeroMove,
         validate: (): boolean => true,
     },
     SoloBotPlaceYludHeroMoveValidator: {
@@ -802,7 +802,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotPlaceYludHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotPlaceYludHeroMove,
         validate: (): boolean => true,
     },
     SoloBotClickCoinToUpgradeMoveValidator: {
@@ -884,7 +884,7 @@ export const moveValidators: IMoveValidators = {
     // Solo Mode Andvari
     ChooseStrategyVariantForSoloModeAndvariMoveValidator: {
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]> =>
-            ChooseDifficultyVariantLevelForSoloModeAndvariProfit(G, ctx,
+            ChooseStrategyVariantForSoloModeAndvariProfit(G, ctx,
                 MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) as
             MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments:
@@ -903,7 +903,7 @@ export const moveValidators: IMoveValidators = {
     },
     ChooseStrategyForSoloModeAndvariMoveValidator: {
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<SoloGameAndvariStrategyNames[]> =>
-            ChooseDifficultyLevelForSoloModeAndvariProfit(G, ctx,
+            ChooseStrategyForSoloModeAndvariProfit(G, ctx,
                 MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) as
             MoveArgumentsType<SoloGameAndvariStrategyNames[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<SoloGameAndvariStrategyNames[]>):
@@ -1015,7 +1015,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotAndvariPlaceThrudHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariPlaceYludHeroMoveValidator: {
@@ -1038,10 +1038,11 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.SoloBotAndvariPlaceYludHeroMove,
+        moveName: EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove,
         validate: (): boolean => true,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
+        // TODO Bot Andvari can't update closed coins........!
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<IMoveCoinsArguments[]> =>
             DrawPlayersBoardsCoins(G, ctx,
                 MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator) as
@@ -1306,7 +1307,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceMultiSuitCardMove,
+        moveName: EmptyCardMoveNames.PlaceMultiSuitCardMove,
         validate: (): boolean => true,
     },
     PlaceThrudHeroMoveValidator: {
@@ -1324,7 +1325,7 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: SuitMoveNames.PlaceThrudHeroMove,
+        moveName: EmptyCardMoveNames.PlaceThrudHeroMove,
         validate: (): boolean => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
@@ -1378,6 +1379,7 @@ export const moveValidators: IMoveValidators = {
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveBy: IMoveBy = {
+    default: null,
     chooseDifficultySoloMode: {
         default1: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
         chooseHeroesForSoloMode: moveValidators.ChooseHeroesForSoloModeMoveValidator,
@@ -1420,7 +1422,7 @@ export const moveBy: IMoveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         discardCard: moveValidators.DiscardCard2PlayersMoveValidator,
         placeTradingCoinsUline: moveValidators.ClickHandTradingCoinUlineMoveValidator,
@@ -1458,7 +1460,7 @@ export const moveBy: IMoveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
     },
     placeYlud: {
@@ -1477,7 +1479,7 @@ export const moveBy: IMoveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         // Solo Bot
         default2: moveValidators.SoloBotPlaceYludHeroMoveValidator,
@@ -1510,7 +1512,7 @@ export const moveBy: IMoveBy = {
         placeThrudHero: moveValidators.PlaceThrudHeroMoveValidator,
         upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
         upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
-        useGodPower: moveValidators.UseGodPowerMoveValidator,
+        // useGodPower: moveValidators.UseGodPowerMoveValidator,
         // end
         pickDistinctionCard: moveValidators.ClickCardToPickDistinctionMoveValidator,
         // Solo Bot
@@ -1547,7 +1549,7 @@ export const moveBy: IMoveBy = {
  * @TODO Саше: сделать описание функции и параметров.
  * @param value Значение для валидации.
  * @param values Массив значений, допустимых для прохождения валидации.
- * @returns
+ * @returns Валидация значений мувов.
  */
 const ValidateByValues = <T>(value: T, values: T[]): boolean => values.includes(value);
 
@@ -1561,7 +1563,7 @@ const ValidateByValues = <T>(value: T, values: T[]): boolean => values.includes(
  * @TODO Саше: сделать описание функции и параметров.
  * @param value
  * @param values
- * @returns
+ * @returns Валидация монет.
  */
 const ValidateByObjectCoinIdTypeIsInitialValues = (value: IMoveCoinsArguments, values: IMoveCoinsArguments[]):
     boolean => values.findIndex((coin: IMoveCoinsArguments): boolean =>
@@ -1577,7 +1579,7 @@ const ValidateByObjectCoinIdTypeIsInitialValues = (value: IMoveCoinsArguments, v
  * @TODO Саше: сделать описание функции и параметров.
  * @param value
  * @param values
- * @returns
+ * @returns Валидация карт.
  */
 const ValidateByObjectSuitCardIdValues = (value: IMoveSuitCardCurrentId,
     values: Partial<SuitPropertyType<number[]>>): boolean => {
@@ -1595,7 +1597,7 @@ const ValidateByObjectSuitCardIdValues = (value: IMoveSuitCardCurrentId,
  * @TODO Саше: сделать описание функции и параметров.
  * @param value
  * @param values
- * @returns
+ * @returns Валидация карт.
  */
 const ValidateByObjectSuitCardIdPlayerIdValues = (value: MoveCardPlayerCurrentIdType,
     values: IMoveCardsPlayerIdArguments): boolean =>

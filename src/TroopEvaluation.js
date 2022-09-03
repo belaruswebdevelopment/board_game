@@ -78,6 +78,7 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckDistinction = (G, ctx) => {
     AddDataToLog(G, LogTypeNames.Game, `Преимущество по фракциям в конце эпохи:`);
@@ -127,6 +128,7 @@ const CountPlayerRanksAndMaxRanksForDistinctions = (G, ctx, suit) => {
  * @param ctx
  * @param suit Название фракции дворфов.
  * @param result Id игрока, получившего преимущество (если имеется).
+ * @returns
  */
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = (G, ctx, suit, result) => {
     if (suit === SuitNames.explorer && result === undefined) {

@@ -16,6 +16,7 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckPickHero = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

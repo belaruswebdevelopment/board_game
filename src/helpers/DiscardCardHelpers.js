@@ -9,6 +9,7 @@ import { RusCardTypeNames } from "../typescript/enums";
  * @param G
  * @param player Игрок.
  * @param discardedCard Сбрасываемая карта.
+ * @returns
  */
 export const DiscardPickedCard = (G, discardedCard) => {
     let _exhaustiveCheck;

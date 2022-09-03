@@ -16,6 +16,7 @@ import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } fro
  * @param value Значение улучшения монеты.
  * @param upgradingCoinId Id обменной монеты.
  * @param type Тип обменной монеты.
+ * @returns
  */
 export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, type) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];

@@ -25,6 +25,7 @@ import type { CampDeckCardType, CanBeUndefType, DeckCardType, DiscardDeckCardTyp
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const ClickCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const currentTavern: TavernAllCardType = G.taverns[G.currentTavern],
@@ -58,6 +59,7 @@ export const ClickCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void
  * @param ctx
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames, cardId: number):
     void => {
@@ -83,6 +85,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, s
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -109,6 +112,7 @@ export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: n
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -136,6 +140,7 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -158,6 +163,7 @@ export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitNam
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PassEnlistmentMercenariesAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -178,6 +184,7 @@ export const PassEnlistmentMercenariesAction: IActionFunctionWithoutParams = (G:
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -207,6 +214,7 @@ export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const PickCardToPickDistinctionAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     if (G.explorerDistinctionCards === null) {
@@ -241,6 +249,7 @@ export const PickCardToPickDistinctionAction = (G: IMyGameState, ctx: Ctx, cardI
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

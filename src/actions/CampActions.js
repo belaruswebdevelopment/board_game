@@ -18,6 +18,7 @@ import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, 
  * @param G
  * @param ctx
  * @param coinId Id монеты.
+ * @returns
  */
 export const AddCoinToPouchAction = (G, ctx, coinId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
@@ -69,6 +70,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
  * @param G
  * @param ctx
  * @param value Значение улучшения монеты.
+ * @returns
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G, ctx, value) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -91,6 +93,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G, ctx, value)
  * @param G
  * @param ctx
  * @param cardId Id сбрасываемой карты.
+ * @returns
  */
 export const DiscardSuitCardAction = (G, ctx, cardId) => {
     const player = G.publicPlayers[Number(ctx.playerID)];
@@ -115,6 +118,7 @@ export const DiscardSuitCardAction = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id выбранной карты.
+ * @returns
  */
 export const PickCampCardAction = (G, ctx, cardId) => {
     var _a;
@@ -149,6 +153,7 @@ export const PickCampCardAction = (G, ctx, cardId) => {
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
+ * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

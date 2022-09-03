@@ -14,7 +14,7 @@ import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/e
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndPlaceYludPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -58,6 +58,7 @@ export const CheckEndPlaceYludPhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckPlaceYludOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
@@ -98,7 +99,7 @@ export const CheckPlaceYludOrder = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndPlaceYludTurn = (G, ctx) => EndTurnActions(G, ctx);
 /**
@@ -130,6 +131,7 @@ export const EndPlaceYludActions = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnPlaceYludMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
@@ -143,6 +145,7 @@ export const OnPlaceYludMove = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnPlaceYludTurnBegin = (G, ctx) => {
     if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
@@ -165,6 +168,7 @@ export const OnPlaceYludTurnBegin = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnPlaceYludTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);

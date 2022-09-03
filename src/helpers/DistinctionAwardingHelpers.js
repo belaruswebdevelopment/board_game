@@ -19,7 +19,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param G
  * @param ctx
  * @param playerId Id игрока.
- * @returns
+ * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
@@ -49,7 +49,7 @@ export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
  * @param G
  * @param ctx
  * @param playerId Id игрока.
- * @returns
+ * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
@@ -81,7 +81,7 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
  * @param G
  * @param ctx
  * @param playerId Id игрока.
- * @returns
+ * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const HunterDistinctionAwarding = (G, ctx, playerId) => {
     if (G.tierToEnd !== 0) {
@@ -132,7 +132,7 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
  * @param G
  * @param ctx
  * @param playerId Id игрока.
- * @returns
+ * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const MinerDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
@@ -166,7 +166,7 @@ export const MinerDistinctionAwarding = (G, ctx, playerId) => {
  * @param G
  * @param ctx
  * @param playerId Id игрока.
- * @returns
+ * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const WarriorDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
@@ -190,6 +190,17 @@ export const WarriorDistinctionAwarding = (G, ctx, playerId) => {
     }
     return 0;
 };
+/**
+ * <h3>Завершение получения преимущества по фракции воинов или разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции воинов или разведчиков.</li>
+ * <li>В конце игры, когда получается преимущество по фракции воинов или разведчиков.</li>
+ * </ol>
+ *
+ * @param G
+ * @returns
+ */
 export const EndWarriorOrExplorerDistinctionIfCoinUpgraded = (G) => {
     // todo Move to distinction phase hook?
     if (Object.values(G.distinctions).length) {

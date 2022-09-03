@@ -10,7 +10,7 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
- * @returns
+ * @returns Результат эвристики.
  */
 export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
     const taverns = G.taverns, temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0)), result = Array(taverns.length).fill(0).map((value, index) => {
@@ -58,7 +58,7 @@ averageCards: ICard[] = G.averageCards*/;
  * @TODO Саше: сделать описание функции и параметров.
  * @param stat1
  * @param stat2
- * @returns
+ * @returns Результат сравнения двух эвристик.
  */
 const CompareCharacteristics = (stat1, stat2) => {
     const eps = 0.0001, tempVariation = stat1.variation - stat2.variation;
@@ -101,7 +101,7 @@ export const GetAllPicks = (tavernsNum, playersNum) => {
  *
  * @TODO Саше: сделать описание функции и параметров.
  * @param array
- * @returns
+ * @returns Характеристики карты для ботов.
  */
 const GetCharacteristics = (array) => {
     const mean = array.reduce((acc, item) => acc + item / array.length, 0), variation = array.reduce((acc, item) => acc + ((item - mean) ** 2) / array.length, 0);
@@ -186,7 +186,7 @@ const isAllCardsEqual = {
  * @TODO Саше: сделать описание функции и параметров.
  * @param set
  * @param k
- * @returns
+ * @returns Все комбинации расположения монет.
  */
 export const k_combinations = (set, k) => {
     const combs = [];
@@ -232,7 +232,7 @@ export const k_combinations = (set, k) => {
  *
  * @TODO Саше: сделать описание функции и параметров.
  * @param permutation
- * @returns
+ * @returns Результат перестановки.
  */
 export const Permute = (permutation) => {
     const length = permutation.length, result = [permutation.slice()], c = new Array(length).fill(0);

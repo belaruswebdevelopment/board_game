@@ -194,7 +194,6 @@ const CreateMercenaryCampCard = ({
  * @param points Очки.
  * @param name Название.
  * @param path URL путь.
- * @param variants Варианты расположения карты лагеря Наёмник на поле игрока.
  * @returns Карта лагеря Наёмник на поле игрока.
  */
 export const CreateMercenaryPlayerCampCard = ({

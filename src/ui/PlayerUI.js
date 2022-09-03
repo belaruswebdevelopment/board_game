@@ -7,8 +7,8 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GameModeNames, HeroNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, RusCardTypeNames, StageNames, SuitMoveNames, SuitNames } from "../typescript/enums";
-import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
+import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, ErrorNames, GameModeNames, HeroNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, RusCardTypeNames, StageNames, SuitMoveNames, SuitNames } from "../typescript/enums";
+import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 // TODO Check Solo Bot & multiplayer actions!
 // TODO Move strings coins names to enum!
 /**
@@ -90,6 +90,9 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     }
                     moveMainArgs.push(suitTop);
                 }
+                else {
+                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                }
             }
             else {
                 if (data !== undefined) {
@@ -125,12 +128,16 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit, CardMoveNames.DiscardSuitCardFromPlayerBoardMove, i);
                         }
-                        else if (validatorName === MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator
-                            && p === playerId) {
-                            if (moveMainArgs === undefined || !(`cards` in moveMainArgs)) {
-                                throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем 'cards'.`);
+                        else if (validatorName === MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator) {
+                            if (p === playerId) {
+                                if (moveMainArgs === undefined || !(`cards` in moveMainArgs)) {
+                                    throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем 'cards'.`);
+                                }
+                                moveMainArgs.cards.push(i);
                             }
-                            moveMainArgs.cards.push(i);
+                        }
+                        else {
+                            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                         }
                     }
                     else if (p === Number(ctx.currentPlayer) && last === i
@@ -156,6 +163,9 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                                 }
                                 moveMainArgsFoSuit.push(last);
                             }
+                            else {
+                                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                            }
                         }
                     }
                     else if (p === Number(ctx.currentPlayer) && ctx.phase === PhaseNames.BrisingamensEndGame
@@ -174,6 +184,9 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                             }
                             moveMainArgsFoSuit.push(i);
                         }
+                        else {
+                            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                        }
                     }
                     else {
                         if (data !== undefined) {
@@ -185,8 +198,9 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     && ((((ctx.phase === PhaseNames.PlaceYlud && ctx.activePlayers === null)
                         || ctx.phase === PhaseNames.EnlistmentMercenaries
                             && ((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) ===
-                                StageNames.placeEnlistmentMercenaries)) || stage === StageNames.placeThrudHero
-                        || stage === StageNames.placeMultiSuitsCards)) {
+                                StageNames.placeEnlistmentMercenaries)) || stage === StageNames.placeMultiSuitsCards
+                        || stage === StageNames.placeThrudHero || stage === StageNames.placeThrudHeroSoloBot
+                        || stage === StageNames.placeThrudHeroSoloBotAndvari)) {
                     if (stack === undefined) {
                         return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
                     }
@@ -202,29 +216,96 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     if (data !== undefined) {
                         // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
                         // TODO Can Ylud be placed in old place because of "suit !== pickedCard.suit"? Thrud can be placed same suit in solo game!
-                        let action;
+                        let cardType, moveName;
                         if (((G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`)
                             || G.mode === GameModeNames.SoloAndvari
                             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                                 && (stack.name !== MultiSuitCardNames.OlwinsDouble
                                     || (stack.name === MultiSuitCardNames.OlwinsDouble && suit !== stack.pickedSuit))))
                             || (cardVariants !== undefined && suit === cardVariants.suit)) {
+                            let _exhaustiveCheck;
                             switch (stack.name) {
                                 case HeroNames.Thrud:
-                                    action = data.moves.PlaceThrudHeroMove;
+                                    switch (G.mode) {
+                                        case GameModeNames.Basic:
+                                        case GameModeNames.Multiplayer:
+                                            moveName = EmptyCardMoveNames.PlaceThrudHeroMove;
+                                            break;
+                                        case GameModeNames.Solo1:
+                                            if (ctx.currentPlayer === `0`) {
+                                                moveName = EmptyCardMoveNames.PlaceThrudHeroMove;
+                                            }
+                                            else if (ctx.currentPlayer === `1`) {
+                                                moveName = EmptyCardMoveNames.SoloBotPlaceThrudHeroMove;
+                                            }
+                                            else {
+                                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                            }
+                                            break;
+                                        case GameModeNames.SoloAndvari:
+                                            if (ctx.currentPlayer === `0`) {
+                                                moveName = EmptyCardMoveNames.PlaceThrudHeroMove;
+                                            }
+                                            else if (p === 1 && ctx.currentPlayer === `1`) {
+                                                moveName = EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove;
+                                            }
+                                            else {
+                                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                            }
+                                            break;
+                                        default:
+                                            _exhaustiveCheck = G.mode;
+                                            throw new Error(`Нет такого режима игры.`);
+                                            return _exhaustiveCheck;
+                                    }
+                                    cardType = RusCardTypeNames.Hero_Player_Card;
                                     break;
                                 case HeroNames.Ylud:
-                                    action = data.moves.PlaceYludHeroMove;
+                                    switch (G.mode) {
+                                        case GameModeNames.Basic:
+                                        case GameModeNames.Multiplayer:
+                                            moveName = EmptyCardMoveNames.PlaceYludHeroMove;
+                                            break;
+                                        case GameModeNames.Solo1:
+                                            if (ctx.currentPlayer === `0`) {
+                                                moveName = EmptyCardMoveNames.PlaceYludHeroMove;
+                                            }
+                                            else if (ctx.currentPlayer === `1`) {
+                                                moveName = EmptyCardMoveNames.SoloBotPlaceYludHeroMove;
+                                            }
+                                            else {
+                                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                            }
+                                            break;
+                                        case GameModeNames.SoloAndvari:
+                                            if (ctx.currentPlayer === `0`) {
+                                                moveName = EmptyCardMoveNames.PlaceYludHeroMove;
+                                            }
+                                            else if (p === 1 && ctx.currentPlayer === `1`) {
+                                                moveName = EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove;
+                                            }
+                                            else {
+                                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                            }
+                                            break;
+                                        default:
+                                            _exhaustiveCheck = G.mode;
+                                            throw new Error(`Нет такого режима игры.`);
+                                            return _exhaustiveCheck;
+                                    }
+                                    cardType = RusCardTypeNames.Hero_Player_Card;
                                     break;
                                 case MultiSuitCardNames.OlwinsDouble:
                                 case MultiSuitCardNames.Gullinbursti:
-                                    action = data.moves.PlaceMultiSuitCardMove;
+                                    cardType = RusCardTypeNames.Multi_Suit_Player_Card;
+                                    moveName = EmptyCardMoveNames.PlaceMultiSuitCardMove;
                                     break;
                                 default:
                                     if (((_e = ctx.activePlayers) === null || _e === void 0 ? void 0 : _e[Number(ctx.currentPlayer)]) ===
                                         StageNames.placeEnlistmentMercenaries
                                         && Number(ctx.currentPlayer) === p) {
-                                        action = data.moves.PlaceEnlistmentMercenariesMove;
+                                        cardType = RusCardTypeNames.Mercenary_Player_Card;
+                                        moveName = EmptyCardMoveNames.PlaceEnlistmentMercenariesMove;
                                         break;
                                     }
                                     else {
@@ -232,11 +313,10 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                                     }
                             }
                             isDrawRow = true;
-                            // TODO Move to DrawSuit
-                            playerCells.push(_jsx("td", { onClick: () => action === null || action === void 0 ? void 0 : action(suit), className: "cursor-pointer" }, `${player.nickname} place card ${stack.name} to ${suit}`));
+                            DrawEmptyCard(data, playerCells, cardType, id, player, suit, moveName, suit);
                         }
                         else {
-                            playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                            DrawEmptyCard(data, playerCells, RusCardTypeNames.Player_Board_Card, id, player, suit);
                         }
                     }
                     else if (validatorName === MoveValidatorNames.PlaceThrudHeroMoveValidator
@@ -246,14 +326,20 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                         || validatorName === MoveValidatorNames.SoloBotPlaceYludHeroMoveValidator
                         || validatorName === MoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator
                         || validatorName === MoveValidatorNames.PlaceMultiSuitCardMoveValidator
-                        || (validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
-                            && cardVariants !== undefined && suit === cardVariants.suit)) {
-                        moveMainArgs.push(suit);
+                        || validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator) {
+                        if (!(validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
+                            && ((cardVariants !== undefined && suit !== cardVariants.suit)
+                                || (cardVariants === undefined)))) {
+                            moveMainArgs.push(suit);
+                        }
+                    }
+                    else {
+                        throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                     }
                 }
                 else {
                     if (data !== undefined) {
-                        playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                        DrawEmptyCard(data, playerCells, RusCardTypeNames.Player_Board_Card, id, player, suit);
                     }
                 }
                 j++;
@@ -272,7 +358,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                 }
                 else {
                     if (data !== undefined) {
-                        playerCells.push(_jsx("td", {}, `${player.nickname} hero ${i}`));
+                        DrawEmptyCard(data, playerCells, RusCardTypeNames.Command_Zone_Hero_Card, id, player, null);
                     }
                 }
             }
@@ -294,6 +380,9 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                                 }
                                 moveMainArgs.push(i);
                             }
+                            else {
+                                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                            }
                         }
                         else {
                             if (data !== undefined) {
@@ -303,7 +392,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     }
                     else {
                         if (data !== undefined) {
-                            playerCells.push(_jsx("td", {}, `${player.nickname} camp card ${i}`));
+                            DrawEmptyCard(data, playerCells, RusCardTypeNames.Command_Zone_Camp_Card, id, player, null);
                         }
                     }
                 }
@@ -323,6 +412,9 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                                 }
                                 moveMainArgs.push(i);
                             }
+                            else {
+                                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                            }
                         }
                         else {
                             if (data !== undefined) {
@@ -332,7 +424,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId = null, data) 
                     }
                     else {
                         if (data !== undefined) {
-                            playerCells.push(_jsx("td", {}, `${player.nickname} mythological creature command zone card ${i}`));
+                            DrawEmptyCard(data, playerCells, RusCardTypeNames.Command_Zone_Mythological_Creature_Card, id, player, null);
                         }
                     }
                 }
@@ -385,7 +477,8 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                 moveName = CoinMoveNames.ClickBoardCoinMove;
                 break;
             default:
-                if (stage === StageNames.upgradeCoin) {
+                if (stage === StageNames.upgradeCoin || stage === StageNames.upgradeCoinSoloBot
+                    || stage === StageNames.upgradeCoinSoloBotAndvari) {
                     let _exhaustiveCheck;
                     switch (G.mode) {
                         case GameModeNames.Basic:
@@ -481,9 +574,14 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                             else if (validatorName === MoveValidatorNames.ClickBoardCoinMoveValidator) {
                                 moveMainArgs.push(id);
                             }
+                            else {
+                                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                            }
                         }
                         else if (Number(ctx.currentPlayer) === p && IsCoin(publicBoardCoin)
-                            && !publicBoardCoin.isTriggerTrading && ((stage === StageNames.upgradeCoin)
+                            && !publicBoardCoin.isTriggerTrading && ((stage === StageNames.upgradeCoin
+                            || stage === StageNames.upgradeCoinSoloBot
+                            || stage === StageNames.upgradeCoinSoloBotAndvari)
                             || (stage === StageNames.pickConcreteCoinToUpgrade
                                 && ((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.coinValue) === publicBoardCoin.value)
                             || (stage === StageNames.upgradeVidofnirVedrfolnirCoin
@@ -503,6 +601,9 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                     coinId: id,
                                     type: CoinTypeNames.Board,
                                 });
+                            }
+                            else {
+                                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                             }
                         }
                         else {
@@ -553,6 +654,9 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                                     type: CoinTypeNames.Board,
                                                 });
                                             }
+                                            else {
+                                                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                                            }
                                         }
                                         else {
                                             if (data !== undefined) {
@@ -594,6 +698,9 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                             }
                             else if (validatorName === MoveValidatorNames.ClickBoardCoinMoveValidator) {
                                 moveMainArgs.push(id);
+                            }
+                            else {
+                                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                             }
                         }
                         else {
@@ -658,7 +765,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                 moveName = CoinMoveNames.ClickHandCoinUlineMove;
                 break;
             default:
-                if (stage === StageNames.upgradeCoin) {
+                if (stage === StageNames.upgradeCoin || stage === StageNames.upgradeCoinSoloBot) {
                     let _exhaustiveCheck;
                     switch (G.mode) {
                         case GameModeNames.Basic:
@@ -740,6 +847,9 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                             || validatorName === MoveValidatorNames.AddCoinToPouchMoveValidator) {
                             moveMainArgs.push(j);
                         }
+                        else {
+                            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                        }
                     }
                     else if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                         && Number(ctx.currentPlayer) === p
@@ -747,8 +857,9 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                         || ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari)
                             && Number(ctx.currentPlayer) === p && ctx.currentPlayer === `1`
                             && ctx.phase === PhaseNames.ChooseDifficultySoloMode))
-                        && (stage === StageNames.upgradeCoin || (stage === StageNames.pickConcreteCoinToUpgrade
-                            && ((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.coinValue) === handCoin.value))) {
+                        && (stage === StageNames.upgradeCoin || stage === StageNames.upgradeCoinSoloBot
+                            || (stage === StageNames.pickConcreteCoinToUpgrade
+                                && ((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.coinValue) === handCoin.value))) {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses, null, moveName, j, CoinTypeNames.Hand);
                         }
@@ -759,6 +870,9 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                                 coinId: j,
                                 type: CoinTypeNames.Hand,
                             });
+                        }
+                        else {
+                            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                         }
                     }
                     else {
@@ -799,6 +913,9 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                             }
                             moveMainArg.push(j);
                         }
+                        else {
+                            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                        }
                     }
                     else if (G.mode === GameModeNames.Multiplayer && privateHandCoin === undefined) {
                         if (data !== undefined) {
@@ -807,6 +924,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                     }
                     else {
                         if (data !== undefined) {
+                            // TODO Move empty coin to the DrawCoin or add DrawEmptyCoin?!
                             playerCells.push(_jsx("td", { className: "bg-yellow-300", children: _jsx("span", { className: "bg-coin bg-yellow-300 border-2" }) }, `${player.nickname} hand coin ${j} empty`));
                         }
                     }

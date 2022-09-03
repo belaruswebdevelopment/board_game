@@ -19,7 +19,7 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле для выбора уровня сложности стратегий соло бота Андвари соло игры.
  */
-export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, ctx: Ctx,
+export const ChooseStrategyForSoloModeAndvariProfit = (G: IMyGameState, ctx: Ctx,
     validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyNames[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyNames[]> = [],
@@ -35,6 +35,8 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
                     SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
             }
         } else if (j === 1) {
             if (data !== undefined && boardCells !== undefined) {
@@ -43,6 +45,8 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
                     SoloGameAndvariStrategyNames.NoHeroHardStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroHardStrategy);
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
             }
         } else if (j === 2) {
             if (data !== undefined && boardCells !== undefined) {
@@ -51,6 +55,8 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
                     SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
             }
         } else if (j === 3) {
             if (data !== undefined && boardCells !== undefined) {
@@ -59,6 +65,8 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
                     SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroHardStrategy);
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
             }
         }
     }
@@ -81,7 +89,7 @@ export const ChooseDifficultyLevelForSoloModeAndvariProfit = (G: IMyGameState, c
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле для выбора варианта уровня сложности стратегий соло бота Андвари соло игры.
  */
-export const ChooseDifficultyVariantLevelForSoloModeAndvariProfit = (G: IMyGameState, ctx: Ctx,
+export const ChooseStrategyVariantForSoloModeAndvariProfit = (G: IMyGameState, ctx: Ctx,
     validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]> = [],
@@ -95,6 +103,8 @@ export const ChooseDifficultyVariantLevelForSoloModeAndvariProfit = (G: IMyGameS
                 ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
         } else if (validatorName === MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
             moveMainArgs.push(j + 1);
+        } else {
+            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
         }
     }
     if (validatorName !== null) {
@@ -131,6 +141,8 @@ export const ChooseDifficultyLevelForSoloModeProfit = (G: IMyGameState, ctx: Ctx
                     ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
             } else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
                 moveMainArgs.push(j);
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
             }
         }
     }
@@ -178,6 +190,8 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G: IMyGameStat
                 ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
         } else if (validatorName === MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
             moveMainArgs.push(value);
+        } else {
+            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
         }
     }
     if (validatorName !== null) {
@@ -242,7 +256,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
             || MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
             moveMainArgs.push(j);
         } else {
-            throw new Error(`Функция должна иметь один из ключевых параметров.`);
+            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
         }
     }
     if (validatorName !== null) {
@@ -287,8 +301,12 @@ export const PickHeroesForSoloModeProfit = (G: IMyGameState, ctx: Ctx, validator
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null,
                         CardMoveNames.ChooseHeroForDifficultySoloModeMove, j);
-                } else if (validatorName === MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator && hero.active) {
-                    moveMainArgs.push(j);
+                } else if (validatorName === MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator) {
+                    if (hero.active) {
+                        moveMainArgs.push(j);
+                    }
+                } else {
+                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
                 }
             }
         }

@@ -9,7 +9,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * </ol>
  *
  * @param player Игрок.
- * @returns
+ * @returns Количество очков по конкретному герою.
  */
 export const BasicHeroScoring = (player, value) => {
     if (value === undefined) {
@@ -25,7 +25,7 @@ export const BasicHeroScoring = (player, value) => {
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по герою Astrid.
+ * @returns Количество очков по конкретному герою.
  */
 export const AstridScoring = (player) => GetMaxCoinValue(player);
 /**
@@ -36,7 +36,7 @@ export const AstridScoring = (player) => GetMaxCoinValue(player);
  * </ol>
  *
  * @param player Игрок.
- * @returns Количество очков по герою Idunn.
+ * @returns Количество очков по конкретному герою.
  */
 export const IdunnScoring = (player) => GetRanksValueMultiplier(player, SuitNames.explorer, 2);
 //# sourceMappingURL=HeroScoringHelpers.js.map

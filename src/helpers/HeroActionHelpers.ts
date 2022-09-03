@@ -52,6 +52,7 @@ const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardType): boo
  * @param G
  * @param ctx
  * @param card Карта, помещающаяся на карту героя Труд.
+ * @returns
  */
 
 export const CheckAndMoveThrudAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardType): void => {

@@ -16,6 +16,7 @@ import type { BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPubli
  * @param ctx
  * @param buff Баф.
  * @param value Значение бафа.
+ * @returns
  */
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: BuffValueType): void => {
     if (buff !== undefined) {
@@ -31,6 +32,19 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
     }
 };
 
+/**
+ * <h3>Действия, связанные с изменением значения бафа игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости изменить значение бафа игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param buffName Баф.
+ * @param value Новое значение бафа.
+ * @returns
+ */
 export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, value: SuitNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -71,6 +85,7 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffNames): 
 * @param G
 * @param ctx
 * @param buffName Баф.
+* @returns
 */
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -86,6 +101,18 @@ export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffNa
     AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
 
+/**
+ * <h3>Действия, связанные с получением значения бафа игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости получения значения бафа игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param buffName Баф.
+ * @returns
+ */
 export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames): BuffValueType => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

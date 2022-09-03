@@ -145,6 +145,7 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = (G, ctx, moveArguments)
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PlaceAllCoinsInCurrentOrderForSoloBot = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
@@ -181,6 +182,7 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];

@@ -27,7 +27,7 @@ export const DrawDebugData = (G, ctx) => {
  * </ol>
  *
  * @param obj Информация.
- * @returns
+ * @returns Данные дебаг панели.
  */
 const DrawObjectData = (obj) => {
     const values = [];

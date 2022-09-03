@@ -16,6 +16,7 @@ import { StageNames, SuitNames } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const ClickCardMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, cardId);
@@ -34,6 +35,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickDistinctionCard, cardId);

@@ -32,6 +32,7 @@ export const CheckIfCurrentTavernEmpty = (G: IMyGameState): boolean => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const DiscardCardIfTavernHasCardFor2Players = (G: IMyGameState, ctx: Ctx): void => {
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ctx.numPlayers !== 2) {
@@ -108,6 +109,7 @@ export const DiscardConcreteCardFromTavern = (G: IMyGameState, ctx: Ctx, discard
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const RefillTaverns = (G: IMyGameState, ctx: Ctx): void => {
     for (let t = 0; t < G.tavernsNum; t++) {

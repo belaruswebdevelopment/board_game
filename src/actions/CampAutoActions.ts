@@ -18,6 +18,7 @@ import type { CanBeUndefType, IActionFunctionWithoutParams, IMyGameState, IPlaye
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const DiscardTradingCoinAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -36,6 +37,7 @@ export const DiscardTradingCoinAction: IActionFunctionWithoutParams = (G: IMyGam
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const FinishOdroerirTheMythicCauldronAction: IActionFunctionWithoutParams = (G: IMyGameState): void => {
     G.odroerirTheMythicCauldron = false;
@@ -50,6 +52,7 @@ export const FinishOdroerirTheMythicCauldronAction: IActionFunctionWithoutParams
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartDiscardSuitCardAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const value: Record<string, StageArg> = {};
@@ -86,6 +89,7 @@ export const StartDiscardSuitCardAction: IActionFunctionWithoutParams = (G: IMyG
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartVidofnirVedrfolnirAction: IActionFunctionWithoutParams = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],

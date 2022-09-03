@@ -16,6 +16,7 @@ import type { CanBeUndefType, IMyGameState, IPublicPlayer, IStack } from "../typ
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -46,6 +47,7 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
  * @param G
  * @param ctx
  * @param stack Стек действий героя.
+ * @returns
  */
 const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, stack: IStack): void => {
     if (stack.stageName !== undefined) {

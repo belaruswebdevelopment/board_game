@@ -3,8 +3,8 @@ import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, RusCardTypeNames, SuitMoveNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, CanBeNullType, IBackground, IMyGameState, IndexOf, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernsConfigType } from "../typescript/interfaces";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames } from "../typescript/enums";
+import type { AllCardType, ArgsType, ButtonNameType, CanBeNullType, IBackground, IMyGameState, IndexOf, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -19,8 +19,9 @@ import type { AllCardType, ArgsType, CanBeNullType, IBackground, IMyGameState, I
  * @param player Игрок.
  * @param moveName Название действия.
  * @param args Аргументы действия.
+ * @returns
  */
-export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], name: string,
+export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], name: ButtonNameType,
     player: IPublicPlayer, moveName?: ButtonMoveNames, ...args: ArgsType): void => {
     let action: MoveFunctionType,
         _exhaustiveCheck: never;
@@ -80,6 +81,7 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param suit Название фракции дворфов.
  * @param moveName Название действия.
  * @param args Аргументы действия.
+ * @returns
  */
 export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardType, id: number,
     player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNamesKeyofTypeofType>, moveName?: CardMoveNames,
@@ -170,7 +172,9 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             throw new Error(`Нет такого мува на картах.`);
             return _exhaustiveCheck;
     }
-    tdClasses += ` cursor-pointer`;
+    if (action !== null) {
+        tdClasses += ` cursor-pointer`;
+    }
     switch (card.type) {
         case RusCardTypeNames.Hero_Card:
         case RusCardTypeNames.Hero_Player_Card:
@@ -236,6 +240,79 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
 };
 
 /**
+ * <h3>Отрисовка пустых ячеек для карт.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка пустых ячеек для карт на игровом поле.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param playerCells Ячейки для отрисовки.
+ * @param cardType Тип карты.
+ * @param id Id карты.
+ * @param player Игрок.
+ * @param suit Название фракции дворфов.
+ * @param moveName Название действия.
+ * @param args Аргументы действия.
+ * @returns
+ */
+export const DrawEmptyCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], cardType: RusCardTypeNames,
+    id: number, player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNamesKeyofTypeofType>,
+    moveName?: EmptyCardMoveNames, ...args: ArgsType): void => {
+    let tdClasses = ``,
+        action: MoveFunctionType;
+    if (suit !== null) {
+        tdClasses += suitsConfig[suit].suitColor;
+    }
+    let _exhaustiveCheck: never;
+    switch (moveName) {
+        case EmptyCardMoveNames.PlaceThrudHeroMove:
+            action = data.moves.PlaceThrudHeroMove!;
+            break;
+        case EmptyCardMoveNames.PlaceYludHeroMove:
+            action = data.moves.PlaceYludHeroMove!;
+            break;
+        case EmptyCardMoveNames.PlaceMultiSuitCardMove:
+            action = data.moves.PlaceMultiSuitCardMove!;
+            break;
+        case EmptyCardMoveNames.PlaceEnlistmentMercenariesMove:
+            action = data.moves.PlaceEnlistmentMercenariesMove!;
+            break;
+        // Solo Bot
+        case EmptyCardMoveNames.SoloBotPlaceThrudHeroMove:
+            action = data.moves.SoloBotPlaceThrudHeroMove!;
+            break;
+        case EmptyCardMoveNames.SoloBotPlaceYludHeroMove:
+            action = data.moves.SoloBotPlaceYludHeroMove!;
+            break;
+        // Solo Bot Andvari
+        case EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove:
+            action = data.moves.SoloBotAndvariPlaceThrudHeroMove!;
+            break;
+        case EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove:
+            action = data.moves.SoloBotAndvariPlaceYludHeroMove!;
+            break;
+        case undefined:
+            action = null;
+            break;
+        default:
+            _exhaustiveCheck = moveName;
+            throw new Error(`Нет такого мува на картах.`);
+            return _exhaustiveCheck;
+    }
+    if (action !== null) {
+        tdClasses += ` cursor-pointer`;
+    }
+    // TODO Check colors of empty camp & others cards!
+    playerCells.push(
+        <td className={tdClasses} onClick={() => action?.(...args)}
+            key={`${player?.nickname ? `player ${player.nickname} ` : ``}${suit} empty ${cardType} ${id}`}>
+
+        </td>
+    );
+};
+
+/**
  * <h3>Отрисовка монет.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -252,6 +329,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param additionalParam Дополнительные параметры.
  * @param moveName Название действия.
  * @param args Аргументы действия.
+ * @returns
  */
 export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string,
     coin: PublicPlayerCoinType, id: number, player: CanBeNullType<IPublicPlayer>, coinClasses?: CanBeNullType<string>,
@@ -375,41 +453,16 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param suit Фракция.
  * @param player Игрок.
  * @param moveName Название действия.
+ * @returns
  */
 export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitNamesKeyofTypeofType,
     player?: IPublicPlayer, moveName?: SuitMoveNames): void => {
-    let action: MoveFunctionType,
+    let className = ``,
+        action: MoveFunctionType,
         _exhaustiveCheck: never;
     switch (moveName) {
         case SuitMoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove!;
-            break;
-        case SuitMoveNames.PlaceEnlistmentMercenariesMove:
-            action = data.moves.PlaceEnlistmentMercenariesMove!;
-            break;
-        case SuitMoveNames.PlaceYludHeroMove:
-            action = data.moves.PlaceYludHeroMove!;
-            break;
-        // Start
-        case SuitMoveNames.PlaceMultiSuitCardMove:
-            action = data.moves.PlaceMultiSuitCardMove!;
-            break;
-        case SuitMoveNames.PlaceThrudHeroMove:
-            action = data.moves.PlaceThrudHeroMove!;
-            break;
-        // Solo Bot
-        case SuitMoveNames.SoloBotPlaceThrudHeroMove:
-            action = data.moves.SoloBotPlaceThrudHeroMove!;
-            break;
-        case SuitMoveNames.SoloBotPlaceYludHeroMove:
-            action = data.moves.SoloBotPlaceYludHeroMove!;
-            break;
-        // Solo Bot Andvari
-        case SuitMoveNames.SoloBotAndvariPlaceThrudHeroMove:
-            action = data.moves.SoloBotAndvariPlaceThrudHeroMove!;
-            break;
-        case SuitMoveNames.SoloBotAndvariPlaceYludHeroMove:
-            action = data.moves.SoloBotAndvariPlaceYludHeroMove!;
             break;
         case undefined:
             action = null;
@@ -419,7 +472,6 @@ export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Elem
             throw new Error(`Нет такого мува на фракциях дворфов.`);
             return _exhaustiveCheck;
     }
-    let className = ``;
     if (action !== null) {
         className += ` cursor-pointer`;
     }

@@ -9,6 +9,7 @@ import { LogTypeNames } from "./typescript/enums";
  * @param G
  * @param type Тип лога.
  * @param value Значение, заносимое в лог.
+ * @returns
  */
 export const AddDataToLog = (G, type, value) => {
     G.logData.push({ type, value });

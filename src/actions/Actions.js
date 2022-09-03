@@ -22,6 +22,7 @@ import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCard
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const ClickCardAction = (G, ctx, cardId) => {
     const currentTavern = G.taverns[G.currentTavern], card = currentTavern[cardId];
@@ -52,6 +53,7 @@ export const ClickCardAction = (G, ctx, cardId) => {
  * @param ctx
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -75,6 +77,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -100,6 +103,7 @@ export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -126,6 +130,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const GetMjollnirProfitAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -147,6 +152,7 @@ export const GetMjollnirProfitAction = (G, ctx, suit) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PassEnlistmentMercenariesAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -166,6 +172,7 @@ export const PassEnlistmentMercenariesAction = (G, ctx) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const PickDiscardCardAction = (G, ctx, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -194,6 +201,7 @@ export const PickDiscardCardAction = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const PickCardToPickDistinctionAction = (G, ctx, cardId) => {
     if (G.explorerDistinctionCards === null) {
@@ -225,6 +233,7 @@ export const PickCardToPickDistinctionAction = (G, ctx, cardId) => {
  * @param G
  * @param ctx
  * @param suit Название фракции дворфов.
+ * @returns
  */
 export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

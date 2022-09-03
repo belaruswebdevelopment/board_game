@@ -11,6 +11,7 @@ import type { DiscardCardType, IMyGameState } from "../typescript/interfaces";
  * @param G
  * @param player Игрок.
  * @param discardedCard Сбрасываемая карта.
+ * @returns
  */
 export const DiscardPickedCard = (G: IMyGameState, discardedCard: DiscardCardType): void => {
     let _exhaustiveCheck: never;

@@ -11,6 +11,7 @@ import type { IMyGameState } from "./typescript/interfaces";
  * @param G
  * @param type Тип лога.
  * @param value Значение, заносимое в лог.
+ * @returns
  */
 export const AddDataToLog = (G: IMyGameState, type: LogTypeNames, value: string): void => {
     G.logData.push({ type, value });

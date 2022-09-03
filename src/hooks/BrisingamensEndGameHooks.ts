@@ -16,6 +16,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from 
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
     const brisingamensPlayerIndex: number =
@@ -35,7 +36,7 @@ export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
  * </ol>
  * @param G
  * @param ctx
- * @returns
+ * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBrisingamensEndGamePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length && ctx.playOrder.length === 1 && G.publicPlayersOrder[0] === ctx.playOrder[0]
@@ -64,6 +65,7 @@ export const CheckEndBrisingamensEndGamePhase = (G: IMyGameState, ctx: Ctx): Can
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const EndBrisingamensEndGameActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
@@ -78,6 +80,7 @@ export const EndBrisingamensEndGameActions = (G: IMyGameState): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnBrisingamensEndGameMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
@@ -92,6 +95,7 @@ export const OnBrisingamensEndGameMove = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStack(G, ctx, [StackData.brisingamensEndGameAction()]);
