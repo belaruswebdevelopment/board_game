@@ -59,7 +59,7 @@ const CreateRoyalOfferingCard = ({
     value,
     stack,
     name,
-}: CreateRoyalOfferingCardType = {} as CreateRoyalOfferingCardType): IRoyalOfferingCard => ({
+}: CreateRoyalOfferingCardType): IRoyalOfferingCard => ({
     type,
     value,
     stack,

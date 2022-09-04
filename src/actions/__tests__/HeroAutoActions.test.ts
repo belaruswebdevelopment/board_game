@@ -1,6 +1,5 @@
-import type { Ctx } from "boardgame.io";
 import { DrawNames, GameModeNames, LogTypeNames, StageNames } from "../../typescript/enums";
-import type { IMyGameState, IPlayer, IPublicPlayer, IStack } from "../../typescript/interfaces";
+import type { Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
 describe(`Test AddPickHeroAction method`, (): void => {

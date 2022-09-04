@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
@@ -6,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>

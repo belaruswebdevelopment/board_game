@@ -37,7 +37,7 @@ export const BuildSpecialCards = () => {
  * @param name Название.
  * @returns Карта дворфа.
  */
-const CreateSpecialCard = ({ type = RusCardTypeNames.Special_Card, suit, rank, points, name, } = {}) => ({
+const CreateSpecialCard = ({ type = RusCardTypeNames.Special_Card, suit, rank, points, name, }) => ({
     type,
     suit,
     rank,

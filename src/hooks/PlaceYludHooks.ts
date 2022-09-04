@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
@@ -6,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CanBeVoidType, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CanBeVoidType, Ctx, IHeroCard, IMyGameState, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>

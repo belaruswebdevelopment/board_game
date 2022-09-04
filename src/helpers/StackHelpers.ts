@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndefType, CardsHasStackType, IMyGameState, IPublicPlayer, IStack, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackType, Ctx, IMyGameState, IPublicPlayer, IStack, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>

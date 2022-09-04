@@ -1,4 +1,4 @@
-import type { Ctx, StageArg } from "boardgame.io";
+import type { StageArg } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
@@ -7,8 +7,9 @@ import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, BuffNames, ErrorNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IActionFunctionWithoutParams, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, IActionFunctionWithoutParams, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinType } from "../typescript/interfaces";
 
+// TODO Rework StageArg to be implemented my interface type
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>

@@ -34,7 +34,7 @@ export const BuildMultiSuitCards = (configOptions) => {
  * @param name Название.
  * @returns Мультифракционная карта.
  */
-const CreateMultiSuitCard = ({ type = RusCardTypeNames.Multi_Suit_Card, name, } = {}) => ({
+const CreateMultiSuitCard = ({ type = RusCardTypeNames.Multi_Suit_Card, name, }) => ({
     type,
     name,
 });
@@ -52,7 +52,7 @@ const CreateMultiSuitCard = ({ type = RusCardTypeNames.Multi_Suit_Card, name, } 
  * @param name Название.
  * @returns Мультифракционная карта на поле игрока.
  */
-export const CreateMultiSuitPlayerCard = ({ type = RusCardTypeNames.Multi_Suit_Player_Card, name, suit, rank, points, } = {}) => ({
+export const CreateMultiSuitPlayerCard = ({ type = RusCardTypeNames.Multi_Suit_Player_Card, name, suit, rank, points, }) => ({
     type,
     name,
     suit,

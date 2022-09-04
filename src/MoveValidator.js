@@ -1183,7 +1183,7 @@ export const moveBy = {
     chooseDifficultySoloMode: {
         default1: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
         chooseHeroesForSoloMode: moveValidators.ChooseHeroesForSoloModeMoveValidator,
-        // Not Solo
+        // Solo Bot
         upgradeCoinSoloBot: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
     },
     chooseDifficultySoloModeAndvari: {
@@ -1197,7 +1197,7 @@ export const moveBy = {
         default3: moveValidators.BotsPlaceAllCoinsMoveValidator,
         // Solo Bot
         default4: moveValidators.SoloBotPlaceAllCoinsMoveValidator,
-        // Solo Bot
+        // Solo Bot Andvari
         default5: moveValidators.SoloBotAndvariPlaceAllCoinsMoveValidator,
     },
     bidUline: {

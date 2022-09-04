@@ -1,5 +1,3 @@
-import type { Ctx } from "boardgame.io";
-import type { BoardProps } from "boardgame.io/react";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -7,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
-import type { CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { BoardProps, CampCardType, CanBeNullType, CanBeUndefType, Ctx, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -56,8 +54,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
                     || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickCampCardHolda)) {
                     if (data !== undefined) {
-                        const stage: CanBeUndefType<StageNames> =
-                            ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>;
+                        const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                         let moveName: CardMoveNames;
                         switch (stage) {
                             case StageNames.pickCampCardHolda:
@@ -126,11 +123,10 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType
  * @returns Поле информации о текущей фазе и стадии игры.
  */
 export const DrawCurrentPhaseStage = (ctx: Ctx): JSX.Element => {
-    const stage: CanBeUndefType<StageNames> =
-        ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>,
+    const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)],
         stageText: StageNameTextType = stage !== undefined ? RusStageNames[stage] : `none`;
     return (
-        <b>Phase: <span className="italic">{RusPhaseNames[ctx.phase as PhaseNames] ?? `none`}</span>
+        <b>Phase: <span className="italic">{RusPhaseNames[ctx.phase] ?? `none`}</span>
             (Stage: <span className="italic">{stageText}</span>)</b>
     );
 };
@@ -327,8 +323,7 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullTy
                         ctx.currentPlayer);
                 }
                 if (data !== undefined) {
-                    const stage: CanBeUndefType<StageNames> =
-                        ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>;
+                    const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                     let moveName: CardMoveNames;
                     switch (stage) {
                         case StageNames.pickHero:
@@ -668,7 +663,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
                             || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.discardCard))) {
                         if (data !== undefined) {
                             const stage: CanBeUndefType<StageNames> =
-                                ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>;
+                                ctx.activePlayers?.[Number(ctx.currentPlayer)];
                             let moveName: CardMoveNames,
                                 _exhaustiveCheck: never;
                             switch (stage) {

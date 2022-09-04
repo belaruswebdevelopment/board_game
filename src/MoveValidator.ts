@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { CheckSoloBotAndvariMustTakeCardFromGeneralStrategy, CheckSoloBotAndvariMustTakeCardToPickHero, CheckSoloBotAndvariMustTakeRoyalOfferingCard, SoloBotMustTakeCardFromReserveStrategy } from "./bot_logic/SoloBotAndvariCardLogic";
@@ -12,7 +11,7 @@ import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot,
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CoinType, DeckCardType, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CoinType, Ctx, DeckCardType, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -103,7 +102,7 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
  * @returns Валидный ли мув.
  */
 export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageNames, id: ValidMoveIdParamType): boolean => {
-    const validator: IMoveValidator<MoveValidatorGetRangeType> = GetValidator(ctx.phase as PhaseNames, stage);
+    const validator: IMoveValidator<MoveValidatorGetRangeType> = GetValidator(ctx.phase, stage);
     let isValid = false;
     if (validator !== null) {
         if (typeof id === `number`) {
@@ -1383,7 +1382,7 @@ export const moveBy: IMoveBy = {
     chooseDifficultySoloMode: {
         default1: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
         chooseHeroesForSoloMode: moveValidators.ChooseHeroesForSoloModeMoveValidator,
-        // Not Solo
+        // Solo Bot
         upgradeCoinSoloBot: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
     },
     chooseDifficultySoloModeAndvari: {
@@ -1397,7 +1396,7 @@ export const moveBy: IMoveBy = {
         default3: moveValidators.BotsPlaceAllCoinsMoveValidator,
         // Solo Bot
         default4: moveValidators.SoloBotPlaceAllCoinsMoveValidator,
-        // Solo Bot
+        // Solo Bot Andvari
         default5: moveValidators.SoloBotAndvariPlaceAllCoinsMoveValidator,
     },
     bidUline: {

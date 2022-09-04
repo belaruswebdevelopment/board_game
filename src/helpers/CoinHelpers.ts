@@ -1,9 +1,8 @@
-import type { Ctx } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, ICoin, IMyGameState, INumberValues, IPlayer, IPriority, IPublicPlayer, IResolveBoardCoins, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, Ctx, ICoin, IMyGameState, INumberValues, IPlayer, IPriority, IPublicPlayer, IResolveBoardCoins, PublicPlayerCoinType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**

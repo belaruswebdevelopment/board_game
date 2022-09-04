@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
@@ -14,7 +13,7 @@ import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { CreateMultiSuitPlayerCard } from "../MultiSuitCard";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, MultiSuitCardNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IHeroCard, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, IHeroCard, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>

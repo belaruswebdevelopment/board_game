@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { CreateMercenaryPlayerCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
@@ -11,7 +10,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
 import { ArtefactNames, BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DeckCardType, DiscardDeckCardType, IActionFunctionWithoutParams, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, Ctx, DeckCardType, DiscardDeckCardType, IActionFunctionWithoutParams, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с выбором карты из таверны.</h3>

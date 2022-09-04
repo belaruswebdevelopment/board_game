@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
@@ -7,7 +6,7 @@ import { ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterG
 import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { BuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>

@@ -1,11 +1,10 @@
-import type { Ctx } from "boardgame.io";
 import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, ICoin, IDistinctionAwardingFunction, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, ICoin, IDistinctionAwardingFunction, IMyGameState, IPlayer, IPublicPlayer, ISpecialCard } from "../typescript/interfaces";
 import { AddCardToPlayer } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";

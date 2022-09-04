@@ -1,6 +1,5 @@
-import type { Ctx } from "boardgame.io";
 import { ErrorNames, GameModeNames } from "./typescript/enums";
-import type { ErrorArgsType, IMyGameState } from "./typescript/interfaces";
+import type { Ctx, ErrorArgsType, IMyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Все возможные ошибки/исключения в игре.</h3>

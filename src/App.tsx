@@ -1,3 +1,4 @@
+import type { Game } from "boardgame.io";
 import { Client } from "boardgame.io/react";
 import { BoardGame } from "./Game";
 import { GameBoard } from "./GameBoard";
@@ -11,7 +12,7 @@ import { GameBoard } from "./GameBoard";
  */
 const App = Client({
     // debug: false,
-    game: BoardGame,
+    game: BoardGame as Game,
     board: GameBoard,
     numPlayers: 5,
 });

@@ -1,3 +1,4 @@
+import type { Game } from 'boardgame.io';
 import { Origins, Server } from 'boardgame.io/server';
 import { BoardGame } from './Game';
 
@@ -9,7 +10,7 @@ import { BoardGame } from './Game';
  * </ol>
  */
 const server = Server({
-    games: [BoardGame],
+    games: [BoardGame as Game],
     origins: [Origins.LOCALHOST],
 });
 

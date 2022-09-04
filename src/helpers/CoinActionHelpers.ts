@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от действий улучшающих монеты.</h3>

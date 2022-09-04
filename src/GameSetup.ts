@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
@@ -14,7 +13,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, Ctx, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -28,13 +27,13 @@ import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, DeckCardT
  */
 export const SetupGame = (ctx: Ctx): IMyGameState => {
     // TODO Rework it!
-    const mode: GameModeNames = ctx.numPlayers === 1 ? GameModeNames.Solo1 : ctx.numPlayers === 2
-        ? GameModeNames.SoloAndvari : ctx.numPlayers === 3 ? GameModeNames.Multiplayer : GameModeNames.Basic,
+    const mode: GameModeNames = ctx.numPlayers === 2 ? GameModeNames.Solo1 : ctx.numPlayers === 3
+        ? GameModeNames.SoloAndvari : ctx.numPlayers === 4 ? GameModeNames.Multiplayer : GameModeNames.Basic,
         suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
         round = -1,
-        drawSize: DrawSizeType = ctx.numPlayers === 2 ? 3 : ctx.numPlayers as DrawSizeType,
+        drawSize: DrawSizeType = ctx.numPlayers === 2 ? 3 : ctx.numPlayers,
         soloGameDifficultyLevel = null,
         soloGameAndvariStrategyLevel = null,
         soloGameAndvariStrategyVariantLevel = null,

@@ -1,7 +1,6 @@
-import type { Ctx } from "boardgame.io";
 import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDistinctionAwarding, MinerDistinctionAwarding, WarriorDistinctionAwarding } from "../helpers/DistinctionAwardingHelpers";
 import { DistinctionAwardingFunctionNames } from "../typescript/enums";
-import type { IAction, IDistinctionAwardingFunction, IMyGameState, ScoringArgsType } from "../typescript/interfaces";
+import type { Ctx, IAction, IDistinctionAwardingFunction, IMyGameState, ScoringArgsType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению преимущества по фракции дворфов.</h3>

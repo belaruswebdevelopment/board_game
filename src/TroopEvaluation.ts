@@ -1,11 +1,10 @@
-import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "./typescript/enums";
-import type { CanBeUndefType, DeckCardType, DistinctionType, IMyGameState, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType, SuitNamesKeyofTypeofType } from "./typescript/interfaces";
+import type { CanBeUndefType, Ctx, DeckCardType, DistinctionType, IMyGameState, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType, SuitNamesKeyofTypeofType } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>

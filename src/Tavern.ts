@@ -1,9 +1,8 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "./Error";
 import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
-import type { CanBeUndefType, DeckCardType, IMyGameState, IndexOf, ITavernInConfig, TavernAllCardType, TavernCardType, TavernsConfigType, TavernsType } from "./typescript/interfaces";
+import type { CanBeUndefType, Ctx, DeckCardType, IMyGameState, IndexOf, ITavernInConfig, TavernAllCardType, TavernCardType, TavernsConfigType, TavernsType } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет не осталось ли карт в текущей таверне.</h1>

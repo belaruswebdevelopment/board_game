@@ -1,9 +1,8 @@
-import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
 import { StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript/interfaces";
+import type { CanBeVoidType, Ctx, IMyGameState, InvalidMoveType, Move } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор героя.</h3>
@@ -17,7 +16,7 @@ import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript
  * @param heroId Id героя.
  * @returns
  */
-export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
+export const ClickHeroCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickHero, heroId);
@@ -40,7 +39,7 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @param cardId Id карты.
  * @returns
  */
-export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames, cardId: number):
+export const DiscardCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.discardBoardCard, {
@@ -65,7 +64,7 @@ export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, s
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceMultiSuitCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const PlaceMultiSuitCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeMultiSuitsCards, suit);
@@ -87,7 +86,7 @@ export const PlaceMultiSuitCardMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const PlaceThrudHeroMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeThrudHero, suit);
@@ -109,7 +108,7 @@ export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const PlaceYludHeroMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, suit);

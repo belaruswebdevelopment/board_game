@@ -1,10 +1,9 @@
-import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
-import type { AllHeroCardType, CanBeUndefType, IHeroCard, IHeroPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { AllHeroCardType, CanBeUndefType, Ctx, IHeroCard, IHeroPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";

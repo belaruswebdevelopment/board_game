@@ -46,7 +46,7 @@ const CreateSpecialCard = ({
     rank,
     points,
     name,
-}: CreateSpecialCardType = {} as CreateSpecialCardType): ISpecialCard => ({
+}: CreateSpecialCardType): ISpecialCard => ({
     type,
     suit,
     rank,

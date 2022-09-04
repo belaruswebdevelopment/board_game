@@ -1,11 +1,10 @@
-import type { Ctx } from "boardgame.io";
 import { CompareCards } from "./bot_logic/BotCardLogic";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { BuffNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
-import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, DeckCardType, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { ActiveStageAIType, CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -25,11 +24,10 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    const phase: PhaseNames = ctx.phase as PhaseNames;
+    const phase: PhaseNames = ctx.phase;
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
-        const currentStage: CanBeUndefType<StageNames> =
-            ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>;
+        const currentStage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
         let activeStageOfCurrentPlayer: ActiveStageAIType = currentStage ?? `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             let _exhaustiveCheck: never;

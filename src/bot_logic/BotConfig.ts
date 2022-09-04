@@ -1,6 +1,5 @@
-import type { Ctx } from "boardgame.io";
 import { RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, ICardCharacteristics, IHeuristic, IMyGameState, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, ICardCharacteristics, IHeuristic, IMyGameState, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
 /**

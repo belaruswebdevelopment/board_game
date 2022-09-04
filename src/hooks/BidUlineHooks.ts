@@ -1,11 +1,10 @@
-import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>

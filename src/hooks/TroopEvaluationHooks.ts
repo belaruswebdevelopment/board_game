@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { RefillCamp } from "../helpers/CampHelpers";
@@ -6,7 +5,7 @@ import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../hel
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, ExplorerDistinctionCardsArrayType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, DeckCardType, DistinctionType, ExplorerDistinctionCardsArrayType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>

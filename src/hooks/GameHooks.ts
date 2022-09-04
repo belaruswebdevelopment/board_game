@@ -1,10 +1,9 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { ScoreWinner } from "../Score";
 import { BuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>

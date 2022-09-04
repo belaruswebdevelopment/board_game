@@ -1,6 +1,5 @@
-import type { Ctx } from "boardgame.io";
 import { ArtefactNames, BuffNames, DrawNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../../typescript/enums";
-import type { CoinType, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
+import type { CoinType, Ctx, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {

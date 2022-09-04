@@ -101,7 +101,7 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
  * @param boardCoins Массив монет на столе.
  * @returns Приватные данные игрока.
  */
-const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
+const CreatePlayer = ({ handCoins, boardCoins, }) => ({
     handCoins,
     boardCoins,
 });
@@ -125,7 +125,7 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param selectedCoin Выбранная монета.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, } = {}) => ({
+const CreatePublicPlayer = ({ nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, }) => ({
     nickname,
     cards,
     giantTokenSuits,

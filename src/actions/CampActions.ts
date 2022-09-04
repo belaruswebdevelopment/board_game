@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
@@ -9,7 +8,7 @@ import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardType, CanBeUndefType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardType, CanBeUndefType, Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>

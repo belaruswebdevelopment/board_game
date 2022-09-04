@@ -45,7 +45,7 @@ const order = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
  */
 export const BoardGame = {
     name: `nidavellir`,
-    minPlayers: 1,
+    minPlayers: 2,
     maxPlayers: 5,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,

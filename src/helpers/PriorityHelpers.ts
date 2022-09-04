@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IMyGameState, IPriority, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, IMyGameState, IPriority, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>

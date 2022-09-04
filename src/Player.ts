@@ -1,11 +1,10 @@
-import type { Ctx } from "boardgame.io";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, ErrorNames, GameModeNames, PhaseNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CreatePublicPlayerType, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType, SuitPropertyType } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CreatePublicPlayerType, Ctx, ICoin, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitNamesKeyofTypeofType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -109,7 +108,7 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
 const CreatePlayer = ({
     handCoins,
     boardCoins,
-}: IPlayer = {} as IPlayer): IPlayer => ({
+}: IPlayer): IPlayer => ({
     handCoins,
     boardCoins,
 });
@@ -147,7 +146,7 @@ const CreatePublicPlayer = ({
     priority,
     buffs = [],
     selectedCoin = null,
-}: CreatePublicPlayerType = {} as CreatePublicPlayerType): IPublicPlayer => ({
+}: CreatePublicPlayerType): IPublicPlayer => ({
     nickname,
     cards,
     giantTokenSuits,

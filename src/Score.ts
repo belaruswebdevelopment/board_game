@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { IsCoin } from "./Coin";
 import { artefactsConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
@@ -18,7 +17,7 @@ import { AddDataToLog } from "./Logging";
 import { IsMythicalAnimalCard } from "./MythologicalCreature";
 import { CheckCurrentSuitDistinctions } from "./TroopEvaluation";
 import { BuffNames, ErrorNames, GameModeNames, LogTypeNames, RusCardTypeNames, SuitNames } from "./typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "./typescript/interfaces";
+import type { CampDeckCardType, CanBeUndefType, CanBeVoidType, Ctx, IGiantData, IGodData, IHeroCard, IHeroData, IMyGameState, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MythologicalCreatureCommandZoneCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>

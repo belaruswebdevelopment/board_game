@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, RusCardTypeNames } from "../typescript/enums";
-import type { AddCardToPlayerType, CanBeUndefType, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType, TavernCardType } from "../typescript/interfaces";
+import type { AddCardToPlayerType, CanBeUndefType, Ctx, IMyGameState, IPublicPlayer, MythologicalCreatureCommandZoneCardType, TavernCardType } from "../typescript/interfaces";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStack } from "./StackHelpers";

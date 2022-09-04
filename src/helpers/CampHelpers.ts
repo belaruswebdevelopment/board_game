@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, IMyGameState, ITavernInConfig } from "../typescript/interfaces";
+import type { CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, Ctx, IMyGameState, ITavernInConfig } from "../typescript/interfaces";
 
 /**
 * <h3>Заполняет лагерь новой картой из карт лагерь деки текущей эпохи.</h3>

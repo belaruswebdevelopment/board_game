@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
-import type { AutoActionArgsType, AutoActionFunctionType, IAction, IMyGameState } from "../typescript/interfaces";
+import type { AutoActionArgsType, AutoActionFunctionType, Ctx, IAction, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>

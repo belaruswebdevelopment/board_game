@@ -1,9 +1,8 @@
-import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, Ctx, IArtefactPlayerCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";

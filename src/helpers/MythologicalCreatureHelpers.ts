@@ -1,7 +1,6 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { BuffNames, ErrorNames, RusCardTypeNames, ValkyryNames } from "../typescript/enums";
-import type { CanBeUndefType, IMyGameState, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, IMyGameState, IPublicPlayer, IValkyryCard, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**

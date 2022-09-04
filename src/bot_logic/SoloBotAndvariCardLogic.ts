@@ -1,9 +1,8 @@
-import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DeckCardType, IMyGameState, IPublicPlayer, MoveArgumentsType, PlayerCardType, SuitNamesKeyofTypeofType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IMyGameState, IPublicPlayer, MoveArgumentsType, PlayerCardType, SuitNamesKeyofTypeofType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>

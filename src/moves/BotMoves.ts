@@ -1,11 +1,11 @@
-import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, InvalidMoveType, IPlayer, IPublicPlayer, Move, PublicPlayerCoinType } from "../typescript/interfaces";
 
+// TODO Rework Move to local interface!
 // TODO Add Bot place all coins for human player opened in solo game
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -19,7 +19,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPla
  * @param coinsOrder Порядок выкладки монет.
  * @returns
  */
-export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
+export const BotsPlaceAllCoinsMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Check it bot can't play in multiplayer now...
     const isValidMove: boolean =

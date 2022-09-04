@@ -1,6 +1,5 @@
-import type { Ctx } from "boardgame.io";
 import { ArtefactNames, DrawNames, GameModeNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
-import type { DeckCardType, DiscardCampCardType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
+import type { Ctx, DeckCardType, DiscardCampCardType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 
 describe(`Test AddCoinToPouchAction method`, (): void => {

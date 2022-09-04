@@ -1,3 +1,4 @@
+import type { Game } from 'boardgame.io';
 import { Lobby } from 'boardgame.io/react';
 import { BoardGame } from "./Game";
 import { GameBoard } from "./GameBoard";
@@ -17,7 +18,7 @@ const LobbyClient = (): JSX.Element => <Lobby
     lobbyServer={`http://${window.location.hostname}:8000`}
     gameComponents={
         [{
-            game: BoardGame,
+            game: BoardGame as Game,
             board: GameBoard,
         }]
     }

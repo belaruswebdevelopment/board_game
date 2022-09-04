@@ -1,4 +1,3 @@
-import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ClickCardAction, DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickCardToPickDistinctionAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
@@ -7,7 +6,7 @@ import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDisp
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript/interfaces";
+import type { CanBeVoidType, Ctx, IMyGameState, InvalidMoveType, Move } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -21,7 +20,7 @@ import type { CanBeVoidType, IMyGameState, InvalidMoveType } from "../typescript
  * @param cardId Id карты.
  * @returns
  */
-export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const ClickCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, cardId);
@@ -43,7 +42,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
  * @param cardId Id карты.
  * @returns
  */
-export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const ClickCardToPickDistinctionMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickDistinctionCard, cardId);
@@ -65,7 +64,7 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
  * @param suit Фракция.
  * @returns
  */
-export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const ClickDistinctionCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, suit);
@@ -89,7 +88,7 @@ export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames,
+export const DiscardCardFromPlayerBoardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames,
     cardId: number): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, {
@@ -114,7 +113,7 @@ export const DiscardCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameSta
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const DiscardCard2PlayersMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.discardCard, cardId);
@@ -136,7 +135,7 @@ export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx
  * @param cardId Id карты.
  * @returns
  */
-export const GetEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const GetEnlistmentMercenariesMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, cardId);
@@ -158,7 +157,7 @@ export const GetEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const GetMjollnirProfitMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const GetMjollnirProfitMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, suit);
@@ -179,7 +178,7 @@ export const GetMjollnirProfitMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
  * @param ctx
  * @returns
  */
-export const PassEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx):
+export const PassEnlistmentMercenariesMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2, null);
@@ -202,7 +201,7 @@ export const PassEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameStat
  * @param cardId Id карты.
  * @returns
  */
-export const PickDiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const PickDiscardCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickDiscardCard, cardId);
@@ -224,7 +223,7 @@ export const PickDiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ct
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const PlaceEnlistmentMercenariesMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.placeEnlistmentMercenaries, suit);
@@ -245,7 +244,7 @@ export const PlaceEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameSta
  * @param ctx
  * @returns
  */
-export const StartEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx):
+export const StartEnlistmentMercenariesMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, null);

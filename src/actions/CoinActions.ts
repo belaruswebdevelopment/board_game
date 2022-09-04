@@ -1,10 +1,9 @@
-import type { Ctx } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, Ctx, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>

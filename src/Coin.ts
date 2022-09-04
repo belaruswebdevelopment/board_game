@@ -102,7 +102,7 @@ export const CreateCoin = ({
     isOpened = false,
     isTriggerTrading = false,
     value,
-}: CreateCoinType = {} as CreateCoinType): ICoin => ({
+}: CreateCoinType): ICoin => ({
     isInitial,
     isOpened,
     isTriggerTrading,

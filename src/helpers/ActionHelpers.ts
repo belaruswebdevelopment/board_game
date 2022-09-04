@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отображением профита.</h3>

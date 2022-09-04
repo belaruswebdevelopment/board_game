@@ -40,7 +40,7 @@ export const BuildMultiSuitCards = (configOptions: GameNamesKeyofTypeofType[]): 
 const CreateMultiSuitCard = ({
     type = RusCardTypeNames.Multi_Suit_Card,
     name,
-}: CreateMultiSuitCardType = {} as CreateMultiSuitCardType): IMultiSuitCard => ({
+}: CreateMultiSuitCardType): IMultiSuitCard => ({
     type,
     name,
 });
@@ -65,7 +65,7 @@ export const CreateMultiSuitPlayerCard = ({
     suit,
     rank,
     points,
-}: CreateMultiSuitPlayerCardType = {} as CreateMultiSuitPlayerCardType): IMultiSuitPlayerCard => ({
+}: CreateMultiSuitPlayerCardType): IMultiSuitPlayerCard => ({
     type,
     name,
     suit,

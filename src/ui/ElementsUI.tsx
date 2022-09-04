@@ -1,10 +1,9 @@
-import type { BoardProps } from "boardgame.io/react";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, ButtonNameType, CanBeNullType, IBackground, IMyGameState, IndexOf, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernsConfigType } from "../typescript/interfaces";
+import type { AllCardType, ArgsType, BoardProps, ButtonNameType, CanBeNullType, IBackground, IMyGameState, IndexOf, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>

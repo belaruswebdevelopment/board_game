@@ -1,8 +1,6 @@
-import type { Ctx } from "boardgame.io";
-import type { BoardProps } from "boardgame.io/react";
 import { ThrowMyError } from "../Error";
 import { ButtonMoveNames, ButtonNames, CardMoveNames, ErrorNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardType, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, Ctx, DeckCardType, IHeroCard, IMyGameState, IPublicPlayer, IStack, MoveArgumentsType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -234,8 +232,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
                 ctx.currentPlayer);
         }
         if (data !== undefined && boardCells !== undefined) {
-            const stage: CanBeUndefType<StageNames> =
-                ctx.activePlayers?.[Number(ctx.currentPlayer)] as CanBeUndefType<StageNames>;
+            const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
             let moveName: CardMoveNames;
             switch (stage) {
                 case StageNames.pickDistinctionCard:

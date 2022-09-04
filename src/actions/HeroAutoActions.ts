@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
@@ -8,7 +7,7 @@ import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } from "../typescript/enums";
-import type { AutoActionArgsType, CanBeUndefType, IActionFunctionWithoutParams, IAutoActionFunction, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoType, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { AutoActionArgsType, CanBeUndefType, Ctx, IActionFunctionWithoutParams, IAutoActionFunction, ICoin, IMyGameState, IPlayer, IPublicPlayer, OneOrTwoType, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**

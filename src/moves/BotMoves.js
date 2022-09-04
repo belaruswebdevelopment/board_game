@@ -3,6 +3,7 @@ import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
+// TODO Rework Move to local interface!
 // TODO Add Bot place all coins for human player opened in solo game
 /**
  * <h3>Выкладка монет ботами.</h3>

@@ -1,10 +1,9 @@
-import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
 import { TotalRank, TotalRankWithoutThrud } from "../score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DeckCardType, IHeroCard, IMyGameState, IPublicPlayer, MoveArgumentsType, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IHeroCard, IMyGameState, IPublicPlayer, MoveArgumentsType, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты конкретной фракции из таверны соло ботом.</h3>

@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -7,7 +6,7 @@ import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/Co
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, CoinType, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, CoinType, Ctx, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>

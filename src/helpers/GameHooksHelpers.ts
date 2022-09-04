@@ -1,9 +1,8 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty } from "../Tavern";
 import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardType, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, DeckCardType, IMyGameState, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";

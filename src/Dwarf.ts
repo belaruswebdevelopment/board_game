@@ -72,7 +72,7 @@ export const CreateDwarfCard = ({
     rank = 1,
     points,
     name,
-}: CreateDwarfCardType = {} as CreateDwarfCardType): IDwarfCard => ({
+}: CreateDwarfCardType): IDwarfCard => ({
     type,
     suit,
     rank,

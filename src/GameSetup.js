@@ -25,8 +25,8 @@ import { GameModeNames } from "./typescript/enums";
  */
 export const SetupGame = (ctx) => {
     // TODO Rework it!
-    const mode = ctx.numPlayers === 1 ? GameModeNames.Solo1 : ctx.numPlayers === 2
-        ? GameModeNames.SoloAndvari : ctx.numPlayers === 3 ? GameModeNames.Multiplayer : GameModeNames.Basic, suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, soloGameDifficultyLevel = null, soloGameAndvariStrategyLevel = null, soloGameAndvariStrategyVariantLevel = null, explorerDistinctionCardId = null, 
+    const mode = ctx.numPlayers === 2 ? GameModeNames.Solo1 : ctx.numPlayers === 3
+        ? GameModeNames.SoloAndvari : ctx.numPlayers === 4 ? GameModeNames.Multiplayer : GameModeNames.Basic, suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, soloGameDifficultyLevel = null, soloGameAndvariStrategyLevel = null, soloGameAndvariStrategyVariantLevel = null, explorerDistinctionCardId = null, 
     // TODO Rework it!
     odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = null, expansions = {
         basic: {

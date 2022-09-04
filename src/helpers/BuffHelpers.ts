@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
-import type { BuffValueType, CanBeUndefType, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { BuffValueType, CanBeUndefType, Ctx, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>

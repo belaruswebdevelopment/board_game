@@ -1,4 +1,3 @@
-import type { Ctx } from "boardgame.io";
 import { soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
@@ -8,7 +7,7 @@ import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CanBeVoidType, HeroesForSoloGameForStrategyBotAndvariArrayType, HeroNamesForEasyStrategyAndvariKeyofTypeofType, HeroNamesForHardStrategyAndvariKeyofTypeofType, IHeroCard, IMyGameState, IndexOf, IPublicPlayer, OneOrTwoOrThreeOrFour, SuitNamesKeyofTypeofType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CanBeVoidType, Ctx, HeroesForSoloGameForStrategyBotAndvariArrayType, HeroNamesForEasyStrategyAndvariKeyofTypeofType, HeroNamesForHardStrategyAndvariKeyofTypeofType, IHeroCard, IMyGameState, IndexOf, IPublicPlayer, OneOrTwoOrThreeOrFour, SuitNamesKeyofTypeofType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloModeAndvari'.</h3>

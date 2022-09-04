@@ -89,7 +89,7 @@ export const BuildHeroes = (configOptions, mode) => {
  * @param stack Действия.
  * @returns Герой.
  */
-const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, } = {}) => ({
+const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, }) => ({
     type,
     name,
     description,
@@ -118,7 +118,7 @@ const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit
  * @param points Очки.
  * @returns Карта героя на поле игрока.
  */
-export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, suit, rank, points, } = {}) => ({
+export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, suit, rank, points, }) => ({
     type,
     name,
     description,

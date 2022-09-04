@@ -49,7 +49,7 @@ export const BuildRoyalOfferingCards = (data) => {
  * @param name Название.
  * @returns Карта королевской награды.
  */
-const CreateRoyalOfferingCard = ({ type = RusCardTypeNames.Royal_Offering_Card, value, stack, name, } = {}) => ({
+const CreateRoyalOfferingCard = ({ type = RusCardTypeNames.Royal_Offering_Card, value, stack, name, }) => ({
     type,
     value,
     stack,

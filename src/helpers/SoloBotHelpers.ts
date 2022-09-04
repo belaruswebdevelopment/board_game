@@ -1,8 +1,7 @@
-import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, MoveArgumentsType, PublicPlayerCoinType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, Ctx, IMoveCoinsArguments, IMyGameState, IPlayer, IPublicPlayer, MoveArgumentsType, PublicPlayerCoinType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет минимальную видимую монету соло бота.</h3>

@@ -108,7 +108,7 @@ const CreateArtefactCampCard = ({
     validators,
     actions,
     stack,
-}: CreateArtefactCampCardType = {} as CreateArtefactCampCardType): IArtefactCampCard => ({
+}: CreateArtefactCampCardType): IArtefactCampCard => ({
     type,
     path,
     name,
@@ -143,7 +143,7 @@ const CreateArtefactPlayerCampCard = ({
     suit,
     rank,
     points = null,
-}: CreateArtefactPlayerCampCardType = {} as CreateArtefactPlayerCampCardType): IArtefactPlayerCampCard => ({
+}: CreateArtefactPlayerCampCardType): IArtefactPlayerCampCard => ({
     type,
     path,
     name,
@@ -174,7 +174,7 @@ const CreateMercenaryCampCard = ({
     path,
     name,
     variants,
-}: CreateMercenaryCampCardType = {} as CreateMercenaryCampCardType): IMercenaryCampCard => ({
+}: CreateMercenaryCampCardType): IMercenaryCampCard => ({
     type,
     path,
     name,
@@ -203,7 +203,7 @@ export const CreateMercenaryPlayerCampCard = ({
     points,
     name,
     path,
-}: CreateMercenaryPlayerCampCardType = {} as CreateMercenaryPlayerCampCardType): IMercenaryPlayerCampCard => ({
+}: CreateMercenaryPlayerCampCardType): IMercenaryPlayerCampCard => ({
     type,
     suit,
     rank,

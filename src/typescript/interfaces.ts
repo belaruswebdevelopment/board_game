@@ -1,7 +1,11 @@
-import type { ActionPayload, ActionShape, ActivePlayersArg, Ctx, Move, PlayerID, Plugin, State, TurnOrderConfig } from "boardgame.io";
+import type { ActionPayload, ActionShape, ActivePlayersArg, LogEntry, LongFormMove, MoveFn, PlayerID, Plugin, PluginState, TurnOrderConfig, Undo } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
+import type { ClientOpts, _ClientImpl } from "boardgame.io/dist/types/src/client/client";
 // eslint-disable-next-line import/no-unresolved
 import { Flow } from "boardgame.io/dist/types/src/core/flow";
+import type { EventsAPI } from "boardgame.io/dist/types/src/plugins/plugin-events";
+import type { LogAPI } from "boardgame.io/dist/types/src/plugins/plugin-log";
+import type { RandomAPI } from "boardgame.io/dist/types/src/plugins/random/random";
 import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BuffNames, ButtonMoveNames, ButtonNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 /**
@@ -1268,6 +1272,8 @@ export type ZeroOrOneOrTwoType = ZeroOrOneType | 2;
  */
 type ThreeOrFourOrFiveType = 3 | 4 | 5;
 
+export type TwoOrThreeOrFourOrFive = 2 | ThreeOrFourOrFiveType;
+
 /**
  * <h3>Типы данных для 0 | 1 | 2 | 3 | 4.</h3>
  */
@@ -1910,15 +1916,15 @@ export type IndexOf<T extends readonly unknown[], S extends number[] = []> =
     T[`length`] extends S[`length`] ? S[number] : IndexOf<T, [S[`length`], ...S]>;
 
 // My Implementations
-export interface Game<G, CtxWithPlugins extends Ctx, SetupData = unknown> {
+export interface Game<G extends IMyGameState, CtxWithPlugins extends Ctx, SetupData = unknown> {
     name?: string;
-    minPlayers?: 1;
+    minPlayers?: 2;
     maxPlayers?: 5;
     deltaState?: boolean;
     disableUndo?: boolean;
     seed?: string | number;
     setup?: (ctx: CtxWithPlugins, setupData?: SetupData) => G;
-    validateSetupData?: (setupData: SetupData | undefined, numPlayers: number) => string | undefined;
+    validateSetupData?: (setupData: SetupData | undefined, numPlayers: TwoOrThreeOrFourOrFive) => string | undefined;
     moves?: MoveMap<G, CtxWithPlugins>;
     phases?: PhaseMap<G, CtxWithPlugins>;
     turn?: TurnConfig<G, CtxWithPlugins, null>;
@@ -1950,11 +1956,11 @@ export interface Game<G, CtxWithPlugins extends Ctx, SetupData = unknown> {
     flow?: ReturnType<typeof Flow>;
 }
 
-export type PhaseMap<G, CtxWithPlugins extends Ctx> = {
+export type PhaseMap<G extends IMyGameState, CtxWithPlugins extends Ctx> = {
     [key in KeyofType<IMoveBy> as key extends `default` ? never : key]: PhaseConfig<G, CtxWithPlugins, key>;
 };
 
-export interface PhaseConfig<G, CtxWithPlugins extends Ctx, phase extends KeyofType<IMoveBy>> {
+export interface PhaseConfig<G extends IMyGameState, CtxWithPlugins extends Ctx, phase extends KeyofType<IMoveBy>> {
     start?: boolean;
     next?: ((G: G, ctx: CtxWithPlugins) => PhaseNames | void) | PhaseNames;
     onBegin?: (G: G, ctx: CtxWithPlugins) => unknown;
@@ -1974,12 +1980,13 @@ export interface PhaseConfig<G, CtxWithPlugins extends Ctx, phase extends KeyofT
     };
 }
 
-export type MoveMap<G, CtxWithPlugins extends Ctx> = {
+export type MoveMap<G extends IMyGameState, CtxWithPlugins extends Ctx> = {
     // TODO it!
     [moveName: string]: Move<G, CtxWithPlugins>;
 };
 
-export interface TurnConfig<G, CtxWithPlugins extends Ctx, phase extends CanBeNullType<KeyofType<IMoveBy>>> {
+export interface TurnConfig<G extends IMyGameState, CtxWithPlugins extends Ctx,
+    phase extends CanBeNullType<KeyofType<IMoveBy>>> {
     activePlayers?: ActivePlayersArg;
     minMoves?: number;
     maxMoves?: number;
@@ -2003,12 +2010,79 @@ export interface TurnConfig<G, CtxWithPlugins extends Ctx, phase extends CanBeNu
     };
 }
 
-export type StageMap<G, CtxWithPlugins extends Ctx, phase extends CanBeNullType<KeyofType<IMoveBy>>> = {
-    [key in KeyofType<IMoveBy[phase extends null ? `default` : phase]> as
-    key extends `${`default`}${string}` ? never : key]: StageConfig<G, CtxWithPlugins>;
-};
+export type StageMap<G extends IMyGameState, CtxWithPlugins extends Ctx,
+    phase extends CanBeNullType<KeyofType<IMoveBy>>> = {
+        [key in KeyofType<IMoveBy[phase extends null ? `default` : phase]> as
+        key extends `${`default`}${string}` ? never : key]: StageConfig<G, CtxWithPlugins>;
+    };
 
-export interface StageConfig<G, CtxWithPlugins extends Ctx> {
+export interface StageConfig<G extends IMyGameState, CtxWithPlugins extends Ctx> {
     moves?: MoveMap<G, CtxWithPlugins>;
     next?: PhaseNames;
 }
+
+export type Move<G extends IMyGameState, CtxWithPlugins extends Ctx> =
+    MoveFn<G, CtxWithPlugins> | LongFormMove<G, CtxWithPlugins>;
+
+export interface Ctx {
+    numPlayers: TwoOrThreeOrFourOrFive;
+    playOrder: Array<PlayerID>;
+    playOrderPos: number;
+    playerID?: PlayerID;
+    activePlayers: null | ActivePlayers;
+    currentPlayer: PlayerID;
+    numMoves?: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    gameover?: any;
+    turn: number;
+    phase: PhaseNames;
+    _activePlayersMinMoves?: Record<PlayerID, number>;
+    _activePlayersMaxMoves?: Record<PlayerID, number>;
+    _activePlayersNumMoves?: Record<PlayerID, number>;
+    _prevActivePlayers?: Array<{
+        activePlayers: null | ActivePlayers;
+        _activePlayersMinMoves?: Record<PlayerID, number>;
+        _activePlayersMaxMoves?: Record<PlayerID, number>;
+        _activePlayersNumMoves?: Record<PlayerID, number>;
+    }>;
+    _nextActivePlayers?: ActivePlayersArg;
+    _random?: {
+        seed: string | number;
+    };
+    events?: EventsAPI;
+    log?: LogAPI;
+    random?: RandomAPI;
+}
+
+export interface ActivePlayers {
+    [playerID: string]: StageNames;
+}
+
+export type BoardProps<G extends IMyGameState> =
+    ClientState<G> & Omit<WrappedBoardProps, keyof ExposedClientProps<G>> & ExposedClientProps<G> & {
+        isMultiplayer: boolean;
+    };
+
+export type ClientState<G extends IMyGameState> = null | (State<G, Ctx> & {
+    isActive: boolean;
+    isConnected: boolean;
+    log: LogEntry[];
+});
+
+export interface State<G extends IMyGameState, CtxWithPlugins extends Ctx> {
+    G: G;
+    ctx: Ctx | CtxWithPlugins;
+    deltalog?: Array<LogEntry>;
+    plugins: {
+        [pluginName: string]: PluginState;
+    };
+    _undo: Array<Undo<G>>;
+    _redo: Array<Undo<G>>;
+    _stateID: number;
+}
+
+type WrappedBoardProps = Pick<ClientOpts, WrappedBoardDelegates | 'debug'>;
+type ExposedClientProps<G> = Pick<_ClientImpl<G>, 'log' | 'moves' | 'events' | 'reset' | 'undo' | 'redo' | 'playerID'
+    | 'matchID' | 'matchData' | 'sendChatMessage' | 'chatMessages'>;
+
+type WrappedBoardDelegates = 'matchID' | 'playerID' | 'credentials';

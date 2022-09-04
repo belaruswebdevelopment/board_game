@@ -1,9 +1,8 @@
-import type { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, IHeroCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, Ctx, IHeroCard, IMyGameState, IPublicPlayer, IStack, PlayerCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**

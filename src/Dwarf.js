@@ -64,7 +64,7 @@ export const BuildDwarfCards = (data) => {
  * @param name Название.
  * @returns Карта дворфа.
  */
-export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, suit, rank = 1, points, name, } = {}) => ({
+export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, suit, rank = 1, points, name, }) => ({
     type,
     suit,
     rank,

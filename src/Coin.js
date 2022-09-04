@@ -92,7 +92,7 @@ export const CountMarketCoins = (G) => {
  * @param value Значение.
  * @returns Монета.
  */
-export const CreateCoin = ({ isInitial = false, isOpened = false, isTriggerTrading = false, value, } = {}) => ({
+export const CreateCoin = ({ isInitial = false, isOpened = false, isTriggerTrading = false, value, }) => ({
     isInitial,
     isOpened,
     isTriggerTrading,

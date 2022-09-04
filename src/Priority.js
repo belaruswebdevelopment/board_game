@@ -11,7 +11,7 @@
  * @param isExchangeable Является ли кристалл обменным.
  * @returns Кристалл.
  */
-export const CreatePriority = ({ isExchangeable = true, value, } = {}) => ({
+export const CreatePriority = ({ isExchangeable = true, value, }) => ({
     isExchangeable,
     value,
 });

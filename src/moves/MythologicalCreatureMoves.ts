@@ -1,10 +1,9 @@
-import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { godConfig } from "../data/MythologicalCreatureData";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { ErrorNames, RusCardTypeNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPublicPlayer, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, InvalidMoveType, IPublicPlayer, Move, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Использование способности карты Бога.</h3>
@@ -18,7 +17,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPub
  * @param cardId Id выбираемой карты Бога.
  * @returns
  */
-export const UseGodCardPowerMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const UseGodCardPowerMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Check/Fix StageNames.default3
     const isValidMove: boolean =

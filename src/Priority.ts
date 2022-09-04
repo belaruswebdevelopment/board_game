@@ -16,7 +16,7 @@ import type { CreatePriorityType, IPriority, NumPlayersType, PrioritiesConfigTyp
 export const CreatePriority = ({
     isExchangeable = true,
     value,
-}: CreatePriorityType = {} as CreatePriorityType): IPriority => ({
+}: CreatePriorityType): IPriority => ({
     isExchangeable,
     value,
 });

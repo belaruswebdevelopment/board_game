@@ -108,7 +108,7 @@ const CreateHero = ({
     validators,
     actions,
     stack,
-}: CreateHeroCardType = {} as CreateHeroCardType): IHeroCard => ({
+}: CreateHeroCardType): IHeroCard => ({
     type,
     name,
     description,
@@ -145,7 +145,7 @@ export const CreateHeroPlayerCard = ({
     suit,
     rank,
     points,
-}: CreateHeroPlayerCardType = {} as CreateHeroPlayerCardType): IHeroPlayerCard => ({
+}: CreateHeroPlayerCardType): IHeroPlayerCard => ({
     type,
     name,
     description,

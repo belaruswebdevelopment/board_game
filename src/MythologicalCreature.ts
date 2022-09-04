@@ -67,7 +67,7 @@ const CreateGiantCard = ({
     name,
     placedSuit,
     capturedCard = null,
-}: CreateGiantCardType = {} as CreateGiantCardType): IGiantCard => ({
+}: CreateGiantCardType): IGiantCard => ({
     type,
     name,
     placedSuit,
@@ -92,7 +92,7 @@ const CreateGodCard = ({
     name,
     points,
     isPowerTokenUsed = null,
-}: CreateGodCardType = {} as CreateGodCardType): IGodCard => ({
+}: CreateGodCardType): IGodCard => ({
     type,
     name,
     points,
@@ -119,7 +119,7 @@ const CreateMythicalAnimalCard = ({
     suit,
     rank = 1,
     points = null,
-}: CreateMythicalAnimalCardType = {} as CreateMythicalAnimalCardType): IMythicalAnimalCard => ({
+}: CreateMythicalAnimalCardType): IMythicalAnimalCard => ({
     type,
     name,
     suit,
@@ -143,7 +143,7 @@ const CreateValkyryCard = ({
     type = RusCardTypeNames.Valkyry_Card,
     name,
     strengthTokenNotch = null,
-}: CreateValkyryCardType = {} as CreateValkyryCardType): IValkyryCard => ({
+}: CreateValkyryCardType): IValkyryCard => ({
     type,
     name,
     strengthTokenNotch,

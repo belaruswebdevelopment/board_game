@@ -1,4 +1,3 @@
-import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ClickCardAction, PickCardToPickDistinctionAction } from "../actions/Actions";
 import { PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
@@ -8,7 +7,7 @@ import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot } from "../helpers/SoloBotHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { CoinTypeNames, StageNames, SuitNames } from "../typescript/enums";
-import type { CanBeVoidType, HeroesForSoloGameArrayType, IMyGameState, IndexOf, InvalidMoveType } from "../typescript/interfaces";
+import type { CanBeVoidType, Ctx, HeroesForSoloGameArrayType, IMyGameState, IndexOf, InvalidMoveType, Move } from "../typescript/interfaces";
 
 // TODO Add all solo bot moves!
 /**
@@ -23,7 +22,7 @@ import type { CanBeVoidType, HeroesForSoloGameArrayType, IMyGameState, IndexOf, 
  * @param cardId Id карты.
  * @returns
  */
-export const SoloBotClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+export const SoloBotClickCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default4, cardId);
@@ -45,8 +44,8 @@ export const SoloBotClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: C
  * @param cardId Id карты.
  * @returns
  */
-export const SoloBotClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
-    CanBeVoidType<InvalidMoveType> => {
+export const SoloBotClickCardToPickDistinctionMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx:
+    Ctx, cardId: number): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.pickDistinctionCardSoloBot, cardId);
     if (!isValidMove) {
@@ -67,7 +66,7 @@ export const SoloBotClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMy
  * @param heroId Id героя.
  * @returns
  */
-export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
+export const SoloBotClickHeroCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.pickHeroSoloBot, heroId);
@@ -92,7 +91,7 @@ export const SoloBotClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @param coinsOrder Порядок выкладки монет.
  * @returns
  */
-export const SoloBotPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
+export const SoloBotPlaceAllCoinsMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.default4, coinsOrder);
@@ -114,7 +113,7 @@ export const SoloBotPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const SoloBotPlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const SoloBotPlaceThrudHeroMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.placeThrudHeroSoloBot, suit);
@@ -136,7 +135,7 @@ export const SoloBotPlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, c
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const SoloBotPlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
+export const SoloBotPlaceYludHeroMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.default2, suit);
@@ -159,7 +158,7 @@ export const SoloBotPlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @param type Тип монеты.
  * @returns
  */
-export const SoloBotClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
+export const SoloBotClickCoinToUpgradeMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, StageNames.upgradeCoin, {

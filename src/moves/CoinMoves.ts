@@ -1,4 +1,3 @@
-import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
@@ -6,7 +5,7 @@ import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { CoinTypeNames, ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, InvalidMoveType, IPlayer, IPublicPlayer, Move, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Check moves with solo mode!
 /**
@@ -21,7 +20,7 @@ import type { CanBeUndefType, CanBeVoidType, IMyGameState, InvalidMoveType, IPla
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
+export const ClickBoardCoinMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Add Place coins async
     const isValidMove: boolean =
@@ -110,7 +109,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @param type Тип монеты.
  * @returns
  */
-export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
+export const ClickCoinToUpgradeMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.upgradeCoin, {
@@ -137,7 +136,7 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @param type Тип монеты.
  * @returns
  */
-export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
+export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickConcreteCoinToUpgrade, {
@@ -162,7 +161,7 @@ export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameSta
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickHandCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
+export const ClickHandCoinMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
@@ -188,7 +187,7 @@ export const ClickHandCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickHandCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
+export const ClickHandCoinUlineMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, coinId);
@@ -250,7 +249,7 @@ export const ClickHandCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickHandTradingCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number):
+export const ClickHandTradingCoinUlineMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeTradingCoinsUline, coinId);

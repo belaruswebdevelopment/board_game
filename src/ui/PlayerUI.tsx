@@ -1,5 +1,3 @@
-import type { Ctx } from "boardgame.io";
-import type { BoardProps } from "boardgame.io/react";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -9,7 +7,7 @@ import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, ErrorNames, GameModeNames, HeroNames, MoveValidatorNames, MultiSuitCardNames, PhaseNames, RusCardTypeNames, StageNames, SuitMoveNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeNullType, CanBeUndefType, CoinType, IHeroCard, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IndexOf, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveArgumentsType, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsConfigType, VariantType } from "../typescript/interfaces";
+import type { BoardProps, CampDeckCardType, CanBeNullType, CanBeUndefType, CoinType, Ctx, IHeroCard, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMyGameState, IndexOf, IPlayer, IPublicPlayer, IStack, ITavernInConfig, MoveArgumentsType, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsConfigType, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -69,7 +67,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: CanB
             playerHeaders: JSX.Element[] = [],
             playerHeadersCount: JSX.Element[] = [],
             player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p],
-            stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p] as StageNames;
+            stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p];
         if (player === undefined) {
             return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
         }
@@ -499,7 +497,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
         moveMainArgs: MoveArgumentsType<number[] | IMoveCoinsArguments[]> = [];
     let moveName: CanBeUndefType<CoinMoveNames>;
     for (let p = 0; p < ctx.numPlayers; p++) {
-        const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p] as StageNames;
+        const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p];
         switch (ctx.phase) {
             case PhaseNames.Bids:
                 moveName = CoinMoveNames.ClickBoardCoinMove;
@@ -812,7 +810,7 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
     }
     let moveName: CanBeUndefType<CoinMoveNames>;
     for (let p = 0; p < ctx.numPlayers; p++) {
-        const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p] as StageNames;
+        const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[p];
         switch (ctx.phase) {
             case PhaseNames.Bids:
                 moveName = CoinMoveNames.ClickHandCoinMove;

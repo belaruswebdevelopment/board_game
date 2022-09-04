@@ -1,5 +1,4 @@
-import type { Ctx } from "boardgame.io";
-import type { CanBeNullType, CanBeUndefType, DebugDrawDataType, IDebugData, IMyGameState, KeyofType, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Ctx, DebugDrawDataType, IDebugData, IMyGameState, KeyofType, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>

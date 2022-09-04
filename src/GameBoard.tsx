@@ -1,7 +1,6 @@
-import type { BoardProps } from "boardgame.io/react";
 import React from "react";
 import { GameModeNames } from "./typescript/enums";
-import type { CanBeNullType, IMyGameState } from "./typescript/interfaces";
+import type { BoardProps, CanBeNullType, IMyGameState } from "./typescript/interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
 import { DrawCamp, DrawCurrentPhaseStage, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawMarketCoins, DrawProfit, DrawStrategyForSoloBotAndvariUI, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";

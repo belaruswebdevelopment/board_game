@@ -6,6 +6,7 @@ import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, BuffNames, ErrorNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+// TODO Rework StageArg to be implemented my interface type
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
