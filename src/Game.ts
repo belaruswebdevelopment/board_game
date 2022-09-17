@@ -159,7 +159,7 @@ export const BoardGame: Game<IMyGameState, Ctx> = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },
@@ -288,7 +288,7 @@ export const BoardGame: Game<IMyGameState, Ctx> = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },
@@ -375,7 +375,7 @@ export const BoardGame: Game<IMyGameState, Ctx> = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },
@@ -491,7 +491,7 @@ export const BoardGame: Game<IMyGameState, Ctx> = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },

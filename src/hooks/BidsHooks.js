@@ -20,7 +20,7 @@ import { BuffNames, ErrorNames, GameModeNames } from "../typescript/enums";
 export const CheckEndBidsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty = Object.values(G.publicPlayers).map((player) => player).every((player, playerIndex) => {
-            if ((G.mode === GameModeNames.Solo1 && playerIndex === 1)
+            if ((G.mode === GameModeNames.Solo && playerIndex === 1)
                 || (G.mode === GameModeNames.SoloAndvari && playerIndex === 1)
                 || (G.mode === GameModeNames.Multiplayer
                     && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
@@ -30,7 +30,7 @@ export const CheckEndBidsPhase = (G, ctx) => {
                 }
                 return privatePlayer.handCoins.every((coin) => coin === null);
             }
-            else if ((G.mode === GameModeNames.Solo1 && playerIndex === 0)
+            else if ((G.mode === GameModeNames.Solo && playerIndex === 0)
                 || (G.mode === GameModeNames.SoloAndvari && playerIndex === 0)
                 || (G.mode === GameModeNames.Basic && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 return player.handCoins.every((coin, coinIndex) => {
@@ -65,7 +65,7 @@ export const CheckEndBidsTurn = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
-    if ((G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`)
+    if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
         || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
         || G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;

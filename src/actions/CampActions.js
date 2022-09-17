@@ -87,7 +87,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G, ctx, value)
  * <h3>Действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты для сбросом по действию карты лагеря артефакта Hofud.</li>
+ * <li>При выборе карты для сброса по действию карты лагеря артефакта Hofud.</li>
  * </ol>
  *
  * @param G
@@ -105,6 +105,7 @@ export const DiscardSuitCardAction = (G, ctx, cardId) => {
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     DiscardPickedCard(G, discardedCard);
+    AddDataToLog(G, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Artefact_Card}' '${ArtefactNames.Hofud}'.`);
     player.stack = [];
 };
 /**
@@ -123,9 +124,6 @@ export const DiscardSuitCardAction = (G, ctx, cardId) => {
 export const PickCampCardAction = (G, ctx, cardId) => {
     var _a;
     const campCard = G.camp[cardId];
-    if (campCard === undefined) {
-        throw new Error(`Отсутствует кликнутая карта лагеря с id '${cardId}': это должно проверяться в MoveValidator.`);
-    }
     if (campCard === null) {
         throw new Error(`Не существует кликнутая карта лагеря с id '${cardId}'.`);
     }

@@ -5,7 +5,7 @@ export var GameModeNames;
 (function (GameModeNames) {
     GameModeNames["Basic"] = "Basic";
     GameModeNames["Multiplayer"] = "Multiplayer";
-    GameModeNames["Solo1"] = "Solo1";
+    GameModeNames["Solo"] = "Solo";
     GameModeNames["SoloAndvari"] = "Solo Andvari";
 })(GameModeNames || (GameModeNames = {}));
 /**

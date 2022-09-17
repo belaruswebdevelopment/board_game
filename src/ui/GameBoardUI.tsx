@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
-import type { BoardProps, CampCardType, CanBeNullType, CanBeUndefType, Ctx, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { BoardProps, CampCardArrayType, CampCardType, CanBeNullType, CanBeUndefType, Ctx, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -29,10 +29,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
-            const campCard: CanBeUndefType<CampCardType> = G.camp[j];
-            if (campCard === undefined) {
-                throw new Error(`В массиве карт лагеря отсутствует карта с id '${j}'.`);
-            }
+            const campCard: CampCardType = G.camp[j as IndexOf<CampCardArrayType>];
             if (campCard === null) {
                 if (data !== undefined) {
                     boardCells.push(
@@ -677,7 +674,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
                                             case GameModeNames.Multiplayer:
                                                 moveName = CardMoveNames.ClickCardMove;
                                                 break;
-                                            case GameModeNames.Solo1:
+                                            case GameModeNames.Solo:
                                                 if (ctx.currentPlayer === `0`) {
                                                     moveName = CardMoveNames.ClickCardMove;
                                                 } else if (ctx.currentPlayer === `1`) {

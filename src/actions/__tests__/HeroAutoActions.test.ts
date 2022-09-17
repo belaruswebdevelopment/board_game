@@ -24,6 +24,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
                         {
                             stageName: StageNames.pickHero,
                             drawName: DrawNames.PickHero,
+                            priority: 1,
                         },
                     ],
                 } as IPublicPlayer,

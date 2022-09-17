@@ -25,7 +25,7 @@ import { GameModeNames } from "./typescript/enums";
  */
 export const SetupGame = (ctx) => {
     // TODO Rework it!
-    const mode = ctx.numPlayers === 2 ? GameModeNames.Solo1 : ctx.numPlayers === 3
+    const mode = ctx.numPlayers === 2 ? GameModeNames.Solo : ctx.numPlayers === 3
         ? GameModeNames.SoloAndvari : ctx.numPlayers === 4 ? GameModeNames.Multiplayer : GameModeNames.Basic, suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, soloGameDifficultyLevel = null, soloGameAndvariStrategyLevel = null, soloGameAndvariStrategyVariantLevel = null, explorerDistinctionCardId = null, 
     // TODO Rework it!
     odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = null, expansions = {
@@ -33,11 +33,11 @@ export const SetupGame = (ctx) => {
             active: true,
         },
         thingvellir: {
-            active: mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari ? false : true,
+            active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : true,
         },
         // TODO Fix me to "true" after expansion finished
         idavoll: {
-            active: mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari ? false : false,
+            active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : false,
         },
     }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = null, distinctions = {}, strategyForSoloBotAndvari = {}, secret = {
         campDecks: [[], []],
@@ -86,14 +86,14 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = Array(drawSize).fill(null);
     }
-    const players = {}, publicPlayers = {}, publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, mode === GameModeNames.Solo1);
+    const players = {}, publicPlayers = {}, publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, mode === GameModeNames.Solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const randomPriorityIndex = mode === GameModeNames.Solo1 ? 0 : Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
+        const randomPriorityIndex = mode === GameModeNames.Solo ? 0 : Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
         players[i] = BuildPlayer();
-        const soloBot = (mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari) && i === 1;
+        const soloBot = (mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari) && i === 1;
         publicPlayers[i] =
             BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority, soloBot || mode === GameModeNames.Multiplayer);
     }

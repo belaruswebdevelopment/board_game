@@ -6,7 +6,7 @@ import { Flow } from "boardgame.io/dist/types/src/core/flow";
 import type { EventsAPI } from "boardgame.io/dist/types/src/plugins/plugin-events";
 import type { LogAPI } from "boardgame.io/dist/types/src/plugins/plugin-log";
 import type { RandomAPI } from "boardgame.io/dist/types/src/plugins/random/random";
-import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BuffNames, ButtonMoveNames, ButtonNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BuffNames, ButtonMoveNames, ButtonNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, GameModeNames, GameNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MoveValidatorNames, MultiSuitCardNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 /**
  * <h3>Интерфейс для скрытых от всех игроков данных.</h3>
@@ -562,7 +562,7 @@ export interface IMyGameState {
     mythologicalCreatureDeckLength: number;
     explorerDistinctionCardId: CanBeNullType<number>,
     explorerDistinctionCards: CanBeNullType<ExplorerDistinctionCardsArrayType>;
-    readonly camp: CampCardType[];
+    readonly camp: CampCardArrayType;
     readonly secret: ISecret;
     readonly campNum: 5;
     mustDiscardTavernCardJarnglofi: CanBeNullType<boolean>;
@@ -728,72 +728,76 @@ export interface IMoveBy {
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByChooseDifficultySoloModeOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly chooseHeroesForSoloMode: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly upgradeCoinSoloBot: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator];
+    readonly chooseHeroesForSoloMode: IMoveValidators[MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator];
+    readonly upgradeCoinSoloBot: IMoveValidators[MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByChooseDifficultySoloModeAndvariOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>>;
-    readonly default2: IMoveValidator<MoveArgumentsType<SoloGameAndvariStrategyNames[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator];
+    readonly default2: IMoveValidators[MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByBidOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly default2: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly default3: IMoveValidator<MoveArgumentsType<number[][]>>;
-    readonly default4: IMoveValidator<MoveArgumentsType<number[][]>>;
-    readonly default5: IMoveValidator<MoveArgumentsType<number[][]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.ClickHandCoinMoveValidator];
+    readonly default2: IMoveValidators[MoveValidatorNames.ClickBoardCoinMoveValidator];
+    readonly default3: IMoveValidators[MoveValidatorNames.BotsPlaceAllCoinsMoveValidator];
+    readonly default4: IMoveValidators[MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator];
+    readonly default5: IMoveValidators[MoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByBidUlineOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.ClickHandCoinUlineMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveBySoloBotCommonOptions {
-    readonly placeThrudHeroSoloBot: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
-    readonly pickHeroSoloBot: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly upgradeCoinSoloBot: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
+    readonly pickHeroSoloBot: IMoveValidators[MoveValidatorNames.SoloBotClickHeroCardMoveValidator];
+    readonly placeThrudHeroSoloBot: IMoveValidators[MoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator];
+    readonly upgradeCoinSoloBot: IMoveValidators[MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveBySoloBotAndvariCommonOptions {
-    readonly placeThrudHeroSoloBotAndvari: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
-    readonly pickHeroSoloBotAndvari: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly upgradeCoinSoloBotAndvari: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
+    readonly pickHeroSoloBotAndvari: IMoveValidators[MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator];
+    readonly placeThrudHeroSoloBotAndvari:
+    IMoveValidators[MoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator];
+    readonly upgradeCoinSoloBotAndvari:
+    IMoveValidators[MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных общих валидаторов у мува.</h3>
  */
 interface IMoveByCommonOptions {
-    readonly addCoinToPouch: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly chooseCoinValueForVidofnirVedrfolnirUpgrade: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly discardBoardCard: IMoveValidator<MoveArgumentsType<Partial<SuitPropertyType<number[]>>>>;
-    readonly discardSuitCard: IMoveValidator<MoveArgumentsType<IMoveCardsPlayerIdArguments>>;
-    readonly pickCampCardHolda: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly pickConcreteCoinToUpgrade: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
-    readonly pickDiscardCard: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly pickHero: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly placeMultiSuitsCards: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
-    readonly placeThrudHero: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
-    readonly upgradeCoin: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
-    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
-    // readonly useGodPower: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly addCoinToPouch: IMoveValidators[MoveValidatorNames.AddCoinToPouchMoveValidator];
+    readonly chooseCoinValueForVidofnirVedrfolnirUpgrade:
+    IMoveValidators[MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator];
+    readonly discardBoardCard: IMoveValidators[MoveValidatorNames.DiscardCardMoveValidator];
+    readonly discardSuitCard: IMoveValidators[MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator];
+    readonly pickCampCardHolda: IMoveValidators[MoveValidatorNames.ClickCampCardHoldaMoveValidator];
+    readonly clickConcreteCoinToUpgrade: IMoveValidators[MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator];
+    readonly pickDiscardCard: IMoveValidators[MoveValidatorNames.PickDiscardCardMoveValidator];
+    readonly pickHero: IMoveValidators[MoveValidatorNames.ClickHeroCardMoveValidator];
+    readonly placeMultiSuitsCards: IMoveValidators[MoveValidatorNames.PlaceMultiSuitCardMoveValidator];
+    readonly placeThrudHero: IMoveValidators[MoveValidatorNames.PlaceThrudHeroMoveValidator];
+    readonly upgradeCoin: IMoveValidators[MoveValidatorNames.ClickCoinToUpgradeMoveValidator];
+    readonly upgradeVidofnirVedrfolnirCoin:
+    IMoveValidators[MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator];
+    // readonly useGodPower: IMoveValidators[MoveValidatorNames.UseGodPowerMoveValidator];
 }
 
 /**
@@ -801,22 +805,22 @@ interface IMoveByCommonOptions {
  */
 export interface IMoveByTavernsResolutionOptions extends IMoveByCommonOptions, IMoveBySoloBotCommonOptions,
     IMoveBySoloBotAndvariCommonOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly default2: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly default3: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly default4: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly discardCard: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly placeTradingCoinsUline: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.ClickCardMoveValidator];
+    readonly default2: IMoveValidators[MoveValidatorNames.ClickCampCardMoveValidator];
+    readonly default3: IMoveValidators[MoveValidatorNames.SoloBotClickCardMoveValidator];
+    readonly default4: IMoveValidators[MoveValidatorNames.SoloBotAndvariClickCardMoveValidator];
+    readonly discardCard: IMoveValidators[MoveValidatorNames.DiscardCard2PlayersMoveValidator];
+    readonly placeTradingCoinsUline: IMoveValidators[MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByEnlistmentMercenariesOptions extends IMoveByCommonOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<null>>;
-    readonly default2: IMoveValidator<MoveArgumentsType<null>>;
-    readonly default3: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly placeEnlistmentMercenaries: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.StartEnlistmentMercenariesMoveValidator];
+    readonly default2: IMoveValidators[MoveValidatorNames.PassEnlistmentMercenariesMoveValidator];
+    readonly default3: IMoveValidators[MoveValidatorNames.GetEnlistmentMercenariesMoveValidator];
+    readonly placeEnlistmentMercenaries: IMoveValidators[MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator];
 }
 
 /**
@@ -824,9 +828,9 @@ export interface IMoveByEnlistmentMercenariesOptions extends IMoveByCommonOption
  */
 export interface IMoveByPlaceYludOptions extends IMoveByCommonOptions, IMoveBySoloBotCommonOptions,
     IMoveBySoloBotAndvariCommonOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
-    readonly default2: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
-    readonly default3: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.PlaceYludHeroMoveValidator];
+    readonly default2: IMoveValidators[MoveValidatorNames.SoloBotPlaceYludHeroMoveValidator];
+    readonly default3: IMoveValidators[MoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator];
 }
 
 /**
@@ -834,24 +838,26 @@ export interface IMoveByPlaceYludOptions extends IMoveByCommonOptions, IMoveBySo
  */
 export interface IMoveByTroopEvaluationOptions extends IMoveByCommonOptions, IMoveBySoloBotCommonOptions,
     IMoveBySoloBotAndvariCommonOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
-    readonly pickDistinctionCard: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly pickDistinctionCardSoloBot: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly pickDistinctionCardSoloBotAndvari: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.ClickDistinctionCardMoveValidator];
+    readonly pickDistinctionCard: IMoveValidators[MoveValidatorNames.ClickCardToPickDistinctionMoveValidator];
+    readonly pickDistinctionCardSoloBot:
+    IMoveValidators[MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator];
+    readonly pickDistinctionCardSoloBotAndvari:
+    IMoveValidators[MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByBrisingamensEndGameOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<Partial<SuitPropertyType<number[]>>>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator];
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByGetMjollnirProfitOptions {
-    readonly default1: IMoveValidator<MoveArgumentsType<SuitNamesKeyofTypeofType[]>>;
+    readonly default1: IMoveValidators[MoveValidatorNames.GetMjollnirProfitMoveValidator];
 }
 
 /**
@@ -932,7 +938,7 @@ export interface IMoveValidators {
     readonly AddCoinToPouchMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ClickCampCardHoldaMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly PickConcreteCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
+    readonly ClickConcreteCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     readonly ClickCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     readonly ClickHeroCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly DiscardCardMoveValidator: IMoveValidator<MoveArgumentsType<Partial<SuitPropertyType<number[]>>>>;
@@ -1807,6 +1813,12 @@ export type HeroesForSoloGameArrayType = [IHeroCard, IHeroCard, IHeroCard, IHero
  * <h3>Тип для данных массива всех карт героев для соло бота.</h3>
  */
 export type ExplorerDistinctionCardsArrayType = [DeckCardType, DeckCardType?, DeckCardType?];
+
+/**
+ * <h3>Тип для данных массива всех карт лагеря.</h3>
+ */
+export type CampCardArrayType = [CanBeNullType<CampCardType>, CanBeNullType<CampCardType>, CanBeNullType<CampCardType>,
+    CanBeNullType<CampCardType>, CanBeNullType<CampCardType>];
 
 /**
  * <h3>Тип для данных массива всех карт героев для выбора уровня сложности для соло бота.</h3>

@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
 import { CoinTypeNames, StageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CanBeVoidType, Ctx, IMyGameState, InvalidMoveType, Move } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArrayType, CanBeVoidType, Ctx, IMyGameState, IndexOf, InvalidMoveType, Move } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
@@ -60,8 +60,8 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove: Move<IMyGameState,
  * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
-export const ClickCampCardHoldaMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
-    CanBeVoidType<InvalidMoveType> => {
+export const ClickCampCardHoldaMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx,
+    cardId: IndexOf<CampCardArrayType>): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickCampCardHolda, cardId);
     if (!isValidMove) {
@@ -82,8 +82,8 @@ export const ClickCampCardHoldaMove: Move<IMyGameState, Ctx> = (G: IMyGameState,
  * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
-export const ClickCampCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx, cardId: number):
-    CanBeVoidType<InvalidMoveType> => {
+export const ClickCampCardMove: Move<IMyGameState, Ctx> = (G: IMyGameState, ctx: Ctx,
+    cardId: IndexOf<CampCardArrayType>): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default2, cardId);
     if (!isValidMove) {

@@ -34,7 +34,7 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                     && this.props.G.heroesForSoloGameForStrategyBotAndvari.length === 5 ?
                     DrawStrategyForSoloBotAndvariUI(this.props.G, this.props.ctx, this.props) as
                     JSX.Element : null,
-            drawHeroesForSoloBotUI: CanBeNullType<JSX.Element> = this.props.G.mode === GameModeNames.Solo1 ?
+            drawHeroesForSoloBotUI: CanBeNullType<JSX.Element> = this.props.G.mode === GameModeNames.Solo ?
                 DrawHeroesForSoloBotUI(this.props.G, this.props.ctx, null, this.props) as
                 JSX.Element : null,
             drawCampUI: CanBeNullType<JSX.Element> = this.props.G.expansions.thingvellir.active ?

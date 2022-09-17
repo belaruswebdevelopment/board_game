@@ -153,7 +153,7 @@ export const BoardGame = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },
@@ -281,7 +281,7 @@ export const BoardGame = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },
@@ -368,7 +368,7 @@ export const BoardGame = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },
@@ -484,7 +484,7 @@ export const BoardGame = {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    pickConcreteCoinToUpgrade: {
+                    clickConcreteCoinToUpgrade: {
                         moves: {
                             ClickConcreteCoinToUpgradeMove,
                         },

@@ -21,7 +21,7 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
         heroName: HeroNamesKeyofTypeofType;
     for (heroName in heroesConfig) {
         const heroData: IHeroData = heroesConfig[heroName];
-        if ((mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari)
+        if ((mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari)
             || ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
                 && configOptions.includes(heroData.game))) {
             const hero: IHeroCard = CreateHero({
@@ -36,17 +36,17 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
                 stack: heroData.stack,
             });
             if ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
-                || (mode === GameModeNames.Solo1 && heroName in soloGameHeroesForPlayerConfig)
+                || (mode === GameModeNames.Solo && heroName in soloGameHeroesForPlayerConfig)
                 || (mode === GameModeNames.SoloAndvari && heroName in soloGameAndvariHeroesForPlayersConfig)) {
                 heroes.push(hero);
             }
-            if (mode === GameModeNames.Solo1 && heroName in soloGameHeroesForBotConfig) {
+            if (mode === GameModeNames.Solo && heroName in soloGameHeroesForBotConfig) {
                 if (heroesForSoloBot === null) {
                     throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
                 }
                 heroesForSoloBot.push(hero);
             }
-            if (mode === GameModeNames.Solo1 && heroName in soloGameDifficultyLevelHeroesConfig) {
+            if (mode === GameModeNames.Solo && heroName in soloGameDifficultyLevelHeroesConfig) {
                 if (heroesForSoloGameDifficultyLevel === null) {
                     throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
                 }

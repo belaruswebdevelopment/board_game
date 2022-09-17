@@ -51,7 +51,7 @@ const CheckAndMoveThrud = (G, ctx, card) => {
 export const CheckAndMoveThrudAction = (G, ctx, card) => {
     const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
-        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.placeThrudHeroSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {

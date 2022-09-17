@@ -119,7 +119,7 @@ export const EndTavernsResolutionActions = (G: IMyGameState, ctx: Ctx): void => 
     if (!CheckIfCurrentTavernEmpty(G)) {
         throw new Error(`Таверна '${currentTavernConfig.name}' не может не быть пустой в конце фазы '${PhaseNames.TavernsResolution}'.`);
     }
-    if (G.mode === GameModeNames.Solo1 && (G.currentTavern === (G.tavernsNum - 1))) {
+    if (G.mode === GameModeNames.Solo && (G.currentTavern === (G.tavernsNum - 1))) {
         StartTrading(G, ctx, true);
     }
     AddDataToLog(G, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
@@ -218,7 +218,7 @@ export const OnTavernsResolutionMove = (G: IMyGameState, ctx: Ctx): void => {
  * @returns
  */
 export const OnTavernsResolutionTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.pickCardSoloBot()]);
     } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.pickCardSoloBotAndvari()]);

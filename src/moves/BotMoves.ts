@@ -68,7 +68,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState, Ctx> = (G: IMyGameState, 
                 player.boardCoins[i] = {};
                 player.handCoins[i] = null;
             } else {
-                if (handCoin !== null && (G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari)
+                if (handCoin !== null && (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
                     && ctx.currentPlayer === `0`) {
                     ChangeIsOpenedCoinStatus(handCoin, true);
                 }

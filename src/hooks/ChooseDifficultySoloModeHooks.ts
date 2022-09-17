@@ -33,7 +33,7 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
  */
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
     if (ctx.currentPlayer === `0`) {
-        if (G.mode !== GameModeNames.Solo1) {
+        if (G.mode !== GameModeNames.Solo) {
             return true;
         }
     } else if (ctx.currentPlayer === `1`) {

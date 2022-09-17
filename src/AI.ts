@@ -48,7 +48,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                         case GameModeNames.Multiplayer:
                             activeStageOfCurrentPlayer = StageNames.default3;
                             break;
-                        case GameModeNames.Solo1:
+                        case GameModeNames.Solo:
                             if (ctx.currentPlayer === `0`) {
                                 activeStageOfCurrentPlayer = StageNames.default3;
                             } else if (ctx.currentPlayer === `1`) {
@@ -93,7 +93,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                                 }
                             }
                             break;
-                        case GameModeNames.Solo1:
+                        case GameModeNames.Solo:
                             if (ctx.currentPlayer === `0`) {
                                 activeStageOfCurrentPlayer = StageNames.default1;
                             } else if (ctx.currentPlayer === `1`) {

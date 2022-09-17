@@ -62,7 +62,7 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!hero.active) {
-        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
+        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
     }
     hero.active = false;
     player.heroes.push(hero);
@@ -70,7 +70,7 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
         CheckValkyryRequirement(G, ctx, Number(ctx.currentPlayer),
             BuffNames.CountPickedHeroAmount);
     }
-    AddDataToLog(G, LogTypeNames.Public, `${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 
 /**

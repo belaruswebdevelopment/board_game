@@ -57,7 +57,7 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
@@ -174,7 +174,7 @@ export const WarriorDistinctionAwarding = (G, ctx, playerId) => {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {

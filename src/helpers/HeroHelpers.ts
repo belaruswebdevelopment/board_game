@@ -28,7 +28,7 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
         const playerCards: PlayerCardType[][] = Object.values(player.cards),
             heroesLength: number =
-                G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`
+                G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
                     ? player.heroes.filter((hero: IHeroCard): boolean =>
                         hero.name.startsWith(`Dwerg`)).length : player.heroes.length -
                     ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy

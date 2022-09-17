@@ -18,7 +18,7 @@ import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/e
  */
 export const CheckEndPlaceYludPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
-        if (G.mode === GameModeNames.Solo1 && G.tierToEnd === 0) {
+        if (G.mode === GameModeNames.Solo && G.tierToEnd === 0) {
             // TODO Check it!
             return true;
         }
@@ -148,7 +148,7 @@ export const OnPlaceYludMove = (G, ctx) => {
  * @returns
  */
 export const OnPlaceYludTurnBegin = (G, ctx) => {
-    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.placeYludHeroSoloBot()]);
     }
     else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {

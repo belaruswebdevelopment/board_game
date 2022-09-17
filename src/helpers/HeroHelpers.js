@@ -24,7 +24,7 @@ export const CheckPickHero = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
-        const playerCards = Object.values(player.cards), heroesLength = G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`
+        const playerCards = Object.values(player.cards), heroesLength = G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
             ? player.heroes.filter((hero) => hero.name.startsWith(`Dwerg`)).length : player.heroes.length -
             ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
                 || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy)

@@ -10,6 +10,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Dwarf_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -40,6 +41,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCardsDeck: [
                 {
+                    type: RusCardTypeNames.Dwarf_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -64,6 +66,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Artefact_Player_Card,
                                 name: ArtefactNames.Brisingamens,
                                 description: `Test`,
                             },
@@ -94,6 +97,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCampCardsDeck: [
                 {
+                    type: RusCardTypeNames.Artefact_Player_Card,
                     name: ArtefactNames.Brisingamens,
                     description: `Test`,
                 },
@@ -118,6 +122,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Mercenary_Player_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -148,6 +153,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCampCardsDeck: [
                 {
+                    type: RusCardTypeNames.Mercenary_Player_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -170,7 +176,9 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                 0: {
                     cards: {
                         warrior: [
-                            {},
+                            {
+                                type: RusCardTypeNames.Hero_Player_Card,
+                            },
                         ],
                     },
                 },
@@ -180,7 +188,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             DiscardAnyCardFromPlayerBoardAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.warrior, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, () => {
         const G = {
@@ -211,6 +219,7 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             taverns: [
                 [
                     {
+                        type: RusCardTypeNames.Dwarf_Card,
                         name: `Test`,
                         suit: SuitNames.warrior,
                     },
@@ -239,6 +248,7 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             ],
             discardCardsDeck: [
                 {
+                    type: RusCardTypeNames.Dwarf_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -279,7 +289,7 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             DiscardCardFromTavernAction(G, {
                 currentPlayer: `0`,
             }, 0);
-        }).toThrowError(`Не удалось сбросить карту с id '0' из таверны`);
+        }).toThrowError(`Не удалось сбросить карту с id '0' из текущей таверны с id '0'.`);
     });
     it(`shouldn't remove non-exists card from tavern and must throw Error`, () => {
         const G = {
@@ -300,7 +310,7 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             DiscardCardFromTavernAction(G, {
                 currentPlayer: `0`,
             }, 0);
-        }).toThrowError(`В текущей таверне с id '0' отсутствует карта с id '0'.`);
+        }).toThrowError(`В текущей таверне с id '0' отсутствует карта для сброса с id '0'.`);
     });
 });
 describe(`Test GetEnlistmentMercenariesAction method`, () => {

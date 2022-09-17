@@ -11,7 +11,7 @@ import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot,
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { AutoBotsMoveNames, BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, StageNames, SuitMoveNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CoinType, Ctx, DeckCardType, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IHeroCard, IMoveBy, IMoveByBidOptions, IMoveByBidUlineOptions, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeAndvariOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetMjollnirProfitOptions, IMoveByPlaceYludOptions, IMoveByTavernsResolutionOptions, IMoveByTroopEvaluationOptions, IMoveCardsPlayerIdArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardPlayerCurrentIdType, MoveValidatorGetRangeType, MythologicalCreatureDeckCardType, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernAllCardType, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -1041,19 +1041,18 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
-        // TODO Bot Andvari can't update closed coins........!
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<IMoveCoinsArguments[]> =>
             DrawPlayersBoardsCoins(G, ctx,
                 MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator) as
             MoveArgumentsType<IMoveCoinsArguments[]>,
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
             IMoveCoinsArguments => {
-            const player: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
+            const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined,
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
                     ctx.currentPlayer);
             }
-            const coins: CoinType[] = player.boardCoins,
+            const coins: PublicPlayerCoinType[] = player.boardCoins,
                 minValue: number =
                     CheckMinCoinVisibleValueForSoloBotAndvari(G, ctx, currentMoveArguments);
             if (minValue === 0) {
@@ -1119,7 +1118,7 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     // TODO Is it need for solo bot and andvari!?
-    PickConcreteCoinToUpgradeMoveValidator: {
+    ClickConcreteCoinToUpgradeMoveValidator: {
         getRange: (G: IMyGameState, ctx: Ctx): MoveArgumentsType<IMoveCoinsArguments[]> =>
             (DrawPlayersBoardsCoins(G, ctx,
                 MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) as
@@ -1414,7 +1413,7 @@ export const moveBy: IMoveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
@@ -1452,7 +1451,7 @@ export const moveBy: IMoveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
@@ -1471,7 +1470,7 @@ export const moveBy: IMoveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
@@ -1504,7 +1503,7 @@ export const moveBy: IMoveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,

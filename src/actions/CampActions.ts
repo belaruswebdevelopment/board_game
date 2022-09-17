@@ -8,7 +8,7 @@ import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardType, CanBeUndefType, Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArrayType, CampCardType, CanBeUndefType, Ctx, IMyGameState, IndexOf, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -96,7 +96,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = (G: IMyGameStat
  * <h3>Действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты для сбросом по действию карты лагеря артефакта Hofud.</li>
+ * <li>При выборе карты для сброса по действию карты лагеря артефакта Hofud.</li>
  * </ol>
  *
  * @param G
@@ -116,6 +116,7 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
         throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     DiscardPickedCard(G, discardedCard);
+    AddDataToLog(G, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Artefact_Card}' '${ArtefactNames.Hofud}'.`);
     player.stack = [];
 };
 
@@ -132,11 +133,8 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
  * @param cardId Id выбранной карты.
  * @returns
  */
-export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const campCard: CanBeUndefType<CampCardType> = G.camp[cardId];
-    if (campCard === undefined) {
-        throw new Error(`Отсутствует кликнутая карта лагеря с id '${cardId}': это должно проверяться в MoveValidator.`);
-    }
+export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: IndexOf<CampCardArrayType>): void => {
+    const campCard: CampCardType = G.camp[cardId];
     if (campCard === null) {
         throw new Error(`Не существует кликнутая карта лагеря с id '${cardId}'.`);
     }

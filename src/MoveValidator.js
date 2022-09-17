@@ -901,12 +901,11 @@ export const moveValidators = {
         validate: () => true,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
-        // TODO Bot Andvari can't update closed coins........!
         getRange: (G, ctx) => DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator),
         getValue: (G, ctx, currentMoveArguments) => {
-            const player = G.players[Number(ctx.currentPlayer)];
+            const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
             const coins = player.boardCoins, minValue = CheckMinCoinVisibleValueForSoloBotAndvari(G, ctx, currentMoveArguments);
             if (minValue === 0) {
@@ -963,7 +962,7 @@ export const moveValidators = {
         validate: () => true,
     },
     // TODO Is it need for solo bot and andvari!?
-    PickConcreteCoinToUpgradeMoveValidator: {
+    ClickConcreteCoinToUpgradeMoveValidator: {
         getRange: (G, ctx) => DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator)),
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArgument = currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -1214,7 +1213,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
@@ -1251,7 +1250,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
@@ -1269,7 +1268,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,
@@ -1301,7 +1300,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
-        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+        clickConcreteCoinToUpgrade: moveValidators.ClickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeMultiSuitsCards: moveValidators.PlaceMultiSuitCardMoveValidator,

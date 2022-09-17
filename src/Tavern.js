@@ -35,7 +35,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
         return ThrowMyError(G, ctx, ErrorNames.OnlyInSoloOrTwoPlayersGame);
     }
     const currentTavernConfig = tavernsConfig[G.currentTavern];
-    AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при игре ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) ? `в соло режиме` : `на двух игроков в игре`}.`);
+    AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при игре ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) ? `в соло режиме` : `на двух игроков в игре`}.`);
     const isCardDiscarded = DiscardCardFromTavern(G, ctx);
     if (!isCardDiscarded) {
         return ThrowMyError(G, ctx, ErrorNames.DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame, G.currentTavern);

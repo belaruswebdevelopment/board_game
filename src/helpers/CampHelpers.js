@@ -37,11 +37,8 @@ const AddCardToCamp = (G, cardIndex) => {
  */
 const AddRemainingCampCardsToDiscard = (G) => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
-    for (let i = 0; i < G.camp.length; i++) {
+    for (let i = 0; i < G.campNum; i++) {
         const campCard = G.camp[i];
-        if (campCard === undefined) {
-            throw new Error(`В массиве карт лагеря отсутствует карта лагеря с id '${i}'.`);
-        }
         if (campCard !== null) {
             const discardedCard = G.camp.splice(i, 1, null)[0];
             if (discardedCard === undefined) {

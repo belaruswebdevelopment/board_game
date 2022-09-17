@@ -1,7 +1,7 @@
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, Ctx, IMyGameState, ITavernInConfig } from "../typescript/interfaces";
+import type { CampCardArrayType, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, Ctx, IMyGameState, IndexOf, ITavernInConfig } from "../typescript/interfaces";
 
 /**
 * <h3>Заполняет лагерь новой картой из карт лагерь деки текущей эпохи.</h3>
@@ -40,11 +40,8 @@ const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
  */
 const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
-    for (let i = 0; i < G.camp.length; i++) {
-        const campCard: CanBeUndefType<CampCardType> = G.camp[i];
-        if (campCard === undefined) {
-            throw new Error(`В массиве карт лагеря отсутствует карта лагеря с id '${i}'.`);
-        }
+    for (let i = 0; i < G.campNum; i++) {
+        const campCard: CampCardType = G.camp[i as IndexOf<CampCardArrayType>];
         if (campCard !== null) {
             const discardedCard: CanBeUndefType<CampCardType> =
                 G.camp.splice(i, 1, null)[0];

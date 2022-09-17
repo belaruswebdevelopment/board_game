@@ -20,7 +20,7 @@ import type { CanBeNullType, CanBeUndefType, CanBeVoidType, Ctx, IHeroCard, IMyG
  */
 export const CheckEndPlaceYludPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
-        if (G.mode === GameModeNames.Solo1 && G.tierToEnd === 0) {
+        if (G.mode === GameModeNames.Solo && G.tierToEnd === 0) {
             // TODO Check it!
             return true;
         }
@@ -166,7 +166,7 @@ export const OnPlaceYludMove = (G: IMyGameState, ctx: Ctx): void => {
  * @returns
  */
 export const OnPlaceYludTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.placeYludHeroSoloBot()]);
     } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.placeYludHeroSoloBotAndvari()]);

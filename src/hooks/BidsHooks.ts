@@ -24,7 +24,7 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<bool
         const isEveryPlayersHandCoinsEmpty: boolean =
             Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
                 player).every((player: IPublicPlayer, playerIndex: number): boolean => {
-                    if ((G.mode === GameModeNames.Solo1 && playerIndex === 1)
+                    if ((G.mode === GameModeNames.Solo && playerIndex === 1)
                         || (G.mode === GameModeNames.SoloAndvari && playerIndex === 1)
                         || (G.mode === GameModeNames.Multiplayer
                             && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
@@ -34,7 +34,7 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<bool
                                 playerIndex);
                         }
                         return privatePlayer.handCoins.every((coin: CoinType): boolean => coin === null);
-                    } else if ((G.mode === GameModeNames.Solo1 && playerIndex === 0)
+                    } else if ((G.mode === GameModeNames.Solo && playerIndex === 0)
                         || (G.mode === GameModeNames.SoloAndvari && playerIndex === 0)
                         || (G.mode === GameModeNames.Basic && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                         return player.handCoins.every((coin: PublicPlayerCoinType, coinIndex: number):
@@ -72,7 +72,7 @@ export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true>
         return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinType[];
-    if ((G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`)
+    if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
         || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
         || G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;

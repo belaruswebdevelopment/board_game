@@ -47,7 +47,7 @@ export const enumerate = (G, ctx) => {
                         case GameModeNames.Multiplayer:
                             activeStageOfCurrentPlayer = StageNames.default3;
                             break;
-                        case GameModeNames.Solo1:
+                        case GameModeNames.Solo:
                             if (ctx.currentPlayer === `0`) {
                                 activeStageOfCurrentPlayer = StageNames.default3;
                             }
@@ -97,7 +97,7 @@ export const enumerate = (G, ctx) => {
                                 }
                             }
                             break;
-                        case GameModeNames.Solo1:
+                        case GameModeNames.Solo:
                             if (ctx.currentPlayer === `0`) {
                                 activeStageOfCurrentPlayer = StageNames.default1;
                             }

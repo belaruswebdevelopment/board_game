@@ -63,7 +63,7 @@ export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = (G: IMy
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBot()]);
         } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.pickDistinctionCardSoloBotAndvari()]);
@@ -186,7 +186,7 @@ export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = (G: IMyG
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
     if (G.tierToEnd !== 0) {
-        if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
         } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             AddActionsToStack(G, ctx, [StackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);

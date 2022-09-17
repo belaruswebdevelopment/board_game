@@ -13,7 +13,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, Ctx, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeUndefType, Ctx, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -27,7 +27,7 @@ import type { BuildHeroesArraysType, CampDeckCardType, CanBeUndefType, Ctx, Deck
  */
 export const SetupGame = (ctx: Ctx): IMyGameState => {
     // TODO Rework it!
-    const mode: GameModeNames = ctx.numPlayers === 2 ? GameModeNames.Solo1 : ctx.numPlayers === 3
+    const mode: GameModeNames = ctx.numPlayers === 2 ? GameModeNames.Solo : ctx.numPlayers === 3
         ? GameModeNames.SoloAndvari : ctx.numPlayers === 4 ? GameModeNames.Multiplayer : GameModeNames.Basic,
         suitsNum = 5,
         tierToEnd = 2,
@@ -49,11 +49,11 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
                 active: true,
             },
             thingvellir: {
-                active: mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari ? false : true,
+                active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : true,
             },
             // TODO Fix me to "true" after expansion finished
             idavoll: {
-                active: mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari ? false : false,
+                active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : false,
             },
         },
         totalScore: number[] = [],
@@ -82,7 +82,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         discardMultiCards: IMultiSuitPlayerCard[] = [],
         discardSpecialCards: ISpecialCard[] = [],
         campDeckLength: [number, number] = [0, 0],
-        camp: CampDeckCardType[] = Array(campNum).fill(null),
+        camp: CampCardArrayType = Array(campNum).fill(null) as CampCardArrayType,
         deckLength: [number, number] = [0, 0];
     for (let i = 0; i < tierToEnd; i++) {
         if (expansions.thingvellir.active) {
@@ -134,16 +134,16 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         publicPlayersOrder: string[] = [],
         exchangeOrder: number[] = [],
         priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers as NumPlayersType,
-            mode === GameModeNames.Solo1);
+            mode === GameModeNames.Solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex: number =
-            mode === GameModeNames.Solo1 ? 0 : Math.floor(Math.random() * priorities.length),
+            mode === GameModeNames.Solo ? 0 : Math.floor(Math.random() * priorities.length),
             priority: CanBeUndefType<IPriority> = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
         players[i] = BuildPlayer();
-        const soloBot: boolean = (mode === GameModeNames.Solo1 || mode === GameModeNames.SoloAndvari) && i === 1;
+        const soloBot: boolean = (mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari) && i === 1;
         publicPlayers[i] =
             BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority,
                 soloBot || mode === GameModeNames.Multiplayer);

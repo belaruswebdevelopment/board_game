@@ -32,7 +32,7 @@ export const AddPickHeroAction = (G, ctx, ...args) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
-    if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
         AddActionsToStack(G, ctx, [StackData.pickHeroSoloBot(priority)]);
     }
     else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
@@ -41,7 +41,7 @@ export const AddPickHeroAction = (G, ctx, ...args) => {
     else {
         AddActionsToStack(G, ctx, [StackData.pickHero(priority)]);
     }
-    AddDataToLog(G, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
+    AddDataToLog(G, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>
@@ -56,7 +56,7 @@ export const AddPickHeroAction = (G, ctx, ...args) => {
  */
 export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
     if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-        || (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `0`)
+        || (G.mode === GameModeNames.Solo && ctx.currentPlayer === `0`)
         || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `0`)) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
@@ -95,7 +95,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
         throw new Error(`В массиве параметров функции отсутствует аргумент с id '0'.`);
     }
     // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
-    const currentPlayer = G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
+    const currentPlayer = G.mode === GameModeNames.Solo ? 1 : Number(ctx.currentPlayer), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, currentPlayer);
     }
@@ -181,7 +181,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     else {
         const minCoinValue = Math.min(...player.boardCoins.filter((coin) => IsCoin(coin) && !coin.isTriggerTrading)
             .map((coin) => coin.value));
-        if (G.mode === GameModeNames.Solo1 && minCoinValue !== 2) {
+        if (G.mode === GameModeNames.Solo && minCoinValue !== 2) {
             throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
         }
         const upgradingCoinsArray = player.boardCoins.filter((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;

@@ -84,10 +84,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                             stageName: StageNames.addCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
-                        {
-                            stageName: StageNames.addCoinToPouch,
-                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                        },
                     ],
                 },
             },
@@ -178,10 +174,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         },
                     ],
                     stack: [
-                        {
-                            stageName: StageNames.addCoinToPouch,
-                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                        },
                         {
                             stageName: StageNames.addCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
@@ -308,10 +300,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                             stageName: StageNames.addCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
-                        {
-                            stageName: StageNames.addCoinToPouch,
-                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                        },
                     ],
                 },
             },
@@ -405,12 +393,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {
                             stageName: StageNames.addCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                        },
-                        {
-                            coinId: undefined,
-                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
-                            value: 3,
-                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
                 },
@@ -539,12 +521,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {
                             stageName: StageNames.addCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                        },
-                        {
-                            coinId: undefined,
-                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
-                            value: 3,
-                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
                 },
@@ -744,6 +720,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Dwarf_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -774,6 +751,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
             discardCardsDeck: [
                 {
+                    type: RusCardTypeNames.Dwarf_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -794,6 +772,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Mercenary_Player_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -824,6 +803,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
             discardCampCardsDeck: [
                 {
+                    type: RusCardTypeNames.Mercenary_Player_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -843,7 +823,9 @@ describe(`Test DiscardSuitCardAction method`, () => {
                 0: {
                     cards: {
                         warrior: [
-                            {},
+                            {
+                                type: RusCardTypeNames.Dwarf_Card,
+                            },
                         ],
                     },
                 },

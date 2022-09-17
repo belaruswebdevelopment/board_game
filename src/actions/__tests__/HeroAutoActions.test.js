@@ -22,6 +22,7 @@ describe(`Test AddPickHeroAction method`, () => {
                         {
                             stageName: StageNames.pickHero,
                             drawName: DrawNames.PickHero,
+                            priority: 1,
                         },
                     ],
                 },

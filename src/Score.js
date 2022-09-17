@@ -60,37 +60,37 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
     if (player === undefined) {
         return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
     }
-    AddDataToLog(G, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}:`);
+    AddDataToLog(G, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}:`);
     let score = CurrentScoring(G, player), coinsValue = 0;
-    AddDataToLog(G, LogTypeNames.Public, `Очки за карты дворфов ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: ${score}`);
+    AddDataToLog(G, LogTypeNames.Public, `Очки за карты дворфов ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
         if (boardCoin !== null && !IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
         }
         if (IsCoin(boardCoin) && !boardCoin.isOpened) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`} с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
         }
         if (IsCoin(boardCoin)) {
             coinsValue += boardCoin.value;
         }
     }
     score += coinsValue;
-    AddDataToLog(G, LogTypeNames.Public, `Очки за монеты ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${coinsValue}';`);
+    AddDataToLog(G, LogTypeNames.Public, `Очки за монеты ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${coinsValue}';`);
     if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
         const warriorDistinctionScore = StartDistinctionAwarding(G, ctx, suitsConfig[SuitNames.warrior].distinction.awarding, [playerId]);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
-            AddDataToLog(G, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${warriorDistinctionScore}';`);
+            AddDataToLog(G, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${warriorDistinctionScore}';`);
         }
     }
     const minerDistinctionPriorityScore = StartDistinctionAwarding(G, ctx, suitsConfig[SuitNames.miner].distinction.awarding, [playerId]);
     score += minerDistinctionPriorityScore;
     if (minerDistinctionPriorityScore) {
-        AddDataToLog(G, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${minerDistinctionPriorityScore}';`);
+        AddDataToLog(G, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${minerDistinctionPriorityScore}';`);
     }
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
@@ -101,28 +101,28 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         }
         const heroData = heroesConfig[hero.name];
         if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-            || G.mode === GameModeNames.SoloAndvari) || G.mode === GameModeNames.Solo1 && playerId === 1)
+            || G.mode === GameModeNames.SoloAndvari) || G.mode === GameModeNames.Solo && playerId === 1)
             && hero.name.startsWith(`Dwerg`)) {
             dwerg_brothers += StartHeroScoring(player, heroData.scoringRule);
         }
         else {
             const currentHeroScore = StartHeroScoring(player, heroData.scoringRule);
             heroesScore += currentHeroScore;
-            AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${hero.name}' ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}': '${currentHeroScore}';`);
+            AddDataToLog(G, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${hero.name}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}': '${currentHeroScore}';`);
         }
     }
     if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-        || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo1 && playerId === 1))
+        || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo && playerId === 1))
         && dwerg_brothers) {
         const dwerg_brother_value = dwerg_brothers_scoring[dwerg_brothers];
         if (dwerg_brother_value === undefined) {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
         }
         heroesScore += dwerg_brother_value;
-        AddDataToLog(G, LogTypeNames.Private, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) ${G.mode === GameModeNames.Solo1 ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwerg_brothers]}';`);
+        AddDataToLog(G, LogTypeNames.Private, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) ${G.mode === GameModeNames.Solo ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwerg_brothers]}';`);
     }
     score += heroesScore;
-    AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Hero_Card}' ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
+    AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Hero_Card}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
@@ -204,7 +204,7 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Valkyry_Card}' игрока '${player.nickname}': '${valkyriesScore}';`);
         AddDataToLog(G, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Mythical_Animal_Card}' игрока '${player.nickname}': '${mythicalAnimalScore}';`);
     }
-    AddDataToLog(G, LogTypeNames.Public, `Итоговый счёт ${(G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${score}'.`);
+    AddDataToLog(G, LogTypeNames.Public, `Итоговый счёт ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerId === 1 ? `соло бота` : `игрока '${player.nickname}'`}: '${score}'.`);
     return score;
 };
 /**
@@ -220,7 +220,7 @@ const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
  */
 export const ScoreWinner = (G, ctx) => {
     Object.values(G.publicPlayers).forEach((player, index) => {
-        if ((G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`)
+        if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
             || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
                 || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `0`))

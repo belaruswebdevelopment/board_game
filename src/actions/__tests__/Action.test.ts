@@ -1,6 +1,6 @@
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardType, CanBeNullType, Ctx, DeckCardType, IArtefactCampCard, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardType, SuitPropertyType } from "../../typescript/interfaces";
+import type { CampDeckCardType, CanBeNullType, Ctx, DeckCardType, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, PlayerCardType, SuitPropertyType } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -12,6 +12,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Dwarf_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             } as IDwarfCard,
@@ -42,6 +43,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             },
             discardCardsDeck: [
                 {
+                    type: RusCardTypeNames.Dwarf_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -66,6 +68,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Artefact_Player_Card,
                                 name: ArtefactNames.Brisingamens,
                                 description: `Test`,
                             } as IArtefactPlayerCampCard,
@@ -96,9 +99,10 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             },
             discardCampCardsDeck: [
                 {
+                    type: RusCardTypeNames.Artefact_Player_Card,
                     name: ArtefactNames.Brisingamens,
                     description: `Test`,
-                } as IArtefactCampCard,
+                } as IArtefactPlayerCampCard,
             ],
             logData: [
                 {
@@ -121,6 +125,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                     cards: {
                         warrior: [
                             {
+                                type: RusCardTypeNames.Mercenary_Player_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             } as IMercenaryPlayerCampCard,
@@ -151,6 +156,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             },
             discardCampCardsDeck: [
                 {
+                    type: RusCardTypeNames.Mercenary_Player_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 } as IMercenaryPlayerCampCard,
@@ -173,7 +179,9 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     cards: {
                         warrior: [
-                            {},
+                            {
+                                type: RusCardTypeNames.Hero_Player_Card,
+                            },
                         ] as PlayerCardType[],
                     },
                 } as IPublicPlayer,
@@ -183,7 +191,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, SuitNames.warrior, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, (): void => {
         const G = {
@@ -215,6 +223,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             taverns: [
                 [
                     {
+                        type: RusCardTypeNames.Dwarf_Card,
                         name: `Test`,
                         suit: SuitNames.warrior,
                     },
@@ -244,6 +253,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             ],
             discardCardsDeck: [
                 {
+                    type: RusCardTypeNames.Dwarf_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -284,7 +294,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             DiscardCardFromTavernAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, 0);
-        }).toThrowError(`Не удалось сбросить карту с id '0' из таверны`);
+        }).toThrowError(`Не удалось сбросить карту с id '0' из текущей таверны с id '0'.`);
     });
     it(`shouldn't remove non-exists card from tavern and must throw Error`, (): void => {
         const G = {
@@ -305,7 +315,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             DiscardCardFromTavernAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, 0);
-        }).toThrowError(`В текущей таверне с id '0' отсутствует карта с id '0'.`);
+        }).toThrowError(`В текущей таверне с id '0' отсутствует карта для сброса с id '0'.`);
     });
 });
 

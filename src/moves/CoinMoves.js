@@ -81,7 +81,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
             player.handCoins[tempSelectedId] = null;
         }
         else {
-            if ((G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `0`) {
+            if ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `0`) {
                 ChangeIsOpenedCoinStatus(handCoin, true);
             }
             player.boardCoins[coinId] = handCoin;

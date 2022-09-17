@@ -4,7 +4,7 @@
 export const enum GameModeNames {
     Basic = `Basic`,
     Multiplayer = `Multiplayer`,
-    Solo1 = `Solo1`,
+    Solo = `Solo`,
     SoloAndvari = `Solo Andvari`,
 }
 

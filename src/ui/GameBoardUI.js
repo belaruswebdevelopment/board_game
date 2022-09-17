@@ -28,9 +28,6 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
             const campCard = G.camp[j];
-            if (campCard === undefined) {
-                throw new Error(`В массиве карт лагеря отсутствует карта с id '${j}'.`);
-            }
             if (campCard === null) {
                 if (data !== undefined) {
                     boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
@@ -543,7 +540,7 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                                             case GameModeNames.Multiplayer:
                                                 moveName = CardMoveNames.ClickCardMove;
                                                 break;
-                                            case GameModeNames.Solo1:
+                                            case GameModeNames.Solo:
                                                 if (ctx.currentPlayer === `0`) {
                                                     moveName = CardMoveNames.ClickCardMove;
                                                 }

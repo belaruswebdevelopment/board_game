@@ -155,7 +155,7 @@ export const OpenClosedCoinsOnPlayerBoard = (G: IMyGameState, ctx: Ctx, playerId
  */
 export const OpenCurrentTavernClosedCoinsOnPlayerBoard = (G: IMyGameState, ctx: Ctx): void => {
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && index === 1)
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && index === 1)
             || (G.mode === GameModeNames.SoloAndvari && index === 1)) {
             const privatePlayer: CanBeUndefType<IPlayer> = G.players[index];
             if (privatePlayer === undefined) {
@@ -447,7 +447,7 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
         return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerId);
     }
     let handCoins: PublicPlayerCoinType[];
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && playerId === 1)
         || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
         handCoins = privatePlayer.handCoins;
     } else {
@@ -462,7 +462,7 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
         throw new Error(`В массиве монет игрока с id '${playerId}' на поле отсутствует нужная монета с id '${coinId}'.`);
     }
     if (IsCoin(coin)) {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && playerId === 1)
             || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
             if (!coin.isOpened) {
                 throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть ранее не открыта монета с id '${coinId}'.`);
@@ -473,7 +473,7 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
         }
         handCoins[tempCoinId] = coin;
     } else {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && playerId === 1)
             || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
             const privateBoardCoin: CanBeUndefType<PublicPlayerCoinType> = privatePlayer.boardCoins[coinId];
             if (privateBoardCoin === undefined) {
@@ -487,7 +487,7 @@ export const ReturnCoinToPlayerHands = (G: IMyGameState, ctx: Ctx, playerId: num
             }
         }
     }
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo1 && playerId === 1)
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && playerId === 1)
         || (G.mode === GameModeNames.SoloAndvari && playerId === 1)) {
         if (close) {
             player.handCoins[tempCoinId] = {};
@@ -536,7 +536,7 @@ export const MixUpCoinsInPlayerHands = (G: IMyGameState, ctx: Ctx): void => {
         for (let p = 0; p < ctx.numPlayers; p++) {
             MixUpCoins(G, ctx, p);
         }
-    } else if (G.mode === GameModeNames.Solo1 || G.mode === GameModeNames.SoloAndvari) {
+    } else if (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) {
         MixUpCoins(G, ctx, 1);
     }
 };

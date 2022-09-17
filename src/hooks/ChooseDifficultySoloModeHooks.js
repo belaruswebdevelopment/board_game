@@ -30,7 +30,7 @@ export const CheckChooseDifficultySoloModeOrder = (G, ctx) => CheckPlayersBasicO
  */
 export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
     if (ctx.currentPlayer === `0`) {
-        if (G.mode !== GameModeNames.Solo1) {
+        if (G.mode !== GameModeNames.Solo) {
             return true;
         }
     }

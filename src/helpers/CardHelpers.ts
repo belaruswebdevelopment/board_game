@@ -115,7 +115,7 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Non
             break;
         case RusCardTypeNames.Royal_Offering_Card:
             AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
-            if (G.mode === GameModeNames.Solo1 && ctx.currentPlayer === `1`) {
+            if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
                 AddActionsToStack(G, ctx, card.stack?.soloBot, card);
             } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
                 AddActionsToStack(G, ctx, card.stack?.soloBotAndvari, card);
@@ -123,6 +123,7 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Non
                 AddActionsToStack(G, ctx, card.stack?.player, card);
             }
             DiscardPickedCard(G, card);
+            AddDataToLog(G, LogTypeNames.Game, `Карта '${card.type}' '${card.name}' убрана в сброс после применения её эффекта.`);
             break;
         case RusCardTypeNames.God_Card:
         case RusCardTypeNames.Giant_Card:
