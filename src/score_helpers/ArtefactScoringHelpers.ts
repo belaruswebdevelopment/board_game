@@ -2,7 +2,7 @@ import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsMercenaryPlayerCampCard } from "../helpers/IsCampTypeHelpers";
 import { BuffNames } from "../typescript/enums";
-import type { CanBeUndefType, IArtefactScoringFunction, IBuffs, ICoin, IMyGameState, IPublicPlayer, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import type { CanBeUndefType, IArtefactScoringFunction, IBuffs, IMyGameState, IPublicPlayer, PublicPlayerCoinType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 /**
@@ -34,19 +34,13 @@ export const BasicArtefactScoring: IArtefactScoringFunction = (G: IMyGameState, 
  * @param player Игрок.
  * @returns Количество очков по конкретному артефакту.
  */
-export const DraupnirScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number => {
-    // Rework to playerId?
-    const basicScore: number =
-        player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
-            if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
-                throw new Error(`В массиве монет игрока '${player.nickname}' в руке не может быть закрыта монета с id '${index}'.`);
-            }
-            return IsCoin(coin) && coin.value >= 15;
-        }).length,
-        odroerirScore: number = G.odroerirTheMythicCauldronCoins.filter((coin: ICoin): boolean =>
-            coin.value >= 15).length;
-    return (basicScore + odroerirScore) * 6;
-};
+export const DraupnirScoring: IArtefactScoringFunction = (G: IMyGameState, player: IPublicPlayer): number =>
+    player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
+        if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
+            throw new Error(`В массиве монет игрока '${player.nickname}' на столе не может быть закрыта монета с id '${index}'.`);
+        }
+        return IsCoin(coin) && coin.value >= 15;
+    }).length * 6;
 
 /**
  * <h3>Получение победных очков по артефакту Hrafnsmerki.</h3>
