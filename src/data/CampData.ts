@@ -1,4 +1,4 @@
-import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, BuffNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, CampBuffNames, SuitNames } from "../typescript/enums";
 import type { ArtefactConfigType, IArtefactData, MercenariesConfigType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -14,7 +14,7 @@ const Brisingamens: IArtefactData = {
     description: `Взяв этот артефакт, сразу же посмотрите все карты в стопке сброса карт эпохи 1 и 2 (но не в стопке сброса карт лагеря) и выберите две карты. Это могут быть карты королевская награда и/или дворф в любом сочетании. В желаемом порядке выполните следующие действия: - улучшите монету, если выбрали карту королевская награда, - сразу же поместите в свою армию карту дворфа и призовите героя, если создали новую линию 5 шевронов. В конце эпохи 2 перед подсчётом победных очков сбросьте одну карту дворфа из своей армии. Эта карта может быть сброшена из колонки любого воинского класса по выбору игрока, но нельзя сбрасывать карту героя.`,
     tier: 1,
     buff: {
-        name: BuffNames.DiscardCardEndGame,
+        name: CampBuffNames.DiscardCardEndGame,
     },
     validators: {
         pickDiscardCardToStack: {},
@@ -59,7 +59,7 @@ const Fafnir_Baleygr: IArtefactData = {
     description: `Игрок, владеющий этим артефактом, может брать карты из лагеря вместо таверны, если лагерь не посещал игрок, который получил первенство на этапе «Открытие ставок».`,
     tier: 0,
     buff: {
-        name: BuffNames.GoCamp,
+        name: CampBuffNames.GoCamp,
     },
     scoringRule: {
         name: ArtefactScoringFunctionNames.BasicArtefactScoring,
@@ -159,7 +159,7 @@ const Megingjord: IArtefactData = {
     description: `С момента получения этого артефакта и до конца игры владелец не может призывать героев в свою армию после создания линии 5 шевронов. Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 28 победных очков. Гьяллархорн позволяет игроку призывать героев, даже если он владеет Мегингьордом.`,
     tier: 0,
     buff: {
-        name: BuffNames.NoHero,
+        name: CampBuffNames.NoHero,
     },
     scoringRule: {
         name: ArtefactScoringFunctionNames.BasicArtefactScoring,
@@ -179,7 +179,7 @@ const Mjollnir: IArtefactData = {
     description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 2 победных очка за каждый шеврон в колонке одного воинского класса по выбору игрока.`,
     tier: 1,
     buff: {
-        name: BuffNames.GetMjollnirProfit,
+        name: CampBuffNames.GetMjollnirProfit,
     },
     scoringRule: {
         name: ArtefactScoringFunctionNames.MjollnirScoring,

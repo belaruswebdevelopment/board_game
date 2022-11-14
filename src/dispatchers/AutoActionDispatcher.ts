@@ -1,7 +1,8 @@
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
+import { AddMythologyCreatureCardsSkymirAction, AddPlusTwoValueToAllCoinsAction } from "../actions/MythologicalCreatureAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
-import type { AutoActionArgsType, AutoActionFunctionType, Ctx, IAction, IMyGameState } from "../typescript/interfaces";
+import type { AutoActionArgsType, AutoActionFunctionType, IAction, IActionFunctionWithoutParams, MyFnContext } from "../typescript/interfaces";
 
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
@@ -17,8 +18,14 @@ const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): Auto
     let action: AutoActionFunctionType,
         _exhaustiveCheck: never;
     switch (actionName) {
+        case AutoActionFunctionNames.AddMythologyCreatureCardsSkymirAction:
+            action = AddMythologyCreatureCardsSkymirAction;
+            break;
         case AutoActionFunctionNames.AddPickHeroAction:
             action = AddPickHeroAction;
+            break;
+        case AutoActionFunctionNames.AddPlusTwoValueToAllCoinsAction:
+            action = AddPlusTwoValueToAllCoinsAction;
             break;
         case AutoActionFunctionNames.DiscardTradingCoinAction:
             action = DiscardTradingCoinAction;
@@ -58,14 +65,15 @@ const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): Auto
  * @param action Объект автоматического действия.
  * @returns
  */
-export const StartAutoAction = (G: IMyGameState, ctx: Ctx,
+export const StartAutoAction = ({ G, ctx, playerID, ...rest }: MyFnContext,
     action?: IAction<AutoActionFunctionNames, AutoActionArgsType>): void => {
     if (action !== undefined) {
         const actionDispatcher: AutoActionFunctionType = AutoActionDispatcherSwitcher(action.name);
+        // TODO Rework!?
         if (action.params === undefined) {
-            actionDispatcher?.(G, ctx);
+            (actionDispatcher as IActionFunctionWithoutParams)?.({ G, ctx, playerID, ...rest });
         } else {
-            actionDispatcher?.(G, ctx, ...action.params);
+            actionDispatcher?.({ G, ctx, playerID, ...rest }, ...action.params);
         }
     }
 };

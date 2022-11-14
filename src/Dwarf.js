@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypeNames } from "./typescript/enums";
+import { RusCardTypeNames, SuitNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты дворфов.</h3>
  * <p>Применения:</p>

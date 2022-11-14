@@ -2,10 +2,10 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { BuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { BuffNames, CampBuffNames, ErrorNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
@@ -18,15 +18,16 @@ import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer } 
  * @param ctx
  * @returns Необходимость завершения текущей фазы.
  */
-export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
+export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
         }
         if (!player.stack.length) {
-            return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
+            return CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest },
+                BuffNames.SuitIdForMjollnir);
         }
     }
 };
@@ -41,12 +42,13 @@ export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): CanBe
  * @param G
  * @returns
  */
-export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
+export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }: FnContext): void => {
     const mjollnirPlayerIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
-            CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                CampBuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex === -1) {
-        throw new Error(`У игроков отсутствует обязательный баф '${BuffNames.GetMjollnirProfit}'.`);
+        throw new Error(`У игроков отсутствует обязательный баф '${CampBuffNames.GetMjollnirProfit}'.`);
     }
     G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
 };
@@ -62,8 +64,8 @@ export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
  * @param ctx
  * @returns
  */
-export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {
-    StartOrEndActions(G, ctx);
+export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }: FnContext): void => {
+    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
 };
 
 /**
@@ -77,9 +79,10 @@ export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  * @returns
  */
-export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStack(G, ctx, [StackData.getMjollnirProfit()]);
-    DrawCurrentProfit(G, ctx);
+export const OnGetMjollnirProfitTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
+    AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest },
+        [StackData.getMjollnirProfit()]);
+    DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
 };
 
 /**
@@ -93,7 +96,7 @@ export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
  * @param ctx
  * @returns
  */
-export const StartEndGame = (G: IMyGameState, ctx: Ctx): void => {
+export const StartEndGame = ({ G, events }: FnContext): void => {
     G.publicPlayersOrder = [];
-    EndGame(ctx);
+    events.endGame();
 };

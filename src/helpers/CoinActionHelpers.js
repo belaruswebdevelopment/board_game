@@ -14,20 +14,20 @@ import { CoinTypeNames, ErrorNames } from "../typescript/enums";
  * @param type Тип обменной монеты.
  * @returns Значение на которое улучшается монета.
  */
-export const UpgradeCoinActions = (G, ctx, coinId, type) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const UpgradeCoinActions = ({ G, ctx, playerID, ...rest }, coinId, type) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined, playerID);
     }
     const value = stack.value;
     if (value === undefined) {
-        throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
+        throw new Error(`У игрока с id '${playerID}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }
-    UpgradeCoinAction(G, ctx, false, value, coinId, type);
+    UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, value, coinId, type);
     return value;
 };
 //# sourceMappingURL=CoinActionHelpers.js.map

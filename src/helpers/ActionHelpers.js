@@ -15,15 +15,15 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  * @param ctx
  * @returns
  */
-export const DrawCurrentProfit = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const DrawCurrentProfit = ({ G, ctx, playerID, events, ...rest }) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const stack = player.stack[0];
     if (stack !== undefined) {
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
-        StartOrEndActionStage(G, ctx, stack);
+        AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
+        StartOrEndActionStage({ G, ctx, playerID, events, ...rest }, stack);
         if (stack.configName !== undefined) {
             G.drawProfit = stack.configName;
         }
@@ -47,16 +47,16 @@ export const DrawCurrentProfit = (G, ctx) => {
  * @param stack Стек действий героя.
  * @returns
  */
-const StartOrEndActionStage = (G, ctx, stack) => {
-    var _a, _b, _c;
+const StartOrEndActionStage = ({ G, ctx, playerID, events, ...rest }, stack) => {
+    var _a;
     if (stack.stageName !== undefined) {
-        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
+        events.setActivePlayers({
             currentPlayer: stack.stageName,
         });
-        AddDataToLog(G, LogTypeNames.Game, `Начало стадии '${stack.stageName}'.`);
+        AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Начало стадии '${stack.stageName}'.`);
     }
-    else if (((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== undefined) {
-        (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.endStage();
+    else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(playerID)]) !== undefined) {
+        events.endStage();
     }
 };
 //# sourceMappingURL=ActionHelpers.js.map

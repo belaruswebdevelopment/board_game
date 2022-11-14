@@ -12,14 +12,14 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @param ctx
  * @returns Результат эвристики.
  */
-export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
+export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }) => {
     const taverns = G.taverns, temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0)), result = Array(taverns.length).fill(0).map((value, index) => {
         const num = temp[index];
         if (num === undefined) {
             throw new Error(`Отсутствует значение с id '${index}'.`);
         }
         return value + num;
-    }), tempNumbers = taverns.map((tavern) => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr))), tempChars = tempNumbers.map((element) => GetCharacteristics(element)) /*,
+    }), tempNumbers = taverns.map((tavern) => tavern.map((card, index, arr) => EvaluateCard({ G, ctx, ...rest }, card, index, arr))), tempChars = tempNumbers.map((element) => GetCharacteristics(element)) /*,
 averageCards: ICard[] = G.averageCards*/;
     let maxIndex = 0, minIndex = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {

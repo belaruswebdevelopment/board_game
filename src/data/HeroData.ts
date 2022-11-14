@@ -1,4 +1,4 @@
-import { AutoActionFunctionNames, BuffNames, GameNames, HeroNames, HeroScoringFunctionNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
+import { AutoActionFunctionNames, GameNames, HeroBuffNames, HeroNames, HeroScoringFunctionNames, MultiSuitCardNames, SuitNames } from "../typescript/enums";
 import type { HeroConfigType, IHeroData, SoloGameAndvariEasyStrategyHeroesConfigType, SoloGameAndvariHardStrategyHeroesConfigType, SoloGameAndvariHeroesForPlayersConfigType, SoloGameDifficultyLevelHeroesConfigType, SoloGameHeroesForBotConfigType, SoloGameHeroesForPlayerConfigType } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -283,7 +283,7 @@ const Holda: IHeroData = {
     game: GameNames.thingvellir,
     points: 12,
     buff: {
-        name: BuffNames.GoCampOneTime,
+        name: HeroBuffNames.GoCampOneTime,
     },
     validators: {
         pickCampCardToStack: {},
@@ -357,7 +357,7 @@ const Jarika: IHeroData = {
     game: GameNames.basic,
     points: 8,
     buff: {
-        name: BuffNames.UpgradeCoin,
+        name: HeroBuffNames.UpgradeCoin,
     },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -505,7 +505,7 @@ const Thrud: IHeroData = {
         soloBotAndvari: [StackData.placeThrudHeroSoloBotAndvari()],
     },
     buff: {
-        name: BuffNames.MoveThrud,
+        name: HeroBuffNames.MoveThrud,
     },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -529,7 +529,7 @@ const Uline: IHeroData = {
         name: AutoActionFunctionNames.GetClosedCoinIntoPlayerHandAction,
     },
     buff: {
-        name: BuffNames.EveryTurn,
+        name: HeroBuffNames.EveryTurn,
     },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -549,7 +549,7 @@ const Ylud: IHeroData = {
     description: `Поместите эту карту в свою командную зону. В эпоху 1, сразу после посещения последней таверны, но до смотра войск, поместите карту Илуд в колонку любого воинского класса вашей армии. При распределении знаков отличий во время смотра войск, шеврон Илуд учитывается в качестве шеврона этого класса. Илуд остаётся в этой колонке до конца эпохи 2. Если вы призвали Илуд во время эпохи 2, поместите её карту в свою командную зону. В эпоху 2, сразу после посещения последней таверны, но до подсчёта итогового показателя храбрости: • если Илуд в командной зоне, то игрок помещает её в колонку любого воинского класса своей армии, • если Илуд в армии, игрок может переместить её в другую колонку воинского класса по своему выбору. Илуд будет учитываться в качестве дворфа того класса, где располагается. В конце эпохи 2, в зависимости от местоположения Илуд, она будет учитываться как кузнец или охотник, разведчик 11, воин 7, горняк 1. Если Илуд в колонке воинов, то её шеврон учитывается в сумме шевронов воинов при определении преимущества. Игрок получает право призвать нового героя, если с помощью карты Илуд завершит новую линию 5 шевронов. Если игрок обладает обеими картами героев Илуд и Труд, то при их активации важно учесть следующий порядок. После посещения последней таверны в эпоху 2 игрок сначала помещает Илуд в свою армию. В этот момент игрок может призвать нового героя, если с помощью Илуд создал линию 5 шевронов. Затем игрок перемещает Труд из армии в свою командную зону.`,
     game: GameNames.basic,
     buff: {
-        name: BuffNames.EndTier,
+        name: HeroBuffNames.EndTier,
     },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -570,7 +570,7 @@ const Zolkur: IHeroData = {
     game: GameNames.thingvellir,
     points: 10,
     buff: {
-        name: BuffNames.UpgradeNextCoin,
+        name: HeroBuffNames.UpgradeNextCoin,
     },
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,

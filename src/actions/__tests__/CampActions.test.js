@@ -43,10 +43,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
-        };
-        AddCoinToPouchAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        AddCoinToPouchAction({ G, ctx }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -137,10 +137,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
-        };
-        AddCoinToPouchAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        AddCoinToPouchAction({ G, ctx }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -243,10 +243,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
-        };
-        AddCoinToPouchAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        AddCoinToPouchAction({ G, ctx }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -353,10 +353,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
-        };
-        AddCoinToPouchAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        AddCoinToPouchAction({ G, ctx }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -464,10 +464,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
-        };
-        AddCoinToPouchAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        AddCoinToPouchAction({ G, ctx }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -548,11 +548,11 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            AddCoinToPouchAction({ G, ctx }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
     });
     it(`shouldn't add undefined coin to pouch (multiplayer=false) and must throw Error`, () => {
@@ -575,11 +575,11 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            AddCoinToPouchAction({ G, ctx }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует выбранная монета с id '0': это должно проверяться в MoveValidator.`);
     });
     it(`shouldn't add undefined coin to pouch (multiplayer=true) and must throw Error`, () => {
@@ -609,11 +609,11 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            AddCoinToPouchAction({ G, ctx }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует выбранная монета с id '0': это должно проверяться в MoveValidator.`);
     });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`, () => {
@@ -638,11 +638,11 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            AddCoinToPouchAction({ G, ctx }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' в руке не может не быть монеты с id '0'.`);
     });
     it(`shouldn't add null coin to pouch (multiplayer=true) and must throw Error`, () => {
@@ -674,11 +674,11 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            AddCoinToPouchAction({ G, ctx }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' в руке не может не быть монеты с id '0'.`);
     });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`, () => {
@@ -703,11 +703,11 @@ describe(`Test AddCoinToPouchAction method`, () => {
                 },
             },
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            AddCoinToPouchAction({ G, ctx }, 0);
         }).toThrowError(`Монета с id '0' в руке текущего игрока с id '0' не может быть закрытой для него.`);
     });
 });
@@ -736,9 +736,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             discardCardsDeck: [],
             logData: [],
         };
-        DiscardSuitCardAction(G, {
-            playerID: `0`,
-        }, 0);
+        DiscardSuitCardAction({ G, playerID: `0` }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -788,9 +786,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             discardCampCardsDeck: [],
             logData: [],
         };
-        DiscardSuitCardAction(G, {
-            playerID: `0`,
-        }, 0);
+        DiscardSuitCardAction({ G, playerID: `0` }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -832,9 +828,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
         };
         expect(() => {
-            DiscardSuitCardAction(G, {
-                playerID: `0`,
-            }, 0);
+            DiscardSuitCardAction({ G, playerID: `0` }, 0);
         }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
     });
 });

@@ -14,7 +14,7 @@ import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
  * @param card Карта.
  * @returns
  */
-export const AddActionsToStack = (G, ctx, stack, card) => {
+export const AddActionsToStack = ({ G, ctx, playerID, ...rest }, stack, card) => {
     var _a, _b;
     let isValid = false;
     if (stack !== undefined) {
@@ -24,10 +24,11 @@ export const AddActionsToStack = (G, ctx, stack, card) => {
                 let validator, _exhaustiveCheck;
                 for (validator in validators) {
                     if (validator === PickCardValidatorNames.pickDiscardCardToStack) {
-                        isValid = IsCanPickPickDiscardCardToStack(G, card);
+                        isValid =
+                            IsCanPickPickDiscardCardToStack({ G, ctx, playerID, ...rest }, card);
                     }
                     else if (validator === PickCardValidatorNames.pickCampCardToStack) {
-                        isValid = IsCanPickPickCampCardToStack(G, card);
+                        isValid = IsCanPickPickCampCardToStack({ G, ctx, playerID, ...rest }, card);
                     }
                     else {
                         _exhaustiveCheck = validator;
@@ -52,7 +53,7 @@ export const AddActionsToStack = (G, ctx, stack, card) => {
                 stackI.priority = (_a = stackI.priority) !== null && _a !== void 0 ? _a : 0;
                 const playerId = (_b = stackI.playerId) !== null && _b !== void 0 ? _b : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
                 }
                 let stackIndex;
                 if (stackI.priority === 3) {

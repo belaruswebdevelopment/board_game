@@ -23,7 +23,9 @@ export const enum DistinctionAwardingFunctionNames {
  * <h3>Перечисление для названий автоматических действий.</h3>
  */
 export const enum AutoActionFunctionNames {
+    AddMythologyCreatureCardsSkymirAction = `AddMythologyCardSkymirAction`,
     AddPickHeroAction = `AddPickHeroAction`,
+    AddPlusTwoValueToAllCoinsAction = `AddPlusTwoValueToAllCoinsAction`,
     DiscardTradingCoinAction = `DiscardTradingCoinAction`,
     FinishOdroerirTheMythicCauldronAction = `FinishOdroerirTheMythicCauldronAction`,
     GetClosedCoinIntoPlayerHandAction = `GetClosedCoinIntoPlayerHandAction`,
@@ -135,21 +137,62 @@ export const enum RusArtefactNames {
  * <h3>Перечисление для названия бафов в конфиге.</h3>
  */
 export const enum BuffNames {
-    CountDistinctionAmount = `countDistinctionAmount`,
-    CountPickedHeroAmount = `countPickedHeroAmount`,
-    DagdaDiscardOnlyOneCards = `dagdaDiscardOnlyOneCards`,
+    HasOneNotCountHero = `hasOneNotCountHero`,
+    SuitIdForMjollnir = `suitIdForMjollnir`,
+    SuitIdForOlrun = `suitIdForOlrun`,
+}
+
+/**
+ * <h3>Перечисление для названия бафов карт Лагеря в конфиге.</h3>
+ */
+export const enum CampBuffNames {
     DiscardCardEndGame = `discardCardEndGame`,
-    EndTier = `endTier`,
-    EveryTurn = `everyTurn`,
     GetMjollnirProfit = `getMjollnirProfit`,
     GoCamp = `goCamp`,
+    NoHero = `noHero`,
+}
+
+/**
+ * <h3>Перечисление для названия бафов Героев в конфиге.</h3>
+ */
+export const enum HeroBuffNames {
+    EndTier = `endTier`,
+    EveryTurn = `everyTurn`,
     GoCampOneTime = `goCampOneTime`,
     MoveThrud = `moveThrud`,
-    NoHero = `noHero`,
-    RatatoskFinalScoring = `ratatoskFinalScoring`,
-    SuitIdForMjollnir = `suitIdForMjollnir`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeNextCoin = `upgradeNextCoin`,
+}
+
+/**
+ * <h3>Перечисление для названия бафов Гигантов в конфиге.</h3>
+ */
+export const enum GiantBuffNames {
+    PlayerHasActiveGiantGymir = `playerHasActiveGiantGymir`,
+    PlayerHasActiveGiantHrungnir = `playerHasActiveGiantHrungnir`,
+    PlayerHasActiveGiantSkymir = `playerHasActiveGiantSkymir`,
+    PlayerHasActiveGiantSurt = `playerHasActiveGiantSurt`,
+    PlayerHasActiveGiantThrivaldi = `playerHasActiveGiantThrivaldi`,
+}
+
+/**
+ * <h3>Перечисление для названия бафов Мистических животных в конфиге.</h3>
+ */
+export const enum MythicalAnimalBuffNames {
+    DagdaDiscardOnlyOneCards = `dagdaDiscardOnlyOneCards`,
+    ExplorerDistinctionGetSixCards = `explorerDistinctionGetSixCards`,
+    RatatoskFinalScoring = `ratatoskFinalScoring`,
+}
+
+/**
+ * <h3>Перечисление для названия бафов Валькирий в конфиге.</h3>
+ */
+export const enum ValkyryBuffNames {
+    CountBettermentAmount = `countBettermentAmount`,
+    CountBidWinnerAmount = `countBidWinnerAmount`,
+    CountDistinctionAmount = `countDistinctionAmount`,
+    CountPickedCardClassRankAmount = `countPickedCardClassRankAmount`,
+    CountPickedHeroAmount = `countPickedHeroAmount`,
 }
 
 /**
@@ -206,6 +249,7 @@ export const enum CoinTypeNames {
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */
 export const enum ConfigNames {
+    ChooseGetMythologyCard = `chooseGetMythologyCard`,
     ChooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
     ChooseStrategyLevelForSoloModeAndvari = `ChooseStrategyLevelForSoloModeAndvari`,
     ChooseStrategyVariantLevelForSoloModeAndvari = `ChooseStrategyVariantLevelForSoloModeAndvari`,
@@ -220,11 +264,13 @@ export const enum ConfigNames {
  */
 export const enum DrawNames {
     // TODO Give normal names to all?!
+    ActivateGiantAbilityOrPickCard = `Activate Giant ability or pick card`,
     AddCoinToPouchVidofnirVedrfolnir = `Add coin to pouch Vidofnir Vedrfolnir`,
     Andumia = `Andumia`,
     Bonfur = `Bonfur`,
     Brisingamens = `Brisingamens`,
     BrisingamensEndGame = `Brisingamens end game`,
+    ChooseSuitOlrun = `Choose suit Olrun`,
     ChooseStrategyLevelForSoloModeAndvari = `Choose strategy level for solo mode Andvari`,
     ChooseStrategyVariantLevelForSoloModeAndvari = `Choose strategy variant level for solo mode Andvari`,
     CrovaxTheDoppelganger = `Crovax the Doppelganger`,
@@ -233,6 +279,7 @@ export const enum DrawNames {
     EnlistmentMercenaries = `Enlistment Mercenaries`,
     Mjollnir = `Mjollnir`,
     GetDifficultyLevelForSoloMode = `Get difficulty level for Solo mode`,
+    GetMythologyCardSkymir = `Get Mythology card Skymir`,
     GetHeroesForSoloMode = `Get heroes for Solo mode`,
     GetMjollnirProfit = `Get Mjollnir profit`,
     Hofud = `Hofud`,
@@ -271,6 +318,7 @@ export const enum DrawNames {
  * <h3>Перечисление для названий ошибок.</h3>
  */
 export const enum ErrorNames {
+    CurrentMoveArgumentIsUndefined = `CurrentMoveArgumentIsUndefined`,
     CurrentTierDeckIsUndefined = `CurrentTierDeckIsUndefined`,
     CurrentPrivatePlayerIsUndefined = `CurrentPrivatePlayerIsUndefined`,
     CurrentPublicPlayerIsUndefined = `CurrentPublicPlayerIsUndefined`,
@@ -281,6 +329,7 @@ export const enum ErrorNames {
     DoNotDiscardCardFromCurrentTavernIfNoCardInTavern = `DoNotDiscardCardFromCurrentTavernIfNoCardInTavern`,
     DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame = `DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame`,
     FirstStackActionIsUndefined = `FirstStackActionIsUndefined`,
+    FunctionParamIsUndefined = `FunctionParamIsUndefined`,
     NoCardsToDiscardWhenNoWinnerInExplorerDistinction = `NoCardsToDiscardWhenNoWinnerInExplorerDistinction`,
     OnlyInSoloOrTwoPlayersGame = `OnlyInSoloOrTwoPlayersGame`,
     PlayersCurrentSuitCardsMustHaveCardsForDistinction = `PlayersCurrentSuitCardsMustHaveCardsForDistinction`,
@@ -491,6 +540,7 @@ export const enum CardMoveNames {
     ClickDistinctionCardMove = `ClickDistinctionCardMove`,
     DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
     GetEnlistmentMercenariesMove = `GetEnlistmentMercenariesMove`,
+    GetMythologyCardMove = `GetMythologyCardMove`,
     // start
     ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
     ClickHeroCardMove = `ClickHeroCardMove`,
@@ -498,8 +548,6 @@ export const enum CardMoveNames {
     DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
     DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
     PickDiscardCardMove = `PickDiscardCardMove`,
-    // TODO Is it here?
-    UseGodCardPowerMove = `UseGodCardPowerMove`,
     // Solo Mode
     ChooseHeroForDifficultySoloModeMove = `ChooseHeroForDifficultySoloModeMove`,
     // Solo Bot
@@ -552,6 +600,7 @@ export const enum EmptyCardMoveNames {
  * <h3>Перечисление для описаний отображения действий на фракциях дворфов.</h3>
  */
 export const enum SuitMoveNames {
+    ChooseSuitOlrunMove = `ChooseSuitOlrunMove`,
     GetMjollnirProfitMove = `GetMjollnirProfitMove`,
 }
 
@@ -641,7 +690,9 @@ export enum RusSuitNames {
  * <h3>Перечисление для стадий игры.</h3>
  */
 export const enum StageNames {
+    activateGiantAbilityOrPickCard = `activateGiantAbilityOrPickCard`,
     addCoinToPouch = `addCoinToPouch`,
+    chooseSuitOlrun = `chooseSuitOlrun`,
     chooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
     default1 = `default1`,
     default2 = `default2`,
@@ -651,6 +702,7 @@ export const enum StageNames {
     discardCard = `discardCard`,
     discardBoardCard = `discardBoardCard`,
     discardSuitCard = `discardSuitCard`,
+    getMythologyCard = `getMythologyCard`,
     pickCampCardHolda = `pickCampCardHolda`,
     pickConcreteCoinToUpgrade = `pickConcreteCoinToUpgrade`,
     pickDiscardCard = `pickDiscardCard`,
@@ -677,7 +729,9 @@ export const enum StageNames {
  * <h3>Перечисление для русских названий стадий игры.</h3>
  */
 export enum RusStageNames {
+    activateGiantAbilityOrPickCard = `activateGiantAbilityOrPickCard`,
     addCoinToPouch = `addCoinToPouch`,
+    chooseSuitOlrun = `chooseSuitOlrun`,
     chooseCoinValueForVidofnirVedrfolnirUpgrade = `chooseCoinValueForVidofnirVedrfolnirUpgrade`,
     default1 = `default1`,
     default2 = `default2`,
@@ -687,6 +741,7 @@ export enum RusStageNames {
     discardCard = `discardCard`,
     discardBoardCard = `discardBoardCard`,
     discardSuitCard = `discardSuitCard`,
+    getMythologyCard = `getMythologyCard`,
     pickCampCardHolda = `pickCampCardHolda`,
     pickConcreteCoinToUpgrade = `pickConcreteCoinToUpgrade`,
     pickDiscardCard = `pickDiscardCard`,
@@ -767,6 +822,7 @@ export const enum TavernNames {
  * <h3>Перечисление для названия валидаторов мувов.</h3>
  */
 export const enum MoveValidatorNames {
+    ChooseSuitOlrunMoveValidator = `ChooseSuitOlrunMoveValidator`,
     ClickBoardCoinMoveValidator = `ClickBoardCoinMoveValidator`,
     ClickCampCardMoveValidator = `ClickCampCardMoveValidator`,
     ClickCardMoveValidator = `ClickCardMoveValidator`,
@@ -779,6 +835,7 @@ export const enum MoveValidatorNames {
     DiscardCard2PlayersMoveValidator = `DiscardCard2PlayersMoveValidator`,
     GetEnlistmentMercenariesMoveValidator = `GetEnlistmentMercenariesMoveValidator`,
     GetMjollnirProfitMoveValidator = `GetMjollnirProfitMoveValidator`,
+    GetMythologyCardMoveValidator = `GetMythologyCardMoveValidator`,
     PassEnlistmentMercenariesMoveValidator = `PassEnlistmentMercenariesMoveValidator`,
     PlaceEnlistmentMercenariesMoveValidator = `PlaceEnlistmentMercenariesMoveValidator`,
     PlaceYludHeroMoveValidator = `PlaceYludHeroMoveValidator`,
@@ -820,6 +877,4 @@ export const enum MoveValidatorNames {
     PlaceMultiSuitCardMoveValidator = `PlaceMultiSuitCardMoveValidator`,
     PlaceThrudHeroMoveValidator = `PlaceThrudHeroMoveValidator`,
     UpgradeCoinVidofnirVedrfolnirMoveValidator = `UpgradeCoinVidofnirVedrfolnirMoveValidator`,
-    // TODO Is it here?
-    UseGodPowerMoveValidator = `UseGodPowerMoveValidator`,
 }

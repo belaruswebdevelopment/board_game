@@ -1,6 +1,7 @@
+import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { SuitNames } from "../typescript/enums";
-import type { IHeroScoringFunction, IPublicPlayer } from "../typescript/interfaces";
+import { ErrorNames, SuitNames } from "../typescript/enums";
+import type { IHeroScoringFunction, MyFnContext } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -13,9 +14,10 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const BasicHeroScoring: IHeroScoringFunction = (player: IPublicPlayer, value?: number): number => {
+export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFnContext, value?: number):
+    number => {
     if (value === undefined) {
-        throw new Error(`Function param 'value' is undefined.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }
     return value;
 };
@@ -30,7 +32,8 @@ export const BasicHeroScoring: IHeroScoringFunction = (player: IPublicPlayer, va
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const AstridScoring: IHeroScoringFunction = (player: IPublicPlayer): number => GetMaxCoinValue(player);
+export const AstridScoring: IHeroScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number =>
+    GetMaxCoinValue({ G, ctx, playerID, ...rest });
 
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>
@@ -42,5 +45,5 @@ export const AstridScoring: IHeroScoringFunction = (player: IPublicPlayer): numb
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const IdunnScoring: IHeroScoringFunction = (player: IPublicPlayer): number =>
-    GetRanksValueMultiplier(player, SuitNames.explorer, 2);
+export const IdunnScoring: IHeroScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number =>
+    GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.explorer, 2);

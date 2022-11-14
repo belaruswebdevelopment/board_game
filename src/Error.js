@@ -12,9 +12,11 @@ import { ErrorNames, GameModeNames } from "./typescript/enums";
  * @param errorArgs Аргументы действия.
  * @returns
  */
-export const ThrowMyError = (G, ctx, error, ...errorArgs) => {
+export const ThrowMyError = ({ G, ctx }, error, ...errorArgs) => {
     let _exhaustiveCheck;
     switch (error) {
+        case ErrorNames.CurrentMoveArgumentIsUndefined:
+            throw new Error(`Отсутствует необходимый аргумент мува.`);
         case ErrorNames.CurrentTierDeckIsUndefined:
             throw new Error(`Отсутствует колода карт текущей эпохи с id '${G.secret.decks.length - G.tierToEnd}'.`);
         case ErrorNames.CurrentPrivatePlayerIsUndefined:
@@ -34,6 +36,8 @@ export const ThrowMyError = (G, ctx, error, ...errorArgs) => {
         // TODO Move ctx.currentPlayer to Error(..., ctx.currentPlayer)?
         case ErrorNames.FirstStackActionIsUndefined:
             throw new Error(`В массиве стека действий текущего ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        case ErrorNames.FunctionParamIsUndefined:
+            throw new Error(`Отсутствует необходимый параметр функции '${errorArgs[0]}'.`);
         case ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction:
             throw new Error(`Отсутствует сбрасываемая карта из колоды с id '1' при отсутствии преимущества по фракции разведчиков.`);
         case ErrorNames.OnlyInSoloOrTwoPlayersGame:

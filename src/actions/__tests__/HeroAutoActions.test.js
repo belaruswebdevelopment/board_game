@@ -10,10 +10,10 @@ describe(`Test AddPickHeroAction method`, () => {
                 },
             },
             logData: [],
-        };
-        AddPickHeroAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 1);
+        };
+        AddPickHeroAction({ G, ctx }, 1);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -59,10 +59,10 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                 },
             },
             currentTavern: 0,
-        };
-        GetClosedCoinIntoPlayerHandAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        GetClosedCoinIntoPlayerHandAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -119,10 +119,10 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                 },
             },
             currentTavern: 0,
-        };
-        GetClosedCoinIntoPlayerHandAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        GetClosedCoinIntoPlayerHandAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -193,10 +193,10 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                 },
             },
             currentTavern: 0,
-        };
-        GetClosedCoinIntoPlayerHandAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        GetClosedCoinIntoPlayerHandAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {

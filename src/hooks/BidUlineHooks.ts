@@ -3,8 +3,8 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { BuffNames, ErrorNames, GameModeNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>
@@ -17,20 +17,21 @@ import type { CanBeUndefType, CanBeVoidType, Ctx, IMyGameState, IPublicPlayer, P
  * @param ctx
  * @returns Необходимость завершения текущей фазы.
  */
-export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
+export const CheckEndBidUlinePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
         }
         const ulinePlayerIndex: number =
-            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
-                CheckPlayerHasBuff(player, BuffNames.EveryTurn));
+            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+                CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                    HeroBuffNames.EveryTurn));
         if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== - 1) {
             const ulinePlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     ulinePlayerIndex);
             }
             if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
@@ -58,9 +59,9 @@ export const CheckEndBidUlinePhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<
  * @param ctx
  * @returns
  */
-export const CheckBidUlineOrder = (G: IMyGameState, ctx: Ctx): void => {
-    OpenCurrentTavernClosedCoinsOnPlayerBoard(G, ctx);
-    CheckPlayersBasicOrder(G, ctx);
+export const CheckBidUlineOrder = ({ G, ctx, ...rest }: FnContext): void => {
+    OpenCurrentTavernClosedCoinsOnPlayerBoard({ G, ctx, ...rest });
+    CheckPlayersBasicOrder({ G, ctx, ...rest });
 };
 
 /**
@@ -73,6 +74,6 @@ export const CheckBidUlineOrder = (G: IMyGameState, ctx: Ctx): void => {
  * @param G
  * @returns
  */
-export const EndBidUlineActions = (G: IMyGameState): void => {
+export const EndBidUlineActions = ({ G }: FnContext): void => {
     G.publicPlayersOrder = [];
 };

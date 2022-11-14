@@ -1,4 +1,5 @@
-import { SuitNames } from "../typescript/enums";
+import { ThrowMyError } from "../Error";
+import { ErrorNames, SuitNames } from "../typescript/enums";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 /**
  * <h3>Получение победных очков по Мифическому животному, не имеющему специфических вариантов подсчёта очков.</h3>
@@ -10,9 +11,9 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const BasicMythicalAnimalScoring = (player, value) => {
+export const BasicMythicalAnimalScoring = ({ G, ctx, ...rest }, value) => {
     if (value === undefined) {
-        throw new Error(`Function param 'value' is undefined.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }
     return value;
 };
@@ -26,7 +27,7 @@ export const BasicMythicalAnimalScoring = (player, value) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const GarmScoring = (player) => GetRanksValueMultiplier(player, SuitNames.explorer, 1);
+export const GarmScoring = ({ G, ctx, playerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.explorer, 1);
 /**
  * <h3>Получение победных очков по мифическому существу Nidhogg.</h3>
  * <p>Применения:</p>
@@ -37,5 +38,5 @@ export const GarmScoring = (player) => GetRanksValueMultiplier(player, SuitNames
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const NidhoggScoring = (player) => GetRanksValueMultiplier(player, SuitNames.warrior, 2);
+export const NidhoggScoring = ({ G, ctx, playerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.warrior, 2);
 //# sourceMappingURL=MythicalAnimalScoringHelpers.js.map

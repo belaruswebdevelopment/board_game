@@ -1,5 +1,5 @@
 import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, SuitNames } from "../typescript/enums";
-import type { IMercenaryCampCard, IStack, IStackData, OneOrTwoType, SuitNamesKeyofTypeofType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { IDwarfCard, IMercenaryCampCard, IStack, IStackData, OneOrTwoType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
 /**
  * <h3>Данные об стеке действий.</h3>
@@ -9,12 +9,21 @@ import type { IMercenaryCampCard, IStack, IStackData, OneOrTwoType, SuitNamesKey
  * </ol>
  */
 export const StackData: IStackData = {
+    activateGiantAbilityOrPickCard: (card: IDwarfCard): IStack => ({
+        stageName: StageNames.activateGiantAbilityOrPickCard,
+        drawName: DrawNames.ActivateGiantAbilityOrPickCard,
+        card,
+    }),
     addCoinToPouch: (): IStack => ({
         stageName: StageNames.addCoinToPouch,
         drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
     brisingamensEndGameAction: (): IStack => ({
         drawName: DrawNames.BrisingamensEndGame,
+    }),
+    chooseSuitOlrun: (): IStack => ({
+        stageName: StageNames.chooseSuitOlrun,
+        drawName: DrawNames.ChooseSuitOlrun,
     }),
     chooseStrategyLevelForSoloModeAndvari: (): IStack => ({
         configName: ConfigNames.ChooseStrategyLevelForSoloModeAndvari,
@@ -33,7 +42,7 @@ export const StackData: IStackData = {
         stageName: StageNames.discardBoardCard,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (pickedSuit?: SuitNamesKeyofTypeofType): IStack => ({
+    discardCardFromBoardDagda: (pickedSuit?: SuitNames): IStack => ({
         stageName: StageNames.discardBoardCard,
         drawName: DrawNames.Dagda,
         suit: SuitNames.hunter,
@@ -56,6 +65,12 @@ export const StackData: IStackData = {
     getDifficultyLevelForSoloMode: (): IStack => ({
         configName: ConfigNames.GetDifficultyLevelForSoloMode,
         drawName: DrawNames.GetDifficultyLevelForSoloMode,
+    }),
+    getMythologyCardSkymir: (priority?: 3): IStack => ({
+        configName: ConfigNames.ChooseGetMythologyCard,
+        stageName: StageNames.getMythologyCard,
+        drawName: DrawNames.GetMythologyCardSkymir,
+        priority,
     }),
     getHeroesForSoloMode: (): IStack => ({
         configName: ConfigNames.GetHeroesForSoloMode,
@@ -112,7 +127,7 @@ export const StackData: IStackData = {
         stageName: StageNames.pickDistinctionCardSoloBotAndvari,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBotAndvari,
     }),
-    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNamesKeyofTypeofType, priority?: 3): IStack => ({
+    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNames, priority?: 3): IStack => ({
         stageName: StageNames.placeMultiSuitsCards,
         drawName: DrawNames.PlaceMultiSuitsCards,
         pickedSuit,

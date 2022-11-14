@@ -11,7 +11,7 @@ import { RusCardTypeNames } from "../typescript/enums";
  * @param discardedCard Сбрасываемая карта.
  * @returns
  */
-export const DiscardPickedCard = (G, discardedCard) => {
+export const DiscardPickedCard = ({ G }, discardedCard) => {
     let _exhaustiveCheck;
     switch (discardedCard.type) {
         case RusCardTypeNames.Mercenary_Player_Card:

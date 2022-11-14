@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndefType, CardsHasStackType, Ctx, IMyGameState, IPublicPlayer, IStack, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, IStack, MyFnContext, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
@@ -16,7 +16,8 @@ import type { CanBeUndefType, CardsHasStackType, Ctx, IMyGameState, IPublicPlaye
  * @param card Карта.
  * @returns
  */
-export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], card?: CardsHasStackType): void => {
+export const AddActionsToStack = ({ G, ctx, playerID, ...rest }: MyFnContext, stack?: IStack[],
+    card?: CardsHasStackType): void => {
     let isValid = false;
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
@@ -26,9 +27,10 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
                     _exhaustiveCheck: never;
                 for (validator in validators) {
                     if (validator === PickCardValidatorNames.pickDiscardCardToStack) {
-                        isValid = IsCanPickPickDiscardCardToStack(G, card);
+                        isValid =
+                            IsCanPickPickDiscardCardToStack({ G, ctx, playerID, ...rest }, card);
                     } else if (validator === PickCardValidatorNames.pickCampCardToStack) {
-                        isValid = IsCanPickPickCampCardToStack(G, card);
+                        isValid = IsCanPickPickCampCardToStack({ G, ctx, playerID, ...rest }, card);
                     } else {
                         _exhaustiveCheck = validator;
                         throw new Error(`Отсутствует валидатор для выбора карты.`);
@@ -51,7 +53,7 @@ export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack?: IStack[], c
                 const playerId: number = stackI.playerId ?? Number(ctx.currentPlayer),
                     player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         playerId);
                 }
                 let stackIndex: number;

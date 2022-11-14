@@ -1,5 +1,5 @@
 import { ArtefactNames, DrawNames, GameModeNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
-import type { Ctx, DeckCardType, DiscardCampCardType, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
+import type { Ctx, DeckCardType, DiscardCampCardType, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContext, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 
 describe(`Test AddCoinToPouchAction method`, (): void => {
@@ -45,10 +45,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-        AddCoinToPouchAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx, 0);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -139,10 +140,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-        AddCoinToPouchAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx, 0);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -245,10 +247,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-        AddCoinToPouchAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx, 0);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -355,10 +358,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-        AddCoinToPouchAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx, 0);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -466,10 +470,11 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-        AddCoinToPouchAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx, 0);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -551,11 +556,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-            expect((): void => {
-                AddCoinToPouchAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx, 0);
+                } as Ctx;
+            expect((): void => {
+                AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
             }).toThrowError(`В массиве монет игрока с id '0' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
         });
     it(`shouldn't add undefined coin to pouch (multiplayer=false) and must throw Error`,
@@ -579,11 +585,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-            expect((): void => {
-                AddCoinToPouchAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx, 0);
+                } as Ctx;
+            expect((): void => {
+                AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
             }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует выбранная монета с id '0': это должно проверяться в MoveValidator.`);
         });
     it(`shouldn't add undefined coin to pouch (multiplayer=true) and must throw Error`,
@@ -614,11 +621,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-            expect((): void => {
-                AddCoinToPouchAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx, 0);
+                } as Ctx;
+            expect((): void => {
+                AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
             }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует выбранная монета с id '0': это должно проверяться в MoveValidator.`);
         });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`,
@@ -644,11 +652,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-            expect((): void => {
-                AddCoinToPouchAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx, 0);
+                } as Ctx;
+            expect((): void => {
+                AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
             }).toThrowError(`В массиве монет игрока с id '0' в руке не может не быть монеты с id '0'.`);
         });
     it(`shouldn't add null coin to pouch (multiplayer=true) and must throw Error`,
@@ -681,11 +690,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-            expect((): void => {
-                AddCoinToPouchAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx, 0);
+                } as Ctx;
+            expect((): void => {
+                AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
             }).toThrowError(`В массиве монет игрока с id '0' в руке не может не быть монеты с id '0'.`);
         });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`,
@@ -711,11 +721,12 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     } as IPublicPlayer,
                 },
                 logData: [],
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>;
-            expect((): void => {
-                AddCoinToPouchAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx, 0);
+                } as Ctx;
+            expect((): void => {
+                AddCoinToPouchAction({ G, ctx } as MyFnContext, 0);
             }).toThrowError(`Монета с id '0' в руке текущего игрока с id '0' не может быть закрытой для него.`);
         });
 });
@@ -745,9 +756,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             discardCardsDeck: [],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
-        DiscardSuitCardAction(G as IMyGameState, {
-            playerID: `0`,
-        } as Ctx, 0);
+        DiscardSuitCardAction({ G, playerID: `0` } as MyFnContext, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -797,9 +806,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             discardCampCardsDeck: [],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCampCardsDeck` | `logData`>;
-        DiscardSuitCardAction(G as IMyGameState, {
-            playerID: `0`,
-        } as Ctx, 0);
+        DiscardSuitCardAction({ G, playerID: `0` } as MyFnContext, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -842,9 +849,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 },
             } as Pick<IMyGameState, `publicPlayers`>;
             expect((): void => {
-                DiscardSuitCardAction(G as IMyGameState, {
-                    playerID: `0`,
-                } as Ctx, 0);
+                DiscardSuitCardAction({ G, playerID: `0` } as MyFnContext, 0);
             }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
         });
 });

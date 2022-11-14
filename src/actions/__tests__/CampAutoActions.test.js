@@ -1,4 +1,4 @@
-import { ArtefactNames, BuffNames, ConfigNames, DrawNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../../typescript/enums";
+import { ArtefactNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, StageNames, SuitNames } from "../../typescript/enums";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 describe(`Test DiscardTradingCoinAction method`, () => {
     it(`should discard trading coin isOpened=true from board (multiplayer=false)`, () => {
@@ -20,10 +20,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -65,10 +65,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -114,10 +114,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -170,10 +170,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -223,10 +223,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -276,10 +276,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -336,10 +336,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -397,10 +397,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -455,10 +455,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -515,10 +515,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -583,10 +583,10 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 },
             },
             logData: [],
-        };
-        DiscardTradingCoinAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        DiscardTradingCoinAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -632,11 +632,11 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     buffs: [],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardTradingCoinAction(G, {
-                currentPlayer: `0`,
-            });
+            DiscardTradingCoinAction({ G, ctx });
         }).toThrowError(`У игрока с id '0' на столе не может отсутствовать обменная монета.`);
     });
     it(`shouldn't discard trading coin if player hasn't trading coin and must throw Error (multiplayer=true)`, () => {
@@ -653,11 +653,11 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     buffs: [],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardTradingCoinAction(G, {
-                currentPlayer: `0`,
-            });
+            DiscardTradingCoinAction({ G, ctx });
         }).toThrowError(`У игрока с id '0' на столе не может отсутствовать обменная монета.`);
     });
     it(`shouldn't discard trading coin if player has Uline but player hasn't trading coin and must throw Error (multiplayer=false)`, () => {
@@ -677,12 +677,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     ],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardTradingCoinAction(G, {
-                currentPlayer: `0`,
-            });
-        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+            DiscardTradingCoinAction({ G, ctx });
+        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
     });
     it(`shouldn't discard trading coin if player has Uline but player hasn't trading coin and must throw Error (multiplayer=true)`, () => {
         const G = {
@@ -704,12 +704,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     ],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardTradingCoinAction(G, {
-                currentPlayer: `0`,
-            });
-        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+            DiscardTradingCoinAction({ G, ctx });
+        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
     });
 });
 describe(`Test FinishOdroerirTheMythicCauldronAction method`, () => {
@@ -717,7 +717,7 @@ describe(`Test FinishOdroerirTheMythicCauldronAction method`, () => {
         const G = {
             odroerirTheMythicCauldron: true,
         }, ctx = {};
-        FinishOdroerirTheMythicCauldronAction(G, ctx);
+        FinishOdroerirTheMythicCauldronAction({ G, ctx });
         expect(G).toEqual({
             odroerirTheMythicCauldron: false,
         });
@@ -741,7 +741,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
             currentPlayer: `0`,
             numPlayers: 2,
         };
-        StartDiscardSuitCardAction(G, ctx);
+        StartDiscardSuitCardAction({ G, ctx });
         expect(G).toEqual({
             publicPlayers: {
                 0: {},
@@ -788,7 +788,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
             currentPlayer: `0`,
             numPlayers: 3,
         };
-        StartDiscardSuitCardAction(G, ctx);
+        StartDiscardSuitCardAction({ G, ctx });
         expect(G).toEqual({
             publicPlayers: {
                 0: {},
@@ -834,7 +834,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
             numPlayers: 2,
         };
         expect(() => {
-            StartDiscardSuitCardAction(G, ctx);
+            StartDiscardSuitCardAction({ G, ctx });
         }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
     });
 });
@@ -868,10 +868,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -943,10 +943,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1026,10 +1026,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1133,10 +1133,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1224,10 +1224,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1306,10 +1306,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1392,10 +1392,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1466,10 +1466,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1553,10 +1553,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1645,10 +1645,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1736,10 +1736,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1824,10 +1824,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1909,10 +1909,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1993,10 +1993,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2089,10 +2089,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2197,10 +2197,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2300,10 +2300,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2396,10 +2396,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2488,10 +2488,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2578,10 +2578,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2680,10 +2680,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2770,10 +2770,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2848,10 +2848,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
-        };
-        StartVidofnirVedrfolnirAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        });
+        };
+        StartVidofnirVedrfolnirAction({ G, ctx });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2927,12 +2927,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            StartVidofnirVedrfolnirAction(G, {
-                currentPlayer: `0`,
-            });
-        }).toThrowError(`При наличии бафа '${BuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
+            StartVidofnirVedrfolnirAction({ G, ctx });
+        }).toThrowError(`При наличии бафа '${HeroBuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
     });
     it(`shouldn't have closed coins on the pouch (if multiplayer=false) and must throw Error`, () => {
         const G = {
@@ -2958,11 +2958,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            StartVidofnirVedrfolnirAction(G, {
-                currentPlayer: `0`,
-            });
+            StartVidofnirVedrfolnirAction({ G, ctx });
         }).toThrowError(`В массиве монет игрока с id '0' на поле не должна быть закрыта монета в кошеле с id '3'.`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=false) and must throw Error`, () => {
@@ -2986,11 +2986,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            StartVidofnirVedrfolnirAction(G, {
-                currentPlayer: `0`,
-            });
+            StartVidofnirVedrfolnirAction({ G, ctx });
         }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=true) and must throw Error`, () => {
@@ -3022,11 +3022,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            StartVidofnirVedrfolnirAction(G, {
-                currentPlayer: `0`,
-            });
+            StartVidofnirVedrfolnirAction({ G, ctx });
         }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
     });
 });

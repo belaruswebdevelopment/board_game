@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
+import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
  * <p>Применения:</p>
@@ -14,7 +14,7 @@ import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typ
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */
-export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id) => {
+export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, playerID, ...rest }, id) => {
     var _a;
     const hero = G.heroes[id];
     if (hero === undefined) {
@@ -26,9 +26,9 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
         let suit;
         for (suit in suitsConfig) {
             if (validators.discardCard.suit !== suit) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player = G.publicPlayers[Number(playerID)];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
                 }
                 const last = player.cards[suit].length - 1;
                 if (last >= 0) {
@@ -58,7 +58,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */
-export const IsCanPickHeroWithConditionsValidator = (G, ctx, id) => {
+export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, playerID, ...rest }, id) => {
     var _a;
     const hero = G.heroes[id];
     if (hero === undefined) {
@@ -74,9 +74,9 @@ export const IsCanPickHeroWithConditionsValidator = (G, ctx, id) => {
             let ranks = 0, key;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
-                    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                    const player = G.publicPlayers[Number(playerID)];
                     if (player === undefined) {
-                        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
                     }
                     ranks = player.cards[conditions[condition][key]].reduce(TotalRank, 0);
                 }

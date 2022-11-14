@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, Ctx, IMyGameState, IPriority, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, FnContext, IPriority, IPublicPlayer, MyFnContext } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>
@@ -15,13 +15,14 @@ import type { CanBeUndefType, Ctx, IMyGameState, IPriority, IPublicPlayer } from
  * @param playerId Id выбранного игрока.
  * @returns Имеет ли игрок наименьший кристалл.
  */
-export const HasLowestPriority = (G: IMyGameState, ctx: Ctx, playerId: number): boolean => {
+export const HasLowestPriority = ({ G, ctx, playerID, ...rest }: MyFnContext): boolean => {
     const tempPriorities: number[] =
         Object.values(G.publicPlayers).map((player: IPublicPlayer): number => player.priority.value),
         minPriority: number = Math.min(...tempPriorities),
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
+        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+            playerID);
     }
     const priority: IPriority = player.priority;
     return priority.value === minPriority;
@@ -38,30 +39,31 @@ export const HasLowestPriority = (G: IMyGameState, ctx: Ctx, playerId: number): 
  * @param ctx
  * @returns
  */
-export const ChangePlayersPriorities = (G: IMyGameState, ctx: Ctx): void => {
+export const ChangePlayersPriorities = ({ G, ctx, ...rest }: FnContext): void => {
     const tempPriorities: CanBeUndefType<IPriority>[] = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder: CanBeUndefType<number> = G.exchangeOrder[i];
         if (exchangeOrder !== undefined) {
             const exchangePlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[exchangeOrder];
             if (exchangePlayer === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     exchangeOrder);
             }
             tempPriorities[i] = exchangePlayer.priority;
         }
     }
     if (tempPriorities.length) {
-        AddDataToLog(G, LogTypeNames.Game, `Обмен кристаллами между игроками:`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Обмен кристаллами между игроками:`);
         for (let i = 0; i < G.exchangeOrder.length; i++) {
             const tempPriority: CanBeUndefType<IPriority> = tempPriorities[i],
                 player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    i);
             }
             if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
                 player.priority = tempPriority;
-                AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
             }
         }
     }

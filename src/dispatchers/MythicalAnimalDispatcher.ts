@@ -1,6 +1,6 @@
 import { BasicMythicalAnimalScoring, GarmScoring, NidhoggScoring } from "../score_helpers/MythicalAnimalScoringHelpers";
 import { MythicalAnimalScoringFunctionNames } from "../typescript/enums";
-import type { IAction, IMythicalAnimalScoringFunction, IPublicPlayer, ScoringArgsType } from "../typescript/interfaces";
+import type { IAction, IMythicalAnimalScoringFunction, MyFnContext, ScoringArgsType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по мифическому животному.</h3>
@@ -13,14 +13,14 @@ import type { IAction, IMythicalAnimalScoringFunction, IPublicPlayer, ScoringArg
  * @param action Объект действия.
  * @returns Количество победных очков по мифическому животному.
  */
-export const StartMythicalAnimalScoring = (player: IPublicPlayer,
+export const StartMythicalAnimalScoring = ({ G, ctx, playerID, ...rest }: MyFnContext,
     action: IAction<MythicalAnimalScoringFunctionNames, ScoringArgsType>): number => {
     const actionDispatcher: IMythicalAnimalScoringFunction =
         MythicalAnimalScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
     }
-    return actionDispatcher?.(player, ...action.params);
+    return actionDispatcher?.({ G, ctx, playerID, ...rest }, ...action.params);
 };
 
 /**

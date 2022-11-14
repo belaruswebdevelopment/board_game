@@ -1,7 +1,7 @@
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypeNames } from "./typescript/enums";
-import type { ArtefactNamesKeyofTypeofType, CampDeckCardType, CanBeUndefType, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCampCardType, IArtefactCampCard, IArtefactData, IArtefactPlayerCampCard, IBasicSuitableNullableCardInfo, IMercenaryCampCard, IMercenaryPlayerCampCard, KeyofType, MercenaryType, SuitNamesKeyofTypeofType, SuitPropertyType, TierType } from "./typescript/interfaces";
+import { RusCardTypeNames, SuitNames } from "./typescript/enums";
+import type { ArtefactNamesKeyofTypeofType, CampDeckCardType, CanBeUndefType, CreateArtefactCampCardType, CreateArtefactPlayerCampCardType, CreateMercenaryCampCardType, CreateMercenaryPlayerCampCardType, IArtefactCampCard, IArtefactData, IArtefactPlayerCampCard, IBasicSuitableNullableCardInfo, IMercenaryCampCard, IMercenaryPlayerCampCard, KeyofType, MercenaryType, SuitPropertyType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
@@ -55,7 +55,7 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
         }
         let name = ``,
             path = ``,
-            campMercenarySuit: SuitNamesKeyofTypeofType;
+            campMercenarySuit: SuitNames;
         for (campMercenarySuit in mercenaryData) {
             path += `${campMercenarySuit} `;
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;

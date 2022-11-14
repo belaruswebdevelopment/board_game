@@ -1,8 +1,8 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, Ctx, ICondition, IConditions, IHeroCard, IMyGameState, IPickValidatorsConfig, IPublicPlayer, KeyofType, PlayerCardType, SuitNamesKeyofTypeofType } from "../typescript/interfaces";
+import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndefType, ICondition, IConditions, IHeroCard, IPickValidatorsConfig, IPublicPlayer, KeyofType, MyFnContext, PlayerCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -16,8 +16,8 @@ import type { CanBeUndefType, Ctx, ICondition, IConditions, IHeroCard, IMyGameSt
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */
-export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGameState, ctx: Ctx, id: number):
-    boolean => {
+export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, playerID, ...rest }: MyFnContext,
+    id: number): boolean => {
     const hero: CanBeUndefType<IHeroCard> = G.heroes[id];
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
@@ -26,13 +26,13 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
         cardsToDiscard: PlayerCardType[] = [];
     let isValidMove = false;
     if (validators?.discardCard !== undefined) {
-        let suit: SuitNamesKeyofTypeofType;
+        let suit: SuitNames;
         for (suit in suitsConfig) {
             if (validators.discardCard.suit !== suit) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
-                        ctx.currentPlayer);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+                        playerID);
                 }
                 const last: number = player.cards[suit].length - 1;
                 if (last >= 0) {
@@ -63,7 +63,8 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */
-export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, id: number): boolean => {
+export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, playerID, ...rest }: MyFnContext, id: number):
+    boolean => {
     const hero: CanBeUndefType<IHeroCard> = G.heroes[id];
     if (hero === undefined) {
         throw new Error(`Не существует карта героя с id '${id}'.`);
@@ -80,10 +81,10 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
                 key: KeyofType<ICondition>;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
-                    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
                     if (player === undefined) {
-                        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
-                            ctx.currentPlayer);
+                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+                            playerID);
                     }
                     ranks = player.cards[conditions[condition][key]].reduce(TotalRank, 0);
                 } else if (key === `value`) {

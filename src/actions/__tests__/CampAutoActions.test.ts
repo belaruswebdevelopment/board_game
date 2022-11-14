@@ -1,5 +1,5 @@
-import { ArtefactNames, BuffNames, ConfigNames, DrawNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../../typescript/enums";
-import type { CoinType, Ctx, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
+import { ArtefactNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, StageNames, SuitNames } from "../../typescript/enums";
+import type { CoinType, Ctx, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContext, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {
@@ -22,10 +22,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -67,10 +68,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -116,10 +118,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -172,10 +175,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -225,10 +229,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -278,10 +283,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -338,10 +344,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -399,10 +406,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -457,10 +465,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -517,10 +526,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -585,10 +595,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>;
-        DiscardTradingCoinAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -635,11 +646,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         buffs: [] as IBuffs[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>;
-            expect((): void => {
-                DiscardTradingCoinAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx);
+                } as Ctx;
+            expect((): void => {
+                DiscardTradingCoinAction({ G, ctx } as MyFnContext);
             }).toThrowError(`У игрока с id '0' на столе не может отсутствовать обменная монета.`);
         });
     it(`shouldn't discard trading coin if player hasn't trading coin and must throw Error (multiplayer=true)`,
@@ -657,11 +669,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         buffs: [] as IBuffs[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>;
-            expect((): void => {
-                DiscardTradingCoinAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx);
+                } as Ctx;
+            expect((): void => {
+                DiscardTradingCoinAction({ G, ctx } as MyFnContext);
             }).toThrowError(`У игрока с id '0' на столе не может отсутствовать обменная монета.`);
         });
     it(`shouldn't discard trading coin if player has Uline but player hasn't trading coin and must throw Error (multiplayer=false)`,
@@ -682,12 +695,13 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         ],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>;
-            expect((): void => {
-                DiscardTradingCoinAction(G as IMyGameState, {
+            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+                ctx = {
                     currentPlayer: `0`,
-                } as Ctx);
-            }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+                } as Ctx;
+            expect((): void => {
+                DiscardTradingCoinAction({ G, ctx } as MyFnContext);
+            }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
         });
     it(`shouldn't discard trading coin if player has Uline but player hasn't trading coin and must throw Error (multiplayer=true)`, (): void => {
         const G = {
@@ -709,12 +723,13 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>;
-        expect((): void => {
-            DiscardTradingCoinAction(G as IMyGameState, {
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+            ctx = {
                 currentPlayer: `0`,
-            } as Ctx);
-        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+            } as Ctx;
+        expect((): void => {
+            DiscardTradingCoinAction({ G, ctx } as MyFnContext);
+        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
     });
 });
 
@@ -724,7 +739,7 @@ describe(`Test FinishOdroerirTheMythicCauldronAction method`, (): void => {
             odroerirTheMythicCauldron: true,
         } as Pick<IMyGameState, `odroerirTheMythicCauldron`>,
             ctx: Ctx = {} as Ctx;
-        FinishOdroerirTheMythicCauldronAction(G as IMyGameState, ctx);
+        FinishOdroerirTheMythicCauldronAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             odroerirTheMythicCauldron: false,
         } as Pick<IMyGameState, `odroerirTheMythicCauldron`>);
@@ -750,7 +765,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 currentPlayer: `0`,
                 numPlayers: 2,
             } as Ctx;
-        StartDiscardSuitCardAction(G as IMyGameState, ctx as Ctx);
+        StartDiscardSuitCardAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             publicPlayers: {
                 0: {} as IPublicPlayer,
@@ -798,7 +813,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 currentPlayer: `0`,
                 numPlayers: 3,
             } as Ctx;
-        StartDiscardSuitCardAction(G as IMyGameState, ctx as Ctx);
+        StartDiscardSuitCardAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             publicPlayers: {
                 0: {} as IPublicPlayer,
@@ -845,7 +860,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 numPlayers: 2,
             } as Ctx;
         expect((): void => {
-            StartDiscardSuitCardAction(G as IMyGameState, ctx as Ctx);
+            StartDiscardSuitCardAction({ G, ctx } as MyFnContext);
         }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
     });
 });
@@ -880,10 +895,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -955,10 +971,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1038,10 +1055,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1145,10 +1163,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1237,10 +1256,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [] as IStack[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-            StartVidofnirVedrfolnirAction(G as IMyGameState, {
-                currentPlayer: `0`,
-            } as Ctx);
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+                ctx = {
+                    currentPlayer: `0`,
+                } as Ctx;
+            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
             expect(G).toEqual({
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
@@ -1320,10 +1340,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         stack: [] as IStack[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-            StartVidofnirVedrfolnirAction(G as IMyGameState, {
-                currentPlayer: `0`,
-            } as Ctx);
+            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+                ctx = {
+                    currentPlayer: `0`,
+                } as Ctx;
+            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
             expect(G).toEqual({
                 mode: GameModeNames.Multiplayer,
                 tavernsNum: 3,
@@ -1406,10 +1427,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1480,10 +1502,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1567,10 +1590,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1659,10 +1683,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1750,10 +1775,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -1838,10 +1864,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1923,10 +1950,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2007,10 +2035,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2103,10 +2132,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2211,10 +2241,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2314,10 +2345,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2410,10 +2442,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2502,10 +2535,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2592,10 +2626,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2694,10 +2729,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2784,10 +2820,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -2862,10 +2899,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        StartVidofnirVedrfolnirAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2941,12 +2979,13 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        expect((): void => {
-            StartVidofnirVedrfolnirAction(G as IMyGameState, {
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
                 currentPlayer: `0`,
-            } as Ctx);
-        }).toThrowError(`При наличии бафа '${BuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
+            } as Ctx;
+        expect((): void => {
+            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
+        }).toThrowError(`При наличии бафа '${HeroBuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
     });
     it(`shouldn't have closed coins on the pouch (if multiplayer=false) and must throw Error`, (): void => {
         const G = {
@@ -2972,11 +3011,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        expect((): void => {
-            StartVidofnirVedrfolnirAction(G as IMyGameState, {
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
                 currentPlayer: `0`,
-            } as Ctx);
+            } as Ctx;
+        expect((): void => {
+            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         }).toThrowError(`В массиве монет игрока с id '0' на поле не должна быть закрыта монета в кошеле с id '3'.`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=false) and must throw Error`, (): void => {
@@ -3000,11 +3040,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        expect((): void => {
-            StartVidofnirVedrfolnirAction(G as IMyGameState, {
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
                 currentPlayer: `0`,
-            } as Ctx);
+            } as Ctx;
+        expect((): void => {
+            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=true) and must throw Error`, (): void => {
@@ -3036,11 +3077,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [] as IStack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>;
-        expect((): void => {
-            StartVidofnirVedrfolnirAction(G as IMyGameState, {
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            ctx = {
                 currentPlayer: `0`,
-            } as Ctx);
+            } as Ctx;
+        expect((): void => {
+            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContext);
         }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
     });
 });

@@ -3,7 +3,7 @@ import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames } from "../typescript/enums";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -22,7 +22,7 @@ import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCard
 export const DrawButton = (data, boardCells, name, player, moveName, ...args) => {
     let action, _exhaustiveCheck;
     switch (moveName) {
-        // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove! -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
+        // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
         case ButtonMoveNames.PassEnlistmentMercenariesMove:
             action = data.moves.PassEnlistmentMercenariesMove;
             break;
@@ -99,6 +99,9 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         case CardMoveNames.GetEnlistmentMercenariesMove:
             action = data.moves.GetEnlistmentMercenariesMove;
             break;
+        case CardMoveNames.GetMythologyCardMove:
+            action = data.moves.GetMythologyCardMove;
+            break;
         // Start
         case CardMoveNames.ClickCampCardHoldaMove:
             action = data.moves.ClickCampCardHoldaMove;
@@ -117,9 +120,6 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             break;
         case CardMoveNames.PickDiscardCardMove:
             action = data.moves.PickDiscardCardMove;
-            break;
-        case CardMoveNames.UseGodCardPowerMove:
-            action = data.moves.UseGodPowerMove;
             break;
         // Solo Mode
         case CardMoveNames.ChooseHeroForDifficultySoloModeMove:
@@ -180,7 +180,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
                 tdClasses += ` bg-yellow-200`;
                 if (card.type === RusCardTypeNames.Artefact_Card
                     && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
-                    value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
+                    value = String(GetOdroerirTheMythicCauldronCoinsValues({ G: data.G }));
                 }
             }
             break;
@@ -409,6 +409,9 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
 export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
     let className = ``, action, _exhaustiveCheck;
     switch (moveName) {
+        case SuitMoveNames.ChooseSuitOlrunMove:
+            action = data.moves.ChooseSuitOlrunMove;
+            break;
         case SuitMoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove;
             break;

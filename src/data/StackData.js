@@ -7,12 +7,21 @@ import { ConfigNames, DrawNames, HeroNames, MultiSuitCardNames, StageNames, Suit
  * </ol>
  */
 export const StackData = {
+    activateGiantAbilityOrPickCard: (card) => ({
+        stageName: StageNames.activateGiantAbilityOrPickCard,
+        drawName: DrawNames.ActivateGiantAbilityOrPickCard,
+        card,
+    }),
     addCoinToPouch: () => ({
         stageName: StageNames.addCoinToPouch,
         drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
     brisingamensEndGameAction: () => ({
         drawName: DrawNames.BrisingamensEndGame,
+    }),
+    chooseSuitOlrun: () => ({
+        stageName: StageNames.chooseSuitOlrun,
+        drawName: DrawNames.ChooseSuitOlrun,
     }),
     chooseStrategyLevelForSoloModeAndvari: () => ({
         configName: ConfigNames.ChooseStrategyLevelForSoloModeAndvari,
@@ -54,6 +63,12 @@ export const StackData = {
     getDifficultyLevelForSoloMode: () => ({
         configName: ConfigNames.GetDifficultyLevelForSoloMode,
         drawName: DrawNames.GetDifficultyLevelForSoloMode,
+    }),
+    getMythologyCardSkymir: (priority) => ({
+        configName: ConfigNames.ChooseGetMythologyCard,
+        stageName: StageNames.getMythologyCard,
+        drawName: DrawNames.GetMythologyCardSkymir,
+        priority,
     }),
     getHeroesForSoloMode: () => ({
         configName: ConfigNames.GetHeroesForSoloMode,

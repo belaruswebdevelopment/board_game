@@ -1,8 +1,9 @@
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
  * <p>Применения:</p>
@@ -18,16 +19,16 @@ import { BuffNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames } fro
  * @param type Тип обменной монеты.
  * @returns
  */
-export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, type) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+export const UpgradeCoinAction = ({ G, ctx, playerID, ...rest }, isTrading, value, upgradingCoinId, type) => {
+    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
     }
     let handCoins, boardCoins;
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)) {
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.SoloAndvari && playerID === `1`)) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     }
@@ -40,25 +41,25 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
     switch (type) {
         case CoinTypeNames.Hand:
             if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке нет монеты с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' в руке нет монеты с id '${upgradingCoinId}'.`);
             }
             if (handCoin === null) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
             }
             if (!IsCoin(handCoin)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${upgradingCoinId}'.`);
             }
             upgradingCoin = handCoin;
             break;
         case CoinTypeNames.Board:
             if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' на столе нет монеты с id '${upgradingCoinId}'.`);
             }
             if (boardCoin === null) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может не быть монеты с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' на столе не может не быть монеты с id '${upgradingCoinId}'.`);
             }
             if (!IsCoin(boardCoin)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрыта монета с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' на столе не может быть закрыта монета с id '${upgradingCoinId}'.`);
             }
             upgradingCoin = boardCoin;
             break;
@@ -69,9 +70,9 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
     }
     // TODO Split into different functions!?
     if (upgradingCoin === undefined) {
-        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' отсутствует обменная монета.`);
+        throw new Error(`В массиве монет игрока с id '${playerID}' отсутствует обменная монета.`);
     }
-    const buffValue = CheckPlayerHasBuff(player, BuffNames.UpgradeCoin) ? 2 : 0, newValue = upgradingCoin.value + value + buffValue;
+    const buffValue = CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.UpgradeCoin) ? 2 : 0, newValue = upgradingCoin.value + value + buffValue;
     let upgradedCoin = null;
     if (G.marketCoins.length) {
         const lastMarketCoin = G.marketCoins[G.marketCoins.length - 1];
@@ -94,6 +95,14 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
                 else if (marketCoin.value >= newValue) {
                     upgradedCoin = marketCoin;
                     G.marketCoins.splice(i, 1);
+                    if (G.expansions.idavoll.active) {
+                        const betterment = marketCoin.value - newValue;
+                        if (betterment > 0) {
+                            for (let j = 0; j < betterment; j++) {
+                                CheckValkyryRequirement({ G, ctx, playerID, ...rest }, ValkyryBuffNames.CountBettermentAmount);
+                            }
+                        }
+                    }
                     break;
                 }
                 if (i === G.marketCoins.length - 1) {
@@ -105,18 +114,18 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
     if (upgradedCoin === null) {
         throw new Error(`На рынке монет нет доступных монет для обмена.`);
     }
-    AddDataToLog(G, LogTypeNames.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
-    AddDataToLog(G, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
     // TODO Check it && check is it need for solo bot Andvari?!
     if (!upgradedCoin.isOpened
-        && !(G.mode === GameModeNames.Solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
+        && !(G.mode === GameModeNames.Solo && playerID === `1` && upgradingCoin.value === 2)) {
         ChangeIsOpenedCoinStatus(upgradedCoin, true);
     }
     // TODO Check it && check is it need for solo bot Andvari?!
     if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-        || (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2))
+        || (G.mode === GameModeNames.Solo && playerID === `1` && upgradingCoin.value === 2))
         && type === CoinTypeNames.Hand) || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-        && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
+        && CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.EveryTurn)
         && type === CoinTypeNames.Board && isTrading)) {
         if (isTrading) {
             const handCoinId = player.handCoins.indexOf(null);
@@ -133,15 +142,15 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
             }
             handCoins[upgradingCoinId] = upgradedCoin;
         }
-        AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
     }
     else if (type === CoinTypeNames.Board) {
         if (G.mode === GameModeNames.Multiplayer
-            || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)) {
+            || (G.mode === GameModeNames.SoloAndvari && playerID === `1`)) {
             boardCoins[upgradingCoinId] = upgradedCoin;
         }
         player.boardCoins[upgradingCoinId] = upgradedCoin;
-        AddDataToLog(G, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
     }
     if (!upgradingCoin.isInitial) {
         let returningIndex = 0;
@@ -156,7 +165,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
             }
         }
         G.marketCoins.splice(returningIndex, 0, upgradingCoin);
-        AddDataToLog(G, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
     }
 };
 //# sourceMappingURL=CoinActions.js.map

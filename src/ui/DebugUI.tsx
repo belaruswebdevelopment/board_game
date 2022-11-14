@@ -1,4 +1,4 @@
-import type { CanBeNullType, CanBeUndefType, Ctx, DebugDrawDataType, IDebugData, IMyGameState, KeyofType, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Ctx, DebugDrawDataType, FnContext, IDebugData, KeyofType, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -11,8 +11,8 @@ import type { CanBeNullType, CanBeUndefType, Ctx, DebugDrawDataType, IDebugData,
  * @param ctx
  * @returns Дебаг панель.
  */
-export const DrawDebugData = (G: IMyGameState, ctx: Ctx): CanBeNullType<JSX.Element> => {
-    const debugData: CanBeUndefType<IDebugData> = GetDebugData(G, ctx);
+export const DrawDebugData = ({ G, ctx, ...rest }: FnContext): CanBeNullType<JSX.Element> => {
+    const debugData: CanBeUndefType<IDebugData> = GetDebugData({ G, ctx, ...rest });
     if (debugData === undefined) {
         return null;
     } else {
@@ -93,7 +93,7 @@ const DrawObjectData = (obj: DebugDrawDataType): JSX.Element => {
  * @param ctx
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (G: IMyGameState, ctx: Ctx): CanBeUndefType<IDebugData> => {
+const GetDebugData = ({ G, ctx }: FnContext): CanBeUndefType<IDebugData> => {
     if (G.debug) {
         const debugData: IDebugData = {
             G: {},

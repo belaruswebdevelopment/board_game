@@ -1,7 +1,7 @@
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardArrayType, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, Ctx, IMyGameState, IndexOf, ITavernInConfig } from "../typescript/interfaces";
+import type { CampCardArrayType, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, ITavernInConfig } from "../typescript/interfaces";
 
 /**
 * <h3>Заполняет лагерь новой картой из карт лагерь деки текущей эпохи.</h3>
@@ -15,7 +15,7 @@ import type { CampCardArrayType, CampCardType, CampDeckCardType, CanBeNullType, 
 * @param cardIndex Индекс карты.
 * @returns
 */
-const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
+const AddCardToCamp = ({ G }: FnContext, cardIndex: number): void => {
     const campDeck: CanBeUndefType<CampDeckCardType[]> = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
     if (campDeck === undefined) {
         throw new Error(`Отсутствует колода карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
@@ -38,7 +38,7 @@ const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
  * @param G
  * @returns
  */
-const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
+const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }: FnContext): void => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.campNum; i++) {
         const campCard: CampCardType = G.camp[i as IndexOf<CampCardArrayType>];
@@ -63,7 +63,7 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
         campDeck.splice(0);
         G.campDeckLength[G.secret.campDecks.length - G.tierToEnd - 1] = campDeck.length;
     }
-    AddDataToLog(G, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
 };
 
 /**
@@ -77,10 +77,10 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  * @param ctx
  * @returns
  */
-export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void => {
+export const DiscardCardFromTavernJarnglofi = ({ G, ctx, ...rest }: FnContext): void => {
     const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
-    AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
-    const isCardDiscarded: boolean = DiscardCardFromTavern(G, ctx);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
+    const isCardDiscarded: boolean = DiscardCardFromTavern({ G, ctx, ...rest });
     if (!isCardDiscarded) {
         throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${G.currentTavern}' при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
     }
@@ -98,11 +98,11 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void 
  * @param ctx
  * @returns
  */
-export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => {
+export const DiscardCardIfCampCardPicked = ({ G, ctx, ...rest }: FnContext): void => {
     if (G.campPicked) {
         const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
-        AddDataToLog(G, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
-        const isCardDiscarded: boolean = DiscardCardFromTavern(G, ctx);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
+        const isCardDiscarded: boolean = DiscardCardFromTavern({ G, ctx, ...rest });
         if (!isCardDiscarded) {
             throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${G.currentTavern}' после выбора карты лагеря в конце выбора карт из таверны.`);
         }
@@ -120,8 +120,8 @@ export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => 
  * @param G
  * @returns
  */
-export const RefillCamp = (G: IMyGameState): void => {
-    AddRemainingCampCardsToDiscard(G);
+export const RefillCamp = ({ G, ctx, ...rest }: FnContext): void => {
+    AddRemainingCampCardsToDiscard({ G, ctx, ...rest });
     const campDeck1: CampDeckCardType[] = G.secret.campDecks[1],
         index: number = campDeck1.findIndex((card: CampDeckCardType): boolean =>
             card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
@@ -139,10 +139,10 @@ export const RefillCamp = (G: IMyGameState): void => {
     campDeck1[0] = odroerirTheMythicCauldron;
     campDeck1[index] = campCardTemp;
     for (let i = 0; i < G.campNum; i++) {
-        AddCardToCamp(G, i);
+        AddCardToCamp({ G, ctx, ...rest }, i);
     }
     G.odroerirTheMythicCauldron = true;
-    AddDataToLog(G, LogTypeNames.Game, `Кэмп заполнен новыми картами новой эпохи.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Кэмп заполнен новыми картами новой эпохи.`);
 };
 
 /**
@@ -155,7 +155,7 @@ export const RefillCamp = (G: IMyGameState): void => {
  * @param G
  * @returns
  */
-export const RefillEmptyCampCards = (G: IMyGameState): void => {
+export const RefillEmptyCampCards = ({ G, ctx, ...rest }: FnContext): void => {
     const emptyCampCards: (CanBeNullType<number>)[] =
         G.camp.map((card: CampCardType, index: number): CanBeNullType<number> => {
             if (card === null) {
@@ -173,9 +173,9 @@ export const RefillEmptyCampCards = (G: IMyGameState): void => {
         emptyCampCards.forEach((cardIndex: CanBeNullType<number>): void => {
             isEmptyCurrentTierCampDeck = campDeck.length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
-                AddCardToCamp(G, cardIndex);
+                AddCardToCamp({ G, ctx, ...rest }, cardIndex);
             }
         });
-        AddDataToLog(G, LogTypeNames.Game, `Кэмп заполнен новыми картами.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Кэмп заполнен новыми картами.`);
     }
 };

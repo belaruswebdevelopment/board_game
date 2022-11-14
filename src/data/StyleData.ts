@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CardNamesForStylesType, IBackground, IndexOf, IStyles, MythologicalCreatureNameType, SuitNamesKeyofTypeofType, TavernsConfigType, TierType } from "../typescript/interfaces";
+import type { CanBeNullType, CardNamesForStylesType, IBackground, IndexOf, IStyles, MythologicalCreatureNameType, TavernsConfigType, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -153,8 +153,7 @@ export const Styles: IStyles = {
     CardBack: (tier: TierType): IBackground => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    Card: (suit: SuitNamesKeyofTypeofType, name: CardNamesForStylesType, points: CanBeNullType<number>):
-        IBackground => {
+    Card: (suit: SuitNames, name: CardNamesForStylesType, points: CanBeNullType<number>): IBackground => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             // TODO Fix it to use _exhaustiveCheck!
             switch (name) {
@@ -290,7 +289,7 @@ export const Styles: IStyles = {
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinction: (distinction: SuitNamesKeyofTypeofType): IBackground => {
+    Distinction: (distinction: SuitNames): IBackground => {
         switch (distinction) {
             case SuitNames.blacksmith:
                 return {
@@ -561,7 +560,7 @@ export const Styles: IStyles = {
                 return _exhaustiveCheck;
         }
     },
-    Suit: (suit: SuitNamesKeyofTypeofType): IBackground => ({
+    Suit: (suit: SuitNames): IBackground => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Tavern: (tavernId: IndexOf<TavernsConfigType>): IBackground => {

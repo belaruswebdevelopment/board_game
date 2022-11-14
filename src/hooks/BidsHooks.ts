@@ -5,8 +5,8 @@ import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
-import { BuffNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, CoinType, Ctx, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, CoinType, FnContext, IPlayer, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -19,7 +19,7 @@ import type { CanBeUndefType, CanBeVoidType, CoinType, Ctx, IMyGameState, IPlaye
  * @param ctx
  * @returns Необходимость завершения текущей фазы.
  */
-export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
+export const CheckEndBidsPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty: boolean =
             Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
@@ -27,16 +27,18 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<bool
                     if ((G.mode === GameModeNames.Solo && playerIndex === 1)
                         || (G.mode === GameModeNames.SoloAndvari && playerIndex === 1)
                         || (G.mode === GameModeNames.Multiplayer
-                            && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+                            && !CheckPlayerHasBuff({ G, ctx, playerID: String(playerIndex), ...rest }, HeroBuffNames.EveryTurn))) {
                         const privatePlayer: CanBeUndefType<IPlayer> = G.players[playerIndex];
                         if (privatePlayer === undefined) {
-                            return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
-                                playerIndex);
+                            return ThrowMyError({ G, ctx, ...rest },
+                                ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerIndex);
                         }
                         return privatePlayer.handCoins.every((coin: CoinType): boolean => coin === null);
                     } else if ((G.mode === GameModeNames.Solo && playerIndex === 0)
                         || (G.mode === GameModeNames.SoloAndvari && playerIndex === 0)
-                        || (G.mode === GameModeNames.Basic && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
+                        || (G.mode === GameModeNames.Basic
+                            && !CheckPlayerHasBuff({ G, ctx, playerID: String(playerIndex), ...rest },
+                                HeroBuffNames.EveryTurn))) {
                         return player.handCoins.every((coin: PublicPlayerCoinType, coinIndex: number):
                             boolean => {
                             if (coin !== null && !IsCoin(coin)) {
@@ -62,14 +64,16 @@ export const CheckEndBidsPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<bool
  * @param ctx
  * @returns Необходимость завершения текущего хода.
  */
-export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => {
+export const CheckEndBidsTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+            ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinType[];
     if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
@@ -101,7 +105,7 @@ export const CheckEndBidsTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true>
  * @param G
  * @returns
  */
-export const EndBidsActions = (G: IMyGameState): void => {
+export const EndBidsActions = ({ G }: FnContext): void => {
     G.publicPlayersOrder = [];
 };
 
@@ -116,16 +120,16 @@ export const EndBidsActions = (G: IMyGameState): void => {
  * @param ctx
  * @returns
  */
-export const PreparationPhaseActions = (G: IMyGameState, ctx: Ctx): void => {
+export const PreparationPhaseActions = ({ G, ctx, random, ...rest }: FnContext): void => {
     G.round++;
     G.currentTavern = 0;
     if (G.round !== 0) {
-        ReturnCoinsToPlayerHands(G, ctx);
+        ReturnCoinsToPlayerHands({ G, ctx, random, ...rest });
     }
     if (G.expansions.thingvellir.active) {
-        RefillEmptyCampCards(G);
+        RefillEmptyCampCards({ G, ctx, random, ...rest });
     }
-    RefillTaverns(G, ctx);
-    MixUpCoinsInPlayerHands(G, ctx);
-    CheckPlayersBasicOrder(G, ctx);
+    RefillTaverns({ G, ctx, random, ...rest });
+    MixUpCoinsInPlayerHands({ G, ctx, random, ...rest });
+    CheckPlayersBasicOrder({ G, ctx, random, ...rest });
 };

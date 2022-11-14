@@ -10,7 +10,7 @@ import { LogTypeNames } from "../typescript/enums";
  * @param G
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (G) => {
+export const DrawLogData = ({ G }) => {
     if (G.log) {
         const loggingData = [];
         for (let i = G.logData.length - 1; i >= 0; i--) {

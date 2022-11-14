@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinType, IBuildCoinsOptions, ICoin, IMyGameState, INumberValues, PublicPlayerCoinType } from "./typescript/interfaces";
+import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinType, FnContext, IBuildCoinsOptions, ICoin, INumberValues, PublicPlayerCoinType } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -70,7 +70,7 @@ export const ChangeIsOpenedCoinStatus = (coin: ICoin, status: boolean): void => 
  * @param G
  * @returns Количество всех монет на рынке (с повторами).
  */
-export const CountMarketCoins = (G: IMyGameState): INumberValues => {
+export const CountMarketCoins = ({ G }: FnContext): INumberValues => {
     const repeated: INumberValues = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
         const marketCoin: CanBeUndefType<ICoin> = G.marketCoinsUnique[i];

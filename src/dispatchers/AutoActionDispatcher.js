@@ -1,5 +1,6 @@
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
+import { AddMythologyCreatureCardsSkymirAction, AddPlusTwoValueToAllCoinsAction } from "../actions/MythologicalCreatureAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
@@ -14,8 +15,14 @@ import { AutoActionFunctionNames } from "../typescript/enums";
 const AutoActionDispatcherSwitcher = (actionName) => {
     let action, _exhaustiveCheck;
     switch (actionName) {
+        case AutoActionFunctionNames.AddMythologyCreatureCardsSkymirAction:
+            action = AddMythologyCreatureCardsSkymirAction;
+            break;
         case AutoActionFunctionNames.AddPickHeroAction:
             action = AddPickHeroAction;
+            break;
+        case AutoActionFunctionNames.AddPlusTwoValueToAllCoinsAction:
+            action = AddPlusTwoValueToAllCoinsAction;
             break;
         case AutoActionFunctionNames.DiscardTradingCoinAction:
             action = DiscardTradingCoinAction;
@@ -54,14 +61,15 @@ const AutoActionDispatcherSwitcher = (actionName) => {
  * @param action Объект автоматического действия.
  * @returns
  */
-export const StartAutoAction = (G, ctx, action) => {
+export const StartAutoAction = ({ G, ctx, playerID, ...rest }, action) => {
     if (action !== undefined) {
         const actionDispatcher = AutoActionDispatcherSwitcher(action.name);
+        // TODO Rework!?
         if (action.params === undefined) {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx);
+            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest });
         }
         else {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, ...action.params);
+            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest }, ...action.params);
         }
     }
 };

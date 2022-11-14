@@ -17,18 +17,18 @@ import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
  * @param coinsOrder Порядок выкладки монет.
  * @returns
  */
-export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
+export const BotsPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrder) => {
     // TODO Check it bot can't play in multiplayer now...
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default3, coinsOrder);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default3, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
     }
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -41,23 +41,23 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         const coinId = coinsOrder[i]
             || handCoins.findIndex((coin, index) => {
                 if (coin !== null && !IsCoin(coin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${index}'.`);
+                    throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта для него монета с id '${index}'.`);
                 }
                 if (IsCoin(coin) && coin.isOpened) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                    throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта монета с id '${index}'.`);
                 }
                 return IsCoin(coin);
             });
         if (coinId !== -1) {
             const handCoin = handCoins[coinId];
             if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${coinId}'.`);
             }
             if (handCoin !== null && !IsCoin(handCoin)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
             }
             if (IsCoin(handCoin) && handCoin.isOpened) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
             }
             if (G.mode === GameModeNames.Multiplayer) {
                 privatePlayer.boardCoins[i] = handCoin;
@@ -66,7 +66,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
             }
             else {
                 if (handCoin !== null && (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
-                    && ctx.currentPlayer === `0`) {
+                    && playerID === `0`) {
                     ChangeIsOpenedCoinStatus(handCoin, true);
                 }
                 player.boardCoins[i] = handCoin;

@@ -8,17 +8,16 @@ import { ArtefactScoringFunctionNames } from "../typescript/enums";
  * </ol>
  *
  * @param G
- * @param player Игрок.
  * @param action Объект действия.
  * @returns Количество победных очков по артефакту.
  */
-export const StartArtefactScoring = (G, player, action) => {
+export const StartArtefactScoring = ({ G, ctx, playerID, ...rest }, action) => {
     const actionDispatcher = ArtefactScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, player);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest });
     }
     else {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, player, ...action.params);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest }, ...action.params);
     }
 };
 /**

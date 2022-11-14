@@ -66,7 +66,7 @@ export const ChangeIsOpenedCoinStatus = (coin, status) => {
  * @param G
  * @returns Количество всех монет на рынке (с повторами).
  */
-export const CountMarketCoins = (G) => {
+export const CountMarketCoins = ({ G }) => {
     const repeated = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
         const marketCoin = G.marketCoinsUnique[i];

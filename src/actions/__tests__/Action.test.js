@@ -1,5 +1,5 @@
 import { suitsConfig } from "../../data/SuitData";
-import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, CampBuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     it(`should remove non-hero discarded card from player's cards to cards discard`, () => {
@@ -25,10 +25,10 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCardsDeck: [],
             logData: [],
-        };
-        DiscardAnyCardFromPlayerBoardAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, SuitNames.warrior, 0);
+        };
+        DiscardAnyCardFromPlayerBoardAction({ G, ctx }, SuitNames.warrior, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -53,7 +53,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         });
@@ -81,10 +81,10 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCampCardsDeck: [],
             logData: [],
-        };
-        DiscardAnyCardFromPlayerBoardAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, SuitNames.warrior, 0);
+        };
+        DiscardAnyCardFromPlayerBoardAction({ G, ctx }, SuitNames.warrior, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -109,7 +109,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         });
@@ -137,10 +137,10 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCampCardsDeck: [],
             logData: [],
-        };
-        DiscardAnyCardFromPlayerBoardAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, SuitNames.warrior, 0);
+        };
+        DiscardAnyCardFromPlayerBoardAction({ G, ctx }, SuitNames.warrior, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -165,7 +165,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         });
@@ -183,11 +183,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     },
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardAnyCardFromPlayerBoardAction(G, {
-                currentPlayer: `0`,
-            }, SuitNames.warrior, 0);
+            DiscardAnyCardFromPlayerBoardAction({ G, ctx }, SuitNames.warrior, 0);
         }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, () => {
@@ -199,11 +199,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     },
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardAnyCardFromPlayerBoardAction(G, {
-                currentPlayer: `0`,
-            }, SuitNames.warrior, 0);
+            DiscardAnyCardFromPlayerBoardAction({ G, ctx }, SuitNames.warrior, 0);
         }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта во фракции '${RusSuitNames['warrior']}' с id '0': это должно проверяться в MoveValidator.`);
     });
 });
@@ -230,10 +230,10 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             discardCardsDeck: [],
             tavernCardDiscarded2Players: false,
             logData: [],
-        };
-        DiscardCardFromTavernAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        DiscardCardFromTavernAction({ G, ctx }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -284,11 +284,11 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                 [],
             ],
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardCardFromTavernAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            DiscardCardFromTavernAction({ G, ctx }, 0);
         }).toThrowError(`Не удалось сбросить карту с id '0' из текущей таверны с id '0'.`);
     });
     it(`shouldn't remove non-exists card from tavern and must throw Error`, () => {
@@ -305,11 +305,11 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                 [],
             ],
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            DiscardCardFromTavernAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            DiscardCardFromTavernAction({ G, ctx }, 0);
         }).toThrowError(`В текущей таверне с id '0' отсутствует карта для сброса с id '0'.`);
     });
 });
@@ -331,11 +331,11 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                 },
             },
             logData: [],
-        };
-        GetEnlistmentMercenariesAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
             phase: PhaseNames.EnlistmentMercenaries,
-        }, 0);
+        };
+        GetEnlistmentMercenariesAction({ G, ctx }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -371,12 +371,12 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                     campCards: [],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
+            phase: PhaseNames.EnlistmentMercenaries,
         };
         expect(() => {
-            GetEnlistmentMercenariesAction(G, {
-                currentPlayer: `0`,
-                phase: PhaseNames.EnlistmentMercenaries,
-            }, 0);
+            GetEnlistmentMercenariesAction({ G, ctx }, 0);
         }).toThrowError(`В массиве карт лагеря игрока с id '0' отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
     it(`shouldn't remove null card from tavern and must throw Error`, () => {
@@ -388,12 +388,12 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                     ],
                 },
             },
+        }, ctx = {
+            currentPlayer: `0`,
+            phase: PhaseNames.EnlistmentMercenaries,
         };
         expect(() => {
-            GetEnlistmentMercenariesAction(G, {
-                currentPlayer: `0`,
-                phase: PhaseNames.EnlistmentMercenaries,
-            }, 0);
+            GetEnlistmentMercenariesAction({ G, ctx }, 0);
         }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary_Card}'.`);
     });
 });
@@ -411,10 +411,10 @@ describe(`Test GetMjollnirProfitAction method`, () => {
                 },
             },
             logData: [],
-        };
-        GetMjollnirProfitAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, SuitNames.hunter);
+        };
+        GetMjollnirProfitAction({ G, ctx }, SuitNames.hunter);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -433,7 +433,7 @@ describe(`Test GetMjollnirProfitAction method`, () => {
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${BuffNames.GetMjollnirProfit}'.`,
+                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.GetMjollnirProfit}'.`,
                 },
                 {
                     type: LogTypeNames.Game,
@@ -452,11 +452,11 @@ describe(`Test PassEnlistmentMercenariesAction method`, () => {
                 },
             },
             logData: [],
-        };
-        PassEnlistmentMercenariesAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
             phase: PhaseNames.EnlistmentMercenaries,
-        });
+        };
+        PassEnlistmentMercenariesAction({ G, ctx });
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -492,10 +492,10 @@ describe(`Test PickDiscardCardAction method`, () => {
                 },
             ],
             logData: [],
-        };
-        PickDiscardCardAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        PickDiscardCardAction({ G, ctx }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -551,10 +551,10 @@ describe(`Test PickDiscardCardAction method`, () => {
                 },
             ],
             logData: [],
-        };
-        PickDiscardCardAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        PickDiscardCardAction({ G, ctx }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -624,10 +624,10 @@ describe(`Test PickDiscardCardAction method`, () => {
                 },
             ],
             logData: [],
-        };
-        PickDiscardCardAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        PickDiscardCardAction({ G, ctx }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -703,10 +703,10 @@ describe(`Test PickDiscardCardAction method`, () => {
                 },
             ],
             logData: [],
-        };
-        PickDiscardCardAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
-        }, 0);
+        };
+        PickDiscardCardAction({ G, ctx }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -787,11 +787,11 @@ describe(`Test PickDiscardCardAction method`, () => {
                 0: {},
             },
             discardCardsDeck: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            PickDiscardCardAction(G, {
-                currentPlayer: `0`,
-            }, 0);
+            PickDiscardCardAction({ G, ctx }, 0);
         }).toThrowError(`В массиве колоды сброса отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
 });
@@ -828,11 +828,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                 },
             },
             logData: [],
-        };
-        PlaceEnlistmentMercenariesAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
             phase: PhaseNames.EnlistmentMercenaries,
-        }, SuitNames.blacksmith);
+        };
+        PlaceEnlistmentMercenariesAction({ G, ctx }, SuitNames.blacksmith);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -909,11 +909,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                 },
             },
             logData: [],
-        };
-        PlaceEnlistmentMercenariesAction(G, {
+        }, ctx = {
             currentPlayer: `0`,
             phase: PhaseNames.EnlistmentMercenaries,
-        }, SuitNames.warrior);
+        };
+        PlaceEnlistmentMercenariesAction({ G, ctx }, SuitNames.warrior);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -1005,11 +1005,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             publicPlayers: {
                 0: {},
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            PlaceEnlistmentMercenariesAction(G, {
-                currentPlayer: `0`,
-            }, SuitNames.blacksmith);
+            PlaceEnlistmentMercenariesAction({ G, ctx }, SuitNames.blacksmith);
         }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary_Card}'.`);
     });
     it(`shouldn't get mercenary card which not exists in player's camp cards to place and must throw Error`, () => {
@@ -1029,11 +1029,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                 },
             },
             logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            PlaceEnlistmentMercenariesAction(G, {
-                currentPlayer: `0`,
-            }, SuitNames.explorer);
+            PlaceEnlistmentMercenariesAction({ G, ctx }, SuitNames.explorer);
         }).toThrowError(`У игрока с id '0' в массиве карт лагеря отсутствует выбранная карта.`);
     });
     it(`shouldn't use non-existing suit in picked mercenary card and must throw Error`, () => {
@@ -1041,11 +1041,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             publicPlayers: {
                 0: {},
             },
+        }, ctx = {
+            currentPlayer: `0`,
         };
         expect(() => {
-            PlaceEnlistmentMercenariesAction(G, {
-                currentPlayer: `0`,
-            }, SuitNames.hunter);
+            PlaceEnlistmentMercenariesAction({ G, ctx }, SuitNames.hunter);
         }).toThrowError(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${SuitNames.hunter}'.`);
     });
 });

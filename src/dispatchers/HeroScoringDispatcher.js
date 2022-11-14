@@ -11,13 +11,13 @@ import { HeroScoringFunctionNames } from "../typescript/enums";
  * @param action Объект действия.
  * @returns Количество победных очков по герою.
  */
-export const StartHeroScoring = (player, action) => {
+export const StartHeroScoring = ({ G, ctx, playerID, ...rest }, action) => {
     const actionDispatcher = HeroScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(player);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest });
     }
     else {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(player, ...action.params);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest }, ...action.params);
     }
 };
 /**

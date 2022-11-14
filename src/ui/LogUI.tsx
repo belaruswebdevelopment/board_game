@@ -1,5 +1,5 @@
 import { LogTypeNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, ILogData, IMyGameState } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, FnContext, ILogData } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -11,7 +11,7 @@ import type { CanBeNullType, CanBeUndefType, ILogData, IMyGameState } from "../t
  * @param G
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (G: IMyGameState): CanBeNullType<JSX.Element> => {
+export const DrawLogData = ({ G }: FnContext): CanBeNullType<JSX.Element> => {
     if (G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = G.logData.length - 1; i >= 0; i--) {

@@ -24,7 +24,9 @@ export var DistinctionAwardingFunctionNames;
  */
 export var AutoActionFunctionNames;
 (function (AutoActionFunctionNames) {
+    AutoActionFunctionNames["AddMythologyCreatureCardsSkymirAction"] = "AddMythologyCardSkymirAction";
     AutoActionFunctionNames["AddPickHeroAction"] = "AddPickHeroAction";
+    AutoActionFunctionNames["AddPlusTwoValueToAllCoinsAction"] = "AddPlusTwoValueToAllCoinsAction";
     AutoActionFunctionNames["DiscardTradingCoinAction"] = "DiscardTradingCoinAction";
     AutoActionFunctionNames["FinishOdroerirTheMythicCauldronAction"] = "FinishOdroerirTheMythicCauldronAction";
     AutoActionFunctionNames["GetClosedCoinIntoPlayerHandAction"] = "GetClosedCoinIntoPlayerHandAction";
@@ -136,22 +138,63 @@ export var RusArtefactNames;
  */
 export var BuffNames;
 (function (BuffNames) {
-    BuffNames["CountDistinctionAmount"] = "countDistinctionAmount";
-    BuffNames["CountPickedHeroAmount"] = "countPickedHeroAmount";
-    BuffNames["DagdaDiscardOnlyOneCards"] = "dagdaDiscardOnlyOneCards";
-    BuffNames["DiscardCardEndGame"] = "discardCardEndGame";
-    BuffNames["EndTier"] = "endTier";
-    BuffNames["EveryTurn"] = "everyTurn";
-    BuffNames["GetMjollnirProfit"] = "getMjollnirProfit";
-    BuffNames["GoCamp"] = "goCamp";
-    BuffNames["GoCampOneTime"] = "goCampOneTime";
-    BuffNames["MoveThrud"] = "moveThrud";
-    BuffNames["NoHero"] = "noHero";
-    BuffNames["RatatoskFinalScoring"] = "ratatoskFinalScoring";
+    BuffNames["HasOneNotCountHero"] = "hasOneNotCountHero";
     BuffNames["SuitIdForMjollnir"] = "suitIdForMjollnir";
-    BuffNames["UpgradeCoin"] = "upgradeCoin";
-    BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
+    BuffNames["SuitIdForOlrun"] = "suitIdForOlrun";
 })(BuffNames || (BuffNames = {}));
+/**
+ * <h3>Перечисление для названия бафов карт Лагеря в конфиге.</h3>
+ */
+export var CampBuffNames;
+(function (CampBuffNames) {
+    CampBuffNames["DiscardCardEndGame"] = "discardCardEndGame";
+    CampBuffNames["GetMjollnirProfit"] = "getMjollnirProfit";
+    CampBuffNames["GoCamp"] = "goCamp";
+    CampBuffNames["NoHero"] = "noHero";
+})(CampBuffNames || (CampBuffNames = {}));
+/**
+ * <h3>Перечисление для названия бафов Героев в конфиге.</h3>
+ */
+export var HeroBuffNames;
+(function (HeroBuffNames) {
+    HeroBuffNames["EndTier"] = "endTier";
+    HeroBuffNames["EveryTurn"] = "everyTurn";
+    HeroBuffNames["GoCampOneTime"] = "goCampOneTime";
+    HeroBuffNames["MoveThrud"] = "moveThrud";
+    HeroBuffNames["UpgradeCoin"] = "upgradeCoin";
+    HeroBuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
+})(HeroBuffNames || (HeroBuffNames = {}));
+/**
+ * <h3>Перечисление для названия бафов Гигантов в конфиге.</h3>
+ */
+export var GiantBuffNames;
+(function (GiantBuffNames) {
+    GiantBuffNames["PlayerHasActiveGiantGymir"] = "playerHasActiveGiantGymir";
+    GiantBuffNames["PlayerHasActiveGiantHrungnir"] = "playerHasActiveGiantHrungnir";
+    GiantBuffNames["PlayerHasActiveGiantSkymir"] = "playerHasActiveGiantSkymir";
+    GiantBuffNames["PlayerHasActiveGiantSurt"] = "playerHasActiveGiantSurt";
+    GiantBuffNames["PlayerHasActiveGiantThrivaldi"] = "playerHasActiveGiantThrivaldi";
+})(GiantBuffNames || (GiantBuffNames = {}));
+/**
+ * <h3>Перечисление для названия бафов Мистических животных в конфиге.</h3>
+ */
+export var MythicalAnimalBuffNames;
+(function (MythicalAnimalBuffNames) {
+    MythicalAnimalBuffNames["DagdaDiscardOnlyOneCards"] = "dagdaDiscardOnlyOneCards";
+    MythicalAnimalBuffNames["ExplorerDistinctionGetSixCards"] = "explorerDistinctionGetSixCards";
+    MythicalAnimalBuffNames["RatatoskFinalScoring"] = "ratatoskFinalScoring";
+})(MythicalAnimalBuffNames || (MythicalAnimalBuffNames = {}));
+/**
+ * <h3>Перечисление для названия бафов Валькирий в конфиге.</h3>
+ */
+export var ValkyryBuffNames;
+(function (ValkyryBuffNames) {
+    ValkyryBuffNames["CountBettermentAmount"] = "countBettermentAmount";
+    ValkyryBuffNames["CountBidWinnerAmount"] = "countBidWinnerAmount";
+    ValkyryBuffNames["CountDistinctionAmount"] = "countDistinctionAmount";
+    ValkyryBuffNames["CountPickedCardClassRankAmount"] = "countPickedCardClassRankAmount";
+    ValkyryBuffNames["CountPickedHeroAmount"] = "countPickedHeroAmount";
+})(ValkyryBuffNames || (ValkyryBuffNames = {}));
 /**
  * <h3>Перечисление для названия кнопок.</h3>
  */
@@ -207,6 +250,7 @@ export var CoinTypeNames;
  */
 export var ConfigNames;
 (function (ConfigNames) {
+    ConfigNames["ChooseGetMythologyCard"] = "chooseGetMythologyCard";
     ConfigNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "chooseCoinValueForVidofnirVedrfolnirUpgrade";
     ConfigNames["ChooseStrategyLevelForSoloModeAndvari"] = "ChooseStrategyLevelForSoloModeAndvari";
     ConfigNames["ChooseStrategyVariantLevelForSoloModeAndvari"] = "ChooseStrategyVariantLevelForSoloModeAndvari";
@@ -221,11 +265,13 @@ export var ConfigNames;
 export var DrawNames;
 (function (DrawNames) {
     // TODO Give normal names to all?!
+    DrawNames["ActivateGiantAbilityOrPickCard"] = "Activate Giant ability or pick card";
     DrawNames["AddCoinToPouchVidofnirVedrfolnir"] = "Add coin to pouch Vidofnir Vedrfolnir";
     DrawNames["Andumia"] = "Andumia";
     DrawNames["Bonfur"] = "Bonfur";
     DrawNames["Brisingamens"] = "Brisingamens";
     DrawNames["BrisingamensEndGame"] = "Brisingamens end game";
+    DrawNames["ChooseSuitOlrun"] = "Choose suit Olrun";
     DrawNames["ChooseStrategyLevelForSoloModeAndvari"] = "Choose strategy level for solo mode Andvari";
     DrawNames["ChooseStrategyVariantLevelForSoloModeAndvari"] = "Choose strategy variant level for solo mode Andvari";
     DrawNames["CrovaxTheDoppelganger"] = "Crovax the Doppelganger";
@@ -234,6 +280,7 @@ export var DrawNames;
     DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
     DrawNames["Mjollnir"] = "Mjollnir";
     DrawNames["GetDifficultyLevelForSoloMode"] = "Get difficulty level for Solo mode";
+    DrawNames["GetMythologyCardSkymir"] = "Get Mythology card Skymir";
     DrawNames["GetHeroesForSoloMode"] = "Get heroes for Solo mode";
     DrawNames["GetMjollnirProfit"] = "Get Mjollnir profit";
     DrawNames["Hofud"] = "Hofud";
@@ -272,6 +319,7 @@ export var DrawNames;
  */
 export var ErrorNames;
 (function (ErrorNames) {
+    ErrorNames["CurrentMoveArgumentIsUndefined"] = "CurrentMoveArgumentIsUndefined";
     ErrorNames["CurrentTierDeckIsUndefined"] = "CurrentTierDeckIsUndefined";
     ErrorNames["CurrentPrivatePlayerIsUndefined"] = "CurrentPrivatePlayerIsUndefined";
     ErrorNames["CurrentPublicPlayerIsUndefined"] = "CurrentPublicPlayerIsUndefined";
@@ -281,6 +329,7 @@ export var ErrorNames;
     ErrorNames["DoNotDiscardCardFromCurrentTavernIfNoCardInTavern"] = "DoNotDiscardCardFromCurrentTavernIfNoCardInTavern";
     ErrorNames["DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame"] = "DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame";
     ErrorNames["FirstStackActionIsUndefined"] = "FirstStackActionIsUndefined";
+    ErrorNames["FunctionParamIsUndefined"] = "FunctionParamIsUndefined";
     ErrorNames["NoCardsToDiscardWhenNoWinnerInExplorerDistinction"] = "NoCardsToDiscardWhenNoWinnerInExplorerDistinction";
     ErrorNames["OnlyInSoloOrTwoPlayersGame"] = "OnlyInSoloOrTwoPlayersGame";
     ErrorNames["PlayersCurrentSuitCardsMustHaveCardsForDistinction"] = "PlayersCurrentSuitCardsMustHaveCardsForDistinction";
@@ -490,6 +539,7 @@ export var CardMoveNames;
     CardMoveNames["ClickDistinctionCardMove"] = "ClickDistinctionCardMove";
     CardMoveNames["DiscardCardFromPlayerBoardMove"] = "DiscardCardFromPlayerBoardMove";
     CardMoveNames["GetEnlistmentMercenariesMove"] = "GetEnlistmentMercenariesMove";
+    CardMoveNames["GetMythologyCardMove"] = "GetMythologyCardMove";
     // start
     CardMoveNames["ClickCampCardHoldaMove"] = "ClickCampCardHoldaMove";
     CardMoveNames["ClickHeroCardMove"] = "ClickHeroCardMove";
@@ -497,8 +547,6 @@ export var CardMoveNames;
     CardMoveNames["DiscardCard2PlayersMove"] = "DiscardCard2PlayersMove";
     CardMoveNames["DiscardSuitCardFromPlayerBoardMove"] = "DiscardSuitCardFromPlayerBoardMove";
     CardMoveNames["PickDiscardCardMove"] = "PickDiscardCardMove";
-    // TODO Is it here?
-    CardMoveNames["UseGodCardPowerMove"] = "UseGodCardPowerMove";
     // Solo Mode
     CardMoveNames["ChooseHeroForDifficultySoloModeMove"] = "ChooseHeroForDifficultySoloModeMove";
     // Solo Bot
@@ -551,6 +599,7 @@ export var EmptyCardMoveNames;
  */
 export var SuitMoveNames;
 (function (SuitMoveNames) {
+    SuitMoveNames["ChooseSuitOlrunMove"] = "ChooseSuitOlrunMove";
     SuitMoveNames["GetMjollnirProfitMove"] = "GetMjollnirProfitMove";
 })(SuitMoveNames || (SuitMoveNames = {}));
 /**
@@ -640,7 +689,9 @@ export var RusSuitNames;
  */
 export var StageNames;
 (function (StageNames) {
+    StageNames["activateGiantAbilityOrPickCard"] = "activateGiantAbilityOrPickCard";
     StageNames["addCoinToPouch"] = "addCoinToPouch";
+    StageNames["chooseSuitOlrun"] = "chooseSuitOlrun";
     StageNames["chooseCoinValueForVidofnirVedrfolnirUpgrade"] = "chooseCoinValueForVidofnirVedrfolnirUpgrade";
     StageNames["default1"] = "default1";
     StageNames["default2"] = "default2";
@@ -650,6 +701,7 @@ export var StageNames;
     StageNames["discardCard"] = "discardCard";
     StageNames["discardBoardCard"] = "discardBoardCard";
     StageNames["discardSuitCard"] = "discardSuitCard";
+    StageNames["getMythologyCard"] = "getMythologyCard";
     StageNames["pickCampCardHolda"] = "pickCampCardHolda";
     StageNames["pickConcreteCoinToUpgrade"] = "pickConcreteCoinToUpgrade";
     StageNames["pickDiscardCard"] = "pickDiscardCard";
@@ -676,7 +728,9 @@ export var StageNames;
  */
 export var RusStageNames;
 (function (RusStageNames) {
+    RusStageNames["activateGiantAbilityOrPickCard"] = "activateGiantAbilityOrPickCard";
     RusStageNames["addCoinToPouch"] = "addCoinToPouch";
+    RusStageNames["chooseSuitOlrun"] = "chooseSuitOlrun";
     RusStageNames["chooseCoinValueForVidofnirVedrfolnirUpgrade"] = "chooseCoinValueForVidofnirVedrfolnirUpgrade";
     RusStageNames["default1"] = "default1";
     RusStageNames["default2"] = "default2";
@@ -686,6 +740,7 @@ export var RusStageNames;
     RusStageNames["discardCard"] = "discardCard";
     RusStageNames["discardBoardCard"] = "discardBoardCard";
     RusStageNames["discardSuitCard"] = "discardSuitCard";
+    RusStageNames["getMythologyCard"] = "getMythologyCard";
     RusStageNames["pickCampCardHolda"] = "pickCampCardHolda";
     RusStageNames["pickConcreteCoinToUpgrade"] = "pickConcreteCoinToUpgrade";
     RusStageNames["pickDiscardCard"] = "pickDiscardCard";
@@ -766,6 +821,7 @@ export var TavernNames;
  */
 export var MoveValidatorNames;
 (function (MoveValidatorNames) {
+    MoveValidatorNames["ChooseSuitOlrunMoveValidator"] = "ChooseSuitOlrunMoveValidator";
     MoveValidatorNames["ClickBoardCoinMoveValidator"] = "ClickBoardCoinMoveValidator";
     MoveValidatorNames["ClickCampCardMoveValidator"] = "ClickCampCardMoveValidator";
     MoveValidatorNames["ClickCardMoveValidator"] = "ClickCardMoveValidator";
@@ -778,6 +834,7 @@ export var MoveValidatorNames;
     MoveValidatorNames["DiscardCard2PlayersMoveValidator"] = "DiscardCard2PlayersMoveValidator";
     MoveValidatorNames["GetEnlistmentMercenariesMoveValidator"] = "GetEnlistmentMercenariesMoveValidator";
     MoveValidatorNames["GetMjollnirProfitMoveValidator"] = "GetMjollnirProfitMoveValidator";
+    MoveValidatorNames["GetMythologyCardMoveValidator"] = "GetMythologyCardMoveValidator";
     MoveValidatorNames["PassEnlistmentMercenariesMoveValidator"] = "PassEnlistmentMercenariesMoveValidator";
     MoveValidatorNames["PlaceEnlistmentMercenariesMoveValidator"] = "PlaceEnlistmentMercenariesMoveValidator";
     MoveValidatorNames["PlaceYludHeroMoveValidator"] = "PlaceYludHeroMoveValidator";
@@ -818,7 +875,5 @@ export var MoveValidatorNames;
     MoveValidatorNames["PlaceMultiSuitCardMoveValidator"] = "PlaceMultiSuitCardMoveValidator";
     MoveValidatorNames["PlaceThrudHeroMoveValidator"] = "PlaceThrudHeroMoveValidator";
     MoveValidatorNames["UpgradeCoinVidofnirVedrfolnirMoveValidator"] = "UpgradeCoinVidofnirVedrfolnirMoveValidator";
-    // TODO Is it here?
-    MoveValidatorNames["UseGodPowerMoveValidator"] = "UseGodPowerMoveValidator";
 })(MoveValidatorNames || (MoveValidatorNames = {}));
 //# sourceMappingURL=enums.js.map

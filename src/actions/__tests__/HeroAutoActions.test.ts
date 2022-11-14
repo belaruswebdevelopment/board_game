@@ -1,5 +1,5 @@
 import { DrawNames, GameModeNames, LogTypeNames, StageNames } from "../../typescript/enums";
-import type { Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack } from "../../typescript/interfaces";
+import type { Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContext } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
 describe(`Test AddPickHeroAction method`, (): void => {
@@ -12,10 +12,11 @@ describe(`Test AddPickHeroAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `logData`>;
-        AddPickHeroAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx, 1);
+        } as Pick<IMyGameState, `publicPlayers` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        AddPickHeroAction({ G, ctx } as MyFnContext, 1);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -62,10 +63,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>;
-        GetClosedCoinIntoPlayerHandAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -122,10 +124,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>;
-        GetClosedCoinIntoPlayerHandAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -196,10 +199,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>;
-        GetClosedCoinIntoPlayerHandAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
+        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContext);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {

@@ -3,8 +3,8 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { ErrorNames, GameModeNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, Ctx, IDwarfCard, IMyGameState, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, PointsType, PointsValuesType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import { ErrorNames, GameModeNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndefType, FnContext, IDwarfCard, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, MyFnContext, PointsType, PointsValuesType, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -50,7 +50,7 @@ export const CompareCards = (card1: TavernCardType, card2: TavernCardType): numb
  * @param tavern Таверна.
  * @returns Сравнительное значение.
  */
-export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardType, cardId: number,
+export const EvaluateCard = ({ G, ctx, ...rest }: FnContext, compareCard: TavernCardType, cardId: number,
     tavern: TavernAllCardType): number => {
     if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
         if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
@@ -60,7 +60,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     if (G.secret.decks[1].length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardType): number[] =>
             Object.values(G.publicPlayers).map((player: IPublicPlayer, index: number): number =>
-                PotentialScoring(G, ctx, index, card))),
+                PotentialScoring({ G, ctx, playerID: String(index), ...rest }, card))),
             tavernCardResults: CanBeUndefType<number[]> = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
@@ -134,19 +134,20 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCa
  * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
- * @param player Игрок.
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = (G: IMyGameState, ctx: Ctx, playerId: number, card: TavernCardType): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[playerId];
+const PotentialScoring = ({ G, ctx, playerID, ...rest }: MyFnContext, card: TavernCardType):
+    number => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+            playerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
-            playerId);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
+            playerID);
     }
     let handCoins: PublicPlayerCoinType[];
     if (G.mode === GameModeNames.Multiplayer) {
@@ -155,7 +156,7 @@ const PotentialScoring = (G: IMyGameState, ctx: Ctx, playerId: number, card: Tav
         handCoins = player.handCoins;
     }
     let score = 0,
-        suit: SuitNamesKeyofTypeofType;
+        suit: SuitNames;
     for (suit in suitsConfig) {
         if (card !== null && card.type === RusCardTypeNames.Dwarf_Card && card.suit === suit) {
             score +=
@@ -170,21 +171,21 @@ const PotentialScoring = (G: IMyGameState, ctx: Ctx, playerId: number, card: Tav
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${playerID}' на столе отсутствует монета с id '${i}'.`);
         }
         // TODO Check it it can be error in !multiplayer, but bot can't play in multiplayer now...
         if (boardCoin !== null && !IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может быть закрыта монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${playerID}' на столе не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(boardCoin)) {
             score += boardCoin.value;
         }
         const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[i];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${i}'.`);
         }
         if (handCoin !== null && !IsCoin(handCoin)) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(handCoin)) {
             score += handCoin.value;

@@ -1,10 +1,11 @@
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
-import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
-import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
  * <p>Применения:</p>
@@ -16,8 +17,8 @@ import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
  * @param ctx
  * @returns
  */
-export const CheckAndResolveTroopEvaluationOrders = (G, ctx) => {
-    CheckDistinction(G, ctx);
+export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }) => {
+    CheckDistinction({ G, ctx, ...rest });
     const distinctions = Object.values(G.distinctions).filter((distinction) => distinction !== null && distinction !== undefined);
     if (distinctions.every((distinction) => distinction !== null && distinction !== undefined)) {
         G.publicPlayersOrder = distinctions;
@@ -34,11 +35,11 @@ export const CheckAndResolveTroopEvaluationOrders = (G, ctx) => {
  * @param ctx
  * @returns Необходимость завершения текущей фазы.
  */
-export const CheckEndTroopEvaluationPhase = (G, ctx) => {
+export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             return Object.values(G.distinctions).every((distinction) => distinction === undefined);
@@ -56,7 +57,7 @@ export const CheckEndTroopEvaluationPhase = (G, ctx) => {
  * @param ctx
  * @returns Необходимость завершения текущего хода.
  */
-export const CheckEndTroopEvaluationTurn = (G, ctx) => EndTurnActions(G, ctx);
+export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }) => EndTurnActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
 /**
  * <h3>Действия при завершении фазы 'Смотр войск'.</h3>
  * <p>Применения:</p>
@@ -65,11 +66,12 @@ export const CheckEndTroopEvaluationTurn = (G, ctx) => EndTurnActions(G, ctx);
  * </ol>
  *
  * @param G
+ * @param ctx
  * @returns
  */
-export const EndTroopEvaluationPhaseActions = (G) => {
+export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }) => {
     if (G.expansions.thingvellir.active) {
-        RefillCamp(G);
+        RefillCamp({ G, ctx, ...rest });
     }
     G.publicPlayersOrder = [];
 };
@@ -84,8 +86,8 @@ export const EndTroopEvaluationPhaseActions = (G) => {
  * @param ctx
  * @returns
  */
-export const OnTroopEvaluationMove = (G, ctx) => {
-    StartOrEndActions(G, ctx);
+export const OnTroopEvaluationMove = ({ G, ctx, ...rest }) => {
+    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
 };
 /**
  * <h3>Действия при начале хода в фазе 'Смотр войск'.</h3>
@@ -98,15 +100,26 @@ export const OnTroopEvaluationMove = (G, ctx) => {
  * @param ctx
  * @returns
  */
-export const OnTroopEvaluationTurnBegin = (G, ctx) => {
-    AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
+export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
+    AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         let length;
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             length = 1;
         }
         else {
-            length = 3;
+            // TODO Add 6 cards if player has Garm in his deck
+            const player = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            }
+            if (G.expansions.idavoll.active
+                && CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest }, MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards)) {
+                length = 6;
+            }
+            else {
+                length = 3;
+            }
         }
         const explorerDistinctionCards = [];
         for (let j = 0; j < length; j++) {
@@ -130,12 +143,11 @@ export const OnTroopEvaluationTurnBegin = (G, ctx) => {
  * @param ctx
  * @returns
  */
-export const OnTroopEvaluationTurnEnd = (G, ctx) => {
-    ClearPlayerPickedCard(G, ctx);
+export const OnTroopEvaluationTurnEnd = ({ G, ctx, random }) => {
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         G.secret.decks[1].splice(G.explorerDistinctionCardId, 1);
         G.deckLength[1] = G.secret.decks[1].length;
-        G.secret.decks[1] = ctx.random.Shuffle(G.secret.decks[1]);
+        G.secret.decks[1] = random.Shuffle(G.secret.decks[1]);
         G.explorerDistinctionCardId = null;
     }
 };

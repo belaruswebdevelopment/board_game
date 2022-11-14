@@ -1,5 +1,6 @@
-import { AutoActionFunctionNames, BuffNames, GiantNames, GiantScoringFunctionNames, GodNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
-import type { GiantConfigType, GodConfigType, IGiantData, IGodData, IMythicalAnimalData, IValkyryData, MythicalAnimalConfigType, ValkyryConfigType } from "../typescript/interfaces";
+import { AutoActionFunctionNames, GiantBuffNames, GiantNames, GiantScoringFunctionNames, GodNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryBuffNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
+import type { GiantConfigType, GodConfigType, IGiantData, IGodData, IMythicalAnimalData, IValkyryData, MythicalAnimalConfigType, MythologicalCreatureConfigType, ValkyryConfigType } from "../typescript/interfaces";
+import { StackData } from "./StackData";
 
 /**
  * <h3>Данные об Гиганте.</h3>
@@ -9,8 +10,12 @@ import type { GiantConfigType, GodConfigType, IGiantData, IGodData, IMythicalAni
  * </ol>
  */
 const Gymir: IGiantData = {
+    description: ``,
     name: GiantNames.Gymir,
     placedSuit: SuitNames.explorer,
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantGymir,
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.GymirScoring,
     },
@@ -24,12 +29,15 @@ const Gymir: IGiantData = {
  * </ol>
  */
 const Hrungnir: IGiantData = {
+    description: ``,
     name: GiantNames.Hrungnir,
     placedSuit: SuitNames.miner,
-    // TODO Add +2 to upgrade coin during next trading coin upgrade or for each coin on player board...?!
-    // actions: {
-    //     name: AddValueToCoin.name,
-    // },
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantHrungnir,
+    },
+    actions: {
+        name: AutoActionFunctionNames.AddPlusTwoValueToAllCoinsAction,
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -44,12 +52,18 @@ const Hrungnir: IGiantData = {
  * </ol>
  */
 const Skymir: IGiantData = {
+    description: ``,
     name: GiantNames.Surt,
     placedSuit: SuitNames.hunter,
-    // TODO Get 2 random(?) mythological creatures cards form it's deck?!
-    // actions: {
-    //     name: GetMythologicalCreaturesCards.name,
-    // },
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantSkymir,
+    },
+    actions: {
+        name: AutoActionFunctionNames.AddMythologyCreatureCardsSkymirAction,
+    },
+    stack: {
+        player: [StackData.getMythologyCardSkymir()],
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -64,8 +78,12 @@ const Skymir: IGiantData = {
  * </ol>
  */
 const Surt: IGiantData = {
+    description: ``,
     name: GiantNames.Surt,
     placedSuit: SuitNames.warrior,
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantSurt,
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.SurtScoring,
         params: [0],
@@ -80,8 +98,16 @@ const Surt: IGiantData = {
  * </ol>
  */
 const Thrivaldi: IGiantData = {
+    description: ``,
     name: GiantNames.Thrivaldi,
     placedSuit: SuitNames.blacksmith,
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantThrivaldi,
+    },
+    // TODO Add it!
+    // buff: {
+    //     name: BuffNames.HasOneNotCountHero,
+    // },
     actions: {
         name: AutoActionFunctionNames.AddPickHeroAction,
     },
@@ -99,6 +125,7 @@ const Thrivaldi: IGiantData = {
  * </ol>
  */
 const Freyja: IGodData = {
+    description: ``,
     name: GodNames.Freyja,
     points: 15,
     godPower: (): void => {
@@ -114,10 +141,11 @@ const Freyja: IGodData = {
  * </ol>
  */
 const Frigg: IGodData = {
+    description: ``,
     name: GodNames.Frigg,
     points: 12,
     godPower: (): void => {
-        // TODO Get 3 cards form 1 or 2 tier decks and choose 1?!
+        // TODO Get 3 cards form 1 or 2 tier decks (or discard deck...?!) and choose 1?!
     },
 };
 
@@ -129,6 +157,7 @@ const Frigg: IGodData = {
  * </ol>
  */
 const Loki: IGodData = {
+    description: ``,
     name: GodNames.Loki,
     points: 8,
     godPower: (): void => {
@@ -144,10 +173,11 @@ const Loki: IGodData = {
  * </ol>
  */
 const Odin: IGodData = {
+    description: ``,
     name: GodNames.Odin,
     points: 0,
     godPower: (): void => {
-        // TODO You can one swap neutral/all hero to another hero?!
+        // TODO You can one swap neutral(!)/all hero to another hero?!
     },
 };
 
@@ -159,10 +189,11 @@ const Odin: IGodData = {
  * </ol>
  */
 const Thor: IGodData = {
+    description: ``,
     name: GodNames.Thor,
     points: 8,
     godPower: (): void => {
-        // TODO You can not discard card one time?!
+        // TODO You can not discard card one time or all time?!
     },
 };
 
@@ -174,10 +205,11 @@ const Thor: IGodData = {
  * </ol>
  */
 const Durathor: IMythicalAnimalData = {
+    description: ``,
     name: MythicalAnimalNames.Durathor,
     suit: SuitNames.hunter,
     buff: {
-        name: BuffNames.DagdaDiscardOnlyOneCards,
+        name: MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards,
     },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
@@ -193,10 +225,14 @@ const Durathor: IMythicalAnimalData = {
  * </ol>
  */
 const Garm: IMythicalAnimalData = {
+    description: ``,
     name: MythicalAnimalNames.Garm,
     points: 9,
     rank: 2,
     suit: SuitNames.explorer,
+    buff: {
+        name: MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards,
+    },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.GarmScoring,
     },
@@ -210,10 +246,11 @@ const Garm: IMythicalAnimalData = {
  * </ol>
  */
 const Hraesvelg: IMythicalAnimalData = {
+    description: ``,
     name: MythicalAnimalNames.Hraesvelg,
     suit: SuitNames.blacksmith,
-    ability: (): void => {
-        // TODO Add Gullinbursti to your dwarf's player board
+    stack: {
+        player: [StackData.placeMultiSuitsCards(MultiSuitCardNames.Gullinbursti)],
     },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
@@ -229,6 +266,7 @@ const Hraesvelg: IMythicalAnimalData = {
  * </ol>
  */
 const Nidhogg: IMythicalAnimalData = {
+    description: ``,
     name: MythicalAnimalNames.Nidhogg,
     points: 5,
     suit: SuitNames.warrior,
@@ -246,11 +284,12 @@ const Nidhogg: IMythicalAnimalData = {
  * </ol>
  */
 const Ratatosk: IMythicalAnimalData = {
+    description: ``,
     name: MythicalAnimalNames.Ratatosk,
     points: 2,
     suit: SuitNames.miner,
     buff: {
-        name: BuffNames.RatatoskFinalScoring,
+        name: MythicalAnimalBuffNames.RatatoskFinalScoring,
     },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
@@ -266,10 +305,10 @@ const Ratatosk: IMythicalAnimalData = {
  * </ol>
  */
 const Brynhildr: IValkyryData = {
+    description: ``,
     name: ValkyryNames.Brynhildr,
-    // TODO For biggest coin in all/different taverns?!
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountBidWinnerAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.BrynhildrScoring,
@@ -284,9 +323,10 @@ const Brynhildr: IValkyryData = {
  * </ol>
  */
 const Hildr: IValkyryData = {
+    description: ``,
     name: ValkyryNames.Hildr,
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountDistinctionAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.HildrScoring,
@@ -301,10 +341,13 @@ const Hildr: IValkyryData = {
  * </ol>
  */
 const Olrun: IValkyryData = {
+    description: ``,
     name: ValkyryNames.Olrun,
-    // TODO For each pick/set of all/different suits?!
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountPickedCardClassRankAmount,
+    },
+    stack: {
+        player: [StackData.chooseSuitOlrun()],
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.OlrunScoring,
@@ -319,9 +362,10 @@ const Olrun: IValkyryData = {
  * </ol>
  */
 const Sigrdrifa: IValkyryData = {
+    description: ``,
     name: ValkyryNames.Sigrdrifa,
     buff: {
-        name: BuffNames.CountPickedHeroAmount,
+        name: ValkyryBuffNames.CountPickedHeroAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.SigrdrifaScoring,
@@ -336,10 +380,10 @@ const Sigrdrifa: IValkyryData = {
  * </ol>
  */
 const Svafa: IValkyryData = {
+    description: ``,
     name: ValkyryNames.Svafa,
-    // TODO For biggest coin opened in tavern/or biggest exchange coin?!
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountBettermentAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.SvafaScoring,
@@ -404,4 +448,18 @@ export const valkyryConfig: ValkyryConfigType = {
     Olrun,
     Sigrdrifa,
     Svafa,
+};
+
+/**
+ * <h3>Конфиг Мифических существ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех Мифических существ при инициализации игры.</li>
+ * </ol>
+ */
+export const mythologicalCreatureConfig: MythologicalCreatureConfigType = {
+    2: 9,
+    3: 9,
+    4: 12,
+    5: 15,
 };

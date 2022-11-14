@@ -1,6 +1,53 @@
 import { ThrowMyError } from "../Error";
-import { ButtonMoveNames, ButtonNames, CardMoveNames, ErrorNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import { ButtonMoveNames, ButtonNames, CardMoveNames, ErrorNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, StageNames, SuitNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
+/**
+ * <h3>Отрисовка для выбора карты Мифического существа при выборе Skymir.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Поле для выбора карты Мифического существа при выборе Skymir.
+ */
+export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
+    var _a;
+    const moveMainArgs = [];
+    for (let i = 0; i < 1; i++) {
+        if (G.mythologicalCreatureDeckForSkymir === null) {
+            throw new Error(`Массив всех карт мифических существ для Skymir не может не быть заполнен картами.`);
+        }
+        for (let j = 0; j < G.mythologicalCreatureDeckForSkymir.length; j++) {
+            const mythologicalCreature = G.mythologicalCreatureDeckForSkymir[j];
+            if (mythologicalCreature === undefined) {
+                throw new Error(`В массиве карт мифических существ для Skymir отсутствует мифическое существо с id '${j}'.`);
+            }
+            if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.getMythologyCard) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                }
+                if (data !== undefined && boardCells !== undefined) {
+                    DrawCard(data, boardCells, mythologicalCreature, j, player, null, CardMoveNames.GetMythologyCardMove, j);
+                }
+                else if (validatorName === MoveValidatorNames.GetMythologyCardMoveValidator) {
+                    moveMainArgs.push(j);
+                }
+                else {
+                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                }
+            }
+        }
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
+};
 /**
  * <h3>Отрисовка для выбора уровня сложности стратегий соло бота Андвари соло игры.</h3>
  * <p>Применения:</p>
@@ -15,10 +62,10 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле для выбора уровня сложности стратегий соло бота Андвари соло игры.
  */
-export const ChooseStrategyForSoloModeAndvariProfit = (G, ctx, validatorName, data, boardCells) => {
+export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
     const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     for (let j = 0; j < 4; j++) {
         if (j === 0) {
@@ -84,10 +131,10 @@ export const ChooseStrategyForSoloModeAndvariProfit = (G, ctx, validatorName, da
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле для выбора варианта уровня сложности стратегий соло бота Андвари соло игры.
  */
-export const ChooseStrategyVariantForSoloModeAndvariProfit = (G, ctx, validatorName, data, boardCells) => {
+export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
     const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     for (let j = 0; j < 3; j++) {
         if (data !== undefined && boardCells !== undefined) {
@@ -118,10 +165,10 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = (G, ctx, validatorN
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле для выбора уровня сложности соло игры.
  */
-export const ChooseDifficultyLevelForSoloModeProfit = (G, ctx, validatorName, data, boardCells) => {
+export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
     const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < 6; j++) {
@@ -153,14 +200,14 @@ export const ChooseDifficultyLevelForSoloModeProfit = (G, ctx, validatorName, da
  * @param boardCells Ячейки для отрисовки.
  * @returns Игровое поле для отрисовки выбора значения улучшения монеты по артефакту 'Vidofnir Vedrfolnir'.
  */
-export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G, ctx, validatorName, data, boardCells) => {
+export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
     const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined, ctx.currentPlayer);
     }
     const values = stack.valueArray;
     if (values === undefined) {
@@ -199,7 +246,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = (G, ctx, valida
  * @param boardCells Ячейки для отрисовки.
  * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
  */
-export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCells) => {
+export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
     var _a;
     if (G.explorerDistinctionCards === null) {
         throw new Error(`В массиве карт для получения преимущества по фракции '${RusSuitNames.explorer}' не может не быть карт.`);
@@ -216,7 +263,7 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
         }
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (data !== undefined && boardCells !== undefined) {
             const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
@@ -263,7 +310,7 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
  * @param boardCells Ячейки для отрисовки.
  * @returns Поле героев для выбора сложности соло игры.
  */
-export const PickHeroesForSoloModeProfit = (G, ctx, validatorName, data, boardCells) => {
+export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
     var _a;
     const moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
@@ -279,7 +326,7 @@ export const PickHeroesForSoloModeProfit = (G, ctx, validatorName, data, boardCe
                 && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.chooseHeroesForSoloMode) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null, CardMoveNames.ChooseHeroForDifficultySoloModeMove, j);
@@ -312,10 +359,10 @@ export const PickHeroesForSoloModeProfit = (G, ctx, validatorName, data, boardCe
  * @param boardCells Ячейки для отрисовки.
  * @returns Игровое поле для отрисовки старта фазы 'enlistmentMercenaries'.
  */
-export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
+export const StartEnlistmentMercenariesProfit = ({ G, ctx, ...rest }, data, boardCells) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {

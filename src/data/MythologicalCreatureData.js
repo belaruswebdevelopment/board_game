@@ -1,4 +1,5 @@
-import { AutoActionFunctionNames, BuffNames, GiantNames, GiantScoringFunctionNames, GodNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
+import { AutoActionFunctionNames, GiantBuffNames, GiantNames, GiantScoringFunctionNames, GodNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryBuffNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
+import { StackData } from "./StackData";
 /**
  * <h3>Данные об Гиганте.</h3>
  * <p>Применения:</p>
@@ -7,8 +8,12 @@ import { AutoActionFunctionNames, BuffNames, GiantNames, GiantScoringFunctionNam
  * </ol>
  */
 const Gymir = {
+    description: ``,
     name: GiantNames.Gymir,
     placedSuit: SuitNames.explorer,
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantGymir,
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.GymirScoring,
     },
@@ -21,12 +26,15 @@ const Gymir = {
  * </ol>
  */
 const Hrungnir = {
+    description: ``,
     name: GiantNames.Hrungnir,
     placedSuit: SuitNames.miner,
-    // TODO Add +2 to upgrade coin during next trading coin upgrade or for each coin on player board...?!
-    // actions: {
-    //     name: AddValueToCoin.name,
-    // },
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantHrungnir,
+    },
+    actions: {
+        name: AutoActionFunctionNames.AddPlusTwoValueToAllCoinsAction,
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -40,12 +48,18 @@ const Hrungnir = {
  * </ol>
  */
 const Skymir = {
+    description: ``,
     name: GiantNames.Surt,
     placedSuit: SuitNames.hunter,
-    // TODO Get 2 random(?) mythological creatures cards form it's deck?!
-    // actions: {
-    //     name: GetMythologicalCreaturesCards.name,
-    // },
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantSkymir,
+    },
+    actions: {
+        name: AutoActionFunctionNames.AddMythologyCreatureCardsSkymirAction,
+    },
+    stack: {
+        player: [StackData.getMythologyCardSkymir()],
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -59,8 +73,12 @@ const Skymir = {
  * </ol>
  */
 const Surt = {
+    description: ``,
     name: GiantNames.Surt,
     placedSuit: SuitNames.warrior,
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantSurt,
+    },
     scoringRule: {
         name: GiantScoringFunctionNames.SurtScoring,
         params: [0],
@@ -74,8 +92,16 @@ const Surt = {
  * </ol>
  */
 const Thrivaldi = {
+    description: ``,
     name: GiantNames.Thrivaldi,
     placedSuit: SuitNames.blacksmith,
+    buff: {
+        name: GiantBuffNames.PlayerHasActiveGiantThrivaldi,
+    },
+    // TODO Add it!
+    // buff: {
+    //     name: BuffNames.HasOneNotCountHero,
+    // },
     actions: {
         name: AutoActionFunctionNames.AddPickHeroAction,
     },
@@ -92,6 +118,7 @@ const Thrivaldi = {
  * </ol>
  */
 const Freyja = {
+    description: ``,
     name: GodNames.Freyja,
     points: 15,
     godPower: () => {
@@ -106,10 +133,11 @@ const Freyja = {
  * </ol>
  */
 const Frigg = {
+    description: ``,
     name: GodNames.Frigg,
     points: 12,
     godPower: () => {
-        // TODO Get 3 cards form 1 or 2 tier decks and choose 1?!
+        // TODO Get 3 cards form 1 or 2 tier decks (or discard deck...?!) and choose 1?!
     },
 };
 /**
@@ -120,6 +148,7 @@ const Frigg = {
  * </ol>
  */
 const Loki = {
+    description: ``,
     name: GodNames.Loki,
     points: 8,
     godPower: () => {
@@ -134,10 +163,11 @@ const Loki = {
  * </ol>
  */
 const Odin = {
+    description: ``,
     name: GodNames.Odin,
     points: 0,
     godPower: () => {
-        // TODO You can one swap neutral/all hero to another hero?!
+        // TODO You can one swap neutral(!)/all hero to another hero?!
     },
 };
 /**
@@ -148,10 +178,11 @@ const Odin = {
  * </ol>
  */
 const Thor = {
+    description: ``,
     name: GodNames.Thor,
     points: 8,
     godPower: () => {
-        // TODO You can not discard card one time?!
+        // TODO You can not discard card one time or all time?!
     },
 };
 /**
@@ -162,10 +193,11 @@ const Thor = {
  * </ol>
  */
 const Durathor = {
+    description: ``,
     name: MythicalAnimalNames.Durathor,
     suit: SuitNames.hunter,
     buff: {
-        name: BuffNames.DagdaDiscardOnlyOneCards,
+        name: MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards,
     },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
@@ -180,10 +212,14 @@ const Durathor = {
  * </ol>
  */
 const Garm = {
+    description: ``,
     name: MythicalAnimalNames.Garm,
     points: 9,
     rank: 2,
     suit: SuitNames.explorer,
+    buff: {
+        name: MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards,
+    },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.GarmScoring,
     },
@@ -196,10 +232,11 @@ const Garm = {
  * </ol>
  */
 const Hraesvelg = {
+    description: ``,
     name: MythicalAnimalNames.Hraesvelg,
     suit: SuitNames.blacksmith,
-    ability: () => {
-        // TODO Add Gullinbursti to your dwarf's player board
+    stack: {
+        player: [StackData.placeMultiSuitsCards(MultiSuitCardNames.Gullinbursti)],
     },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
@@ -214,6 +251,7 @@ const Hraesvelg = {
  * </ol>
  */
 const Nidhogg = {
+    description: ``,
     name: MythicalAnimalNames.Nidhogg,
     points: 5,
     suit: SuitNames.warrior,
@@ -230,11 +268,12 @@ const Nidhogg = {
  * </ol>
  */
 const Ratatosk = {
+    description: ``,
     name: MythicalAnimalNames.Ratatosk,
     points: 2,
     suit: SuitNames.miner,
     buff: {
-        name: BuffNames.RatatoskFinalScoring,
+        name: MythicalAnimalBuffNames.RatatoskFinalScoring,
     },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
@@ -249,10 +288,10 @@ const Ratatosk = {
  * </ol>
  */
 const Brynhildr = {
+    description: ``,
     name: ValkyryNames.Brynhildr,
-    // TODO For biggest coin in all/different taverns?!
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountBidWinnerAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.BrynhildrScoring,
@@ -266,9 +305,10 @@ const Brynhildr = {
  * </ol>
  */
 const Hildr = {
+    description: ``,
     name: ValkyryNames.Hildr,
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountDistinctionAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.HildrScoring,
@@ -282,10 +322,13 @@ const Hildr = {
  * </ol>
  */
 const Olrun = {
+    description: ``,
     name: ValkyryNames.Olrun,
-    // TODO For each pick/set of all/different suits?!
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountPickedCardClassRankAmount,
+    },
+    stack: {
+        player: [StackData.chooseSuitOlrun()],
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.OlrunScoring,
@@ -299,9 +342,10 @@ const Olrun = {
  * </ol>
  */
 const Sigrdrifa = {
+    description: ``,
     name: ValkyryNames.Sigrdrifa,
     buff: {
-        name: BuffNames.CountPickedHeroAmount,
+        name: ValkyryBuffNames.CountPickedHeroAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.SigrdrifaScoring,
@@ -315,10 +359,10 @@ const Sigrdrifa = {
  * </ol>
  */
 const Svafa = {
+    description: ``,
     name: ValkyryNames.Svafa,
-    // TODO For biggest coin opened in tavern/or biggest exchange coin?!
     buff: {
-        name: BuffNames.CountDistinctionAmount,
+        name: ValkyryBuffNames.CountBettermentAmount,
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.SvafaScoring,
@@ -379,5 +423,18 @@ export const valkyryConfig = {
     Olrun,
     Sigrdrifa,
     Svafa,
+};
+/**
+ * <h3>Конфиг Мифических существ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех Мифических существ при инициализации игры.</li>
+ * </ol>
+ */
+export const mythologicalCreatureConfig = {
+    2: 9,
+    3: 9,
+    4: 12,
+    5: 15,
 };
 //# sourceMappingURL=MythologicalCreatureData.js.map

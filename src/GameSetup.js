@@ -7,12 +7,12 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
 import { BuildMultiSuitCards } from "./MultiSuitCard";
-import { BuildMythologicalCreatureCards } from "./MythologicalCreature";
+import { BuildMythologicalCreatureCards, BuildMythologicalCreatureDecks } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
-import { GameModeNames } from "./typescript/enums";
+import { GameModeNames, SuitNames } from "./typescript/enums";
 /**
  * <h3>Инициализация игры.</h3>
  * <p>Применения:</p>
@@ -23,7 +23,7 @@ import { GameModeNames } from "./typescript/enums";
  * @param ctx
  * @returns Данные игры.
  */
-export const SetupGame = (ctx) => {
+export const SetupGame = ({ ctx, random }) => {
     // TODO Rework it!
     const mode = ctx.numPlayers === 2 ? GameModeNames.Solo : ctx.numPlayers === 3
         ? GameModeNames.SoloAndvari : ctx.numPlayers === 4 ? GameModeNames.Multiplayer : GameModeNames.Basic, suitsNum = 5, tierToEnd = 2, campNum = 5, round = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers, soloGameDifficultyLevel = null, soloGameAndvariStrategyLevel = null, soloGameAndvariStrategyVariantLevel = null, explorerDistinctionCardId = null, 
@@ -42,18 +42,19 @@ export const SetupGame = (ctx) => {
     }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = null, distinctions = {}, strategyForSoloBotAndvari = {}, secret = {
         campDecks: [[], []],
         decks: [[], []],
-        mythologicalCreatureDecks: [],
+        mythologicalCreatureDeck: [],
+        mythologicalCreatureNotInGameDeck: [],
     };
     let suit;
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
-    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null), deckLength = [0, 0];
+    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null), deckLength = [0, 0], mythologicalCreatureDeckForSkymir = null;
     for (let i = 0; i < tierToEnd; i++) {
         if (expansions.thingvellir.active) {
             secret.campDecks[i] = BuildCampCards(i);
             let campDeck = secret.campDecks[i];
-            campDeck = ctx.random.Shuffle(campDeck);
+            campDeck = random.Shuffle(campDeck);
             secret.campDecks[i] = campDeck;
             campDeckLength[i] = campDeck.length;
             campDeckLength[0] = secret.campDecks[0].length;
@@ -66,7 +67,7 @@ export const SetupGame = (ctx) => {
         let deck = secret.decks[i];
         deck = deck.concat(dwarfDeck, royalOfferingDeck);
         deckLength[i] = deck.length;
-        secret.decks[i] = ctx.random.Shuffle(deck);
+        secret.decks[i] = random.Shuffle(deck);
     }
     let expansion;
     for (expansion in expansions) {
@@ -76,12 +77,15 @@ export const SetupGame = (ctx) => {
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari] = BuildHeroes(configOptions, mode), heroesForSoloGameForStrategyBotAndvari = null, multiCardsDeck = BuildMultiSuitCards(configOptions), taverns = [[], [], []], tavernsNum = 3, currentTavern = 0;
     deckLength[0] = secret.decks[0].length;
-    let mythologicalCreatureDeckLength = 0;
+    let mythologicalCreatureDeckLength = 0, mythologicalCreatureNotInGameDeckLength = 0;
     if (expansions.idavoll.active) {
-        secret.mythologicalCreatureDecks = BuildMythologicalCreatureCards();
-        secret.mythologicalCreatureDecks = ctx.random.Shuffle(secret.mythologicalCreatureDecks);
-        // TODO Add Idavoll deck length info on main page?
-        mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
+        let mythologicalCreatureCardsDeck = BuildMythologicalCreatureCards();
+        mythologicalCreatureCardsDeck = random.Shuffle(mythologicalCreatureCardsDeck);
+        [secret.mythologicalCreatureDeck, secret.mythologicalCreatureNotInGameDeck] =
+            BuildMythologicalCreatureDecks(mythologicalCreatureCardsDeck, ctx.numPlayers);
+        // TODO Add Idavoll decks length info on main page?
+        mythologicalCreatureDeckLength = secret.mythologicalCreatureDeck.length;
+        mythologicalCreatureNotInGameDeckLength = secret.mythologicalCreatureNotInGameDeck.length;
     }
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = Array(drawSize).fill(null);
@@ -139,6 +143,8 @@ export const SetupGame = (ctx) => {
         deckLength,
         campDeckLength,
         mythologicalCreatureDeckLength,
+        mythologicalCreatureNotInGameDeckLength,
+        mythologicalCreatureDeckForSkymir,
         secret,
         campNum,
         campPicked,

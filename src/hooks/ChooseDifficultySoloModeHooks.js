@@ -16,7 +16,9 @@ import { ErrorNames, GameModeNames, HeroNames, PhaseNames } from "../typescript/
  * @param G
  * @param ctx
  */
-export const CheckChooseDifficultySoloModeOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
+export const CheckChooseDifficultySoloModeOrder = ({ G, ctx, ...rest }) => {
+    CheckPlayersBasicOrder({ G, ctx, ...rest });
+};
 /**
  * <h3>Проверяет необходимость завершения фазы 'chooseDifficultySoloMode'.</h3>
  * <p>Применения:</p>
@@ -28,7 +30,7 @@ export const CheckChooseDifficultySoloModeOrder = (G, ctx) => CheckPlayersBasicO
  * @param ctx
  * @returns Необходимость завершения текущей фазы.
  */
-export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
+export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }) => {
     if (ctx.currentPlayer === `0`) {
         if (G.mode !== GameModeNames.Solo) {
             return true;
@@ -37,7 +39,7 @@ export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
     else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         return G.heroesForSoloGameDifficultyLevel === null && !soloBotPublicPlayer.stack.length;
     }
@@ -53,12 +55,8 @@ export const CheckEndChooseDifficultySoloModePhase = (G, ctx) => {
  * @param ctx
  * @returns Необходимость завершения текущего хода.
  */
-export const CheckEndChooseDifficultySoloModeTurn = (G, ctx) => {
+export const CheckEndChooseDifficultySoloModeTurn = ({ G, ctx }) => {
     if (ctx.currentPlayer === `0`) {
-        const soloBotPublicPlayer = G.publicPlayers[1];
-        if (soloBotPublicPlayer === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
-        }
         return G.soloGameDifficultyLevel !== null && G.soloGameDifficultyLevel === 0;
     }
 };
@@ -72,7 +70,7 @@ export const CheckEndChooseDifficultySoloModeTurn = (G, ctx) => {
  * @param G
  * @returns
  */
-export const EndChooseDifficultySoloModeActions = (G) => {
+export const EndChooseDifficultySoloModeActions = ({ G }) => {
     G.publicPlayersOrder = [];
 };
 /**
@@ -86,8 +84,8 @@ export const EndChooseDifficultySoloModeActions = (G) => {
  * @param ctx
  * @returns
  */
-export const OnChooseDifficultySoloModeMove = (G, ctx) => {
-    StartOrEndActions(G, ctx);
+export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }) => {
+    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
 };
 /**
  * <h3>Действия при начале хода в фазе 'chooseDifficultySoloMode'.</h3>
@@ -100,22 +98,22 @@ export const OnChooseDifficultySoloModeMove = (G, ctx) => {
  * @param ctx
  * @returns
  */
-export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
+export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }) => {
     if (ctx.currentPlayer === `0`) {
-        AddActionsToStack(G, ctx, [StackData.getDifficultyLevelForSoloMode()]);
-        DrawCurrentProfit(G, ctx);
+        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, [StackData.getDifficultyLevelForSoloMode()]);
+        DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, ...rest });
     }
     else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
         }
         soloBotPublicPlayer.heroes.forEach((hero) => {
             var _a;
-            AddBuffToPlayer(G, ctx, hero.buff);
+            AddBuffToPlayer({ G, ctx, playerID: ctx.currentPlayer, ...rest }, hero.buff);
             if (hero.name !== HeroNames.Thrud && hero.name !== HeroNames.Ylud) {
-                AddActionsToStack(G, ctx, (_a = hero.stack) === null || _a === void 0 ? void 0 : _a.soloBot, hero);
-                DrawCurrentProfit(G, ctx);
+                AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, (_a = hero.stack) === null || _a === void 0 ? void 0 : _a.soloBot, hero);
+                DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, ...rest });
             }
         });
         G.heroesForSoloGameDifficultyLevel = null;
@@ -131,7 +129,7 @@ export const OnChooseDifficultySoloModeTurnBegin = (G, ctx) => {
  * @param G
  * @returns Фаза игры.
  */
-export const StartChooseDifficultySoloModeAndvariOrBidsPhase = (G) => {
+export const StartChooseDifficultySoloModeAndvariOrBidsPhase = ({ G }) => {
     if (G.mode === GameModeNames.SoloAndvari) {
         return PhaseNames.ChooseDifficultySoloModeAndvari;
     }

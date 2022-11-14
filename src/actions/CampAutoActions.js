@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, BuffNames, ErrorNames, GameModeNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
 // TODO Rework StageArg to be implemented my interface type
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
@@ -18,13 +18,13 @@ import { ArtefactNames, BuffNames, ErrorNames, GameModeNames, LogTypeNames, Stag
  * @param ctx
  * @returns
  */
-export const DiscardTradingCoinAction = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const DiscardTradingCoinAction = ({ G, ctx, playerID, ...rest }) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
-    DiscardTradingCoin(G, ctx, Number(ctx.currentPlayer));
-    AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
+    DiscardTradingCoin({ G, ctx, playerID, ...rest });
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
 /**
  * <h3>Действия, связанные с завершением выкладки монет на артефакт Odroerir The Mythic Cauldron.</h3>
@@ -36,7 +36,7 @@ export const DiscardTradingCoinAction = (G, ctx) => {
  * @param G
  * @returns
  */
-export const FinishOdroerirTheMythicCauldronAction = (G) => {
+export const FinishOdroerirTheMythicCauldronAction = ({ G }) => {
     G.odroerirTheMythicCauldron = false;
 };
 /**
@@ -50,27 +50,26 @@ export const FinishOdroerirTheMythicCauldronAction = (G) => {
  * @param ctx
  * @returns
  */
-export const StartDiscardSuitCardAction = (G, ctx) => {
-    var _a;
+export const StartDiscardSuitCardAction = ({ G, ctx, playerID, events, ...rest }) => {
     const value = {};
     let results = 0;
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+            return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.warrior].length) {
             value[i] = {
                 stage: StageNames.discardSuitCard,
             };
-            AddActionsToStack(G, ctx, [StackData.discardSuitCard(i)]);
+            AddActionsToStack({ G, ctx, playerID, events, ...rest }, [StackData.discardSuitCard(i)]);
             results++;
         }
     }
     if (!results) {
         throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
     }
-    (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
+    events === null || events === void 0 ? void 0 : events.setActivePlayers({
         value,
         minMoves: 1,
         maxMoves: 1,
@@ -87,13 +86,13 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
  * @param ctx
  * @returns
  */
-export const StartVidofnirVedrfolnirAction = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+export const StartVidofnirVedrfolnirAction = ({ G, ctx, playerID, ...rest }) => {
+    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
     }
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -102,15 +101,15 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     else {
         handCoins = player.handCoins;
     }
-    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+    if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.EveryTurn)) {
         const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter(IsCoin).length;
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
-                AddActionsToStack(G, ctx, [StackData.addCoinToPouch()]);
+                AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.addCoinToPouch()]);
             }
         }
         else {
-            throw new Error(`При наличии бафа '${BuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
+            throw new Error(`При наличии бафа '${HeroBuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
         }
     }
     else {
@@ -120,11 +119,11 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
             if (G.mode === GameModeNames.Multiplayer) {
                 boardCoin = privatePlayer.boardCoins[j];
                 if (boardCoin === undefined) {
-                    throw new Error(`В массиве приватных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);
+                    throw new Error(`В массиве приватных монет игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
                 }
                 const publicBoardCoin = player.boardCoins[j];
                 if (publicBoardCoin === undefined) {
-                    throw new Error(`В массиве публичных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);
+                    throw new Error(`В массиве публичных монет игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
                 }
                 if (IsCoin(boardCoin) && publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
                     if (!boardCoin.isOpened) {
@@ -136,10 +135,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
             else {
                 boardCoin = player.boardCoins[j];
                 if (boardCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);
+                    throw new Error(`В массиве монет игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
                 }
                 if (boardCoin !== null && !IsCoin(boardCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не должна быть закрыта монета в кошеле с id '${j}'.`);
+                    throw new Error(`В массиве монет игрока с id '${playerID}' на поле не должна быть закрыта монета в кошеле с id '${j}'.`);
                 }
                 if (boardCoin !== null && !boardCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(boardCoin, true);
@@ -158,7 +157,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         else {
             throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '${coinsValue}' монет(ы).`);
         }
-        AddActionsToStack(G, ctx, stack);
+        AddActionsToStack({ G, ctx, playerID, ...rest }, stack);
     }
 };
 //# sourceMappingURL=CampAutoActions.js.map

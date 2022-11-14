@@ -1,7 +1,7 @@
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, Ctx, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CanBeUndefType, IPublicPlayer, IStack, MyFnContext } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от действий улучшающих монеты.</h3>
@@ -16,19 +16,22 @@ import type { CanBeUndefType, Ctx, IMyGameState, IPublicPlayer, IStack } from ".
  * @param type Тип обменной монеты.
  * @returns Значение на которое улучшается монета.
  */
-export const UpgradeCoinActions = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypeNames): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const UpgradeCoinActions = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number, type: CoinTypeNames):
+    number => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
     }
     const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+            playerID);
     }
     const value: CanBeUndefType<number> = stack.value;
     if (value === undefined) {
-        throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
+        throw new Error(`У игрока с id '${playerID}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }
-    UpgradeCoinAction(G, ctx, false, value, coinId, type);
+    UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, value, coinId, type);
     return value;
 };

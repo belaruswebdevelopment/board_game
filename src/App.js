@@ -11,6 +11,7 @@ import { GameBoard } from "./GameBoard";
 const App = Client({
     // debug: false,
     game: BoardGame,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     board: GameBoard,
     numPlayers: 5,
 });

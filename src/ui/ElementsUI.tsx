@@ -2,8 +2,8 @@ import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, BoardProps, ButtonNameType, CanBeNullType, IBackground, IMyGameState, IndexOf, IPublicPlayer, MoveFunctionType, PublicPlayerCoinType, SuitNamesKeyofTypeofType, TavernsConfigType } from "../typescript/interfaces";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames, SuitNames } from "../typescript/enums";
+import type { AllCardType, ArgsType, BoardProps, ButtonNameType, CanBeNullType, IBackground, IndexOf, IPublicPlayer, MoveFunctionType, MyFnContext, PublicPlayerCoinType, TavernsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -20,32 +20,32 @@ import type { AllCardType, ArgsType, BoardProps, ButtonNameType, CanBeNullType, 
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], name: ButtonNameType,
-    player: IPublicPlayer, moveName?: ButtonMoveNames, ...args: ArgsType): void => {
+export const DrawButton = (data: BoardProps, boardCells: JSX.Element[], name: ButtonNameType, player: IPublicPlayer,
+    moveName?: ButtonMoveNames, ...args: ArgsType): void => {
     let action: MoveFunctionType,
         _exhaustiveCheck: never;
     switch (moveName) {
-        // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove! -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
+        // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
         case ButtonMoveNames.PassEnlistmentMercenariesMove:
-            action = data.moves.PassEnlistmentMercenariesMove!;
+            action = data.moves.PassEnlistmentMercenariesMove;
             break;
         case ButtonMoveNames.StartEnlistmentMercenariesMove:
-            action = data.moves.StartEnlistmentMercenariesMove!;
+            action = data.moves.StartEnlistmentMercenariesMove;
             break;
         // Start
         case ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
-            action = data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove!;
+            action = data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove;
             break;
         // Solo Mode
         case ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove:
-            action = data.moves.ChooseDifficultyLevelForSoloModeMove!;
+            action = data.moves.ChooseDifficultyLevelForSoloModeMove;
             break;
         // Solo Mode Andvari
         case ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove:
-            action = data.moves.ChooseStrategyVariantForSoloModeAndvariMove!;
+            action = data.moves.ChooseStrategyVariantForSoloModeAndvariMove;
             break;
         case ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove:
-            action = data.moves.ChooseStrategyForSoloModeAndvariMove!;
+            action = data.moves.ChooseStrategyForSoloModeAndvariMove;
             break;
         case undefined:
             action = null;
@@ -82,8 +82,8 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardType, id: number,
-    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNamesKeyofTypeofType>, moveName?: CardMoveNames,
+export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: AllCardType, id: number,
+    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNames>, moveName?: CardMoveNames,
     ...args: ArgsType): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
@@ -100,68 +100,68 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     let _exhaustiveCheck: never;
     switch (moveName) {
         case CardMoveNames.ClickCardMove:
-            action = data.moves.ClickCardMove!;
+            action = data.moves.ClickCardMove;
             break;
         case CardMoveNames.ClickCardToPickDistinctionMove:
-            action = data.moves.ClickCardToPickDistinctionMove!;
+            action = data.moves.ClickCardToPickDistinctionMove;
             break;
         case CardMoveNames.ClickCampCardMove:
-            action = data.moves.ClickCampCardMove!;
+            action = data.moves.ClickCampCardMove;
             break;
         case CardMoveNames.ClickDistinctionCardMove:
-            action = data.moves.ClickDistinctionCardMove!;
+            action = data.moves.ClickDistinctionCardMove;
             break;
         case CardMoveNames.DiscardCardFromPlayerBoardMove:
-            action = data.moves.DiscardCardFromPlayerBoardMove!;
+            action = data.moves.DiscardCardFromPlayerBoardMove;
             break;
         case CardMoveNames.GetEnlistmentMercenariesMove:
-            action = data.moves.GetEnlistmentMercenariesMove!;
+            action = data.moves.GetEnlistmentMercenariesMove;
+            break;
+        case CardMoveNames.GetMythologyCardMove:
+            action = data.moves.GetMythologyCardMove;
             break;
         // Start
         case CardMoveNames.ClickCampCardHoldaMove:
-            action = data.moves.ClickCampCardHoldaMove!;
+            action = data.moves.ClickCampCardHoldaMove;
             break;
         case CardMoveNames.ClickHeroCardMove:
-            action = data.moves.ClickHeroCardMove!;
+            action = data.moves.ClickHeroCardMove;
             break;
         case CardMoveNames.DiscardCardMove:
-            action = data.moves.DiscardCardMove!;
+            action = data.moves.DiscardCardMove;
             break;
         case CardMoveNames.DiscardCard2PlayersMove:
-            action = data.moves.DiscardCard2PlayersMove!;
+            action = data.moves.DiscardCard2PlayersMove;
             break;
         case CardMoveNames.DiscardSuitCardFromPlayerBoardMove:
-            action = data.moves.DiscardSuitCardFromPlayerBoardMove!;
+            action = data.moves.DiscardSuitCardFromPlayerBoardMove;
             break;
         case CardMoveNames.PickDiscardCardMove:
-            action = data.moves.PickDiscardCardMove!;
-            break;
-        case CardMoveNames.UseGodCardPowerMove:
-            action = data.moves.UseGodPowerMove!;
+            action = data.moves.PickDiscardCardMove;
             break;
         // Solo Mode
         case CardMoveNames.ChooseHeroForDifficultySoloModeMove:
-            action = data.moves.ChooseHeroForDifficultySoloModeMove!;
+            action = data.moves.ChooseHeroForDifficultySoloModeMove;
             break;
         // Solo Bot
         case CardMoveNames.SoloBotClickHeroCardMove:
-            action = data.moves.SoloBotClickHeroCardMove!;
+            action = data.moves.SoloBotClickHeroCardMove;
             break;
         case CardMoveNames.SoloBotClickCardMove:
-            action = data.moves.SoloBotClickCardMove!;
+            action = data.moves.SoloBotClickCardMove;
             break;
         case CardMoveNames.SoloBotClickCardToPickDistinctionMove:
-            action = data.moves.SoloBotClickCardMove!;
+            action = data.moves.SoloBotClickCardMove;
             break;
         // Solo Bot Andvari
         case CardMoveNames.SoloBotAndvariClickCardMove:
-            action = data.moves.SoloBotAndvariClickCardMove!;
+            action = data.moves.SoloBotAndvariClickCardMove;
             break;
         case CardMoveNames.SoloBotAndvariClickHeroCardMove:
-            action = data.moves.SoloBotAndvariClickHeroCardMove!;
+            action = data.moves.SoloBotAndvariClickHeroCardMove;
             break;
         case CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove:
-            action = data.moves.SoloBotAndvariClickCardToPickDistinctionMove!;
+            action = data.moves.SoloBotAndvariClickCardToPickDistinctionMove;
             break;
         case undefined:
             action = null;
@@ -197,7 +197,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
                 tdClasses += ` bg-yellow-200`;
                 if (card.type === RusCardTypeNames.Artefact_Card
                     && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
-                    value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
+                    value = String(GetOdroerirTheMythicCauldronCoinsValues({ G: data.G } as MyFnContext));
                 }
             }
             break;
@@ -255,8 +255,8 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawEmptyCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], cardType: RusCardTypeNames,
-    id: number, player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNamesKeyofTypeofType>,
+export const DrawEmptyCard = (data: BoardProps, playerCells: JSX.Element[], cardType: RusCardTypeNames, id: number,
+    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNames>,
     moveName?: EmptyCardMoveNames, ...args: ArgsType): void => {
     let tdClasses = ``,
         action: MoveFunctionType;
@@ -266,30 +266,30 @@ export const DrawEmptyCard = (data: BoardProps<IMyGameState>, playerCells: JSX.E
     let _exhaustiveCheck: never;
     switch (moveName) {
         case EmptyCardMoveNames.PlaceThrudHeroMove:
-            action = data.moves.PlaceThrudHeroMove!;
+            action = data.moves.PlaceThrudHeroMove;
             break;
         case EmptyCardMoveNames.PlaceYludHeroMove:
-            action = data.moves.PlaceYludHeroMove!;
+            action = data.moves.PlaceYludHeroMove;
             break;
         case EmptyCardMoveNames.PlaceMultiSuitCardMove:
-            action = data.moves.PlaceMultiSuitCardMove!;
+            action = data.moves.PlaceMultiSuitCardMove;
             break;
         case EmptyCardMoveNames.PlaceEnlistmentMercenariesMove:
-            action = data.moves.PlaceEnlistmentMercenariesMove!;
+            action = data.moves.PlaceEnlistmentMercenariesMove;
             break;
         // Solo Bot
         case EmptyCardMoveNames.SoloBotPlaceThrudHeroMove:
-            action = data.moves.SoloBotPlaceThrudHeroMove!;
+            action = data.moves.SoloBotPlaceThrudHeroMove;
             break;
         case EmptyCardMoveNames.SoloBotPlaceYludHeroMove:
-            action = data.moves.SoloBotPlaceYludHeroMove!;
+            action = data.moves.SoloBotPlaceYludHeroMove;
             break;
         // Solo Bot Andvari
         case EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove:
-            action = data.moves.SoloBotAndvariPlaceThrudHeroMove!;
+            action = data.moves.SoloBotAndvariPlaceThrudHeroMove;
             break;
         case EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove:
-            action = data.moves.SoloBotAndvariPlaceYludHeroMove!;
+            action = data.moves.SoloBotAndvariPlaceYludHeroMove;
             break;
         case undefined:
             action = null;
@@ -330,8 +330,8 @@ export const DrawEmptyCard = (data: BoardProps<IMyGameState>, playerCells: JSX.E
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string,
-    coin: PublicPlayerCoinType, id: number, player: CanBeNullType<IPublicPlayer>, coinClasses?: CanBeNullType<string>,
+export const DrawCoin = (data: BoardProps, playerCells: JSX.Element[], type: string, coin: PublicPlayerCoinType,
+    id: number, player: CanBeNullType<IPublicPlayer>, coinClasses?: CanBeNullType<string>,
     additionalParam?: CanBeNullType<number>, moveName?: CoinMoveNames, ...args: ArgsType): void => {
     let styles: IBackground = { background: `` },
         span: CanBeNullType<JSX.Element | number> = null,
@@ -341,37 +341,37 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         _exhaustiveCheck: never;
     switch (moveName) {
         case CoinMoveNames.ClickBoardCoinMove:
-            action = data.moves.ClickBoardCoinMove!;
+            action = data.moves.ClickBoardCoinMove;
             break;
         case CoinMoveNames.ClickHandCoinMove:
-            action = data.moves.ClickHandCoinMove!;
+            action = data.moves.ClickHandCoinMove;
             break;
         case CoinMoveNames.ClickHandCoinUlineMove:
-            action = data.moves.ClickHandCoinUlineMove!;
+            action = data.moves.ClickHandCoinUlineMove;
             break;
         case CoinMoveNames.ClickHandTradingCoinUlineMove:
-            action = data.moves.ClickHandTradingCoinUlineMove!;
+            action = data.moves.ClickHandTradingCoinUlineMove;
             break;
         // Start
         case CoinMoveNames.AddCoinToPouchMove:
-            action = data.moves.AddCoinToPouchMove!;
+            action = data.moves.AddCoinToPouchMove;
             break;
         case CoinMoveNames.ClickCoinToUpgradeMove:
-            action = data.moves.ClickCoinToUpgradeMove!;
+            action = data.moves.ClickCoinToUpgradeMove;
             break;
         case CoinMoveNames.ClickConcreteCoinToUpgradeMove:
-            action = data.moves.ClickConcreteCoinToUpgradeMove!;
+            action = data.moves.ClickConcreteCoinToUpgradeMove;
             break;
         case CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove:
-            action = data.moves.UpgradeCoinVidofnirVedrfolnirMove!;
+            action = data.moves.UpgradeCoinVidofnirVedrfolnirMove;
             break;
         // Solo Bot
         case CoinMoveNames.SoloBotClickCoinToUpgradeMove:
-            action = data.moves.SoloBotClickCoinToUpgradeMove!;
+            action = data.moves.SoloBotClickCoinToUpgradeMove;
             break;
         // Solo Bot Andvari
         case CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove:
-            action = data.moves.SoloBotAndvariClickCoinToUpgradeMove!;
+            action = data.moves.SoloBotAndvariClickCoinToUpgradeMove;
             break;
         case undefined:
             action = null;
@@ -454,14 +454,17 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param moveName Название действия.
  * @returns
  */
-export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitNamesKeyofTypeofType,
-    player?: IPublicPlayer, moveName?: SuitMoveNames): void => {
+export const DrawSuit = (data: BoardProps, playerHeaders: JSX.Element[], suit: SuitNames, player?: IPublicPlayer,
+    moveName?: SuitMoveNames): void => {
     let className = ``,
         action: MoveFunctionType,
         _exhaustiveCheck: never;
     switch (moveName) {
+        case SuitMoveNames.ChooseSuitOlrunMove:
+            action = data.moves.ChooseSuitOlrunMove;
+            break;
         case SuitMoveNames.GetMjollnirProfitMove:
-            action = data.moves.GetMjollnirProfitMove!;
+            action = data.moves.GetMjollnirProfitMove;
             break;
         case undefined:
             action = null;

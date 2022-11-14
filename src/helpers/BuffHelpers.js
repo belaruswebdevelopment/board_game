@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>
@@ -15,16 +15,16 @@ import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/en
  * @param value Значение бафа.
  * @returns
  */
-export const AddBuffToPlayer = (G, ctx, buff, value) => {
+export const AddBuffToPlayer = ({ G, ctx, playerID, ...rest }, buff, value) => {
     if (buff !== undefined) {
-        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player = G.publicPlayers[Number(playerID)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
         }
         player.buffs.push({
             [buff.name]: value !== null && value !== void 0 ? value : true,
         });
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
     }
 };
 /**
@@ -40,10 +40,10 @@ export const AddBuffToPlayer = (G, ctx, buff, value) => {
  * @param value Новое значение бафа.
  * @returns
  */
-export const ChangeBuffValue = (G, ctx, buffName, value) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const ChangeBuffValue = ({ G, ctx, playerID, ...rest }, buffName, value) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const buffIndex = player.buffs.findIndex((buff) => buff[buffName] !== undefined);
     if (buffIndex === -1) {
@@ -52,7 +52,7 @@ export const ChangeBuffValue = (G, ctx, buffName, value) => {
     player.buffs[buffIndex] = {
         [buffName]: value,
     };
-    AddDataToLog(G, LogTypeNames.Game, `У игрок '${player.nickname}' изменилось значение бафа '${buffName}' на новое - '${value}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `У игрок '${player.nickname}' изменилось значение бафа '${buffName}' на новое - '${value}'.`);
 };
 /**
  * <h3>Действия, связанные с проверкой наличия конкретного бафа у игрока.</h3>
@@ -65,7 +65,13 @@ export const ChangeBuffValue = (G, ctx, buffName, value) => {
  * @param buffName Баф.
  * @returns
  */
-export const CheckPlayerHasBuff = (player, buffName) => player.buffs.find((buff) => buff[buffName] !== undefined) !== undefined;
+export const CheckPlayerHasBuff = ({ G, ctx, playerID, ...rest }, buffName) => {
+    const player = G.publicPlayers[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+    }
+    return player.buffs.find((buff) => buff[buffName] !== undefined) !== undefined;
+};
 /**
 * <h3>Действия, связанные с удалением бафов у игрока.</h3>
 * <p>Применения:</p>
@@ -78,17 +84,17 @@ export const CheckPlayerHasBuff = (player, buffName) => player.buffs.find((buff)
 * @param buffName Баф.
 * @returns
 */
-export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const DeleteBuffFromPlayer = ({ G, ctx, playerID, ...rest }, buffName) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const buffIndex = player.buffs.findIndex((buff) => buff[buffName] !== undefined);
     if (buffIndex === -1) {
-        throw new Error(`У игрока с id ${ctx.currentPlayer} в массиве бафов отсутствует баф '${buffName}' с id ${buffIndex}.`);
+        throw new Error(`У игрока с id ${playerID} в массиве бафов отсутствует баф '${buffName}' с id ${buffIndex}.`);
     }
     player.buffs.splice(buffIndex, 1);
-    AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
 /**
  * <h3>Действия, связанные с получением значения бафа игрока.</h3>
@@ -102,10 +108,10 @@ export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
  * @param buffName Баф.
  * @returns
  */
-export const GetBuffValue = (G, ctx, buffName) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const GetBuffValue = ({ G, ctx, playerID, ...rest }, buffName) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const buff = player.buffs.find((buff) => buff[buffName] !== undefined);
     if (buff === undefined) {

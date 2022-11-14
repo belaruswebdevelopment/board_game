@@ -7,13 +7,13 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
 import { BuildMultiSuitCards } from "./MultiSuitCard";
-import { BuildMythologicalCreatureCards } from "./MythologicalCreature";
+import { BuildMythologicalCreatureCards, BuildMythologicalCreatureDecks } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
-import { GameModeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeUndefType, Ctx, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitNamesKeyofTypeofType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import { GameModeNames, SuitNames } from "./typescript/enums";
+import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeUndefType, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -25,7 +25,7 @@ import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeU
  * @param ctx
  * @returns Данные игры.
  */
-export const SetupGame = (ctx: Ctx): IMyGameState => {
+export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
     // TODO Rework it!
     const mode: GameModeNames = ctx.numPlayers === 2 ? GameModeNames.Solo : ctx.numPlayers === 3
         ? GameModeNames.SoloAndvari : ctx.numPlayers === 4 ? GameModeNames.Multiplayer : GameModeNames.Basic,
@@ -68,9 +68,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         secret: ISecret = {
             campDecks: [[], []],
             decks: [[], []],
-            mythologicalCreatureDecks: [],
+            mythologicalCreatureDeck: [],
+            mythologicalCreatureNotInGameDeck: [],
         };
-    let suit: SuitNamesKeyofTypeofType;
+    let suit: SuitNames;
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
@@ -83,12 +84,13 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         discardSpecialCards: ISpecialCard[] = [],
         campDeckLength: [number, number] = [0, 0],
         camp: CampCardArrayType = Array(campNum).fill(null) as CampCardArrayType,
-        deckLength: [number, number] = [0, 0];
+        deckLength: [number, number] = [0, 0],
+        mythologicalCreatureDeckForSkymir = null;
     for (let i = 0; i < tierToEnd; i++) {
         if (expansions.thingvellir.active) {
             secret.campDecks[i] = BuildCampCards(i as TierType);
             let campDeck: CampDeckCardType[] = secret.campDecks[i as IndexOf<SecretCampDecksType>];
-            campDeck = ctx.random!.Shuffle(campDeck);
+            campDeck = random.Shuffle(campDeck);
             secret.campDecks[i] = campDeck;
             campDeckLength[i] = campDeck.length;
             campDeckLength[0] = secret.campDecks[0].length;
@@ -103,7 +105,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         let deck: DeckCardType[] = secret.decks[i as IndexOf<SecretDecksType>];
         deck = deck.concat(dwarfDeck, royalOfferingDeck);
         deckLength[i] = deck.length;
-        secret.decks[i] = ctx.random!.Shuffle(deck);
+        secret.decks[i] = random.Shuffle(deck);
     }
     let expansion: GameNamesKeyofTypeofType;
     for (expansion in expansions) {
@@ -119,12 +121,16 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         tavernsNum = 3,
         currentTavern = 0;
     deckLength[0] = secret.decks[0].length;
-    let mythologicalCreatureDeckLength = 0;
+    let mythologicalCreatureDeckLength = 0,
+        mythologicalCreatureNotInGameDeckLength = 0;
     if (expansions.idavoll.active) {
-        secret.mythologicalCreatureDecks = BuildMythologicalCreatureCards();
-        secret.mythologicalCreatureDecks = ctx.random!.Shuffle(secret.mythologicalCreatureDecks);
-        // TODO Add Idavoll deck length info on main page?
-        mythologicalCreatureDeckLength = secret.mythologicalCreatureDecks.length;
+        let mythologicalCreatureCardsDeck: MythologicalCreatureDeckCardType[] = BuildMythologicalCreatureCards();
+        mythologicalCreatureCardsDeck = random.Shuffle(mythologicalCreatureCardsDeck);
+        [secret.mythologicalCreatureDeck, secret.mythologicalCreatureNotInGameDeck] =
+            BuildMythologicalCreatureDecks(mythologicalCreatureCardsDeck, ctx.numPlayers);
+        // TODO Add Idavoll decks length info on main page?
+        mythologicalCreatureDeckLength = secret.mythologicalCreatureDeck.length;
+        mythologicalCreatureNotInGameDeckLength = secret.mythologicalCreatureNotInGameDeck.length;
     }
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = Array(drawSize).fill(null);
@@ -193,6 +199,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         deckLength,
         campDeckLength,
         mythologicalCreatureDeckLength,
+        mythologicalCreatureNotInGameDeckLength,
+        mythologicalCreatureDeckForSkymir,
         secret,
         campNum,
         campPicked,

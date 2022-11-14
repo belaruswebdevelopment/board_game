@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { BuffNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
+import { CampBuffNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -15,17 +15,16 @@ import { BuffNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardT
  * @param ctx
  * @returns Массив возможных мувов у ботов.
  */
-export const enumerate = (G, ctx) => {
+export const enumerate = ({ G, ctx, playerID, ...rest }) => {
     var _a;
-    const moves = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
-    let playerId;
+    const moves = [], player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const phase = ctx.phase;
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
-        const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
+        const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(playerID)];
         let activeStageOfCurrentPlayer = currentStage !== null && currentStage !== void 0 ? currentStage : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             let _exhaustiveCheck;
@@ -86,7 +85,7 @@ export const enumerate = (G, ctx) => {
                             if (ctx.activePlayers === null) {
                                 let pickCardOrCampCard = `card`;
                                 if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                                    || (!G.campPicked && CheckPlayerHasBuff(player, BuffNames.GoCamp)))) {
+                                    || (!G.campPicked && CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, CampBuffNames.GoCamp)))) {
                                     pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                                 }
                                 if (pickCardOrCampCard === `card`) {
@@ -161,10 +160,10 @@ export const enumerate = (G, ctx) => {
                 for (let p = 0; p < ctx.numPlayers; p++) {
                     const playerP = G.publicPlayers[p];
                     if (playerP === undefined) {
-                        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
+                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
                     }
-                    if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
-                        playerId = p;
+                    if (p !== Number(playerID) && playerP.stack[0] !== undefined) {
+                        playerID = String(p);
                         break;
                     }
                 }
@@ -176,7 +175,7 @@ export const enumerate = (G, ctx) => {
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator = GetValidator(phase, activeStageOfCurrentPlayer);
         if (validator !== null) {
-            const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx, playerId), moveValue = validator.getValue(G, ctx, moveRangeData);
+            const moveName = validator.moveName, moveRangeData = validator.getRange({ G, ctx, playerID, ...rest }), moveValue = validator.getValue({ G, ctx, playerID, ...rest }, moveRangeData);
             let moveValues = [];
             if (typeof moveValue === `number`) {
                 moveValues = [moveValue];
@@ -224,7 +223,7 @@ export const enumerate = (G, ctx) => {
 * @param ctx
 * @returns Итерации.
 */
-export const iterations = (G, ctx) => {
+export const iterations = ({ G, ctx }) => {
     const maxIter = G.botData.maxIter;
     if (ctx.phase === PhaseNames.TavernsResolution) {
         const currentTavern = G.taverns[G.currentTavern];
@@ -285,12 +284,12 @@ export const iterations = (G, ctx) => {
  */
 export const objectives = () => ({
     isEarlyGame: {
-        checker: (G) => G.secret.decks[0].length > 0,
+        checker: ({ G }) => G.secret.decks[0].length > 0,
         weight: -100.0,
     },
     // TODO Move same logic in one func?!
     /* isWeaker: {
-        checker: (G: IMyGameState, ctx: Ctx): boolean => {
+        checker: ({ G, ctx, playerID, ...rest }: MyFnContext): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
@@ -323,7 +322,7 @@ export const objectives = () => ({
         weight: 0.01,
     }, */
     /* isSecond: {
-        checker: (G: MyGameState, ctx: Ctx): boolean => {
+        checker: ({ G, ctx, playerID, ...rest }: MyFnContext): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
@@ -356,7 +355,7 @@ export const objectives = () => ({
         weight: 0.1,
     }, */
     /* isEqual: {
-        checker: (G: MyGameState, ctx: Ctx): boolean => {
+        checker: ({ G, ctx, playerID, ...rest }: MyFnContext): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
@@ -390,7 +389,7 @@ export const objectives = () => ({
         weight: 0.1,
     }, */
     isFirst: {
-        checker: (G, ctx) => {
+        checker: ({ G, ctx, playerID, ...rest }) => {
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
@@ -405,9 +404,9 @@ export const objectives = () => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
-                totalScore.push(CurrentScoring(G, player));
+                totalScore.push(CurrentScoring({ G, ctx, playerID, ...rest }));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
@@ -424,7 +423,7 @@ export const objectives = () => ({
         weight: 0.5,
     },
     isStronger: {
-        checker: (G, ctx) => {
+        checker: ({ G, ctx, playerID, ...rest }) => {
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
@@ -439,9 +438,9 @@ export const objectives = () => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
-                totalScore.push(CurrentScoring(G, player));
+                totalScore.push(CurrentScoring({ G, ctx, playerID, ...rest }));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
@@ -470,7 +469,7 @@ export const objectives = () => ({
  * @param ctx
  * @returns Глубина.
  */
-export const playoutDepth = (G, ctx) => {
+export const playoutDepth = ({ G, ctx }) => {
     const tavern0 = G.taverns[0];
     if (G.secret.decks[1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;

@@ -14,12 +14,12 @@ import { StageNames, SuitNames } from "../typescript/enums";
  * @param heroId Id героя.
  * @returns
  */
-export const ClickHeroCardMove = (G, ctx, heroId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.pickHero, heroId);
+export const ClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.pickHero, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddHeroToPlayerCardsAction(G, ctx, heroId);
+    AddHeroToPlayerCardsAction({ G, ctx, playerID, ...rest }, heroId);
 };
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>
@@ -34,15 +34,15 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
  * @param cardId Id карты.
  * @returns
  */
-export const DiscardCardMove = (G, ctx, suit, cardId) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.discardBoardCard, {
+export const DiscardCardMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.discardBoardCard, {
         suit,
         cardId,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardCardsFromPlayerBoardAction(G, ctx, suit, cardId);
+    DiscardCardsFromPlayerBoardAction({ G, ctx, playerID, ...rest }, suit, cardId);
 };
 /**
  * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
@@ -56,12 +56,12 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceMultiSuitCardMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeMultiSuitsCards, suit);
+export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.placeMultiSuitsCards, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceMultiSuitCardAction(G, ctx, suit);
+    PlaceMultiSuitCardAction({ G, ctx, playerID, ...rest }, suit);
 };
 /**
  * <h3>Расположение героя на планшет игрока.</h3>
@@ -75,12 +75,12 @@ export const PlaceMultiSuitCardMove = (G, ctx, suit) => {
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceThrudHeroMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.placeThrudHero, suit);
+export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.placeThrudHero, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceThrudAction(G, ctx, suit);
+    PlaceThrudAction({ G, ctx, playerID, ...rest }, suit);
 };
 /**
  * <h3>Расположение героя на планшет игрока.</h3>
@@ -94,11 +94,11 @@ export const PlaceThrudHeroMove = (G, ctx, suit) => {
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceYludHeroMove = (G, ctx, suit) => {
-    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, StageNames.default1, suit);
+export const PlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceYludAction(G, ctx, suit);
+    PlaceYludAction({ G, ctx, playerID, ...rest }, suit);
 };
 //# sourceMappingURL=HeroMoves.js.map

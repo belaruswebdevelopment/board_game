@@ -2,7 +2,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { ScoreWinner } from "../Score";
-import { BuffNames, ErrorNames } from "../typescript/enums";
+import { CampBuffNames, ErrorNames, HeroBuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>
  * <p>Применения:</p>
@@ -14,18 +14,18 @@ import { BuffNames, ErrorNames } from "../typescript/enums";
  * @param ctx
  * @returns Необходимость завершения игры.
  */
-export const CheckEndGame = (G, ctx) => {
+export const CheckEndGame = ({ G, ctx, ...rest }) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
+        const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EndTier));
         if (yludIndex !== -1) {
             return false;
         }
         if (G.expansions.thingvellir.active) {
-            const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+            const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.DiscardCardEndGame));
             if (brisingamensIndex !== -1) {
                 return false;
             }
-            const mjollnirIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+            const mjollnirIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
             if (mjollnirIndex !== -1) {
                 return false;
             }
@@ -33,7 +33,7 @@ export const CheckEndGame = (G, ctx) => {
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
                 allMercenariesPlayed = player.campCards.filter(IsMercenaryCampCard).length === 0;
                 if (!allMercenariesPlayed) {
@@ -56,5 +56,5 @@ export const CheckEndGame = (G, ctx) => {
  * @param ctx
  * @returns Финальные данные о игре.
  */
-export const ReturnEndGameData = (G, ctx) => ScoreWinner(G, ctx);
+export const ReturnEndGameData = ({ G, ctx, ...rest }) => ScoreWinner({ G, ctx, ...rest });
 //# sourceMappingURL=GameHooks.js.map

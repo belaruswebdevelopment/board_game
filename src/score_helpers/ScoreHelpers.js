@@ -1,4 +1,5 @@
-import { HeroNames, SuitNames } from "../typescript/enums";
+import { ThrowMyError } from "../Error";
+import { ErrorNames, HeroNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
  * <p>Применения:</p>
@@ -24,7 +25,13 @@ export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue +
  * @param multiplier Множитель.
  * @returns Суммарное количество очков за множитель.
  */
-export const GetRanksValueMultiplier = (player, suit, multiplier) => player.cards[suit].reduce(TotalRank, 0) * multiplier;
+export const GetRanksValueMultiplier = ({ G, ctx, playerID, ...rest }, suit, multiplier) => {
+    const player = G.publicPlayers[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+    }
+    return player.cards[suit].reduce(TotalRank, 0) * multiplier;
+};
 /**
  * <h3>Высчитывает суммарное количество очков фракции.</h3>
  * <p>Применения:</p>

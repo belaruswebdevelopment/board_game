@@ -1,11 +1,12 @@
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
-import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckDistinction } from "../TroopEvaluation";
-import { ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, Ctx, DeckCardType, DistinctionType, ExplorerDistinctionCardsArrayType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, ExplorerDistinctionCardsArrayType, FnContext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -18,8 +19,8 @@ import type { CanBeUndefType, CanBeVoidType, Ctx, DeckCardType, DistinctionType,
  * @param ctx
  * @returns
  */
-export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx): void => {
-    CheckDistinction(G, ctx);
+export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }: FnContext): void => {
+    CheckDistinction({ G, ctx, ...rest });
     const distinctions: string[] =
         Object.values(G.distinctions).filter((distinction: DistinctionType): boolean =>
             distinction !== null && distinction !== undefined) as string[];
@@ -40,11 +41,11 @@ export const CheckAndResolveTroopEvaluationOrders = (G: IMyGameState, ctx: Ctx):
  * @param ctx
  * @returns Необходимость завершения текущей фазы.
  */
-export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): CanBeVoidType<boolean> => {
+export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
@@ -66,7 +67,8 @@ export const CheckEndTroopEvaluationPhase = (G: IMyGameState, ctx: Ctx): CanBeVo
  * @param ctx
  * @returns Необходимость завершения текущего хода.
  */
-export const CheckEndTroopEvaluationTurn = (G: IMyGameState, ctx: Ctx): CanBeVoidType<true> => EndTurnActions(G, ctx);
+export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> =>
+    EndTurnActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
 
 /**
  * <h3>Действия при завершении фазы 'Смотр войск'.</h3>
@@ -76,11 +78,12 @@ export const CheckEndTroopEvaluationTurn = (G: IMyGameState, ctx: Ctx): CanBeVoi
  * </ol>
  *
  * @param G
+ * @param ctx
  * @returns
  */
-export const EndTroopEvaluationPhaseActions = (G: IMyGameState): void => {
+export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }: FnContext): void => {
     if (G.expansions.thingvellir.active) {
-        RefillCamp(G);
+        RefillCamp({ G, ctx, ...rest });
     }
     G.publicPlayersOrder = [];
 };
@@ -96,8 +99,8 @@ export const EndTroopEvaluationPhaseActions = (G: IMyGameState): void => {
  * @param ctx
  * @returns
  */
-export const OnTroopEvaluationMove = (G: IMyGameState, ctx: Ctx): void => {
-    StartOrEndActions(G, ctx);
+export const OnTroopEvaluationMove = ({ G, ctx, ...rest }: FnContext): void => {
+    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
 };
 
 /**
@@ -111,14 +114,26 @@ export const OnTroopEvaluationMove = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  * @returns
  */
-export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStack(G, ctx, [StackData.getDistinctions()]);
+export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
+    AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         let length: number;
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             length = 1;
         } else {
-            length = 3;
+            // TODO Add 6 cards if player has Garm in his deck
+            const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    ctx.currentPlayer);
+            }
+            if (G.expansions.idavoll.active
+                && CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest },
+                    MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards)) {
+                length = 6;
+            } else {
+                length = 3;
+            }
         }
         const explorerDistinctionCards: DeckCardType[] = [];
         for (let j = 0; j < length; j++) {
@@ -143,12 +158,11 @@ export const OnTroopEvaluationTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  * @returns
  */
-export const OnTroopEvaluationTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
-    ClearPlayerPickedCard(G, ctx);
+export const OnTroopEvaluationTurnEnd = ({ G, ctx, random }: FnContext): void => {
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         G.secret.decks[1].splice(G.explorerDistinctionCardId, 1);
         G.deckLength[1] = G.secret.decks[1].length;
-        G.secret.decks[1] = ctx.random!.Shuffle(G.secret.decks[1]);
+        G.secret.decks[1] = random!.Shuffle(G.secret.decks[1]);
         G.explorerDistinctionCardId = null;
     }
 };

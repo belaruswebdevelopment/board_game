@@ -13,10 +13,10 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  * @param playerId Id выбранного игрока.
  * @returns Имеет ли игрок наименьший кристалл.
  */
-export const HasLowestPriority = (G, ctx, playerId) => {
-    const tempPriorities = Object.values(G.publicPlayers).map((player) => player.priority.value), minPriority = Math.min(...tempPriorities), player = G.publicPlayers[playerId];
+export const HasLowestPriority = ({ G, ctx, playerID, ...rest }) => {
+    const tempPriorities = Object.values(G.publicPlayers).map((player) => player.priority.value), minPriority = Math.min(...tempPriorities), player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
     }
     const priority = player.priority;
     return priority.value === minPriority;
@@ -32,28 +32,28 @@ export const HasLowestPriority = (G, ctx, playerId) => {
  * @param ctx
  * @returns
  */
-export const ChangePlayersPriorities = (G, ctx) => {
+export const ChangePlayersPriorities = ({ G, ctx, ...rest }) => {
     const tempPriorities = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder = G.exchangeOrder[i];
         if (exchangeOrder !== undefined) {
             const exchangePlayer = G.publicPlayers[exchangeOrder];
             if (exchangePlayer === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, exchangeOrder);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, exchangeOrder);
             }
             tempPriorities[i] = exchangePlayer.priority;
         }
     }
     if (tempPriorities.length) {
-        AddDataToLog(G, LogTypeNames.Game, `Обмен кристаллами между игроками:`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Обмен кристаллами между игроками:`);
         for (let i = 0; i < G.exchangeOrder.length; i++) {
             const tempPriority = tempPriorities[i], player = G.publicPlayers[i];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
             }
             if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
                 player.priority = tempPriority;
-                AddDataToLog(G, LogTypeNames.Public, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' получил кристалл с приоритетом '${tempPriority.value}'.`);
             }
         }
     }

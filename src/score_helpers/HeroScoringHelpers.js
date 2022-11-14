@@ -1,5 +1,6 @@
+import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { SuitNames } from "../typescript/enums";
+import { ErrorNames, SuitNames } from "../typescript/enums";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 /**
  * <h3>Получение победных очков по герою, не имеющему специфических вариантов подсчёта очков.</h3>
@@ -11,9 +12,9 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const BasicHeroScoring = (player, value) => {
+export const BasicHeroScoring = ({ G, ctx, ...rest }, value) => {
     if (value === undefined) {
-        throw new Error(`Function param 'value' is undefined.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }
     return value;
 };
@@ -27,7 +28,7 @@ export const BasicHeroScoring = (player, value) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const AstridScoring = (player) => GetMaxCoinValue(player);
+export const AstridScoring = ({ G, ctx, playerID, ...rest }) => GetMaxCoinValue({ G, ctx, playerID, ...rest });
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>
  * <p>Применения:</p>
@@ -38,5 +39,5 @@ export const AstridScoring = (player) => GetMaxCoinValue(player);
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const IdunnScoring = (player) => GetRanksValueMultiplier(player, SuitNames.explorer, 2);
+export const IdunnScoring = ({ G, ctx, playerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.explorer, 2);
 //# sourceMappingURL=HeroScoringHelpers.js.map

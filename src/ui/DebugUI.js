@@ -10,8 +10,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * @param ctx
  * @returns Дебаг панель.
  */
-export const DrawDebugData = (G, ctx) => {
-    const debugData = GetDebugData(G, ctx);
+export const DrawDebugData = ({ G, ctx, ...rest }) => {
+    const debugData = GetDebugData({ G, ctx, ...rest });
     if (debugData === undefined) {
         return null;
     }
@@ -58,7 +58,7 @@ const DrawObjectData = (obj) => {
  * @param ctx
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (G, ctx) => {
+const GetDebugData = ({ G, ctx }) => {
     if (G.debug) {
         const debugData = {
             G: {},

@@ -4,10 +4,10 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames } from "../typescript/enums";
-import type { BoardProps, CampCardArrayType, CampCardType, CanBeNullType, CanBeUndefType, Ctx, DiscardDeckCardType, DrawProfitType, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IMyGameState, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, SuitNamesKeyofTypeofType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames, SuitNames } from "../typescript/enums";
+import type { BoardProps, CampCardArrayType, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, FnContext, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
-import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
 // TODO Check Solo Bot & multiplayer actions!
 /**
@@ -23,8 +23,8 @@ import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLeve
  * @param data Глобальные параметры.
  * @returns Поле лагеря | данные для списка доступных аргументов мува.
  */
-export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element | MoveArgumentsType<number[]> => {
+export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNullType<MoveValidatorNames>,
+    data?: BoardProps): JSX.Element | MoveArgumentsType<number[]> => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
@@ -41,10 +41,10 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType
             } else {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
-                let suit: CanBeNullType<SuitNamesKeyofTypeofType> = null;
+                let suit: CanBeNullType<SuitNames> = null;
                 if (campCard.type === RusCardTypeNames.Artefact_Player_Card) {
                     suit = campCard.suit;
                 }
@@ -119,7 +119,7 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType
  * @param ctx
  * @returns Поле информации о текущей фазе и стадии игры.
  */
-export const DrawCurrentPhaseStage = (ctx: Ctx): JSX.Element => {
+export const DrawCurrentPhaseStage = ({ ctx }: FnContext): JSX.Element => {
     const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)],
         stageText: StageNameTextType = stage !== undefined ? RusStageNames[stage] : `none`;
     return (
@@ -138,7 +138,7 @@ export const DrawCurrentPhaseStage = (ctx: Ctx): JSX.Element => {
  * @param ctx
  * @returns Поле информации о текущем ходу.
  */
-export const DrawCurrentPlayerTurn = (ctx: Ctx): JSX.Element => (
+export const DrawCurrentPlayerTurn = ({ ctx }: FnContext): JSX.Element => (
     <b><span className="italic">Player {Number(ctx.currentPlayer) + 1}</span> |
         Turn: <span className="italic">{ctx.turn}</span></b>
 );
@@ -156,13 +156,13 @@ export const DrawCurrentPlayerTurn = (ctx: Ctx): JSX.Element => (
  * @param data Глобальные параметры.
  * @returns Поле преимуществ в конце эпохи.
  */
-export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element | MoveArgumentsType<SuitNamesKeyofTypeofType[]> => {
+export const DrawDistinctions = ({ G, ctx }: FnContext, validatorName: CanBeNullType<MoveValidatorNames>,
+    data?: BoardProps): JSX.Element | MoveArgumentsType<SuitNames[]> => {
     const boardCells: JSX.Element[] = [],
-        moveMainArgs: MoveArgumentsType<SuitNamesKeyofTypeofType[]> = [];
+        moveMainArgs: MoveArgumentsType<SuitNames[]> = [];
     for (let i = 0; i < 1; i++) {
-        let suit: SuitNamesKeyofTypeofType,
-            currentDistinctionSuit: CanBeUndefType<SuitNamesKeyofTypeofType>;
+        let suit: SuitNames,
+            currentDistinctionSuit: CanBeUndefType<SuitNames>;
         for (suit in G.distinctions) {
             if (G.distinctions[suit] !== undefined) {
                 currentDistinctionSuit = suit;
@@ -233,8 +233,8 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: CanBe
  * @param data Глобальные параметры.
  * @returns Поле колоды сброса карт.
  */
-export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element | MoveArgumentsType<number[]> => {
+export const DrawDiscardedCards = ({ G, ctx, ...rest }: FnContext,
+    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps): JSX.Element | MoveArgumentsType<number[]> => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
@@ -242,14 +242,14 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Can
         if (card === undefined) {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
-        let suit: CanBeNullType<SuitNamesKeyofTypeofType> = null;
+        let suit: CanBeNullType<SuitNames> = null;
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickDiscardCard) {
             const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                     ctx.currentPlayer);
             }
             if (data !== undefined) {
@@ -299,8 +299,8 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Can
  * @param data Глобальные параметры.
  * @returns Поле героев.
  */
-export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element | MoveArgumentsType<number[]> => {
+export const DrawHeroes = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNullType<MoveValidatorNames>,
+    data?: BoardProps): JSX.Element | MoveArgumentsType<number[]> => {
     const boardRows: JSX.Element[] = [],
         drawData: IDrawBoardOptions = DrawBoard(G.heroes.length),
         moveMainArgs: MoveArgumentsType<number[]> = [];
@@ -312,11 +312,11 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullTy
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
-            const suit: CanBeNullType<SuitNamesKeyofTypeofType> = hero.suit;
+            const suit: CanBeNullType<SuitNames> = hero.suit;
             if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickHero) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
                 if (data !== undefined) {
@@ -387,8 +387,8 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullTy
  * @param data Глобальные параметры.
  * @returns Поле героев для соло бота.
  */
-export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>): JSX.Element | MoveArgumentsType<number[]> => {
+export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
+    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps): JSX.Element | MoveArgumentsType<number[]> => {
     if (G.heroesForSoloBot === null) {
         throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
     }
@@ -401,7 +401,7 @@ export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName:
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickHeroSoloBot) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
                 if (data !== undefined) {
@@ -451,10 +451,10 @@ export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName:
  * @param data Глобальные параметры.
  * @returns Поле рынка монет.
  */
-export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>): JSX.Element => {
+export const DrawMarketCoins = ({ G, ...rest }: FnContext, data: BoardProps): JSX.Element => {
     const boardRows: JSX.Element[] = [],
         drawData: IDrawBoardOptions = DrawBoard(G.marketCoinsUnique.length),
-        countMarketCoins: INumberValues = CountMarketCoins(G);
+        countMarketCoins: INumberValues = CountMarketCoins({ G, ...rest });
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
@@ -501,43 +501,52 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
  * @param data Глобальные параметры.
  * @returns Поле профита.
  */
-export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>): JSX.Element => {
+export const DrawProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JSX.Element => {
     const boardCells: JSX.Element[] = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            ctx.currentPlayer);
     }
     const option: DrawProfitType = G.drawProfit;
     let caption = ``,
         _exhaustiveCheck: never;
     switch (option) {
+        case ConfigNames.ChooseGetMythologyCard:
+            caption += `Get Mythology card.`;
+            ChooseGetMythologyCardProfit({ G, ctx, ...rest }, null, data, boardCells);
+            break;
         case ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade:
             caption += `Get value of coin upgrade.`;
-            ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit(G, ctx, null, data, boardCells);
+            ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit({ G, ctx, ...rest }, null, data,
+                boardCells);
             break;
         case ConfigNames.ExplorerDistinction:
             caption += `Get one card to your board.`;
-            ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
+            ExplorerDistinctionProfit({ G, ctx, ...rest }, null, data, boardCells);
             break;
         case ConfigNames.GetDifficultyLevelForSoloMode:
             caption += `Get difficulty level for Solo mode.`;
-            ChooseDifficultyLevelForSoloModeProfit(G, ctx, null, data, boardCells);
+            ChooseDifficultyLevelForSoloModeProfit({ G, ctx, ...rest }, null, data,
+                boardCells);
             break;
         case ConfigNames.ChooseStrategyLevelForSoloModeAndvari:
             caption += `Get strategy level for Solo mode Andvari.`;
-            ChooseStrategyForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
+            ChooseStrategyForSoloModeAndvariProfit({ G, ctx, ...rest }, null, data,
+                boardCells);
             break;
         case ConfigNames.ChooseStrategyVariantLevelForSoloModeAndvari:
             caption += `Get strategy variant level for Solo mode Andvari.`;
-            ChooseStrategyVariantForSoloModeAndvariProfit(G, ctx, null, data, boardCells);
+            ChooseStrategyVariantForSoloModeAndvariProfit({ G, ctx, ...rest }, null,
+                data, boardCells);
             break;
         case ConfigNames.GetHeroesForSoloMode:
             caption += `Get ${G.soloGameDifficultyLevel} hero${G.soloGameDifficultyLevel === 1 ? `` : `es`} to Solo Bot.`;
-            PickHeroesForSoloModeProfit(G, ctx, null, data, boardCells);
+            PickHeroesForSoloModeProfit({ G, ctx, ...rest }, null, data, boardCells);
             break;
         case ConfigNames.StartOrPassEnlistmentMercenaries:
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
-            StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
+            StartEnlistmentMercenariesProfit({ G, ctx, ...rest }, data, boardCells);
             break;
         case null:
             throw new Error(`Не задан обязательный параметр '${option}'.`);
@@ -571,15 +580,14 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
  * @param data Глобальные параметры.
  * @returns Поле стратегий соло бота Андвари.
  */
-export const DrawStrategyForSoloBotAndvariUI = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>):
-    JSX.Element => {
+export const DrawStrategyForSoloBotAndvariUI = ({ G }: FnContext, data: BoardProps): JSX.Element => {
     if (G.soloGameAndvariStrategyVariantLevel === null) {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
     const playerHeadersGeneral: JSX.Element[] = [],
         playerHeadersReserve: JSX.Element[] = [];
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
-        const suit: CanBeUndefType<SuitNamesKeyofTypeofType> =
+        const suit: CanBeUndefType<SuitNames> =
             G.strategyForSoloBotAndvari.general[i as ZeroOrOneOrTwoType];
         if (suit === undefined) {
             throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
@@ -587,7 +595,7 @@ export const DrawStrategyForSoloBotAndvariUI = (G: IMyGameState, ctx: Ctx, data:
         DrawSuit(data, playerHeadersGeneral, suit);
     }
     for (let i = G.soloGameAndvariStrategyVariantLevel; i < 5; i++) {
-        const suit: CanBeUndefType<SuitNamesKeyofTypeofType> = G.strategyForSoloBotAndvari.reserve[i];
+        const suit: CanBeUndefType<SuitNames> = G.strategyForSoloBotAndvari.reserve[i];
         if (suit === undefined) {
             throw new Error(`В объекте резервных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
         }
@@ -622,8 +630,9 @@ export const DrawStrategyForSoloBotAndvariUI = (G: IMyGameState, ctx: Ctx, data:
  * @param gridClass Класс для отрисовки таверны.
  * @returns Поле таверн.
  */
-export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullType<MoveValidatorNames>,
-    data?: BoardProps<IMyGameState>, gridClass?: string): JSX.Element[] | MoveArgumentsType<number[]> => {
+export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
+    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, gridClass?: string):
+    JSX.Element[] | MoveArgumentsType<number[]> => {
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let t = 0; t < G.tavernsNum; t++) {
@@ -646,13 +655,13 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
                         );
                     }
                 } else {
-                    let suit: CanBeNullType<SuitNamesKeyofTypeofType> = null;
+                    let suit: CanBeNullType<SuitNames> = null;
                     if (`suit` in tavernCard) {
                         suit = tavernCard.suit;
                     }
                     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
-                        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
+                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                             ctx.currentPlayer);
                     }
                     if (t === G.currentTavern && ctx.phase === PhaseNames.TavernsResolution
@@ -757,7 +766,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: CanBeNullT
  * @param G
  * @returns Поле информации о количестве карт по эпохам.
  */
-export const DrawTierCards = (G: IMyGameState): JSX.Element => {
+export const DrawTierCards = ({ G }: FnContext): JSX.Element => {
     return (
         <b>Tier: <span className="italic">
             {G.deckLength.length - G.tierToEnd + 1 > G.deckLength.length ? G.deckLength.length :
@@ -779,7 +788,7 @@ export const DrawTierCards = (G: IMyGameState): JSX.Element => {
  * @param ctx
  * @returns Поле информации о ходе/победителях игры.
  */
-export const DrawWinner = (G: IMyGameState, ctx: Ctx): JSX.Element => {
+export const DrawWinner = ({ G, ctx }: FnContext): JSX.Element => {
     let winner: string;
     if (ctx.gameover !== undefined) {
         if (G.winner !== undefined) {

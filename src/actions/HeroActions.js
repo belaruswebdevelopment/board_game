@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
-import { ChangeBuffValue, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
+import { ChangeBuffValue, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
@@ -12,7 +12,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { CreateMultiSuitPlayerCard } from "../MultiSuitCard";
-import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, MultiSuitCardNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>
  * <p>Применения:</p>
@@ -26,23 +26,23 @@ import { BuffNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, MultiSui
  * @param heroId Id героя.
  * @returns
  */
-export const AddHeroToPlayerCardsAction = (G, ctx, heroId) => {
+export const AddHeroToPlayerCardsAction = ({ G, ctx, playerID, ...rest }, heroId) => {
     var _a, _b, _c, _d, _e, _f, _g;
     const hero = G.heroes[heroId];
     if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }
-    AddHeroToPlayerCards(G, ctx, hero);
-    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-        AddActionsToStack(G, ctx, (_b = (_a = hero.stack) === null || _a === void 0 ? void 0 : _a.soloBot) !== null && _b !== void 0 ? _b : (_c = hero.stack) === null || _c === void 0 ? void 0 : _c.player, hero);
+    AddHeroToPlayerCards({ G, ctx, playerID, ...rest }, hero);
+    if (G.mode === GameModeNames.Solo && playerID === `1`) {
+        AddActionsToStack({ G, ctx, playerID, ...rest }, (_b = (_a = hero.stack) === null || _a === void 0 ? void 0 : _a.soloBot) !== null && _b !== void 0 ? _b : (_c = hero.stack) === null || _c === void 0 ? void 0 : _c.player, hero);
     }
-    else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-        AddActionsToStack(G, ctx, (_e = (_d = hero.stack) === null || _d === void 0 ? void 0 : _d.soloBotAndvari) !== null && _e !== void 0 ? _e : (_f = hero.stack) === null || _f === void 0 ? void 0 : _f.player, hero);
+    else if (G.mode === GameModeNames.SoloAndvari && playerID === `1`) {
+        AddActionsToStack({ G, ctx, playerID, ...rest }, (_e = (_d = hero.stack) === null || _d === void 0 ? void 0 : _d.soloBotAndvari) !== null && _e !== void 0 ? _e : (_f = hero.stack) === null || _f === void 0 ? void 0 : _f.player, hero);
     }
     else {
-        AddActionsToStack(G, ctx, (_g = hero.stack) === null || _g === void 0 ? void 0 : _g.player, hero);
+        AddActionsToStack({ G, ctx, playerID, ...rest }, (_g = hero.stack) === null || _g === void 0 ? void 0 : _g.player, hero);
     }
-    StartAutoAction(G, ctx, hero.actions);
+    StartAutoAction({ G, ctx, playerID, ...rest }, hero.actions);
 };
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -57,20 +57,23 @@ export const AddHeroToPlayerCardsAction = (G, ctx, heroId) => {
  * @param cardId Id карты.
  * @returns
  */
-export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
+export const DiscardCardsFromPlayerBoardAction = ({ G, ctx, playerID, ...rest }, suit, cardId) => {
     var _a, _b, _c;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const discardedCard = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
+        throw new Error(`В массиве карт игрока с id '${playerID}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
-    DiscardPickedCard(G, discardedCard);
-    AddDataToLog(G, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Hero_Card}' '${(_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.name}'.`);
+    DiscardPickedCard({ G, ctx, ...rest }, discardedCard);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Hero_Card}' '${(_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.name}'.`);
     if (((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.name) === HeroNames.Dagda && ((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.pickedSuit) === undefined) {
-        AddActionsToStack(G, ctx, [StackData.discardCardFromBoardDagda(suit)]);
+        if (!G.expansions.idavoll.active || (G.expansions.idavoll.active
+            && !CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards))) {
+            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.discardCardFromBoardDagda(suit)]);
+        }
     }
 };
 /**
@@ -85,14 +88,14 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PlaceMultiSuitCardAction = ({ G, ctx, playerID, ...rest }, suit) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined);
     }
     const playerVariants = {
         blacksmith: {
@@ -122,7 +125,7 @@ export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
         },
     }, name = stack.name;
     if (name === undefined) {
-        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${MultiSuitCardNames.OlwinsDouble}'.`);
+        throw new Error(`У конфига действия игрока с id '${playerID}' отсутствует обязательный параметр вариантов выкладки карты '${MultiSuitCardNames.OlwinsDouble}'.`);
     }
     const card = G.multiCardsDeck.find((card) => card.name === name);
     if (card === undefined) {
@@ -134,12 +137,12 @@ export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
         rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,
     });
-    AddCardToPlayer(G, ctx, multiSuitCard);
-    AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' добавил карту '${multiSuitCard.type}' '${name}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddCardToPlayer({ G, ctx, playerID, ...rest }, multiSuitCard);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' добавил карту '${multiSuitCard.type}' '${name}' во фракцию '${suitsConfig[suit].suitName}'.`);
     if (stack.pickedSuit === undefined && name === MultiSuitCardNames.OlwinsDouble) {
-        AddActionsToStack(G, ctx, [StackData.placeMultiSuitsCards(MultiSuitCardNames.OlwinsDouble, suit, 3)]);
+        AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.placeMultiSuitsCards(MultiSuitCardNames.OlwinsDouble, suit, 3)]);
     }
-    CheckAndMoveThrudAction(G, ctx, multiSuitCard);
+    CheckAndMoveThrudAction({ G, ctx, playerID, ...rest }, multiSuitCard);
 };
 /**
  * <h3>Действия, связанные с проверкой расположением конкретного героя на игровом поле игрока.</h3>
@@ -154,14 +157,14 @@ export const PlaceMultiSuitCardAction = (G, ctx, suit) => {
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceThrudAction = (G, ctx, suit) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PlaceThrudAction = ({ G, ctx, playerID, ...rest }, suit) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        throw new Error(`В массиве стека действий ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerID === `1` ? `соло бота` : `текущего игрока`} с id '${playerID}' отсутствует '0' действие.`);
     }
     const heroCard = CreateHeroPlayerCard({
         suit,
@@ -171,9 +174,9 @@ export const PlaceThrudAction = (G, ctx, suit) => {
         name: HeroNames.Thrud,
         description: heroesConfig.Thrud.description,
     });
-    AddDataToLog(G, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
-    AddHeroCardToPlayerCards(G, ctx, heroCard);
-    ChangeBuffValue(G, ctx, BuffNames.MoveThrud, suit);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerID === `1` ? `Соло бот` : `Текущий игрок`} добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddHeroCardToPlayerCards({ G, ctx, playerID, ...rest }, heroCard);
+    ChangeBuffValue({ G, ctx, playerID, ...rest }, HeroBuffNames.MoveThrud, suit);
 };
 /**
  * <h3>Действия, связанные с проверкой расположением конкретного героя на игровом поле игрока.</h3>
@@ -188,14 +191,14 @@ export const PlaceThrudAction = (G, ctx, suit) => {
  * @param suit Название фракции дворфов.
  * @returns
  */
-export const PlaceYludAction = (G, ctx, suit) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const PlaceYludAction = ({ G, ctx, playerID, ...rest }, suit) => {
+    const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.FirstStackActionIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined);
     }
     const playerVariants = {
         blacksmith: {
@@ -231,10 +234,10 @@ export const PlaceYludAction = (G, ctx, suit) => {
         name: HeroNames.Ylud,
         description: heroesConfig.Ylud.description,
     });
-    AddDataToLog(G, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
-    AddHeroCardToPlayerCards(G, ctx, heroCard);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerID === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddHeroCardToPlayerCards({ G, ctx, playerID, ...rest }, heroCard);
     if (G.tierToEnd === 0) {
-        DeleteBuffFromPlayer(G, ctx, BuffNames.EndTier);
+        DeleteBuffFromPlayer({ G, ctx, playerID, ...rest }, HeroBuffNames.EndTier);
     }
 };
 //# sourceMappingURL=HeroActions.js.map

@@ -1,12 +1,11 @@
 import { soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
-import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
+import { RusCardTypeNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloModeAndvari'.</h3>
  * <p>Применения:</p>
@@ -18,8 +17,8 @@ import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames } from "../t
  * @param ctx
  * @returns
  */
-export const CheckChooseStrategyForSoloModeAndvariOrder = (G, ctx) => {
-    CheckPlayersBasicOrder(G, ctx);
+export const CheckChooseStrategyForSoloModeAndvariOrder = ({ G, ctx, ...rest }) => {
+    CheckPlayersBasicOrder({ G, ctx, ...rest });
 };
 /**
  * <h3>Проверяет необходимость завершения фазы 'chooseDifficultySoloModeAndvari'.</h3>
@@ -32,12 +31,8 @@ export const CheckChooseStrategyForSoloModeAndvariOrder = (G, ctx) => {
  * @param ctx
  * @returns Необходимость завершения текущей фазы.
  */
-export const CheckChooseStrategyForSoloModeAndvariPhase = (G, ctx) => {
+export const CheckChooseStrategyForSoloModeAndvariPhase = ({ G, ctx }) => {
     if (ctx.currentPlayer === `1`) {
-        const soloBotPublicPlayer = G.publicPlayers[1];
-        if (soloBotPublicPlayer === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
-        }
         return G.heroesForSoloGameForStrategyBotAndvari !== null
             && G.heroesForSoloGameForStrategyBotAndvari.length === 5
             && G.heroesInitialForSoloGameForBotAndvari === null;
@@ -54,7 +49,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = (G, ctx) => {
  * @param ctx
  * @returns Необходимость завершения текущего хода.
  */
-export const CheckEndChooseStrategyForSoloModeAndvariTurn = (G, ctx) => {
+export const CheckEndChooseStrategyForSoloModeAndvariTurn = ({ G, ctx }) => {
     if (ctx.currentPlayer === `0`) {
         return G.soloGameAndvariStrategyVariantLevel !== null && G.soloGameAndvariStrategyLevel !== null;
     }
@@ -69,7 +64,7 @@ export const CheckEndChooseStrategyForSoloModeAndvariTurn = (G, ctx) => {
  * @param G
  * @returns
  */
-export const EndChooseStrategyForSoloModeAndvariActions = (G) => {
+export const EndChooseStrategyForSoloModeAndvariActions = ({ G }) => {
     G.publicPlayersOrder = [];
 };
 /**
@@ -83,8 +78,8 @@ export const EndChooseStrategyForSoloModeAndvariActions = (G) => {
  * @param ctx
  * @returns
  */
-export const OnChooseStrategyForSoloModeAndvariMove = (G, ctx) => {
-    StartOrEndActions(G, ctx);
+export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }) => {
+    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
 };
 /**
  * <h3>Действия при начале хода в фазе 'chooseDifficultySoloModeAndvari'.</h3>
@@ -96,10 +91,10 @@ export const OnChooseStrategyForSoloModeAndvariMove = (G, ctx) => {
  * @param G
  * @param ctx
  */
-export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G, ctx) => {
+export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ...rest }) => {
     if (ctx.currentPlayer === `0`) {
-        AddActionsToStack(G, ctx, [StackData.chooseStrategyVariantLevelForSoloModeAndvari()]);
-        DrawCurrentProfit(G, ctx);
+        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, random, ...rest }, [StackData.chooseStrategyVariantLevelForSoloModeAndvari()]);
+        DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, random, ...rest });
     }
     else if (ctx.currentPlayer === `1`) {
         if (G.heroesInitialForSoloGameForBotAndvari === null) {
@@ -156,7 +151,7 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G, ctx) => {
                     if (heroCard === undefined) {
                         throw new Error(`В массиве героев для соло бот Андвари отсутствует '${RusCardTypeNames.Hero_Card}' с названием '${heroNameHardStrategy}'.`);
                     }
-                    AddHeroToPlayerCards(G, ctx, heroCard);
+                    AddHeroToPlayerCards({ G, ctx, playerID: ctx.currentPlayer, random, ...rest }, heroCard);
                 }
                 break;
             case SoloGameAndvariStrategyNames.WithHeroHardStrategy:
@@ -172,7 +167,7 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G, ctx) => {
                     if (heroCard === undefined) {
                         throw new Error(`В массиве героев для соло бот Андвари отсутствует '${RusCardTypeNames.Hero_Card}' с названием '${heroNameEasyStrategy}'.`);
                     }
-                    AddHeroToPlayerCards(G, ctx, heroCard);
+                    AddHeroToPlayerCards({ G, ctx, playerID: ctx.currentPlayer, random, ...rest }, heroCard);
                 }
                 break;
             case null:
@@ -184,8 +179,7 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = (G, ctx) => {
         }
         G.heroesForSoloGameForStrategyBotAndvari =
             heroesForSoloGameForStrategyBotAndvari;
-        G.heroesForSoloGameForStrategyBotAndvari =
-            ctx.random.Shuffle(G.heroesForSoloGameForStrategyBotAndvari);
+        G.heroesForSoloGameForStrategyBotAndvari = random.Shuffle(G.heroesForSoloGameForStrategyBotAndvari);
         switch (G.soloGameAndvariStrategyVariantLevel) {
             case 1:
                 G.strategyForSoloBotAndvari = {

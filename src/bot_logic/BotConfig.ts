@@ -1,5 +1,5 @@
 import { RusCardTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, Ctx, ICardCharacteristics, IHeuristic, IMyGameState, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
+import type { CanBeUndefType, FnContext, ICardCharacteristics, IHeuristic, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
 /**
@@ -14,7 +14,7 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @param ctx
  * @returns Результат эвристики.
  */
-export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): number[] => {
+export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext): number[] => {
     const taverns: TavernsType = G.taverns,
         temp: number[] = taverns.map((tavern: TavernAllCardType): number =>
             absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernAllCardType>):
@@ -30,7 +30,7 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
             }),
         tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
             tavern.map((card: TavernCardType, index: number, arr: TavernAllCardType): number =>
-                EvaluateCard(G, ctx, card, index, arr))),
+                EvaluateCard({ G, ctx, ...rest }, card, index, arr))),
         tempChars: ICardCharacteristics[] = tempNumbers.map((element: number[]): ICardCharacteristics =>
             GetCharacteristics(element))/*,
         averageCards: ICard[] = G.averageCards*/;

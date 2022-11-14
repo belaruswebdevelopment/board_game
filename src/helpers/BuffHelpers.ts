@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
-import type { BuffValueType, CanBeUndefType, Ctx, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
+import type { AllBuffNames, BuffTypes, BuffValueType, CanBeUndefType, IBuffs, IPublicPlayer, MyFnContext } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -17,17 +17,18 @@ import type { BuffValueType, CanBeUndefType, Ctx, IBuff, IBuffs, IMyGameState, I
  * @param value Значение бафа.
  * @returns
  */
-export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: BuffValueType): void => {
+export const AddBuffToPlayer = ({ G, ctx, playerID, ...rest }: MyFnContext, buff?: BuffTypes, value?: BuffValueType):
+    void => {
     if (buff !== undefined) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
         if (player === undefined) {
-            return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined,
-                ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+                playerID);
         }
         player.buffs.push({
             [buff.name]: value ?? true,
         });
-        AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
     }
 };
 
@@ -44,10 +45,12 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
  * @param value Новое значение бафа.
  * @returns
  */
-export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, value: SuitNames): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const ChangeBuffValue = ({ G, ctx, playerID, ...rest }: MyFnContext, buffName: AllBuffNames, value: SuitNames):
+    void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
     }
     const buffIndex: number =
         player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
@@ -57,7 +60,7 @@ export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, 
     player.buffs[buffIndex] = {
         [buffName]: value,
     };
-    AddDataToLog(G, LogTypeNames.Game, `У игрок '${player.nickname}' изменилось значение бафа '${buffName}' на новое - '${value}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `У игрок '${player.nickname}' изменилось значение бафа '${buffName}' на новое - '${value}'.`);
 };
 
 /**
@@ -71,8 +74,14 @@ export const ChangeBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames, 
  * @param buffName Баф.
  * @returns
  */
-export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffNames): boolean =>
-    player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined) !== undefined;
+export const CheckPlayerHasBuff = ({ G, ctx, playerID, ...rest }: MyFnContext, buffName: AllBuffNames): boolean => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
+    }
+    return player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined) !== undefined;
+};
 
 /**
 * <h3>Действия, связанные с удалением бафов у игрока.</h3>
@@ -86,18 +95,19 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffNames): 
 * @param buffName Баф.
 * @returns
 */
-export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffNames): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const DeleteBuffFromPlayer = ({ G, ctx, playerID, ...rest }: MyFnContext, buffName: AllBuffNames): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
     }
     const buffIndex: number =
         player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
     if (buffIndex === -1) {
-        throw new Error(`У игрока с id ${ctx.currentPlayer} в массиве бафов отсутствует баф '${buffName}' с id ${buffIndex}.`);
+        throw new Error(`У игрока с id ${playerID} в массиве бафов отсутствует баф '${buffName}' с id ${buffIndex}.`);
     }
     player.buffs.splice(buffIndex, 1);
-    AddDataToLog(G, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
 
 /**
@@ -112,10 +122,11 @@ export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffNa
  * @param buffName Баф.
  * @returns
  */
-export const GetBuffValue = (G: IMyGameState, ctx: Ctx, buffName: BuffNames): BuffValueType => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+export const GetBuffValue = ({ G, ctx, playerID, ...rest }: MyFnContext, buffName: AllBuffNames): BuffValueType => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError(G, ctx, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
     }
     const buff: CanBeUndefType<IBuffs> =
         player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined);

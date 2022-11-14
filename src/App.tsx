@@ -13,7 +13,8 @@ import { GameBoard } from "./GameBoard";
 const App = Client({
     // debug: false,
     game: BoardGame as Game,
-    board: GameBoard,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    board: GameBoard as React.ComponentType<any>,
     numPlayers: 5,
 });
 

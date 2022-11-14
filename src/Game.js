@@ -1,17 +1,17 @@
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
-import { StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase, StartBidUlineOrTavernsResolutionPhase, StartEndGameLastActions, StartEndTierPhaseOrEndGameLastActions, StartGetMjollnirProfitPhase } from "./helpers/GameHooksHelpers";
 import { CheckEndBidsPhase, CheckEndBidsTurn, EndBidsActions, PreparationPhaseActions } from "./hooks/BidsHooks";
 import { CheckBidUlineOrder, CheckEndBidUlinePhase, EndBidUlineActions } from "./hooks/BidUlineHooks";
-import { CheckBrisingamensEndGameOrder, CheckEndBrisingamensEndGamePhase, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin } from "./hooks/BrisingamensEndGameHooks";
+import { CheckBrisingamensEndGameOrder, CheckEndBrisingamensEndGamePhase, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitPhase } from "./hooks/BrisingamensEndGameHooks";
 import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, CheckEndChooseDifficultySoloModeTurn, EndChooseDifficultySoloModeActions, OnChooseDifficultySoloModeMove, OnChooseDifficultySoloModeTurnBegin, StartChooseDifficultySoloModeAndvariOrBidsPhase } from "./hooks/ChooseDifficultySoloModeHooks";
 import { CheckChooseStrategyForSoloModeAndvariOrder, CheckChooseStrategyForSoloModeAndvariPhase, CheckEndChooseStrategyForSoloModeAndvariTurn, EndChooseStrategyForSoloModeAndvariActions, OnChooseStrategyForSoloModeAndvariMove, OnChooseStrategyForSoloModeAndvariTurnBegin } from "./hooks/ChooseStrategyForSoloModeAndvariHooks";
-import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
+import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
 import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitMove, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
-import { CheckEndPlaceYludPhase, CheckEndPlaceYludTurn, CheckPlaceYludOrder, EndPlaceYludActions, OnPlaceYludMove, OnPlaceYludTurnBegin, OnPlaceYludTurnEnd } from "./hooks/PlaceYludHooks";
-import { CheckEndTavernsResolutionPhase, CheckEndTavernsResolutionTurn, EndTavernsResolutionActions, OnTavernsResolutionMove, OnTavernsResolutionTurnBegin, OnTavernsResolutionTurnEnd, ResolveCurrentTavernOrders } from "./hooks/TavernsResolutionHooks";
+import { StartBidUlineOrTavernsResolutionPhase, StartEndGameLastActions, StartEndTierPhaseOrEndGameLastActions } from "./hooks/NextPhaseHooks";
+import { CheckEndPlaceYludPhase, CheckEndPlaceYludTurn, CheckPlaceYludOrder, EndPlaceYludActions, OnPlaceYludMove, OnPlaceYludTurnBegin } from "./hooks/PlaceYludHooks";
+import { CheckEndTavernsResolutionPhase, CheckEndTavernsResolutionTurn, EndTavernsResolutionActions, OnTavernsResolutionMove, OnTavernsResolutionTurnBegin, OnTavernsResolutionTurnEnd, ResolveCurrentTavernOrders, StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase } from "./hooks/TavernsResolutionHooks";
 import { CheckAndResolveTroopEvaluationOrders, CheckEndTroopEvaluationPhase, CheckEndTroopEvaluationTurn, EndTroopEvaluationPhaseActions, OnTroopEvaluationMove, OnTroopEvaluationTurnBegin, OnTroopEvaluationTurnEnd } from "./hooks/TroopEvaluationHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
 import { AddCoinToPouchMove, ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
@@ -19,7 +19,7 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeM
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove, ChooseStrategyForSoloModeAndvariMove, ChooseStrategyVariantForSoloModeAndvariMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceMultiSuitCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
-import { UseGodCardPowerMove } from "./moves/MythologicalCreatureMoves";
+import { ChooseSuitOlrunMove, GetMythologyCardMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotAndvariClickCardMove, SoloBotAndvariClickCardToPickDistinctionMove, SoloBotAndvariClickCoinToUpgradeMove, SoloBotAndvariClickHeroCardMove, SoloBotAndvariPlaceAllCoinsMove, SoloBotAndvariPlaceThrudHeroMove, SoloBotAndvariPlaceYludHeroMove } from "./moves/SoloBotAndvariMoves";
 import { SoloBotClickCardMove, SoloBotClickCardToPickDistinctionMove, SoloBotClickCoinToUpgradeMove, SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove, SoloBotPlaceThrudHeroMove, SoloBotPlaceYludHeroMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
@@ -65,39 +65,39 @@ export const BoardGame = {
                         },
                     },
                 },
-                onBegin: (G, ctx) => OnChooseDifficultySoloModeTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnChooseDifficultySoloModeMove(G, ctx),
-                endIf: (G, ctx) => CheckEndChooseDifficultySoloModeTurn(G, ctx),
+                onBegin: ({ G, ctx, ...rest }) => OnChooseDifficultySoloModeTurnBegin({ G, ctx, ...rest }),
+                onMove: ({ G, ctx, ...rest }) => OnChooseDifficultySoloModeMove({ G, ctx, ...rest }),
+                endIf: ({ G, ctx, ...rest }) => CheckEndChooseDifficultySoloModeTurn({ G, ctx, ...rest }),
             },
             start: true,
             moves: {
                 ChooseDifficultyLevelForSoloModeMove,
             },
-            next: (G) => StartChooseDifficultySoloModeAndvariOrBidsPhase(G),
-            onBegin: (G, ctx) => CheckChooseDifficultySoloModeOrder(G, ctx),
-            endIf: (G, ctx) => CheckEndChooseDifficultySoloModePhase(G, ctx),
-            onEnd: (G) => EndChooseDifficultySoloModeActions(G),
+            next: ({ G, ...rest }) => StartChooseDifficultySoloModeAndvariOrBidsPhase({ G, ...rest }),
+            onBegin: ({ G, ctx, ...rest }) => CheckChooseDifficultySoloModeOrder({ G, ctx, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndChooseDifficultySoloModePhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ...rest }) => EndChooseDifficultySoloModeActions({ G, ...rest }),
         },
         chooseDifficultySoloModeAndvari: {
             turn: {
                 order,
-                onBegin: (G, ctx) => OnChooseStrategyForSoloModeAndvariTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnChooseStrategyForSoloModeAndvariMove(G, ctx),
-                endIf: (G, ctx) => CheckEndChooseStrategyForSoloModeAndvariTurn(G, ctx),
+                onBegin: ({ G, ctx, random, ...rest }) => OnChooseStrategyForSoloModeAndvariTurnBegin({ G, ctx, random, ...rest }),
+                onMove: ({ G, ctx, ...rest }) => OnChooseStrategyForSoloModeAndvariMove({ G, ctx, ...rest }),
+                endIf: ({ G, ctx, ...rest }) => CheckEndChooseStrategyForSoloModeAndvariTurn({ G, ctx, ...rest }),
             },
             moves: {
                 ChooseStrategyVariantForSoloModeAndvariMove,
                 ChooseStrategyForSoloModeAndvariMove,
             },
             next: PhaseNames.Bids,
-            onBegin: (G, ctx) => CheckChooseStrategyForSoloModeAndvariOrder(G, ctx),
-            endIf: (G, ctx) => CheckChooseStrategyForSoloModeAndvariPhase(G, ctx),
-            onEnd: (G) => EndChooseStrategyForSoloModeAndvariActions(G),
+            onBegin: ({ G, ctx, ...rest }) => CheckChooseStrategyForSoloModeAndvariOrder({ G, ctx, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckChooseStrategyForSoloModeAndvariPhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ...rest }) => EndChooseStrategyForSoloModeAndvariActions({ G, ...rest }),
         },
         bids: {
             turn: {
                 order,
-                endIf: (G, ctx) => CheckEndBidsTurn(G, ctx),
+                endIf: ({ G, ctx, ...rest }) => CheckEndBidsTurn({ G, ctx, ...rest }),
             },
             moves: {
                 ClickHandCoinMove,
@@ -106,10 +106,10 @@ export const BoardGame = {
                 SoloBotPlaceAllCoinsMove,
                 SoloBotAndvariPlaceAllCoinsMove,
             },
-            next: (G) => StartBidUlineOrTavernsResolutionPhase(G),
-            onBegin: (G, ctx) => PreparationPhaseActions(G, ctx),
-            endIf: (G, ctx) => CheckEndBidsPhase(G, ctx),
-            onEnd: (G) => EndBidsActions(G),
+            next: ({ G, ...rest }) => StartBidUlineOrTavernsResolutionPhase({ G, ...rest }),
+            onBegin: ({ G, ctx, random, ...rest }) => PreparationPhaseActions({ G, ctx, random, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndBidsPhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ...rest }) => EndBidsActions({ G, ...rest }),
         },
         bidUline: {
             turn: {
@@ -119,9 +119,9 @@ export const BoardGame = {
                 ClickHandCoinUlineMove,
             },
             next: PhaseNames.TavernsResolution,
-            onBegin: (G, ctx) => CheckBidUlineOrder(G, ctx),
-            endIf: (G, ctx) => CheckEndBidUlinePhase(G, ctx),
-            onEnd: (G) => EndBidUlineActions(G),
+            onBegin: ({ G, ctx, ...rest }) => CheckBidUlineOrder({ G, ctx, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndBidUlinePhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ...rest }) => EndBidUlineActions({ G, ...rest }),
         },
         tavernsResolution: {
             turn: {
@@ -189,6 +189,16 @@ export const BoardGame = {
                         },
                     },
                     // End
+                    chooseSuitOlrun: {
+                        moves: {
+                            ChooseSuitOlrunMove,
+                        },
+                    },
+                    getMythologyCard: {
+                        moves: {
+                            GetMythologyCardMove,
+                        },
+                    },
                     discardCard: {
                         moves: {
                             DiscardCard2PlayersMove,
@@ -234,22 +244,21 @@ export const BoardGame = {
                     },
                     // Common Solo Bot Andvari End
                 },
-                onBegin: (G, ctx) => OnTavernsResolutionTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnTavernsResolutionMove(G, ctx),
-                endIf: (G, ctx) => CheckEndTavernsResolutionTurn(G, ctx),
-                onEnd: (G, ctx) => OnTavernsResolutionTurnEnd(G, ctx),
+                onBegin: ({ G, ctx, ...rest }) => OnTavernsResolutionTurnBegin({ G, ctx, ...rest }),
+                onMove: ({ G, ctx, events, ...rest }) => OnTavernsResolutionMove({ G, ctx, events, ...rest }),
+                endIf: ({ G, ctx, ...rest }) => CheckEndTavernsResolutionTurn({ G, ctx, ...rest }),
+                onEnd: ({ G, ctx, ...rest }) => OnTavernsResolutionTurnEnd({ G, ctx, ...rest }),
             },
             moves: {
                 ClickCardMove,
                 ClickCampCardMove,
                 SoloBotClickCardMove,
                 SoloBotAndvariClickCardMove,
-                UseGodCardPowerMove,
             },
-            next: (G, ctx) => StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase(G, ctx),
-            onBegin: (G, ctx) => ResolveCurrentTavernOrders(G, ctx),
-            endIf: (G, ctx) => CheckEndTavernsResolutionPhase(G, ctx),
-            onEnd: (G, ctx) => EndTavernsResolutionActions(G, ctx),
+            next: ({ G, ctx, ...rest }) => StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase({ G, ctx, ...rest }),
+            onBegin: ({ G, ctx, ...rest }) => ResolveCurrentTavernOrders({ G, ctx, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndTavernsResolutionPhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ctx, ...rest }) => EndTavernsResolutionActions({ G, ctx, ...rest }),
         },
         enlistmentMercenaries: {
             turn: {
@@ -323,20 +332,19 @@ export const BoardGame = {
                         },
                     },
                 },
-                onBegin: (G, ctx) => OnEnlistmentMercenariesTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnEnlistmentMercenariesMove(G, ctx),
-                endIf: (G, ctx) => CheckEndEnlistmentMercenariesTurn(G, ctx),
-                onEnd: (G, ctx) => OnEnlistmentMercenariesTurnEnd(G, ctx),
+                onBegin: ({ G, ctx, events, ...rest }) => OnEnlistmentMercenariesTurnBegin({ G, ctx, events, ...rest }),
+                onMove: ({ G, ctx, events, ...rest }) => OnEnlistmentMercenariesMove({ G, ctx, events, ...rest }),
+                endIf: ({ G, ctx, ...rest }) => CheckEndEnlistmentMercenariesTurn({ G, ctx, ...rest }),
             },
             moves: {
                 StartEnlistmentMercenariesMove,
                 PassEnlistmentMercenariesMove,
                 GetEnlistmentMercenariesMove,
             },
-            next: (G) => StartEndTierPhaseOrEndGameLastActions(G),
-            onBegin: (G) => PrepareMercenaryPhaseOrders(G),
-            endIf: (G, ctx) => CheckEndEnlistmentMercenariesPhase(G, ctx),
-            onEnd: (G, ctx) => EndEnlistmentMercenariesActions(G, ctx),
+            next: ({ G, ...rest }) => StartEndTierPhaseOrEndGameLastActions({ G, ...rest }),
+            onBegin: ({ G, ...rest }) => PrepareMercenaryPhaseOrders({ G, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndEnlistmentMercenariesPhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ctx, ...rest }) => EndEnlistmentMercenariesActions({ G, ctx, ...rest }),
         },
         placeYlud: {
             turn: {
@@ -439,20 +447,19 @@ export const BoardGame = {
                     },
                     // Common Solo Bot Andvari End
                 },
-                onBegin: (G, ctx) => OnPlaceYludTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnPlaceYludMove(G, ctx),
-                endIf: (G, ctx) => CheckEndPlaceYludTurn(G, ctx),
-                onEnd: (G, ctx) => OnPlaceYludTurnEnd(G, ctx),
+                onBegin: ({ G, ctx, events, ...rest }) => OnPlaceYludTurnBegin({ G, ctx, events, ...rest }),
+                onMove: ({ G, ctx, ...rest }) => OnPlaceYludMove({ G, ctx, ...rest }),
+                endIf: ({ G, ctx, ...rest }) => CheckEndPlaceYludTurn({ G, ctx, ...rest }),
             },
             moves: {
                 PlaceYludHeroMove,
                 SoloBotPlaceYludHeroMove,
                 SoloBotAndvariPlaceYludHeroMove,
             },
-            next: (G) => StartEndGameLastActions(G),
-            onBegin: (G, ctx) => CheckPlaceYludOrder(G, ctx),
-            endIf: (G, ctx) => CheckEndPlaceYludPhase(G, ctx),
-            onEnd: (G, ctx) => EndPlaceYludActions(G, ctx),
+            next: ({ G, ...rest }) => StartEndGameLastActions({ G, ...rest }),
+            onBegin: ({ G, ctx, ...rest }) => CheckPlaceYludOrder({ G, ctx, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndPlaceYludPhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ctx, ...rest }) => EndPlaceYludActions({ G, ctx, ...rest }),
         },
         troopEvaluation: {
             turn: {
@@ -572,53 +579,53 @@ export const BoardGame = {
                     },
                     // Common Solo Bot Andvari End
                 },
-                onBegin: (G, ctx) => OnTroopEvaluationTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnTroopEvaluationMove(G, ctx),
-                endIf: (G, ctx) => CheckEndTroopEvaluationTurn(G, ctx),
-                onEnd: (G, ctx) => OnTroopEvaluationTurnEnd(G, ctx),
+                onBegin: ({ G, ctx, ...rest }) => OnTroopEvaluationTurnBegin({ G, ctx, ...rest }),
+                onMove: ({ G, ctx, ...rest }) => OnTroopEvaluationMove({ G, ctx, ...rest }),
+                endIf: ({ G, ctx, ...rest }) => CheckEndTroopEvaluationTurn({ G, ctx, ...rest }),
+                onEnd: ({ G, ctx, random, ...rest }) => OnTroopEvaluationTurnEnd({ G, ctx, random, ...rest }),
             },
             next: PhaseNames.Bids,
             moves: {
                 ClickDistinctionCardMove,
             },
-            onBegin: (G, ctx) => CheckAndResolveTroopEvaluationOrders(G, ctx),
-            endIf: (G, ctx) => CheckEndTroopEvaluationPhase(G, ctx),
-            onEnd: (G) => EndTroopEvaluationPhaseActions(G),
+            onBegin: ({ G, ctx, ...rest }) => CheckAndResolveTroopEvaluationOrders({ G, ctx, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndTroopEvaluationPhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ctx, ...rest }) => EndTroopEvaluationPhaseActions({ G, ctx, ...rest }),
         },
         brisingamensEndGame: {
             turn: {
                 order,
                 minMoves: 1,
                 maxMoves: 1,
-                onBegin: (G, ctx) => OnBrisingamensEndGameTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnBrisingamensEndGameMove(G, ctx),
+                onBegin: ({ G, ctx, ...rest }) => OnBrisingamensEndGameTurnBegin({ G, ctx, ...rest }),
+                onMove: ({ G, ctx, ...rest }) => OnBrisingamensEndGameMove({ G, ctx, ...rest }),
             },
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
-            next: (G) => StartGetMjollnirProfitPhase(G),
-            onBegin: (G) => CheckBrisingamensEndGameOrder(G),
-            endIf: (G, ctx) => CheckEndBrisingamensEndGamePhase(G, ctx),
-            onEnd: (G) => EndBrisingamensEndGameActions(G),
+            next: ({ G, ...rest }) => StartGetMjollnirProfitPhase({ G, ...rest }),
+            onBegin: ({ G, ...rest }) => CheckBrisingamensEndGameOrder({ G, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndBrisingamensEndGamePhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ...rest }) => EndBrisingamensEndGameActions({ G, ...rest }),
         },
         getMjollnirProfit: {
             turn: {
                 order,
                 minMoves: 1,
                 maxMoves: 1,
-                onBegin: (G, ctx) => OnGetMjollnirProfitTurnBegin(G, ctx),
-                onMove: (G, ctx) => OnGetMjollnirProfitMove(G, ctx),
+                onBegin: ({ G, ctx, events, ...rest }) => OnGetMjollnirProfitTurnBegin({ G, ctx, events, ...rest }),
+                onMove: ({ G, ctx, ...rest }) => OnGetMjollnirProfitMove({ G, ctx, ...rest }),
             },
             moves: {
                 GetMjollnirProfitMove,
             },
-            onBegin: (G) => CheckGetMjollnirProfitOrder(G),
-            endIf: (G, ctx) => CheckEndGetMjollnirProfitPhase(G, ctx),
-            onEnd: (G, ctx) => StartEndGame(G, ctx),
+            onBegin: ({ G, ...rest }) => CheckGetMjollnirProfitOrder({ G, ...rest }),
+            endIf: ({ G, ctx, ...rest }) => CheckEndGetMjollnirProfitPhase({ G, ctx, ...rest }),
+            onEnd: ({ G, ctx, events, ...rest }) => StartEndGame({ G, ctx, events, ...rest }),
         },
     },
-    endIf: (G, ctx) => CheckEndGame(G, ctx),
-    onEnd: (G, ctx) => ReturnEndGameData(G, ctx),
+    endIf: ({ G, ctx, ...rest }) => CheckEndGame({ G, ctx, ...rest }),
+    onEnd: ({ G, ctx, ...rest }) => ReturnEndGameData({ G, ctx, ...rest }),
     ai: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore

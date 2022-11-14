@@ -11,7 +11,7 @@ import { LogTypeNames } from "./typescript/enums";
  * @param value Значение, заносимое в лог.
  * @returns
  */
-export const AddDataToLog = (G, type, value) => {
+export const AddDataToLog = ({ G }, type, value) => {
     G.logData.push({ type, value });
 };
 //# sourceMappingURL=Logging.js.map
