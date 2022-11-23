@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import { ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeStageNames, ErrorNames, MoveTypeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IHeroCard, InvalidMoveType, IPublicPlayer, Move, MyFnContext, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
 
 // TODO Move all playerID === `0` to validate!
@@ -22,8 +22,8 @@ import type { CanBeUndefType, CanBeVoidType, IHeroCard, InvalidMoveType, IPublic
  */
 export const ChooseStrategyForSoloModeAndvariMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     level: SoloGameAndvariStrategyNames): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean =
-        playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default2, level);
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+        ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari, MoveTypeNames.default, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -44,8 +44,8 @@ export const ChooseStrategyForSoloModeAndvariMove: Move = ({ G, ctx, playerID, .
  */
 export const ChooseStrategyVariantForSoloModeAndvariMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     level: SoloGameAndvariStrategyVariantLevelType): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean =
-        playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, level);
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+        ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari, MoveTypeNames.default, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -68,8 +68,9 @@ export const ChooseStrategyVariantForSoloModeAndvariMove: Move = ({ G, ctx, play
 export const ChooseDifficultyLevelForSoloModeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     level: SoloGameDifficultyLevelArgType):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean =
-        playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, level);
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+        ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode, MoveTypeNames.default,
+        level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -91,8 +92,8 @@ export const ChooseDifficultyLevelForSoloModeMove: Move = ({ G, ctx, playerID, .
  */
 export const ChooseHeroForDifficultySoloModeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = playerID === `0`
-        && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.chooseHeroesForSoloMode, heroId);
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+        ChooseDifficultySoloModeStageNames.ChooseHeroesForSoloMode, MoveTypeNames.default, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

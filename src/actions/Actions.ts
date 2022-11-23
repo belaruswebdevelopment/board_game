@@ -37,15 +37,7 @@ export const ClickCardAction = ({ G, ctx, playerID, ...rest }: MyFnContext, card
         throw new Error(`Не существует кликнутая карта с id '${cardId}'.`);
     }
     currentTavern.splice(cardId, 1, null);
-    const isAdded: boolean = PickCardOrActionCardActions({ G, ctx, playerID, ...rest }, card);
-    if (isAdded && `suit` in card) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
-        if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-                playerID);
-        }
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
-    }
+    PickCardOrActionCardActions({ G, ctx, playerID, ...rest }, card);
 };
 
 /**
@@ -203,10 +195,7 @@ export const PickDiscardCardAction = ({ G, ctx, playerID, ...rest }: MyFnContext
         throw new Error(`В массиве колоды сброса отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
-    const isAdded: boolean = PickCardOrActionCardActions({ G, ctx, playerID, ...rest }, card);
-    if (isAdded && card.type === RusCardTypeNames.Dwarf_Card) {
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
-    }
+    PickCardOrActionCardActions({ G, ctx, playerID, ...rest }, card);
 };
 
 /**
@@ -233,14 +222,8 @@ export const PickCardToPickDistinctionAction = ({ G, ctx, playerID, ...rest }: M
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
     G.explorerDistinctionCards.splice(0);
-    const isAdded: boolean = PickCardOrActionCardActions({ G, ctx, playerID, ...rest }, pickedCard);
-    if (isAdded && pickedCard.type === RusCardTypeNames.Dwarf_Card) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
-        if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-                playerID);
-        }
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}' во фракцию '${suitsConfig[pickedCard.suit].suitName}'.`);
+    PickCardOrActionCardActions({ G, ctx, playerID, ...rest }, pickedCard);
+    if (pickedCard.type === RusCardTypeNames.Dwarf_Card) {
         G.distinctions[SuitNames.explorer] = undefined;
     }
     G.explorerDistinctionCardId = cardId;
@@ -270,7 +253,7 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, playerID, ...rest }: 
             playerID);
     }
     if (!IsMercenaryCampCard(stack.card)) {
-        throw new Error(`Выбранная карта должна быть типа '${RusCardTypeNames.Mercenary_Card}', а не типа '${stack.card?.type}'.`);
+        throw new Error(`Выбранная карта должна быть типа '${RusCardTypeNames.Mercenary_Card}'.`);
     }
     const mercenaryCard: CanBeUndefType<IMercenaryCampCard> = stack.card;
     if (mercenaryCard === undefined) {
@@ -286,15 +269,13 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, playerID, ...rest }: 
         name: mercenaryCard.name,
         path: mercenaryCard.path,
     }),
-        isAdded: boolean = AddCardToPlayer({ G, ctx, playerID, ...rest }, mercenaryPlayerCard),
         cardIndex: number = player.campCards.findIndex((card: CampDeckCardType): boolean =>
             card.name === mercenaryCard.name);
     if (cardIndex === -1) {
         throw new Error(`У игрока с id '${playerID}' в массиве карт лагеря отсутствует выбранная карта.`);
     }
+    AddCardToPlayer({ G, ctx, playerID, ...rest }, mercenaryPlayerCard);
     player.campCards.splice(cardIndex, 1);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал карту '${mercenaryPlayerCard.type}' '${mercenaryPlayerCard.name}' во фракцию '${suitsConfig[suit].suitName}'.`);
-    if (isAdded) {
-        CheckAndMoveThrudAction({ G, ctx, playerID, ...rest }, mercenaryPlayerCard);
-    }
+    CheckAndMoveThrudAction({ G, ctx, playerID, ...rest }, mercenaryPlayerCard);
 };

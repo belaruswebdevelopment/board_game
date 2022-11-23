@@ -1,6 +1,6 @@
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
-import { AddMythologyCreatureCardsSkymirAction, AddPlusTwoValueToAllCoinsAction } from "../actions/MythologicalCreatureAutoActions";
+import { AddMythologyCreatureCardsSkymirAction } from "../actions/MythologicalCreatureAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
@@ -20,9 +20,6 @@ const AutoActionDispatcherSwitcher = (actionName) => {
             break;
         case AutoActionFunctionNames.AddPickHeroAction:
             action = AddPickHeroAction;
-            break;
-        case AutoActionFunctionNames.AddPlusTwoValueToAllCoinsAction:
-            action = AddPlusTwoValueToAllCoinsAction;
             break;
         case AutoActionFunctionNames.DiscardTradingCoinAction:
             action = DiscardTradingCoinAction;

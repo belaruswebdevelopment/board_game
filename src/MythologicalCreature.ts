@@ -89,6 +89,7 @@ export const BuildMythologicalCreatureDecks = (mythologicalCreatureCardsDeck: My
  * @param description Описание.
  * @param placedSuit Выбранная фракция.
  * @param capturedCard Захваченная карта.
+ * @param isActivated Активирована ли способность.
  * @returns Карта Гиганта.
  */
 const CreateGiantCard = ({
@@ -98,6 +99,7 @@ const CreateGiantCard = ({
     description,
     placedSuit,
     capturedCard = null,
+    isActivated = false,
 }: CreateGiantCardType): IGiantCard => ({
     type,
     name,
@@ -105,6 +107,7 @@ const CreateGiantCard = ({
     description,
     placedSuit,
     capturedCard,
+    isActivated,
 });
 
 /**
@@ -119,6 +122,7 @@ const CreateGiantCard = ({
  * @param description Описание.
  * @param isPowerTokenUsed Положен ли токен силы на карту Бога.
  * @param godPower Сила Бога.
+ * @param isActivated Активирована ли способность.
  * @returns Карта Бога.
  */
 const CreateGodCard = ({
@@ -127,12 +131,14 @@ const CreateGodCard = ({
     description,
     points,
     isPowerTokenUsed = null,
+    isActivated = false,
 }: CreateGodCardType): IGodCard => ({
     type,
     name,
     description,
     points,
     isPowerTokenUsed,
+    isActivated,
 });
 
 /**

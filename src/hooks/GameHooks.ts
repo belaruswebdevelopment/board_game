@@ -25,7 +25,7 @@ export const CheckEndGame = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<bool
         if (yludIndex !== -1) {
             return false;
         }
-        if (G.expansions.thingvellir.active) {
+        if (G.expansions.Thingvellir.active) {
             const brisingamensIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
                     boolean => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },

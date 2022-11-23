@@ -43,7 +43,7 @@ export const CurrentScoring = ({ G, ctx, playerID, ...rest }: MyFnContext): numb
         suit: SuitNames;
     for (suit in suitsConfig) {
         let additionalScoring = false;
-        if (G.expansions.idavoll.active) {
+        if (G.expansions.Idavoll.active) {
             additionalScoring = CheckPlayerHasBuff({ G, ctx, playerID, ...rest },
                 MythicalAnimalBuffNames.RatatoskFinalScoring);
         }
@@ -143,7 +143,7 @@ const FinalScoring = ({ G, ctx, playerID, ...rest }: MyFnContext, warriorDistinc
     }
     score += heroesScore;
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Hero_Card}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
-    if (G.expansions.thingvellir.active) {
+    if (G.expansions.Thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
             const campCard: CanBeUndefType<CampDeckCardType> = player.campCards[i];
@@ -172,7 +172,7 @@ const FinalScoring = ({ G, ctx, playerID, ...rest }: MyFnContext, warriorDistinc
         score += artifactsScore;
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Artefact_Card}' игрока '${player.nickname}': '${artifactsScore}';`);
     }
-    if (G.expansions.idavoll.active) {
+    if (G.expansions.Idavoll.active) {
         let godsScore = 0,
             giantsScore = 0,
             valkyriesScore = 0,

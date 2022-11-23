@@ -1,4 +1,4 @@
-import { ArtefactNames, DrawNames, GameModeNames, LogTypeNames, RusCardTypeNames, StageNames, SuitNames } from "../../typescript/enums";
+import { ArtefactNames, CommonStageNames, DrawNames, GameModeNames, LogTypeNames, RusCardTypeNames, SuitNames } from "../../typescript/enums";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 describe(`Test AddCoinToPouchAction method`, () => {
     it(`should add first coin isOpened=false to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, () => {
@@ -36,7 +36,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -81,7 +81,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -130,7 +130,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -175,7 +175,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -236,7 +236,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -297,7 +297,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -346,7 +346,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -391,7 +391,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -457,7 +457,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
@@ -519,7 +519,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],

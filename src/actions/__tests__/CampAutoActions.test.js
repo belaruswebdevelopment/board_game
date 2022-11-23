@@ -1,4 +1,4 @@
-import { ArtefactNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, StageNames, SuitNames } from "../../typescript/enums";
+import { ArtefactNames, CommonStageNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, SuitNames } from "../../typescript/enums";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 describe(`Test DiscardTradingCoinAction method`, () => {
     it(`should discard trading coin isOpened=true from board (multiplayer=false)`, () => {
@@ -903,7 +903,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 2,
                                 3,
@@ -978,7 +978,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 2,
                                 3,
@@ -1077,7 +1077,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 2,
                                 3,
@@ -1184,7 +1184,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 2,
                                 3,
@@ -1259,7 +1259,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 5,
                             ],
@@ -1357,7 +1357,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 5,
                             ],
@@ -1423,7 +1423,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 5,
                             ],
@@ -1509,7 +1509,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             priority: 0,
-                            stageName: StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
                             valueArray: [
                                 5,
                             ],
@@ -1589,12 +1589,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -1689,12 +1689,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -1771,7 +1771,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -1870,7 +1870,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -1941,12 +1941,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -2033,12 +2033,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -2133,12 +2133,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -2249,12 +2249,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -2339,7 +2339,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -2446,7 +2446,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     stack: [
                         {
-                            stageName: StageNames.addCoinToPouch,
+                            stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                             priority: 0,
                         },
@@ -2524,7 +2524,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2626,7 +2626,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2732,7 +2732,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2802,7 +2802,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2892,7 +2892,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: StageNames.upgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },

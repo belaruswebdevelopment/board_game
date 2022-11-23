@@ -15,11 +15,11 @@ import { CheckEndTavernsResolutionPhase, CheckEndTavernsResolutionTurn, EndTaver
 import { CheckAndResolveTroopEvaluationOrders, CheckEndTroopEvaluationPhase, CheckEndTroopEvaluationTurn, EndTroopEvaluationPhaseActions, OnTroopEvaluationMove, OnTroopEvaluationTurnBegin, OnTroopEvaluationTurnEnd } from "./hooks/TroopEvaluationHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
 import { AddCoinToPouchMove, ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
-import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove } from "./moves/CoinMoves";
+import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove, PickConcreteCoinToUpgradeMove } from "./moves/CoinMoves";
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove, ChooseStrategyForSoloModeAndvariMove, ChooseStrategyVariantForSoloModeAndvariMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceMultiSuitCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
-import { ChooseSuitOlrunMove, GetMythologyCardMove } from "./moves/MythologicalCreatureMoves";
+import { ChooseCoinValueForHrungnirUpgradeMove, ChooseSuitOlrunMove, ClickCardNotGiantAbilityMove, ClickGiantAbilityNotCardMove, GetMythologyCardMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotAndvariClickCardMove, SoloBotAndvariClickCardToPickDistinctionMove, SoloBotAndvariClickCoinToUpgradeMove, SoloBotAndvariClickHeroCardMove, SoloBotAndvariPlaceAllCoinsMove, SoloBotAndvariPlaceThrudHeroMove, SoloBotAndvariPlaceYludHeroMove } from "./moves/SoloBotAndvariMoves";
 import { SoloBotClickCardMove, SoloBotClickCardToPickDistinctionMove, SoloBotClickCoinToUpgradeMove, SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove, SoloBotPlaceThrudHeroMove, SoloBotPlaceYludHeroMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
@@ -50,16 +50,16 @@ export const BoardGame = {
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
     phases: {
-        chooseDifficultySoloMode: {
+        ChooseDifficultySoloMode: {
             turn: {
                 order,
                 stages: {
-                    chooseHeroesForSoloMode: {
+                    ChooseHeroesForSoloMode: {
                         moves: {
                             ChooseHeroForDifficultySoloModeMove,
                         },
                     },
-                    upgradeCoinSoloBot: {
+                    UpgradeCoinSoloBot: {
                         moves: {
                             SoloBotClickCoinToUpgradeMove,
                         },
@@ -78,7 +78,7 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndChooseDifficultySoloModePhase({ G, ctx, ...rest }),
             onEnd: ({ G, ...rest }) => EndChooseDifficultySoloModeActions({ G, ...rest }),
         },
-        chooseDifficultySoloModeAndvari: {
+        ChooseDifficultySoloModeAndvari: {
             turn: {
                 order,
                 onBegin: ({ G, ctx, random, ...rest }) => OnChooseStrategyForSoloModeAndvariTurnBegin({ G, ctx, random, ...rest }),
@@ -94,7 +94,7 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckChooseStrategyForSoloModeAndvariPhase({ G, ctx, ...rest }),
             onEnd: ({ G, ...rest }) => EndChooseStrategyForSoloModeAndvariActions({ G, ...rest }),
         },
-        bids: {
+        Bids: {
             turn: {
                 order,
                 endIf: ({ G, ctx, ...rest }) => CheckEndBidsTurn({ G, ctx, ...rest }),
@@ -111,7 +111,7 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndBidsPhase({ G, ctx, ...rest }),
             onEnd: ({ G, ...rest }) => EndBidsActions({ G, ...rest }),
         },
-        bidUline: {
+        BidUline: {
             turn: {
                 order,
             },
@@ -123,121 +123,132 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndBidUlinePhase({ G, ctx, ...rest }),
             onEnd: ({ G, ...rest }) => EndBidUlineActions({ G, ...rest }),
         },
-        tavernsResolution: {
+        TavernsResolution: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    addCoinToPouch: {
+                    AddCoinToPouch: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                    ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
                         moves: {
                             ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
                         },
                     },
-                    discardBoardCard: {
+                    DiscardBoardCard: {
                         moves: {
                             DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    DiscardSuitCard: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    pickCampCardHolda: {
+                    PickCampCardHolda: {
                         moves: {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    clickConcreteCoinToUpgrade: {
+                    PickConcreteCoinToUpgrade: {
                         moves: {
-                            ClickConcreteCoinToUpgradeMove,
+                            PickConcreteCoinToUpgradeMove,
                         },
                     },
-                    pickDiscardCard: {
+                    PickDiscardCard: {
                         moves: {
                             PickDiscardCardMove,
                         },
                     },
-                    pickHero: {
+                    PickHero: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
-                    placeMultiSuitsCards: {
+                    PlaceMultiSuitsCards: {
                         moves: {
                             PlaceMultiSuitCardMove,
                         },
                     },
-                    placeThrudHero: {
+                    PlaceThrudHero: {
                         moves: {
                             PlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoin: {
+                    UpgradeCoin: {
                         moves: {
                             ClickCoinToUpgradeMove,
                         },
                     },
-                    upgradeVidofnirVedrfolnirCoin: {
+                    UpgradeVidofnirVedrfolnirCoin: {
                         moves: {
                             UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     // End
-                    chooseSuitOlrun: {
+                    ActivateGiantAbilityOrPickCard: {
+                        moves: {
+                            ClickCardNotGiantAbilityMove,
+                            ClickGiantAbilityNotCardMove,
+                        },
+                    },
+                    ChooseCoinValueForHrungnirUpgrade: {
+                        moves: {
+                            ChooseCoinValueForHrungnirUpgradeMove,
+                        },
+                    },
+                    ChooseSuitOlrun: {
                         moves: {
                             ChooseSuitOlrunMove,
                         },
                     },
-                    getMythologyCard: {
+                    GetMythologyCard: {
                         moves: {
                             GetMythologyCardMove,
                         },
                     },
-                    discardCard: {
+                    DiscardCard: {
                         moves: {
                             DiscardCard2PlayersMove,
                         },
                     },
-                    placeTradingCoinsUline: {
+                    PlaceTradingCoinsUline: {
                         moves: {
                             ClickHandTradingCoinUlineMove,
                         },
                     },
                     // Common Solo Bot Start
-                    pickHeroSoloBot: {
+                    PickHeroSoloBot: {
                         moves: {
                             SoloBotClickHeroCardMove,
                         },
                     },
-                    placeThrudHeroSoloBot: {
+                    PlaceThrudHeroSoloBot: {
                         moves: {
                             SoloBotPlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoinSoloBot: {
+                    UpgradeCoinSoloBot: {
                         moves: {
                             SoloBotClickCoinToUpgradeMove,
                         },
                     },
                     // Common Solo Bot End
                     // Common Solo Bot Andvari Start
-                    pickHeroSoloBotAndvari: {
+                    PickHeroSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariClickHeroCardMove,
                         },
                     },
-                    placeThrudHeroSoloBotAndvari: {
+                    PlaceThrudHeroSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariPlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoinSoloBotAndvari: {
+                    UpgradeCoinSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariClickCoinToUpgradeMove,
                         },
@@ -260,73 +271,73 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndTavernsResolutionPhase({ G, ctx, ...rest }),
             onEnd: ({ G, ctx, ...rest }) => EndTavernsResolutionActions({ G, ctx, ...rest }),
         },
-        enlistmentMercenaries: {
+        EnlistmentMercenaries: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    addCoinToPouch: {
+                    AddCoinToPouch: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                    ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
                         moves: {
                             ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
                         },
                     },
-                    discardBoardCard: {
+                    DiscardBoardCard: {
                         moves: {
                             DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    DiscardSuitCard: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    pickCampCardHolda: {
+                    PickCampCardHolda: {
                         moves: {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    clickConcreteCoinToUpgrade: {
+                    PickConcreteCoinToUpgrade: {
                         moves: {
-                            ClickConcreteCoinToUpgradeMove,
+                            PickConcreteCoinToUpgradeMove,
                         },
                     },
-                    pickDiscardCard: {
+                    PickDiscardCard: {
                         moves: {
                             PickDiscardCardMove,
                         },
                     },
-                    pickHero: {
+                    PickHero: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
-                    placeMultiSuitsCards: {
+                    PlaceMultiSuitsCards: {
                         moves: {
                             PlaceMultiSuitCardMove,
                         },
                     },
-                    placeThrudHero: {
+                    PlaceThrudHero: {
                         moves: {
                             PlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoin: {
+                    UpgradeCoin: {
                         moves: {
                             ClickCoinToUpgradeMove,
                         },
                     },
-                    upgradeVidofnirVedrfolnirCoin: {
+                    UpgradeVidofnirVedrfolnirCoin: {
                         moves: {
                             UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     // End
-                    placeEnlistmentMercenaries: {
+                    PlaceEnlistmentMercenaries: {
                         moves: {
                             PlaceEnlistmentMercenariesMove,
                         },
@@ -346,101 +357,101 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndEnlistmentMercenariesPhase({ G, ctx, ...rest }),
             onEnd: ({ G, ctx, ...rest }) => EndEnlistmentMercenariesActions({ G, ctx, ...rest }),
         },
-        placeYlud: {
+        PlaceYlud: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    addCoinToPouch: {
+                    AddCoinToPouch: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                    ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
                         moves: {
                             ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
                         },
                     },
-                    discardBoardCard: {
+                    DiscardBoardCard: {
                         moves: {
                             DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    DiscardSuitCard: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    pickCampCardHolda: {
+                    PickCampCardHolda: {
                         moves: {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    clickConcreteCoinToUpgrade: {
+                    PickConcreteCoinToUpgrade: {
                         moves: {
-                            ClickConcreteCoinToUpgradeMove,
+                            PickConcreteCoinToUpgradeMove,
                         },
                     },
-                    pickDiscardCard: {
+                    PickDiscardCard: {
                         moves: {
                             PickDiscardCardMove,
                         },
                     },
-                    pickHero: {
+                    PickHero: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
-                    placeMultiSuitsCards: {
+                    PlaceMultiSuitsCards: {
                         moves: {
                             PlaceMultiSuitCardMove,
                         },
                     },
-                    placeThrudHero: {
+                    PlaceThrudHero: {
                         moves: {
                             PlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoin: {
+                    UpgradeCoin: {
                         moves: {
                             ClickCoinToUpgradeMove,
                         },
                     },
-                    upgradeVidofnirVedrfolnirCoin: {
+                    UpgradeVidofnirVedrfolnirCoin: {
                         moves: {
                             UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     // End
                     // Common Solo Bot Start
-                    pickHeroSoloBot: {
+                    PickHeroSoloBot: {
                         moves: {
                             SoloBotClickHeroCardMove,
                         },
                     },
-                    placeThrudHeroSoloBot: {
+                    PlaceThrudHeroSoloBot: {
                         moves: {
                             SoloBotPlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoinSoloBot: {
+                    UpgradeCoinSoloBot: {
                         moves: {
                             SoloBotClickCoinToUpgradeMove,
                         },
                     },
                     // Common Solo Bot End
                     // Common Solo Bot Andvari Start
-                    pickHeroSoloBotAndvari: {
+                    PickHeroSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariClickHeroCardMove,
                         },
                     },
-                    placeThrudHeroSoloBotAndvari: {
+                    PlaceThrudHeroSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariPlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoinSoloBotAndvari: {
+                    UpgradeCoinSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariClickCoinToUpgradeMove,
                         },
@@ -461,118 +472,118 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndPlaceYludPhase({ G, ctx, ...rest }),
             onEnd: ({ G, ctx, ...rest }) => EndPlaceYludActions({ G, ctx, ...rest }),
         },
-        troopEvaluation: {
+        TroopEvaluation: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    addCoinToPouch: {
+                    AddCoinToPouch: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    chooseCoinValueForVidofnirVedrfolnirUpgrade: {
+                    ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
                         moves: {
                             ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
                         },
                     },
-                    discardBoardCard: {
+                    DiscardBoardCard: {
                         moves: {
                             DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    DiscardSuitCard: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    pickCampCardHolda: {
+                    PickCampCardHolda: {
                         moves: {
                             ClickCampCardHoldaMove,
                         },
                     },
-                    clickConcreteCoinToUpgrade: {
+                    PickConcreteCoinToUpgrade: {
                         moves: {
-                            ClickConcreteCoinToUpgradeMove,
+                            PickConcreteCoinToUpgradeMove,
                         },
                     },
-                    pickDiscardCard: {
+                    PickDiscardCard: {
                         moves: {
                             PickDiscardCardMove,
                         },
                     },
-                    pickHero: {
+                    PickHero: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
-                    placeMultiSuitsCards: {
+                    PlaceMultiSuitsCards: {
                         moves: {
                             PlaceMultiSuitCardMove,
                         },
                     },
-                    placeThrudHero: {
+                    PlaceThrudHero: {
                         moves: {
                             PlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoin: {
+                    UpgradeCoin: {
                         moves: {
                             ClickCoinToUpgradeMove,
                         },
                     },
-                    upgradeVidofnirVedrfolnirCoin: {
+                    UpgradeVidofnirVedrfolnirCoin: {
                         moves: {
                             UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     // End
-                    pickDistinctionCard: {
+                    PickDistinctionCard: {
                         moves: {
                             ClickCardToPickDistinctionMove,
                         },
                     },
                     // Solo Bot
-                    pickDistinctionCardSoloBot: {
+                    PickDistinctionCardSoloBot: {
                         moves: {
                             SoloBotClickCardToPickDistinctionMove,
                         },
                     },
                     // Common Solo Bot Start
-                    pickHeroSoloBot: {
+                    PickHeroSoloBot: {
                         moves: {
                             SoloBotClickHeroCardMove,
                         },
                     },
-                    placeThrudHeroSoloBot: {
+                    PlaceThrudHeroSoloBot: {
                         moves: {
                             SoloBotPlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoinSoloBot: {
+                    UpgradeCoinSoloBot: {
                         moves: {
                             SoloBotClickCoinToUpgradeMove,
                         },
                     },
                     // Common Solo Bot End
                     // Solo Bot Andvari
-                    pickDistinctionCardSoloBotAndvari: {
+                    PickDistinctionCardSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariClickCardToPickDistinctionMove,
                         },
                     },
                     // Common Solo Bot Andvari Start
-                    pickHeroSoloBotAndvari: {
+                    PickHeroSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariClickHeroCardMove,
                         },
                     },
-                    placeThrudHeroSoloBotAndvari: {
+                    PlaceThrudHeroSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariPlaceThrudHeroMove,
                         },
                     },
-                    upgradeCoinSoloBotAndvari: {
+                    UpgradeCoinSoloBotAndvari: {
                         moves: {
                             SoloBotAndvariClickCoinToUpgradeMove,
                         },
@@ -592,7 +603,7 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndTroopEvaluationPhase({ G, ctx, ...rest }),
             onEnd: ({ G, ctx, ...rest }) => EndTroopEvaluationPhaseActions({ G, ctx, ...rest }),
         },
-        brisingamensEndGame: {
+        BrisingamensEndGame: {
             turn: {
                 order,
                 minMoves: 1,
@@ -608,7 +619,7 @@ export const BoardGame = {
             endIf: ({ G, ctx, ...rest }) => CheckEndBrisingamensEndGamePhase({ G, ctx, ...rest }),
             onEnd: ({ G, ...rest }) => EndBrisingamensEndGameActions({ G, ...rest }),
         },
-        getMjollnirProfit: {
+        GetMjollnirProfit: {
             turn: {
                 order,
                 minMoves: 1,

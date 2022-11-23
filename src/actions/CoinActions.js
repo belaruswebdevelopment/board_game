@@ -95,7 +95,7 @@ export const UpgradeCoinAction = ({ G, ctx, playerID, ...rest }, isTrading, valu
                 else if (marketCoin.value >= newValue) {
                     upgradedCoin = marketCoin;
                     G.marketCoins.splice(i, 1);
-                    if (G.expansions.idavoll.active) {
+                    if (G.expansions.Idavoll.active) {
                         const betterment = marketCoin.value - newValue;
                         if (betterment > 0) {
                             for (let j = 0; j < betterment; j++) {

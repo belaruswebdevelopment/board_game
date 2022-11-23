@@ -20,7 +20,7 @@ export const CheckEndGame = ({ G, ctx, ...rest }) => {
         if (yludIndex !== -1) {
             return false;
         }
-        if (G.expansions.thingvellir.active) {
+        if (G.expansions.Thingvellir.active) {
             const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.DiscardCardEndGame));
             if (brisingamensIndex !== -1) {
                 return false;

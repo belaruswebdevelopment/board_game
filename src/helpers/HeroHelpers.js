@@ -1,7 +1,7 @@
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, CampBuffNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import { BuffNames, CampBuffNames, CommonStageNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 /**
  * <h3>Проверяет возможность взятия нового героя.</h3>
@@ -31,7 +31,7 @@ export const CheckPickHero = ({ G, ctx, playerID, ...rest }) => {
                 && ctx.currentPlayer === `1` ? 5 : 0), isCanPickHero = (Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) -
             ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
                 || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy) ?
-                1 : 0)) > (heroesLength - Number(playerHasNotCountHero)), playerPickHeroActionInStackIndex = player.stack.findIndex((stack) => stack.stageName === StageNames.pickHero);
+                1 : 0)) > (heroesLength - Number(playerHasNotCountHero)), playerPickHeroActionInStackIndex = player.stack.findIndex((stack) => stack.stageName === CommonStageNames.PickHero);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
             AddPickHeroAction({ G, ctx, playerID, ...rest }, 1);
         }

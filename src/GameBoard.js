@@ -18,7 +18,7 @@ export class GameBoard extends React.Component {
             && this.props.G.heroesForSoloGameForStrategyBotAndvari !== null
             && this.props.G.heroesForSoloGameForStrategyBotAndvari.length === 5 ?
             DrawStrategyForSoloBotAndvariUI({ G: this.props.G, ctx: this.props.ctx }, this.props) : null, drawHeroesForSoloBotUI = this.props.G.mode === GameModeNames.Solo ?
-            DrawHeroesForSoloBotUI({ G: this.props.G, ctx: this.props.ctx }, null, this.props) : null, drawCampUI = this.props.G.expansions.thingvellir.active ?
+            DrawHeroesForSoloBotUI({ G: this.props.G, ctx: this.props.ctx }, null, this.props) : null, drawCampUI = this.props.G.expansions.Thingvellir.active ?
             DrawCamp({ G: this.props.G, ctx: this.props.ctx }, null, this.props) : null, drawDistinctionsUI = DrawDistinctions({ G: this.props.G, ctx: this.props.ctx }, null, this.props), drawDistinctionProfitUI = this.props.G.drawProfit ?
             DrawProfit({ G: this.props.G, ctx: this.props.ctx }, this.props)
             : this.props.G.drawProfit, tavernsUI = DrawTaverns({ G: this.props.G, ctx: this.props.ctx }, null, this.props, gridClasses), playersBoardsCoinsUI = DrawPlayersBoardsCoins({ G: this.props.G, ctx: this.props.ctx }, null, this.props), playersHandsCoinsUI = DrawPlayersHandsCoins({ G: this.props.G, ctx: this.props.ctx }, null, this.props), playersBoardsUI = DrawPlayersBoards({ G: this.props.G, ctx: this.props.ctx }, null, null, this.props), logUI = DrawLogData({ G: this.props.G }), debugUI = DrawDebugData({ G: this.props.G, ctx: this.props.ctx });

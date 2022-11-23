@@ -37,7 +37,7 @@ export class GameBoard extends React.Component<BoardProps> {
             drawHeroesForSoloBotUI: CanBeNullType<JSX.Element> = this.props.G.mode === GameModeNames.Solo ?
                 DrawHeroesForSoloBotUI({ G: this.props.G, ctx: this.props.ctx } as FnContext, null,
                     this.props) as JSX.Element : null,
-            drawCampUI: CanBeNullType<JSX.Element> = this.props.G.expansions.thingvellir.active ?
+            drawCampUI: CanBeNullType<JSX.Element> = this.props.G.expansions.Thingvellir.active ?
                 (DrawCamp({ G: this.props.G, ctx: this.props.ctx } as FnContext, null,
                     this.props) as JSX.Element) : null,
             drawDistinctionsUI: JSX.Element = DrawDistinctions({ G: this.props.G, ctx: this.props.ctx } as FnContext,

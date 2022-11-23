@@ -323,7 +323,7 @@ export const ResolveBoardCoins = ({ G, ctx, ...rest }: FnContext): IResolveBoard
         }
     }
     const playersOrder: string[] = playersOrderNumbers.map((index: number): string => String(index));
-    if (G.expansions.idavoll.active) {
+    if (G.expansions.Idavoll.active) {
         const firstPlayer: CanBeUndefType<string> = playersOrder[0];
         if (firstPlayer === undefined) {
             throw new Error(`В массиве порядка хода игроков не может отсутствовать победивший первый игрок.`);

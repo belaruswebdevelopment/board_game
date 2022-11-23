@@ -34,7 +34,7 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }) => {
         return PhaseNames.TroopEvaluation;
     }
     else {
-        if (G.expansions.thingvellir.active) {
+        if (G.expansions.Thingvellir.active) {
             const brisingamensBuffIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return PhaseNames.BrisingamensEndGame;

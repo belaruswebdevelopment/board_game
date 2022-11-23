@@ -67,7 +67,7 @@ export const AddHeroCardToPlayerHeroCards = ({ G, ctx, playerID, ...rest }: MyFn
     }
     hero.active = false;
     player.heroes.push(hero);
-    if (G.expansions.idavoll.active) {
+    if (G.expansions.Idavoll.active) {
         // TODO Add Odin ability not trigger this!!!!!!
         CheckValkyryRequirement({ G, ctx, playerID, ...rest },
             ValkyryBuffNames.CountPickedHeroAmount);
@@ -89,7 +89,7 @@ export const AddHeroCardToPlayerHeroCards = ({ G, ctx, playerID, ...rest }: MyFn
  */
 export const AddHeroToPlayerCards = ({ G, ctx, playerID, ...rest }: MyFnContext, hero: IHeroCard): void => {
     AddHeroCardToPlayerHeroCards({ G, ctx, playerID, ...rest }, hero);
-    if (G.expansions.idavoll.active) {
+    if (G.expansions.Idavoll.active) {
         if (`suit` in hero && hero.suit !== null) {
             if (CheckIfRecruitedCardHasNotLeastRankOfChosenClass({ G, ctx, playerID, ...rest },
                 Number(playerID), hero.suit)) {

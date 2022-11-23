@@ -35,9 +35,6 @@ const Hrungnir: IGiantData = {
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantHrungnir,
     },
-    actions: {
-        name: AutoActionFunctionNames.AddPlusTwoValueToAllCoinsAction,
-    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -60,9 +57,6 @@ const Skymir: IGiantData = {
     },
     actions: {
         name: AutoActionFunctionNames.AddMythologyCreatureCardsSkymirAction,
-    },
-    stack: {
-        player: [StackData.getMythologyCardSkymir()],
     },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
@@ -104,13 +98,6 @@ const Thrivaldi: IGiantData = {
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantThrivaldi,
     },
-    // TODO Add it!
-    // buff: {
-    //     name: BuffNames.HasOneNotCountHero,
-    // },
-    actions: {
-        name: AutoActionFunctionNames.AddPickHeroAction,
-    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -129,7 +116,7 @@ const Freyja: IGodData = {
     name: GodNames.Freyja,
     points: 15,
     godPower: (): void => {
-        // TODO You can swap cards from all taverns into another taverns?!
+        // TODO
     },
 };
 
@@ -145,7 +132,7 @@ const Frigg: IGodData = {
     name: GodNames.Frigg,
     points: 12,
     godPower: (): void => {
-        // TODO Get 3 cards form 1 or 2 tier decks (or discard deck...?!) and choose 1?!
+        // TODO
     },
 };
 
@@ -161,7 +148,7 @@ const Loki: IGodData = {
     name: GodNames.Loki,
     points: 8,
     godPower: (): void => {
-        // TODO Put Loki token on tavern card and discard or take it?!
+        // TODO
     },
 };
 
@@ -177,7 +164,7 @@ const Odin: IGodData = {
     name: GodNames.Odin,
     points: 0,
     godPower: (): void => {
-        // TODO You can one swap neutral(!)/all hero to another hero?!
+        // TODO
     },
 };
 
@@ -193,7 +180,7 @@ const Thor: IGodData = {
     name: GodNames.Thor,
     points: 8,
     godPower: (): void => {
-        // TODO You can not discard card one time or all time?!
+        // TODO
     },
 };
 

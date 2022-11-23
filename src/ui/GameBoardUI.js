@@ -5,9 +5,9 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames, SuitNames } from "../typescript/enums";
+import { CardMoveNames, CommonStageNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, SoloBotAndvariCommonStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
-import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
 /**
  * <h3>Отрисовка карт лагеря.</h3>
@@ -43,12 +43,13 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
-                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickCampCardHolda)) {
+                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.PickCampCardHolda)) {
                     if (data !== undefined) {
+                        // TODO StageNames => CommonStageNames???
                         const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                         let moveName;
                         switch (stage) {
-                            case StageNames.pickCampCardHolda:
+                            case CommonStageNames.PickCampCardHolda:
                                 moveName = CardMoveNames.ClickCampCardHoldaMove;
                                 break;
                             case undefined:
@@ -199,7 +200,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }, validatorName, data) => 
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
-        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickDiscardCard) {
+        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.PickDiscardCard) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -254,19 +255,20 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit = hero.suit;
-            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickHero) {
+            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.PickHero) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined) {
+                    // TODO StageNames => CommonStageNames | SoloBotAndvariCommonStageNames
                     const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                     let moveName;
                     switch (stage) {
-                        case StageNames.pickHero:
+                        case CommonStageNames.PickHero:
                             moveName = CardMoveNames.ClickHeroCardMove;
                             break;
-                        case StageNames.pickHeroSoloBotAndvari:
+                        case SoloBotAndvariCommonStageNames.PickHeroSoloBotAndvari:
                             moveName = CardMoveNames.SoloBotAndvariClickHeroCardMove;
                             break;
                         default:
@@ -328,7 +330,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
             const hero = G.heroesForSoloBot[j];
             if (hero.active && Number(ctx.currentPlayer) === 1
-                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.pickHeroSoloBot) {
+                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === SoloBotCommonStageNames.PickHeroSoloBot) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -412,6 +414,10 @@ export const DrawProfit = ({ G, ctx, ...rest }, data) => {
     const option = G.drawProfit;
     let caption = ``, _exhaustiveCheck;
     switch (option) {
+        case ConfigNames.ActivateGiantAbilityOrPickCard:
+            caption += `Activate Giant ability or pick dwarf card.`;
+            ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, null, data, boardCells);
+            break;
         case ConfigNames.ChooseGetMythologyCard:
             caption += `Get Mythology card.`;
             ChooseGetMythologyCardProfit({ G, ctx, ...rest }, null, data, boardCells);
@@ -529,12 +535,14 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                     }
                     if (t === G.currentTavern && ctx.phase === PhaseNames.TavernsResolution
                         && ((ctx.activePlayers === null)
-                            || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === StageNames.discardCard))) {
+                            || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)])
+                                === TavernsResolutionStageNames.DiscardCard))) {
                         if (data !== undefined) {
+                            // TODO StageNames => TavernsResolutionStageNames
                             const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                             let moveName, _exhaustiveCheck;
                             switch (stage) {
-                                case StageNames.discardCard:
+                                case TavernsResolutionStageNames.DiscardCard:
                                     moveName = CardMoveNames.DiscardCard2PlayersMove;
                                     break;
                                 case undefined:

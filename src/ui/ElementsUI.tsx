@@ -99,8 +99,14 @@ export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: All
     }
     let _exhaustiveCheck: never;
     switch (moveName) {
+        case CardMoveNames.ClickCardNotGiantAbilityMove:
+            action = data.moves.ClickCardNoyGiantAbilityMove;
+            break;
         case CardMoveNames.ClickCardMove:
             action = data.moves.ClickCardMove;
+            break;
+        case CardMoveNames.ClickGiantAbilityNotCardMove:
+            action = data.moves.ClickGiantAbilityNotCardMove;
             break;
         case CardMoveNames.ClickCardToPickDistinctionMove:
             action = data.moves.ClickCardToPickDistinctionMove;
@@ -216,7 +222,13 @@ export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: All
         case RusCardTypeNames.God_Card:
         case RusCardTypeNames.Mythical_Animal_Card:
         case RusCardTypeNames.Valkyry_Card:
-            spanClasses += `bg-mythological-creature`;
+            if (`isActivated` in card && card.isActivated === true) {
+                // TODO Draw capturedCard for Giant if captured!
+                spanClasses += `bg-mythological-creature-inactive`;
+            } else {
+                spanClasses += `bg-mythological-creature`;
+            }
+            // TODO Draw valkyry requirements!
             styles = Styles.MythologicalCreature(card.name);
             break;
         default:
@@ -227,7 +239,7 @@ export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: All
     if (`points` in card) {
         value = card.points !== null ? String(card.points) : ``;
     }
-    //TODO Draw Power token on Gods if needed and Strength token on valkyries!
+    //TODO Draw Power token on Gods if needed and Strength token on valkyries! And Loki token!
     playerCells.push(
         <td className={tdClasses} onClick={() => action?.(...args)}
             key={`${player?.nickname ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`}>
@@ -340,6 +352,9 @@ export const DrawCoin = (data: BoardProps, playerCells: JSX.Element[], type: str
         action: MoveFunctionType,
         _exhaustiveCheck: never;
     switch (moveName) {
+        case CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove:
+            action = data.moves.ChooseCoinValueForHrungnirUpgradeMove;
+            break;
         case CoinMoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
             break;

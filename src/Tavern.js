@@ -102,7 +102,7 @@ export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }, discardCardIn
 export const RefillTaverns = ({ G, ctx, ...rest }) => {
     for (let t = 0; t < G.tavernsNum; t++) {
         let refillDeck;
-        if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
+        if (G.expansions.Idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
             refillDeck = G.secret.mythologicalCreatureDeck.splice(0, G.drawSize);
             G.mythologicalCreatureDeckLength = G.secret.mythologicalCreatureDeck.length;
         }

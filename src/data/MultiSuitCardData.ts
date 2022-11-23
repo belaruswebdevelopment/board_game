@@ -10,7 +10,7 @@ import type { MultiCardsConfigType, MultiSuitCardDataType } from "../typescript/
  */
 const Gullinbursti: MultiSuitCardDataType = {
     name: MultiSuitCardNames.Gullinbursti,
-    game: GameNames.idavoll,
+    game: GameNames.Idavoll,
 };
 
 /**
@@ -22,7 +22,7 @@ const Gullinbursti: MultiSuitCardDataType = {
  */
 const OlwinsDouble: MultiSuitCardDataType = {
     name: MultiSuitCardNames.OlwinsDouble,
-    game: GameNames.thingvellir,
+    game: GameNames.Thingvellir,
 };
 
 

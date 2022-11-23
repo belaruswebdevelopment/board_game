@@ -45,14 +45,14 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
         tavernCardDiscarded2Players = false,
         drawProfit = null,
         expansions: ExpansionsType = {
-            basic: {
+            Basic: {
                 active: true,
             },
-            thingvellir: {
+            Thingvellir: {
                 active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : true,
             },
             // TODO Fix me to "true" after expansion finished
-            idavoll: {
+            Idavoll: {
                 active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : false,
             },
         },
@@ -87,7 +87,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
         deckLength: [number, number] = [0, 0],
         mythologicalCreatureDeckForSkymir = null;
     for (let i = 0; i < tierToEnd; i++) {
-        if (expansions.thingvellir.active) {
+        if (expansions.Thingvellir.active) {
             secret.campDecks[i] = BuildCampCards(i as TierType);
             let campDeck: CampDeckCardType[] = secret.campDecks[i as IndexOf<SecretCampDecksType>];
             campDeck = random.Shuffle(campDeck);
@@ -123,7 +123,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
     deckLength[0] = secret.decks[0].length;
     let mythologicalCreatureDeckLength = 0,
         mythologicalCreatureNotInGameDeckLength = 0;
-    if (expansions.idavoll.active) {
+    if (expansions.Idavoll.active) {
         let mythologicalCreatureCardsDeck: MythologicalCreatureDeckCardType[] = BuildMythologicalCreatureCards();
         mythologicalCreatureCardsDeck = random.Shuffle(mythologicalCreatureCardsDeck);
         [secret.mythologicalCreatureDeck, secret.mythologicalCreatureNotInGameDeck] =

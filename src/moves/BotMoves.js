@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
+import { BidsDefaultStageNames, ErrorNames, GameModeNames, MoveTypeNames } from "../typescript/enums";
 // TODO Rework Move to local interface!
 // TODO Add Bot place all coins for human player opened in solo game
 /**
@@ -19,7 +19,7 @@ import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
  */
 export const BotsPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrder) => {
     // TODO Check it bot can't play in multiplayer now...
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default3, coinsOrder);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.BotsPlaceAllCoins, MoveTypeNames.default, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

@@ -1,7 +1,10 @@
 import { UpgradeCoinAction } from "../actions/CoinActions";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
+import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
-import { CoinTypeNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, IPublicPlayer, IStack, MyFnContext } from "../typescript/interfaces";
+import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
+import type { CanBeUndefType, CoinType, IPlayer, IPublicPlayer, IStack, MyFnContext } from "../typescript/interfaces";
+import { AddActionsToStack } from "./StackHelpers";
 
 /**
  * <h3>Действия, связанные с улучшением монет от действий улучшающих монеты.</h3>
@@ -34,4 +37,40 @@ export const UpgradeCoinActions = ({ G, ctx, playerID, ...rest }: MyFnContext, c
     }
     UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, value, coinId, type);
     return value;
+};
+
+export const UpgradeNextCoinsHrungnir = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
+    }
+    if (privatePlayer === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+            playerID);
+    }
+    for (let j = coinId; j < 5; j++) {
+        // TODO Check for Local and Multiplayer games!
+        const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[j];
+        if (privateBoardCoin === undefined) {
+            throw new Error(`В массиве монет приватного игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
+        }
+        // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
+        if (G.mode === GameModeNames.Multiplayer) {
+            // TODO Check if player has coins in hands to continue upgrade!?
+            if (privateBoardCoin === null) {
+                coinId = j;
+                break;
+            }
+            if (!privateBoardCoin.isOpened) {
+                ChangeIsOpenedCoinStatus(privateBoardCoin, true);
+            }
+            player.boardCoins[j] = privateBoardCoin;
+        }
+        UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, 2, j,
+            CoinTypeNames.Board);
+    }
+    AddActionsToStack({ G, ctx, playerID, ...rest },
+        [StackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
 };

@@ -70,7 +70,7 @@ export const DiscardCardsFromPlayerBoardAction = ({ G, ctx, playerID, ...rest },
     DiscardPickedCard({ G, ctx, ...rest }, discardedCard);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Hero_Card}' '${(_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.name}'.`);
     if (((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.name) === HeroNames.Dagda && ((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.pickedSuit) === undefined) {
-        if (!G.expansions.idavoll.active || (G.expansions.idavoll.active
+        if (!G.expansions.Idavoll.active || (G.expansions.Idavoll.active
             && !CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards))) {
             AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.discardCardFromBoardDagda(suit)]);
         }

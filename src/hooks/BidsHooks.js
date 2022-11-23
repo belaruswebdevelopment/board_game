@@ -114,7 +114,7 @@ export const PreparationPhaseActions = ({ G, ctx, random, ...rest }) => {
     if (G.round !== 0) {
         ReturnCoinsToPlayerHands({ G, ctx, random, ...rest });
     }
-    if (G.expansions.thingvellir.active) {
+    if (G.expansions.Thingvellir.active) {
         RefillEmptyCampCards({ G, ctx, random, ...rest });
     }
     RefillTaverns({ G, ctx, random, ...rest });

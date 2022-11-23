@@ -4,10 +4,10 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, StageNames, SuitNames } from "../typescript/enums";
-import type { BoardProps, CampCardArrayType, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, FnContext, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNameTextType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import { CardMoveNames, CommonStageNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, SoloBotAndvariCommonStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames } from "../typescript/enums";
+import type { ActiveStageNames, BoardProps, CampCardArrayType, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, FnContext, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, StageNames, StageNameTextType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
-import { ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
 // TODO Check Solo Bot & multiplayer actions!
 /**
@@ -49,12 +49,13 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
-                    || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickCampCardHolda)) {
+                    || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.PickCampCardHolda)) {
                     if (data !== undefined) {
+                        // TODO StageNames => CommonStageNames???
                         const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                         let moveName: CardMoveNames;
                         switch (stage) {
-                            case StageNames.pickCampCardHolda:
+                            case CommonStageNames.PickCampCardHolda:
                                 moveName = CardMoveNames.ClickCampCardHoldaMove;
                                 break;
                             case undefined:
@@ -120,7 +121,7 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
  * @returns Поле информации о текущей фазе и стадии игры.
  */
 export const DrawCurrentPhaseStage = ({ ctx }: FnContext): JSX.Element => {
-    const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)],
+    const stage: CanBeUndefType<ActiveStageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)],
         stageText: StageNameTextType = stage !== undefined ? RusStageNames[stage] : `none`;
     return (
         <b>Phase: <span className="italic">{RusPhaseNames[ctx.phase] ?? `none`}</span>
@@ -246,7 +247,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }: FnContext,
         if (card.type === RusCardTypeNames.Dwarf_Card) {
             suit = card.suit;
         }
-        if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickDiscardCard) {
+        if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.PickDiscardCard) {
             const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -313,20 +314,21 @@ export const DrawHeroes = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeN
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit: CanBeNullType<SuitNames> = hero.suit;
-            if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickHero) {
+            if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.PickHero) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                         ctx.currentPlayer);
                 }
                 if (data !== undefined) {
+                    // TODO StageNames => CommonStageNames | SoloBotAndvariCommonStageNames
                     const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
                     let moveName: CardMoveNames;
                     switch (stage) {
-                        case StageNames.pickHero:
+                        case CommonStageNames.PickHero:
                             moveName = CardMoveNames.ClickHeroCardMove;
                             break;
-                        case StageNames.pickHeroSoloBotAndvari:
+                        case SoloBotAndvariCommonStageNames.PickHeroSoloBotAndvari:
                             moveName = CardMoveNames.SoloBotAndvariClickHeroCardMove;
                             break;
                         default:
@@ -398,7 +400,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
             const hero: IHeroCard = G.heroesForSoloBot[j as IndexOf<HeroesForSoloGameArrayType>];
             if (hero.active && Number(ctx.currentPlayer) === 1
-                && ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.pickHeroSoloBot) {
+                && ctx.activePlayers?.[Number(ctx.currentPlayer)] === SoloBotCommonStageNames.PickHeroSoloBot) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -512,6 +514,10 @@ export const DrawProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JS
     let caption = ``,
         _exhaustiveCheck: never;
     switch (option) {
+        case ConfigNames.ActivateGiantAbilityOrPickCard:
+            caption += `Activate Giant ability or pick dwarf card.`;
+            ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, null, data, boardCells);
+            break;
         case ConfigNames.ChooseGetMythologyCard:
             caption += `Get Mythology card.`;
             ChooseGetMythologyCardProfit({ G, ctx, ...rest }, null, data, boardCells);
@@ -666,14 +672,16 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
                     }
                     if (t === G.currentTavern && ctx.phase === PhaseNames.TavernsResolution
                         && ((ctx.activePlayers === null)
-                            || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === StageNames.discardCard))) {
+                            || (ctx.activePlayers?.[Number(ctx.currentPlayer)]
+                                === TavernsResolutionStageNames.DiscardCard))) {
                         if (data !== undefined) {
+                            // TODO StageNames => TavernsResolutionStageNames
                             const stage: CanBeUndefType<StageNames> =
                                 ctx.activePlayers?.[Number(ctx.currentPlayer)];
                             let moveName: CardMoveNames,
                                 _exhaustiveCheck: never;
                             switch (stage) {
-                                case StageNames.discardCard:
+                                case TavernsResolutionStageNames.DiscardCard:
                                     moveName = CardMoveNames.DiscardCard2PlayersMove;
                                     break;
                                 case undefined:

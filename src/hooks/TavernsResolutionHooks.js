@@ -32,7 +32,7 @@ const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }) => {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTierDeckIsUndefined);
     }
     if (currentDeck.length === 0) {
-        if (G.expansions.thingvellir.active) {
+        if (G.expansions.Thingvellir.active) {
             return CheckEnlistmentMercenaries({ G, ctx, ...rest });
         }
         else {
@@ -184,7 +184,7 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
         const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EndTier));
         if (yludIndex !== -1) {
             let startThrud = true;
-            if (G.expansions.thingvellir.active) {
+            if (G.expansions.Thingvellir.active) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
                     const player = G.publicPlayers[i];
                     if (player === undefined) {
@@ -201,7 +201,7 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
             }
         }
     }
-    if (G.expansions.thingvellir.active) {
+    if (G.expansions.Thingvellir.active) {
         G.mustDiscardTavernCardJarnglofi = null;
     }
     if (ctx.numPlayers === 2) {
@@ -290,7 +290,7 @@ export const OnTavernsResolutionTurnEnd = ({ G, ctx, ...rest }) => {
         if (ctx.numPlayers === 2 && !CheckIfCurrentTavernEmpty({ G, ctx, ...rest })) {
             DiscardCardIfTavernHasCardFor2Players({ G, ctx, ...rest });
         }
-        if (G.expansions.thingvellir.active) {
+        if (G.expansions.Thingvellir.active) {
             if (ctx.numPlayers === 2) {
                 G.campPicked = false;
             }
@@ -306,7 +306,7 @@ export const OnTavernsResolutionTurnEnd = ({ G, ctx, ...rest }) => {
                 }
             }
         }
-        if (G.expansions.idavoll.active) {
+        if (G.expansions.Idavoll.active) {
             if (G.mythologicalCreatureDeckForSkymir !== null && G.mythologicalCreatureDeckForSkymir.length === 3) {
                 for (let j = 0; j < G.mythologicalCreatureDeckForSkymir.length; j++) {
                     const mythologyCreatureCard = G.mythologicalCreatureDeckForSkymir[j];

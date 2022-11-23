@@ -5,7 +5,7 @@ import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot, PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari } from "../helpers/SoloBotHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { BidsDefaultStageNames, CoinTypeNames, MoveTypeNames, PlaceYludDefaultStageNames, SoloBotAndvariCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
 // TODO Move all playerID === `1` to validate!
@@ -24,7 +24,8 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
 export const SoloBotAndvariClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1` &&
-        IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default3, cardId);
+        IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotClickCard,
+            MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -46,7 +47,8 @@ export const SoloBotAndvariClickCardMove: Move = ({ G, ctx, playerID, ...rest }:
 export const SoloBotAndvariClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     cardId: number): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.pickDistinctionCardSoloBotAndvari, cardId);
+        && IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationStageNames.PickDistinctionCardSoloBotAndvari,
+            MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -68,7 +70,8 @@ export const SoloBotAndvariClickCardToPickDistinctionMove: Move = ({ G, ctx, pla
 export const SoloBotAndvariClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.pickHeroSoloBotAndvari, heroId);
+        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotAndvariCommonStageNames.PickHeroSoloBotAndvari,
+            MoveTypeNames.default, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -90,7 +93,8 @@ export const SoloBotAndvariClickHeroCardMove: Move = ({ G, ctx, playerID, ...res
 export const SoloBotAndvariPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinsOrder: number[]):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default5, coinsOrder);
+        && IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.SoloBotAndvariPlaceAllCoins, MoveTypeNames.default,
+            coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -116,7 +120,8 @@ export const SoloBotAndvariPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...res
 export const SoloBotAndvariPlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.placeThrudHero, suit);
+        && IsValidMove({ G, ctx, playerID, ...rest },
+            SoloBotAndvariCommonStageNames.PlaceThrudHeroSoloBotAndvari, MoveTypeNames.default, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -138,7 +143,8 @@ export const SoloBotAndvariPlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...re
 export const SoloBotAndvariPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default3, suit);
+        && IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.SoloBotAndvariPlaceYludHero, MoveTypeNames.default,
+            suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -161,7 +167,8 @@ export const SoloBotAndvariPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...res
 export const SoloBotAndvariClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, StageNames.upgradeCoin, {
+        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotAndvariCommonStageNames.UpgradeCoinSoloBotAndvari,
+            MoveTypeNames.default, {
             coinId,
             type,
         });

@@ -1,5 +1,5 @@
 import { suitsConfig } from "../../data/SuitData";
-import { ArtefactNames, BuffNames, CampBuffNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, StageNames, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, CampBuffNames, CommonStageNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SuitNames, TavernNames } from "../../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     it(`should remove non-hero discarded card from player's cards to cards discard`, () => {
@@ -540,7 +540,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     stack: {
                         player: [
                             {
-                                stageName: StageNames.upgradeCoin,
+                                stageName: CommonStageNames.UpgradeCoin,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
                             },
@@ -563,7 +563,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                         {},
                         {
                             config: {
-                                stageName: StageNames.upgradeCoin,
+                                stageName: CommonStageNames.UpgradeCoin,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
                             },
@@ -576,7 +576,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     stack: {
                         player: [
                             {
-                                stageName: StageNames.upgradeCoin,
+                                stageName: CommonStageNames.UpgradeCoin,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
                             },
@@ -637,7 +637,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                         {},
                         {
                             config: {
-                                stageName: StageNames.pickDiscardCard,
+                                stageName: CommonStageNames.PickDiscardCard,
                                 drawName: DrawNames.Brisingamens,
                                 number: undefined,
                             },
@@ -748,7 +748,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                                 },
                             },
                             config: {
-                                stageName: StageNames.placeThrudHero,
+                                stageName: CommonStageNames.PlaceThrudHero,
                                 drawName: DrawNames.PlaceThrudHero,
                             },
                         },
@@ -950,7 +950,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 },
                             },
                             config: {
-                                stageName: StageNames.placeThrudHero,
+                                stageName: CommonStageNames.PlaceThrudHero,
                                 drawName: DrawNames.PlaceThrudHero,
                             },
                         },
@@ -965,7 +965,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 name: `Test`,
                                 tier: 0,
                                 path: ``,
-                                game: GameNames.thingvellir,
+                                game: GameNames.Thingvellir,
                                 variants: {
                                     warrior: {
                                         suit: SuitNames.warrior,

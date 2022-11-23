@@ -82,15 +82,17 @@ export const BuildMythologicalCreatureDecks = (mythologicalCreatureCardsDeck, pl
  * @param description Описание.
  * @param placedSuit Выбранная фракция.
  * @param capturedCard Захваченная карта.
+ * @param isActivated Активирована ли способность.
  * @returns Карта Гиганта.
  */
-const CreateGiantCard = ({ type = RusCardTypeNames.Giant_Card, name, buff, description, placedSuit, capturedCard = null, }) => ({
+const CreateGiantCard = ({ type = RusCardTypeNames.Giant_Card, name, buff, description, placedSuit, capturedCard = null, isActivated = false, }) => ({
     type,
     name,
     buff,
     description,
     placedSuit,
     capturedCard,
+    isActivated,
 });
 /**
  * <h3>Создание карты Бога.</h3>
@@ -104,14 +106,16 @@ const CreateGiantCard = ({ type = RusCardTypeNames.Giant_Card, name, buff, descr
  * @param description Описание.
  * @param isPowerTokenUsed Положен ли токен силы на карту Бога.
  * @param godPower Сила Бога.
+ * @param isActivated Активирована ли способность.
  * @returns Карта Бога.
  */
-const CreateGodCard = ({ type = RusCardTypeNames.God_Card, name, description, points, isPowerTokenUsed = null, }) => ({
+const CreateGodCard = ({ type = RusCardTypeNames.God_Card, name, description, points, isPowerTokenUsed = null, isActivated = false, }) => ({
     type,
     name,
     description,
     points,
     isPowerTokenUsed,
+    isActivated,
 });
 /**
  * <h3>Создание карты Мифического животного.</h3>

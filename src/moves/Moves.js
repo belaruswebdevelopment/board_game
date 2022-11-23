@@ -5,7 +5,7 @@ import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { StageNames, SuitNames } from "../typescript/enums";
+import { BrisingamensEndGameDefaultStageNames, CommonStageNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, MoveTypeNames, SuitNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -19,7 +19,7 @@ import { StageNames, SuitNames } from "../typescript/enums";
  * @returns
  */
 export const ClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCard, MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -38,7 +38,7 @@ export const ClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * @returns
  */
 export const ClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.pickDistinctionCard, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationStageNames.PickDistinctionCard, MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -57,7 +57,7 @@ export const ClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, ca
  * @returns
  */
 export const ClickDistinctionCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationDefaultStageNames.ClickDistinctionCard, MoveTypeNames.default, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -77,7 +77,7 @@ export const ClickDistinctionCardMove = ({ G, ctx, playerID, ...rest }, suit) =>
  * @returns
  */
 export const DiscardCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BrisingamensEndGameDefaultStageNames.DiscardCardFromPlayerBoard, MoveTypeNames.default, {
         suit,
         cardId,
     });
@@ -99,7 +99,7 @@ export const DiscardCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, su
  * @returns
  */
 export const DiscardCard2PlayersMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.discardCard, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.DiscardCard, MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -118,7 +118,7 @@ export const DiscardCard2PlayersMove = ({ G, ctx, playerID, ...rest }, cardId) =
  * @returns
  */
 export const GetEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default3, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.GetEnlistmentMercenaries, MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -137,7 +137,7 @@ export const GetEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, card
  * @returns
  */
 export const GetMjollnirProfitMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, GetMjollnirProfitDefaultStageNames.GetMjollnirProfit, MoveTypeNames.default, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -155,7 +155,7 @@ export const GetMjollnirProfitMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * @returns
  */
 export const PassEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default2, null);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries, MoveTypeNames.default, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -175,7 +175,7 @@ export const PassEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => 
  * @returns
  */
 export const PickDiscardCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.pickDiscardCard, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickDiscardCard, MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -194,7 +194,7 @@ export const PickDiscardCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * @returns
  */
 export const PlaceEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.placeEnlistmentMercenaries, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries, MoveTypeNames.default, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -212,7 +212,7 @@ export const PlaceEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, su
  * @returns
  */
 export const StartEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, null);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries, MoveTypeNames.default, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

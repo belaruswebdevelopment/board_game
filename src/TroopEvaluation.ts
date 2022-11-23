@@ -38,7 +38,7 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitN
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 playerDistinctionIndex);
         }
-        if (G.expansions.idavoll.active) {
+        if (G.expansions.Idavoll.active) {
             CheckValkyryRequirement({ G, ctx, playerID: String(playerDistinctionIndex), ...rest },
                 ValkyryBuffNames.CountDistinctionAmount);
         }

@@ -81,8 +81,14 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     }
     let _exhaustiveCheck;
     switch (moveName) {
+        case CardMoveNames.ClickCardNotGiantAbilityMove:
+            action = data.moves.ClickCardNoyGiantAbilityMove;
+            break;
         case CardMoveNames.ClickCardMove:
             action = data.moves.ClickCardMove;
+            break;
+        case CardMoveNames.ClickGiantAbilityNotCardMove:
+            action = data.moves.ClickGiantAbilityNotCardMove;
             break;
         case CardMoveNames.ClickCardToPickDistinctionMove:
             action = data.moves.ClickCardToPickDistinctionMove;
@@ -199,7 +205,14 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         case RusCardTypeNames.God_Card:
         case RusCardTypeNames.Mythical_Animal_Card:
         case RusCardTypeNames.Valkyry_Card:
-            spanClasses += `bg-mythological-creature`;
+            if (`isActivated` in card && card.isActivated === true) {
+                // TODO Draw capturedCard for Giant if captured!
+                spanClasses += `bg-mythological-creature-inactive`;
+            }
+            else {
+                spanClasses += `bg-mythological-creature`;
+            }
+            // TODO Draw valkyry requirements!
             styles = Styles.MythologicalCreature(card.name);
             break;
         default:
@@ -210,7 +223,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     if (`points` in card) {
         value = card.points !== null ? String(card.points) : ``;
     }
-    //TODO Draw Power token on Gods if needed and Strength token on valkyries!
+    //TODO Draw Power token on Gods if needed and Strength token on valkyries! And Loki token!
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
 };
 /**
@@ -299,6 +312,9 @@ export const DrawEmptyCard = (data, playerCells, cardType, id, player, suit, mov
 export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, moveName, ...args) => {
     let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action, _exhaustiveCheck;
     switch (moveName) {
+        case CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove:
+            action = data.moves.ChooseCoinValueForHrungnirUpgradeMove;
+            break;
         case CoinMoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
             break;

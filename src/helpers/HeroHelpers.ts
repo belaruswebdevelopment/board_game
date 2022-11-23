@@ -1,7 +1,7 @@
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, CampBuffNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames, StageNames } from "../typescript/enums";
+import { BuffNames, CampBuffNames, CommonStageNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 import type { CanBeUndefType, IHeroCard, IPublicPlayer, IStack, MyFnContext, PlayerCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
@@ -44,7 +44,7 @@ export const CheckPickHero = ({ G, ctx, playerID, ...rest }: MyFnContext): void 
                         || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy) ?
                         1 : 0)) > (heroesLength - Number(playerHasNotCountHero)),
             playerPickHeroActionInStackIndex: number = player.stack.findIndex((stack: IStack): boolean =>
-                stack.stageName === StageNames.pickHero);
+                stack.stageName === CommonStageNames.PickHero);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
             AddPickHeroAction({ G, ctx, playerID, ...rest }, 1);
         }

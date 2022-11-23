@@ -70,7 +70,7 @@ export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }) => EndTurnActio
  * @returns
  */
 export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }) => {
-    if (G.expansions.thingvellir.active) {
+    if (G.expansions.Thingvellir.active) {
         RefillCamp({ G, ctx, ...rest });
     }
     G.publicPlayersOrder = [];
@@ -113,7 +113,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
             if (player === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
-            if (G.expansions.idavoll.active
+            if (G.expansions.Idavoll.active
                 && CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest }, MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards)) {
                 length = 6;
             }

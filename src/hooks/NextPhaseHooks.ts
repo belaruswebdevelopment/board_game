@@ -37,7 +37,7 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVo
     if (!G.secret.decks[0].length && G.secret.decks[1].length) {
         return PhaseNames.TroopEvaluation;
     } else {
-        if (G.expansions.thingvellir.active) {
+        if (G.expansions.Thingvellir.active) {
             const brisingamensBuffIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
                     CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },

@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { CampBuffNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, StageNames } from "./typescript/enums";
+import { BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, MoveTypeNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -22,36 +22,41 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const phase = ctx.phase;
+    const type = MoveTypeNames.default;
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(playerID)];
+        // TODO Check `default`!?
         let activeStageOfCurrentPlayer = currentStage !== null && currentStage !== void 0 ? currentStage : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             let _exhaustiveCheck;
             switch (phase) {
                 case PhaseNames.ChooseDifficultySoloMode:
-                    activeStageOfCurrentPlayer = StageNames.default1;
+                    activeStageOfCurrentPlayer =
+                        ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode;
                     break;
                 case PhaseNames.ChooseDifficultySoloModeAndvari:
                     if (G.soloGameAndvariStrategyVariantLevel === null) {
-                        activeStageOfCurrentPlayer = StageNames.default1;
+                        activeStageOfCurrentPlayer =
+                            ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari;
                     }
                     else if (G.soloGameAndvariStrategyLevel === null) {
-                        activeStageOfCurrentPlayer = StageNames.default2;
+                        activeStageOfCurrentPlayer =
+                            ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari;
                     }
                     break;
                 case PhaseNames.Bids:
                     switch (G.mode) {
                         case GameModeNames.Basic:
                         case GameModeNames.Multiplayer:
-                            activeStageOfCurrentPlayer = StageNames.default3;
+                            activeStageOfCurrentPlayer = BidsDefaultStageNames.BotsPlaceAllCoins;
                             break;
                         case GameModeNames.Solo:
                             if (ctx.currentPlayer === `0`) {
-                                activeStageOfCurrentPlayer = StageNames.default3;
+                                activeStageOfCurrentPlayer = BidsDefaultStageNames.BotsPlaceAllCoins;
                             }
                             else if (ctx.currentPlayer === `1`) {
-                                activeStageOfCurrentPlayer = StageNames.default4;
+                                activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotPlaceAllCoins;
                             }
                             else {
                                 throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
@@ -59,10 +64,10 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
                             break;
                         case GameModeNames.SoloAndvari:
                             if (ctx.currentPlayer === `0`) {
-                                activeStageOfCurrentPlayer = StageNames.default3;
+                                activeStageOfCurrentPlayer = BidsDefaultStageNames.BotsPlaceAllCoins;
                             }
                             else if (ctx.currentPlayer === `1`) {
-                                activeStageOfCurrentPlayer = StageNames.default5;
+                                activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotAndvariPlaceAllCoins;
                             }
                             else {
                                 throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
@@ -76,7 +81,7 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
                     break;
                 case PhaseNames.BidUline:
                     // TODO Add BotPlaceCoinUline and others moves only for bots?!
-                    activeStageOfCurrentPlayer = StageNames.default1;
+                    activeStageOfCurrentPlayer = BidUlineDefaultStageNames.ClickHandCoinUline;
                     break;
                 case PhaseNames.TavernsResolution:
                     switch (G.mode) {
@@ -84,24 +89,24 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
                         case GameModeNames.Multiplayer:
                             if (ctx.activePlayers === null) {
                                 let pickCardOrCampCard = `card`;
-                                if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                                if (G.expansions.Thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                                     || (!G.campPicked && CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, CampBuffNames.GoCamp)))) {
                                     pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                                 }
                                 if (pickCardOrCampCard === `card`) {
-                                    activeStageOfCurrentPlayer = StageNames.default1;
+                                    activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.ClickCard;
                                 }
                                 else {
-                                    activeStageOfCurrentPlayer = StageNames.default2;
+                                    activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.ClickCampCard;
                                 }
                             }
                             break;
                         case GameModeNames.Solo:
                             if (ctx.currentPlayer === `0`) {
-                                activeStageOfCurrentPlayer = StageNames.default1;
+                                activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.ClickCard;
                             }
                             else if (ctx.currentPlayer === `1`) {
-                                activeStageOfCurrentPlayer = StageNames.default3;
+                                activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotClickCard;
                             }
                             else {
                                 throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
@@ -109,10 +114,10 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
                             break;
                         case GameModeNames.SoloAndvari:
                             if (ctx.currentPlayer === `0`) {
-                                activeStageOfCurrentPlayer = StageNames.default1;
+                                activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.ClickCard;
                             }
                             else if (ctx.currentPlayer === `1`) {
-                                activeStageOfCurrentPlayer = StageNames.default4;
+                                activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard;
                             }
                             else {
                                 throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
@@ -127,27 +132,29 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
                 case PhaseNames.EnlistmentMercenaries:
                     if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
                         if (G.publicPlayersOrder.length === 1 || Math.floor(Math.random() * 2) === 0) {
-                            activeStageOfCurrentPlayer = StageNames.default1;
+                            activeStageOfCurrentPlayer =
+                                EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries;
                         }
                         else {
-                            activeStageOfCurrentPlayer = StageNames.default2;
+                            activeStageOfCurrentPlayer =
+                                EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries;
                         }
                     }
                     else if (G.drawProfit === null) {
-                        activeStageOfCurrentPlayer = StageNames.default3;
+                        activeStageOfCurrentPlayer = EnlistmentMercenariesDefaultStageNames.GetEnlistmentMercenaries;
                     }
                     break;
                 case PhaseNames.PlaceYlud:
-                    activeStageOfCurrentPlayer = StageNames.default1;
+                    activeStageOfCurrentPlayer = PlaceYludDefaultStageNames.PlaceYludHero;
                     break;
                 case PhaseNames.TroopEvaluation:
-                    activeStageOfCurrentPlayer = StageNames.default1;
+                    activeStageOfCurrentPlayer = TroopEvaluationDefaultStageNames.ClickDistinctionCard;
                     break;
                 case PhaseNames.BrisingamensEndGame:
-                    activeStageOfCurrentPlayer = StageNames.default1;
+                    activeStageOfCurrentPlayer = BrisingamensEndGameDefaultStageNames.DiscardCardFromPlayerBoard;
                     break;
                 case PhaseNames.GetMjollnirProfit:
-                    activeStageOfCurrentPlayer = StageNames.default1;
+                    activeStageOfCurrentPlayer = GetMjollnirProfitDefaultStageNames.GetMjollnirProfit;
                     break;
                 default:
                     _exhaustiveCheck = phase;
@@ -155,7 +162,7 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
                     return _exhaustiveCheck;
             }
             if (ctx.activePlayers !== null) {
-                activeStageOfCurrentPlayer = StageNames.discardSuitCard;
+                activeStageOfCurrentPlayer = CommonStageNames.DiscardSuitCard;
                 // TODO Bot can't do async turns...?
                 for (let p = 0; p < ctx.numPlayers; p++) {
                     const playerP = G.publicPlayers[p];
@@ -173,7 +180,7 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator = GetValidator(phase, activeStageOfCurrentPlayer);
+        const validator = GetValidator(phase, activeStageOfCurrentPlayer, type);
         if (validator !== null) {
             const moveName = validator.moveName, moveRangeData = validator.getRange({ G, ctx, playerID, ...rest }), moveValue = validator.getValue({ G, ctx, playerID, ...rest }, moveRangeData);
             let moveValues = [];
@@ -186,6 +193,9 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
             else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
                 if (`coinId` in moveValue) {
                     moveValues = [moveValue.coinId, moveValue.type];
+                }
+                else if (`rank` in moveValue) {
+                    moveValues = [moveValue];
                 }
                 else if (`suit` in moveValue) {
                     moveValues = [moveValue.suit, moveValue.cardId];

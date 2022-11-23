@@ -32,9 +32,6 @@ const Hrungnir = {
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantHrungnir,
     },
-    actions: {
-        name: AutoActionFunctionNames.AddPlusTwoValueToAllCoinsAction,
-    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -56,9 +53,6 @@ const Skymir = {
     },
     actions: {
         name: AutoActionFunctionNames.AddMythologyCreatureCardsSkymirAction,
-    },
-    stack: {
-        player: [StackData.getMythologyCardSkymir()],
     },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
@@ -98,13 +92,6 @@ const Thrivaldi = {
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantThrivaldi,
     },
-    // TODO Add it!
-    // buff: {
-    //     name: BuffNames.HasOneNotCountHero,
-    // },
-    actions: {
-        name: AutoActionFunctionNames.AddPickHeroAction,
-    },
     scoringRule: {
         name: GiantScoringFunctionNames.BasicGiantScoring,
         params: [0],
@@ -122,7 +109,7 @@ const Freyja = {
     name: GodNames.Freyja,
     points: 15,
     godPower: () => {
-        // TODO You can swap cards from all taverns into another taverns?!
+        // TODO
     },
 };
 /**
@@ -137,7 +124,7 @@ const Frigg = {
     name: GodNames.Frigg,
     points: 12,
     godPower: () => {
-        // TODO Get 3 cards form 1 or 2 tier decks (or discard deck...?!) and choose 1?!
+        // TODO
     },
 };
 /**
@@ -152,7 +139,7 @@ const Loki = {
     name: GodNames.Loki,
     points: 8,
     godPower: () => {
-        // TODO Put Loki token on tavern card and discard or take it?!
+        // TODO
     },
 };
 /**
@@ -167,7 +154,7 @@ const Odin = {
     name: GodNames.Odin,
     points: 0,
     godPower: () => {
-        // TODO You can one swap neutral(!)/all hero to another hero?!
+        // TODO
     },
 };
 /**
@@ -182,7 +169,7 @@ const Thor = {
     name: GodNames.Thor,
     points: 8,
     godPower: () => {
-        // TODO You can not discard card one time or all time?!
+        // TODO
     },
 };
 /**

@@ -6,7 +6,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, StageNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, IActionFunctionWithoutParams, IPlayer, IPublicPlayer, IStack, MyFnContext, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Rework StageArg to be implemented my interface type
@@ -69,7 +69,7 @@ export const StartDiscardSuitCardAction: IActionFunctionWithoutParams = ({ G, ct
         }
         if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.warrior].length) {
             value[i] = {
-                stage: StageNames.discardSuitCard,
+                stage: CommonStageNames.DiscardSuitCard,
             };
             AddActionsToStack({ G, ctx, playerID, events, ...rest },
                 [StackData.discardSuitCard(i)]);

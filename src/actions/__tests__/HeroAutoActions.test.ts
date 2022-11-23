@@ -1,4 +1,4 @@
-import { DrawNames, GameModeNames, LogTypeNames, StageNames } from "../../typescript/enums";
+import { CommonStageNames, DrawNames, GameModeNames, LogTypeNames } from "../../typescript/enums";
 import type { Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContext } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
@@ -23,7 +23,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
                     nickname: `Dan`,
                     stack: [
                         {
-                            stageName: StageNames.pickHero,
+                            stageName: CommonStageNames.PickHero,
                             drawName: DrawNames.PickHero,
                             priority: 1,
                         },

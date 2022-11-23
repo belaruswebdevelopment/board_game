@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
-import { CoinTypeNames, StageNames } from "../typescript/enums";
+import { CoinTypeNames, CommonStageNames, MoveTypeNames, TavernsResolutionDefaultStageNames } from "../typescript/enums";
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -15,7 +15,7 @@ import { CoinTypeNames, StageNames } from "../typescript/enums";
  * @returns
  */
 export const AddCoinToPouchMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.addCoinToPouch, coinId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.AddCoinToPouch, MoveTypeNames.default, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -34,7 +34,7 @@ export const AddCoinToPouchMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * @returns
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, playerID, ...rest }, value) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.chooseCoinValueForVidofnirVedrfolnirUpgrade, value);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, MoveTypeNames.default, value);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -53,7 +53,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, player
  * @returns
  */
 export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.pickCampCardHolda, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickCampCardHolda, MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -72,7 +72,7 @@ export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, cardId) =>
  * @returns
  */
 export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default2, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCampCard, MoveTypeNames.default, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -92,7 +92,7 @@ export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * @returns
  */
 export const DiscardSuitCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.discardSuitCard, {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardSuitCard, MoveTypeNames.default, {
         cardId,
     });
     if (!isValidMove) {
@@ -114,7 +114,7 @@ export const DiscardSuitCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.upgradeVidofnirVedrfolnirCoin, {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.UpgradeVidofnirVedrfolnirCoin, MoveTypeNames.default, {
         coinId,
         type,
     });

@@ -8,7 +8,7 @@ import { GameNames, MultiSuitCardNames } from "../typescript/enums";
  */
 const Gullinbursti = {
     name: MultiSuitCardNames.Gullinbursti,
-    game: GameNames.idavoll,
+    game: GameNames.Idavoll,
 };
 /**
  * <h3>Данные о особой карте.</h3>
@@ -19,7 +19,7 @@ const Gullinbursti = {
  */
 const OlwinsDouble = {
     name: MultiSuitCardNames.OlwinsDouble,
-    game: GameNames.thingvellir,
+    game: GameNames.Thingvellir,
 };
 /**
  * <h3>Конфиг особых карт.</h3>

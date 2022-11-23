@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
-import { StageNames, SuitNames } from "../typescript/enums";
+import { CommonStageNames, MoveTypeNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор героя.</h3>
  * <p>Применения:</p>
@@ -15,7 +15,7 @@ import { StageNames, SuitNames } from "../typescript/enums";
  * @returns
  */
 export const ClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.pickHero, heroId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickHero, MoveTypeNames.default, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -35,7 +35,7 @@ export const ClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
  * @returns
  */
 export const DiscardCardMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.discardBoardCard, {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardBoardCard, MoveTypeNames.default, {
         suit,
         cardId,
     });
@@ -57,7 +57,7 @@ export const DiscardCardMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => 
  * @returns
  */
 export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.placeMultiSuitsCards, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceMultiSuitsCards, MoveTypeNames.default, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -76,7 +76,7 @@ export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * @returns
  */
 export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.placeThrudHero, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceThrudHero, MoveTypeNames.default, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -95,7 +95,7 @@ export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * @returns
  */
 export const PlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default1, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.PlaceYludHero, MoveTypeNames.default, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

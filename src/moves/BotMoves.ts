@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
-import { ErrorNames, GameModeNames, StageNames } from "../typescript/enums";
+import { BidsDefaultStageNames, ErrorNames, GameModeNames, MoveTypeNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPlayer, Move, MyFnContext, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Rework Move to local interface!
@@ -22,7 +22,8 @@ import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPl
 export const BotsPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinsOrder: number[]):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Check it bot can't play in multiplayer now...
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, StageNames.default3, coinsOrder);
+    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+        BidsDefaultStageNames.BotsPlaceAllCoins, MoveTypeNames.default, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
