@@ -115,8 +115,8 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         case CardMoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
             break;
-        case CardMoveNames.DiscardCardMove:
-            action = data.moves.DiscardCardMove;
+        case CardMoveNames.DiscardTopCardFromSuitMove:
+            action = data.moves.DiscardTopCardFromSuitMove;
             break;
         case CardMoveNames.DiscardCard2PlayersMove:
             action = data.moves.DiscardCard2PlayersMove;
@@ -334,8 +334,8 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
         case CoinMoveNames.ClickCoinToUpgradeMove:
             action = data.moves.ClickCoinToUpgradeMove;
             break;
-        case CoinMoveNames.ClickConcreteCoinToUpgradeMove:
-            action = data.moves.ClickConcreteCoinToUpgradeMove;
+        case CoinMoveNames.PickConcreteCoinToUpgradeMove:
+            action = data.moves.PickConcreteCoinToUpgradeMove;
             break;
         case CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove:
             action = data.moves.UpgradeCoinVidofnirVedrfolnirMove;

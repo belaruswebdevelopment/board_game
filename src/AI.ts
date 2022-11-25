@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, MoveTypeNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
+import { BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
 import type { ActiveStageAIType, ActiveStageNames, CanBeNullType, CanBeUndefType, DeckCardType, FnContext, IMoves, IMoveValidator, IObjectives, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, MyFnContext, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
@@ -25,7 +25,6 @@ export const enumerate = ({ G, ctx, playerID, ...rest }: MyFnContext): IMoves[] 
             playerID);
     }
     const phase: PhaseNames = ctx.phase;
-    const type: MoveTypeNames = MoveTypeNames.default;
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage: CanBeUndefType<ActiveStageNames> = ctx.activePlayers?.[Number(playerID)];
@@ -154,7 +153,7 @@ export const enumerate = ({ G, ctx, playerID, ...rest }: MyFnContext): IMoves[] 
                     return _exhaustiveCheck;
             }
             if (ctx.activePlayers !== null) {
-                activeStageOfCurrentPlayer = CommonStageNames.DiscardSuitCard;
+                activeStageOfCurrentPlayer = CommonStageNames.DiscardSuitCardFromPlayerBoard;
                 // TODO Bot can't do async turns...?
                 for (let p = 0; p < ctx.numPlayers; p++) {
                     const playerP: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p];
@@ -174,7 +173,8 @@ export const enumerate = ({ G, ctx, playerID, ...rest }: MyFnContext): IMoves[] 
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator: IMoveValidator<MoveValidatorGetRangeType> =
-            GetValidator(phase, activeStageOfCurrentPlayer, type);
+            GetValidator(phase, activeStageOfCurrentPlayer,
+                `${activeStageOfCurrentPlayer}Move` as MoveNamesType);
         if (validator !== null) {
             const moveName: MoveNamesType = validator.moveName,
                 moveRangeData: MoveValidatorGetRangeType =

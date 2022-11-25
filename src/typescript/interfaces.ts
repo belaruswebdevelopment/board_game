@@ -7,7 +7,7 @@ import { Transport, type TransportOpts } from "boardgame.io/dist/types/src/clien
 import { Flow } from "boardgame.io/dist/types/src/core/flow";
 // eslint-disable-next-line import/no-unresolved
 import { ProcessGameConfig } from "boardgame.io/dist/types/src/core/game";
-import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, BuffNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GiantBuffNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroBuffNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MoveValidatorNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloBotAndvariCommonStageNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, BuffNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GiantBuffNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroBuffNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 /**
  * <h3>Интерфейс для скрытых от всех игроков данных.</h3>
@@ -749,12 +749,19 @@ export interface IMoveCardsArguments {
     readonly cards: number[];
 }
 
+export type MoveValidatorNamesTypes = BidUlineMoveValidatorNames | ChooseDifficultySoloModeMoveValidatorNames
+    | ChooseDifficultySoloModeMoveValidatorNames | ChooseDifficultySoloModeAndvariMoveValidatorNames
+    | BidsMoveValidatorNames | TavernsResolutionMoveValidatorNames | EnlistmentMercenariesMoveValidatorNames
+    | PlaceYludMoveValidatorNames | TroopEvaluationMoveValidatorNames | BrisingamensEndGameMoveValidatorNames
+    | GetMjollnirProfitMoveValidatorNames | CommonMoveValidatorNames | SoloBotCommonMoveValidatorNames
+    | SoloBotAndvariCommonMoveValidatorNames | SoloBotCommonCoinUpgradeMoveValidatorNames;
+
 /**
  * Тип для всех активных стадий игры.
  */
 export type ActiveStageNames = ChooseDifficultySoloModeStageNames
     | EnlistmentMercenariesStageNames | TroopEvaluationStageNames | TavernsResolutionStageNames
-    | CommonStageNames | SoloBotCommonStageNames | SoloBotAndvariCommonStageNames;
+    | CommonStageNames | SoloBotCommonStageNames | SoloBotAndvariCommonStageNames | SoloBotCommonCoinUpgradeStageNames;
 
 /**
 * Тип для всех стадий игры.
@@ -797,278 +804,54 @@ export type TavernsResolutionAllStageNames = TavernsResolutionStageNames | Taver
  */
 export type IMoveBy = {
     readonly [key in PhaseNames | `default`]:
-    key extends PhaseNames.Bids ? IMoveByBidsOptions
-    : key extends PhaseNames.BidUline ? IMoveByBidUlineOptions
-    : key extends PhaseNames.BrisingamensEndGame ? IMoveByBrisingamensEndGameOptions
-    : key extends PhaseNames.ChooseDifficultySoloModeAndvari ? IMoveByChooseDifficultySoloModeAndvariOptions
-    : key extends PhaseNames.ChooseDifficultySoloMode ? IMoveByChooseDifficultySoloModeOptions
-    : key extends PhaseNames.EnlistmentMercenaries ? IMoveByEnlistmentMercenariesOptions
-    : key extends PhaseNames.GetMjollnirProfit ? IMoveByGetMjollnirProfitOptions
-    : key extends PhaseNames.PlaceYlud ? IMoveByPlaceYludOptions
-    : key extends PhaseNames.TavernsResolution ? IMoveByTavernsResolutionOptions
-    : key extends PhaseNames.TroopEvaluation ? IMoveByTroopEvaluationOptions
+    key extends PhaseNames.Bids
+    ? IMoveByOptions<BidsDefaultStageNames, BidsMoveValidatorNames>
+    : key extends PhaseNames.BidUline
+    ? IMoveByOptions<BidUlineDefaultStageNames, BidUlineMoveValidatorNames>
+    : key extends PhaseNames.BrisingamensEndGame
+    ? IMoveByOptions<BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames>
+    : key extends PhaseNames.ChooseDifficultySoloModeAndvari
+    ? IMoveByOptions<ChooseDifficultySoloModeAndvariDefaultStageNames,
+        ChooseDifficultySoloModeAndvariMoveValidatorNames>
+    : key extends PhaseNames.ChooseDifficultySoloMode
+    ? IMoveByOptions<ChooseDifficultySoloModeAllStageNames, ChooseDifficultySoloModeMoveValidatorNames>
+    & IMoveByOptions<SoloBotCommonCoinUpgradeStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames>
+    : key extends PhaseNames.EnlistmentMercenaries
+    ? IMoveByOptions<EnlistmentMercenariesAllStageNames, EnlistmentMercenariesMoveValidatorNames>
+    & IMoveByOptions<CommonStageNames, CommonMoveValidatorNames>
+    : key extends PhaseNames.GetMjollnirProfit
+    ? IMoveByOptions<GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames>
+    : key extends PhaseNames.PlaceYlud
+    ? IMoveByOptions<PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames>
+    & IMoveByOptions<CommonStageNames, CommonMoveValidatorNames>
+    & IMoveByOptions<SoloBotCommonStageNames, SoloBotCommonMoveValidatorNames>
+    & IMoveByOptions<SoloBotCommonCoinUpgradeStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames>
+    & IMoveByOptions<SoloBotAndvariCommonStageNames, SoloBotAndvariCommonMoveValidatorNames>
+    : key extends PhaseNames.TavernsResolution
+    ? IMoveByOptions<TavernsResolutionAllStageNames, TavernsResolutionMoveValidatorNames>
+    & IMoveByOptions<CommonStageNames, CommonMoveValidatorNames>
+    & IMoveByOptions<SoloBotCommonStageNames, SoloBotCommonMoveValidatorNames>
+    & IMoveByOptions<SoloBotCommonCoinUpgradeStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames>
+    & IMoveByOptions<SoloBotAndvariCommonStageNames, SoloBotAndvariCommonMoveValidatorNames>
+    : key extends PhaseNames.TroopEvaluation
+    ? IMoveByOptions<TroopEvaluationAllStageNames, TroopEvaluationMoveValidatorNames>
+    & IMoveByOptions<CommonStageNames, CommonMoveValidatorNames>
+    & IMoveByOptions<SoloBotCommonStageNames, SoloBotCommonMoveValidatorNames>
+    & IMoveByOptions<SoloBotCommonCoinUpgradeStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames>
+    & IMoveByOptions<SoloBotAndvariCommonStageNames, SoloBotAndvariCommonMoveValidatorNames>
     : null;
 };
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export type IMoveByChooseDifficultySoloModeOptions = {
-    readonly [key in ChooseDifficultySoloModeAllStageNames]:
-    key extends ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode ? {
-        default: IMoveValidators[MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator];
-    }
-    : key extends ChooseDifficultySoloModeStageNames.ChooseHeroesForSoloMode ? {
-        default: IMoveValidators[MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator];
-    }
-    : key extends ChooseDifficultySoloModeStageNames.UpgradeCoinSoloBot ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByChooseDifficultySoloModeAndvariOptions = {
-    readonly [key in ChooseDifficultySoloModeAndvariDefaultStageNames]:
-    key extends ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari ? {
-        default: IMoveValidators[MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator];
-    }
-    : key extends ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari ? {
-        default: IMoveValidators[MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByBidsOptions = {
-    readonly [key in BidsDefaultStageNames]:
-    key extends BidsDefaultStageNames.ClickHandCoin ? {
-        default: IMoveValidators[MoveValidatorNames.ClickHandCoinMoveValidator];
-    }
-    : key extends BidsDefaultStageNames.ClickBoardCoin ? {
-        default: IMoveValidators[MoveValidatorNames.ClickBoardCoinMoveValidator];
-    }
-    : key extends BidsDefaultStageNames.BotsPlaceAllCoins ? {
-        default: IMoveValidators[MoveValidatorNames.BotsPlaceAllCoinsMoveValidator];
-    }
-    : key extends BidsDefaultStageNames.SoloBotPlaceAllCoins ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator];
-    }
-    : key extends BidsDefaultStageNames.SoloBotAndvariPlaceAllCoins ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByBidUlineOptions = {
-    readonly [key in BidUlineDefaultStageNames]:
-    key extends BidUlineDefaultStageNames.ClickHandCoinUline ? {
-        default: IMoveValidators[MoveValidatorNames.ClickHandCoinUlineMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-type IMoveBySoloBotCommonOptions = {
-    readonly [key in SoloBotCommonStageNames]:
-    key extends SoloBotCommonStageNames.PickHeroSoloBot ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotClickHeroCardMoveValidator];
-    }
-    : key extends SoloBotCommonStageNames.PlaceThrudHeroSoloBot ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator];
-    }
-    : key extends SoloBotCommonStageNames.UpgradeCoinSoloBot ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-type IMoveBySoloBotAndvariCommonOptions = {
-    readonly [key in SoloBotAndvariCommonStageNames]:
-    key extends SoloBotAndvariCommonStageNames.PickHeroSoloBotAndvari ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator];
-    }
-    : key extends SoloBotAndvariCommonStageNames.PlaceThrudHeroSoloBotAndvari ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator];
-    }
-    : key extends SoloBotAndvariCommonStageNames.UpgradeCoinSoloBotAndvari ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных общих валидаторов у мува.</h3>
- */
-type IMoveByCommonOptions = {
-    readonly [key in CommonStageNames]:
-    key extends CommonStageNames.AddCoinToPouch ? {
-        default: IMoveValidators[MoveValidatorNames.AddCoinToPouchMoveValidator];
-    }
-    : key extends CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade ? {
-        default: IMoveValidators[MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator];
-    }
-    : key extends CommonStageNames.DiscardBoardCard ? {
-        default: IMoveValidators[MoveValidatorNames.DiscardCardMoveValidator];
-    }
-    : key extends CommonStageNames.DiscardSuitCard ? {
-        default: IMoveValidators[MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator];
-    }
-    : key extends CommonStageNames.PickCampCardHolda ? {
-        default: IMoveValidators[MoveValidatorNames.ClickCampCardHoldaMoveValidator];
-    }
-    : key extends CommonStageNames.PickConcreteCoinToUpgrade ? {
-        default: IMoveValidators[MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator];
-    }
-    : key extends CommonStageNames.PickDiscardCard ? {
-        default: IMoveValidators[MoveValidatorNames.PickDiscardCardMoveValidator];
-    }
-    : key extends CommonStageNames.PickHero ? {
-        default: IMoveValidators[MoveValidatorNames.ClickHeroCardMoveValidator];
-    }
-    : key extends CommonStageNames.PlaceMultiSuitsCards ? {
-        default: IMoveValidators[MoveValidatorNames.PlaceMultiSuitCardMoveValidator];
-    }
-    : key extends CommonStageNames.PlaceThrudHero ? {
-        default: IMoveValidators[MoveValidatorNames.PlaceThrudHeroMoveValidator];
-    }
-    : key extends CommonStageNames.UpgradeCoin ? {
-        default: IMoveValidators[MoveValidatorNames.ClickCoinToUpgradeMoveValidator];
-    }
-    : key extends CommonStageNames.UpgradeVidofnirVedrfolnirCoin ? {
-        default: IMoveValidators[MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByTavernsResolutionOptions = {
-    readonly [key in TavernsResolutionAllStageNames]:
-    key extends TavernsResolutionDefaultStageNames.ClickCard ? {
-        default: IMoveValidators[MoveValidatorNames.ClickCardMoveValidator];
-    }
-    : key extends TavernsResolutionDefaultStageNames.ClickCampCard ? {
-        default: IMoveValidators[MoveValidatorNames.ClickCampCardMoveValidator];
-    }
-    : key extends TavernsResolutionDefaultStageNames.SoloBotClickCard ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotClickCardMoveValidator];
-    }
-    : key extends TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotAndvariClickCardMoveValidator];
-    }
-    : key extends TavernsResolutionStageNames.ActivateGiantAbilityOrPickCard ? {
-        clickCardNotGiantAbilityMove: IMoveValidators[MoveValidatorNames.ClickCardNotGiantAbilityMoveValidator],
-        clickGiantAbilityNotCardMove: IMoveValidators[MoveValidatorNames.ClickGiantAbilityNotCardMoveValidator],
-    }
-    : key extends TavernsResolutionStageNames.ChooseCoinValueForHrungnirUpgrade ? {
-        default: IMoveValidators[MoveValidatorNames.ChooseCoinValueForHrungnirUpgradeMoveValidator];
-    }
-    : key extends TavernsResolutionStageNames.ChooseSuitOlrun ? {
-        default: IMoveValidators[MoveValidatorNames.ChooseSuitOlrunMoveValidator];
-    }
-    : key extends TavernsResolutionStageNames.DiscardCard ? {
-        default: IMoveValidators[MoveValidatorNames.DiscardCard2PlayersMoveValidator];
-    }
-    : key extends TavernsResolutionStageNames.GetMythologyCard ? {
-        default: IMoveValidators[MoveValidatorNames.DiscardCard2PlayersMoveValidator];
-    }
-    : key extends TavernsResolutionStageNames.PlaceTradingCoinsUline ? {
-        default: IMoveValidators[MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator];
-    }
-    : never;
-} & IMoveByCommonOptions & IMoveBySoloBotCommonOptions & IMoveBySoloBotAndvariCommonOptions;
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByEnlistmentMercenariesOptions = {
-    readonly [key in EnlistmentMercenariesAllStageNames]:
-    key extends EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries ? {
-        default: IMoveValidators[MoveValidatorNames.StartEnlistmentMercenariesMoveValidator];
-    }
-    : key extends EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries ? {
-        default: IMoveValidators[MoveValidatorNames.PassEnlistmentMercenariesMoveValidator];
-    }
-    : key extends EnlistmentMercenariesDefaultStageNames.GetEnlistmentMercenaries ? {
-        default: IMoveValidators[MoveValidatorNames.GetEnlistmentMercenariesMoveValidator];
-    }
-    : key extends EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries ? {
-        default: IMoveValidators[MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator];
-    }
-    : never;
-} & IMoveByCommonOptions;
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByPlaceYludOptions = {
-    readonly [key in PlaceYludDefaultStageNames]:
-    key extends PlaceYludDefaultStageNames.PlaceYludHero ? {
-        default: IMoveValidators[MoveValidatorNames.PlaceYludHeroMoveValidator];
-    }
-    : key extends PlaceYludDefaultStageNames.SoloBotPlaceYludHero ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotPlaceYludHeroMoveValidator];
-    }
-    : key extends PlaceYludDefaultStageNames.SoloBotAndvariPlaceYludHero ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator];
-    }
-    : never;
-} & IMoveByCommonOptions & IMoveBySoloBotCommonOptions & IMoveBySoloBotAndvariCommonOptions;
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByTroopEvaluationOptions = {
-    readonly [key in TroopEvaluationAllStageNames]:
-    key extends TroopEvaluationDefaultStageNames.ClickDistinctionCard ? {
-        default: IMoveValidators[MoveValidatorNames.ClickDistinctionCardMoveValidator];
-    }
-    : key extends TroopEvaluationStageNames.PickDistinctionCard ? {
-        default: IMoveValidators[MoveValidatorNames.ClickCardToPickDistinctionMoveValidator];
-    }
-    : key extends TroopEvaluationStageNames.PickDistinctionCardSoloBot ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator];
-    }
-    : key extends TroopEvaluationStageNames.PickDistinctionCardSoloBotAndvari ? {
-        default: IMoveValidators[MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator];
-    }
-    : never;
-} & IMoveByCommonOptions & IMoveBySoloBotCommonOptions & IMoveBySoloBotAndvariCommonOptions;
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByBrisingamensEndGameOptions = {
-    readonly [key in BrisingamensEndGameDefaultStageNames]:
-    key extends BrisingamensEndGameDefaultStageNames.DiscardCardFromPlayerBoard ? {
-        default: IMoveValidators[MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator];
-    }
-    : never;
-};
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export type IMoveByGetMjollnirProfitOptions = {
-    readonly [key in GetMjollnirProfitDefaultStageNames]:
-    key extends GetMjollnirProfitDefaultStageNames.GetMjollnirProfit ? {
-        default: IMoveValidators[MoveValidatorNames.GetMjollnirProfitMoveValidator];
-    }
-    : never;
+type IMoveByOptions<CurrentStageNames extends StageNames, CurrentValidatorNames extends MoveValidatorNamesTypes> = {
+    readonly [key in CurrentStageNames]: {
+        [k in key as `${k}Move` extends `${MoveNamesType}` ? `${k}Move` : never]:
+        `${k}MoveValidator` extends KeyofType<IMoveValidators>
+        ? `${k}MoveValidator` extends `${CurrentValidatorNames}`
+        ? IMoveValidators[`${k}MoveValidator`] : never : never;
+    };
 };
 
 /**
@@ -1140,7 +923,7 @@ export interface IMoveValidators {
     readonly SoloBotClickCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     // Solo Mode
     readonly ChooseDifficultyLevelForSoloModeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly ChooseHeroesForSoloModeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
+    readonly ChooseHeroForDifficultySoloModeMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     // Solo Mode Andvari
     readonly SoloBotAndvariClickCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
     readonly ChooseStrategyForSoloModeAndvariMoveValidator:
@@ -1160,7 +943,8 @@ export interface IMoveValidators {
     readonly PickConcreteCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     readonly ClickCoinToUpgradeMoveValidator: IMoveValidator<MoveArgumentsType<IMoveCoinsArguments[]>>;
     readonly ClickHeroCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;
-    readonly DiscardCardMoveValidator: IMoveValidator<MoveArgumentsType<Partial<SuitPropertyType<number[]>>>>;
+    readonly DiscardTopCardFromSuitMoveValidator:
+    IMoveValidator<MoveArgumentsType<Partial<SuitPropertyType<number[]>>>>;
     readonly DiscardSuitCardFromPlayerBoardMoveValidator:
     IMoveValidator<MoveArgumentsType<IMoveCardsArguments>>;
     readonly PickDiscardCardMoveValidator: IMoveValidator<MoveArgumentsType<number[]>>;

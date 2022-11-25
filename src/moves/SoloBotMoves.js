@@ -6,7 +6,7 @@ import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/Distin
 import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot } from "../helpers/SoloBotHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BidsDefaultStageNames, CoinTypeNames, MoveTypeNames, PlaceYludDefaultStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 // TODO Move all playerID === `1` to validate!
 // TODO Add all solo bot moves!
 /**
@@ -23,7 +23,7 @@ import { BidsDefaultStageNames, CoinTypeNames, MoveTypeNames, PlaceYludDefaultSt
  */
 export const SoloBotClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard, MoveTypeNames.default, cardId);
+        && IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard, CardMoveNames.SoloBotClickCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -43,7 +43,7 @@ export const SoloBotClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  */
 export const SoloBotClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, cardId) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationStageNames.PickDistinctionCardSoloBot, MoveTypeNames.default, cardId);
+        && IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationStageNames.SoloBotClickCardToPickDistinction, CardMoveNames.SoloBotClickCardToPickDistinctionMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -63,8 +63,7 @@ export const SoloBotClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...res
  */
 export const SoloBotClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.PickHeroSoloBot, MoveTypeNames.
-            default, heroId);
+        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard, CardMoveNames.SoloBotClickHeroCardMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -87,7 +86,7 @@ export const SoloBotClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) 
  */
 export const SoloBotPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrder) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.SoloBotPlaceAllCoins, MoveTypeNames.default, coinsOrder);
+        && IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.SoloBotPlaceAllCoins, AutoBotsMoveNames.SoloBotPlaceAllCoinsMove, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -107,7 +106,7 @@ export const SoloBotPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrd
  */
 export const SoloBotPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.PlaceThrudHeroSoloBot, MoveTypeNames.default, suit);
+        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard, EmptyCardMoveNames.SoloBotPlaceThrudHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -127,7 +126,7 @@ export const SoloBotPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) =
  */
 export const SoloBotPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.SoloBotPlaceYludHero, MoveTypeNames.default, suit);
+        && IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.SoloBotPlaceYludHero, EmptyCardMoveNames.SoloBotPlaceYludHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -148,7 +147,7 @@ export const SoloBotPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) =>
  */
 export const SoloBotClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.UpgradeCoinSoloBot, MoveTypeNames.default, {
+        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade, CoinMoveNames.SoloBotClickCoinToUpgradeMove, {
             coinId,
             type,
         });

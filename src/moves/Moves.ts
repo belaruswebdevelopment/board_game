@@ -5,7 +5,7 @@ import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BrisingamensEndGameDefaultStageNames, CommonStageNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, MoveTypeNames, SuitNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, CommonStageNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, SuitMoveNames, SuitNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
 /**
@@ -23,7 +23,7 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
 export const ClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        TavernsResolutionDefaultStageNames.ClickCard, MoveTypeNames.default, cardId);
+        TavernsResolutionDefaultStageNames.ClickCard, CardMoveNames.ClickCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -45,7 +45,8 @@ export const ClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, 
 export const ClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        TroopEvaluationStageNames.PickDistinctionCard, MoveTypeNames.default, cardId);
+        TroopEvaluationStageNames.ClickCardToPickDistinction, CardMoveNames.ClickCardToPickDistinctionMove,
+        cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -67,7 +68,8 @@ export const ClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest
 export const ClickDistinctionCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        TroopEvaluationDefaultStageNames.ClickDistinctionCard, MoveTypeNames.default, suit);
+        TroopEvaluationDefaultStageNames.ClickDistinctionCard, CardMoveNames.ClickDistinctionCardMove,
+        suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -90,7 +92,8 @@ export const ClickDistinctionCardMove: Move = ({ G, ctx, playerID, ...rest }: My
 export const DiscardCardFromPlayerBoardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames,
     cardId: number): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        BrisingamensEndGameDefaultStageNames.DiscardCardFromPlayerBoard, MoveTypeNames.default, {
+        BrisingamensEndGameDefaultStageNames.DiscardCardFromPlayerBoard,
+        CardMoveNames.DiscardCardFromPlayerBoardMove, {
         suit,
         cardId,
     });
@@ -115,7 +118,7 @@ export const DiscardCardFromPlayerBoardMove: Move = ({ G, ctx, playerID, ...rest
 export const DiscardCard2PlayersMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        TavernsResolutionStageNames.DiscardCard, MoveTypeNames.default, cardId);
+        TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -137,7 +140,8 @@ export const DiscardCard2PlayersMove: Move = ({ G, ctx, playerID, ...rest }: MyF
 export const GetEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        EnlistmentMercenariesDefaultStageNames.GetEnlistmentMercenaries, MoveTypeNames.default, cardId);
+        EnlistmentMercenariesDefaultStageNames.GetEnlistmentMercenaries,
+        CardMoveNames.GetEnlistmentMercenariesMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -159,7 +163,8 @@ export const GetEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }
 export const GetMjollnirProfitMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        GetMjollnirProfitDefaultStageNames.GetMjollnirProfit, MoveTypeNames.default, suit);
+        GetMjollnirProfitDefaultStageNames.GetMjollnirProfit, SuitMoveNames.GetMjollnirProfitMove,
+        suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -180,7 +185,8 @@ export const GetMjollnirProfitMove: Move = ({ G, ctx, playerID, ...rest }: MyFnC
 export const PassEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries, MoveTypeNames.default, null);
+        EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries,
+        ButtonMoveNames.PassEnlistmentMercenariesMove, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -203,7 +209,7 @@ export const PassEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest 
 export const PickDiscardCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickDiscardCard,
-        MoveTypeNames.default, cardId);
+        CardMoveNames.PickDiscardCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -225,7 +231,8 @@ export const PickDiscardCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCon
 export const PlaceEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries, MoveTypeNames.default, suit);
+        EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries,
+        EmptyCardMoveNames.PlaceEnlistmentMercenariesMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -246,7 +253,8 @@ export const PlaceEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest
 export const StartEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries, MoveTypeNames.default, null);
+        EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries,
+        ButtonMoveNames.StartEnlistmentMercenariesMove, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

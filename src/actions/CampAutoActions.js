@@ -60,7 +60,7 @@ export const StartDiscardSuitCardAction = ({ G, ctx, playerID, events, ...rest }
         }
         if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.warrior].length) {
             value[i] = {
-                stage: CommonStageNames.DiscardSuitCard,
+                stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
             };
             AddActionsToStack({ G, ctx, playerID, events, ...rest }, [StackData.discardSuitCard(i)]);
             results++;

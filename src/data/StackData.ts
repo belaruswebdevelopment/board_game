@@ -1,4 +1,4 @@
-import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { IDwarfCard, IMercenaryCampCard, IStack, IStackData, OneOrTwoType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
 /**
@@ -36,16 +36,16 @@ export const StackData: IStackData = {
         drawName: DrawNames.ChooseStrategyVariantLevelForSoloModeAndvari,
     }),
     discardCardFromBoardBonfur: (): IStack => ({
-        stageName: CommonStageNames.DiscardBoardCard,
+        stageName: CommonStageNames.DiscardTopCardFromSuit,
         drawName: DrawNames.Bonfur,
         suit: SuitNames.blacksmith,
     }),
     discardCardFromBoardCrovaxTheDoppelganger: (): IStack => ({
-        stageName: CommonStageNames.DiscardBoardCard,
+        stageName: CommonStageNames.DiscardTopCardFromSuit,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
     discardCardFromBoardDagda: (pickedSuit?: SuitNames): IStack => ({
-        stageName: CommonStageNames.DiscardBoardCard,
+        stageName: CommonStageNames.DiscardTopCardFromSuit,
         drawName: DrawNames.Dagda,
         suit: SuitNames.hunter,
         pickedSuit,
@@ -58,7 +58,7 @@ export const StackData: IStackData = {
         drawName: DrawNames.Hofud,
     }),
     discardTavernCard: (): IStack => ({
-        stageName: TavernsResolutionStageNames.DiscardCard,
+        stageName: TavernsResolutionStageNames.DiscardCard2Players,
         drawName: DrawNames.DiscardTavernCard,
     }),
     enlistmentMercenaries: (): IStack => ({
@@ -76,7 +76,7 @@ export const StackData: IStackData = {
     }),
     getHeroesForSoloMode: (): IStack => ({
         configName: ConfigNames.GetHeroesForSoloMode,
-        stageName: ChooseDifficultySoloModeStageNames.ChooseHeroesForSoloMode,
+        stageName: ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode,
         drawName: DrawNames.GetHeroesForSoloMode,
     }),
     getDistinctions: (): IStack => ({
@@ -86,7 +86,7 @@ export const StackData: IStackData = {
         drawName: DrawNames.Mjollnir,
     }),
     pickCampCardHolda: (): IStack => ({
-        stageName: CommonStageNames.PickCampCardHolda,
+        stageName: CommonStageNames.ClickCampCardHolda,
         drawName: DrawNames.Holda,
     }),
     pickCard: (): IStack => ({
@@ -116,21 +116,21 @@ export const StackData: IStackData = {
     }),
     pickDistinctionCard: (): IStack => ({
         configName: ConfigNames.ExplorerDistinction,
-        stageName: TroopEvaluationStageNames.PickDistinctionCard,
+        stageName: TroopEvaluationStageNames.ClickCardToPickDistinction,
         drawName: DrawNames.PickCardByExplorerDistinction,
     }),
     pickDistinctionCardSoloBot: (): IStack => ({
         configName: ConfigNames.ExplorerDistinction,
-        stageName: TroopEvaluationStageNames.PickDistinctionCardSoloBot,
+        stageName: TroopEvaluationStageNames.SoloBotClickCardToPickDistinction,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
     pickDistinctionCardSoloBotAndvari: (): IStack => ({
         configName: ConfigNames.ExplorerDistinction,
-        stageName: TroopEvaluationStageNames.PickDistinctionCardSoloBotAndvari,
+        stageName: TroopEvaluationStageNames.SoloBotAndvariClickCardToPickDistinction,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBotAndvari,
     }),
     placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNames, priority?: 3): IStack => ({
-        stageName: CommonStageNames.PlaceMultiSuitsCards,
+        stageName: CommonStageNames.PlaceMultiSuitCard,
         drawName: DrawNames.PlaceMultiSuitsCards,
         pickedSuit,
         priority,
@@ -143,19 +143,19 @@ export const StackData: IStackData = {
         name: HeroNames.Thrud,
     }),
     placeThrudHeroSoloBot: (): IStack => ({
-        stageName: SoloBotCommonStageNames.PlaceThrudHeroSoloBot,
+        stageName: SoloBotCommonStageNames.SoloBotPlaceThrudHero,
         drawName: DrawNames.PlaceThrudHeroSoloBot,
         priority: 2,
         name: HeroNames.Thrud,
     }),
     placeThrudHeroSoloBotAndvari: (): IStack => ({
-        stageName: SoloBotAndvariCommonStageNames.PlaceThrudHeroSoloBotAndvari,
+        stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariPlaceThrudHero,
         drawName: DrawNames.PlaceThrudHeroSoloBotAndvari,
         priority: 2,
         name: HeroNames.Thrud,
     }),
     placeTradingCoinsUline: (): IStack => ({
-        stageName: TavernsResolutionStageNames.PlaceTradingCoinsUline,
+        stageName: TavernsResolutionStageNames.ClickHandTradingCoinUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
     }),
     placeYludHero: (): IStack => ({
@@ -171,17 +171,17 @@ export const StackData: IStackData = {
         name: HeroNames.Ylud,
     }),
     pickHero: (priority: OneOrTwoType): IStack => ({
-        stageName: CommonStageNames.PickHero,
+        stageName: CommonStageNames.ClickHeroCard,
         drawName: DrawNames.PickHero,
         priority,
     }),
     pickHeroSoloBot: (priority: OneOrTwoType): IStack => ({
-        stageName: SoloBotCommonStageNames.PickHeroSoloBot,
+        stageName: SoloBotCommonStageNames.SoloBotClickHeroCard,
         drawName: DrawNames.PickHeroSoloBot,
         priority,
     }),
     pickHeroSoloBotAndvari: (priority: OneOrTwoType): IStack => ({
-        stageName: SoloBotAndvariCommonStageNames.PickHeroSoloBotAndvari,
+        stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariClickHeroCard,
         drawName: DrawNames.PickHeroSoloBotAndvari,
         priority,
     }),
@@ -209,39 +209,39 @@ export const StackData: IStackData = {
         drawName: DrawNames.StartOrPassEnlistmentMercenaries,
     }),
     upgradeCoin: (value: number): IStack => ({
-        stageName: CommonStageNames.UpgradeCoin,
+        stageName: CommonStageNames.ClickCoinToUpgrade,
         value,
         drawName: DrawNames.UpgradeCoin,
     }),
     upgradeCoinSoloBot: (value: number): IStack => ({
-        stageName: SoloBotCommonStageNames.UpgradeCoinSoloBot,
+        stageName: SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
         value,
         drawName: DrawNames.UpgradeCoinSoloBot,
     }),
     upgradeCoinSoloBotAndvari: (value: number): IStack => ({
-        stageName: SoloBotAndvariCommonStageNames.UpgradeCoinSoloBotAndvari,
+        stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade,
         value,
         drawName: DrawNames.UpgradeCoinSoloBotAndvari,
     }),
     upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3): IStack => ({
         coinId,
-        stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
+        stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
         value,
         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
         priority,
     }),
     upgradeCoinWarriorDistinction: (): IStack => ({
-        stageName: CommonStageNames.UpgradeCoin,
+        stageName: CommonStageNames.ClickCoinToUpgrade,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinction,
     }),
     upgradeCoinWarriorDistinctionSoloBot: (): IStack => ({
-        stageName: SoloBotCommonStageNames.UpgradeCoinSoloBot,
+        stageName: SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinctionSoloBot,
     }),
     upgradeCoinWarriorDistinctionSoloBotAndvari: (): IStack => ({
-        stageName: SoloBotAndvariCommonStageNames.UpgradeCoinSoloBotAndvari,
+        stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinctionSoloBotAndvari,
     }),

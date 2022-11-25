@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, MoveTypeNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
+import { BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -22,7 +22,6 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
     }
     const phase = ctx.phase;
-    const type = MoveTypeNames.default;
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(playerID)];
@@ -162,7 +161,7 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
                     return _exhaustiveCheck;
             }
             if (ctx.activePlayers !== null) {
-                activeStageOfCurrentPlayer = CommonStageNames.DiscardSuitCard;
+                activeStageOfCurrentPlayer = CommonStageNames.DiscardSuitCardFromPlayerBoard;
                 // TODO Bot can't do async turns...?
                 for (let p = 0; p < ctx.numPlayers; p++) {
                     const playerP = G.publicPlayers[p];
@@ -180,7 +179,7 @@ export const enumerate = ({ G, ctx, playerID, ...rest }) => {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator = GetValidator(phase, activeStageOfCurrentPlayer, type);
+        const validator = GetValidator(phase, activeStageOfCurrentPlayer, `${activeStageOfCurrentPlayer}Move`);
         if (validator !== null) {
             const moveName = validator.moveName, moveRangeData = validator.getRange({ G, ctx, playerID, ...rest }), moveValue = validator.getValue({ G, ctx, playerID, ...rest }, moveRangeData);
             let moveValues = [];

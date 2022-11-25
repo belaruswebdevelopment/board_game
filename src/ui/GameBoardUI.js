@@ -5,7 +5,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, CommonStageNames, ConfigNames, ErrorNames, GameModeNames, MoveValidatorNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, SoloBotAndvariCommonStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { CardMoveNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -43,13 +43,13 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
-                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.PickCampCardHolda)) {
+                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.ClickCampCardHolda)) {
                     if (data !== undefined) {
                         // TODO StageNames => CommonStageNames???
                         const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                         let moveName;
                         switch (stage) {
-                            case CommonStageNames.PickCampCardHolda:
+                            case CommonStageNames.ClickCampCardHolda:
                                 moveName = CardMoveNames.ClickCampCardHoldaMove;
                                 break;
                             case undefined:
@@ -65,8 +65,8 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
                         }
                         DrawCard(data, boardCells, campCard, j, player, suit, moveName, j);
                     }
-                    else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
-                        || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
+                    else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCampCardMoveValidator
+                        || validatorName === CommonMoveValidatorNames.ClickCampCardHoldaMoveValidator) {
                         moveMainArgs.push(j);
                     }
                     else {
@@ -150,7 +150,7 @@ export const DrawDistinctions = ({ G, ctx }, validatorName, data) => {
                     // TODO Move to DrawDistinction?
                     boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suit); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
-                else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
+                else if (validatorName === TroopEvaluationMoveValidatorNames.ClickDistinctionCardMoveValidator) {
                     moveMainArgs.push(suit);
                 }
                 else {
@@ -208,7 +208,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }, validatorName, data) => 
             if (data !== undefined) {
                 DrawCard(data, boardCells, card, j, player, suit, CardMoveNames.PickDiscardCardMove, j);
             }
-            else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
+            else if (validatorName === CommonMoveValidatorNames.PickDiscardCardMoveValidator) {
                 moveMainArgs.push(j);
             }
             else {
@@ -255,7 +255,7 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit = hero.suit;
-            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.PickHero) {
+            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.ClickHeroCard) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -265,10 +265,10 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
                     const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                     let moveName;
                     switch (stage) {
-                        case CommonStageNames.PickHero:
+                        case CommonStageNames.ClickHeroCard:
                             moveName = CardMoveNames.ClickHeroCardMove;
                             break;
-                        case SoloBotAndvariCommonStageNames.PickHeroSoloBotAndvari:
+                        case SoloBotAndvariCommonStageNames.SoloBotAndvariClickHeroCard:
                             moveName = CardMoveNames.SoloBotAndvariClickHeroCardMove;
                             break;
                         default:
@@ -276,8 +276,9 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
                     }
                     DrawCard(data, boardCells, hero, increment, player, suit, moveName, increment);
                 }
-                else if ((validatorName === MoveValidatorNames.ClickHeroCardMoveValidator
-                    || validatorName === MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) && hero.active) {
+                else if ((validatorName === CommonMoveValidatorNames.ClickHeroCardMoveValidator
+                    || validatorName ===
+                        SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) && hero.active) {
                     moveMainArgs.push(increment);
                 }
                 else {
@@ -330,7 +331,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
             const hero = G.heroesForSoloBot[j];
             if (hero.active && Number(ctx.currentPlayer) === 1
-                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === SoloBotCommonStageNames.PickHeroSoloBot) {
+                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === SoloBotCommonStageNames.SoloBotClickHeroCard) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -338,7 +339,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
                 if (data !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null, CardMoveNames.SoloBotClickHeroCardMove, j);
                 }
-                else if (validatorName === MoveValidatorNames.SoloBotClickHeroCardMoveValidator) {
+                else if (validatorName === SoloBotCommonMoveValidatorNames.SoloBotClickHeroCardMoveValidator) {
                     if (hero.active) {
                         moveMainArgs.push(j);
                     }
@@ -536,13 +537,13 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                     if (t === G.currentTavern && ctx.phase === PhaseNames.TavernsResolution
                         && ((ctx.activePlayers === null)
                             || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)])
-                                === TavernsResolutionStageNames.DiscardCard))) {
+                                === TavernsResolutionStageNames.DiscardCard2Players))) {
                         if (data !== undefined) {
                             // TODO StageNames => TavernsResolutionStageNames
                             const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                             let moveName, _exhaustiveCheck;
                             switch (stage) {
-                                case TavernsResolutionStageNames.DiscardCard:
+                                case TavernsResolutionStageNames.DiscardCard2Players:
                                     moveName = CardMoveNames.DiscardCard2PlayersMove;
                                     break;
                                 case undefined:
@@ -589,10 +590,11 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                             }
                             DrawCard(data, boardCells, tavernCard, j, player, suit, moveName, j);
                         }
-                        else if (validatorName === MoveValidatorNames.ClickCardMoveValidator
-                            || validatorName === MoveValidatorNames.SoloBotClickCardMoveValidator
-                            || validatorName === MoveValidatorNames.SoloBotAndvariClickCardMoveValidator
-                            || validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
+                        else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCardMoveValidator
+                            || validatorName === TavernsResolutionMoveValidatorNames.SoloBotClickCardMoveValidator
+                            || validatorName ===
+                                TavernsResolutionMoveValidatorNames.SoloBotAndvariClickCardMoveValidator
+                            || validatorName === TavernsResolutionMoveValidatorNames.DiscardCard2PlayersMoveValidator) {
                             moveMainArgs.push(j);
                         }
                         else {

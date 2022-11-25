@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, MoveTypeNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, TavernsResolutionStageNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPlayer, Move, MyFnContext, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Check moves with solo mode!
@@ -24,7 +24,7 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
     CanBeVoidType<InvalidMoveType> => {
     // TODO Add Place coins async
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickBoardCoin,
-        MoveTypeNames.default, coinId);
+        CoinMoveNames.ClickBoardCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -113,8 +113,8 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
  */
 export const ClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.UpgradeCoin,
-        MoveTypeNames.default, {
+    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickCoinToUpgrade,
+        CoinMoveNames.ClickCoinToUpgradeMove, {
         coinId,
         type,
     });
@@ -141,7 +141,7 @@ export const ClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
 export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        CommonStageNames.PickConcreteCoinToUpgrade, MoveTypeNames.default, {
+        CommonStageNames.PickConcreteCoinToUpgrade, CoinMoveNames.PickConcreteCoinToUpgradeMove, {
         coinId,
         type,
     });
@@ -166,7 +166,7 @@ export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest 
 export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickHandCoin,
-        MoveTypeNames.default, coinId);
+        CoinMoveNames.ClickHandCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -193,7 +193,7 @@ export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
 export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        BidUlineDefaultStageNames.ClickHandCoinUline, MoveTypeNames.default, coinId);
+        BidUlineDefaultStageNames.ClickHandCoinUline, CoinMoveNames.ClickHandCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -257,7 +257,8 @@ export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
 export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
-        TavernsResolutionStageNames.PlaceTradingCoinsUline, MoveTypeNames.default, coinId);
+        TavernsResolutionStageNames.ClickHandTradingCoinUline,
+        CoinMoveNames.ClickHandTradingCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

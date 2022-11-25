@@ -10,7 +10,7 @@ import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
 import { IsGiantCard } from "../helpers/IsMythologicalCreatureTypeHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BuffNames, CoinTypeNames, ErrorNames, GiantBuffNames, MoveTypeNames, RusCardTypeNames, SuitNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GiantBuffNames, RusCardTypeNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames } from "../typescript/enums";
 /**
  * <h3>Выбор монеты для улучшения по способности Гиганта Hrungnir.</h3>
  * <p>Применения:</p>
@@ -24,7 +24,7 @@ import { BuffNames, CoinTypeNames, ErrorNames, GiantBuffNames, MoveTypeNames, Ru
  * @returns
  */
 export const ChooseCoinValueForHrungnirUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ChooseCoinValueForHrungnirUpgrade, MoveTypeNames.default, coinId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ChooseCoinValueForHrungnirUpgrade, CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -58,7 +58,7 @@ export const ChooseCoinValueForHrungnirUpgradeMove = ({ G, ctx, playerID, ...res
  * @returns
  */
 export const ClickCardNotGiantAbilityMove = ({ G, ctx, playerID, ...rest }, card) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ActivateGiantAbilityOrPickCard, MoveTypeNames.clickCardNotGiantAbilityMove, card);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ActivateGiantAbilityOrPickCard, CardMoveNames.ClickCardNotGiantAbilityMove, card);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -141,7 +141,7 @@ export const ClickCardNotGiantAbilityMove = ({ G, ctx, playerID, ...rest }, card
  * @returns
  */
 export const ClickGiantAbilityNotCardMove = ({ G, ctx, playerID, ...rest }, card) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ActivateGiantAbilityOrPickCard, MoveTypeNames.clickGiantAbilityNotCardMove, card);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ActivateGiantAbilityOrPickCard, CardMoveNames.ClickGiantAbilityNotCardMove, card);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -230,7 +230,7 @@ export const ClickGiantAbilityNotCardMove = ({ G, ctx, playerID, ...rest }, card
  * @returns
  */
 export const ChooseSuitOlrunMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ChooseSuitOlrun, MoveTypeNames.default, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ChooseSuitOlrun, SuitMoveNames.ChooseSuitOlrunMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -255,7 +255,7 @@ export const ChooseSuitOlrunMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * @returns
  */
 export const GetMythologyCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.GetMythologyCard, MoveTypeNames.default, cardId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.GetMythologyCard, CardMoveNames.GetMythologyCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

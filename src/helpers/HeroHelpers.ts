@@ -44,7 +44,7 @@ export const CheckPickHero = ({ G, ctx, playerID, ...rest }: MyFnContext): void 
                         || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy) ?
                         1 : 0)) > (heroesLength - Number(playerHasNotCountHero)),
             playerPickHeroActionInStackIndex: number = player.stack.findIndex((stack: IStack): boolean =>
-                stack.stageName === CommonStageNames.PickHero);
+                stack.stageName === CommonStageNames.ClickHeroCard);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
             AddPickHeroAction({ G, ctx, playerID, ...rest }, 1);
         }

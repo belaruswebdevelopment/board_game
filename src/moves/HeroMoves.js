@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
-import { CommonStageNames, MoveTypeNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
+import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор героя.</h3>
  * <p>Применения:</p>
@@ -15,7 +15,7 @@ import { CommonStageNames, MoveTypeNames, PlaceYludDefaultStageNames, SuitNames 
  * @returns
  */
 export const ClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickHero, MoveTypeNames.default, heroId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickHeroCard, CardMoveNames.ClickHeroCardMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -34,8 +34,8 @@ export const ClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
  * @param cardId Id карты.
  * @returns
  */
-export const DiscardCardMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardBoardCard, MoveTypeNames.default, {
+export const DiscardTopCardFromSuitMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardTopCardFromSuit, CardMoveNames.DiscardTopCardFromSuitMove, {
         suit,
         cardId,
     });
@@ -57,7 +57,7 @@ export const DiscardCardMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => 
  * @returns
  */
 export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceMultiSuitsCards, MoveTypeNames.default, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceMultiSuitCard, EmptyCardMoveNames.PlaceMultiSuitCardMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -76,7 +76,7 @@ export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * @returns
  */
 export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceThrudHero, MoveTypeNames.default, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceThrudHero, EmptyCardMoveNames.PlaceThrudHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -95,7 +95,7 @@ export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * @returns
  */
 export const PlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.PlaceYludHero, MoveTypeNames.default, suit);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.PlaceYludHero, EmptyCardMoveNames.PlaceYludHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

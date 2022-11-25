@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, MoveTypeNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, TavernsResolutionStageNames } from "../typescript/enums";
 // TODO Check moves with solo mode!
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
@@ -20,7 +20,7 @@ import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinTypeNames, Common
  */
 export const ClickBoardCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
     // TODO Add Place coins async
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickBoardCoin, MoveTypeNames.default, coinId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickBoardCoin, CoinMoveNames.ClickBoardCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -107,7 +107,7 @@ export const ClickBoardCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * @returns
  */
 export const ClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.UpgradeCoin, MoveTypeNames.default, {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickCoinToUpgrade, CoinMoveNames.ClickCoinToUpgradeMove, {
         coinId,
         type,
     });
@@ -131,7 +131,7 @@ export const ClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, ty
  * @returns
  */
 export const PickConcreteCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickConcreteCoinToUpgrade, MoveTypeNames.default, {
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickConcreteCoinToUpgrade, CoinMoveNames.PickConcreteCoinToUpgradeMove, {
         coinId,
         type,
     });
@@ -153,7 +153,7 @@ export const PickConcreteCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coi
  * @returns
  */
 export const ClickHandCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickHandCoin, MoveTypeNames.default, coinId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickHandCoin, CoinMoveNames.ClickHandCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -176,7 +176,7 @@ export const ClickHandCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * @returns
  */
 export const ClickHandCoinUlineMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidUlineDefaultStageNames.ClickHandCoinUline, MoveTypeNames.default, coinId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidUlineDefaultStageNames.ClickHandCoinUline, CoinMoveNames.ClickHandCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -235,7 +235,7 @@ export const ClickHandCoinUlineMove = ({ G, ctx, playerID, ...rest }, coinId) =>
  * @returns
  */
 export const ClickHandTradingCoinUlineMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.PlaceTradingCoinsUline, MoveTypeNames.default, coinId);
+    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ClickHandTradingCoinUline, CoinMoveNames.ClickHandTradingCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

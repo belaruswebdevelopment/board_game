@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../helpers/IsDwarfTypeHelpers";
-import { ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeStageNames, ErrorNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, ErrorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 /**
  * <h3>Отрисовка для выбора карты Дворфа или активации способности Гиганта.</h3>
@@ -38,7 +38,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }, valida
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, card, j, player, card.suit, CardMoveNames.ClickCardNotGiantAbilityMove, card);
             }
-            else if (validatorName === MoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
+            else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
                 moveMainArgs = card;
             }
             else {
@@ -56,7 +56,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }, valida
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, giant, j, player, null, CardMoveNames.ClickGiantAbilityNotCardMove, card);
             }
-            else if (validatorName === MoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
+            else if (validatorName === TavernsResolutionMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
                 moveMainArgs = card;
             }
             else {
@@ -106,7 +106,7 @@ export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }, validatorName,
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, mythologicalCreature, j, player, null, CardMoveNames.GetMythologyCardMove, j);
                 }
-                else if (validatorName === MoveValidatorNames.GetMythologyCardMoveValidator) {
+                else if (validatorName === TavernsResolutionMoveValidatorNames.GetMythologyCardMoveValidator) {
                     moveMainArgs.push(j);
                 }
                 else {
@@ -143,7 +143,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }, vali
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.NoHeroEasyStrategy, player, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
             }
-            else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
             }
             else {
@@ -154,7 +155,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }, vali
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.NoHeroHardStrategy, player, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, SoloGameAndvariStrategyNames.NoHeroHardStrategy);
             }
-            else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroHardStrategy);
             }
             else {
@@ -165,7 +167,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }, vali
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.WithHeroEasyStrategy, player, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             }
-            else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             }
             else {
@@ -176,7 +179,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }, vali
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, ButtonNames.WithHeroHardStrategy, player, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             }
-            else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             }
             else {
@@ -211,7 +215,8 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
         if (data !== undefined && boardCells !== undefined) {
             DrawButton(data, boardCells, String(j + 1), player, ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
         }
-        else if (validatorName === MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
+        else if (validatorName ===
+            ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
             moveMainArgs.push(j + 1);
         }
         else {
@@ -246,7 +251,8 @@ export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }, vali
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, String(j + 1), player, ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
             }
-            else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
+            else if (validatorName ===
+                ChooseDifficultySoloModeMoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
                 moveMainArgs.push(j);
             }
             else {
@@ -292,7 +298,8 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
         if (data !== undefined && boardCells !== undefined) {
             DrawButton(data, boardCells, String(value), player, ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
         }
-        else if (validatorName === MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
+        else if (validatorName ===
+            CommonMoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
             moveMainArgs.push(value);
         }
         else {
@@ -341,13 +348,13 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }, validatorName, da
             const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
             let moveName;
             switch (stage) {
-                case TroopEvaluationStageNames.PickDistinctionCard:
+                case TroopEvaluationStageNames.ClickCardToPickDistinction:
                     moveName = CardMoveNames.ClickCardToPickDistinctionMove;
                     break;
-                case TroopEvaluationStageNames.PickDistinctionCardSoloBot:
+                case TroopEvaluationStageNames.SoloBotClickCardToPickDistinction:
                     moveName = CardMoveNames.SoloBotClickCardToPickDistinctionMove;
                     break;
-                case TroopEvaluationStageNames.PickDistinctionCardSoloBotAndvari:
+                case TroopEvaluationStageNames.SoloBotAndvariClickCardToPickDistinction:
                     moveName = CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove;
                     break;
                 default:
@@ -355,9 +362,9 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }, validatorName, da
             }
             DrawCard(data, boardCells, card, j, player, suit, moveName, j);
         }
-        else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator
-            || MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator
-            || MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
+        else if (validatorName === TroopEvaluationMoveValidatorNames.ClickCardToPickDistinctionMoveValidator
+            || TroopEvaluationMoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator
+            || TroopEvaluationMoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
             moveMainArgs.push(j);
         }
         else {
@@ -396,7 +403,7 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }, validatorName, 
             }
             if (hero.active && Number(ctx.currentPlayer) === 0
                 && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)])
-                    === ChooseDifficultySoloModeStageNames.ChooseHeroesForSoloMode) {
+                    === ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -404,7 +411,8 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }, validatorName, 
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null, CardMoveNames.ChooseHeroForDifficultySoloModeMove, j);
                 }
-                else if (validatorName === MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator) {
+                else if (validatorName ===
+                    ChooseDifficultySoloModeMoveValidatorNames.ChooseHeroForDifficultySoloModeMoveValidator) {
                     if (hero.active) {
                         moveMainArgs.push(j);
                     }

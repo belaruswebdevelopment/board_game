@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../helpers/IsDwarfTypeHelpers";
-import { ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeStageNames, ErrorNames, MoveValidatorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionStageNames, TroopEvaluationStageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardType, FnContext, IDwarfCard, IHeroCard, IPublicPlayer, IStack, MoveArgumentsType, MythologicalCreatureCommandZoneCardType, MythologicalCreatureDeckCardType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StackCardType, StageNames, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import { ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, ErrorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardType, FnContext, IDwarfCard, IHeroCard, IPublicPlayer, IStack, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, MythologicalCreatureDeckCardType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StackCardType, StageNames, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 /**
@@ -19,7 +19,7 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  * @returns Поле для выбора карты Дворфа или активации способности Гиганта.
  */
 export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<IDwarfCard>> => {
     let moveMainArgs: CanBeUndefType<MoveArgumentsType<IDwarfCard>>;
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -44,7 +44,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, card, j, player, card.suit,
                     CardMoveNames.ClickCardNotGiantAbilityMove, card);
-            } else if (validatorName === MoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
+            } else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
                 moveMainArgs = card;
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -62,7 +62,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, giant, j, player, null,
                     CardMoveNames.ClickGiantAbilityNotCardMove, card);
-            } else if (validatorName === MoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
+            } else if (validatorName === TavernsResolutionMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
                 moveMainArgs = card;
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -92,7 +92,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
  * @returns Поле для выбора карты Мифического существа при выборе Skymir.
  */
 export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<number[]>> => {
     const moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
@@ -115,7 +115,7 @@ export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }: FnContext,
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, mythologicalCreature, j, player, null,
                         CardMoveNames.GetMythologyCardMove, j);
-                } else if (validatorName === MoveValidatorNames.GetMythologyCardMoveValidator) {
+                } else if (validatorName === TavernsResolutionMoveValidatorNames.GetMythologyCardMoveValidator) {
                     moveMainArgs.push(j);
                 } else {
                     throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -143,7 +143,7 @@ export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }: FnContext,
  * @returns Поле для выбора уровня сложности стратегий соло бота Андвари соло игры.
  */
 export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyNames[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyNames[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -157,7 +157,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
                 DrawButton(data, boardCells, ButtonNames.NoHeroEasyStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
-            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            } else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -167,7 +168,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
                 DrawButton(data, boardCells, ButtonNames.NoHeroHardStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.NoHeroHardStrategy);
-            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            } else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroHardStrategy);
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -177,7 +179,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
                 DrawButton(data, boardCells, ButtonNames.WithHeroEasyStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
-            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            } else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -187,7 +190,8 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
                 DrawButton(data, boardCells, ButtonNames.WithHeroHardStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.WithHeroHardStrategy);
-            } else if (validatorName === MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
+            } else if (validatorName ===
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -214,7 +218,7 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
  * @returns Поле для выбора варианта уровня сложности стратегий соло бота Андвари соло игры.
  */
 export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -226,7 +230,8 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
         if (data !== undefined && boardCells !== undefined) {
             DrawButton(data, boardCells, String(j + 1), player,
                 ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
-        } else if (validatorName === MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
+        } else if (validatorName ===
+            ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
             moveMainArgs.push(j + 1);
         } else {
             throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -252,7 +257,7 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
  * @returns Поле для выбора уровня сложности соло игры.
  */
 export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameDifficultyLevelArgType[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameDifficultyLevelArgType[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -265,7 +270,8 @@ export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }: FnCo
             if (data !== undefined && boardCells !== undefined) {
                 DrawButton(data, boardCells, String(j + 1), player,
                     ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
-            } else if (validatorName === MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
+            } else if (validatorName ===
+                ChooseDifficultySoloModeMoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
                 moveMainArgs.push(j);
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -291,7 +297,7 @@ export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }: FnCo
  * @returns Игровое поле для отрисовки выбора значения улучшения монеты по артефакту 'Vidofnir Vedrfolnir'.
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<number[]>> => {
     const moveMainArgs: MoveArgumentsType<number[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -316,7 +322,8 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
         if (data !== undefined && boardCells !== undefined) {
             DrawButton(data, boardCells, String(value), player,
                 ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
-        } else if (validatorName === MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
+        } else if (validatorName ===
+            CommonMoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
             moveMainArgs.push(value);
         } else {
             throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -342,7 +349,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
  * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
  */
 export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<number[]>> => {
     if (G.explorerDistinctionCards === null) {
         throw new Error(`В массиве карт для получения преимущества по фракции '${RusSuitNames.explorer}' не может не быть карт.`);
@@ -367,22 +374,22 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }: FnContext,
             const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
             let moveName: CardMoveNames;
             switch (stage) {
-                case TroopEvaluationStageNames.PickDistinctionCard:
+                case TroopEvaluationStageNames.ClickCardToPickDistinction:
                     moveName = CardMoveNames.ClickCardToPickDistinctionMove;
                     break;
-                case TroopEvaluationStageNames.PickDistinctionCardSoloBot:
+                case TroopEvaluationStageNames.SoloBotClickCardToPickDistinction:
                     moveName = CardMoveNames.SoloBotClickCardToPickDistinctionMove;
                     break;
-                case TroopEvaluationStageNames.PickDistinctionCardSoloBotAndvari:
+                case TroopEvaluationStageNames.SoloBotAndvariClickCardToPickDistinction:
                     moveName = CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove;
                     break;
                 default:
                     throw new Error(`Нет такого мува.`);
             }
             DrawCard(data, boardCells, card, j, player, suit, moveName, j);
-        } else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator
-            || MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator
-            || MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
+        } else if (validatorName === TroopEvaluationMoveValidatorNames.ClickCardToPickDistinctionMoveValidator
+            || TroopEvaluationMoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator
+            || TroopEvaluationMoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
             moveMainArgs.push(j);
         } else {
             throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -408,7 +415,7 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }: FnContext,
  * @returns Поле героев для выбора сложности соло игры.
  */
 export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
-    validatorName: CanBeNullType<MoveValidatorNames>, data?: BoardProps, boardCells?: JSX.Element[]):
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<number[]>> => {
     const moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
@@ -422,7 +429,7 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
             }
             if (hero.active && Number(ctx.currentPlayer) === 0
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)]
-                === ChooseDifficultySoloModeStageNames.ChooseHeroesForSoloMode) {
+                === ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -431,7 +438,8 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
                 if (data !== undefined && boardCells !== undefined) {
                     DrawCard(data, boardCells, hero, j, player, null,
                         CardMoveNames.ChooseHeroForDifficultySoloModeMove, j);
-                } else if (validatorName === MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator) {
+                } else if (validatorName ===
+                    ChooseDifficultySoloModeMoveValidatorNames.ChooseHeroForDifficultySoloModeMoveValidator) {
                     if (hero.active) {
                         moveMainArgs.push(j);
                     }

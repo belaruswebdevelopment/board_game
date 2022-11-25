@@ -547,7 +547,7 @@ export const enum CardMoveNames {
     // start
     ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
     ClickHeroCardMove = `ClickHeroCardMove`,
-    DiscardCardMove = `DiscardCardMove`,
+    DiscardTopCardFromSuitMove = `DiscardTopCardFromSuitMove`,
     DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
     DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
     PickDiscardCardMove = `PickDiscardCardMove`,
@@ -575,7 +575,7 @@ export const enum CoinMoveNames {
     // Start
     AddCoinToPouchMove = `AddCoinToPouchMove`,
     ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
-    ClickConcreteCoinToUpgradeMove = `ClickConcreteCoinToUpgradeMove`,
+    PickConcreteCoinToUpgradeMove = `PickConcreteCoinToUpgradeMove`,
     UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
     // Solo Bot
     SoloBotClickCoinToUpgradeMove = `SoloBotClickCoinToUpgradeMove`,
@@ -690,6 +690,7 @@ export enum RusSuitNames {
     warrior = `Воины`,
 }
 
+// TODO DELETE!
 /**
  * <h3>Перечисление для типов мувов.</h3>
  */
@@ -710,9 +711,7 @@ export const enum ChooseDifficultySoloModeDefaultStageNames {
  * <h3>Перечисление для стадий игры `chooseDifficultySoloMode`.</h3>
  */
 export const enum ChooseDifficultySoloModeStageNames {
-    ChooseHeroesForSoloMode = `ChooseHeroesForSoloMode`,
-    // TODO Rework in Common
-    UpgradeCoinSoloBot = `UpgradeCoinSoloBot`,
+    ChooseHeroForDifficultySoloMode = `ChooseHeroForDifficultySoloMode`,
 }
 
 /**
@@ -791,9 +790,9 @@ export const enum TroopEvaluationDefaultStageNames {
  * <h3>Перечисление для стадий игры `troopEvaluation`.</h3>
  */
 export const enum TroopEvaluationStageNames {
-    PickDistinctionCard = `PickDistinctionCard`,
-    PickDistinctionCardSoloBot = `PickDistinctionCardSoloBot`,
-    PickDistinctionCardSoloBotAndvari = `PickDistinctionCardSoloBotAndvari`,
+    ClickCardToPickDistinction = `ClickCardToPickDistinction`,
+    SoloBotClickCardToPickDistinction = `SoloBotClickCardToPickDistinction`,
+    SoloBotAndvariClickCardToPickDistinction = `SoloBotAndvariClickCardToPickDistinction`,
 }
 
 /**
@@ -813,27 +812,33 @@ export const enum TavernsResolutionStageNames {
     ActivateGiantAbilityOrPickCard = `ActivateGiantAbilityOrPickCard`,
     ChooseCoinValueForHrungnirUpgrade = `ChooseCoinValueForHrungnirUpgrade`,
     ChooseSuitOlrun = `ChooseSuitOlrun`,
-    DiscardCard = `DiscardCard`,
+    DiscardCard2Players = `DiscardCard2Players`,
     GetMythologyCard = `GetMythologyCard`,
-    PlaceTradingCoinsUline = `PlaceTradingCoinsUline`,
+    ClickHandTradingCoinUline = `ClickHandTradingCoinUline`,
 }
 
 /**
  * <h3>Перечисление для общих стадий игры `SoloBotCommon`.</h3>
  */
 export const enum SoloBotCommonStageNames {
-    PickHeroSoloBot = `PickHeroSoloBot`,
-    PlaceThrudHeroSoloBot = `PlaceThrudHeroSoloBot`,
-    UpgradeCoinSoloBot = `UpgradeCoinSoloBot`,
+    SoloBotClickHeroCard = `SoloBotClickHeroCard`,
+    SoloBotPlaceThrudHero = `SoloBotPlaceThrudHero`,
+}
+
+/**
+ * <h3>Перечисление для общих стадий игры `SoloBotCommonCoinUpgrade`.</h3>
+ */
+export const enum SoloBotCommonCoinUpgradeStageNames {
+    SoloBotClickCoinToUpgrade = `SoloBotClickCoinToUpgrade`,
 }
 
 /**
  * <h3>Перечисление для общих стадий игры `SoloBotAndvariCommon`.</h3>
  */
 export const enum SoloBotAndvariCommonStageNames {
-    PickHeroSoloBotAndvari = `PickHeroSoloBotAndvari`,
-    PlaceThrudHeroSoloBotAndvari = `PlaceThrudHeroSoloBotAndvari`,
-    UpgradeCoinSoloBotAndvari = `UpgradeCoinSoloBotAndvari`,
+    SoloBotAndvariClickHeroCard = `SoloBotAndvariClickHeroCard`,
+    SoloBotAndvariPlaceThrudHero = `SoloBotAndvariPlaceThrudHero`,
+    SoloBotAndvariClickCoinToUpgrade = `SoloBotAndvariClickCoinToUpgrade`,
 }
 
 /**
@@ -842,16 +847,16 @@ export const enum SoloBotAndvariCommonStageNames {
 export const enum CommonStageNames {
     AddCoinToPouch = `AddCoinToPouch`,
     ChooseCoinValueForVidofnirVedrfolnirUpgrade = `ChooseCoinValueForVidofnirVedrfolnirUpgrade`,
-    DiscardBoardCard = `DiscardBoardCard`,
-    DiscardSuitCard = `DiscardSuitCard`,
-    PickCampCardHolda = `PickCampCardHolda`,
+    DiscardTopCardFromSuit = `DiscardTopCardFromSuit`,
+    DiscardSuitCardFromPlayerBoard = `DiscardSuitCardFromPlayerBoard`,
+    ClickCampCardHolda = `ClickCampCardHolda`,
     PickConcreteCoinToUpgrade = `PickConcreteCoinToUpgrade`,
     PickDiscardCard = `PickDiscardCard`,
-    PickHero = `PickHero`,
-    PlaceMultiSuitsCards = `PlaceMultiSuitsCards`,
+    ClickHeroCard = `ClickHeroCard`,
+    PlaceMultiSuitCard = `PlaceMultiSuitCard`,
     PlaceThrudHero = `PlaceThrudHero`,
-    UpgradeCoin = `UpgradeCoin`,
-    UpgradeVidofnirVedrfolnirCoin = `UpgradeVidofnirVedrfolnirCoin`,
+    ClickCoinToUpgrade = `ClickCoinToUpgrade`,
+    UpgradeCoinVidofnirVedrfolnir = `UpgradeCoinVidofnirVedrfolnir`,
 }
 
 /**
@@ -862,31 +867,31 @@ export enum RusStageNames {
     AddCoinToPouch = `AddCoinToPouch`,
     ChooseSuitOlrun = `ChooseSuitOlrun`,
     ChooseCoinValueForVidofnirVedrfolnirUpgrade = `ChooseCoinValueForVidofnirVedrfolnirUpgrade`,
-    ChooseHeroesForSoloMode = `ChooseHeroesForSoloMode`,
+    ChooseHeroForDifficultySoloMode = `ChooseHeroForDifficultySoloMode`,
     ChooseCoinValueForHrungnirUpgrade = `ChooseCoinValueForHrungnirUpgrade`,
-    DiscardCard = `DiscardCard`,
-    DiscardBoardCard = `DiscardBoardCard`,
-    DiscardSuitCard = `DiscardSuitCard`,
+    DiscardCard2Players = `DiscardCard2Players`,
+    DiscardTopCardFromSuit = `DiscardTopCardFromSuit`,
+    DiscardSuitCardFromPlayerBoard = `DiscardSuitCardFromPlayerBoard`,
     GetMythologyCard = `GetMythologyCard`,
-    PickCampCardHolda = `PickCampCardHolda`,
+    ClickCampCardHolda = `ClickCampCardHolda`,
     PickConcreteCoinToUpgrade = `PickConcreteCoinToUpgrade`,
     PickDiscardCard = `PickDiscardCard`,
-    PickDistinctionCard = `PickDistinctionCard`,
-    PickDistinctionCardSoloBot = `PickDistinctionCardSoloBot`,
-    PickDistinctionCardSoloBotAndvari = `PickDistinctionCardSoloBotAndvari`,
-    PickHero = `PickHero`,
-    PickHeroSoloBot = `PickHeroSoloBot`,
-    PickHeroSoloBotAndvari = `PickHeroSoloBotAndvari`,
+    ClickCardToPickDistinction = `ClickCardToPickDistinction`,
+    SoloBotClickCardToPickDistinction = `SoloBotClickCardToPickDistinction`,
+    SoloBotAndvariClickCardToPickDistinction = `SoloBotAndvariClickCardToPickDistinction`,
+    ClickHeroCard = `ClickHeroCard`,
+    SoloBotClickHeroCard = `SoloBotAndvariClickHeroCard`,
+    SoloBotAndvariClickHeroCard = `SoloBotAndvariClickHeroCard`,
     PlaceEnlistmentMercenaries = `PlaceEnlistmentMercenaries`,
-    PlaceMultiSuitsCards = `PlaceMultiSuitsCards`,
-    PlaceTradingCoinsUline = `PlaceTradingCoinsUline`,
+    PlaceMultiSuitCard = `PlaceMultiSuitCard`,
+    ClickHandTradingCoinUline = `ClickHandTradingCoinUline`,
     PlaceThrudHero = `PlaceThrudHero`,
-    PlaceThrudHeroSoloBot = `PlaceThrudHeroSoloBot`,
-    PlaceThrudHeroSoloBotAndvari = `PlaceThrudHeroSoloBotAndvari`,
-    UpgradeCoin = `UpgradeCoin`,
-    UpgradeCoinSoloBot = `UpgradeCoinSoloBot`,
-    UpgradeCoinSoloBotAndvari = `UpgradeCoinSoloBotAndvari`,
-    UpgradeVidofnirVedrfolnirCoin = `UpgradeVidofnirVedrfolnirCoin`,
+    SoloBotPlaceThrudHero = `SoloBotPlaceThrudHero`,
+    SoloBotAndvariPlaceThrudHero = `SoloBotAndvariPlaceThrudHero`,
+    ClickCoinToUpgrade = `ClickCoinToUpgrade`,
+    SoloBotClickCoinToUpgrade = `SoloBotClickCoinToUpgrade`,
+    SoloBotAndvariClickCoinToUpgrade = `SoloBotAndvariClickCoinToUpgrade`,
+    UpgradeCoinVidofnirVedrfolnir = `UpgradeCoinVidofnirVedrfolnir`,
 }
 
 /**
@@ -944,54 +949,114 @@ export const enum TavernNames {
 }
 
 /**
- * <h3>Перечисление для названия валидаторов мувов.</h3>
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'ChooseDifficultySoloMode'.</h3>
  */
-export const enum MoveValidatorNames {
-    ChooseCoinValueForHrungnirUpgradeMoveValidator = `ChooseCoinValueForHrungnirUpgradeMoveValidator`,
-    ClickCardNotGiantAbilityMoveValidator = `ClickCardNotGiantAbilityMoveValidator`,
-    ClickGiantAbilityNotCardMoveValidator = `ClickGiantAbilityNotCardMoveValidator`,
-    ChooseSuitOlrunMoveValidator = `ChooseSuitOlrunMoveValidator`,
+export const enum ChooseDifficultySoloModeMoveValidatorNames {
+    ChooseDifficultyLevelForSoloModeMoveValidator = `ChooseDifficultyLevelForSoloModeMoveValidator`,
+    ChooseHeroForDifficultySoloModeMoveValidator = `ChooseHeroForDifficultySoloModeMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'ChooseDifficultySoloModeAndvari'.</h3>
+ */
+export const enum ChooseDifficultySoloModeAndvariMoveValidatorNames {
+    ChooseStrategyForSoloModeAndvariMoveValidator = `ChooseStrategyForSoloModeAndvariMoveValidator`,
+    ChooseStrategyVariantForSoloModeAndvariMoveValidator = `ChooseStrategyVariantForSoloModeAndvariMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'Bids'.</h3>
+ */
+export const enum BidsMoveValidatorNames {
     ClickBoardCoinMoveValidator = `ClickBoardCoinMoveValidator`,
-    ClickCampCardMoveValidator = `ClickCampCardMoveValidator`,
-    ClickCardMoveValidator = `ClickCardMoveValidator`,
-    ClickCardToPickDistinctionMoveValidator = `ClickCardToPickDistinctionMoveValidator`,
-    ClickDistinctionCardMoveValidator = `ClickDistinctionCardMoveValidator`,
     ClickHandCoinMoveValidator = `ClickHandCoinMoveValidator`,
-    ClickHandCoinUlineMoveValidator = `ClickHandCoinUlineMoveValidator`,
-    ClickHandTradingCoinUlineMoveValidator = `ClickHandTradingCoinUlineMoveValidator`,
-    DiscardCardFromPlayerBoardMoveValidator = `DiscardCardFromPlayerBoardMoveValidator`,
-    DiscardCard2PlayersMoveValidator = `DiscardCard2PlayersMoveValidator`,
-    GetEnlistmentMercenariesMoveValidator = `GetEnlistmentMercenariesMoveValidator`,
-    GetMjollnirProfitMoveValidator = `GetMjollnirProfitMoveValidator`,
-    GetMythologyCardMoveValidator = `GetMythologyCardMoveValidator`,
-    PassEnlistmentMercenariesMoveValidator = `PassEnlistmentMercenariesMoveValidator`,
-    PlaceEnlistmentMercenariesMoveValidator = `PlaceEnlistmentMercenariesMoveValidator`,
-    PlaceYludHeroMoveValidator = `PlaceYludHeroMoveValidator`,
-    StartEnlistmentMercenariesMoveValidator = `StartEnlistmentMercenariesMoveValidator`,
     // Bots
     BotsPlaceAllCoinsMoveValidator = `BotsPlaceAllCoinsMoveValidator`,
     // Solo Bot
-    SoloBotClickCardMoveValidator = `SoloBotClickCardMoveValidator`,
-    SoloBotClickHeroCardMoveValidator = `SoloBotClickHeroCardMoveValidator`,
     SoloBotPlaceAllCoinsMoveValidator = `SoloBotPlaceAllCoinsMoveValidator`,
-    SoloBotClickCardToPickDistinctionMoveValidator = `SoloBotClickCardToPickDistinctionMoveValidator`,
-    SoloBotPlaceYludHeroMoveValidator = `SoloBotPlaceYludHeroMoveValidator`,
-    SoloBotPlaceThrudHeroMoveValidator = `SoloBotPlaceThrudHeroMoveValidator`,
-    SoloBotClickCoinToUpgradeMoveValidator = `SoloBotClickCoinToUpgradeMoveValidator`,
-    // Solo Mode
-    ChooseDifficultyLevelForSoloModeMoveValidator = `ChooseDifficultyLevelForSoloModeMoveValidator`,
-    ChooseHeroesForSoloModeMoveValidator = `ChooseHeroesForSoloModeMoveValidator`,
-    // Solo Mode Andvari
-    SoloBotAndvariClickCardMoveValidator = `SoloBotAndvariClickCardMoveValidator`,
-    ChooseStrategyForSoloModeAndvariMoveValidator = `ChooseStrategyForSoloModeAndvariMoveValidator`,
-    ChooseStrategyVariantForSoloModeAndvariMoveValidator = `ChooseStrategyVariantForSoloModeAndvariMoveValidator`,
+    // Solo Bot Andvari
     SoloBotAndvariPlaceAllCoinsMoveValidator = `SoloBotAndvariPlaceAllCoinsMoveValidator`,
-    SoloBotAndvariClickHeroCardMoveValidator = `SoloBotAndvariClickHeroCardMoveValidator`,
-    SoloBotAndvariClickCardToPickDistinctionMoveValidator = `SoloBotAndvariClickCardToPickDistinctionMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'BidUline'.</h3>
+ */
+export const enum BidUlineMoveValidatorNames {
+    ClickHandCoinUlineMoveValidator = `ClickHandCoinUlineMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'TavernsResolution'.</h3>
+ */
+export const enum TavernsResolutionMoveValidatorNames {
+    ClickCardMoveValidator = `ClickCardMoveValidator`,
+    ClickCampCardMoveValidator = `ClickCampCardMoveValidator`,
+    // Solo Bot
+    SoloBotClickCardMoveValidator = `SoloBotClickCardMoveValidator`,
+    // Solo Bot Andvari
+    SoloBotAndvariClickCardMoveValidator = `SoloBotAndvariClickCardMoveValidator`,
+    ClickCardNotGiantAbilityMoveValidator = `ClickCardNotGiantAbilityMoveValidator`,
+    ClickGiantAbilityNotCardMoveValidator = `ClickGiantAbilityNotCardMoveValidator`,
+    // TODO Add `ChooseCoinValueForHrungnirUpgradeMoveValidator` to UI validate
+    ChooseCoinValueForHrungnirUpgradeMoveValidator = `ChooseCoinValueForHrungnirUpgradeMoveValidator`,
+    ChooseSuitOlrunMoveValidator = `ChooseSuitOlrunMoveValidator`,
+    DiscardCard2PlayersMoveValidator = `DiscardCard2PlayersMoveValidator`,
+    GetMythologyCardMoveValidator = `GetMythologyCardMoveValidator`,
+    ClickHandTradingCoinUlineMoveValidator = `ClickHandTradingCoinUlineMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'EnlistmentMercenaries'.</h3>
+ */
+export const enum EnlistmentMercenariesMoveValidatorNames {
+    StartEnlistmentMercenariesMoveValidator = `StartEnlistmentMercenariesMoveValidator`,
+    PassEnlistmentMercenariesMoveValidator = `PassEnlistmentMercenariesMoveValidator`,
+    GetEnlistmentMercenariesMoveValidator = `GetEnlistmentMercenariesMoveValidator`,
+    PlaceEnlistmentMercenariesMoveValidator = `PlaceEnlistmentMercenariesMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'PlaceYlud'.</h3>
+ */
+export const enum PlaceYludMoveValidatorNames {
+    PlaceYludHeroMoveValidator = `PlaceYludHeroMoveValidator`,
+    // Solo Bot
+    SoloBotPlaceYludHeroMoveValidator = `SoloBotPlaceYludHeroMoveValidator`,
+    // Solo Bot Andvari
     SoloBotAndvariPlaceYludHeroMoveValidator = `SoloBotAndvariPlaceYludHeroMoveValidator`,
-    SoloBotAndvariPlaceThrudHeroMoveValidator = `SoloBotAndvariPlaceThrudHeroMoveValidator`,
-    SoloBotAndvariClickCoinToUpgradeMoveValidator = `SoloBotAndvariClickCoinToUpgradeMoveValidator`,
-    // start
+
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'TroopEvaluation'.</h3>
+ */
+export const enum TroopEvaluationMoveValidatorNames {
+    ClickDistinctionCardMoveValidator = `ClickDistinctionCardMoveValidator`,
+    ClickCardToPickDistinctionMoveValidator = `ClickCardToPickDistinctionMoveValidator`,
+    // Solo Bot
+    SoloBotClickCardToPickDistinctionMoveValidator = `SoloBotClickCardToPickDistinctionMoveValidator`,
+    // Solo Bot Andvari
+    SoloBotAndvariClickCardToPickDistinctionMoveValidator = `SoloBotAndvariClickCardToPickDistinctionMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'BrisingamensEndGame'.</h3>
+ */
+export const enum BrisingamensEndGameMoveValidatorNames {
+    DiscardCardFromPlayerBoardMoveValidator = `DiscardCardFromPlayerBoardMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия валидаторов мувов в фазу 'GetMjollnirProfit'.</h3>
+ */
+export const enum GetMjollnirProfitMoveValidatorNames {
+    GetMjollnirProfitMoveValidator = `GetMjollnirProfitMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия общих валидаторов мувов.</h3>
+ */
+export const enum CommonMoveValidatorNames {
     AddCoinToPouchMoveValidator = `AddCoinToPouchMoveValidator`,
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator =
     `ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator`,
@@ -999,10 +1064,35 @@ export const enum MoveValidatorNames {
     ClickCoinToUpgradeMoveValidator = `ClickCoinToUpgradeMoveValidator`,
     PickConcreteCoinToUpgradeMoveValidator = `PickConcreteCoinToUpgradeMoveValidator`,
     ClickHeroCardMoveValidator = `ClickHeroCardMoveValidator`,
-    DiscardCardMoveValidator = `DiscardCardMoveValidator`,
+    DiscardTopCardFromSuitMoveValidator = `DiscardTopCardFromSuitMoveValidator`,
     DiscardSuitCardFromPlayerBoardMoveValidator = `DiscardSuitCardFromPlayerBoardMoveValidator`,
     PickDiscardCardMoveValidator = `PickDiscardCardMoveValidator`,
     PlaceMultiSuitCardMoveValidator = `PlaceMultiSuitCardMoveValidator`,
     PlaceThrudHeroMoveValidator = `PlaceThrudHeroMoveValidator`,
     UpgradeCoinVidofnirVedrfolnirMoveValidator = `UpgradeCoinVidofnirVedrfolnirMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия общих соло бот валидаторов мувов.</h3>
+ */
+export const enum SoloBotCommonMoveValidatorNames {
+    SoloBotClickHeroCardMoveValidator = `SoloBotClickHeroCardMoveValidator`,
+    SoloBotPlaceThrudHeroMoveValidator = `SoloBotPlaceThrudHeroMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия общих соло бот улучшений монеты валидаторов мувов.</h3>
+ */
+export const enum SoloBotCommonCoinUpgradeMoveValidatorNames {
+    SoloBotClickCoinToUpgradeMoveValidator = `SoloBotClickCoinToUpgradeMoveValidator`,
+}
+
+
+/**
+ * <h3>Перечисление для названия общих соло бот Andvari валидаторов мувов.</h3>
+ */
+export const enum SoloBotAndvariCommonMoveValidatorNames {
+    SoloBotAndvariClickHeroCardMoveValidator = `SoloBotAndvariClickHeroCardMoveValidator`,
+    SoloBotAndvariPlaceThrudHeroMoveValidator = `SoloBotAndvariPlaceThrudHeroMoveValidator`,
+    SoloBotAndvariClickCoinToUpgradeMoveValidator = `SoloBotAndvariClickCoinToUpgradeMoveValidator`,
 }

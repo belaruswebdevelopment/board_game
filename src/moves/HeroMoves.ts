@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
-import { CommonStageNames, MoveTypeNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
+import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
 /**
@@ -18,8 +18,8 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  */
 export const ClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickHero,
-        MoveTypeNames.default, heroId);
+    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickHeroCard,
+        CardMoveNames.ClickHeroCardMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -39,10 +39,10 @@ export const ClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
  * @param cardId Id карты.
  * @returns
  */
-export const DiscardCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames, cardId: number):
-    CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardBoardCard,
-        MoveTypeNames.default, {
+export const DiscardTopCardFromSuitMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames,
+    cardId: number): CanBeVoidType<InvalidMoveType> => {
+    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardTopCardFromSuit,
+        CardMoveNames.DiscardTopCardFromSuitMove, {
         suit,
         cardId,
     });
@@ -66,8 +66,8 @@ export const DiscardCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext
  */
 export const PlaceMultiSuitCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceMultiSuitsCards,
-        MoveTypeNames.default, suit);
+    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+        CommonStageNames.PlaceMultiSuitCard, EmptyCardMoveNames.PlaceMultiSuitCardMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -89,7 +89,7 @@ export const PlaceMultiSuitCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
 export const PlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceThrudHero,
-        MoveTypeNames.default, suit);
+        EmptyCardMoveNames.PlaceThrudHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -110,8 +110,8 @@ export const PlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
  */
 export const PlaceYludHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.PlaceYludHero,
-        MoveTypeNames.default, suit);
+    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+        PlaceYludDefaultStageNames.PlaceYludHero, EmptyCardMoveNames.PlaceYludHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

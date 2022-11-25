@@ -204,7 +204,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
         };
         expect(() => {
             DiscardAnyCardFromPlayerBoardAction({ G, ctx }, SuitNames.warrior, 0);
-        }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта во фракции '${RusSuitNames['warrior']}' с id '0': это должно проверяться в MoveValidator.`);
+        }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта во фракции '${RusSuitNames.warrior}' с id '0': это должно проверяться в MoveValidator.`);
     });
 });
 describe(`Test DiscardCardFromTavernAction method`, () => {
@@ -540,7 +540,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     stack: {
                         player: [
                             {
-                                stageName: CommonStageNames.UpgradeCoin,
+                                stageName: CommonStageNames.ClickCoinToUpgrade,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
                             },
@@ -563,7 +563,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                         {},
                         {
                             config: {
-                                stageName: CommonStageNames.UpgradeCoin,
+                                stageName: CommonStageNames.ClickCoinToUpgrade,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
                             },
@@ -576,7 +576,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     stack: {
                         player: [
                             {
-                                stageName: CommonStageNames.UpgradeCoin,
+                                stageName: CommonStageNames.ClickCoinToUpgrade,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
                             },

@@ -2572,7 +2572,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2675,7 +2675,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2782,7 +2782,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
                             value: 3,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2853,7 +2853,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
@@ -2944,7 +2944,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeVidofnirVedrfolnirCoin,
+                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },

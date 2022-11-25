@@ -31,7 +31,7 @@ export const CheckPickHero = ({ G, ctx, playerID, ...rest }) => {
                 && ctx.currentPlayer === `1` ? 5 : 0), isCanPickHero = (Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) -
             ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
                 || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy) ?
-                1 : 0)) > (heroesLength - Number(playerHasNotCountHero)), playerPickHeroActionInStackIndex = player.stack.findIndex((stack) => stack.stageName === CommonStageNames.PickHero);
+                1 : 0)) > (heroesLength - Number(playerHasNotCountHero)), playerPickHeroActionInStackIndex = player.stack.findIndex((stack) => stack.stageName === CommonStageNames.ClickHeroCard);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
             AddPickHeroAction({ G, ctx, playerID, ...rest }, 1);
         }

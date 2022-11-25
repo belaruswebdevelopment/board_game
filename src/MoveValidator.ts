@@ -10,8 +10,8 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { AutoBotsMoveNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, MoveTypeNames, MoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, RusCardTypeNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, EnlistmentMercenariesAllStageNames, IDwarfCard, IHeroCard, IMoveBy, IMoveCardsArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardIdType, MoveValidatorGetRangeType, MyFnContext, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardTypeWithExpansion, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType } from "./typescript/interfaces";
+import { AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RusCardTypeNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
+import type { CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, EnlistmentMercenariesAllStageNames, IDwarfCard, IHeroCard, IMoveBy, IMoveCardsArguments, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IPickValidatorsConfig, IPlayer, IPublicPlayer, KeyofType, MoveArgumentsType, MoveCardIdType, MoveNamesType, MoveValidatorGetRangeType, MyFnContext, PickHeroCardValidatorNamesKeyofTypeofType, PlayerCardType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardTypeWithExpansion, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -104,7 +104,7 @@ export const CoinUpgradeValidation = ({ G, ctx, playerID, ...rest }: MyFnContext
  * @param id Данные для валидации.
  * @returns Валидный ли мув.
  */
-export const IsValidMove = ({ G, ctx, ...rest }: MyFnContext, stage: StageNames, type: MoveTypeNames,
+export const IsValidMove = ({ G, ctx, ...rest }: MyFnContext, stage: StageNames, type: MoveNamesType,
     id: ValidMoveIdParamType): boolean => {
     const validator: IMoveValidator<MoveValidatorGetRangeType> = GetValidator(ctx.phase, stage, type);
     let isValid = false;
@@ -151,7 +151,7 @@ export const IsValidMove = ({ G, ctx, ...rest }: MyFnContext, stage: StageNames,
  * @param type Тип мува.
  * @returns Валидатор.
  */
-export const GetValidator = (phase: PhaseNames, stage: StageNames, type: MoveTypeNames):
+export const GetValidator = (phase: PhaseNames, stage: StageNames, type: MoveNamesType):
     IMoveValidator<MoveValidatorGetRangeType> => {
     let validator: IMoveValidator<MoveValidatorGetRangeType>,
         _exhaustiveCheck: never;
@@ -229,7 +229,7 @@ export const moveValidators: IMoveValidators = {
     ClickCardNotGiantAbilityMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IDwarfCard> =>
             ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) as
+                TavernsResolutionMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) as
             MoveArgumentsType<IDwarfCard>,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         getValue: ({ G }: MyFnContext, currentMoveArguments: MoveArgumentsType<IDwarfCard>): IDwarfCard =>
@@ -240,7 +240,7 @@ export const moveValidators: IMoveValidators = {
     ClickGiantAbilityNotCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IDwarfCard> =>
             ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) as
+                TavernsResolutionMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) as
             MoveArgumentsType<IDwarfCard>,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         getValue: ({ G }: MyFnContext, currentMoveArguments: MoveArgumentsType<IDwarfCard>): IDwarfCard =>
@@ -251,7 +251,7 @@ export const moveValidators: IMoveValidators = {
     ChooseCoinValueForHrungnirUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IMoveCoinsArguments[]> =>
             DrawPlayersBoardsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.ChooseCoinValueForHrungnirUpgradeMoveValidator) as
+                TavernsResolutionMoveValidatorNames.ChooseCoinValueForHrungnirUpgradeMoveValidator) as
             MoveArgumentsType<IMoveCoinsArguments[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
             IMoveCoinsArguments => {
@@ -269,7 +269,7 @@ export const moveValidators: IMoveValidators = {
     ChooseSuitOlrunMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.ChooseSuitOlrunMoveValidator) as MoveArgumentsType<SuitNames[]>,
+                TavernsResolutionMoveValidatorNames.ChooseSuitOlrunMoveValidator) as MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
             const moveArgument: CanBeUndefType<SuitNames> =
@@ -285,7 +285,7 @@ export const moveValidators: IMoveValidators = {
     GetMythologyCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             ChooseGetMythologyCardProfit({ G, ctx, ...rest },
-                MoveValidatorNames.GetMythologyCardMoveValidator) as MoveArgumentsType<number[]>,
+                TavernsResolutionMoveValidatorNames.GetMythologyCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -300,7 +300,7 @@ export const moveValidators: IMoveValidators = {
     ClickBoardCoinMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawPlayersBoardsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.ClickBoardCoinMoveValidator) as MoveArgumentsType<number[]>,
+                BidsMoveValidatorNames.ClickBoardCoinMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -315,7 +315,7 @@ export const moveValidators: IMoveValidators = {
     ClickCampCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawCamp({ G, ctx, ...rest },
-                MoveValidatorNames.ClickCampCardMoveValidator) as MoveArgumentsType<number[]>,
+                TavernsResolutionMoveValidatorNames.ClickCampCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -339,7 +339,7 @@ export const moveValidators: IMoveValidators = {
     ClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawTaverns({ G, ctx, ...rest },
-                MoveValidatorNames.ClickCardMoveValidator) as MoveArgumentsType<number[]>,
+                TavernsResolutionMoveValidatorNames.ClickCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>):
             number => {
             // TODO Get MythologicalCreature cards for AI bots...
@@ -399,7 +399,7 @@ export const moveValidators: IMoveValidators = {
     ClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             ExplorerDistinctionProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ClickCardToPickDistinctionMoveValidator) as
+                TroopEvaluationMoveValidatorNames.ClickCardToPickDistinctionMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
@@ -415,7 +415,8 @@ export const moveValidators: IMoveValidators = {
     ClickDistinctionCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawDistinctions({ G, ctx, ...rest },
-                MoveValidatorNames.ClickDistinctionCardMoveValidator) as MoveArgumentsType<SuitNames[]>,
+                TroopEvaluationMoveValidatorNames.ClickDistinctionCardMoveValidator) as
+            MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
             const moveArgument: CanBeUndefType<SuitNames> =
@@ -431,7 +432,7 @@ export const moveValidators: IMoveValidators = {
     ClickHandCoinMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawPlayersHandsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.ClickHandCoinMoveValidator) as MoveArgumentsType<number[]>,
+                BidsMoveValidatorNames.ClickHandCoinMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -446,7 +447,8 @@ export const moveValidators: IMoveValidators = {
     ClickHandCoinUlineMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawPlayersHandsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.ClickHandCoinUlineMoveValidator) as MoveArgumentsType<number[]>,
+                BidUlineMoveValidatorNames.ClickHandCoinUlineMoveValidator) as
+            MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -461,7 +463,7 @@ export const moveValidators: IMoveValidators = {
     ClickHandTradingCoinUlineMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawPlayersHandsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator) as
+                TavernsResolutionMoveValidatorNames.ClickHandTradingCoinUlineMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
@@ -478,7 +480,7 @@ export const moveValidators: IMoveValidators = {
         getRange: ({ G, ctx, ...rest }: MyFnContext):
             MoveArgumentsType<Partial<SuitPropertyType<number[]>>> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) as
+                BrisingamensEndGameMoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) as
             MoveArgumentsType<Partial<SuitPropertyType<number[]>>>,
         getValue: ({ G, ctx, ...rest }: MyFnContext,
             currentMoveArguments: MoveArgumentsType<Partial<SuitPropertyType<number[]>>>): IMoveSuitCardCurrentId => {
@@ -512,7 +514,7 @@ export const moveValidators: IMoveValidators = {
     DiscardCard2PlayersMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawTaverns({ G, ctx, ...rest },
-                MoveValidatorNames.DiscardCard2PlayersMoveValidator) as MoveArgumentsType<number[]>,
+                TavernsResolutionMoveValidatorNames.DiscardCard2PlayersMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -527,7 +529,8 @@ export const moveValidators: IMoveValidators = {
     GetEnlistmentMercenariesMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) as MoveArgumentsType<number[]>,
+                EnlistmentMercenariesMoveValidatorNames.GetEnlistmentMercenariesMoveValidator) as
+            MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -542,7 +545,8 @@ export const moveValidators: IMoveValidators = {
     GetMjollnirProfitMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.GetMjollnirProfitMoveValidator) as MoveArgumentsType<SuitNames[]>,
+                GetMjollnirProfitMoveValidatorNames.GetMjollnirProfitMoveValidator) as
+            MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
             const totalSuitsRanks: number[] = [];
@@ -590,7 +594,7 @@ export const moveValidators: IMoveValidators = {
     PlaceEnlistmentMercenariesMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator) as
+                EnlistmentMercenariesMoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator) as
             MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
@@ -607,7 +611,8 @@ export const moveValidators: IMoveValidators = {
     PlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.PlaceYludHeroMoveValidator) as MoveArgumentsType<SuitNames[]>,
+                PlaceYludMoveValidatorNames.PlaceYludHeroMoveValidator) as
+            MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
             const moveArgument: CanBeUndefType<SuitNames> =
@@ -628,6 +633,7 @@ export const moveValidators: IMoveValidators = {
     },
     // Bots
     BotsPlaceAllCoinsMoveValidator: {
+        // TODO Move to Get from validator BidsMoveValidatorNames.BotsPlaceAllCoinsMoveValidator!?
         getRange: ({ G }: MyFnContext): MoveArgumentsType<number[][]> => G.botData.allCoinsOrder,
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[][]>):
             number[] => {
@@ -787,7 +793,8 @@ export const moveValidators: IMoveValidators = {
     SoloBotPlaceAllCoinsMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[][]> =>
             DrawPlayersHandsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator) as MoveArgumentsType<number[][]>,
+                BidsMoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator) as
+            MoveArgumentsType<number[][]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[][]>): number[] => {
             const moveArgument: CanBeUndefType<number[]> = currentMoveArguments[0];
             if (moveArgument === undefined) {
@@ -801,7 +808,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawTaverns({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotClickCardMoveValidator) as MoveArgumentsType<number[]>,
+                TavernsResolutionMoveValidatorNames.SoloBotClickCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>):
             number => {
             // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
@@ -831,7 +838,8 @@ export const moveValidators: IMoveValidators = {
     SoloBotClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawHeroesForSoloBotUI({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotClickHeroCardMoveValidator) as MoveArgumentsType<number[]>,
+                SoloBotCommonMoveValidatorNames.SoloBotClickHeroCardMoveValidator) as
+            MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -846,7 +854,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             ExplorerDistinctionProfit({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator) as
+                TroopEvaluationMoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
@@ -862,7 +870,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotPlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator) as
+                SoloBotCommonMoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator) as
             MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
@@ -899,7 +907,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotPlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotPlaceYludHeroMoveValidator) as
+                PlaceYludMoveValidatorNames.SoloBotPlaceYludHeroMoveValidator) as
             MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
@@ -917,10 +925,10 @@ export const moveValidators: IMoveValidators = {
     SoloBotClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IMoveCoinsArguments[]> =>
             (DrawPlayersBoardsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator) as
+                SoloBotCommonCoinUpgradeMoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator) as
                 MoveArgumentsType<IMoveCoinsArguments[]>).concat(
                     DrawPlayersHandsCoins({ G, ctx, ...rest },
-                        MoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator) as
+                        SoloBotCommonCoinUpgradeMoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator) as
                     MoveArgumentsType<IMoveCoinsArguments[]>),
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext,
             currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>): IMoveCoinsArguments => {
@@ -962,7 +970,7 @@ export const moveValidators: IMoveValidators = {
     ChooseDifficultyLevelForSoloModeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SoloGameDifficultyLevelArgType[]> =>
             ChooseDifficultyLevelForSoloModeProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) as
+                ChooseDifficultySoloModeMoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) as
             MoveArgumentsType<SoloGameDifficultyLevelArgType[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext,
             currentMoveArguments: MoveArgumentsType<SoloGameDifficultyLevelArgType[]>):
@@ -978,10 +986,11 @@ export const moveValidators: IMoveValidators = {
         moveName: ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove,
         validate: ({ ctx, playerID }: MyFnContext): boolean => playerID === ctx.currentPlayer,
     },
-    ChooseHeroesForSoloModeMoveValidator: {
+    ChooseHeroForDifficultySoloModeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             PickHeroesForSoloModeProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ChooseHeroesForSoloModeMoveValidator) as MoveArgumentsType<number[]>,
+                ChooseDifficultySoloModeMoveValidatorNames.ChooseHeroForDifficultySoloModeMoveValidator) as
+            MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -998,7 +1007,7 @@ export const moveValidators: IMoveValidators = {
         getRange: ({ G, ctx, ...rest }: MyFnContext):
             MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]> =>
             ChooseStrategyVariantForSoloModeAndvariProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) as
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) as
             MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments:
             MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>):
@@ -1017,7 +1026,7 @@ export const moveValidators: IMoveValidators = {
     ChooseStrategyForSoloModeAndvariMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SoloGameAndvariStrategyNames[]> =>
             ChooseStrategyForSoloModeAndvariProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) as
+                ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) as
             MoveArgumentsType<SoloGameAndvariStrategyNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext,
             currentMoveArguments: MoveArgumentsType<SoloGameAndvariStrategyNames[]>): SoloGameAndvariStrategyNames => {
@@ -1035,7 +1044,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotAndvariPlaceAllCoinsMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[][]> =>
             DrawPlayersHandsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator) as
+                BidsMoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator) as
             MoveArgumentsType<number[][]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[][]>): number[] => {
             const moveArgument: CanBeUndefType<number[]> = currentMoveArguments[0];
@@ -1050,7 +1059,8 @@ export const moveValidators: IMoveValidators = {
     SoloBotAndvariClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawTaverns({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotAndvariClickCardMoveValidator) as MoveArgumentsType<number[]>,
+                TavernsResolutionMoveValidatorNames.SoloBotAndvariClickCardMoveValidator) as
+            MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>):
             number => {
             let moveArgument: CanBeUndefType<number>;
@@ -1079,7 +1089,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotAndvariClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawHeroes({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) as
+                SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             let moveArgument: CanBeUndefType<number>;
@@ -1101,7 +1111,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotAndvariClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             ExplorerDistinctionProfit({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) as
+                TroopEvaluationMoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
@@ -1117,7 +1127,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotAndvariPlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator) as
+                SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator) as
             MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
@@ -1141,7 +1151,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotAndvariPlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator) as
+                PlaceYludMoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator) as
             MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
@@ -1164,7 +1174,7 @@ export const moveValidators: IMoveValidators = {
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IMoveCoinsArguments[]> =>
             DrawPlayersBoardsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator) as
+                SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator) as
             MoveArgumentsType<IMoveCoinsArguments[]>,
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
             IMoveCoinsArguments => {
@@ -1197,7 +1207,7 @@ export const moveValidators: IMoveValidators = {
     AddCoinToPouchMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawPlayersHandsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.AddCoinToPouchMoveValidator) as MoveArgumentsType<number[]>,
+                CommonMoveValidatorNames.AddCoinToPouchMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -1212,7 +1222,7 @@ export const moveValidators: IMoveValidators = {
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit({ G, ctx, ...rest },
-                MoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) as
+                CommonMoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) as
             MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
@@ -1228,7 +1238,7 @@ export const moveValidators: IMoveValidators = {
     ClickCampCardHoldaMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawCamp({ G, ctx, ...rest },
-                MoveValidatorNames.ClickCampCardHoldaMoveValidator) as MoveArgumentsType<number[]>,
+                CommonMoveValidatorNames.ClickCampCardHoldaMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -1244,10 +1254,10 @@ export const moveValidators: IMoveValidators = {
     PickConcreteCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IMoveCoinsArguments[]> =>
             (DrawPlayersBoardsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) as
+                CommonMoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) as
                 MoveArgumentsType<IMoveCoinsArguments[]>).concat(
                     DrawPlayersHandsCoins({ G, ctx, ...rest },
-                        MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) as
+                        CommonMoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) as
                     MoveArgumentsType<IMoveCoinsArguments[]>),
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
             IMoveCoinsArguments => {
@@ -1258,16 +1268,17 @@ export const moveValidators: IMoveValidators = {
             }
             return moveArgument;
         },
-        moveName: CoinMoveNames.ClickConcreteCoinToUpgradeMove,
+        moveName: CoinMoveNames.PickConcreteCoinToUpgradeMove,
         validate: ({ G, ctx, playerID, ...rest }: MyFnContext, id: IMoveCoinsArguments): boolean =>
             playerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, playerID, ...rest }, id),
     },
     ClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IMoveCoinsArguments[]> =>
-            (DrawPlayersBoardsCoins({ G, ctx, ...rest }, MoveValidatorNames.ClickCoinToUpgradeMoveValidator) as
+            (DrawPlayersBoardsCoins({ G, ctx, ...rest },
+                CommonMoveValidatorNames.ClickCoinToUpgradeMoveValidator) as
                 MoveArgumentsType<IMoveCoinsArguments[]>).concat(
                     DrawPlayersHandsCoins({ G, ctx, ...rest },
-                        MoveValidatorNames.ClickCoinToUpgradeMoveValidator) as
+                        CommonMoveValidatorNames.ClickCoinToUpgradeMoveValidator) as
                     MoveArgumentsType<IMoveCoinsArguments[]>),
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
             IMoveCoinsArguments => {
@@ -1285,7 +1296,7 @@ export const moveValidators: IMoveValidators = {
     ClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawHeroes({ G, ctx, ...rest },
-                MoveValidatorNames.ClickHeroCardMoveValidator) as MoveArgumentsType<number[]>,
+                CommonMoveValidatorNames.ClickHeroCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -1323,11 +1334,11 @@ export const moveValidators: IMoveValidators = {
             return playerID === ctx.currentPlayer && isValid;
         },
     },
-    DiscardCardMoveValidator: {
+    DiscardTopCardFromSuitMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext):
             MoveArgumentsType<Partial<SuitPropertyType<number[]>>> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.DiscardCardMoveValidator) as
+                CommonMoveValidatorNames.DiscardTopCardFromSuitMoveValidator) as
             MoveArgumentsType<Partial<SuitPropertyType<number[]>>>,
         getValue: ({ G, ctx, ...rest }: MyFnContext,
             currentMoveArguments: MoveArgumentsType<Partial<SuitPropertyType<number[]>>>): IMoveSuitCardCurrentId => {
@@ -1355,13 +1366,13 @@ export const moveValidators: IMoveValidators = {
                 cardId: moveArgument,
             };
         },
-        moveName: CardMoveNames.DiscardCardMove,
+        moveName: CardMoveNames.DiscardTopCardFromSuitMove,
         validate: ({ ctx, playerID }: MyFnContext): boolean => playerID === ctx.currentPlayer,
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IMoveCardsArguments> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator) as
+                CommonMoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator) as
             MoveArgumentsType<IMoveCardsArguments>,
         getValue: ({ G, ctx, playerID, ...rest }: MyFnContext,
             currentMoveArguments: MoveArgumentsType<IMoveCardsArguments>): MoveCardIdType => {
@@ -1406,7 +1417,7 @@ export const moveValidators: IMoveValidators = {
     PickDiscardCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<number[]> =>
             DrawDiscardedCards({ G, ctx, ...rest },
-                MoveValidatorNames.PickDiscardCardMoveValidator) as MoveArgumentsType<number[]>,
+                CommonMoveValidatorNames.PickDiscardCardMoveValidator) as MoveArgumentsType<number[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<number[]>): number => {
             const moveArgument: CanBeUndefType<number> =
                 currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
@@ -1421,7 +1432,8 @@ export const moveValidators: IMoveValidators = {
     PlaceMultiSuitCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.PlaceMultiSuitCardMoveValidator) as MoveArgumentsType<SuitNames[]>,
+                CommonMoveValidatorNames.PlaceMultiSuitCardMoveValidator) as
+            MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
             const moveArgument: CanBeUndefType<SuitNames> =
@@ -1437,7 +1449,7 @@ export const moveValidators: IMoveValidators = {
     PlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<SuitNames[]> =>
             DrawPlayersBoards({ G, ctx, ...rest },
-                MoveValidatorNames.PlaceThrudHeroMoveValidator) as MoveArgumentsType<SuitNames[]>,
+                CommonMoveValidatorNames.PlaceThrudHeroMoveValidator) as MoveArgumentsType<SuitNames[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<SuitNames[]>):
             SuitNames => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
@@ -1455,7 +1467,7 @@ export const moveValidators: IMoveValidators = {
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         getRange: ({ G, ctx, ...rest }: MyFnContext): MoveArgumentsType<IMoveCoinsArguments[]> =>
             DrawPlayersBoardsCoins({ G, ctx, ...rest },
-                MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) as
+                CommonMoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) as
             MoveArgumentsType<IMoveCoinsArguments[]>,
         getValue: ({ G, ctx, ...rest }: MyFnContext, currentMoveArguments: MoveArgumentsType<IMoveCoinsArguments[]>):
             IMoveCoinsArguments => {
@@ -1492,354 +1504,360 @@ export const moveBy: IMoveBy = {
     default: null,
     ChooseDifficultySoloMode: {
         ChooseDifficultyLevelForSoloMode: {
-            default: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
+            ChooseDifficultyLevelForSoloModeMove: moveValidators.ChooseDifficultyLevelForSoloModeMoveValidator,
         },
-        ChooseHeroesForSoloMode: {
-            default: moveValidators.ChooseHeroesForSoloModeMoveValidator,
+        ChooseHeroForDifficultySoloMode: {
+            ChooseHeroForDifficultySoloModeMove: moveValidators.ChooseHeroForDifficultySoloModeMoveValidator,
         },
         // Solo Bot
-        UpgradeCoinSoloBot: {
-            default: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
+        SoloBotClickCoinToUpgrade: {
+            SoloBotClickCoinToUpgradeMove: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
         },
     },
     ChooseDifficultySoloModeAndvari: {
         ChooseStrategyVariantForSoloModeAndvari: {
-            default: moveValidators.ChooseStrategyVariantForSoloModeAndvariMoveValidator,
+            ChooseStrategyVariantForSoloModeAndvariMove:
+                moveValidators.ChooseStrategyVariantForSoloModeAndvariMoveValidator,
         },
         ChooseStrategyForSoloModeAndvari: {
-            default: moveValidators.ChooseStrategyForSoloModeAndvariMoveValidator,
+            ChooseStrategyForSoloModeAndvariMove: moveValidators.ChooseStrategyForSoloModeAndvariMoveValidator,
         },
     },
     Bids: {
         ClickHandCoin: {
-            default: moveValidators.ClickHandCoinMoveValidator,
+            ClickHandCoinMove: moveValidators.ClickHandCoinMoveValidator,
         },
         ClickBoardCoin: {
-            default: moveValidators.ClickBoardCoinMoveValidator,
+            ClickBoardCoinMove: moveValidators.ClickBoardCoinMoveValidator,
         },
         // Bots
         BotsPlaceAllCoins: {
-            default: moveValidators.BotsPlaceAllCoinsMoveValidator,
+            BotsPlaceAllCoinsMove: moveValidators.BotsPlaceAllCoinsMoveValidator,
         },
         // Solo Bot
         SoloBotPlaceAllCoins: {
-            default: moveValidators.SoloBotPlaceAllCoinsMoveValidator,
+            SoloBotPlaceAllCoinsMove: moveValidators.SoloBotPlaceAllCoinsMoveValidator,
         },
         // Solo Bot Andvari
         SoloBotAndvariPlaceAllCoins: {
-            default: moveValidators.SoloBotAndvariPlaceAllCoinsMoveValidator,
+            SoloBotAndvariPlaceAllCoinsMove: moveValidators.SoloBotAndvariPlaceAllCoinsMoveValidator,
         },
     },
     BidUline: {
         ClickHandCoinUline: {
-            default: moveValidators.ClickHandCoinUlineMoveValidator,
+            ClickHandCoinUlineMove: moveValidators.ClickHandCoinUlineMoveValidator,
         },
     },
     TavernsResolution: {
         ClickCard: {
-            default: moveValidators.ClickCardMoveValidator,
+            ClickCardMove: moveValidators.ClickCardMoveValidator,
         },
         ClickCampCard: {
-            default: moveValidators.ClickCampCardMoveValidator,
+            ClickCampCardMove: moveValidators.ClickCampCardMoveValidator,
         },
         // TODO Check/Fix
         // start
         AddCoinToPouch: {
-            default: moveValidators.AddCoinToPouchMoveValidator,
+            AddCoinToPouchMove: moveValidators.AddCoinToPouchMoveValidator,
         },
         ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
-            default: moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
+            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
+                moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         },
-        DiscardBoardCard: {
-            default: moveValidators.DiscardCardMoveValidator,
+        DiscardTopCardFromSuit: {
+            DiscardTopCardFromSuitMove: moveValidators.DiscardTopCardFromSuitMoveValidator,
         },
-        DiscardSuitCard: {
-            default: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        DiscardSuitCardFromPlayerBoard: {
+            DiscardSuitCardFromPlayerBoardMove: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         },
-        PickCampCardHolda: {
-            default: moveValidators.ClickCampCardHoldaMoveValidator,
+        ClickCampCardHolda: {
+            ClickCampCardHoldaMove: moveValidators.ClickCampCardHoldaMoveValidator,
         },
         PickConcreteCoinToUpgrade: {
-            default: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+            PickConcreteCoinToUpgradeMove: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         },
         PickDiscardCard: {
-            default: moveValidators.PickDiscardCardMoveValidator,
+            PickDiscardCardMove: moveValidators.PickDiscardCardMoveValidator,
         },
-        PickHero: {
-            default: moveValidators.ClickHeroCardMoveValidator,
+        ClickHeroCard: {
+            ClickHeroCardMove: moveValidators.ClickHeroCardMoveValidator,
         },
-        PlaceMultiSuitsCards: {
-            default: moveValidators.PlaceMultiSuitCardMoveValidator,
+        PlaceMultiSuitCard: {
+            PlaceMultiSuitCardMove: moveValidators.PlaceMultiSuitCardMoveValidator,
         },
         PlaceThrudHero: {
-            default: moveValidators.PlaceThrudHeroMoveValidator,
+            PlaceThrudHeroMove: moveValidators.PlaceThrudHeroMoveValidator,
         },
-        UpgradeCoin: {
-            default: moveValidators.ClickCoinToUpgradeMoveValidator,
+        ClickCoinToUpgrade: {
+            ClickCoinToUpgradeMove: moveValidators.ClickCoinToUpgradeMoveValidator,
         },
-        UpgradeVidofnirVedrfolnirCoin: {
-            default: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        UpgradeCoinVidofnirVedrfolnir: {
+            UpgradeCoinVidofnirVedrfolnirMove: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
         },
         // end
         ActivateGiantAbilityOrPickCard: {
-            clickCardNotGiantAbilityMove: moveValidators.ClickCardNotGiantAbilityMoveValidator,
-            clickGiantAbilityNotCardMove: moveValidators.ClickGiantAbilityNotCardMoveValidator,
+            ClickCardNotGiantAbilityMove: moveValidators.ClickCardNotGiantAbilityMoveValidator,
+            ClickGiantAbilityNotCardMove: moveValidators.ClickGiantAbilityNotCardMoveValidator,
         },
         ChooseCoinValueForHrungnirUpgrade: {
-            default: moveValidators.ChooseCoinValueForHrungnirUpgradeMoveValidator,
+            ChooseCoinValueForHrungnirUpgradeMove: moveValidators.ChooseCoinValueForHrungnirUpgradeMoveValidator,
         },
         ChooseSuitOlrun: {
-            default: moveValidators.ChooseSuitOlrunMoveValidator,
+            ChooseSuitOlrunMove: moveValidators.ChooseSuitOlrunMoveValidator,
         },
-        DiscardCard: {
-            default: moveValidators.DiscardCard2PlayersMoveValidator,
+        DiscardCard2Players: {
+            DiscardCard2PlayersMove: moveValidators.DiscardCard2PlayersMoveValidator,
         },
         GetMythologyCard: {
-            default: moveValidators.GetMythologyCardMoveValidator,
+            GetMythologyCardMove: moveValidators.GetMythologyCardMoveValidator,
         },
-        PlaceTradingCoinsUline: {
-            default: moveValidators.ClickHandTradingCoinUlineMoveValidator,
+        ClickHandTradingCoinUline: {
+            ClickHandTradingCoinUlineMove: moveValidators.ClickHandTradingCoinUlineMoveValidator,
         },
         // Solo Bot
         SoloBotClickCard: {
-            default: moveValidators.SoloBotClickCardMoveValidator,
+            SoloBotClickCardMove: moveValidators.SoloBotClickCardMoveValidator,
         },
         // Common Solo Bot Start
-        PickHeroSoloBot: {
-            default: moveValidators.SoloBotClickHeroCardMoveValidator,
+        SoloBotClickHeroCard: {
+            SoloBotClickHeroCardMove: moveValidators.SoloBotClickHeroCardMoveValidator,
         },
-        PlaceThrudHeroSoloBot: {
-            default: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
+        SoloBotPlaceThrudHero: {
+            SoloBotPlaceThrudHeroMove: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
         },
-        UpgradeCoinSoloBot: {
-            default: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
+        SoloBotClickCoinToUpgrade: {
+            SoloBotClickCoinToUpgradeMove: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
         },
         // Common Solo Bot End
         // Solo Bot Andvari
         SoloBotAndvariClickCard: {
-            default: moveValidators.SoloBotAndvariClickCardMoveValidator,
+            SoloBotAndvariClickCardMove: moveValidators.SoloBotAndvariClickCardMoveValidator,
         },
         // Common Solo Bot Andvari Start
-        PickHeroSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
+        SoloBotAndvariClickHeroCard: {
+            SoloBotAndvariClickHeroCardMove: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
         },
-        PlaceThrudHeroSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
+        SoloBotAndvariPlaceThrudHero: {
+            SoloBotAndvariPlaceThrudHeroMove: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
         },
-        UpgradeCoinSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
+        SoloBotAndvariClickCoinToUpgrade: {
+            SoloBotAndvariClickCoinToUpgradeMove: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
         },
         // Common Solo Bot Andvari End
     },
     EnlistmentMercenaries: {
         StartEnlistmentMercenaries: {
-            default: moveValidators.StartEnlistmentMercenariesMoveValidator,
+            StartEnlistmentMercenariesMove: moveValidators.StartEnlistmentMercenariesMoveValidator,
         },
         PassEnlistmentMercenaries: {
-            default: moveValidators.PassEnlistmentMercenariesMoveValidator,
+            PassEnlistmentMercenariesMove: moveValidators.PassEnlistmentMercenariesMoveValidator,
         },
         GetEnlistmentMercenaries: {
-            default: moveValidators.GetEnlistmentMercenariesMoveValidator,
+            GetEnlistmentMercenariesMove: moveValidators.GetEnlistmentMercenariesMoveValidator,
         },
         PlaceEnlistmentMercenaries: {
-            default: moveValidators.PlaceEnlistmentMercenariesMoveValidator,
+            PlaceEnlistmentMercenariesMove: moveValidators.PlaceEnlistmentMercenariesMoveValidator,
         },
         // start
         AddCoinToPouch: {
-            default: moveValidators.AddCoinToPouchMoveValidator,
+            AddCoinToPouchMove: moveValidators.AddCoinToPouchMoveValidator,
         },
         ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
-            default: moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
+            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
+                moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         },
-        DiscardBoardCard: {
-            default: moveValidators.DiscardCardMoveValidator,
+        DiscardTopCardFromSuit: {
+            DiscardTopCardFromSuitMove: moveValidators.DiscardTopCardFromSuitMoveValidator,
         },
-        DiscardSuitCard: {
-            default: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        DiscardSuitCardFromPlayerBoard: {
+            DiscardSuitCardFromPlayerBoardMove: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         },
-        PickCampCardHolda: {
-            default: moveValidators.ClickCampCardHoldaMoveValidator,
+        ClickCampCardHolda: {
+            ClickCampCardHoldaMove: moveValidators.ClickCampCardHoldaMoveValidator,
         },
         PickConcreteCoinToUpgrade: {
-            default: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+            PickConcreteCoinToUpgradeMove: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         },
         PickDiscardCard: {
-            default: moveValidators.PickDiscardCardMoveValidator,
+            PickDiscardCardMove: moveValidators.PickDiscardCardMoveValidator,
         },
-        PickHero: {
-            default: moveValidators.ClickHeroCardMoveValidator,
+        ClickHeroCard: {
+            ClickHeroCardMove: moveValidators.ClickHeroCardMoveValidator,
         },
-        PlaceMultiSuitsCards: {
-            default: moveValidators.PlaceMultiSuitCardMoveValidator,
+        PlaceMultiSuitCard: {
+            PlaceMultiSuitCardMove: moveValidators.PlaceMultiSuitCardMoveValidator,
         },
         PlaceThrudHero: {
-            default: moveValidators.PlaceThrudHeroMoveValidator,
+            PlaceThrudHeroMove: moveValidators.PlaceThrudHeroMoveValidator,
         },
-        UpgradeCoin: {
-            default: moveValidators.ClickCoinToUpgradeMoveValidator,
+        ClickCoinToUpgrade: {
+            ClickCoinToUpgradeMove: moveValidators.ClickCoinToUpgradeMoveValidator,
         },
-        UpgradeVidofnirVedrfolnirCoin: {
-            default: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        UpgradeCoinVidofnirVedrfolnir: {
+            UpgradeCoinVidofnirVedrfolnirMove: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
         },
         // end
     },
     PlaceYlud: {
         PlaceYludHero: {
-            default: moveValidators.PlaceYludHeroMoveValidator,
+            PlaceYludHeroMove: moveValidators.PlaceYludHeroMoveValidator,
         },
         // start
         AddCoinToPouch: {
-            default: moveValidators.AddCoinToPouchMoveValidator,
+            AddCoinToPouchMove: moveValidators.AddCoinToPouchMoveValidator,
         },
         ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
-            default: moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
+            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
+                moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         },
-        DiscardBoardCard: {
-            default: moveValidators.DiscardCardMoveValidator,
+        DiscardTopCardFromSuit: {
+            DiscardTopCardFromSuitMove: moveValidators.DiscardTopCardFromSuitMoveValidator,
         },
-        DiscardSuitCard: {
-            default: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        DiscardSuitCardFromPlayerBoard: {
+            DiscardSuitCardFromPlayerBoardMove: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         },
-        PickCampCardHolda: {
-            default: moveValidators.ClickCampCardHoldaMoveValidator,
+        ClickCampCardHolda: {
+            ClickCampCardHoldaMove: moveValidators.ClickCampCardHoldaMoveValidator,
         },
         PickConcreteCoinToUpgrade: {
-            default: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+            PickConcreteCoinToUpgradeMove: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         },
         PickDiscardCard: {
-            default: moveValidators.PickDiscardCardMoveValidator,
+            PickDiscardCardMove: moveValidators.PickDiscardCardMoveValidator,
         },
-        PickHero: {
-            default: moveValidators.ClickHeroCardMoveValidator,
+        ClickHeroCard: {
+            ClickHeroCardMove: moveValidators.ClickHeroCardMoveValidator,
         },
-        PlaceMultiSuitsCards: {
-            default: moveValidators.PlaceMultiSuitCardMoveValidator,
+        PlaceMultiSuitCard: {
+            PlaceMultiSuitCardMove: moveValidators.PlaceMultiSuitCardMoveValidator,
         },
         PlaceThrudHero: {
-            default: moveValidators.PlaceThrudHeroMoveValidator,
+            PlaceThrudHeroMove: moveValidators.PlaceThrudHeroMoveValidator,
         },
-        UpgradeCoin: {
-            default: moveValidators.ClickCoinToUpgradeMoveValidator,
+        ClickCoinToUpgrade: {
+            ClickCoinToUpgradeMove: moveValidators.ClickCoinToUpgradeMoveValidator,
         },
-        UpgradeVidofnirVedrfolnirCoin: {
-            default: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        UpgradeCoinVidofnirVedrfolnir: {
+            UpgradeCoinVidofnirVedrfolnirMove: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
         },
         // end
         // Solo Bot
         SoloBotPlaceYludHero: {
-            default: moveValidators.SoloBotPlaceYludHeroMoveValidator,
+            SoloBotPlaceYludHeroMove: moveValidators.SoloBotPlaceYludHeroMoveValidator,
         },
         // Common Solo Bot Start
-        PickHeroSoloBot: {
-            default: moveValidators.SoloBotClickHeroCardMoveValidator,
+        SoloBotClickHeroCard: {
+            SoloBotClickHeroCardMove: moveValidators.SoloBotClickHeroCardMoveValidator,
         },
-        PlaceThrudHeroSoloBot: {
-            default: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
+        SoloBotPlaceThrudHero: {
+            SoloBotPlaceThrudHeroMove: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
         },
-        UpgradeCoinSoloBot: {
-            default: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
+        SoloBotClickCoinToUpgrade: {
+            SoloBotClickCoinToUpgradeMove: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
         },
         // Common Solo Bot End
         // Solo Bot Andvari
         SoloBotAndvariPlaceYludHero: {
-            default: moveValidators.SoloBotAndvariPlaceYludHeroMoveValidator,
+            SoloBotAndvariPlaceYludHeroMove: moveValidators.SoloBotAndvariPlaceYludHeroMoveValidator,
         },
         // Common Solo Bot Andvari Start
-        PickHeroSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
+        SoloBotAndvariClickHeroCard: {
+            SoloBotAndvariClickHeroCardMove: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
         },
-        PlaceThrudHeroSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
+        SoloBotAndvariPlaceThrudHero: {
+            SoloBotAndvariPlaceThrudHeroMove: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
         },
-        UpgradeCoinSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
+        SoloBotAndvariClickCoinToUpgrade: {
+            SoloBotAndvariClickCoinToUpgradeMove: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
         },
         // Common Solo Bot Andvari End
     },
     TroopEvaluation: {
         ClickDistinctionCard: {
-            default: moveValidators.ClickDistinctionCardMoveValidator,
+            ClickDistinctionCardMove: moveValidators.ClickDistinctionCardMoveValidator,
         },
         // start
         AddCoinToPouch: {
-            default: moveValidators.AddCoinToPouchMoveValidator,
+            AddCoinToPouchMove: moveValidators.AddCoinToPouchMoveValidator,
         },
         ChooseCoinValueForVidofnirVedrfolnirUpgrade: {
-            default: moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
+            ChooseCoinValueForVidofnirVedrfolnirUpgradeMove:
+                moveValidators.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator,
         },
-        DiscardBoardCard: {
-            default: moveValidators.DiscardCardMoveValidator,
+        DiscardTopCardFromSuit: {
+            DiscardTopCardFromSuitMove: moveValidators.DiscardTopCardFromSuitMoveValidator,
         },
-        DiscardSuitCard: {
-            default: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        DiscardSuitCardFromPlayerBoard: {
+            DiscardSuitCardFromPlayerBoardMove: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         },
-        PickCampCardHolda: {
-            default: moveValidators.ClickCampCardHoldaMoveValidator,
+        ClickCampCardHolda: {
+            ClickCampCardHoldaMove: moveValidators.ClickCampCardHoldaMoveValidator,
         },
         PickConcreteCoinToUpgrade: {
-            default: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
+            PickConcreteCoinToUpgradeMove: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         },
         PickDiscardCard: {
-            default: moveValidators.PickDiscardCardMoveValidator,
+            PickDiscardCardMove: moveValidators.PickDiscardCardMoveValidator,
         },
-        PickHero: {
-            default: moveValidators.ClickHeroCardMoveValidator,
+        ClickHeroCard: {
+            ClickHeroCardMove: moveValidators.ClickHeroCardMoveValidator,
         },
-        PlaceMultiSuitsCards: {
-            default: moveValidators.PlaceMultiSuitCardMoveValidator,
+        PlaceMultiSuitCard: {
+            PlaceMultiSuitCardMove: moveValidators.PlaceMultiSuitCardMoveValidator,
         },
         PlaceThrudHero: {
-            default: moveValidators.PlaceThrudHeroMoveValidator,
+            PlaceThrudHeroMove: moveValidators.PlaceThrudHeroMoveValidator,
         },
-        UpgradeCoin: {
-            default: moveValidators.ClickCoinToUpgradeMoveValidator,
+        ClickCoinToUpgrade: {
+            ClickCoinToUpgradeMove: moveValidators.ClickCoinToUpgradeMoveValidator,
         },
-        UpgradeVidofnirVedrfolnirCoin: {
-            default: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        UpgradeCoinVidofnirVedrfolnir: {
+            UpgradeCoinVidofnirVedrfolnirMove: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
         },
         // end
-        PickDistinctionCard: {
-            default: moveValidators.ClickCardToPickDistinctionMoveValidator,
+        ClickCardToPickDistinction: {
+            ClickCardToPickDistinctionMove: moveValidators.ClickCardToPickDistinctionMoveValidator,
         },
         // Solo Bot
-        PickDistinctionCardSoloBot: {
-            default: moveValidators.SoloBotClickCardToPickDistinctionMoveValidator,
+        SoloBotClickCardToPickDistinction: {
+            SoloBotClickCardToPickDistinctionMove: moveValidators.SoloBotClickCardToPickDistinctionMoveValidator,
         },
         // Common Solo Bot Start
-        PickHeroSoloBot: {
-            default: moveValidators.SoloBotClickHeroCardMoveValidator,
+        SoloBotClickHeroCard: {
+            SoloBotClickHeroCardMove: moveValidators.SoloBotClickHeroCardMoveValidator,
         },
-        PlaceThrudHeroSoloBot: {
-            default: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
+        SoloBotPlaceThrudHero: {
+            SoloBotPlaceThrudHeroMove: moveValidators.SoloBotPlaceThrudHeroMoveValidator,
         },
-        UpgradeCoinSoloBot: {
-            default: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
+        SoloBotClickCoinToUpgrade: {
+            SoloBotClickCoinToUpgradeMove: moveValidators.SoloBotClickCoinToUpgradeMoveValidator,
         },
         // Common Solo Bot End
         // Solo Bot Andvari
-        PickDistinctionCardSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariClickCardToPickDistinctionMoveValidator,
+        SoloBotAndvariClickCardToPickDistinction: {
+            SoloBotAndvariClickCardToPickDistinctionMove:
+                moveValidators.SoloBotAndvariClickCardToPickDistinctionMoveValidator,
         },
         // Common Solo Bot Andvari Start
-        PickHeroSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
+        SoloBotAndvariClickHeroCard: {
+            SoloBotAndvariClickHeroCardMove: moveValidators.SoloBotAndvariClickHeroCardMoveValidator,
         },
-        PlaceThrudHeroSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
+        SoloBotAndvariPlaceThrudHero: {
+            SoloBotAndvariPlaceThrudHeroMove: moveValidators.SoloBotAndvariPlaceThrudHeroMoveValidator,
         },
-        UpgradeCoinSoloBotAndvari: {
-            default: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
+        SoloBotAndvariClickCoinToUpgrade: {
+            SoloBotAndvariClickCoinToUpgradeMove: moveValidators.SoloBotAndvariClickCoinToUpgradeMoveValidator,
         },
         // Common Solo Bot Andvari End
     },
     BrisingamensEndGame: {
         DiscardCardFromPlayerBoard: {
-            default: moveValidators.DiscardCardFromPlayerBoardMoveValidator,
+            DiscardCardFromPlayerBoardMove: moveValidators.DiscardCardFromPlayerBoardMoveValidator,
         },
     },
     GetMjollnirProfit: {
         GetMjollnirProfit: {
-            default: moveValidators.GetMjollnirProfitMoveValidator,
+            GetMjollnirProfitMove: moveValidators.GetMjollnirProfitMoveValidator,
         },
     },
 };
