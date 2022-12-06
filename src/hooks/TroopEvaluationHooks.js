@@ -57,7 +57,7 @@ export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }) => {
  * @param ctx
  * @returns Необходимость завершения текущего хода.
  */
-export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }) => EndTurnActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }) => EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 /**
  * <h3>Действия при завершении фазы 'Смотр войск'.</h3>
  * <p>Применения:</p>
@@ -87,7 +87,7 @@ export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnTroopEvaluationMove = ({ G, ctx, ...rest }) => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 /**
  * <h3>Действия при начале хода в фазе 'Смотр войск'.</h3>
@@ -101,7 +101,7 @@ export const OnTroopEvaluationMove = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
-    AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, [StackData.getDistinctions()]);
+    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         let length;
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
@@ -114,7 +114,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
             }
             if (G.expansions.Idavoll.active
-                && CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest }, MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards)) {
+                && CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards)) {
                 length = 6;
             }
             else {

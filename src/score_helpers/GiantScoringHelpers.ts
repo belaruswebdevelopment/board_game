@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { ErrorNames, GiantNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, IDwarfCard, IGiantCard, IGiantScoringFunction, IPublicPlayer, MyFnContext, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, IDwarfCard, IGiantCard, IGiantScoringFunction, IPublicPlayer, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Получение победных очков по Гиганту, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -13,12 +13,12 @@ import type { CanBeNullType, CanBeUndefType, IDwarfCard, IGiantCard, IGiantScori
  * @param player Игрок.
  * @returns Количество очков по конкретному гиганту.
  */
-export const BasicGiantScoring: IGiantScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext, value?: number):
-    number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const BasicGiantScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    value?: number): number => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            playerID);
+            myPlayerID);
     }
     if (value === undefined) {
         throw new Error(`Function param 'value' is undefined.`);
@@ -36,11 +36,12 @@ export const BasicGiantScoring: IGiantScoringFunction = ({ G, ctx, playerID, ...
  * @param player Игрок.
  * @returns Количество очков по конкретному гиганту.
  */
-export const GymirScoring: IGiantScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const GymirScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    number => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            playerID);
+            myPlayerID);
     }
     const gymirCard: CanBeUndefType<IGiantCard> =
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType): boolean =>
@@ -52,8 +53,10 @@ export const GymirScoring: IGiantScoringFunction = ({ G, ctx, playerID, ...rest 
     if (capturedGymirCard === null) {
         return 0;
     }
-    // TODO Rework "!"?
-    return capturedGymirCard.points! * 3;
+    if (capturedGymirCard.points === null) {
+        throw new Error(`У карты '${capturedGymirCard.name}' не могут отсутствовать очки.`);
+    }
+    return capturedGymirCard.points * 3;
 };
 
 /**
@@ -66,11 +69,12 @@ export const GymirScoring: IGiantScoringFunction = ({ G, ctx, playerID, ...rest 
  * @param player Игрок.
  * @returns Количество очков по конкретному гиганту.
  */
-export const SurtScoring: IGiantScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const SurtScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    number => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            playerID);
+            myPlayerID);
     }
     const surtCard: CanBeUndefType<IGiantCard> =
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType): boolean =>
@@ -82,5 +86,5 @@ export const SurtScoring: IGiantScoringFunction = ({ G, ctx, playerID, ...rest }
     if (capturedSurtCard === null) {
         return 0;
     }
-    return GetMaxCoinValue({ G, ctx, playerID, ...rest });
+    return GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
 };

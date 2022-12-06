@@ -26,12 +26,12 @@ import type { CanBeVoidType, HeroesForSoloGameArrayType, IndexOf, InvalidMoveTyp
 export const SoloBotClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard,
             CardMoveNames.SoloBotClickCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ClickCardAction({ G, ctx, playerID, ...rest }, cardId);
+    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 
 /**
@@ -49,12 +49,12 @@ export const SoloBotClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCo
 export const SoloBotClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationStageNames.SoloBotClickCardToPickDistinction,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationStageNames.SoloBotClickCardToPickDistinction,
             CardMoveNames.SoloBotClickCardToPickDistinctionMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickCardToPickDistinctionAction({ G, ctx, playerID, ...rest }, cardId);
+    PickCardToPickDistinctionAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 
 /**
@@ -72,7 +72,7 @@ export const SoloBotClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, 
 export const SoloBotClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard,
             CardMoveNames.SoloBotClickHeroCardMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -80,7 +80,7 @@ export const SoloBotClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: My
     if (G.heroesForSoloBot === null) {
         throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
     }
-    AddHeroCardToPlayerHeroCards({ G, ctx, playerID, ...rest },
+    AddHeroCardToPlayerHeroCards({ G, ctx, myPlayerID: playerID, ...rest },
         G.heroesForSoloBot[heroId as IndexOf<HeroesForSoloGameArrayType>]);
 };
 
@@ -99,12 +99,12 @@ export const SoloBotClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: My
 export const SoloBotPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinsOrder: number[]):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.SoloBotPlaceAllCoins,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, BidsDefaultStageNames.SoloBotPlaceAllCoins,
             AutoBotsMoveNames.SoloBotPlaceAllCoinsMove, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceAllCoinsInCurrentOrderForSoloBot({ G, ctx, playerID, ...rest });
+    PlaceAllCoinsInCurrentOrderForSoloBot({ G, ctx, myPlayerID: playerID, ...rest });
 };
 
 /**
@@ -122,12 +122,12 @@ export const SoloBotPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: My
 export const SoloBotPlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard,
             EmptyCardMoveNames.SoloBotPlaceThrudHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceThrudAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
 /**
@@ -145,12 +145,13 @@ export const SoloBotPlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: M
 export const SoloBotPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.SoloBotPlaceYludHero,
-            EmptyCardMoveNames.SoloBotPlaceYludHeroMove, suit);
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+            PlaceYludDefaultStageNames.SoloBotPlaceYludHero, EmptyCardMoveNames.SoloBotPlaceYludHeroMove,
+            suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceYludAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceYludAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
 /**
@@ -169,7 +170,7 @@ export const SoloBotPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...rest }: My
 export const SoloBotClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
             CoinMoveNames.SoloBotClickCoinToUpgradeMove, {
             coinId,
             type,
@@ -177,6 +178,6 @@ export const SoloBotClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, playerID, ...rest });
-    UpgradeCoinActions({ G, ctx, playerID, ...rest }, coinId, type);
+    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, myPlayerID: playerID, ...rest });
+    UpgradeCoinActions({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };

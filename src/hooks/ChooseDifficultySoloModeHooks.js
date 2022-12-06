@@ -85,7 +85,7 @@ export const EndChooseDifficultySoloModeActions = ({ G }) => {
  * @returns
  */
 export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }) => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 /**
  * <h3>Действия при начале хода в фазе 'chooseDifficultySoloMode'.</h3>
@@ -100,8 +100,8 @@ export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }) => {
  */
 export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }) => {
     if (ctx.currentPlayer === `0`) {
-        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, [StackData.getDifficultyLevelForSoloMode()]);
-        DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.getDifficultyLevelForSoloMode()]);
+        DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     }
     else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer = G.publicPlayers[1];
@@ -110,10 +110,10 @@ export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }) => {
         }
         soloBotPublicPlayer.heroes.forEach((hero) => {
             var _a;
-            AddBuffToPlayer({ G, ctx, playerID: ctx.currentPlayer, ...rest }, hero.buff);
+            AddBuffToPlayer({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, hero.buff);
             if (hero.name !== HeroNames.Thrud && hero.name !== HeroNames.Ylud) {
-                AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, (_a = hero.stack) === null || _a === void 0 ? void 0 : _a.soloBot, hero);
-                DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+                AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, (_a = hero.stack) === null || _a === void 0 ? void 0 : _a.soloBot, hero);
+                DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
             }
         });
         G.heroesForSoloGameDifficultyLevel = null;

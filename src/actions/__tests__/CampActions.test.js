@@ -736,7 +736,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             discardCardsDeck: [],
             logData: [],
         };
-        DiscardSuitCardAction({ G, playerID: `0` }, 0);
+        DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -786,7 +786,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             discardCampCardsDeck: [],
             logData: [],
         };
-        DiscardSuitCardAction({ G, playerID: `0` }, 0);
+        DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -828,7 +828,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
         };
         expect(() => {
-            DiscardSuitCardAction({ G, playerID: `0` }, 0);
+            DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
         }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
     });
 });

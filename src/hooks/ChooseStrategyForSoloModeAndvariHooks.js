@@ -79,7 +79,7 @@ export const EndChooseStrategyForSoloModeAndvariActions = ({ G }) => {
  * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }) => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 /**
  * <h3>Действия при начале хода в фазе 'chooseDifficultySoloModeAndvari'.</h3>
@@ -93,8 +93,8 @@ export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }) => {
  */
 export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ...rest }) => {
     if (ctx.currentPlayer === `0`) {
-        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, random, ...rest }, [StackData.chooseStrategyVariantLevelForSoloModeAndvari()]);
-        DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, random, ...rest });
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, [StackData.chooseStrategyVariantLevelForSoloModeAndvari()]);
+        DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest });
     }
     else if (ctx.currentPlayer === `1`) {
         if (G.heroesInitialForSoloGameForBotAndvari === null) {
@@ -151,7 +151,7 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ..
                     if (heroCard === undefined) {
                         throw new Error(`В массиве героев для соло бот Андвари отсутствует '${RusCardTypeNames.Hero_Card}' с названием '${heroNameHardStrategy}'.`);
                     }
-                    AddHeroToPlayerCards({ G, ctx, playerID: ctx.currentPlayer, random, ...rest }, heroCard);
+                    AddHeroToPlayerCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, heroCard);
                 }
                 break;
             case SoloGameAndvariStrategyNames.WithHeroHardStrategy:
@@ -167,7 +167,7 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ..
                     if (heroCard === undefined) {
                         throw new Error(`В массиве героев для соло бот Андвари отсутствует '${RusCardTypeNames.Hero_Card}' с названием '${heroNameEasyStrategy}'.`);
                     }
-                    AddHeroToPlayerCards({ G, ctx, playerID: ctx.currentPlayer, random, ...rest }, heroCard);
+                    AddHeroToPlayerCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, heroCard);
                 }
                 break;
             case null:

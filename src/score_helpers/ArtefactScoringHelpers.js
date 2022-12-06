@@ -15,10 +15,10 @@ import { TotalRank } from "./ScoreHelpers";
  * @param value Значение очков артефакта.
  * @returns Количество очков по конкретному артефакту.
  */
-export const BasicArtefactScoring = ({ G, ctx, playerID, ...rest }, value) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, value) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (value === undefined) {
         throw new Error(`Function param 'value' is undefined.`);
@@ -35,10 +35,10 @@ export const BasicArtefactScoring = ({ G, ctx, playerID, ...rest }, value) => {
  * @param G
  * @returns Количество очков по конкретному артефакту.
  */
-export const DraupnirScoring = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const DraupnirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     return player.boardCoins.filter((coin, index) => {
         if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
@@ -58,11 +58,11 @@ export const DraupnirScoring = ({ G, ctx, playerID, ...rest }) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному артефакту.
  */
-export const HrafnsmerkiScoring = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const HrafnsmerkiScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     let score = 0, suit;
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     for (suit in player.cards) {
         score += player.cards[suit].filter(IsMercenaryPlayerCampCard).length * 5;
@@ -80,11 +80,11 @@ export const HrafnsmerkiScoring = ({ G, ctx, playerID, ...rest }) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному артефакту.
  */
-export const MjollnirScoring = ({ G, ctx, playerID, ...rest }) => {
+export const MjollnirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     var _a;
-    const player = G.publicPlayers[Number(playerID)];
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const suit = (_a = player.buffs.find((buff) => buff.suitIdForMjollnir !== undefined)) === null || _a === void 0 ? void 0 : _a.suitIdForMjollnir;
     if (suit === undefined) {
@@ -113,10 +113,10 @@ export const OdroerirTheMythicCauldronScoring = ({ G, ...rest }) => GetOdroerirT
  * @param G
  * @returns Количество очков по конкретному артефакту.
  */
-export const SvalinnScoring = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const SvalinnScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     return player.heroes.length * 5;
 };

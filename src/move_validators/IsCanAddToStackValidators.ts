@@ -1,4 +1,4 @@
-import type { CanBeUndefType, CardsHasStackValidatorsType, MyFnContext, ValidatorsConfigType } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackValidatorsType, MyFnContextWithMyPlayerID, ValidatorsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из лагеря.</h3>
@@ -11,7 +11,8 @@ import type { CanBeUndefType, CardsHasStackValidatorsType, MyFnContext, Validato
  * @param card Карта.
  * @returns Возможен ли выбор карты из лагеря.
  */
-export const IsCanPickPickCampCardToStack = ({ G }: MyFnContext, card: CardsHasStackValidatorsType): boolean => {
+export const IsCanPickPickCampCardToStack = ({ G }: MyFnContextWithMyPlayerID, card: CardsHasStackValidatorsType):
+    boolean => {
     const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;
     let isValidMove = false;
     if (validators?.pickCampCardToStack !== undefined) {
@@ -34,7 +35,8 @@ export const IsCanPickPickCampCardToStack = ({ G }: MyFnContext, card: CardsHasS
  * @param card Карта.
  * @returns Возможен ли выбор карты из колоды сброса.
  */
-export const IsCanPickPickDiscardCardToStack = ({ G }: MyFnContext, card: CardsHasStackValidatorsType): boolean => {
+export const IsCanPickPickDiscardCardToStack = ({ G }: MyFnContextWithMyPlayerID, card: CardsHasStackValidatorsType):
+    boolean => {
     const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;
     let isValidMove = false;
     if (validators?.pickDiscardCardToStack !== undefined) {

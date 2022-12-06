@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CampBuffNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, IArtefactPlayerCampCard, ICoin, IPublicPlayer, MyFnContext } from "../typescript/interfaces";
+import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, IArtefactPlayerCampCard, ICoin, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -19,27 +19,28 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  * @param card Карта.
  * @returns
  */
-export const AddCampCardToCards = ({ G, ctx, playerID, ...rest }: MyFnContext, card: CampDeckCardType): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: CampDeckCardType):
+    void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     if (ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null
         && (ctx.currentPlayer === G.publicPlayersOrder[0]
-            || CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, CampBuffNames.GoCamp))) {
+            || CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CampBuffNames.GoCamp))) {
         G.campPicked = true;
     }
-    if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.GoCampOneTime)) {
-        DeleteBuffFromPlayer({ G, ctx, playerID, ...rest }, HeroBuffNames.GoCampOneTime);
+    if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime)) {
+        DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime);
     }
     if (card.type === RusCardTypeNames.Artefact_Player_Card) {
-        AddArtefactPlayerCardToPlayerCards({ G, ctx, playerID, ...rest }, card);
-        CheckAndMoveThrudAction({ G, ctx, playerID, ...rest }, card);
+        AddArtefactPlayerCardToPlayerCards({ G, ctx, myPlayerID, ...rest }, card);
+        CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
     } else {
-        AddCampCardToPlayerCampCards({ G, ctx, playerID, ...rest }, card);
+        AddCampCardToPlayerCampCards({ G, ctx, myPlayerID, ...rest }, card);
         if (card.type === RusCardTypeNames.Artefact_Card) {
-            AddBuffToPlayer({ G, ctx, playerID, ...rest }, card.buff);
+            AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, card.buff);
         }
     }
 };
@@ -56,12 +57,12 @@ export const AddCampCardToCards = ({ G, ctx, playerID, ...rest }: MyFnContext, c
  * @param card Карта лагеря.
  * @returns
  */
-const AddCampCardToPlayerCampCards = ({ G, ctx, playerID, ...rest }: MyFnContext,
+const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     card: CampCreatureCommandZoneCardType): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     player.campCards.push(card);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}'.`);
@@ -79,14 +80,14 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, playerID, ...rest }: MyFnContext
  * @param card Карта лагеря.
  * @returns Добавлен ли артефакт на планшет игрока.
  */
-const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, playerID, ...rest }: MyFnContext, card: IArtefactPlayerCampCard):
+const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: IArtefactPlayerCampCard):
     boolean => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
-    AddCardToPlayer({ G, ctx, playerID, ...rest }, card);
+    AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };
@@ -101,7 +102,7 @@ const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, playerID, ...rest }: MyFnC
  * @param G
  * @returns
  */
-export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }: MyFnContext): void => {
+export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }: MyFnContextWithMyPlayerID): void => {
     const minCoinValue: number = G.marketCoins.reduceRight((prev: ICoin, curr: ICoin): ICoin =>
         prev.value < curr.value ? prev : curr).value,
         minCoinIndex: number =
@@ -127,6 +128,6 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }: MyFnContext): 
  * @param G
  * @returns Значение всех монет на артефакте Odroerir The Mythic Cauldron.
  */
-export const GetOdroerirTheMythicCauldronCoinsValues = ({ G }: MyFnContext): number =>
+export const GetOdroerirTheMythicCauldronCoinsValues = ({ G }: MyFnContextWithMyPlayerID): number =>
     G.odroerirTheMythicCauldronCoins.reduce((prev: number, curr: ICoin): number =>
         prev + curr.value, 0);

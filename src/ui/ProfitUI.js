@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../helpers/IsDwarfTypeHelpers";
-import { ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, ErrorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, ErrorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 /**
  * <h3>Отрисовка для выбора карты Дворфа или активации способности Гиганта.</h3>
@@ -38,7 +38,8 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }, valida
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, card, j, player, card.suit, CardMoveNames.ClickCardNotGiantAbilityMove, card);
             }
-            else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
+            else if (validatorName ===
+                ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
                 moveMainArgs = card;
             }
             else {
@@ -56,7 +57,8 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }, valida
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, giant, j, player, null, CardMoveNames.ClickGiantAbilityNotCardMove, card);
             }
-            else if (validatorName === TavernsResolutionMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
+            else if (validatorName ===
+                ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
                 moveMainArgs = card;
             }
             else {

@@ -11,13 +11,13 @@ import { ArtefactScoringFunctionNames } from "../typescript/enums";
  * @param action Объект действия.
  * @returns Количество победных очков по артефакту.
  */
-export const StartArtefactScoring = ({ G, ctx, playerID, ...rest }, action) => {
+export const StartArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, action) => {
     const actionDispatcher = ArtefactScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest });
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest });
     }
     else {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest }, ...action.params);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest }, ...action.params);
     }
 };
 /**

@@ -1,6 +1,6 @@
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactNames, BuffNames, CampBuffNames, CommonStageNames, DrawNames, GameNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, RusCardTypeNames, RusSuitNames, SuitNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardType, CanBeNullType, Ctx, DeckCardType, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, MyFnContext, PlayerCardType, SuitPropertyType } from "../../typescript/interfaces";
+import type { CampDeckCardType, CanBeNullType, Ctx, DeckCardType, IArtefactPlayerCampCard, IBuffs, IDwarfCard, IHeroCard, IHeroPlayerCard, IMercenaryCampCard, IMercenaryPlayerCampCard, IMyGameState, IPublicPlayer, IPublicPlayers, IRoyalOfferingCard, MyFnContextWithMyPlayerID, PlayerCardType, SuitPropertyType } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -31,7 +31,8 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContext, SuitNames.warrior, 0);
+        DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContextWithMyPlayerID,
+            SuitNames.warrior, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -88,7 +89,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContext, SuitNames.warrior, 0);
+        DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.warrior, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -146,7 +147,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContext, SuitNames.warrior, 0);
+        DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.warrior, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -194,7 +195,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContext, SuitNames.warrior, 0);
+            DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.warrior, 0);
         }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, (): void => {
@@ -211,7 +212,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContext, SuitNames.warrior, 0);
+            DiscardAnyCardFromPlayerBoardAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.warrior, 0);
         }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта во фракции '${RusSuitNames.warrior}' с id '0': это должно проверяться в MoveValidator.`);
     });
 });
@@ -244,7 +245,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardCardFromTavernAction({ G, ctx } as MyFnContext, 0);
+        DiscardCardFromTavernAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -300,7 +301,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            DiscardCardFromTavernAction({ G, ctx } as MyFnContext, 0);
+            DiscardCardFromTavernAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         }).toThrowError(`Не удалось сбросить карту с id '0' из текущей таверны с id '0'.`);
     });
     it(`shouldn't remove non-exists card from tavern and must throw Error`, (): void => {
@@ -322,7 +323,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            DiscardCardFromTavernAction({ G, ctx } as MyFnContext, 0);
+            DiscardCardFromTavernAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         }).toThrowError(`В текущей таверне с id '0' отсутствует карта для сброса с id '0'.`);
     });
 });
@@ -350,7 +351,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                 currentPlayer: `0`,
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
-        GetEnlistmentMercenariesAction({ G, ctx } as MyFnContext, 0);
+        GetEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -392,7 +393,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
         expect((): void => {
-            GetEnlistmentMercenariesAction({ G, ctx } as MyFnContext, 0);
+            GetEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         }).toThrowError(`В массиве карт лагеря игрока с id '0' отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
     it(`shouldn't remove null card from tavern and must throw Error`, (): void => {
@@ -410,7 +411,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
         expect((): void => {
-            GetEnlistmentMercenariesAction({ G, ctx } as MyFnContext, 0);
+            GetEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary_Card}'.`);
     });
 });
@@ -433,7 +434,7 @@ describe(`Test GetMjollnirProfitAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        GetMjollnirProfitAction({ G, ctx } as MyFnContext, SuitNames.hunter);
+        GetMjollnirProfitAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.hunter);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -477,7 +478,7 @@ describe(`Test PassEnlistmentMercenariesAction method`, (): void => {
                 currentPlayer: `0`,
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
-        PassEnlistmentMercenariesAction({ G, ctx } as MyFnContext);
+        PassEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -518,7 +519,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        PickDiscardCardAction({ G, ctx } as MyFnContext, 0);
+        PickDiscardCardAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -579,7 +580,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        PickDiscardCardAction({ G, ctx } as MyFnContext, 0);
+        PickDiscardCardAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -654,7 +655,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        PickDiscardCardAction({ G, ctx } as MyFnContext, 0);
+        PickDiscardCardAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -734,7 +735,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        PickDiscardCardAction({ G, ctx } as MyFnContext, 0);
+        PickDiscardCardAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -820,7 +821,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            PickDiscardCardAction({ G, ctx } as MyFnContext, 0);
+            PickDiscardCardAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
         }).toThrowError(`В массиве колоды сброса отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
 });
@@ -863,7 +864,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                 currentPlayer: `0`,
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
-        PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContext, SuitNames.blacksmith);
+        PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.blacksmith);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -945,7 +946,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                 currentPlayer: `0`,
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
-        PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContext, SuitNames.warrior);
+        PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.warrior);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -1043,7 +1044,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContext, SuitNames.blacksmith);
+            PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.blacksmith);
         }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypeNames.Mercenary_Card}'.`);
     });
     it(`shouldn't get mercenary card which not exists in player's camp cards to place and must throw Error`,
@@ -1069,7 +1070,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                     currentPlayer: `0`,
                 } as Ctx;
             expect((): void => {
-                PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContext, SuitNames.explorer);
+                PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.explorer);
             }).toThrowError(`У игрока с id '0' в массиве карт лагеря отсутствует выбранная карта.`);
         });
     it(`shouldn't use non-existing suit in picked mercenary card and must throw Error`, (): void => {
@@ -1082,7 +1083,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContext, SuitNames.hunter);
+            PlaceEnlistmentMercenariesAction({ G, ctx } as MyFnContextWithMyPlayerID, SuitNames.hunter);
         }).toThrowError(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${SuitNames.hunter}'.`);
     });
 });

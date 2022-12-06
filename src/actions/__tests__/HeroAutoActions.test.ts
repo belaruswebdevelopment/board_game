@@ -1,5 +1,5 @@
 import { CommonStageNames, DrawNames, GameModeNames, LogTypeNames } from "../../typescript/enums";
-import type { Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContext } from "../../typescript/interfaces";
+import type { Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContextWithMyPlayerID } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
 describe(`Test AddPickHeroAction method`, (): void => {
@@ -16,7 +16,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        AddPickHeroAction({ G, ctx } as MyFnContext, 1);
+        AddPickHeroAction({ G, ctx } as MyFnContextWithMyPlayerID, 1);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -67,7 +67,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContext);
+        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -128,7 +128,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContext);
+        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -203,7 +203,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContext);
+        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {

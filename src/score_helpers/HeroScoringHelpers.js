@@ -28,7 +28,7 @@ export const BasicHeroScoring = ({ G, ctx, ...rest }, value) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const AstridScoring = ({ G, ctx, playerID, ...rest }) => GetMaxCoinValue({ G, ctx, playerID, ...rest });
+export const AstridScoring = ({ G, ctx, myPlayerID, ...rest }) => GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>
  * <p>Применения:</p>
@@ -39,5 +39,5 @@ export const AstridScoring = ({ G, ctx, playerID, ...rest }) => GetMaxCoinValue(
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const IdunnScoring = ({ G, ctx, playerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.explorer, 2);
+export const IdunnScoring = ({ G, ctx, myPlayerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 2);
 //# sourceMappingURL=HeroScoringHelpers.js.map

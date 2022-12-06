@@ -10,7 +10,7 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RusCardTypeNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RusCardTypeNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
@@ -27,13 +27,13 @@ import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfol
  * @param coinData Данные монеты.
  * @returns Валидация обмена монет.
  */
-export const CoinUpgradeValidation = ({ G, ctx, playerID, ...rest }, coinData) => {
-    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
+export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }, coinData) => {
+    const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
     }
     let handCoins, boardCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -49,13 +49,13 @@ export const CoinUpgradeValidation = ({ G, ctx, playerID, ...rest }, coinData) =
     switch (coinData.type) {
         case CoinTypeNames.Hand:
             if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${coinData.coinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${coinData.coinId}'.`);
             }
             if (handCoin === null) {
-                throw new Error(`Выбранная для улучшения монета игрока с id '${playerID}' в руке с id '${coinData.coinId}' не может отсутствовать там.`);
+                throw new Error(`Выбранная для улучшения монета игрока с id '${myPlayerID}' в руке с id '${coinData.coinId}' не может отсутствовать там.`);
             }
             if (!IsCoin(handCoin)) {
-                throw new Error(`Монета с id '${coinData.coinId}' в руке текущего игрока с id '${playerID}' не может быть закрытой для него.`);
+                throw new Error(`Монета с id '${coinData.coinId}' в руке текущего игрока с id '${myPlayerID}' не может быть закрытой для него.`);
             }
             if (!handCoin.isTriggerTrading) {
                 return true;
@@ -63,13 +63,13 @@ export const CoinUpgradeValidation = ({ G, ctx, playerID, ...rest }, coinData) =
             break;
         case CoinTypeNames.Board:
             if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${playerID}' на столе отсутствует монета с id '${coinData.coinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует монета с id '${coinData.coinId}'.`);
             }
             if (boardCoin === null) {
-                throw new Error(`Выбранная для улучшения монета игрока с id '${playerID}' на столе с id '${coinData.coinId}' не может отсутствовать там.`);
+                throw new Error(`Выбранная для улучшения монета игрока с id '${myPlayerID}' на столе с id '${coinData.coinId}' не может отсутствовать там.`);
             }
             if (!IsCoin(boardCoin)) {
-                throw new Error(`Монета с id '${coinData.coinId}' на столе текущего игрока с id '${playerID}' не может быть закрытой для него.`);
+                throw new Error(`Монета с id '${coinData.coinId}' на столе текущего игрока с id '${myPlayerID}' не может быть закрытой для него.`);
             }
             if (!boardCoin.isTriggerTrading) {
                 return true;
@@ -96,35 +96,40 @@ export const CoinUpgradeValidation = ({ G, ctx, playerID, ...rest }, coinData) =
  * @param id Данные для валидации.
  * @returns Валидный ли мув.
  */
-export const IsValidMove = ({ G, ctx, ...rest }, stage, type, id) => {
+export const IsValidMove = ({ G, ctx, myPlayerID, ...rest }, stage, type, id) => {
     const validator = GetValidator(ctx.phase, stage, type);
     let isValid = false;
     if (validator !== null) {
         if (typeof id === `number`) {
-            isValid = ValidateByValues(id, validator.getRange({ G, ctx, ...rest }));
+            isValid =
+                ValidateByValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
         }
         else if (typeof id === `string`) {
-            isValid = ValidateByValues(id, validator.getRange({ G, ctx, ...rest }));
+            isValid =
+                ValidateByValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
         }
         else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
             if (`coinId` in id) {
-                isValid = ValidateByObjectCoinIdTypeIsInitialValues(id, validator.getRange({ G, ctx, ...rest }));
+                isValid = ValidateByObjectCoinIdTypeIsInitialValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
             }
             else if (`rank` in id) {
-                isValid = ValidateObjectEqualValues(id, validator.getRange({ G, ctx, ...rest }));
+                isValid = ValidateObjectEqualValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
             }
-            else if (`playerId` in id) {
-                isValid = ValidateByObjectCardIdValues(id, validator.getRange({ G, ctx, ...rest }));
+            else if (`myPlayerID` in id) {
+                isValid = ValidateByObjectCardIdValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
             }
             else if (`suit` in id) {
-                isValid = ValidateByObjectSuitCardIdValues(id, validator.getRange({ G, ctx, ...rest }));
+                isValid = ValidateByObjectSuitCardIdValues(id, validator.getRange({
+                    G, ctx,
+                    myPlayerID, ...rest
+                }));
             }
         }
         else {
             isValid = true;
         }
         if (isValid) {
-            return validator.validate({ G, ctx, ...rest }, id);
+            return validator.validate({ G, ctx, myPlayerID, ...rest }, id);
         }
     }
     return isValid;
@@ -144,7 +149,6 @@ export const IsValidMove = ({ G, ctx, ...rest }, stage, type, id) => {
  */
 export const GetValidator = (phase, stage, type) => {
     let validator, _exhaustiveCheck;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let moveByType;
     switch (phase) {
         case PhaseNames.ChooseDifficultySoloMode:
@@ -205,18 +209,18 @@ export const GetValidator = (phase, stage, type) => {
  */
 export const moveValidators = {
     ClickCardNotGiantAbilityMoveValidator: {
-        getRange: ({ G, ctx, ...rest }) => ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator),
+        getRange: ({ G, ctx, ...rest }) => ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         getValue: ({ G }, currentMoveArguments) => currentMoveArguments,
         moveName: CardMoveNames.ClickCardNotGiantAbilityMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickGiantAbilityNotCardMoveValidator: {
-        getRange: ({ G, ctx, ...rest }) => ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator),
+        getRange: ({ G, ctx, ...rest }) => ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         getValue: ({ G }, currentMoveArguments) => currentMoveArguments,
         moveName: CardMoveNames.ClickGiantAbilityNotCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ChooseCoinValueForHrungnirUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.ChooseCoinValueForHrungnirUpgradeMoveValidator),
@@ -228,7 +232,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove,
-        validate: ({ G, ctx, playerID, ...rest }, id) => playerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, playerID, ...rest }, id),
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id),
     },
     ChooseSuitOlrunMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.ChooseSuitOlrunMoveValidator),
@@ -240,7 +244,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: SuitMoveNames.ChooseSuitOlrunMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     GetMythologyCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ChooseGetMythologyCardProfit({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.GetMythologyCardMoveValidator),
@@ -252,7 +256,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.GetMythologyCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickBoardCoinMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, BidsMoveValidatorNames.ClickBoardCoinMoveValidator),
@@ -264,7 +268,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.ClickBoardCoinMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickCampCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawCamp({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.ClickCampCardMoveValidator),
@@ -276,14 +280,14 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.ClickCampCardMove,
-        validate: ({ G, ctx, playerID, ...rest }) => {
-            const player = G.publicPlayers[Number(playerID)];
+        validate: ({ G, ctx, myPlayerID, ...rest }) => {
+            const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
             }
-            return playerID === ctx.currentPlayer && G.expansions.Thingvellir.active
+            return myPlayerID === ctx.currentPlayer && G.expansions.Thingvellir.active
                 && (ctx.currentPlayer === G.publicPlayersOrder[0] || (!G.campPicked
-                    && CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, CampBuffNames.GoCamp)));
+                    && CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CampBuffNames.GoCamp)));
         },
     },
     ClickCardMoveValidator: {
@@ -335,7 +339,7 @@ export const moveValidators = {
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
         moveName: CardMoveNames.ClickCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ExplorerDistinctionProfit({ G, ctx, ...rest }, TroopEvaluationMoveValidatorNames.ClickCardToPickDistinctionMoveValidator),
@@ -347,7 +351,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.ClickCardToPickDistinctionMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickDistinctionCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawDistinctions({ G, ctx, ...rest }, TroopEvaluationMoveValidatorNames.ClickDistinctionCardMoveValidator),
@@ -359,7 +363,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.ClickDistinctionCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickHandCoinMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersHandsCoins({ G, ctx, ...rest }, BidsMoveValidatorNames.ClickHandCoinMoveValidator),
@@ -371,7 +375,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.ClickHandCoinMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickHandCoinUlineMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersHandsCoins({ G, ctx, ...rest }, BidUlineMoveValidatorNames.ClickHandCoinUlineMoveValidator),
@@ -383,7 +387,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.ClickHandCoinUlineMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickHandTradingCoinUlineMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersHandsCoins({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.ClickHandTradingCoinUlineMoveValidator),
@@ -395,7 +399,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.ClickHandTradingCoinUlineMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     DiscardCardFromPlayerBoardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, BrisingamensEndGameMoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator),
@@ -423,7 +427,7 @@ export const moveValidators = {
             };
         },
         moveName: CardMoveNames.DiscardCardFromPlayerBoardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     DiscardCard2PlayersMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawTaverns({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.DiscardCard2PlayersMoveValidator),
@@ -435,7 +439,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.DiscardCard2PlayersMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     GetEnlistmentMercenariesMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, EnlistmentMercenariesMoveValidatorNames.GetEnlistmentMercenariesMoveValidator),
@@ -447,16 +451,16 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.GetEnlistmentMercenariesMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     GetMjollnirProfitMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, GetMjollnirProfitMoveValidatorNames.GetMjollnirProfitMoveValidator),
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             const totalSuitsRanks = [];
             for (let j = 0; j < currentMoveArguments.length; j++) {
-                const player = G.publicPlayers[Number(playerID)];
+                const player = G.publicPlayers[Number(myPlayerID)];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
                 }
                 const moveArgumentI = currentMoveArguments[j];
                 if (moveArgumentI === undefined) {
@@ -476,19 +480,19 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: SuitMoveNames.GetMjollnirProfitMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     PassEnlistmentMercenariesMoveValidator: {
         getRange: () => null,
         getValue: () => null,
         moveName: ButtonMoveNames.PassEnlistmentMercenariesMove,
-        validate: ({ G, ctx, playerID, ...rest }) => {
-            const player = G.publicPlayers[Number(playerID)];
+        validate: ({ G, ctx, myPlayerID, ...rest }) => {
+            const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
             }
             const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
-            return playerID === ctx.currentPlayer && ctx.playOrderPos === 0
+            return myPlayerID === ctx.currentPlayer && ctx.playOrderPos === 0
                 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && mercenariesCount > 0;
         },
     },
@@ -502,7 +506,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.PlaceEnlistmentMercenariesMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     PlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, PlaceYludMoveValidatorNames.PlaceYludHeroMoveValidator),
@@ -514,20 +518,20 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.PlaceYludHeroMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     StartEnlistmentMercenariesMoveValidator: {
         getRange: () => null,
         getValue: () => null,
         moveName: ButtonMoveNames.StartEnlistmentMercenariesMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     // Bots
     BotsPlaceAllCoinsMoveValidator: {
         // TODO Move to Get from validator BidsMoveValidatorNames.BotsPlaceAllCoinsMoveValidator!?
         getRange: ({ G }) => G.botData.allCoinsOrder,
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
-            const hasLowestPriority = HasLowestPriority({ G, ctx, playerID, ...rest });
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
+            const hasLowestPriority = HasLowestPriority({ G, ctx, myPlayerID, ...rest });
             let resultsForCoins = CheckHeuristicsForCoinsPlacement({ G, ctx, ...rest });
             if (hasLowestPriority) {
                 resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
@@ -541,12 +545,12 @@ export const moveValidators = {
                 positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
             }
             // TODO Check it bot can't play in multiplayer now...
-            const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
+            const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
             }
             if (privatePlayer === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
             }
             let handCoins;
             if (G.mode === GameModeNames.Multiplayer) {
@@ -563,13 +567,13 @@ export const moveValidators = {
                 const hasTrading = allCoinsOrderI.some((coinId) => {
                     const handCoin = handCoins[coinId];
                     if (handCoin === undefined) {
-                        throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${coinId}'.`);
+                        throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${coinId}'.`);
                     }
                     if (handCoin !== null && !IsCoin(handCoin)) {
-                        throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${coinId}'.`);
+                        throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${coinId}'.`);
                     }
                     if (IsCoin(handCoin) && handCoin.isOpened) {
-                        throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
+                        throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
                     }
                     return Boolean(handCoin === null || handCoin === void 0 ? void 0 : handCoin.isTriggerTrading);
                 });
@@ -583,10 +587,10 @@ export const moveValidators = {
                 else if (tradingProfit > 0) {
                     const isEveryCoinsInHands = handCoins.every((coin, index) => {
                         if (coin !== null && !IsCoin(coin)) {
-                            throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${index}'.`);
+                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${index}'.`);
                         }
                         if (IsCoin(coin) && coin.isOpened) {
-                            throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть ранее открыта монета с id '${index}'.`);
                         }
                         return IsCoin(coin);
                     });
@@ -603,41 +607,41 @@ export const moveValidators = {
                     if (coinsOrderPositionForMaxCoin !== undefined && coinsOrderPositionForMinCoin !== undefined) {
                         const maxCoin = handCoins[coinsOrderPositionForMaxCoin], minCoin = handCoins[coinsOrderPositionForMinCoin];
                         if (maxCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (minCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         if (maxCoin === null) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${playerID}' не может не быть максимальной монеты с id '${coinsOrderPositionForMaxCoin}'.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${myPlayerID}' не может не быть максимальной монеты с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (minCoin === null) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${playerID}' не может не быть минимальной монеты с id '${coinsOrderPositionForMinCoin}'.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${myPlayerID}' не может не быть минимальной монеты с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         if (!IsCoin(maxCoin)) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${playerID}' не может быть закрыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${myPlayerID}' не может быть закрыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (!IsCoin(minCoin)) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${playerID}' не может быть закрыта минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${myPlayerID}' не может быть закрыта минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         if (IsCoin(maxCoin) && maxCoin.isOpened) {
-                            throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (IsCoin(minCoin) && minCoin.isOpened) {
-                            throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         let isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
                         if (hasPositionForMaxCoin) {
                             isTopCoinsOnPosition = allCoinsOrderI.filter((coinIndex) => {
                                 const handCoin = handCoins[coinIndex];
                                 if (handCoin === undefined) {
-                                    throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${coinIndex}'.`);
+                                    throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${coinIndex}'.`);
                                 }
                                 if (handCoin !== null && !IsCoin(handCoin)) {
-                                    throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
+                                    throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
                                 }
                                 if (IsCoin(handCoin) && handCoin.isOpened) {
-                                    throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта монета с id '${coinIndex}'.`);
+                                    throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть ранее открыта монета с id '${coinIndex}'.`);
                                 }
                                 return IsCoin(handCoin) && handCoin.value > maxCoin.value;
                             }).length <= 1;
@@ -646,10 +650,10 @@ export const moveValidators = {
                             isMinCoinsOnPosition =
                                 handCoins.filter((coin, index) => {
                                     if (coin !== null && !IsCoin(coin)) {
-                                        throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${index}'.`);
+                                        throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${index}'.`);
                                     }
                                     if (IsCoin(coin) && coin.isOpened) {
-                                        throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                                        throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть ранее открыта монета с id '${index}'.`);
                                     }
                                     return IsCoin(coin) && coin.value < minCoin.value;
                                 }).length <= 1;
@@ -668,7 +672,7 @@ export const moveValidators = {
             throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
         },
         moveName: AutoBotsMoveNames.BotsPlaceAllCoinsMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     // Solo Bot
     SoloBotPlaceAllCoinsMoveValidator: {
@@ -681,24 +685,24 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: AutoBotsMoveNames.SoloBotPlaceAllCoinsMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawTaverns({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.SoloBotClickCardMoveValidator),
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
             let moveArgument;
             moveArgument =
-                CheckSoloBotMustTakeCardToPickHero({ G, ctx, playerID, ...rest }, currentMoveArguments);
+                CheckSoloBotMustTakeCardToPickHero({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             if (moveArgument === undefined) {
-                moveArgument = CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard({ G, ctx, playerID, ...rest }, currentMoveArguments);
+                moveArgument = CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
             if (moveArgument === undefined) {
-                moveArgument = CheckSoloBotMustTakeRoyalOfferingCard({ G, ctx, playerID, ...rest }, currentMoveArguments);
+                moveArgument = CheckSoloBotMustTakeRoyalOfferingCard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
             if (moveArgument === undefined) {
                 moveArgument =
-                    SoloBotMustTakeRandomCard({ G, ctx, playerID, ...rest }, currentMoveArguments);
+                    SoloBotMustTakeRandomCard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
             if (moveArgument !== undefined) {
                 return moveArgument;
@@ -706,7 +710,7 @@ export const moveValidators = {
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
         moveName: CardMoveNames.SoloBotClickCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawHeroesForSoloBotUI({ G, ctx, ...rest }, SoloBotCommonMoveValidatorNames.SoloBotClickHeroCardMoveValidator),
@@ -718,7 +722,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotClickHeroCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ExplorerDistinctionProfit({ G, ctx, ...rest }, TroopEvaluationMoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator),
@@ -730,17 +734,17 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotClickCardToPickDistinctionMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotPlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, SoloBotCommonMoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator),
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
             // TODO Same logic for Ylud placement and move in one func!?
             let moveArgument;
-            const suit = CheckSoloBotCanPickHero({ G, ctx, playerID, ...rest });
+            const suit = CheckSoloBotCanPickHero({ G, ctx, myPlayerID, ...rest });
             if (suit === undefined) {
-                const [suits] = CheckSuitsLeastPresentOnPlayerBoard({ G, ctx, playerID, ...rest });
+                const [suits] = CheckSuitsLeastPresentOnPlayerBoard({ G, ctx, myPlayerID, ...rest });
                 if (suits.length === 0) {
                     // TODO Move Thrud/Ylud in most left suit from `suits`
                     throw new Error(`Не может не быть фракций с минимальным количеством карт.`);
@@ -765,7 +769,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotPlaceThrudHeroMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotPlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, PlaceYludMoveValidatorNames.SoloBotPlaceYludHeroMoveValidator),
@@ -778,14 +782,14 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotPlaceYludHeroMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, SoloBotCommonCoinUpgradeMoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins({ G, ctx, ...rest }, SoloBotCommonCoinUpgradeMoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator)),
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
-            const player = G.publicPlayers[Number(playerID)];
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
+            const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
             }
             let type, coins;
             if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
@@ -796,13 +800,13 @@ export const moveValidators = {
                 type = CoinTypeNames.Board;
                 coins = player.boardCoins;
             }
-            const minValue = CheckMinCoinVisibleValueForSoloBot({ G, ctx, playerID, ...rest }, currentMoveArguments, type);
+            const minValue = CheckMinCoinVisibleValueForSoloBot({ G, ctx, myPlayerID, ...rest }, currentMoveArguments, type);
             if (minValue === 0) {
-                throw new Error(`В массиве монет соло бота с id '${playerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть минимальная монета для улучшения с значением '${minValue}'.`);
+                throw new Error(`В массиве монет соло бота с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть минимальная монета для улучшения с значением '${minValue}'.`);
             }
             const coinId = CheckMinCoinVisibleIndexForSoloBot(coins, minValue);
             if (coinId === -1) {
-                throw new Error(`В массиве монет соло бота с id '${playerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не найдена минимальная монета с значением '${minValue}'.`);
+                throw new Error(`В массиве монет соло бота с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не найдена минимальная монета с значением '${minValue}'.`);
             }
             const moveArgument = currentMoveArguments[coinId];
             if (moveArgument === undefined) {
@@ -811,7 +815,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.SoloBotClickCoinToUpgradeMove,
-        validate: ({ G, ctx, playerID, ...rest }, id) => playerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, playerID, ...rest }, id),
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id),
     },
     // Solo Mode
     ChooseDifficultyLevelForSoloModeMoveValidator: {
@@ -824,7 +828,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ChooseHeroForDifficultySoloModeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => PickHeroesForSoloModeProfit({ G, ctx, ...rest }, ChooseDifficultySoloModeMoveValidatorNames.ChooseHeroForDifficultySoloModeMoveValidator),
@@ -836,7 +840,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.ChooseHeroForDifficultySoloModeMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     // Solo Mode Andvari
     ChooseStrategyVariantForSoloModeAndvariMoveValidator: {
@@ -849,7 +853,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ChooseStrategyForSoloModeAndvariMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ChooseStrategyForSoloModeAndvariProfit({ G, ctx, ...rest }, ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator),
@@ -861,7 +865,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotAndvariPlaceAllCoinsMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersHandsCoins({ G, ctx, ...rest }, BidsMoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator),
@@ -873,21 +877,21 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: AutoBotsMoveNames.SoloBotAndvariPlaceAllCoinsMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotAndvariClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawTaverns({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.SoloBotAndvariClickCardMoveValidator),
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             let moveArgument;
-            moveArgument = CheckSoloBotAndvariMustTakeCardFromGeneralStrategy({ G, ctx, playerID, ...rest }, currentMoveArguments);
+            moveArgument = CheckSoloBotAndvariMustTakeCardFromGeneralStrategy({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             if (moveArgument === undefined) {
-                moveArgument = CheckSoloBotAndvariMustTakeCardToPickHero({ G, ctx, playerID, ...rest }, currentMoveArguments);
+                moveArgument = CheckSoloBotAndvariMustTakeCardToPickHero({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
             if (moveArgument === undefined) {
-                moveArgument = CheckSoloBotAndvariMustTakeRoyalOfferingCard({ G, ctx, playerID, ...rest }, currentMoveArguments);
+                moveArgument = CheckSoloBotAndvariMustTakeRoyalOfferingCard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
             if (moveArgument === undefined) {
-                moveArgument = SoloBotMustTakeCardFromReserveStrategy({ G, ctx, playerID, ...rest }, currentMoveArguments);
+                moveArgument = SoloBotMustTakeCardFromReserveStrategy({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
             if (moveArgument !== undefined) {
                 return moveArgument;
@@ -895,7 +899,7 @@ export const moveValidators = {
             throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
         moveName: CardMoveNames.SoloBotAndvariClickCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotAndvariClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawHeroes({ G, ctx, ...rest }, SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator),
@@ -914,7 +918,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotAndvariClickHeroCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotAndvariClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ExplorerDistinctionProfit({ G, ctx, ...rest }, TroopEvaluationMoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator),
@@ -926,7 +930,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove,
-        validate: ({ ctx, playerID }, id) => playerID === ctx.currentPlayer && id === 0,
+        validate: ({ ctx, myPlayerID }, id) => myPlayerID === ctx.currentPlayer && id === 0,
     },
     SoloBotAndvariPlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator),
@@ -944,7 +948,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotAndvariPlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, PlaceYludMoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator),
@@ -961,22 +965,22 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator),
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
-            const player = G.publicPlayers[Number(playerID)];
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
+            const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
             }
-            const coins = player.boardCoins, minValue = CheckMinCoinVisibleValueForSoloBotAndvari({ G, ctx, playerID, ...rest }, currentMoveArguments);
+            const coins = player.boardCoins, minValue = CheckMinCoinVisibleValueForSoloBotAndvari({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             if (minValue === 0) {
-                throw new Error(`В массиве монет соло бота Андвари с id '${playerID}' не может быть минимальная монета для улучшения с значением '${minValue}'.`);
+                throw new Error(`В массиве монет соло бота Андвари с id '${myPlayerID}' не может быть минимальная монета для улучшения с значением '${minValue}'.`);
             }
             const coinId = CheckMinCoinIndexForSoloBotAndvari(coins, minValue);
             if (coinId === -1) {
-                throw new Error(`В массиве монет соло бота Андвари с id '${playerID}' не найдена минимальная монета с значением '${minValue}'.`);
+                throw new Error(`В массиве монет соло бота Андвари с id '${myPlayerID}' не найдена минимальная монета с значением '${minValue}'.`);
             }
             const moveArgument = currentMoveArguments[coinId];
             if (moveArgument === undefined) {
@@ -985,7 +989,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove,
-        validate: ({ G, ctx, playerID, ...rest }, id) => playerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, playerID, ...rest }, id),
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id),
     },
     // start
     AddCoinToPouchMoveValidator: {
@@ -998,7 +1002,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.AddCoinToPouchMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit({ G, ctx, ...rest }, CommonMoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator),
@@ -1010,7 +1014,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickCampCardHoldaMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawCamp({ G, ctx, ...rest }, CommonMoveValidatorNames.ClickCampCardHoldaMoveValidator),
@@ -1022,7 +1026,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.ClickCampCardHoldaMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     // TODO Is it need for solo bot and andvari!?
     PickConcreteCoinToUpgradeMoveValidator: {
@@ -1035,7 +1039,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.PickConcreteCoinToUpgradeMove,
-        validate: ({ G, ctx, playerID, ...rest }, id) => playerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, playerID, ...rest }, id),
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id),
     },
     ClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, CommonMoveValidatorNames.ClickCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins({ G, ctx, ...rest }, CommonMoveValidatorNames.ClickCoinToUpgradeMoveValidator)),
@@ -1047,7 +1051,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.ClickCoinToUpgradeMove,
-        validate: ({ G, ctx, playerID, ...rest }, id) => playerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, playerID, ...rest }, id),
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id),
     },
     ClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawHeroes({ G, ctx, ...rest }, CommonMoveValidatorNames.ClickHeroCardMoveValidator),
@@ -1059,7 +1063,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.ClickHeroCardMove,
-        validate: ({ G, ctx, playerID, ...rest }, id) => {
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => {
             let isValid = false;
             const hero = G.heroes[id];
             if (hero === undefined) {
@@ -1070,11 +1074,11 @@ export const moveValidators = {
                 let validator, _exhaustiveCheck;
                 for (validator in validators) {
                     if (validator === PickHeroCardValidatorNames.conditions) {
-                        isValid = IsCanPickHeroWithConditionsValidator({ G, ctx, playerID, ...rest }, id);
+                        isValid = IsCanPickHeroWithConditionsValidator({ G, ctx, myPlayerID, ...rest }, id);
                     }
                     else if (validator === PickHeroCardValidatorNames.discardCard) {
                         isValid =
-                            IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator({ G, ctx, playerID, ...rest }, id);
+                            IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator({ G, ctx, myPlayerID, ...rest }, id);
                     }
                     else {
                         _exhaustiveCheck = validator;
@@ -1086,7 +1090,7 @@ export const moveValidators = {
             else {
                 isValid = true;
             }
-            return playerID === ctx.currentPlayer && isValid;
+            return myPlayerID === ctx.currentPlayer && isValid;
         },
     },
     DiscardTopCardFromSuitMoveValidator: {
@@ -1115,15 +1119,15 @@ export const moveValidators = {
             };
         },
         moveName: CardMoveNames.DiscardTopCardFromSuitMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
-        getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, CommonMoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator),
-        getValue: ({ G, ctx, playerID, ...rest }, currentMoveArguments) => {
-            // TODO Check playerID here!!!
-            const player = G.publicPlayers[Number(playerID)];
+        getRange: ({ G, ctx, myPlayerID, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, CommonMoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator, Number(myPlayerID)),
+        getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
+            // TODO Check myPlayerID here!!!
+            const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             const cardFirst = player.cards[SuitNames.warrior][0];
             if (cardFirst === undefined) {
@@ -1153,8 +1157,8 @@ export const moveValidators = {
             };
         },
         moveName: CardMoveNames.DiscardSuitCardFromPlayerBoardMove,
-        // TODO validate Not bot playerId === ctx.currentPlayer & for Bot playerId exists in playersNum and card not hero?
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        // TODO validate Not bot myPlayerID === ctx.currentPlayer & for Bot myPlayerID exists in playersNum and card not hero?
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     PickDiscardCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawDiscardedCards({ G, ctx, ...rest }, CommonMoveValidatorNames.PickDiscardCardMoveValidator),
@@ -1166,7 +1170,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.PickDiscardCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     PlaceMultiSuitCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, CommonMoveValidatorNames.PlaceMultiSuitCardMoveValidator),
@@ -1178,7 +1182,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.PlaceMultiSuitCardMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     PlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, CommonMoveValidatorNames.PlaceThrudHeroMoveValidator),
@@ -1192,7 +1196,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.PlaceThrudHeroMove,
-        validate: ({ ctx, playerID }) => playerID === ctx.currentPlayer,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, CommonMoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator),
@@ -1204,14 +1208,14 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-        validate: ({ G, ctx, playerID, ...rest }, id) => {
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => {
             var _a;
-            const player = G.publicPlayers[Number(playerID)];
+            const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
             }
-            return playerID === ctx.currentPlayer && ((_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.coinId) !== id.coinId
-                && CoinUpgradeValidation({ G, ctx, playerID, ...rest }, id);
+            return myPlayerID === ctx.currentPlayer && ((_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.coinId) !== id.coinId
+                && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id);
         },
     },
     // end

@@ -82,7 +82,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     let _exhaustiveCheck;
     switch (moveName) {
         case CardMoveNames.ClickCardNotGiantAbilityMove:
-            action = data.moves.ClickCardNoyGiantAbilityMove;
+            action = data.moves.ClickCardNotGiantAbilityMove;
             break;
         case CardMoveNames.ClickCardMove:
             action = data.moves.ClickCardMove;

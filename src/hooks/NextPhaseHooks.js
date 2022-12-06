@@ -11,7 +11,7 @@ import { CampBuffNames, GameModeNames, HeroBuffNames, PhaseNames } from "../type
  * @returns Фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionPhase = ({ G, ctx, ...rest }) => {
-    const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EveryTurn));
+    const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EveryTurn));
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== -1) {
         return PhaseNames.BidUline;
     }
@@ -35,11 +35,11 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }) => {
     }
     else {
         if (G.expansions.Thingvellir.active) {
-            const brisingamensBuffIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.DiscardCardEndGame));
+            const brisingamensBuffIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, CampBuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return PhaseNames.BrisingamensEndGame;
             }
-            const mjollnirBuffIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
+            const mjollnirBuffIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
                 return PhaseNames.GetMjollnirProfit;
             }
@@ -58,7 +58,7 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }) => {
 * @returns Фаза игры.
 */
 export const StartEndTierPhaseOrEndGameLastActions = ({ G, ctx, ...rest }) => {
-    const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EndTier));
+    const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
     if (yludIndex !== -1) {
         return PhaseNames.PlaceYlud;
     }

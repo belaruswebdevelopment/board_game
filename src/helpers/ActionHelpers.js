@@ -15,15 +15,15 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  * @param ctx
  * @returns
  */
-export const DrawCurrentProfit = ({ G, ctx, playerID, events, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
     const stack = player.stack[0];
     if (stack !== undefined) {
         AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
-        StartOrEndActionStage({ G, ctx, playerID, events, ...rest }, stack);
+        StartOrEndActionStage({ G, ctx, myPlayerID, events, ...rest }, stack);
         if (stack.configName !== undefined) {
             G.drawProfit = stack.configName;
         }
@@ -47,7 +47,7 @@ export const DrawCurrentProfit = ({ G, ctx, playerID, events, ...rest }) => {
  * @param stack Стек действий героя.
  * @returns
  */
-const StartOrEndActionStage = ({ G, ctx, playerID, events, ...rest }, stack) => {
+const StartOrEndActionStage = ({ G, ctx, myPlayerID, events, ...rest }, stack) => {
     var _a;
     if (stack.stageName !== undefined) {
         events.setActivePlayers({
@@ -55,7 +55,7 @@ const StartOrEndActionStage = ({ G, ctx, playerID, events, ...rest }, stack) => 
         });
         AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Начало стадии '${stack.stageName}'.`);
     }
-    else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(playerID)]) !== undefined) {
+    else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(myPlayerID)]) !== undefined) {
         events.endStage();
     }
 };

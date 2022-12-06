@@ -26,7 +26,7 @@ export const CheckEndBidUlinePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoid
         }
         const ulinePlayerIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-                CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                     HeroBuffNames.EveryTurn));
         if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== - 1) {
             const ulinePlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];

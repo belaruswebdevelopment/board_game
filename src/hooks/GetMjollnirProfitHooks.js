@@ -23,7 +23,7 @@ export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }) => {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
         }
         if (!player.stack.length) {
-            return CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest }, BuffNames.SuitIdForMjollnir);
+            return CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, BuffNames.SuitIdForMjollnir);
         }
     }
 };
@@ -38,7 +38,7 @@ export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }) => {
-    const mjollnirPlayerIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
+    const mjollnirPlayerIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex === -1) {
         throw new Error(`У игроков отсутствует обязательный баф '${CampBuffNames.GetMjollnirProfit}'.`);
     }
@@ -56,7 +56,7 @@ export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }) => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 /**
  * <h3>Действия при начале хода в фазе 'getMjollnirProfit'.</h3>
@@ -70,8 +70,8 @@ export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnGetMjollnirProfitTurnBegin = ({ G, ctx, events, ...rest }) => {
-    AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest }, [StackData.getMjollnirProfit()]);
-    DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.getMjollnirProfit()]);
+    DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
 };
 /**
  * <h3>Действия завершения игры при завершении фазы 'getMjollnirProfit'.</h3>

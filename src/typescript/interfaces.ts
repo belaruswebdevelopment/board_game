@@ -1,4 +1,4 @@
-import type { ActionPayload, ActivePlayersArg, AiEnumerate, ChatMessage, DefaultPluginAPIs, FilteredMetadata, LogEntry, PlayerID, Plugin, PluginState, Store, TurnOrderConfig, Undo } from "boardgame.io";
+import type { ActionPayload, ActivePlayersArg, AiEnumerate, ChatMessage, DefaultPluginAPIs, FilteredMetadata, LogEntry, Plugin, PluginState, Store, TurnOrderConfig, Undo } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import type { ClientOpts, DebugOpt } from "boardgame.io/dist/types/src/client/client";
 // eslint-disable-next-line import/no-unresolved
@@ -7,7 +7,7 @@ import { Transport, type TransportOpts } from "boardgame.io/dist/types/src/clien
 import { Flow } from "boardgame.io/dist/types/src/core/flow";
 // eslint-disable-next-line import/no-unresolved
 import { ProcessGameConfig } from "boardgame.io/dist/types/src/core/game";
-import { ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, BuffNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GiantBuffNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroBuffNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGiantAbilityOrPickCardSubStageNames, ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, BuffNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GiantBuffNames, GiantNames, GiantScoringFunctionNames, GodNames, HeroBuffNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RoyalOfferingNames, RusCardTypeNames, RusStageNames, RusSuitNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, SuitMoveNames, SuitNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 /**
  * <h3>Интерфейс для скрытых от всех игроков данных.</h3>
@@ -37,7 +37,7 @@ export interface IHeuristic<T extends unknown[]> extends IWeight {
  * <h3>Интерфейс для цели ботов.</h3>
  */
 interface IObjective extends IWeight {
-    readonly checker: ({ G, ctx, playerID }: MyFnContext) => boolean;
+    readonly checker: ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID) => boolean;
 }
 
 /**
@@ -363,7 +363,7 @@ export interface IDrawBoardOptions {
  * <h3>Интерфейс для количества игроков и эпох.</h3>
  */
 export interface IPlayersNumberTierCardData extends ITierInfo {
-    readonly players: number;
+    readonly players: NumPlayersType;
 }
 
 /**
@@ -493,7 +493,7 @@ interface IBuff {
  */
 export interface IBuildCoinsOptions {
     readonly isInitial?: boolean,
-    readonly players?: number;
+    readonly players?: NumPlayersType;
     readonly count?: Partial<ICoin>[];
 }
 
@@ -518,14 +518,14 @@ export interface IMarketCoinConfig extends Pick<ICoin, `value`> {
  * <h3>Интерфейс для автоматических действий с параметрами.</h3>
  */
 interface IAutoActionFunction {
-    (context: MyFnContext, ...params: AutoActionArgsType): void;
+    (context: MyFnContextWithMyPlayerID, ...params: AutoActionArgsType): void;
 }
 
 /**
  * <h3>Интерфейс для действий без параметров.</h3>
  */
 export interface IActionFunctionWithoutParams {
-    (context: MyFnContext): void;
+    (context: MyFnContextWithMyPlayerID): void;
 }
 
 /**
@@ -539,7 +539,7 @@ export interface ISuitScoringFunction {
  * <h3>Интерфейс для функций подсчёта очков по артефактам.</h3>
  */
 export interface IArtefactScoringFunction {
-    ({ G, ctx, playerID }: MyFnContext, ...params: ScoringArgsCanBeUndefType): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsCanBeUndefType): number;
 }
 
 // TODO Rework common ScoringFunction interfaces!?
@@ -547,21 +547,21 @@ export interface IArtefactScoringFunction {
  * <h3>Интерфейс для функций подсчёта очков по героям.</h3>
  */
 export interface IHeroScoringFunction {
-    ({ G, ctx, playerID }: MyFnContext, ...params: ScoringArgsCanBeUndefType): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsCanBeUndefType): number;
 }
 
 /**
  * <h3>Интерфейс для функций подсчёта очков по мифическим животным.</h3>
  */
 export interface IMythicalAnimalScoringFunction {
-    ({ G, ctx, playerID }: MyFnContext, ...params: ScoringArgsType): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsType): number;
 }
 
 /**
  * <h3>Интерфейс для функций подсчёта очков по гигантам.</h3>
  */
 export interface IGiantScoringFunction {
-    ({ G, ctx, playerID }: MyFnContext, ...params: ScoringArgsType): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsType): number;
 }
 
 /**
@@ -575,7 +575,7 @@ export interface IValkyryScoringFunction {
  * <h3>Интерфейс для функций получения преимущества по фракциям дворфов.</h3>
  */
 export interface IDistinctionAwardingFunction {
-    ({ G, ctx, playerID }: MyFnContext): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID): number;
 }
 
 /**
@@ -659,7 +659,7 @@ export interface IMyGameState {
     readonly totalScore: number[];
     readonly players: IPlayers;
     readonly publicPlayers: IPublicPlayers;
-    publicPlayersOrder: string[];
+    publicPlayersOrder: PlayerID[];
     readonly winner: number[];
 }
 
@@ -685,7 +685,7 @@ export interface IStrategyForSoloBotAndvari {
  * <h3>Интерфейс для распределения монет на столе.</h3>
  */
 export interface IResolveBoardCoins {
-    readonly playersOrder: string[];
+    readonly playersOrder: PlayerID[];
     readonly exchangeOrder: number[];
 }
 
@@ -754,19 +754,31 @@ export type MoveValidatorNamesTypes = BidUlineMoveValidatorNames | ChooseDifficu
     | BidsMoveValidatorNames | TavernsResolutionMoveValidatorNames | EnlistmentMercenariesMoveValidatorNames
     | PlaceYludMoveValidatorNames | TroopEvaluationMoveValidatorNames | BrisingamensEndGameMoveValidatorNames
     | GetMjollnirProfitMoveValidatorNames | CommonMoveValidatorNames | SoloBotCommonMoveValidatorNames
-    | SoloBotAndvariCommonMoveValidatorNames | SoloBotCommonCoinUpgradeMoveValidatorNames;
+    | SoloBotAndvariCommonMoveValidatorNames | SoloBotCommonCoinUpgradeMoveValidatorNames
+    | ActivateGiantAbilityOrPickCardSubMoveValidatorNames;
+
+/**
+ * Тип для всех стадий с валидаторами игры.
+ */
+export type ValidatorStageNames = StageNames | ActivateGiantAbilityOrPickCardSubStageNames;
 
 /**
  * Тип для всех активных стадий игры.
  */
 export type ActiveStageNames = ChooseDifficultySoloModeStageNames
     | EnlistmentMercenariesStageNames | TroopEvaluationStageNames | TavernsResolutionStageNames
-    | CommonStageNames | SoloBotCommonStageNames | SoloBotAndvariCommonStageNames | SoloBotCommonCoinUpgradeStageNames;
+    | CommonStageNames | SoloBotCommonStageNames | SoloBotAndvariCommonStageNames | SoloBotCommonCoinUpgradeStageNames
+    | StageWithSubStageNames;
+
+/**
+* Тип для всех стадий с суб стадиями игры.
+*/
+export type StageWithSubStageNames = TavernsResolutionWithSubStageNames;
 
 /**
 * Тип для всех стадий игры.
 */
-export type StageNames = DefaultStageNames | ActiveStageNames;
+export type StageNames = DefaultStageNames | ActiveStageNames | StageWithSubStageNames;
 
 /**
 * Тип для всех дефолтных стадий игры.
@@ -797,7 +809,8 @@ export type TroopEvaluationAllStageNames = TroopEvaluationStageNames | TroopEval
 /**
 * Тип для всех стадий игры 'TavernsResolution'.
 */
-export type TavernsResolutionAllStageNames = TavernsResolutionStageNames | TavernsResolutionDefaultStageNames;
+export type TavernsResolutionAllStageNames = TavernsResolutionStageNames | TavernsResolutionDefaultStageNames
+    | TavernsResolutionWithSubStageNames;
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мувов.</h3>
@@ -842,24 +855,39 @@ export type IMoveBy = {
     : null;
 };
 
+// TODO Move ActivateGiantAbilityOrPickCardSubStageNames to union SubStageNames & SubMoveValidatorNames
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-type IMoveByOptions<CurrentStageNames extends StageNames, CurrentValidatorNames extends MoveValidatorNamesTypes> = {
-    readonly [key in CurrentStageNames]: {
-        [k in key as `${k}Move` extends `${MoveNamesType}` ? `${k}Move` : never]:
-        `${k}MoveValidator` extends KeyofType<IMoveValidators>
-        ? `${k}MoveValidator` extends `${CurrentValidatorNames}`
-        ? IMoveValidators[`${k}MoveValidator`] : never : never;
+export type IMoveByOptions<CurrentStageNames extends StageNames,
+    CurrentValidatorNames extends MoveValidatorNamesTypes> = {
+        readonly [key in CurrentStageNames]: `${key}MoveValidator` extends KeyofType<IMoveValidators> ? {
+            readonly [k in key as `${k}Move` extends `${MoveNamesType}` ? `${k}Move` : never]:
+            `${k}MoveValidator` extends KeyofType<IMoveValidators>
+            ? `${k}MoveValidator` extends `${CurrentValidatorNames}`
+            ? IMoveValidators[`${k}MoveValidator`] : never : never;
+        } : IMoveBySubOptions<ActivateGiantAbilityOrPickCardSubStageNames,
+            ActivateGiantAbilityOrPickCardSubMoveValidatorNames>;
     };
-};
+
+// TODO Can we make it more common!?
+/**
+* <h3>Интерфейс для возможных суб валидаторов у мува.</h3>
+*/
+export type IMoveBySubOptions<CurrentStageNames extends ActivateGiantAbilityOrPickCardSubStageNames,
+    CurrentValidatorNames extends ActivateGiantAbilityOrPickCardSubMoveValidatorNames> = {
+        readonly [key in CurrentStageNames as `${key}Move` extends `${MoveNamesType}` ? `${key}Move` : never]:
+        `${key}MoveValidator` extends KeyofType<IMoveValidators>
+        ? `${key}MoveValidator` extends `${CurrentValidatorNames}`
+        ? IMoveValidators[`${key}MoveValidator`] : never : never;
+    };
 
 /**
  * <h3>Интерфейс для валидатора мувов.</h3>
  */
 export interface IMoveValidator<GetRangeType extends MoveValidatorGetRangeType> {
-    readonly getRange: ({ G, ctx, playerID }: MyFnContext) => GetRangeType;
-    readonly getValue: ({ G, ctx }: MyFnContext, moveRangeData: GetRangeType) =>
+    readonly getRange: ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID) => GetRangeType;
+    readonly getValue: ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, moveRangeData: GetRangeType) =>
         GetRangeType extends Partial<SuitPropertyType<number[]>> ? IMoveSuitCardCurrentId
         : GetRangeType extends IMoveCardsArguments ? MoveCardIdType
         : GetRangeType extends IMoveCoinsArguments[] ? IMoveCoinsArguments
@@ -872,7 +900,7 @@ export interface IMoveValidator<GetRangeType extends MoveValidatorGetRangeType> 
         : GetRangeType extends null ? null
         : never;
     readonly moveName: MoveNamesType;
-    readonly validate: ({ G, ctx }: MyFnContext, id:
+    readonly validate: ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, id:
         GetRangeType extends Partial<SuitPropertyType<number[]>> ? IMoveSuitCardCurrentId
         : GetRangeType extends IMoveCardsArguments ? MoveCardIdType
         : GetRangeType extends IMoveCoinsArguments[] ? IMoveCoinsArguments
@@ -1308,7 +1336,7 @@ export type ZeroOrOneOrTwoType = ZeroOrOneType | 2;
  */
 type ThreeOrFourOrFiveType = 3 | 4 | 5;
 
-export type TwoOrThreeOrFourOrFive = 2 | ThreeOrFourOrFiveType;
+type TwoOrThreeOrFourOrFive = 2 | ThreeOrFourOrFiveType;
 
 /**
  * <h3>Типы данных для 0 | 1 | 2 | 3 | 4.</h3>
@@ -1386,7 +1414,7 @@ export type CoinConfigArraysType = IMarketCoinConfig[] | InitialTradingCoinConfi
 /**
  * <h3>Типы данных для стадий игры для ботов.</h3>
  */
-export type ActiveStageAIType = StageNames | `default`;
+export type ActiveStageAIType = ValidatorStageNames | `default`;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
@@ -1659,7 +1687,7 @@ export type SuitScoringArgsType = [PlayerCardType[], number?, boolean?];
 /**
  * <h3>Типы данных для преимуществ.</h3>
  */
-export type DistinctionType = CanBeUndefType<CanBeNullType<string>>;
+export type DistinctionType = CanBeUndefType<CanBeNullType<PlayerID>>;
 
 /**
  * <h3>Типы данных для аргументов ошибок.</h3>
@@ -1971,12 +1999,18 @@ export type IndexOf<T extends readonly unknown[], S extends number[] = []> =
     T[`length`] extends S[`length`] ? S[number] : IndexOf<T, [S[`length`], ...S]>;
 
 // My Implementations
+export type StripSecretsType = Game[`playerView`];
+
 export type GameSetupDataType = DefaultPluginAPIs & {
     ctx: Ctx;
 };
 
 export type MyFnContext = FnContext & {
     playerID: PlayerID;
+};
+
+export type MyFnContextWithMyPlayerID = FnContext & {
+    myPlayerID: PlayerID;
 };
 
 export interface Game<SetupData = unknown> {
@@ -1987,7 +2021,7 @@ export interface Game<SetupData = unknown> {
     disableUndo?: boolean;
     seed?: string | number;
     setup?: (context: GameSetupDataType, setupData?: SetupData) => IMyGameState;
-    validateSetupData?: (setupData: SetupData | undefined, numPlayers: TwoOrThreeOrFourOrFive) => string | undefined;
+    validateSetupData?: (setupData: SetupData | undefined, numPlayers: NumPlayersType) => string | undefined;
     moves?: MoveMap;
     phases?: PhaseMap;
     turn?: TurnConfig<null>;
@@ -2006,7 +2040,7 @@ export interface Game<SetupData = unknown> {
     playerView?: (context: { G: IMyGameState; ctx: Ctx; playerID: PlayerID | null; }) => unknown;
     plugins?: Array<Plugin<unknown, unknown, IMyGameState>>;
     ai?: {
-        enumerate: ({ G, ctx, playerID }: MyFnContext) => AiEnumerate;
+        enumerate: (G: IMyGameState, ctx: Ctx, playerID: PlayerID) => AiEnumerate;
     };
     processMove?: (state: State, action: ActionPayload.MakeMove) => State | typeof INVALID_MOVE;
     flow?: ReturnType<typeof Flow>;
@@ -2078,9 +2112,7 @@ interface TurnConfig<phase extends CanBeNullType<KeyofType<IMoveBy>> = null> {
     endIf?: (context: FnContext) => boolean | void | {
         next: PlayerID;
     };
-    onMove?: (context: FnContext & {
-        playerID: PlayerID;
-    }) => void | IMyGameState;
+    onMove?: (context: MyFnContext) => void | IMyGameState;
     stages?: StageMap<phase>;
     order?: TurnOrderConfig<IMyGameState>;
     wrapped?: {
@@ -2138,6 +2170,8 @@ interface ActivePlayers {
 export type BoardProps = ClientState & Omit<WrappedBoardProps, keyof ExposedClientProps> & ExposedClientProps & {
     isMultiplayer: boolean;
 };
+
+export type PlayerID = string;
 
 declare class _ClientImpl<PluginAPIs extends Record<string, unknown> = Record<string, unknown>> {
     private gameStateOverride?;

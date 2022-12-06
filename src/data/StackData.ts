@@ -1,4 +1,4 @@
-import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { IDwarfCard, IMercenaryCampCard, IStack, IStackData, OneOrTwoType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
 /**
@@ -11,7 +11,7 @@ import type { IDwarfCard, IMercenaryCampCard, IStack, IStackData, OneOrTwoType, 
 export const StackData: IStackData = {
     activateGiantAbilityOrPickCard: (giantName: GiantNames, card: IDwarfCard): IStack => ({
         configName: ConfigNames.ActivateGiantAbilityOrPickCard,
-        stageName: TavernsResolutionStageNames.ActivateGiantAbilityOrPickCard,
+        stageName: TavernsResolutionWithSubStageNames.ActivateGiantAbilityOrPickCard,
         drawName: DrawNames.ActivateGiantAbilityOrPickCard,
         giantName,
         card,

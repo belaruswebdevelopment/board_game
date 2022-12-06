@@ -18,13 +18,13 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * @param ctx
  * @returns
  */
-export const CheckPickHero = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
-    if (!CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, CampBuffNames.NoHero)) {
-        const playerHasNotCountHero = CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, BuffNames.HasOneNotCountHero), playerCards = Object.values(player.cards), heroesLength = G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
+    if (!CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CampBuffNames.NoHero)) {
+        const playerHasNotCountHero = CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, BuffNames.HasOneNotCountHero), playerCards = Object.values(player.cards), heroesLength = G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
             ? player.heroes.filter((hero) => hero.name.startsWith(`Dwerg`)).length : player.heroes.length -
             ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
                 || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy)
@@ -33,7 +33,7 @@ export const CheckPickHero = ({ G, ctx, playerID, ...rest }) => {
                 || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy) ?
                 1 : 0)) > (heroesLength - Number(playerHasNotCountHero)), playerPickHeroActionInStackIndex = player.stack.findIndex((stack) => stack.stageName === CommonStageNames.ClickHeroCard);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
-            AddPickHeroAction({ G, ctx, playerID, ...rest }, 1);
+            AddPickHeroAction({ G, ctx, myPlayerID, ...rest }, 1);
         }
     }
 };

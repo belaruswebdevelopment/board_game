@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { IMythicalAnimalScoringFunction, MyFnContext } from "../typescript/interfaces";
+import type { IMythicalAnimalScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -13,8 +13,8 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = ({ G, ctx, ...rest }: MyFnContext,
-    value?: number): number => {
+export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = ({ G, ctx, ...rest }:
+    MyFnContextWithMyPlayerID, value?: number): number => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }
@@ -31,8 +31,9 @@ export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = ({ G, 
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const GarmScoring: IMythicalAnimalScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number =>
-    GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.explorer, 1);
+export const GarmScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID): number =>
+    GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 1);
 
 /**
  * <h3>Получение победных очков по мифическому существу Nidhogg.</h3>
@@ -44,5 +45,6 @@ export const GarmScoring: IMythicalAnimalScoringFunction = ({ G, ctx, playerID, 
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const NidhoggScoring: IMythicalAnimalScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number =>
-    GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.warrior, 2);
+export const NidhoggScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID): number =>
+    GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.warrior, 2);

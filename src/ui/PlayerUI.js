@@ -218,9 +218,9 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                 }
                 else if (p === Number(ctx.currentPlayer) && (last + 1) === i
                     && ((((ctx.phase === PhaseNames.PlaceYlud && ctx.activePlayers === null)
-                        || ctx.phase === PhaseNames.EnlistmentMercenaries
+                        || (ctx.phase === PhaseNames.EnlistmentMercenaries
                             && ((_d = ctx.activePlayers) === null || _d === void 0 ? void 0 : _d[Number(ctx.currentPlayer)])
-                                === EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries))
+                                === EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries)))
                         || stage === CommonStageNames.PlaceMultiSuitCard
                         || stage === CommonStageNames.PlaceThrudHero
                         || stage === SoloBotCommonStageNames.SoloBotPlaceThrudHero
@@ -451,7 +451,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
             }
         }
         if (data !== undefined) {
-            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring({ G, ctx, playerID: String(p), ...rest }), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
+            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring({ G, ctx, myPlayerID: String(p), ...rest }), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
         }
     }
     if (data !== undefined) {
@@ -855,7 +855,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
                             || (stage === TavernsResolutionStageNames.ClickHandTradingCoinUline)
                             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                                 && stage === CommonStageNames.AddCoinToPouch
-                                && CheckPlayerHasBuff({ G, ctx, playerID: String(p), ...rest }, HeroBuffNames.EveryTurn)))) {
+                                && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(p), ...rest }, HeroBuffNames.EveryTurn)))) {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses, null, moveName, j);
                         }
@@ -872,7 +872,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
                     }
                     else if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                         && Number(ctx.currentPlayer) === p
-                        && CheckPlayerHasBuff({ G, ctx, playerID: String(p), ...rest }, HeroBuffNames.EveryTurn))
+                        && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(p), ...rest }, HeroBuffNames.EveryTurn))
                         || ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
                             && Number(ctx.currentPlayer) === p && ctx.currentPlayer === `1`
                             && ctx.phase === PhaseNames.ChooseDifficultySoloMode))

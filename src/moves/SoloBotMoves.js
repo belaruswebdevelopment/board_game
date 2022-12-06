@@ -23,11 +23,11 @@ import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames,
  */
 export const SoloBotClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard, CardMoveNames.SoloBotClickCardMove, cardId);
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard, CardMoveNames.SoloBotClickCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ClickCardAction({ G, ctx, playerID, ...rest }, cardId);
+    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</h3>
@@ -43,11 +43,11 @@ export const SoloBotClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  */
 export const SoloBotClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, cardId) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationStageNames.SoloBotClickCardToPickDistinction, CardMoveNames.SoloBotClickCardToPickDistinctionMove, cardId);
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationStageNames.SoloBotClickCardToPickDistinction, CardMoveNames.SoloBotClickCardToPickDistinctionMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickCardToPickDistinctionAction({ G, ctx, playerID, ...rest }, cardId);
+    PickCardToPickDistinctionAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор героя соло ботом.</h3>
@@ -63,14 +63,14 @@ export const SoloBotClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...res
  */
 export const SoloBotClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard, CardMoveNames.SoloBotClickHeroCardMove, heroId);
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard, CardMoveNames.SoloBotClickHeroCardMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     if (G.heroesForSoloBot === null) {
         throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
     }
-    AddHeroCardToPlayerHeroCards({ G, ctx, playerID, ...rest }, G.heroesForSoloBot[heroId]);
+    AddHeroCardToPlayerHeroCards({ G, ctx, myPlayerID: playerID, ...rest }, G.heroesForSoloBot[heroId]);
 };
 /**
  * <h3>Выкладка монет соло ботом.</h3>
@@ -86,11 +86,11 @@ export const SoloBotClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) 
  */
 export const SoloBotPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrder) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.SoloBotPlaceAllCoins, AutoBotsMoveNames.SoloBotPlaceAllCoinsMove, coinsOrder);
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, BidsDefaultStageNames.SoloBotPlaceAllCoins, AutoBotsMoveNames.SoloBotPlaceAllCoinsMove, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceAllCoinsInCurrentOrderForSoloBot({ G, ctx, playerID, ...rest });
+    PlaceAllCoinsInCurrentOrderForSoloBot({ G, ctx, myPlayerID: playerID, ...rest });
 };
 /**
  * <h3>Расположение героя на планшет соло бота.</h3>
@@ -106,11 +106,11 @@ export const SoloBotPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrd
  */
 export const SoloBotPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard, EmptyCardMoveNames.SoloBotPlaceThrudHeroMove, suit);
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonStageNames.SoloBotClickHeroCard, EmptyCardMoveNames.SoloBotPlaceThrudHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceThrudAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 /**
  * <h3>Расположение героя на планшет соло бота.</h3>
@@ -126,11 +126,11 @@ export const SoloBotPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) =
  */
 export const SoloBotPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, PlaceYludDefaultStageNames.SoloBotPlaceYludHero, EmptyCardMoveNames.SoloBotPlaceYludHeroMove, suit);
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, PlaceYludDefaultStageNames.SoloBotPlaceYludHero, EmptyCardMoveNames.SoloBotPlaceYludHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceYludAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceYludAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 /**
  * <h3>Выбор монеты для улучшения соло ботом.</h3>
@@ -147,14 +147,14 @@ export const SoloBotPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) =>
  */
 export const SoloBotClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
     const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, playerID, ...rest }, SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade, CoinMoveNames.SoloBotClickCoinToUpgradeMove, {
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade, CoinMoveNames.SoloBotClickCoinToUpgradeMove, {
             coinId,
             type,
         });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, playerID, ...rest });
-    UpgradeCoinActions({ G, ctx, playerID, ...rest }, coinId, type);
+    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, myPlayerID: playerID, ...rest });
+    UpgradeCoinActions({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };
 //# sourceMappingURL=SoloBotMoves.js.map

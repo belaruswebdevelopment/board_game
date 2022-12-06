@@ -44,7 +44,6 @@
                 "ignoreExternal": true
             }
         ],
-        "no-unreachable": "off",
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "no-unreachable": "off"
     }
 }

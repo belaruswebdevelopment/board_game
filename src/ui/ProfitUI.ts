@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../helpers/IsDwarfTypeHelpers";
-import { ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, ErrorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, ErrorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardType, FnContext, IDwarfCard, IHeroCard, IPublicPlayer, IStack, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, MythologicalCreatureDeckCardType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StackCardType, StageNames, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
@@ -44,7 +44,8 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, card, j, player, card.suit,
                     CardMoveNames.ClickCardNotGiantAbilityMove, card);
-            } else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
+            } else if (validatorName ===
+                ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
                 moveMainArgs = card;
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
@@ -62,7 +63,8 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, giant, j, player, null,
                     CardMoveNames.ClickGiantAbilityNotCardMove, card);
-            } else if (validatorName === TavernsResolutionMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
+            } else if (validatorName ===
+                ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
                 moveMainArgs = card;
             } else {
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);

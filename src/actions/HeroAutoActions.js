@@ -20,21 +20,21 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param priority Приоритет выбора героя.
  * @returns
  */
-export const AddPickHeroAction = ({ G, ctx, playerID, ...rest }, priority /* OneOrTwoType */) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const AddPickHeroAction = ({ G, ctx, myPlayerID, ...rest }, priority /* OneOrTwoType */) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
-    if (G.mode === GameModeNames.Solo && playerID === `1`) {
-        AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickHeroSoloBot(priority)]);
+    if (G.mode === GameModeNames.Solo && myPlayerID === `1`) {
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickHeroSoloBot(priority)]);
     }
-    else if (G.mode === GameModeNames.SoloAndvari && playerID === `1`) {
-        AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickHeroSoloBotAndvari(priority)]);
+    else if (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`) {
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickHeroSoloBotAndvari(priority)]);
     }
     else {
-        AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickHero(priority)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickHero(priority)]);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerID === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>
@@ -47,17 +47,17 @@ export const AddPickHeroAction = ({ G, ctx, playerID, ...rest }, priority /* One
  * @param ctx
  * @returns
  */
-export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, playerID, ...rest }) => {
+export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, myPlayerID, ...rest }) => {
     if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-        || (G.mode === GameModeNames.Solo && playerID === `0`)
-        || (G.mode === GameModeNames.SoloAndvari && playerID === `0`)) {
-        const player = G.publicPlayers[Number(playerID)];
+        || (G.mode === GameModeNames.Solo && myPlayerID === `0`)
+        || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `0`)) {
+        const player = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
         }
         for (let i = 0; i < player.boardCoins.length; i++) {
             if (i > G.currentTavern) {
-                const isCoinReturned = ReturnCoinToPlayerHands({ G, ctx, playerID, ...rest }, i, false);
+                const isCoinReturned = ReturnCoinToPlayerHands({ G, ctx, myPlayerID, ...rest }, i, false);
                 if (!isCoinReturned) {
                     break;
                 }
@@ -79,9 +79,9 @@ export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, playerID, ...rest })
  * @param value Значение обмена монеты.
  * @returns
  */
-export const UpgradeMinCoinAction = ({ G, ctx, playerID, ...rest }, value) => {
+export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value) => {
     // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
-    const currentPlayer = G.mode === GameModeNames.Solo ? 1 : Number(playerID), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
+    const currentPlayer = G.mode === GameModeNames.Solo ? 1 : Number(myPlayerID), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, currentPlayer);
     }
@@ -90,7 +90,7 @@ export const UpgradeMinCoinAction = ({ G, ctx, playerID, ...rest }, value) => {
     }
     let type;
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-        && CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.EveryTurn)) {
+        && CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
         let handCoins;
         if (G.mode === GameModeNames.Multiplayer) {
             handCoins = privatePlayer.handCoins;
@@ -154,11 +154,11 @@ export const UpgradeMinCoinAction = ({ G, ctx, playerID, ...rest }, value) => {
                 }
                 type = CoinTypeNames.Board;
             }
-            UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, value, upgradingCoinId, type);
+            UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
-            DrawCurrentProfit({ G, ctx, playerID, ...rest });
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
+            DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
         }
         else if (upgradingCoinsValue <= 0) {
             throw new Error(`Количество возможных монет для обмена не может быть меньше либо равно нулю.`);
@@ -188,11 +188,11 @@ export const UpgradeMinCoinAction = ({ G, ctx, playerID, ...rest }, value) => {
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
             type = CoinTypeNames.Board;
-            UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, value, upgradingCoinId, type);
+            UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
-            DrawCurrentProfit({ G, ctx, playerID, ...rest });
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
+            DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
         }
         else if (upgradingCoinsValue <= 0) {
             throw new Error(`Количество возможных монет для обмена не может быть меньше либо равно нулю.`);

@@ -15,36 +15,36 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param ctx
  * @returns
  */
-export const AddPlusTwoValueToAllCoinsAction = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
+export const AddPlusTwoValueToAllCoinsAction = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
     }
-    if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.EveryTurn)) {
-        UpgradeNextCoinsHrungnir({ G, ctx, playerID, ...rest }, 0);
+    if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
+        UpgradeNextCoinsHrungnir({ G, ctx, myPlayerID, ...rest }, 0);
     }
     else {
         for (let j = 0; j < 5; j++) {
             // TODO Check for Local and Multiplayer games!
             const privateBoardCoin = privatePlayer.boardCoins[j];
             if (privateBoardCoin === undefined) {
-                throw new Error(`В массиве монет приватного игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
+                throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
             }
             // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
             if (G.mode === GameModeNames.Multiplayer) {
                 // TODO Trading coin can be null if trading coin was deleted!?
                 if (privateBoardCoin === null) {
-                    throw new Error(`В массиве монет приватного игрока с id '${playerID}' на столе не может не быть монеты с id '${j}'.`);
+                    throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на столе не может не быть монеты с id '${j}'.`);
                 }
                 if (!privateBoardCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(privateBoardCoin, true);
                 }
                 player.boardCoins[j] = privateBoardCoin;
             }
-            UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, 2, j, CoinTypeNames.Board);
+            UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, 2, j, CoinTypeNames.Board);
         }
     }
 };

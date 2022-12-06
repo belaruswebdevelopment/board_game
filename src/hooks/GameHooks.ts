@@ -20,7 +20,7 @@ export const CheckEndGame = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<bool
     if (G.tierToEnd === 0) {
         const yludIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-                CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                     HeroBuffNames.EndTier));
         if (yludIndex !== -1) {
             return false;
@@ -28,14 +28,14 @@ export const CheckEndGame = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<bool
         if (G.expansions.Thingvellir.active) {
             const brisingamensIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
-                    boolean => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                    boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         CampBuffNames.DiscardCardEndGame));
             if (brisingamensIndex !== -1) {
                 return false;
             }
             const mjollnirIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
-                    boolean => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                    boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         CampBuffNames.GetMjollnirProfit));
             if (mjollnirIndex !== -1) {
                 return false;

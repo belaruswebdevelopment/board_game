@@ -4,7 +4,7 @@ import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, GameModeNames, GiantBuffNames, GiantNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames, ValkyryBuffNames } from "../typescript/enums";
-import type { AddCardToPlayerType, CanBeUndefType, IPublicPlayer, MyFnContext, MythologicalCreatureCommandZoneCardType, TavernCardType } from "../typescript/interfaces";
+import type { AddCardToPlayerType, CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, TavernCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -28,11 +28,11 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param card Карта.
  * @returns
  */
-export const AddCardToPlayer = ({ G, ctx, playerID, ...rest }: MyFnContext, card: AddCardToPlayerType): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const AddCardToPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: AddCardToPlayerType): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     let _exhaustiveCheck: never;
     if (G.expansions.Idavoll.active) {
@@ -42,10 +42,9 @@ export const AddCardToPlayer = ({ G, ctx, playerID, ...rest }: MyFnContext, card
             case RusCardTypeNames.Mythical_Animal_Card:
             case RusCardTypeNames.Special_Card:
             case RusCardTypeNames.Artefact_Player_Card:
-                if (CheckIfRecruitedCardHasNotLeastRankOfChosenClass({ G, ctx, playerID, ...rest },
-                    Number(playerID),
+                if (CheckIfRecruitedCardHasNotLeastRankOfChosenClass({ G, ctx, myPlayerID, ...rest },
                     card.suit)) {
-                    CheckValkyryRequirement({ G, ctx, playerID, ...rest },
+                    CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest },
                         ValkyryBuffNames.CountPickedCardClassRankAmount);
                 }
                 break;
@@ -65,41 +64,41 @@ export const AddCardToPlayer = ({ G, ctx, playerID, ...rest }: MyFnContext, card
                 if (IsDwarfCard(card) && ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null) {
                     switch (card.suit) {
                         case SuitNames.blacksmith:
-                            if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest },
+                            if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
                                 GiantBuffNames.PlayerHasActiveGiantThrivaldi)) {
-                                AddActionsToStack({ G, ctx, playerID, ...rest },
+                                AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [StackData.activateGiantAbilityOrPickCard(GiantNames.Thrivaldi,
                                         card)]);
                             }
                             break;
                         case SuitNames.explorer:
-                            if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest },
+                            if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
                                 GiantBuffNames.PlayerHasActiveGiantGymir)) {
-                                AddActionsToStack({ G, ctx, playerID, ...rest },
+                                AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [StackData.activateGiantAbilityOrPickCard(GiantNames.Gymir,
                                         card)]);
                             }
                             break;
                         case SuitNames.hunter:
-                            if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest },
+                            if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
                                 GiantBuffNames.PlayerHasActiveGiantSkymir)) {
-                                AddActionsToStack({ G, ctx, playerID, ...rest },
+                                AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [StackData.activateGiantAbilityOrPickCard(GiantNames.Skymir,
                                         card)]);
                             }
                             break;
                         case SuitNames.miner:
-                            if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest },
+                            if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
                                 GiantBuffNames.PlayerHasActiveGiantHrungnir)) {
-                                AddActionsToStack({ G, ctx, playerID, ...rest },
+                                AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [StackData.activateGiantAbilityOrPickCard(GiantNames.Hrungnir,
                                         card)]);
                             }
                             break;
                         case SuitNames.warrior:
-                            if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest },
+                            if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
                                 GiantBuffNames.PlayerHasActiveGiantSurt)) {
-                                AddActionsToStack({ G, ctx, playerID, ...rest },
+                                AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [StackData.activateGiantAbilityOrPickCard(GiantNames.Surt,
                                         card)]);
                             }
@@ -141,12 +140,12 @@ export const AddCardToPlayer = ({ G, ctx, playerID, ...rest }: MyFnContext, card
  * @param card Карта.
  * @returns
  */
-const AddMythologicalCreatureCardToPlayerCommandZone = ({ G, ctx, playerID, ...rest }: MyFnContext,
+const AddMythologicalCreatureCardToPlayerCommandZone = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     card: MythologicalCreatureCommandZoneCardType): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     player.mythologicalCreatureCards.push(card);
     let _exhaustiveCheck: never;
@@ -159,8 +158,8 @@ const AddMythologicalCreatureCardToPlayerCommandZone = ({ G, ctx, playerID, ...r
             break;
         case RusCardTypeNames.Valkyry_Card:
             card.strengthTokenNotch = 0;
-            AddActionsToStack({ G, ctx, playerID, ...rest }, card.stack?.player, card);
-            StartAutoAction({ G, ctx, playerID, ...rest }, card.actions);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, card.stack?.player, card);
+            StartAutoAction({ G, ctx, myPlayerID, ...rest }, card.actions);
             break;
         default:
             _exhaustiveCheck = card;
@@ -185,33 +184,33 @@ const AddMythologicalCreatureCardToPlayerCommandZone = ({ G, ctx, playerID, ...r
  * @param card Выбранная карта дворфа или улучшения монет.
  * @returns Добавлена ли карта на планшет игрока.
  */
-export const PickCardOrActionCardActions = ({ G, ctx, playerID, ...rest }: MyFnContext,
+export const PickCardOrActionCardActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     card: NonNullable<TavernCardType>): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
-    AddCardToPlayer({ G, ctx, playerID, ...rest }, card);
+    AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
     let _exhaustiveCheck: never;
     switch (card.type) {
         case RusCardTypeNames.Dwarf_Card:
         case RusCardTypeNames.Mythical_Animal_Card:
             if (IsMythicalAnimalCard(card)) {
-                AddActionsToStack({ G, ctx, playerID, ...rest }, card.stack?.player, card);
-                StartAutoAction({ G, ctx, playerID, ...rest }, card.actions);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, card.stack?.player, card);
+                StartAutoAction({ G, ctx, myPlayerID, ...rest }, card.actions);
             }
-            CheckAndMoveThrudAction({ G, ctx, playerID, ...rest }, card);
+            CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
             break;
         case RusCardTypeNames.Royal_Offering_Card:
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
             if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-                AddActionsToStack({ G, ctx, playerID, ...rest }, card.stack?.soloBot, card);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, card.stack?.soloBot, card);
             } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-                AddActionsToStack({ G, ctx, playerID, ...rest }, card.stack?.soloBotAndvari, card);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, card.stack?.soloBotAndvari, card);
             } else {
-                AddActionsToStack({ G, ctx, playerID, ...rest }, card.stack?.player, card);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, card.stack?.player, card);
             }
             DiscardPickedCard({ G, ctx, ...rest }, card);
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${card.type}' '${card.name}' убрана в сброс после применения её эффекта.`);
@@ -220,7 +219,7 @@ export const PickCardOrActionCardActions = ({ G, ctx, playerID, ...rest }: MyFnC
         case RusCardTypeNames.Giant_Card:
         case RusCardTypeNames.Valkyry_Card:
             if (G.expansions.Idavoll.active) {
-                AddMythologicalCreatureCardToPlayerCommandZone({ G, ctx, playerID, ...rest }, card);
+                AddMythologicalCreatureCardToPlayerCommandZone({ G, ctx, myPlayerID, ...rest }, card);
             }
             break;
         default:

@@ -19,7 +19,7 @@ import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames } f
  */
 export const BotsPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrder) => {
     // TODO Check it bot can't play in multiplayer now...
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.BotsPlaceAllCoins, AutoBotsMoveNames.BotsPlaceAllCoinsMove, coinsOrder);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, BidsDefaultStageNames.BotsPlaceAllCoins, AutoBotsMoveNames.BotsPlaceAllCoinsMove, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

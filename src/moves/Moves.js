@@ -19,11 +19,11 @@ import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, C
  * @returns
  */
 export const ClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCard, CardMoveNames.ClickCardMove, cardId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCard, CardMoveNames.ClickCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ClickCardAction({ G, ctx, playerID, ...rest }, cardId);
+    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
@@ -38,11 +38,11 @@ export const ClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * @returns
  */
 export const ClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationStageNames.ClickCardToPickDistinction, CardMoveNames.ClickCardToPickDistinctionMove, cardId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationStageNames.ClickCardToPickDistinction, CardMoveNames.ClickCardToPickDistinctionMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickCardToPickDistinctionAction({ G, ctx, playerID, ...rest }, cardId);
+    PickCardToPickDistinctionAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
@@ -57,11 +57,11 @@ export const ClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, ca
  * @returns
  */
 export const ClickDistinctionCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TroopEvaluationDefaultStageNames.ClickDistinctionCard, CardMoveNames.ClickDistinctionCardMove, suit);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationDefaultStageNames.ClickDistinctionCard, CardMoveNames.ClickDistinctionCardMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    StartDistinctionAwarding({ G, ctx, playerID, ...rest }, suitsConfig[suit].distinction.awarding);
+    StartDistinctionAwarding({ G, ctx, myPlayerID: playerID, ...rest }, suitsConfig[suit].distinction.awarding);
 };
 /**
  * <h3>Убирает карту в колоду сброса в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
@@ -77,14 +77,14 @@ export const ClickDistinctionCardMove = ({ G, ctx, playerID, ...rest }, suit) =>
  * @returns
  */
 export const DiscardCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, suit, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BrisingamensEndGameDefaultStageNames.DiscardCardFromPlayerBoard, CardMoveNames.DiscardCardFromPlayerBoardMove, {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, BrisingamensEndGameDefaultStageNames.DiscardCardFromPlayerBoard, CardMoveNames.DiscardCardFromPlayerBoardMove, {
         suit,
         cardId,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardAnyCardFromPlayerBoardAction({ G, ctx, playerID, ...rest }, suit, cardId);
+    DiscardAnyCardFromPlayerBoardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit, cardId);
 };
 /**
  * <h3>Сбрасывает карту из таверны при выборе карты из лагеря на двоих игроков.</h3>
@@ -99,11 +99,11 @@ export const DiscardCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, su
  * @returns
  */
 export const DiscardCard2PlayersMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove, cardId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardCardFromTavernAction({ G, ctx, playerID, ...rest }, cardId);
+    DiscardCardFromTavernAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор игроком карты наёмника для вербовки.</h3>
@@ -118,11 +118,11 @@ export const DiscardCard2PlayersMove = ({ G, ctx, playerID, ...rest }, cardId) =
  * @returns
  */
 export const GetEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.GetEnlistmentMercenaries, CardMoveNames.GetEnlistmentMercenariesMove, cardId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.GetEnlistmentMercenaries, CardMoveNames.GetEnlistmentMercenariesMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    GetEnlistmentMercenariesAction({ G, ctx, playerID, ...rest }, cardId);
+    GetEnlistmentMercenariesAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
@@ -137,11 +137,11 @@ export const GetEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, card
  * @returns
  */
 export const GetMjollnirProfitMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, GetMjollnirProfitDefaultStageNames.GetMjollnirProfit, SuitMoveNames.GetMjollnirProfitMove, suit);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, GetMjollnirProfitDefaultStageNames.GetMjollnirProfit, SuitMoveNames.GetMjollnirProfitMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    GetMjollnirProfitAction({ G, ctx, playerID, ...rest }, suit);
+    GetMjollnirProfitAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 /**
  * <h3>Пасс первого игрока в начале фазы вербовки наёмников.</h3>
@@ -155,11 +155,11 @@ export const GetMjollnirProfitMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * @returns
  */
 export const PassEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries, ButtonMoveNames.PassEnlistmentMercenariesMove, null);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries, ButtonMoveNames.PassEnlistmentMercenariesMove, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PassEnlistmentMercenariesAction({ G, ctx, playerID, ...rest });
+    PassEnlistmentMercenariesAction({ G, ctx, myPlayerID: playerID, ...rest });
 };
 /**
  * <h3>Выбор карт из колоды сброса.</h3>
@@ -175,11 +175,11 @@ export const PassEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => 
  * @returns
  */
 export const PickDiscardCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickDiscardCard, CardMoveNames.PickDiscardCardMove, cardId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.PickDiscardCard, CardMoveNames.PickDiscardCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickDiscardCardAction({ G, ctx, playerID, ...rest }, cardId);
+    PickDiscardCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор фракции куда будет завербован наёмник.</h3>
@@ -194,11 +194,11 @@ export const PickDiscardCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * @returns
  */
 export const PlaceEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries, EmptyCardMoveNames.PlaceEnlistmentMercenariesMove, suit);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries, EmptyCardMoveNames.PlaceEnlistmentMercenariesMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceEnlistmentMercenariesAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceEnlistmentMercenariesAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 /**
  * <h3>Начало вербовки наёмников.</li>
@@ -212,10 +212,10 @@ export const PlaceEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, su
  * @returns
  */
 export const StartEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries, ButtonMoveNames.StartEnlistmentMercenariesMove, null);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries, ButtonMoveNames.StartEnlistmentMercenariesMove, null);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.enlistmentMercenaries()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.enlistmentMercenaries()]);
 };
 //# sourceMappingURL=Moves.js.map

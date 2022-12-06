@@ -22,7 +22,7 @@ import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPl
 export const BotsPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinsOrder: number[]):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Check it bot can't play in multiplayer now...
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         BidsDefaultStageNames.BotsPlaceAllCoins, AutoBotsMoveNames.BotsPlaceAllCoinsMove, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;

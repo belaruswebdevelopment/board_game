@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IPublicPlayer, IStack, MyFnContext } from "../typescript/interfaces";
+import type { CanBeUndefType, IPublicPlayer, IStack, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
@@ -17,16 +17,16 @@ import type { CanBeUndefType, IPublicPlayer, IStack, MyFnContext } from "../type
  * @param ctx
  * @returns
  */
-export const DrawCurrentProfit = ({ G, ctx, playerID, events, ...rest }: MyFnContext): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }: MyFnContextWithMyPlayerID): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack !== undefined) {
         AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
-        StartOrEndActionStage({ G, ctx, playerID, events, ...rest }, stack);
+        StartOrEndActionStage({ G, ctx, myPlayerID, events, ...rest }, stack);
         if (stack.configName !== undefined) {
             G.drawProfit = stack.configName;
         } else {
@@ -49,13 +49,13 @@ export const DrawCurrentProfit = ({ G, ctx, playerID, events, ...rest }: MyFnCon
  * @param stack Стек действий героя.
  * @returns
  */
-const StartOrEndActionStage = ({ G, ctx, playerID, events, ...rest }: MyFnContext, stack: IStack): void => {
+const StartOrEndActionStage = ({ G, ctx, myPlayerID, events, ...rest }: MyFnContextWithMyPlayerID, stack: IStack): void => {
     if (stack.stageName !== undefined) {
         events.setActivePlayers({
             currentPlayer: stack.stageName,
         });
         AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Начало стадии '${stack.stageName}'.`);
-    } else if (ctx.activePlayers?.[Number(playerID)] !== undefined) {
+    } else if (ctx.activePlayers?.[Number(myPlayerID)] !== undefined) {
         events.endStage();
     }
 };

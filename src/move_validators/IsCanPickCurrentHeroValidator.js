@@ -14,7 +14,7 @@ import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames, SuitNames } f
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */
-export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, playerID, ...rest }, id) => {
+export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, myPlayerID, ...rest }, id) => {
     var _a;
     const hero = G.heroes[id];
     if (hero === undefined) {
@@ -26,9 +26,9 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
         let suit;
         for (suit in suitsConfig) {
             if (validators.discardCard.suit !== suit) {
-                const player = G.publicPlayers[Number(playerID)];
+                const player = G.publicPlayers[Number(myPlayerID)];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
                 }
                 const last = player.cards[suit].length - 1;
                 if (last >= 0) {
@@ -58,7 +58,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */
-export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, playerID, ...rest }, id) => {
+export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...rest }, id) => {
     var _a;
     const hero = G.heroes[id];
     if (hero === undefined) {
@@ -74,9 +74,9 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, playerID, ...rest
             let ranks = 0, key;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
-                    const player = G.publicPlayers[Number(playerID)];
+                    const player = G.publicPlayers[Number(myPlayerID)];
                     if (player === undefined) {
-                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
                     }
                     ranks = player.cards[conditions[condition][key]].reduce(TotalRank, 0);
                 }

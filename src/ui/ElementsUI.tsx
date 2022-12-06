@@ -3,7 +3,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames, SuitNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, BoardProps, ButtonNameType, CanBeNullType, IBackground, IndexOf, IPublicPlayer, MoveFunctionType, MyFnContext, PublicPlayerCoinType, TavernsConfigType } from "../typescript/interfaces";
+import type { AllCardType, ArgsType, BoardProps, ButtonNameType, CanBeNullType, IBackground, IndexOf, IPublicPlayer, MoveFunctionType, MyFnContextWithMyPlayerID, PublicPlayerCoinType, TavernsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -100,7 +100,7 @@ export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: All
     let _exhaustiveCheck: never;
     switch (moveName) {
         case CardMoveNames.ClickCardNotGiantAbilityMove:
-            action = data.moves.ClickCardNoyGiantAbilityMove;
+            action = data.moves.ClickCardNotGiantAbilityMove;
             break;
         case CardMoveNames.ClickCardMove:
             action = data.moves.ClickCardMove;
@@ -203,7 +203,8 @@ export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: All
                 tdClasses += ` bg-yellow-200`;
                 if (card.type === RusCardTypeNames.Artefact_Card
                     && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
-                    value = String(GetOdroerirTheMythicCauldronCoinsValues({ G: data.G } as MyFnContext));
+                    value = String(GetOdroerirTheMythicCauldronCoinsValues({ G: data.G } as
+                        MyFnContextWithMyPlayerID));
                 }
             }
             break;

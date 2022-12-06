@@ -18,12 +18,12 @@ import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, HeroBuffNam
  * @param ctx
  * @returns
  */
-export const DiscardTradingCoinAction = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const DiscardTradingCoinAction = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
-    DiscardTradingCoin({ G, ctx, playerID, ...rest });
+    DiscardTradingCoin({ G, ctx, myPlayerID, ...rest });
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
 /**
@@ -50,7 +50,7 @@ export const FinishOdroerirTheMythicCauldronAction = ({ G }) => {
  * @param ctx
  * @returns
  */
-export const StartDiscardSuitCardAction = ({ G, ctx, playerID, events, ...rest }) => {
+export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest }) => {
     const value = {};
     let results = 0;
     for (let i = 0; i < ctx.numPlayers; i++) {
@@ -62,7 +62,7 @@ export const StartDiscardSuitCardAction = ({ G, ctx, playerID, events, ...rest }
             value[i] = {
                 stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
             };
-            AddActionsToStack({ G, ctx, playerID, events, ...rest }, [StackData.discardSuitCard(i)]);
+            AddActionsToStack({ G, ctx, myPlayerID, events, ...rest }, [StackData.discardSuitCard(i)]);
             results++;
         }
     }
@@ -86,13 +86,13 @@ export const StartDiscardSuitCardAction = ({ G, ctx, playerID, events, ...rest }
  * @param ctx
  * @returns
  */
-export const StartVidofnirVedrfolnirAction = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
+export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
     }
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -101,11 +101,11 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, playerID, ...rest }) => 
     else {
         handCoins = player.handCoins;
     }
-    if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.EveryTurn)) {
+    if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
         const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter(IsCoin).length;
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
-                AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.addCoinToPouch()]);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.addCoinToPouch()]);
             }
         }
         else {
@@ -119,11 +119,11 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, playerID, ...rest }) => 
             if (G.mode === GameModeNames.Multiplayer) {
                 boardCoin = privatePlayer.boardCoins[j];
                 if (boardCoin === undefined) {
-                    throw new Error(`В массиве приватных монет игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
+                    throw new Error(`В массиве приватных монет игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
                 }
                 const publicBoardCoin = player.boardCoins[j];
                 if (publicBoardCoin === undefined) {
-                    throw new Error(`В массиве публичных монет игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
+                    throw new Error(`В массиве публичных монет игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
                 }
                 if (IsCoin(boardCoin) && publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
                     if (!boardCoin.isOpened) {
@@ -135,10 +135,10 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, playerID, ...rest }) => 
             else {
                 boardCoin = player.boardCoins[j];
                 if (boardCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
+                    throw new Error(`В массиве монет игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
                 }
                 if (boardCoin !== null && !IsCoin(boardCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${playerID}' на поле не должна быть закрыта монета в кошеле с id '${j}'.`);
+                    throw new Error(`В массиве монет игрока с id '${myPlayerID}' на поле не должна быть закрыта монета в кошеле с id '${j}'.`);
                 }
                 if (boardCoin !== null && !boardCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(boardCoin, true);
@@ -157,7 +157,7 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, playerID, ...rest }) => 
         else {
             throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '${coinsValue}' монет(ы).`);
         }
-        AddActionsToStack({ G, ctx, playerID, ...rest }, stack);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, stack);
     }
 };
 //# sourceMappingURL=CampAutoActions.js.map

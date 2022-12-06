@@ -17,35 +17,35 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param type Тип обменной монеты.
  * @returns Значение на которое улучшается монета.
  */
-export const UpgradeCoinActions = ({ G, ctx, playerID, ...rest }, coinId, type) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }, coinId, type) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined, myPlayerID);
     }
     const value = stack.value;
     if (value === undefined) {
-        throw new Error(`У игрока с id '${playerID}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
+        throw new Error(`У игрока с id '${myPlayerID}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }
-    UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, value, coinId, type);
+    UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, coinId, type);
     return value;
 };
-export const UpgradeNextCoinsHrungnir = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
+export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }, coinId) => {
+    const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
     }
     for (let j = coinId; j < 5; j++) {
         // TODO Check for Local and Multiplayer games!
         const privateBoardCoin = privatePlayer.boardCoins[j];
         if (privateBoardCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
+            throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
         }
         // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
         if (G.mode === GameModeNames.Multiplayer) {
@@ -59,8 +59,8 @@ export const UpgradeNextCoinsHrungnir = ({ G, ctx, playerID, ...rest }, coinId) 
             }
             player.boardCoins[j] = privateBoardCoin;
         }
-        UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, 2, j, CoinTypeNames.Board);
+        UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, 2, j, CoinTypeNames.Board);
     }
-    AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
+    AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
 };
 //# sourceMappingURL=CoinActionHelpers.js.map

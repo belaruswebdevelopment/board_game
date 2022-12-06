@@ -19,7 +19,7 @@ import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultS
  * @returns
  */
 export const ChooseStrategyForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest }, level) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, level);
+    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -38,12 +38,12 @@ export const ChooseStrategyForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest
  * @returns
  */
 export const ChooseStrategyVariantForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest }, level) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari, ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, level);
+    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari, ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     G.soloGameAndvariStrategyVariantLevel = level;
-    AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.chooseStrategyLevelForSoloModeAndvari()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.chooseStrategyLevelForSoloModeAndvari()]);
 };
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
@@ -58,12 +58,12 @@ export const ChooseStrategyVariantForSoloModeAndvariMove = ({ G, ctx, playerID, 
  * @returns
  */
 export const ChooseDifficultyLevelForSoloModeMove = ({ G, ctx, playerID, ...rest }, level) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest }, ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode, ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, level);
+    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode, ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     G.soloGameDifficultyLevel = level;
-    AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
 };
 /**
  * <h3>Выбор героя для выбранного уровня сложности в режиме соло игры.</h3>
@@ -78,7 +78,7 @@ export const ChooseDifficultyLevelForSoloModeMove = ({ G, ctx, playerID, ...rest
  * @returns
  */
 export const ChooseHeroForDifficultySoloModeMove = ({ G, ctx, playerID, ...rest }, heroId) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest }, ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode, CardMoveNames.ChooseHeroForDifficultySoloModeMove, heroId);
+    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode, CardMoveNames.ChooseHeroForDifficultySoloModeMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -93,13 +93,13 @@ export const ChooseHeroForDifficultySoloModeMove = ({ G, ctx, playerID, ...rest 
     if (hero === undefined) {
         throw new Error(`Не существует выбранная карта героя с id '${heroId}'.`);
     }
-    AddHeroForDifficultyToSoloBotCards({ G, ctx, playerID, ...rest }, hero);
+    AddHeroForDifficultyToSoloBotCards({ G, ctx, myPlayerID: playerID, ...rest }, hero);
     if (G.soloGameDifficultyLevel === null || G.soloGameDifficultyLevel === 0) {
         throw new Error(`Не может не быть возможности выбора героя для выбранного уровня сложности в режиме соло игры.`);
     }
     G.soloGameDifficultyLevel--;
     if (G.soloGameDifficultyLevel) {
-        AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+        AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
     }
 };
 //# sourceMappingURL=GameConfigMoves.js.map

@@ -15,7 +15,8 @@ import type { CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/inte
 export const StartBidUlineOrTavernsResolutionPhase = ({ G, ctx, ...rest }: FnContext): PhaseNames => {
     const ulinePlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EveryTurn));
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
+                HeroBuffNames.EveryTurn));
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== -1) {
         return PhaseNames.BidUline;
     } else {
@@ -39,15 +40,16 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVo
     } else {
         if (G.expansions.Thingvellir.active) {
             const brisingamensBuffIndex: number =
-                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-                    CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
+                    boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         CampBuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return PhaseNames.BrisingamensEndGame;
             }
             const mjollnirBuffIndex: number =
-                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-                    CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
+                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
+                    boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
+                        CampBuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
                 return PhaseNames.GetMjollnirProfit;
             }
@@ -70,7 +72,7 @@ export const StartEndTierPhaseOrEndGameLastActions = ({ G, ctx, ...rest }: FnCon
     CanBeVoidType<PhaseNames> => {
     const yludIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EndTier));
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
     if (yludIndex !== -1) {
         return PhaseNames.PlaceYlud;
     } else {

@@ -3,7 +3,7 @@ import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IPlayer, IPublicPlayer, IStack, MyFnContext } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, IPlayer, IPublicPlayer, IStack, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { AddActionsToStack } from "./StackHelpers";
 
 /**
@@ -19,42 +19,42 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param type Тип обменной монеты.
  * @returns Значение на которое улучшается монета.
  */
-export const UpgradeCoinActions = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number, type: CoinTypeNames):
+export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number, type: CoinTypeNames):
     number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     const stack: CanBeUndefType<IStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
-            playerID);
+            myPlayerID);
     }
     const value: CanBeUndefType<number> = stack.value;
     if (value === undefined) {
-        throw new Error(`У игрока с id '${playerID}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
+        throw new Error(`У игрока с id '${myPlayerID}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }
-    UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, value, coinId, type);
+    UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, coinId, type);
     return value;
 };
 
-export const UpgradeNextCoinsHrungnir = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
+export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     if (privatePlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     for (let j = coinId; j < 5; j++) {
         // TODO Check for Local and Multiplayer games!
         const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[j];
         if (privateBoardCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${playerID}' на поле отсутствует монета с id '${j}'.`);
+            throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
         }
         // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
         if (G.mode === GameModeNames.Multiplayer) {
@@ -68,9 +68,9 @@ export const UpgradeNextCoinsHrungnir = ({ G, ctx, playerID, ...rest }: MyFnCont
             }
             player.boardCoins[j] = privateBoardCoin;
         }
-        UpgradeCoinAction({ G, ctx, playerID, ...rest }, false, 2, j,
+        UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, 2, j,
             CoinTypeNames.Board);
     }
-    AddActionsToStack({ G, ctx, playerID, ...rest },
+    AddActionsToStack({ G, ctx, myPlayerID, ...rest },
         [StackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
 };

@@ -20,7 +20,7 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "..
 export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }: FnContext): void => {
     const brisingamensPlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 CampBuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф '${CampBuffNames.DiscardCardEndGame}'.`);
@@ -46,11 +46,11 @@ export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }: FnContext)
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
                 ctx.currentPlayer);
         }
-        if (!CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest },
+        if (!CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
             CampBuffNames.DiscardCardEndGame) && !player.stack.length) {
             const buffIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
-                    boolean => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                    boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         CampBuffNames.GetMjollnirProfit));
             if (buffIndex !== -1) {
                 return true;
@@ -85,7 +85,7 @@ export const EndBrisingamensEndGameActions = ({ G }: FnContext): void => {
  * @returns
  */
 export const OnBrisingamensEndGameMove = ({ G, ctx, ...rest }: FnContext): void => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 
 /**
@@ -100,8 +100,8 @@ export const OnBrisingamensEndGameMove = ({ G, ctx, ...rest }: FnContext): void 
  * @returns
  */
 export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
-    AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, ...rest }, [StackData.brisingamensEndGameAction()]);
-    DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.brisingamensEndGameAction()]);
+    DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 
 /**
@@ -117,7 +117,7 @@ export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }: FnContext): 
 export const StartGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {
     const buffIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 CampBuffNames.GetMjollnirProfit));
     if (buffIndex !== -1) {
         return PhaseNames.GetMjollnirProfit;

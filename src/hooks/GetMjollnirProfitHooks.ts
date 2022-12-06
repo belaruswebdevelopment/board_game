@@ -26,7 +26,7 @@ export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): 
                 ctx.currentPlayer);
         }
         if (!player.stack.length) {
-            return CheckPlayerHasBuff({ G, ctx, playerID: ctx.currentPlayer, ...rest },
+            return CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
                 BuffNames.SuitIdForMjollnir);
         }
     }
@@ -45,7 +45,7 @@ export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): 
 export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }: FnContext): void => {
     const mjollnirPlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 CampBuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex === -1) {
         throw new Error(`У игроков отсутствует обязательный баф '${CampBuffNames.GetMjollnirProfit}'.`);
@@ -65,7 +65,7 @@ export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }: FnContext): voi
  * @returns
  */
 export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }: FnContext): void => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 
 /**
@@ -80,9 +80,9 @@ export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }: FnContext): void =>
  * @returns
  */
 export const OnGetMjollnirProfitTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
-    AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest },
+    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
         [StackData.getMjollnirProfit()]);
-    DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+    DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
 };
 
 /**

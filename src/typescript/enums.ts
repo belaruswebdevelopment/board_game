@@ -535,7 +535,7 @@ export const enum ButtonMoveNames {
  * <h3>Перечисление для описаний отображения действий на картах.</h3>
  */
 export const enum CardMoveNames {
-    ClickCardNotGiantAbilityMove = `ClickCardNoyGiantAbilityMove`,
+    ClickCardNotGiantAbilityMove = `ClickCardNotGiantAbilityMove`,
     ClickGiantAbilityNotCardMove = `ClickGiantAbilityNotCardMove`,
     ClickCardMove = `ClickCardMove`,
     ClickCardToPickDistinctionMove = `ClickCardToPickDistinctionMove`,
@@ -690,32 +690,30 @@ export enum RusSuitNames {
     warrior = `Воины`,
 }
 
-// TODO DELETE!
 /**
- * <h3>Перечисление для типов мувов.</h3>
+ * <h3>Перечисление для суб стадий игры `ActivateGiantAbilityOrPickCard`.</h3>
  */
-export const enum MoveTypeNames {
-    default = `default`,
-    clickCardNotGiantAbilityMove = `clickCardNotGiantAbilityMove`,
-    clickGiantAbilityNotCardMove = `clickGiantAbilityNotCardMove`,
+export const enum ActivateGiantAbilityOrPickCardSubStageNames {
+    ClickCardNotGiantAbility = `ClickCardNotGiantAbility`,
+    ClickGiantAbilityNotCard = `ClickGiantAbilityNotCard`,
 }
 
 /**
- * <h3>Перечисление для дефолтных стадий игры `chooseDifficultySoloMode`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `ChooseDifficultySoloMode`.</h3>
  */
 export const enum ChooseDifficultySoloModeDefaultStageNames {
     ChooseDifficultyLevelForSoloMode = `ChooseDifficultyLevelForSoloMode`,
 }
 
 /**
- * <h3>Перечисление для стадий игры `chooseDifficultySoloMode`.</h3>
+ * <h3>Перечисление для стадий игры `ChooseDifficultySoloMode`.</h3>
  */
 export const enum ChooseDifficultySoloModeStageNames {
     ChooseHeroForDifficultySoloMode = `ChooseHeroForDifficultySoloMode`,
 }
 
 /**
- * <h3>Перечисление для дефолтных стадий игры `chooseDifficultySoloModeAndvari`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `ChooseDifficultySoloModeAndvari`.</h3>
  */
 export const enum ChooseDifficultySoloModeAndvariDefaultStageNames {
     ChooseStrategyVariantForSoloModeAndvari = `ChooseStrategyVariantForSoloModeAndvari`,
@@ -723,7 +721,7 @@ export const enum ChooseDifficultySoloModeAndvariDefaultStageNames {
 }
 
 /**
- * <h3>Перечисление для дефолтных стадий игры `bids`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `Bids`.</h3>
  */
 export const enum BidsDefaultStageNames {
     ClickHandCoin = `ClickHandCoin`,
@@ -734,28 +732,28 @@ export const enum BidsDefaultStageNames {
 }
 
 /**
- * <h3>Перечисление для дефолтных стадий игры `bidUline`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `BidUline`.</h3>
  */
 export const enum BidUlineDefaultStageNames {
     ClickHandCoinUline = `ClickHandCoinUline`,
 }
 
 /**
- * <h3>Перечисление для стадий игры `brisingamensEndGame`.</h3>
+ * <h3>Перечисление для стадий игры `BrisingamensEndGame`.</h3>
  */
 export const enum BrisingamensEndGameDefaultStageNames {
     DiscardCardFromPlayerBoard = `DiscardCardFromPlayerBoard`,
 }
 
 /**
- * <h3>Перечисление для стадий игры `getMjollnirProfit`.</h3>
+ * <h3>Перечисление для стадий игры `GetMjollnirProfit`.</h3>
  */
 export const enum GetMjollnirProfitDefaultStageNames {
     GetMjollnirProfit = `GetMjollnirProfit`,
 }
 
 /**
- * <h3>Перечисление для дефолтных стадий игры `enlistmentMercenaries`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `EnlistmentMercenaries`.</h3>
  */
 export const enum EnlistmentMercenariesDefaultStageNames {
     StartEnlistmentMercenaries = `StartEnlistmentMercenaries`,
@@ -764,14 +762,14 @@ export const enum EnlistmentMercenariesDefaultStageNames {
 }
 
 /**
- * <h3>Перечисление для стадий игры `enlistmentMercenaries`.</h3>
+ * <h3>Перечисление для стадий игры `EnlistmentMercenaries`.</h3>
  */
 export const enum EnlistmentMercenariesStageNames {
     PlaceEnlistmentMercenaries = `PlaceEnlistmentMercenaries`,
 }
 
 /**
- * <h3>Перечисление для стадий игры `placeYlud`.</h3>
+ * <h3>Перечисление для стадий игры `PlaceYlud`.</h3>
  */
 export const enum PlaceYludDefaultStageNames {
     PlaceYludHero = `PlaceYludHero`,
@@ -780,14 +778,14 @@ export const enum PlaceYludDefaultStageNames {
 }
 
 /**
- * <h3>Перечисление для дефолтных стадий игры `troopEvaluation`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `TroopEvaluation`.</h3>
  */
 export const enum TroopEvaluationDefaultStageNames {
     ClickDistinctionCard = `ClickDistinctionCard`,
 }
 
 /**
- * <h3>Перечисление для стадий игры `troopEvaluation`.</h3>
+ * <h3>Перечисление для стадий игры `TroopEvaluation`.</h3>
  */
 export const enum TroopEvaluationStageNames {
     ClickCardToPickDistinction = `ClickCardToPickDistinction`,
@@ -796,7 +794,7 @@ export const enum TroopEvaluationStageNames {
 }
 
 /**
- * <h3>Перечисление для дефолтных стадий игры `tavernsResolution`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `TavernsResolution`.</h3>
  */
 export const enum TavernsResolutionDefaultStageNames {
     ClickCard = `ClickCard`,
@@ -806,10 +804,16 @@ export const enum TavernsResolutionDefaultStageNames {
 }
 
 /**
- * <h3>Перечисление для стадий игры `tavernsResolution`.</h3>
+ * <h3>Перечисление для стадий игры с суб стадиями `TavernsResolution`.</h3>
+ */
+export const enum TavernsResolutionWithSubStageNames {
+    ActivateGiantAbilityOrPickCard = `ActivateGiantAbilityOrPickCard`,
+}
+
+/**
+ * <h3>Перечисление для стадий игры `TavernsResolution`.</h3>
  */
 export const enum TavernsResolutionStageNames {
-    ActivateGiantAbilityOrPickCard = `ActivateGiantAbilityOrPickCard`,
     ChooseCoinValueForHrungnirUpgrade = `ChooseCoinValueForHrungnirUpgrade`,
     ChooseSuitOlrun = `ChooseSuitOlrun`,
     DiscardCard2Players = `DiscardCard2Players`,
@@ -949,6 +953,14 @@ export const enum TavernNames {
 }
 
 /**
+ * <h3>Перечисление для названия суб валидаторов мувов в стадию 'ActivateGiantAbilityOrPickCard'.</h3>
+ */
+export const enum ActivateGiantAbilityOrPickCardSubMoveValidatorNames {
+    ClickCardNotGiantAbilityMoveValidator = `ClickCardNotGiantAbilityMoveValidator`,
+    ClickGiantAbilityNotCardMoveValidator = `ClickGiantAbilityNotCardMoveValidator`,
+}
+
+/**
  * <h3>Перечисление для названия валидаторов мувов в фазу 'ChooseDifficultySoloMode'.</h3>
  */
 export const enum ChooseDifficultySoloModeMoveValidatorNames {
@@ -995,8 +1007,6 @@ export const enum TavernsResolutionMoveValidatorNames {
     SoloBotClickCardMoveValidator = `SoloBotClickCardMoveValidator`,
     // Solo Bot Andvari
     SoloBotAndvariClickCardMoveValidator = `SoloBotAndvariClickCardMoveValidator`,
-    ClickCardNotGiantAbilityMoveValidator = `ClickCardNotGiantAbilityMoveValidator`,
-    ClickGiantAbilityNotCardMoveValidator = `ClickGiantAbilityNotCardMoveValidator`,
     // TODO Add `ChooseCoinValueForHrungnirUpgradeMoveValidator` to UI validate
     ChooseCoinValueForHrungnirUpgradeMoveValidator = `ChooseCoinValueForHrungnirUpgradeMoveValidator`,
     ChooseSuitOlrunMoveValidator = `ChooseSuitOlrunMoveValidator`,

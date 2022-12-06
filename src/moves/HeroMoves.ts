@@ -18,12 +18,12 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  */
 export const ClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickHeroCard,
-        CardMoveNames.ClickHeroCardMove, heroId);
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        CommonStageNames.ClickHeroCard, CardMoveNames.ClickHeroCardMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddHeroToPlayerCardsAction({ G, ctx, playerID, ...rest }, heroId);
+    AddHeroToPlayerCardsAction({ G, ctx, myPlayerID: playerID, ...rest }, heroId);
 };
 
 /**
@@ -41,15 +41,15 @@ export const ClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
  */
 export const DiscardTopCardFromSuitMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames,
     cardId: number): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardTopCardFromSuit,
-        CardMoveNames.DiscardTopCardFromSuitMove, {
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        CommonStageNames.DiscardTopCardFromSuit, CardMoveNames.DiscardTopCardFromSuitMove, {
         suit,
         cardId,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardCardsFromPlayerBoardAction({ G, ctx, playerID, ...rest }, suit, cardId);
+    DiscardCardsFromPlayerBoardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit, cardId);
 };
 
 /**
@@ -66,12 +66,12 @@ export const DiscardTopCardFromSuitMove: Move = ({ G, ctx, playerID, ...rest }: 
  */
 export const PlaceMultiSuitCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         CommonStageNames.PlaceMultiSuitCard, EmptyCardMoveNames.PlaceMultiSuitCardMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceMultiSuitCardAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceMultiSuitCardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
 /**
@@ -88,12 +88,12 @@ export const PlaceMultiSuitCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  */
 export const PlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PlaceThrudHero,
-        EmptyCardMoveNames.PlaceThrudHeroMove, suit);
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        CommonStageNames.PlaceThrudHero, EmptyCardMoveNames.PlaceThrudHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceThrudAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
 /**
@@ -110,10 +110,10 @@ export const PlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
  */
 export const PlaceYludHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, suit: SuitNames):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         PlaceYludDefaultStageNames.PlaceYludHero, EmptyCardMoveNames.PlaceYludHeroMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceYludAction({ G, ctx, playerID, ...rest }, suit);
+    PlaceYludAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };

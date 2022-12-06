@@ -13,10 +13,10 @@ import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, SuitNames }
  * @param ctx
  * @returns Фракция дворфов для выбора карты, чтобы получить нового героя.
  */
-const CheckSoloBotAndvariCanPickHero = ({ G, ctx, playerID, ...rest }) => {
-    const soloBotPublicPlayer = G.publicPlayers[Number(playerID)];
+const CheckSoloBotAndvariCanPickHero = ({ G, ctx, myPlayerID, ...rest }) => {
+    const soloBotPublicPlayer = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const playerCards = Object.values(soloBotPublicPlayer.cards), heroesLength = soloBotPublicPlayer.heroes.length -
         ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.NoHeroEasyStrategy
@@ -46,8 +46,8 @@ const CheckSoloBotAndvariCanPickHero = ({ G, ctx, playerID, ...rest }) => {
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить нового героя.
  */
-export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, playerID, ...rest }, moveArguments) => {
-    const suit = CheckSoloBotAndvariCanPickHero({ G, ctx, playerID, ...rest }), availableMoveArguments = [];
+export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest }, moveArguments) => {
+    const suit = CheckSoloBotAndvariCanPickHero({ G, ctx, myPlayerID, ...rest }), availableMoveArguments = [];
     if (suit !== undefined) {
         const currentTavern = G.taverns[G.currentTavern];
         for (let i = 0; i < moveArguments.length; i++) {
@@ -74,7 +74,7 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, playerID, ..
         return availableMoveArguments[0];
     }
     else if (availableMoveArguments.length > 1) {
-        return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, playerID, ...rest }, availableMoveArguments);
+        return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest }, availableMoveArguments);
     }
     return undefined;
 };
@@ -137,12 +137,12 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }, moveArgumen
  * @param suit Название фракции дворфов.
  * @returns Id карты из таверны, при выборе которой можно получить карту по указанной стратегии соло бота Андвари.
  */
-const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, playerID, ...rest }, moveArguments, suit) => {
+const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID, ...rest }, moveArguments, suit) => {
     // TODO Move same code here and for reserve strategy to one helper function
-    // TODO Check playerID === `1`?
-    const soloBotPublicPlayer = G.publicPlayers[Number(playerID)];
+    // TODO Check myPlayerID === `1`?
+    const soloBotPublicPlayer = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const currentTavern = G.taverns[G.currentTavern], strategyArguments = [];
     for (let i = 0; i < moveArguments.length; i++) {
@@ -178,7 +178,7 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, playerID, 
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить карту по главной стратегии соло бота Андвари.
  */
-export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, playerID, ...rest }, moveArguments) => {
+export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myPlayerID, ...rest }, moveArguments) => {
     if (G.soloGameAndvariStrategyVariantLevel === null) {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
@@ -187,12 +187,12 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, pla
         if (suit === undefined) {
             throw new Error(`В массиве главных стратегий отсутствует фракция с id '${i}'.`);
         }
-        const strategyArguments = CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, playerID, ...rest }, moveArguments, suit);
+        const strategyArguments = CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);
         if (strategyArguments.length === 1) {
             return strategyArguments[0];
         }
         else if (strategyArguments.length > 1) {
-            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, playerID, ...rest }, strategyArguments);
+            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest }, strategyArguments);
         }
     }
     return undefined;
@@ -209,7 +209,7 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, pla
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить карту по резервной стратегии соло бота Андвари.
  */
-export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, playerID, ...rest }, moveArguments) => {
+export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, myPlayerID, ...rest }, moveArguments) => {
     if (G.soloGameAndvariStrategyVariantLevel === null) {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
@@ -218,7 +218,7 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, playerID, ...re
         if (suit === undefined) {
             throw new Error(`В массиве резервных стратегий отсутствует фракция с id '${i}'.`);
         }
-        const strategyArguments = CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, playerID, ...rest }, moveArguments, suit);
+        const strategyArguments = CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);
         if (strategyArguments.length === 1) {
             const moveArgument = strategyArguments[0];
             if (moveArgument === undefined) {
@@ -227,7 +227,7 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, playerID, ...re
             return moveArgument;
         }
         else if (strategyArguments.length > 1) {
-            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, playerID, ...rest }, strategyArguments);
+            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest }, strategyArguments);
         }
     }
     throw new Error(`В массиве резервных стратегий отсутствует необходимое значение.`);

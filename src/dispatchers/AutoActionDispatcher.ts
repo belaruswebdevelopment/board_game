@@ -2,7 +2,7 @@ import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartD
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { AddMythologyCreatureCardsSkymirAction } from "../actions/MythologicalCreatureAutoActions";
 import { AutoActionFunctionNames } from "../typescript/enums";
-import type { AutoActionArgsType, AutoActionFunctionType, IAction, IActionFunctionWithoutParams, MyFnContext } from "../typescript/interfaces";
+import type { AutoActionArgsType, AutoActionFunctionType, IAction, IActionFunctionWithoutParams, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
@@ -62,15 +62,15 @@ const AutoActionDispatcherSwitcher = (actionName: AutoActionFunctionNames): Auto
  * @param action Объект автоматического действия.
  * @returns
  */
-export const StartAutoAction = ({ G, ctx, playerID, ...rest }: MyFnContext,
+export const StartAutoAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     action?: IAction<AutoActionFunctionNames, AutoActionArgsType>): void => {
     if (action !== undefined) {
         const actionDispatcher: AutoActionFunctionType = AutoActionDispatcherSwitcher(action.name);
         // TODO Rework!?
         if (action.params === undefined) {
-            (actionDispatcher as IActionFunctionWithoutParams)?.({ G, ctx, playerID, ...rest });
+            (actionDispatcher as IActionFunctionWithoutParams)?.({ G, ctx, myPlayerID, ...rest });
         } else {
-            actionDispatcher?.({ G, ctx, playerID, ...rest }, ...action.params);
+            actionDispatcher?.({ G, ctx, myPlayerID, ...rest }, ...action.params);
         }
     }
 };

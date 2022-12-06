@@ -4,7 +4,7 @@ import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, GameModeNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, FnContext, IDwarfCard, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, MyFnContext, PointsType, PointsValuesType, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, FnContext, IDwarfCard, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, MyFnContextWithMyPlayerID, PointsType, PointsValuesType, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -60,7 +60,7 @@ export const EvaluateCard = ({ G, ctx, ...rest }: FnContext, compareCard: Tavern
     if (G.secret.decks[1].length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardType): number[] =>
             Object.values(G.publicPlayers).map((player: IPublicPlayer, index: number): number =>
-                PotentialScoring({ G, ctx, playerID: String(index), ...rest }, card))),
+                PotentialScoring({ G, ctx, myPlayerID: String(index), ...rest }, card))),
             tavernCardResults: CanBeUndefType<number[]> = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
@@ -137,17 +137,17 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCa
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = ({ G, ctx, playerID, ...rest }: MyFnContext, card: TavernCardType):
+const PotentialScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: TavernCardType):
     number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
+        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            playerID);
+            myPlayerID);
     }
     if (privatePlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
-            playerID);
+            myPlayerID);
     }
     let handCoins: PublicPlayerCoinType[];
     if (G.mode === GameModeNames.Multiplayer) {
@@ -171,21 +171,21 @@ const PotentialScoring = ({ G, ctx, playerID, ...rest }: MyFnContext, card: Tave
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' на столе отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует монета с id '${i}'.`);
         }
         // TODO Check it it can be error in !multiplayer, but bot can't play in multiplayer now...
         if (boardCoin !== null && !IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' на столе не может быть закрыта монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(boardCoin)) {
             score += boardCoin.value;
         }
         const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[i];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${i}'.`);
         }
         if (handCoin !== null && !IsCoin(handCoin)) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(handCoin)) {
             score += handCoin.value;

@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, IStack, MyFnContext, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, IStack, MyFnContextWithMyPlayerID, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
@@ -16,7 +16,7 @@ import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, IStack, MyFnCont
  * @param card Карта.
  * @returns
  */
-export const AddActionsToStack = ({ G, ctx, playerID, ...rest }: MyFnContext, stack?: IStack[],
+export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, stack?: IStack[],
     card?: CardsHasStackType): void => {
     let isValid = false;
     if (stack !== undefined) {
@@ -28,9 +28,9 @@ export const AddActionsToStack = ({ G, ctx, playerID, ...rest }: MyFnContext, st
                 for (validator in validators) {
                     if (validator === PickCardValidatorNames.pickDiscardCardToStack) {
                         isValid =
-                            IsCanPickPickDiscardCardToStack({ G, ctx, playerID, ...rest }, card);
+                            IsCanPickPickDiscardCardToStack({ G, ctx, myPlayerID, ...rest }, card);
                     } else if (validator === PickCardValidatorNames.pickCampCardToStack) {
-                        isValid = IsCanPickPickCampCardToStack({ G, ctx, playerID, ...rest }, card);
+                        isValid = IsCanPickPickCampCardToStack({ G, ctx, myPlayerID, ...rest }, card);
                     } else {
                         _exhaustiveCheck = validator;
                         throw new Error(`Отсутствует валидатор для выбора карты.`);
@@ -54,18 +54,25 @@ export const AddActionsToStack = ({ G, ctx, playerID, ...rest }: MyFnContext, st
                     player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-                        playerId);
+                        myPlayerID);
                 }
                 let stackIndex: number;
                 if (stackI.priority === 3) {
                     stackIndex = player.stack.findIndex((stackP: IStack, index: number): boolean =>
-                        index !== 0 && stackP.priority! === stackI.priority!);
+                        index !== 0 && stackP.priority === stackI.priority);
                     stackIndex = stackIndex === -1 ? player.stack.length : stackIndex;
                 } else {
                     if (stackI.priority !== 1) {
                         stackIndex =
-                            FindLastIndex(player.stack, (stackP: IStack, index: number): boolean =>
-                                index !== 0 && stackP.priority! <= stackI.priority!);
+                            FindLastIndex(player.stack, (stackP: IStack, index: number): boolean => {
+                                if (stackI.priority === undefined) {
+                                    throw new Error(`В массиве стека новых действий отсутствует действие с названием 'priority'.`);
+                                }
+                                if (stackP.priority === undefined) {
+                                    throw new Error(`В массиве стека действий отсутствует действие с названием 'priority'.`);
+                                }
+                                return index !== 0 && stackP.priority <= stackI.priority;
+                            });
                         stackIndex = stackIndex === -1 ? 1 : stackIndex;
                     } else {
                         stackIndex = 0;

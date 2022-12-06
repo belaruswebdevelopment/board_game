@@ -1,10 +1,9 @@
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { ErrorNames, GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CreatePublicPlayerType, FnContext, ICoin, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitPropertyType } from "./typescript/interfaces";
+import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescript/enums";
+import type { CanBeNullType, CreatePublicPlayerType, FnContext, ICoin, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -75,21 +74,16 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, isPriva
 export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }: FnContext): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
-        if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest },
-                ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
-        }
         if (ctx.phase !== PhaseNames.BidUline) {
             if (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari
                 || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                    && !CheckPlayerHasBuff({ G, ctx, playerID: String(i), ...rest },
+                    && !CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest },
                         HeroBuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
             if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                && CheckPlayerHasBuff({ G, ctx, playerID: String(i), ...rest },
+                && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest },
                     HeroBuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }

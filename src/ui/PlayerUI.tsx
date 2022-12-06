@@ -242,9 +242,9 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                     }
                 } else if (p === Number(ctx.currentPlayer) && (last + 1) === i
                     && ((((ctx.phase === PhaseNames.PlaceYlud && ctx.activePlayers === null)
-                        || ctx.phase === PhaseNames.EnlistmentMercenaries
-                        && ctx.activePlayers?.[Number(ctx.currentPlayer)]
-                        === EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries))
+                        || (ctx.phase === PhaseNames.EnlistmentMercenaries
+                            && ctx.activePlayers?.[Number(ctx.currentPlayer)]
+                            === EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries)))
                         || stage === CommonStageNames.PlaceMultiSuitCard
                         || stage === CommonStageNames.PlaceThrudHero
                         || stage === SoloBotCommonStageNames.SoloBotPlaceThrudHero
@@ -472,7 +472,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
         if (data !== undefined) {
             playersBoards.push(
                 <table className="mx-auto" key={`${player.nickname} board`}>
-                    <caption>Player {p + 1} ({player.nickname}) cards, {G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring({ G, ctx, playerID: String(p), ...rest })} points
+                    <caption>Player {p + 1} ({player.nickname}) cards, {G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring({ G, ctx, myPlayerID: String(p), ...rest })} points
                     </caption>
                     <thead>
                         <tr>{playerHeaders}</tr>
@@ -912,7 +912,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }: FnContext,
                             || (stage === TavernsResolutionStageNames.ClickHandTradingCoinUline)
                             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                                 && stage === CommonStageNames.AddCoinToPouch
-                                && CheckPlayerHasBuff({ G, ctx, playerID: String(p), ...rest },
+                                && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(p), ...rest },
                                     HeroBuffNames.EveryTurn)))) {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses,
@@ -928,7 +928,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }: FnContext,
                         }
                     } else if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                         && Number(ctx.currentPlayer) === p
-                        && CheckPlayerHasBuff({ G, ctx, playerID: String(p), ...rest },
+                        && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(p), ...rest },
                             HeroBuffNames.EveryTurn))
                         || ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
                             && Number(ctx.currentPlayer) === p && ctx.currentPlayer === `1`

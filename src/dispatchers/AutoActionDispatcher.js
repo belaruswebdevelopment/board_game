@@ -58,15 +58,15 @@ const AutoActionDispatcherSwitcher = (actionName) => {
  * @param action Объект автоматического действия.
  * @returns
  */
-export const StartAutoAction = ({ G, ctx, playerID, ...rest }, action) => {
+export const StartAutoAction = ({ G, ctx, myPlayerID, ...rest }, action) => {
     if (action !== undefined) {
         const actionDispatcher = AutoActionDispatcherSwitcher(action.name);
         // TODO Rework!?
         if (action.params === undefined) {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest });
+            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest });
         }
         else {
-            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest }, ...action.params);
+            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest }, ...action.params);
         }
     }
 };

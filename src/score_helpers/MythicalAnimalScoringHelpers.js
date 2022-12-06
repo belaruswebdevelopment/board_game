@@ -27,7 +27,7 @@ export const BasicMythicalAnimalScoring = ({ G, ctx, ...rest }, value) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const GarmScoring = ({ G, ctx, playerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.explorer, 1);
+export const GarmScoring = ({ G, ctx, myPlayerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 1);
 /**
  * <h3>Получение победных очков по мифическому существу Nidhogg.</h3>
  * <p>Применения:</p>
@@ -38,5 +38,5 @@ export const GarmScoring = ({ G, ctx, playerID, ...rest }) => GetRanksValueMulti
  * @param player Игрок.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const NidhoggScoring = ({ G, ctx, playerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.warrior, 2);
+export const NidhoggScoring = ({ G, ctx, myPlayerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.warrior, 2);
 //# sourceMappingURL=MythicalAnimalScoringHelpers.js.map

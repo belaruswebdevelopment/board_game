@@ -11,10 +11,10 @@ import { ErrorNames, GiantNames, RusCardTypeNames } from "../typescript/enums";
  * @param player Игрок.
  * @returns Количество очков по конкретному гиганту.
  */
-export const BasicGiantScoring = ({ G, ctx, playerID, ...rest }, value) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const BasicGiantScoring = ({ G, ctx, myPlayerID, ...rest }, value) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (value === undefined) {
         throw new Error(`Function param 'value' is undefined.`);
@@ -31,10 +31,10 @@ export const BasicGiantScoring = ({ G, ctx, playerID, ...rest }, value) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному гиганту.
  */
-export const GymirScoring = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const GymirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const gymirCard = player.mythologicalCreatureCards.find((card) => card.name === GiantNames.Gymir);
     if (gymirCard === undefined) {
@@ -44,7 +44,9 @@ export const GymirScoring = ({ G, ctx, playerID, ...rest }) => {
     if (capturedGymirCard === null) {
         return 0;
     }
-    // TODO Rework "!"?
+    if (capturedGymirCard.points === null) {
+        throw new Error(`У карты '${capturedGymirCard.name}' не могут отсутствовать очки.`);
+    }
     return capturedGymirCard.points * 3;
 };
 /**
@@ -57,10 +59,10 @@ export const GymirScoring = ({ G, ctx, playerID, ...rest }) => {
  * @param player Игрок.
  * @returns Количество очков по конкретному гиганту.
  */
-export const SurtScoring = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const SurtScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const surtCard = player.mythologicalCreatureCards.find((card) => card.name === GiantNames.Surt);
     if (surtCard === undefined) {
@@ -70,6 +72,6 @@ export const SurtScoring = ({ G, ctx, playerID, ...rest }) => {
     if (capturedSurtCard === null) {
         return 0;
     }
-    return GetMaxCoinValue({ G, ctx, playerID, ...rest });
+    return GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
 };
 //# sourceMappingURL=GiantScoringHelpers.js.map

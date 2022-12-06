@@ -32,7 +32,7 @@ export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoi
         if (!player.stack.length) {
             const yludIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
-                    boolean => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                    boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         HeroBuffNames.EndTier));
             if (G.tierToEnd !== 0 && yludIndex === -1) {
                 throw new Error(`У игрока отсутствует обязательная карта героя '${HeroNames.Ylud}'.`);
@@ -72,7 +72,7 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
     G.publicPlayersOrder = [];
     const yludIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EndTier));
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
     if (yludIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф '${HeroBuffNames.EndTier}'.`);
     }
@@ -119,7 +119,7 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndPlaceYludTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> =>
-    EndTurnActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 
 /**
  * <h3>Действия при завершении фазы 'Поместить Труд'.</h3>
@@ -150,7 +150,7 @@ export const EndPlaceYludActions = ({ G, ctx, ...rest }: FnContext): void => {
  * @returns
  */
 export const OnPlaceYludMove = ({ G, ctx, ...rest }: FnContext): void => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
 };
 
 /**
@@ -166,13 +166,13 @@ export const OnPlaceYludMove = ({ G, ctx, ...rest }: FnContext): void => {
  */
 export const OnPlaceYludTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
     if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest },
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
             [StackData.placeYludHeroSoloBot()]);
     } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest },
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
             [StackData.placeYludHeroSoloBotAndvari()]);
     } else {
-        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest }, [StackData.placeYludHero()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.placeYludHero()]);
     }
-    DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+    DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
 };

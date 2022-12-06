@@ -1,4 +1,4 @@
-import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContext, MythologicalCreatureCardsArrayType, MythologicalCreatureDeckCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContextWithMyPlayerID, MythologicalCreatureCardsArrayType, MythologicalCreatureDeckCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением карт Мифических существ для выбора Skymir.</h3>
@@ -10,7 +10,8 @@ import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContext, Mytholo
  * @param G
  * @returns
  */
-export const AddMythologyCreatureCardsSkymirAction: IActionFunctionWithoutParams = ({ G }: MyFnContext): void => {
+export const AddMythologyCreatureCardsSkymirAction: IActionFunctionWithoutParams = ({ G }: MyFnContextWithMyPlayerID):
+    void => {
     const mythologyCreatureCardsSkymir: MythologicalCreatureDeckCardType[] = [];
     for (let j = 0; j < 5; j++) {
         const mythologyCreatureCard: CanBeUndefType<MythologicalCreatureDeckCardType> =

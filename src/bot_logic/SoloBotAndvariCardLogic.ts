@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IMyGameState, IPublicPlayer, MoveArgumentsType, MyFnContext, PlayerCardType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IMyGameState, IPublicPlayer, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerCardType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>
@@ -15,11 +15,12 @@ import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IMyGameState, IP
  * @param ctx
  * @returns Фракция дворфов для выбора карты, чтобы получить нового героя.
  */
-const CheckSoloBotAndvariCanPickHero = ({ G, ctx, playerID, ...rest }: MyFnContext): CanBeUndefType<SuitNames> => {
-    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+const CheckSoloBotAndvariCanPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    CanBeUndefType<SuitNames> => {
+    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            playerID);
+            myPlayerID);
     }
     const playerCards: PlayerCardType[][] = Object.values(soloBotPublicPlayer.cards),
         heroesLength: number = soloBotPublicPlayer.heroes.length -
@@ -58,9 +59,9 @@ const CheckSoloBotAndvariCanPickHero = ({ G, ctx, playerID, ...rest }: MyFnConte
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить нового героя.
  */
-export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, playerID, ...rest }: MyFnContext,
+export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
-    const suit: CanBeUndefType<SuitNames> = CheckSoloBotAndvariCanPickHero({ G, ctx, playerID, ...rest }),
+    const suit: CanBeUndefType<SuitNames> = CheckSoloBotAndvariCanPickHero({ G, ctx, myPlayerID, ...rest }),
         availableMoveArguments: MoveArgumentsType<number[]> = [];
     if (suit !== undefined) {
         const currentTavern: CanBeNullType<DeckCardType>[] =
@@ -89,7 +90,7 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, playerID, ..
     if (availableMoveArguments.length === 1) {
         return availableMoveArguments[0];
     } else if (availableMoveArguments.length > 1) {
-        return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, playerID, ...rest }, availableMoveArguments);
+        return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest }, availableMoveArguments);
     }
     return undefined;
 };
@@ -106,7 +107,7 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, playerID, ..
  * @param moveArguments Аргументы действия соло бота Andvari.
  * @returns Id карты из таверны, при выборе которой можно получить карту с наибольшим значением.
  */
-const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }: MyFnContext,
+const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): number => {
     const currentTavern: CanBeNullType<DeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[];
     let maxValue = 0,
@@ -155,14 +156,14 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }: MyFnContext
  * @param suit Название фракции дворфов.
  * @returns Id карты из таверны, при выборе которой можно получить карту по указанной стратегии соло бота Андвари.
  */
-const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, playerID, ...rest }: MyFnContext,
+const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>, suit: SuitNames): MoveArgumentsType<number[]> => {
     // TODO Move same code here and for reserve strategy to one helper function
-    // TODO Check playerID === `1`?
-    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    // TODO Check myPlayerID === `1`?
+    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            playerID);
+            myPlayerID);
     }
     const currentTavern: CanBeNullType<DeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[],
         strategyArguments: MoveArgumentsType<number[]> = [];
@@ -201,7 +202,7 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, playerID, 
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить карту по главной стратегии соло бота Андвари.
  */
-export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, playerID, ...rest }: MyFnContext,
+export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     if (G.soloGameAndvariStrategyVariantLevel === null) {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
@@ -213,11 +214,11 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, pla
             throw new Error(`В массиве главных стратегий отсутствует фракция с id '${i}'.`);
         }
         const strategyArguments: MoveArgumentsType<number[]> =
-            CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, playerID, ...rest }, moveArguments, suit);
+            CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);
         if (strategyArguments.length === 1) {
             return strategyArguments[0];
         } else if (strategyArguments.length > 1) {
-            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, playerID, ...rest },
+            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest },
                 strategyArguments);
         }
     }
@@ -236,7 +237,7 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, pla
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить карту по резервной стратегии соло бота Андвари.
  */
-export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, playerID, ...rest }: MyFnContext,
+export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): number => {
     if (G.soloGameAndvariStrategyVariantLevel === null) {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
@@ -247,7 +248,7 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, playerID, ...re
             throw new Error(`В массиве резервных стратегий отсутствует фракция с id '${i}'.`);
         }
         const strategyArguments: MoveArgumentsType<number[]> =
-            CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, playerID, ...rest }, moveArguments, suit);
+            CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);
         if (strategyArguments.length === 1) {
             const moveArgument: CanBeUndefType<number> = strategyArguments[0];
             if (moveArgument === undefined) {
@@ -255,7 +256,7 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, playerID, ...re
             }
             return moveArgument;
         } else if (strategyArguments.length > 1) {
-            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, playerID, ...rest },
+            return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest },
                 strategyArguments);
         }
     }
@@ -274,7 +275,7 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, playerID, ...re
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты Королевской награды из таверны.
  */
-export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G }: MyFnContext,
+export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     // TODO Move code here and for solo bot royal to one helper function
     const currentTavern: CanBeNullType<DeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[];

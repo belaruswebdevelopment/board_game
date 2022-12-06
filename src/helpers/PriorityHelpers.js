@@ -10,13 +10,12 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
- * @param playerId Id выбранного игрока.
  * @returns Имеет ли игрок наименьший кристалл.
  */
-export const HasLowestPriority = ({ G, ctx, playerID, ...rest }) => {
-    const tempPriorities = Object.values(G.publicPlayers).map((player) => player.priority.value), minPriority = Math.min(...tempPriorities), player = G.publicPlayers[Number(playerID)];
+export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }) => {
+    const tempPriorities = Object.values(G.publicPlayers).map((player) => player.priority.value), minPriority = Math.min(...tempPriorities), player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const priority = player.priority;
     return priority.value === minPriority;

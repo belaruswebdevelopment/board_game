@@ -15,10 +15,10 @@ import { CheckPickHero } from "./HeroHelpers";
  * @param ctx
  * @returns Должна ли быть завершена фаза.
  */
-export const EndTurnActions = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const EndTurnActions = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
     if (!player.stack.length) {
         return true;
@@ -36,7 +36,7 @@ export const EndTurnActions = ({ G, ctx, playerID, ...rest }) => {
  * @returns
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }) => {
-    const thrudPlayerIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.MoveThrud));
+    const thrudPlayerIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.MoveThrud));
     if (thrudPlayerIndex !== -1) {
         const player = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
@@ -64,19 +64,19 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }) => {
  * @param ctx
  * @returns
  */
-export const StartOrEndActions = ({ G, ctx, playerID, ...rest }) => {
+export const StartOrEndActions = ({ G, ctx, myPlayerID, ...rest }) => {
     var _a, _b, _c, _d;
-    const player = G.publicPlayers[Number(playerID)];
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
-    if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(playerID)]) !== undefined) {
+    if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(myPlayerID)]) !== undefined) {
         player.stack.shift();
         if ((((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.priority) === undefined)
             || (((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.priority) !== undefined && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.priority) > 1)) {
-            CheckPickHero({ G, ctx, playerID, ...rest });
+            CheckPickHero({ G, ctx, myPlayerID, ...rest });
         }
-        DrawCurrentProfit({ G, ctx, playerID, ...rest });
+        DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
     }
 };
 //# sourceMappingURL=GameHooksHelpers.js.map

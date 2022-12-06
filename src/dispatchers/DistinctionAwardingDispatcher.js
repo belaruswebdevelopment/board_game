@@ -13,9 +13,9 @@ import { DistinctionAwardingFunctionNames } from "../typescript/enums";
  * @param params Параметры действия.
  * @returns Количество очков по преимуществу по фракции.
  */
-export const StartDistinctionAwarding = ({ G, ctx, playerID, ...rest }, action) => {
+export const StartDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }, action) => {
     const actionDispatcher = DistinctionAwardingDispatcherSwitcher(action.name);
-    return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, playerID, ...rest });
+    return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest });
 };
 /**
 * <h3>Диспетчер всех действий по получению преимущества по фракции дворфов.</h3>

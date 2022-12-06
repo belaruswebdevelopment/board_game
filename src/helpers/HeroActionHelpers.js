@@ -15,19 +15,19 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param card Карта.
  * @returns Нужно ли перемещать героя Труд.
  */
-const CheckAndMoveThrud = ({ G, ctx, playerID, ...rest }, card) => {
+const CheckAndMoveThrud = ({ G, ctx, myPlayerID, ...rest }, card) => {
     if (card.suit !== null) {
-        const player = G.publicPlayers[Number(playerID)];
+        const player = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
         }
-        if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, HeroBuffNames.MoveThrud)
-            && GetBuffValue({ G, ctx, playerID, ...rest }, HeroBuffNames.MoveThrud) === card.suit) {
+        if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.MoveThrud)
+            && GetBuffValue({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.MoveThrud) === card.suit) {
             const index = player.cards[card.suit].findIndex((card) => card.name === HeroNames.Thrud);
             if (index !== -1) {
                 const thrudCard = player.cards[card.suit][index];
                 if (thrudCard === undefined) {
-                    throw new Error(`В массиве карт игрока с id '${playerID}' во фракции '${card.suit}' с id '${index}' отсутствует карта героя '${HeroNames.Thrud}' для перемещения на новое место.`);
+                    throw new Error(`В массиве карт игрока с id '${myPlayerID}' во фракции '${card.suit}' с id '${index}' отсутствует карта героя '${HeroNames.Thrud}' для перемещения на новое место.`);
                 }
                 player.cards[card.suit].splice(index, 1);
             }
@@ -48,17 +48,17 @@ const CheckAndMoveThrud = ({ G, ctx, playerID, ...rest }, card) => {
  * @param card Карта, помещающаяся на карту героя Труд.
  * @returns
  */
-export const CheckAndMoveThrudAction = ({ G, ctx, playerID, ...rest }, card) => {
-    const isMoveThrud = CheckAndMoveThrud({ G, ctx, playerID, ...rest }, card);
+export const CheckAndMoveThrudAction = ({ G, ctx, myPlayerID, ...rest }, card) => {
+    const isMoveThrud = CheckAndMoveThrud({ G, ctx, myPlayerID, ...rest }, card);
     if (isMoveThrud) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.placeThrudHeroSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.placeThrudHeroSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.placeThrudHeroSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.placeThrudHeroSoloBotAndvari()]);
         }
         else {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.placeThrudHero()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.placeThrudHero()]);
         }
     }
 };

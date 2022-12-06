@@ -20,7 +20,7 @@ import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTy
  */
 export const ClickBoardCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
     // TODO Add Place coins async
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickBoardCoin, CoinMoveNames.ClickBoardCoinMove, coinId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, BidsDefaultStageNames.ClickBoardCoin, CoinMoveNames.ClickBoardCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -107,15 +107,15 @@ export const ClickBoardCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * @returns
  */
 export const ClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickCoinToUpgrade, CoinMoveNames.ClickCoinToUpgradeMove, {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.ClickCoinToUpgrade, CoinMoveNames.ClickCoinToUpgradeMove, {
         coinId,
         type,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, playerID, ...rest });
-    UpgradeCoinActions({ G, ctx, playerID, ...rest }, coinId, type);
+    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, myPlayerID: playerID, ...rest });
+    UpgradeCoinActions({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };
 /**
  * <h3>Выбор конкретной монеты для улучшения.</h3>
@@ -131,14 +131,14 @@ export const ClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, ty
  * @returns
  */
 export const PickConcreteCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.PickConcreteCoinToUpgrade, CoinMoveNames.PickConcreteCoinToUpgradeMove, {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.PickConcreteCoinToUpgrade, CoinMoveNames.PickConcreteCoinToUpgradeMove, {
         coinId,
         type,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    UpgradeCoinActions({ G, ctx, playerID, ...rest }, coinId, type);
+    UpgradeCoinActions({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };
 /**
  * <h3>Выбор монеты в руке для выкладки монет.</h3>
@@ -153,7 +153,7 @@ export const PickConcreteCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coi
  * @returns
  */
 export const ClickHandCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickHandCoin, CoinMoveNames.ClickHandCoinMove, coinId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, BidsDefaultStageNames.ClickHandCoin, CoinMoveNames.ClickHandCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -176,7 +176,7 @@ export const ClickHandCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * @returns
  */
 export const ClickHandCoinUlineMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, BidUlineDefaultStageNames.ClickHandCoinUline, CoinMoveNames.ClickHandCoinUlineMove, coinId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, BidUlineDefaultStageNames.ClickHandCoinUline, CoinMoveNames.ClickHandCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -235,7 +235,7 @@ export const ClickHandCoinUlineMove = ({ G, ctx, playerID, ...rest }, coinId) =>
  * @returns
  */
 export const ClickHandTradingCoinUlineMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionStageNames.ClickHandTradingCoinUline, CoinMoveNames.ClickHandTradingCoinUlineMove, coinId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionStageNames.ClickHandTradingCoinUline, CoinMoveNames.ClickHandTradingCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

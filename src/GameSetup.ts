@@ -13,7 +13,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames, SuitNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeUndefType, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, SecretCampDecksType, SecretDecksType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeUndefType, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, PlayerID, SecretCampDecksType, SecretDecksType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -137,7 +137,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
     }
     const players: IPlayers = {},
         publicPlayers: IPublicPlayers = {},
-        publicPlayersOrder: string[] = [],
+        publicPlayersOrder: PlayerID[] = [],
         exchangeOrder: number[] = [],
         priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers as NumPlayersType,
             mode === GameModeNames.Solo);

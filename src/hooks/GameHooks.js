@@ -16,16 +16,16 @@ import { CampBuffNames, ErrorNames, HeroBuffNames } from "../typescript/enums";
  */
 export const CheckEndGame = ({ G, ctx, ...rest }) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EndTier));
+        const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
         if (yludIndex !== -1) {
             return false;
         }
         if (G.expansions.Thingvellir.active) {
-            const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.DiscardCardEndGame));
+            const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, CampBuffNames.DiscardCardEndGame));
             if (brisingamensIndex !== -1) {
                 return false;
             }
-            const mjollnirIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
+            const mjollnirIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, CampBuffNames.GetMjollnirProfit));
             if (mjollnirIndex !== -1) {
                 return false;
             }

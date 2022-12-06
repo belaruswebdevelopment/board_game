@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { IHeroScoringFunction, MyFnContext } from "../typescript/interfaces";
+import type { IHeroScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -14,7 +14,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFnContext, value?: number):
+export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID, value?: number):
     number => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
@@ -32,8 +32,9 @@ export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFn
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const AstridScoring: IHeroScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number =>
-    GetMaxCoinValue({ G, ctx, playerID, ...rest });
+export const AstridScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    number =>
+    GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
 
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>
@@ -45,5 +46,6 @@ export const AstridScoring: IHeroScoringFunction = ({ G, ctx, playerID, ...rest 
  * @param player Игрок.
  * @returns Количество очков по конкретному герою.
  */
-export const IdunnScoring: IHeroScoringFunction = ({ G, ctx, playerID, ...rest }: MyFnContext): number =>
-    GetRanksValueMultiplier({ G, ctx, playerID, ...rest }, SuitNames.explorer, 2);
+export const IdunnScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    number =>
+    GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 2);

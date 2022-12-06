@@ -14,13 +14,13 @@ import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
  * @param buffName Баф.
  * @returns
  */
-export const CheckValkyryRequirement = ({ G, ctx, playerID, ...rest }, buffName) => {
+export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }, buffName) => {
     // TODO Check only if not maximum count!
-    const player = G.publicPlayers[Number(playerID)];
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    if (CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, buffName)) {
+    if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, buffName)) {
         let valkyryName;
         // TODO Add _exhaustiveCheck and rework all buffs for diff ValkyryBuffNames etc.!
         switch (buffName) {
@@ -44,10 +44,10 @@ export const CheckValkyryRequirement = ({ G, ctx, playerID, ...rest }, buffName)
         }
         const valkyryCard = player.mythologicalCreatureCards.find((card) => card.name === valkyryName);
         if (valkyryCard === undefined) {
-            throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryName}'.`);
+            throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryName}'.`);
         }
         if (valkyryCard.strengthTokenNotch === null) {
-            throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);
+            throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);
         }
         valkyryCard.strengthTokenNotch += 1;
     }
@@ -61,15 +61,14 @@ export const CheckValkyryRequirement = ({ G, ctx, playerID, ...rest }, buffName)
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @returns Может ли быть выполнено свойство валькирии Olrun.
  */
-export const CheckIfRecruitedCardHasNotLeastRankOfChosenClass = ({ G, ctx, playerID, ...rest }, playerId, suit) => {
-    const player = G.publicPlayers[playerId];
+export const CheckIfRecruitedCardHasNotLeastRankOfChosenClass = ({ G, ctx, myPlayerID, ...rest }, suit) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    const chosenSuit = GetBuffValue({ G, ctx, playerID, ...rest }, BuffNames.SuitIdForOlrun);
+    const chosenSuit = GetBuffValue({ G, ctx, myPlayerID, ...rest }, BuffNames.SuitIdForOlrun);
     if (chosenSuit === true) {
         throw new Error(`У бафа с названием '${BuffNames.SuitIdForOlrun}' не может не быть выбрана фракция.`);
     }

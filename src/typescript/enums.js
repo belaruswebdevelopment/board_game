@@ -534,7 +534,7 @@ export var ButtonMoveNames;
  */
 export var CardMoveNames;
 (function (CardMoveNames) {
-    CardMoveNames["ClickCardNotGiantAbilityMove"] = "ClickCardNoyGiantAbilityMove";
+    CardMoveNames["ClickCardNotGiantAbilityMove"] = "ClickCardNotGiantAbilityMove";
     CardMoveNames["ClickGiantAbilityNotCardMove"] = "ClickGiantAbilityNotCardMove";
     CardMoveNames["ClickCardMove"] = "ClickCardMove";
     CardMoveNames["ClickCardToPickDistinctionMove"] = "ClickCardToPickDistinctionMove";
@@ -688,32 +688,30 @@ export var RusSuitNames;
     RusSuitNames["miner"] = "\u0413\u043E\u0440\u043D\u044F\u043A\u0438";
     RusSuitNames["warrior"] = "\u0412\u043E\u0438\u043D\u044B";
 })(RusSuitNames || (RusSuitNames = {}));
-// TODO DELETE!
 /**
- * <h3>Перечисление для типов мувов.</h3>
+ * <h3>Перечисление для суб стадий игры `ActivateGiantAbilityOrPickCard`.</h3>
  */
-export var MoveTypeNames;
-(function (MoveTypeNames) {
-    MoveTypeNames["default"] = "default";
-    MoveTypeNames["clickCardNotGiantAbilityMove"] = "clickCardNotGiantAbilityMove";
-    MoveTypeNames["clickGiantAbilityNotCardMove"] = "clickGiantAbilityNotCardMove";
-})(MoveTypeNames || (MoveTypeNames = {}));
+export var ActivateGiantAbilityOrPickCardSubStageNames;
+(function (ActivateGiantAbilityOrPickCardSubStageNames) {
+    ActivateGiantAbilityOrPickCardSubStageNames["ClickCardNotGiantAbility"] = "ClickCardNotGiantAbility";
+    ActivateGiantAbilityOrPickCardSubStageNames["ClickGiantAbilityNotCard"] = "ClickGiantAbilityNotCard";
+})(ActivateGiantAbilityOrPickCardSubStageNames || (ActivateGiantAbilityOrPickCardSubStageNames = {}));
 /**
- * <h3>Перечисление для дефолтных стадий игры `chooseDifficultySoloMode`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `ChooseDifficultySoloMode`.</h3>
  */
 export var ChooseDifficultySoloModeDefaultStageNames;
 (function (ChooseDifficultySoloModeDefaultStageNames) {
     ChooseDifficultySoloModeDefaultStageNames["ChooseDifficultyLevelForSoloMode"] = "ChooseDifficultyLevelForSoloMode";
 })(ChooseDifficultySoloModeDefaultStageNames || (ChooseDifficultySoloModeDefaultStageNames = {}));
 /**
- * <h3>Перечисление для стадий игры `chooseDifficultySoloMode`.</h3>
+ * <h3>Перечисление для стадий игры `ChooseDifficultySoloMode`.</h3>
  */
 export var ChooseDifficultySoloModeStageNames;
 (function (ChooseDifficultySoloModeStageNames) {
     ChooseDifficultySoloModeStageNames["ChooseHeroForDifficultySoloMode"] = "ChooseHeroForDifficultySoloMode";
 })(ChooseDifficultySoloModeStageNames || (ChooseDifficultySoloModeStageNames = {}));
 /**
- * <h3>Перечисление для дефолтных стадий игры `chooseDifficultySoloModeAndvari`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `ChooseDifficultySoloModeAndvari`.</h3>
  */
 export var ChooseDifficultySoloModeAndvariDefaultStageNames;
 (function (ChooseDifficultySoloModeAndvariDefaultStageNames) {
@@ -721,7 +719,7 @@ export var ChooseDifficultySoloModeAndvariDefaultStageNames;
     ChooseDifficultySoloModeAndvariDefaultStageNames["ChooseStrategyForSoloModeAndvari"] = "ChooseStrategyForSoloModeAndvari";
 })(ChooseDifficultySoloModeAndvariDefaultStageNames || (ChooseDifficultySoloModeAndvariDefaultStageNames = {}));
 /**
- * <h3>Перечисление для дефолтных стадий игры `bids`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `Bids`.</h3>
  */
 export var BidsDefaultStageNames;
 (function (BidsDefaultStageNames) {
@@ -732,28 +730,28 @@ export var BidsDefaultStageNames;
     BidsDefaultStageNames["SoloBotAndvariPlaceAllCoins"] = "SoloBotAndvariPlaceAllCoins";
 })(BidsDefaultStageNames || (BidsDefaultStageNames = {}));
 /**
- * <h3>Перечисление для дефолтных стадий игры `bidUline`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `BidUline`.</h3>
  */
 export var BidUlineDefaultStageNames;
 (function (BidUlineDefaultStageNames) {
     BidUlineDefaultStageNames["ClickHandCoinUline"] = "ClickHandCoinUline";
 })(BidUlineDefaultStageNames || (BidUlineDefaultStageNames = {}));
 /**
- * <h3>Перечисление для стадий игры `brisingamensEndGame`.</h3>
+ * <h3>Перечисление для стадий игры `BrisingamensEndGame`.</h3>
  */
 export var BrisingamensEndGameDefaultStageNames;
 (function (BrisingamensEndGameDefaultStageNames) {
     BrisingamensEndGameDefaultStageNames["DiscardCardFromPlayerBoard"] = "DiscardCardFromPlayerBoard";
 })(BrisingamensEndGameDefaultStageNames || (BrisingamensEndGameDefaultStageNames = {}));
 /**
- * <h3>Перечисление для стадий игры `getMjollnirProfit`.</h3>
+ * <h3>Перечисление для стадий игры `GetMjollnirProfit`.</h3>
  */
 export var GetMjollnirProfitDefaultStageNames;
 (function (GetMjollnirProfitDefaultStageNames) {
     GetMjollnirProfitDefaultStageNames["GetMjollnirProfit"] = "GetMjollnirProfit";
 })(GetMjollnirProfitDefaultStageNames || (GetMjollnirProfitDefaultStageNames = {}));
 /**
- * <h3>Перечисление для дефолтных стадий игры `enlistmentMercenaries`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `EnlistmentMercenaries`.</h3>
  */
 export var EnlistmentMercenariesDefaultStageNames;
 (function (EnlistmentMercenariesDefaultStageNames) {
@@ -762,14 +760,14 @@ export var EnlistmentMercenariesDefaultStageNames;
     EnlistmentMercenariesDefaultStageNames["GetEnlistmentMercenaries"] = "GetEnlistmentMercenaries";
 })(EnlistmentMercenariesDefaultStageNames || (EnlistmentMercenariesDefaultStageNames = {}));
 /**
- * <h3>Перечисление для стадий игры `enlistmentMercenaries`.</h3>
+ * <h3>Перечисление для стадий игры `EnlistmentMercenaries`.</h3>
  */
 export var EnlistmentMercenariesStageNames;
 (function (EnlistmentMercenariesStageNames) {
     EnlistmentMercenariesStageNames["PlaceEnlistmentMercenaries"] = "PlaceEnlistmentMercenaries";
 })(EnlistmentMercenariesStageNames || (EnlistmentMercenariesStageNames = {}));
 /**
- * <h3>Перечисление для стадий игры `placeYlud`.</h3>
+ * <h3>Перечисление для стадий игры `PlaceYlud`.</h3>
  */
 export var PlaceYludDefaultStageNames;
 (function (PlaceYludDefaultStageNames) {
@@ -778,14 +776,14 @@ export var PlaceYludDefaultStageNames;
     PlaceYludDefaultStageNames["SoloBotAndvariPlaceYludHero"] = "SoloBotAndvariPlaceYludHero";
 })(PlaceYludDefaultStageNames || (PlaceYludDefaultStageNames = {}));
 /**
- * <h3>Перечисление для дефолтных стадий игры `troopEvaluation`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `TroopEvaluation`.</h3>
  */
 export var TroopEvaluationDefaultStageNames;
 (function (TroopEvaluationDefaultStageNames) {
     TroopEvaluationDefaultStageNames["ClickDistinctionCard"] = "ClickDistinctionCard";
 })(TroopEvaluationDefaultStageNames || (TroopEvaluationDefaultStageNames = {}));
 /**
- * <h3>Перечисление для стадий игры `troopEvaluation`.</h3>
+ * <h3>Перечисление для стадий игры `TroopEvaluation`.</h3>
  */
 export var TroopEvaluationStageNames;
 (function (TroopEvaluationStageNames) {
@@ -794,7 +792,7 @@ export var TroopEvaluationStageNames;
     TroopEvaluationStageNames["SoloBotAndvariClickCardToPickDistinction"] = "SoloBotAndvariClickCardToPickDistinction";
 })(TroopEvaluationStageNames || (TroopEvaluationStageNames = {}));
 /**
- * <h3>Перечисление для дефолтных стадий игры `tavernsResolution`.</h3>
+ * <h3>Перечисление для дефолтных стадий игры `TavernsResolution`.</h3>
  */
 export var TavernsResolutionDefaultStageNames;
 (function (TavernsResolutionDefaultStageNames) {
@@ -804,11 +802,17 @@ export var TavernsResolutionDefaultStageNames;
     TavernsResolutionDefaultStageNames["SoloBotAndvariClickCard"] = "SoloBotAndvariClickCard";
 })(TavernsResolutionDefaultStageNames || (TavernsResolutionDefaultStageNames = {}));
 /**
- * <h3>Перечисление для стадий игры `tavernsResolution`.</h3>
+ * <h3>Перечисление для стадий игры с суб стадиями `TavernsResolution`.</h3>
+ */
+export var TavernsResolutionWithSubStageNames;
+(function (TavernsResolutionWithSubStageNames) {
+    TavernsResolutionWithSubStageNames["ActivateGiantAbilityOrPickCard"] = "ActivateGiantAbilityOrPickCard";
+})(TavernsResolutionWithSubStageNames || (TavernsResolutionWithSubStageNames = {}));
+/**
+ * <h3>Перечисление для стадий игры `TavernsResolution`.</h3>
  */
 export var TavernsResolutionStageNames;
 (function (TavernsResolutionStageNames) {
-    TavernsResolutionStageNames["ActivateGiantAbilityOrPickCard"] = "ActivateGiantAbilityOrPickCard";
     TavernsResolutionStageNames["ChooseCoinValueForHrungnirUpgrade"] = "ChooseCoinValueForHrungnirUpgrade";
     TavernsResolutionStageNames["ChooseSuitOlrun"] = "ChooseSuitOlrun";
     TavernsResolutionStageNames["DiscardCard2Players"] = "DiscardCard2Players";
@@ -947,6 +951,14 @@ export var TavernNames;
     TavernNames["ShiningHorse"] = "\u00AB\u0413\u0430\u0440\u0446\u0443\u044E\u0449\u0438\u0439 \u043A\u043E\u043D\u044C\u00BB";
 })(TavernNames || (TavernNames = {}));
 /**
+ * <h3>Перечисление для названия суб валидаторов мувов в стадию 'ActivateGiantAbilityOrPickCard'.</h3>
+ */
+export var ActivateGiantAbilityOrPickCardSubMoveValidatorNames;
+(function (ActivateGiantAbilityOrPickCardSubMoveValidatorNames) {
+    ActivateGiantAbilityOrPickCardSubMoveValidatorNames["ClickCardNotGiantAbilityMoveValidator"] = "ClickCardNotGiantAbilityMoveValidator";
+    ActivateGiantAbilityOrPickCardSubMoveValidatorNames["ClickGiantAbilityNotCardMoveValidator"] = "ClickGiantAbilityNotCardMoveValidator";
+})(ActivateGiantAbilityOrPickCardSubMoveValidatorNames || (ActivateGiantAbilityOrPickCardSubMoveValidatorNames = {}));
+/**
  * <h3>Перечисление для названия валидаторов мувов в фазу 'ChooseDifficultySoloMode'.</h3>
  */
 export var ChooseDifficultySoloModeMoveValidatorNames;
@@ -994,8 +1006,6 @@ export var TavernsResolutionMoveValidatorNames;
     TavernsResolutionMoveValidatorNames["SoloBotClickCardMoveValidator"] = "SoloBotClickCardMoveValidator";
     // Solo Bot Andvari
     TavernsResolutionMoveValidatorNames["SoloBotAndvariClickCardMoveValidator"] = "SoloBotAndvariClickCardMoveValidator";
-    TavernsResolutionMoveValidatorNames["ClickCardNotGiantAbilityMoveValidator"] = "ClickCardNotGiantAbilityMoveValidator";
-    TavernsResolutionMoveValidatorNames["ClickGiantAbilityNotCardMoveValidator"] = "ClickGiantAbilityNotCardMoveValidator";
     // TODO Add `ChooseCoinValueForHrungnirUpgradeMoveValidator` to UI validate
     TavernsResolutionMoveValidatorNames["ChooseCoinValueForHrungnirUpgradeMoveValidator"] = "ChooseCoinValueForHrungnirUpgradeMoveValidator";
     TavernsResolutionMoveValidatorNames["ChooseSuitOlrunMoveValidator"] = "ChooseSuitOlrunMoveValidator";

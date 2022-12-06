@@ -27,7 +27,8 @@ export const CheckEndBidsPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType
                     if ((G.mode === GameModeNames.Solo && playerIndex === 1)
                         || (G.mode === GameModeNames.SoloAndvari && playerIndex === 1)
                         || (G.mode === GameModeNames.Multiplayer
-                            && !CheckPlayerHasBuff({ G, ctx, playerID: String(playerIndex), ...rest }, HeroBuffNames.EveryTurn))) {
+                            && !CheckPlayerHasBuff({ G, ctx, myPlayerID: String(playerIndex), ...rest },
+                                HeroBuffNames.EveryTurn))) {
                         const privatePlayer: CanBeUndefType<IPlayer> = G.players[playerIndex];
                         if (privatePlayer === undefined) {
                             return ThrowMyError({ G, ctx, ...rest },
@@ -37,7 +38,7 @@ export const CheckEndBidsPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType
                     } else if ((G.mode === GameModeNames.Solo && playerIndex === 0)
                         || (G.mode === GameModeNames.SoloAndvari && playerIndex === 0)
                         || (G.mode === GameModeNames.Basic
-                            && !CheckPlayerHasBuff({ G, ctx, playerID: String(playerIndex), ...rest },
+                            && !CheckPlayerHasBuff({ G, ctx, myPlayerID: String(playerIndex), ...rest },
                                 HeroBuffNames.EveryTurn))) {
                         return player.handCoins.every((coin: PublicPlayerCoinType, coinIndex: number):
                             boolean => {

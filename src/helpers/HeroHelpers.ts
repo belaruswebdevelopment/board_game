@@ -2,7 +2,7 @@ import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, CampBuffNames, CommonStageNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
-import type { CanBeUndefType, IHeroCard, IPublicPlayer, IStack, MyFnContext, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, IHeroCard, IPublicPlayer, IStack, MyFnContextWithMyPlayerID, PlayerCardType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**
@@ -20,15 +20,15 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * @param ctx
  * @returns
  */
-export const CheckPickHero = ({ G, ctx, playerID, ...rest }: MyFnContext): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
-    if (!CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, CampBuffNames.NoHero)) {
+    if (!CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CampBuffNames.NoHero)) {
         const playerHasNotCountHero: boolean =
-            CheckPlayerHasBuff({ G, ctx, playerID, ...rest }, BuffNames.HasOneNotCountHero),
+            CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, BuffNames.HasOneNotCountHero),
             playerCards: PlayerCardType[][] = Object.values(player.cards),
             heroesLength: number =
                 G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
@@ -46,7 +46,7 @@ export const CheckPickHero = ({ G, ctx, playerID, ...rest }: MyFnContext): void 
             playerPickHeroActionInStackIndex: number = player.stack.findIndex((stack: IStack): boolean =>
                 stack.stageName === CommonStageNames.ClickHeroCard);
         if (isCanPickHero && (playerPickHeroActionInStackIndex === -1)) {
-            AddPickHeroAction({ G, ctx, playerID, ...rest }, 1);
+            AddPickHeroAction({ G, ctx, myPlayerID, ...rest }, 1);
         }
     }
 };

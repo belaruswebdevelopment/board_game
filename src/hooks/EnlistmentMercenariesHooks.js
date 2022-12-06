@@ -58,7 +58,7 @@ export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }) => {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
     }
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
-        return EndTurnActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+        return EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     }
     else if (!player.stack.length) {
         return player.campCards.filter(IsMercenaryCampCard).length === 0;
@@ -77,7 +77,7 @@ export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }) => {
  */
 export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.EndTier));
+        const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
         if (yludIndex === -1) {
             RemoveThrudFromPlayerBoardAfterGameEnd({ G, ctx, ...rest });
         }
@@ -96,7 +96,7 @@ export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }) => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -104,8 +104,8 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }) => {
     if (!player.stack.length) {
         const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
         if (mercenariesCount) {
-            AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest }, [StackData.enlistmentMercenaries()]);
-            DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.enlistmentMercenaries()]);
+            DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         }
     }
 };
@@ -133,8 +133,8 @@ export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }) =>
         else {
             stack = [StackData.enlistmentMercenaries()];
         }
-        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest }, stack);
-        DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, stack);
+        DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
     }
 };
 /**

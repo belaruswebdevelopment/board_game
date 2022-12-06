@@ -6,7 +6,7 @@ import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActio
 import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ErrorNames, HeroBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, IStack, PlayerID } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -64,7 +64,7 @@ export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }: FnContext
             ctx.currentPlayer);
     }
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
-        return EndTurnActions({ G, ctx, playerID: ctx.currentPlayer, ...rest });
+        return EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     } else if (!player.stack.length) {
         return player.campCards.filter(IsMercenaryCampCard).length === 0;
     }
@@ -85,7 +85,7 @@ export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }: FnContext):
     if (G.tierToEnd === 0) {
         const yludIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-                CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest },
+                CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                     HeroBuffNames.EndTier));
         if (yludIndex === -1) {
             RemoveThrudFromPlayerBoardAfterGameEnd({ G, ctx, ...rest });
@@ -106,7 +106,7 @@ export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }: FnContext):
  * @returns
  */
 export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }: FnContext): void => {
-    StartOrEndActions({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+    StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -115,9 +115,9 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }: FnConte
     if (!player.stack.length) {
         const mercenariesCount: number = player.campCards.filter(IsMercenaryCampCard).length;
         if (mercenariesCount) {
-            AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest },
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
                 [StackData.enlistmentMercenaries()]);
-            DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+            DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         }
     }
 };
@@ -146,8 +146,8 @@ export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }: Fn
         } else {
             stack = [StackData.enlistmentMercenaries()];
         }
-        AddActionsToStack({ G, ctx, playerID: ctx.currentPlayer, events, ...rest }, stack);
-        DrawCurrentProfit({ G, ctx, playerID: ctx.currentPlayer, events, ...rest });
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, stack);
+        DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
     }
 };
 
@@ -163,7 +163,7 @@ export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }: Fn
 export const PrepareMercenaryPhaseOrders = ({ G }: FnContext): void => {
     const sortedPlayers: IPublicPlayer[] =
         Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer => player),
-        playersIndexes: string[] = [];
+        playersIndexes: PlayerID[] = [];
     sortedPlayers.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
         if (nextPlayer.campCards.filter(IsMercenaryCampCard).length <
             currentPlayer.campCards.filter(IsMercenaryCampCard).length) {
@@ -187,7 +187,7 @@ export const PrepareMercenaryPhaseOrders = ({ G }: FnContext): void => {
     });
     G.publicPlayersOrder = playersIndexes;
     if (playersIndexes.length > 1) {
-        const playerIndex: CanBeUndefType<string> = playersIndexes[0];
+        const playerIndex: CanBeUndefType<PlayerID> = playersIndexes[0];
         if (playerIndex === undefined) {
             throw new Error(`В массиве индексов игроков отсутствует индекс '0'.`);
         }

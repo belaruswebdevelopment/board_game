@@ -55,7 +55,7 @@ export const EvaluateCard = ({ G, ctx, ...rest }, compareCard, cardId, tavern) =
         }
     }
     if (G.secret.decks[1].length < G.botData.deckLength) {
-        const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring({ G, ctx, playerID: String(index), ...rest }, card))), tavernCardResults = temp[cardId];
+        const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring({ G, ctx, myPlayerID: String(index), ...rest }, card))), tavernCardResults = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
         }
@@ -128,14 +128,14 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = ({ G, ctx, playerID, ...rest }, card) => {
+const PotentialScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
     var _a;
-    const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
+    const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -160,21 +160,21 @@ const PotentialScoring = ({ G, ctx, playerID, ...rest }, card) => {
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' на столе отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует монета с id '${i}'.`);
         }
         // TODO Check it it can be error in !multiplayer, but bot can't play in multiplayer now...
         if (boardCoin !== null && !IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' на столе не может быть закрыта монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(boardCoin)) {
             score += boardCoin.value;
         }
         const handCoin = handCoins[i];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${i}'.`);
         }
         if (handCoin !== null && !IsCoin(handCoin)) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(handCoin)) {
             score += handCoin.value;

@@ -14,7 +14,7 @@ import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
  * @param card Карта.
  * @returns
  */
-export const AddActionsToStack = ({ G, ctx, playerID, ...rest }, stack, card) => {
+export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }, stack, card) => {
     var _a, _b;
     let isValid = false;
     if (stack !== undefined) {
@@ -25,10 +25,10 @@ export const AddActionsToStack = ({ G, ctx, playerID, ...rest }, stack, card) =>
                 for (validator in validators) {
                     if (validator === PickCardValidatorNames.pickDiscardCardToStack) {
                         isValid =
-                            IsCanPickPickDiscardCardToStack({ G, ctx, playerID, ...rest }, card);
+                            IsCanPickPickDiscardCardToStack({ G, ctx, myPlayerID, ...rest }, card);
                     }
                     else if (validator === PickCardValidatorNames.pickCampCardToStack) {
-                        isValid = IsCanPickPickCampCardToStack({ G, ctx, playerID, ...rest }, card);
+                        isValid = IsCanPickPickCampCardToStack({ G, ctx, myPlayerID, ...rest }, card);
                     }
                     else {
                         _exhaustiveCheck = validator;
@@ -53,7 +53,7 @@ export const AddActionsToStack = ({ G, ctx, playerID, ...rest }, stack, card) =>
                 stackI.priority = (_a = stackI.priority) !== null && _a !== void 0 ? _a : 0;
                 const playerId = (_b = stackI.playerId) !== null && _b !== void 0 ? _b : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerId);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
                 }
                 let stackIndex;
                 if (stackI.priority === 3) {
@@ -63,7 +63,15 @@ export const AddActionsToStack = ({ G, ctx, playerID, ...rest }, stack, card) =>
                 else {
                     if (stackI.priority !== 1) {
                         stackIndex =
-                            FindLastIndex(player.stack, (stackP, index) => index !== 0 && stackP.priority <= stackI.priority);
+                            FindLastIndex(player.stack, (stackP, index) => {
+                                if (stackI.priority === undefined) {
+                                    throw new Error(`В массиве стека новых действий отсутствует действие с названием 'priority'.`);
+                                }
+                                if (stackP.priority === undefined) {
+                                    throw new Error(`В массиве стека действий отсутствует действие с названием 'priority'.`);
+                                }
+                                return index !== 0 && stackP.priority <= stackI.priority;
+                            });
                         stackIndex = stackIndex === -1 ? 1 : stackIndex;
                     }
                     else {

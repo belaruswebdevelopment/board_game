@@ -25,10 +25,10 @@ export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue +
  * @param multiplier Множитель.
  * @returns Суммарное количество очков за множитель.
  */
-export const GetRanksValueMultiplier = ({ G, ctx, playerID, ...rest }, suit, multiplier) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const GetRanksValueMultiplier = ({ G, ctx, myPlayerID, ...rest }, suit, multiplier) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     return player.cards[suit].reduce(TotalRank, 0) * multiplier;
 };

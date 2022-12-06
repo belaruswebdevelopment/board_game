@@ -15,11 +15,11 @@ import { ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, CommonSta
  * @returns
  */
 export const AddCoinToPouchMove = ({ G, ctx, playerID, ...rest }, coinId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.AddCoinToPouch, CoinMoveNames.AddCoinToPouchMove, coinId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.AddCoinToPouch, CoinMoveNames.AddCoinToPouchMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddCoinToPouchAction({ G, ctx, playerID, ...rest }, coinId);
+    AddCoinToPouchAction({ G, ctx, myPlayerID: playerID, ...rest }, coinId);
 };
 /**
  * <h3>Выбор значения улучшения монеты при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -34,11 +34,11 @@ export const AddCoinToPouchMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * @returns
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, playerID, ...rest }, value) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ChooseCoinValueForVidofnirVedrfolnirUpgradeAction({ G, ctx, playerID, ...rest }, value);
+    ChooseCoinValueForVidofnirVedrfolnirUpgradeAction({ G, ctx, myPlayerID: playerID, ...rest }, value);
 };
 /**
  * <h3>Выбор карты из лагеря по действию персонажа Хольда.</h3>
@@ -53,11 +53,11 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, player
  * @returns
  */
 export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickCampCardHolda, CardMoveNames.ClickCampCardHoldaMove, cardId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.ClickCampCardHolda, CardMoveNames.ClickCampCardHoldaMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickCampCardAction({ G, ctx, playerID, ...rest }, cardId);
+    PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор карты из лагеря.</h3>
@@ -72,11 +72,11 @@ export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, cardId) =>
  * @returns
  */
 export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCampCard, CardMoveNames.ClickCampCardMove, cardId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCampCard, CardMoveNames.ClickCampCardMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickCampCardAction({ G, ctx, playerID, ...rest }, cardId);
+    PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Сбрасывает карту конкретной фракции в колоду сброса по выбору игрока при действии артефакта Hofud.</h3>
@@ -87,18 +87,17 @@ export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
 export const DiscardSuitCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.DiscardSuitCardFromPlayerBoard, CardMoveNames.DiscardSuitCardFromPlayerBoardMove, {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.DiscardSuitCardFromPlayerBoard, CardMoveNames.DiscardSuitCardFromPlayerBoardMove, {
         cardId,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardSuitCardAction({ G, ctx, playerID, ...rest }, cardId);
+    DiscardSuitCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 /**
  * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
@@ -114,13 +113,13 @@ export const DiscardSuitCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
-    const isValidMove = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.UpgradeCoinVidofnirVedrfolnir, CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove, {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.UpgradeCoinVidofnirVedrfolnir, CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove, {
         coinId,
         type,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    UpgradeCoinVidofnirVedrfolnirAction({ G, ctx, playerID, ...rest }, coinId, type);
+    UpgradeCoinVidofnirVedrfolnirAction({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };
 //# sourceMappingURL=CampMoves.js.map

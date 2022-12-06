@@ -18,23 +18,22 @@ import { AddActionsToStack } from "./StackHelpers";
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const BlacksmithDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const BlacksmithDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (G.tierToEnd !== 0) {
         const card = G.specialCardsDeck.find((card) => card.name === SpecialCardNames.ChiefBlacksmith);
         if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
         }
-        AddCardToPlayer({ G, ctx, playerID, ...rest }, card);
+        AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
         G.distinctions[SuitNames.blacksmith] = undefined;
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${card.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.blacksmith}'.`);
-        CheckAndMoveThrudAction({ G, ctx, playerID, ...rest }, card);
+        CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
     }
     return 0;
 };
@@ -48,23 +47,22 @@ export const BlacksmithDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => 
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const ExplorerDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const ExplorerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (G.tierToEnd !== 0) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickDistinctionCardSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCardSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickDistinctionCardSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCardSoloBotAndvari()]);
         }
         else {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.pickDistinctionCard()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCard()]);
         }
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
@@ -80,19 +78,18 @@ export const ExplorerDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const HunterDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
+export const HunterDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
     if (G.tierToEnd !== 0) {
-        const player = G.publicPlayers[Number(playerID)], privatePlayer = G.players[Number(playerID)];
+        const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
         }
         if (privatePlayer === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerID);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
         }
-        const [type, tradingCoinIndex] = DiscardTradingCoin({ G, ctx, playerID, ...rest }), coin = CreateCoin({
+        const [type, tradingCoinIndex] = DiscardTradingCoin({ G, ctx, myPlayerID, ...rest }), coin = CreateCoin({
             isOpened: true,
             isTriggerTrading: true,
             value: 3,
@@ -131,13 +128,12 @@ export const HunterDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const MinerDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const MinerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (G.tierToEnd !== 0) {
         const currentPriorityValue = player.priority.value;
@@ -165,28 +161,27 @@ export const MinerDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const WarriorDistinctionAwarding = ({ G, ctx, playerID, ...rest }) => {
-    const player = G.publicPlayers[Number(playerID)];
+export const WarriorDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (G.tierToEnd !== 0) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
         }
         else {
-            AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.upgradeCoinWarriorDistinction()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinction()]);
         }
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
     }
     else {
-        return GetMaxCoinValue({ G, ctx, playerID, ...rest });
+        return GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
     }
     return 0;
 };

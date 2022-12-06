@@ -24,7 +24,7 @@ import { ChooseCoinValueForHrungnirUpgradeMove, ChooseSuitOlrunMove, ClickCardNo
 import { SoloBotAndvariClickCardMove, SoloBotAndvariClickCardToPickDistinctionMove, SoloBotAndvariClickCoinToUpgradeMove, SoloBotAndvariClickHeroCardMove, SoloBotAndvariPlaceAllCoinsMove, SoloBotAndvariPlaceThrudHeroMove, SoloBotAndvariPlaceYludHeroMove } from "./moves/SoloBotAndvariMoves";
 import { SoloBotClickCardMove, SoloBotClickCardToPickDistinctionMove, SoloBotClickCoinToUpgradeMove, SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove, SoloBotPlaceThrudHeroMove, SoloBotPlaceYludHeroMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
-import type { CanBeVoidType, FnContext, Game, IMyGameState } from "./typescript/interfaces";
+import type { CanBeVoidType, FnContext, Game, IMyGameState, StripSecretsType } from "./typescript/interfaces";
 
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add Log data fo Solo Bot fo all files!
@@ -52,7 +52,7 @@ export const BoardGame: Game = {
     minPlayers: 2,
     maxPlayers: 5,
     setup: SetupGame,
-    playerView: PlayerView.STRIP_SECRETS,
+    playerView: PlayerView.STRIP_SECRETS as StripSecretsType,
     phases: {
         ChooseDifficultySoloMode: {
             turn: {

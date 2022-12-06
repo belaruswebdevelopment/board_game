@@ -22,7 +22,7 @@ import type { CanBeUndefType, CanBeVoidType, IHeroCard, InvalidMoveType, IPublic
  */
 export const ChooseStrategyForSoloModeAndvariMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     level: SoloGameAndvariStrategyNames): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari,
         ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, level);
     if (!isValidMove) {
@@ -45,13 +45,14 @@ export const ChooseStrategyForSoloModeAndvariMove: Move = ({ G, ctx, playerID, .
  */
 export const ChooseStrategyVariantForSoloModeAndvariMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     level: SoloGameAndvariStrategyVariantLevelType): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari, ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     G.soloGameAndvariStrategyVariantLevel = level;
-    AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.chooseStrategyLevelForSoloModeAndvari()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest },
+        [StackData.chooseStrategyLevelForSoloModeAndvari()]);
 };
 
 /**
@@ -69,14 +70,14 @@ export const ChooseStrategyVariantForSoloModeAndvariMove: Move = ({ G, ctx, play
 export const ChooseDifficultyLevelForSoloModeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     level: SoloGameDifficultyLevelArgType):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode,
         ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     G.soloGameDifficultyLevel = level;
-    AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
 };
 
 /**
@@ -93,7 +94,7 @@ export const ChooseDifficultyLevelForSoloModeMove: Move = ({ G, ctx, playerID, .
  */
 export const ChooseHeroForDifficultySoloModeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode,
         CardMoveNames.ChooseHeroForDifficultySoloModeMove, heroId);
     if (!isValidMove) {
@@ -111,12 +112,12 @@ export const ChooseHeroForDifficultySoloModeMove: Move = ({ G, ctx, playerID, ..
     if (hero === undefined) {
         throw new Error(`Не существует выбранная карта героя с id '${heroId}'.`);
     }
-    AddHeroForDifficultyToSoloBotCards({ G, ctx, playerID, ...rest }, hero);
+    AddHeroForDifficultyToSoloBotCards({ G, ctx, myPlayerID: playerID, ...rest }, hero);
     if (G.soloGameDifficultyLevel === null || G.soloGameDifficultyLevel === 0) {
         throw new Error(`Не может не быть возможности выбора героя для выбранного уровня сложности в режиме соло игры.`);
     }
     G.soloGameDifficultyLevel--;
     if (G.soloGameDifficultyLevel) {
-        AddActionsToStack({ G, ctx, playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+        AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
     }
 };

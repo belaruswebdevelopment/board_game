@@ -23,8 +23,8 @@ import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPl
 export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Add Place coins async
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickBoardCoin,
-        CoinMoveNames.ClickBoardCoinMove, coinId);
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        BidsDefaultStageNames.ClickBoardCoin, CoinMoveNames.ClickBoardCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -113,16 +113,16 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
  */
 export const ClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, CommonStageNames.ClickCoinToUpgrade,
-        CoinMoveNames.ClickCoinToUpgradeMove, {
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        CommonStageNames.ClickCoinToUpgrade, CoinMoveNames.ClickCoinToUpgradeMove, {
         coinId,
         type,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, playerID, ...rest });
-    UpgradeCoinActions({ G, ctx, playerID, ...rest }, coinId, type);
+    EndWarriorOrExplorerDistinctionIfCoinUpgraded({ G, ctx, myPlayerID: playerID, ...rest });
+    UpgradeCoinActions({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };
 
 /**
@@ -140,7 +140,7 @@ export const ClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  */
 export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         CommonStageNames.PickConcreteCoinToUpgrade, CoinMoveNames.PickConcreteCoinToUpgradeMove, {
         coinId,
         type,
@@ -148,7 +148,7 @@ export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    UpgradeCoinActions({ G, ctx, playerID, ...rest }, coinId, type);
+    UpgradeCoinActions({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };
 
 /**
@@ -165,8 +165,8 @@ export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest 
  */
 export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest }, BidsDefaultStageNames.ClickHandCoin,
-        CoinMoveNames.ClickHandCoinMove, coinId);
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        BidsDefaultStageNames.ClickHandCoin, CoinMoveNames.ClickHandCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -192,7 +192,7 @@ export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
  */
 export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         BidUlineDefaultStageNames.ClickHandCoinUline, CoinMoveNames.ClickHandCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -256,7 +256,7 @@ export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  */
 export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, playerID, ...rest },
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionStageNames.ClickHandTradingCoinUline,
         CoinMoveNames.ClickHandTradingCoinUlineMove, coinId);
     if (!isValidMove) {

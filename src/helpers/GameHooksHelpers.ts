@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, HeroBuffNames, HeroNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, MyFnContext, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { CheckPickHero } from "./HeroHelpers";
@@ -17,11 +17,11 @@ import { CheckPickHero } from "./HeroHelpers";
  * @param ctx
  * @returns Должна ли быть завершена фаза.
  */
-export const EndTurnActions = ({ G, ctx, playerID, ...rest }: MyFnContext): CanBeVoidType<true> => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const EndTurnActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): CanBeVoidType<true> => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
     if (!player.stack.length) {
         return true;
@@ -42,7 +42,7 @@ export const EndTurnActions = ({ G, ctx, playerID, ...rest }: MyFnContext): CanB
 export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }: FnContext): void => {
     const thrudPlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, playerID: String(index), ...rest }, HeroBuffNames.MoveThrud));
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.MoveThrud));
     if (thrudPlayerIndex !== -1) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
@@ -76,18 +76,18 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }: FnCo
  * @param ctx
  * @returns
  */
-export const StartOrEndActions = ({ G, ctx, playerID, ...rest }: MyFnContext): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const StartOrEndActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
-            playerID);
+            myPlayerID);
     }
-    if (ctx.activePlayers === null || ctx.activePlayers?.[Number(playerID)] !== undefined) {
+    if (ctx.activePlayers === null || ctx.activePlayers?.[Number(myPlayerID)] !== undefined) {
         player.stack.shift();
         if ((player.stack[0]?.priority === undefined)
             || (player.stack[0]?.priority !== undefined && player.stack[0]?.priority > 1)) {
-            CheckPickHero({ G, ctx, playerID, ...rest });
+            CheckPickHero({ G, ctx, myPlayerID, ...rest });
         }
-        DrawCurrentProfit({ G, ctx, playerID, ...rest });
+        DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
     }
 };
