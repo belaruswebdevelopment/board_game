@@ -9,8 +9,8 @@ import type { CreatePriorityType, IPriority, NumPlayersType, PrioritiesConfigTyp
  * <li>Используется при выдаче преимущества в виде кристалла горняков.</li>
  * </ol>
  *
- * @param value Значение кристалла.
  * @param isExchangeable Является ли кристалл обменным.
+ * @param value Значение кристалла.
  * @returns Кристалл.
  */
 export const CreatePriority = ({

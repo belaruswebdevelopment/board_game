@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinType, FnContext, IBuildCoinsOptions, ICoin, INumberValues, PublicPlayerCoinType } from "./typescript/interfaces";
+import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinType, FnContext, IBuildCoinsOptions, ICoin, INumberValues } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -67,7 +67,7 @@ export const ChangeIsOpenedCoinStatus = (coin: ICoin, status: boolean): void => 
  * <li>Вызывается при отображении рынка монет.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Количество всех монет на рынке (с повторами).
  */
 export const CountMarketCoins = ({ G }: FnContext): INumberValues => {
@@ -108,16 +108,3 @@ export const CreateCoin = ({
     isTriggerTrading,
     value,
 });
-
-/**
- * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функции улучшения монеты.</li>
- * </ol>
- *
- * @param coin Пустой объект или монета.
- * @returns Является ли объект монетой, а не пустым объектом.
- */
-export const IsCoin =
-    (coin: PublicPlayerCoinType): coin is ICoin => coin !== null && (coin as ICoin).value !== undefined;

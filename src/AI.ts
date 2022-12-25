@@ -1,12 +1,11 @@
-import { CompareCards } from "./bot_logic/BotCardLogic";
+import { CompareTavernCards } from "./bot_logic/BotCardLogic";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
-import { CurrentScoring } from "./Score";
-import { ActivateGiantAbilityOrPickCardSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
-import type { ActiveStageAIType, ActiveStageNames, CanBeNullType, CanBeUndefType, Ctx, DeckCardType, FnContext, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, PlayerID, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import { AllCurrentScoring } from "./Score";
+import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
+import type { ActiveStageNames, CanBeNullType, CanBeUndefType, Ctx, DeckCardType, FnContext, GetValidatorStageNames, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, PlayerID, StageNames, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
-// TODO in boardgame.io => G: G, ctx: Ctx, myPlayerID: myPlayerID
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -16,6 +15,7 @@ import type { ActiveStageAIType, ActiveStageNames, CanBeNullType, CanBeUndefType
  *
  * @param G
  * @param ctx
+ * @param playerID Id игрока.
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves[] => {
@@ -29,9 +29,9 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
     if (phase !== null) {
         // TODO Add MythologicalCreature moves
         const currentStage: CanBeUndefType<ActiveStageNames> = ctx.activePlayers?.[Number(playerID)];
-        // TODO Check `default`!?
-        let activeStageOfCurrentPlayer: ActiveStageAIType = currentStage ?? `default`;
-        if (activeStageOfCurrentPlayer === `default`) {
+        let activeStageOfCurrentPlayer: CanBeNullType<StageNames> = currentStage ?? null,
+            type: CanBeUndefType<GetValidatorStageNames>;
+        if (activeStageOfCurrentPlayer === null) {
             let _exhaustiveCheck: never;
             switch (phase) {
                 case PhaseNames.ChooseDifficultySoloMode:
@@ -173,18 +173,26 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
             const activateGiantAbilityOrPickCard: `ability` | `card` =
                 Math.floor(Math.random() * 2) ? `ability` : `card`;
             if (activateGiantAbilityOrPickCard === `ability`) {
-                activeStageOfCurrentPlayer = ActivateGiantAbilityOrPickCardSubStageNames.ClickGiantAbilityNotCard;
+                type = ActivateGiantAbilityOrPickCardSubStageNames.ClickGiantAbilityNotCard;
             } else {
-                activeStageOfCurrentPlayer = ActivateGiantAbilityOrPickCardSubStageNames.ClickCardNotGiantAbility;
+                type = ActivateGiantAbilityOrPickCardSubStageNames.ClickCardNotGiantAbility;
+            }
+        } else if (activeStageOfCurrentPlayer === TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot) {
+            const activateGodAbilityOrPickCard: `ability` | `not` =
+                Math.floor(Math.random() * 2) ? `ability` : `not`;
+            if (activateGodAbilityOrPickCard === `ability`) {
+                type = ActivateGodAbilityOrNotSubStageNames.ActivateGodAbility;
+            } else {
+                type = ActivateGodAbilityOrNotSubStageNames.NotActivateGodAbility;
             }
         }
-        if (activeStageOfCurrentPlayer === `default`) {
+        if (activeStageOfCurrentPlayer === null) {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator: IMoveValidator<MoveValidatorGetRangeType> =
             GetValidator(phase, activeStageOfCurrentPlayer,
-                `${activeStageOfCurrentPlayer}Move` as MoveNamesType);
+                `${type ?? activeStageOfCurrentPlayer}Move` as MoveNamesType);
         if (validator !== null) {
             const moveName: MoveNamesType = validator.moveName,
                 moveRangeData: MoveValidatorGetRangeType =
@@ -233,9 +241,11 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
 * @TODO Саше: сделать описание функции и параметров.
 * @param G
 * @param ctx
+* @param playerID ID игрока.
 * @returns Итерации.
 */
-export const iterations = ({ G, ctx }: FnContext): number => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const iterations = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): number => {
     const maxIter: number = G.botData.maxIter;
     if (ctx.phase === PhaseNames.TavernsResolution) {
         const currentTavern: TavernCardType[] = G.taverns[G.currentTavern];
@@ -246,12 +256,15 @@ export const iterations = ({ G, ctx }: FnContext): number => {
             currentTavern.findIndex((card: TavernCardType): boolean => card !== null),
             tavernNotNullCard: CanBeUndefType<TavernCardType> = currentTavern[cardIndex];
         if (tavernNotNullCard === undefined) {
-            throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '1'.`);
+            return ThrowMyError({ G, ctx } as FnContext,
+                ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined, cardIndex);
+        }
+        if (tavernNotNullCard === null) {
+            return ThrowMyError({ G, ctx } as FnContext,
+                ErrorNames.CurrentTavernCardWithCurrentIdIsNull, cardIndex);
         }
         if (currentTavern.every((card: TavernCardType): boolean =>
-            card === null || (card.type === RusCardTypeNames.Dwarf_Card && tavernNotNullCard !== null
-                && tavernNotNullCard.type === RusCardTypeNames.Dwarf_Card
-                && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))
+            card === null || (CompareTavernCards(card, tavernNotNullCard) === 0))
         ) {
             return 1;
         }
@@ -265,15 +278,15 @@ export const iterations = ({ G, ctx }: FnContext): number => {
                 continue;
             }
             if (currentTavern.some((card: TavernCardType): boolean =>
-                CompareCards(tavernCard, card) === -1)) {
+                CompareTavernCards(tavernCard, card) === -1)) {
                 continue;
             }
             const deck0: DeckCardType[] = G.secret.decks[0];
             if (deck0.length > 18) {
                 if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
-                    if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
-                        && currentTavern.some((card: TavernCardType): boolean => card !== null
-                            && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
+                    if (CompareTavernCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
+                        && currentTavern.some((card: TavernCardType): boolean =>
+                            CompareTavernCards(card, G.averageCards[tavernCard.suit]) > -1)) {
                         continue;
                     }
                 }
@@ -298,16 +311,20 @@ export const iterations = ({ G, ctx }: FnContext): number => {
  * <li>Используется ботами для определения целей.</li>
  * </ol>
  *
+ * @param G
+ * @param ctx
+ * @param playerID ID игрока.
  * @returns Цели.
  */
-export const objectives = (): IObjectives => ({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObjectives => ({
     isEarlyGame: {
-        checker: ({ G }: MyFnContextWithMyPlayerID): boolean => G.secret.decks[0].length > 0,
+        checker: (G: IMyGameState): boolean => G.secret.decks[0].length > 0,
         weight: -100.0,
     },
     // TODO Move same logic in one func?!
     /* isWeaker: {
-        checker: ({ G, ctx, myPlayerID, ...rest }: MyFnContext): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
@@ -322,9 +339,11 @@ export const objectives = (): IObjectives => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    return ThrowMyError({ G, ctx } as FnContext,
+                        ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
-                totalScore.push(CurrentScoring(player));
+                totalScore.push(CurrentScoring({ G, ctx, myPlayerID: String(i) } as
+                MyFnContextWithMyPlayerID));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
@@ -340,7 +359,7 @@ export const objectives = (): IObjectives => ({
         weight: 0.01,
     }, */
     /* isSecond: {
-        checker: ({ G, ctx, myPlayerID, ...rest }: MyFnContext): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
@@ -355,9 +374,11 @@ export const objectives = (): IObjectives => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    return ThrowMyError({ G, ctx } as FnContext,
+                        ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
-                totalScore.push(CurrentScoring(player));
+                totalScore.push(CurrentScoring({ G, ctx, myPlayerID: String(i) } as
+                MyFnContextWithMyPlayerID));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
@@ -373,7 +394,7 @@ export const objectives = (): IObjectives => ({
         weight: 0.1,
     }, */
     /* isEqual: {
-        checker: ({ G, ctx, myPlayerID, ...rest }: MyFnContext): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
@@ -388,9 +409,11 @@ export const objectives = (): IObjectives => ({
             for (let i: number = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndef<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError(G, ctx, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    return ThrowMyError({ G, ctx } as FnContext,
+                        ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
-                totalScore.push(CurrentScoring(player));
+                totalScore.push(CurrentScoring({ G, ctx, myPlayerID: String(i) } as
+                MyFnContextWithMyPlayerID));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
@@ -402,12 +425,11 @@ export const objectives = (): IObjectives => ({
                 return totalScoreCurPlayer >= Math.floor(0.90 * top1);
             }
             return false;
-
         },
         weight: 0.1,
     }, */
     isFirst: {
-        checker: ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
@@ -422,10 +444,11 @@ export const objectives = (): IObjectives => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest },
+                    return ThrowMyError({ G, ctx } as FnContext,
                         ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
                 }
-                totalScore.push(CurrentScoring({ G, ctx, myPlayerID, ...rest }));
+                totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) } as
+                    MyFnContextWithMyPlayerID));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
@@ -444,7 +467,7 @@ export const objectives = (): IObjectives => ({
         weight: 0.5,
     },
     isStronger: {
-        checker: ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
@@ -459,10 +482,11 @@ export const objectives = (): IObjectives => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    return ThrowMyError({ G, ctx } as FnContext, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         i);
                 }
-                totalScore.push(CurrentScoring({ G, ctx, myPlayerID, ...rest }));
+                totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) } as
+                    MyFnContextWithMyPlayerID));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
@@ -492,9 +516,11 @@ export const objectives = (): IObjectives => ({
  * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
+ * @param playerID ID игрока.
  * @returns Глубина.
  */
-export const playoutDepth = ({ G, ctx }: FnContext): number => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const playoutDepth = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): number => {
     const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];
     if (G.secret.decks[1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;

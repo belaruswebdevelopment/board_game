@@ -1,6 +1,5 @@
-import { RusCardTypeNames } from "../typescript/enums";
 import type { CanBeUndefType, FnContext, ICardCharacteristics, IHeuristic, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
-import { CompareCards, EvaluateCard } from "./BotCardLogic";
+import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -10,8 +9,7 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @returns Результат эвристики.
  */
 export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext): number[] => {
@@ -30,7 +28,7 @@ export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext)
             }),
         tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
             tavern.map((card: TavernCardType, index: number, arr: TavernAllCardType): number =>
-                EvaluateCard({ G, ctx, ...rest }, card, index, arr))),
+                EvaluateTavernCard({ G, ctx, ...rest }, card, index, arr))),
         tempChars: ICardCharacteristics[] = tempNumbers.map((element: number[]): ICardCharacteristics =>
             GetCharacteristics(element))/*,
         averageCards: ICard[] = G.averageCards*/;
@@ -149,9 +147,7 @@ const GetCharacteristics = (array: number[]): ICardCharacteristics => {
 const isAllCardsEqual: IHeuristic<TavernAllCardType> = {
     // TODO Add errors for undefined
     heuristic: (cards: TavernCardType[]): boolean => cards.every((card: TavernCardType): boolean =>
-    (card !== null && card.type === RusCardTypeNames.Dwarf_Card && cards[0] !== undefined && cards[0] !== null
-        && cards[0].type === RusCardTypeNames.Dwarf_Card && card.suit === cards[0].suit
-        && CompareCards(card, cards[0]) === 0)),
+        (cards[0] !== undefined && CompareTavernCards(card, cards[0]) === 0)),
     weight: -100,
 };
 

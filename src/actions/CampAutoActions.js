@@ -1,12 +1,13 @@
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
+import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
-// TODO Rework StageArg to be implemented my interface type
+import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
@@ -14,8 +15,7 @@ import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, HeroBuffNam
  * <li>При выборе карты лагеря артефакта Jarnglofi.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const DiscardTradingCoinAction = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -46,8 +46,7 @@ export const FinishOdroerirTheMythicCauldronAction = ({ G }) => {
  * <li>При выборе карты лагеря артефакта Hofud.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest }) => {
@@ -59,13 +58,17 @@ export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest
             return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.warrior].length) {
-            value[i] = {
-                stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
-            };
-            AddActionsToStack({ G, ctx, myPlayerID, events, ...rest }, [StackData.discardSuitCard(i)]);
-            results++;
+            if (!(G.expansions.Idavoll.active
+                && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: String(i), events, ...rest }, GodNames.Thor))) {
+                value[i] = {
+                    stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
+                };
+                AddActionsToStack({ G, ctx, myPlayerID, events, ...rest }, [StackData.discardSuitCard(i)]);
+                results++;
+            }
         }
     }
+    // TODO Can 1 player pick all warriors cards!?
     if (!results) {
         throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
     }
@@ -82,8 +85,7 @@ export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest
  * <li>При старте способности карты лагеря артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) => {

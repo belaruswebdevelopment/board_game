@@ -11,7 +11,8 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по герою, не имеющему специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
+ * @param value Значение.
  * @returns Количество очков по конкретному герою.
  */
 export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID, value?: number):
@@ -29,12 +30,11 @@ export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFn
  * <li>В конце игры, когда получаются победные очки по герою Astrid.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному герою.
  */
 export const AstridScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    number =>
-    GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
+    number => GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
 
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>
@@ -43,9 +43,8 @@ export const AstridScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...res
  * <li>В конце игры, когда получаются победные очки по герою Idunn.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному герою.
  */
 export const IdunnScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    number =>
-    GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 2);
+    number => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 2);

@@ -63,7 +63,7 @@ export const ChangeIsOpenedCoinStatus = (coin, status) => {
  * <li>Вызывается при отображении рынка монет.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Количество всех монет на рынке (с повторами).
  */
 export const CountMarketCoins = ({ G }) => {
@@ -98,15 +98,4 @@ export const CreateCoin = ({ isInitial = false, isOpened = false, isTriggerTradi
     isTriggerTrading,
     value,
 });
-/**
- * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функции улучшения монеты.</li>
- * </ol>
- *
- * @param coin Пустой объект или монета.
- * @returns Является ли объект монетой, а не пустым объектом.
- */
-export const IsCoin = (coin) => coin !== null && coin.value !== undefined;
 //# sourceMappingURL=Coin.js.map

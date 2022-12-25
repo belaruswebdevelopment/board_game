@@ -13,8 +13,7 @@ import { RusCardTypeNames, SoloGameAndvariStrategyNames, SuitNames } from "../ty
  * <li>При начале фазы 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const CheckChooseStrategyForSoloModeAndvariOrder = ({ G, ctx, ...rest }) => {
@@ -27,8 +26,7 @@ export const CheckChooseStrategyForSoloModeAndvariOrder = ({ G, ctx, ...rest }) 
  * <li>При каждом действии в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckChooseStrategyForSoloModeAndvariPhase = ({ G, ctx }) => {
@@ -45,8 +43,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = ({ G, ctx }) => {
  * <li>При каждом действии в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseStrategyForSoloModeAndvariTurn = ({ G, ctx }) => {
@@ -61,7 +58,7 @@ export const CheckEndChooseStrategyForSoloModeAndvariTurn = ({ G, ctx }) => {
  * <li>При завершении фазы 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndChooseStrategyForSoloModeAndvariActions = ({ G }) => {
@@ -74,8 +71,7 @@ export const EndChooseStrategyForSoloModeAndvariActions = ({ G }) => {
  * <li>При завершении мува в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }) => {
@@ -88,8 +84,8 @@ export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }) => {
  * <li>При начале хода в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ...rest }) => {
     if (ctx.currentPlayer === `0`) {

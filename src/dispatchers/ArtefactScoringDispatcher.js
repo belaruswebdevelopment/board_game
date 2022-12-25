@@ -7,17 +7,18 @@ import { ArtefactScoringFunctionNames } from "../typescript/enums";
  * <li>Выполняется при необходимости получить победные очки по артефакту.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @param action Объект действия.
+ * @param isFinal Происходит ли подсчёт очков в конце игры.
  * @returns Количество победных очков по артефакту.
  */
-export const StartArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, action) => {
+export const StartArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, action, isFinal = false) => {
     const actionDispatcher = ArtefactScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest });
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest }, isFinal);
     }
     else {
-        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest }, ...action.params);
+        return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher({ G, ctx, myPlayerID, ...rest }, isFinal, ...action.params);
     }
 };
 /**

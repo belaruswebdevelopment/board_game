@@ -15,8 +15,7 @@ import type { CanBeUndefType, CanBeVoidType, IHeroCard, InvalidMoveType, IPublic
  * <li>Когда игрок выбирает уровень сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param level Уровень сложности в режиме соло игры.
  * @returns
  */
@@ -38,15 +37,15 @@ export const ChooseStrategyForSoloModeAndvariMove: Move = ({ G, ctx, playerID, .
  * <li>Когда игрок выбирает вариант уровня сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param level Вариант уровня сложности в режиме соло игры.
  * @returns
  */
 export const ChooseStrategyVariantForSoloModeAndvariMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     level: SoloGameAndvariStrategyVariantLevelType): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
-        ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari, ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, level);
+        ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari,
+        ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -62,8 +61,7 @@ export const ChooseStrategyVariantForSoloModeAndvariMove: Move = ({ G, ctx, play
  * <li>Когда игрок выбирает уровень сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param level Уровень сложности в режиме соло игры.
  * @returns
  */
@@ -87,8 +85,7 @@ export const ChooseDifficultyLevelForSoloModeMove: Move = ({ G, ctx, playerID, .
  * <li>Когда игрок выбирает героя для выбранного уровня сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */

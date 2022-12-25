@@ -15,8 +15,7 @@ import { CheckIfRecruitedCardHasNotLeastRankOfChosenClass, CheckValkyryRequireme
  * <li>Происходит при добавлении героя на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Герой.
  * @returns
  */
@@ -52,8 +51,7 @@ export const AddHeroCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
  * <li>Происходит при добавлении героя на планшет соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Герой.
  * @returns
  */
@@ -84,12 +82,12 @@ export const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }: My
  * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Карта героя.
  * @returns
  */
-export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, hero: IHeroCard): void => {
+export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, hero: IHeroCard):
+    void => {
     AddHeroCardToPlayerHeroCards({ G, ctx, myPlayerID, ...rest }, hero);
     if (G.expansions.Idavoll.active) {
         if (`suit` in hero && hero.suit !== null) {
@@ -110,14 +108,12 @@ export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContex
  * <li>При выборе конкретных героев, добавляющихся в массив карт соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Карта героя.
  * @returns
  */
 export const AddHeroForDifficultyToSoloBotCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    hero: IHeroCard):
-    void => {
+    hero: IHeroCard): void => {
     const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {

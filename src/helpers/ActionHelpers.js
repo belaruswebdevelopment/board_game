@@ -11,8 +11,7 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  * <li>При игровых моментах, дающих профит.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }) => {
@@ -42,8 +41,7 @@ export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }) => {
  * <li>При начале действий, требующих старта конкретной стадии.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param stack Стек действий героя.
  * @returns
  */

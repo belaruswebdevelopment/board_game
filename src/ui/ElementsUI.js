@@ -1,8 +1,8 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -22,7 +22,9 @@ import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCard
 export const DrawButton = (data, boardCells, name, player, moveName, ...args) => {
     let action, _exhaustiveCheck;
     switch (moveName) {
-        // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
+        case ButtonMoveNames.NotActivateGodAbilityMove:
+            action = data.moves.NotActivateGodAbilityMove;
+            break;
         case ButtonMoveNames.PassEnlistmentMercenariesMove:
             action = data.moves.PassEnlistmentMercenariesMove;
             break;
@@ -81,6 +83,9 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     }
     let _exhaustiveCheck;
     switch (moveName) {
+        case CardMoveNames.ActivateGodAbilityMove:
+            action = data.moves.ActivateGodAbilityMove;
+            break;
         case CardMoveNames.ClickCardNotGiantAbilityMove:
             action = data.moves.ClickCardNotGiantAbilityMove;
             break;

@@ -8,8 +8,7 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  * <li>Используется для ботов при определении приоритета выставления монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Имеет ли игрок наименьший кристалл.
  */
 export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -27,8 +26,7 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>Используется в конце фазы выбора карт.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const ChangePlayersPriorities = ({ G, ctx, ...rest }) => {

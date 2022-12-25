@@ -2,9 +2,10 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
+import { GetCardsFromCardDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { CheckDistinction } from "../TroopEvaluation";
+import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -13,12 +14,11 @@ import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from ".
  * <li>При начале фазы 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }) => {
-    CheckDistinction({ G, ctx, ...rest });
+    CheckAllSuitsDistinctions({ G, ctx, ...rest });
     const distinctions = Object.values(G.distinctions).filter((distinction) => distinction !== null && distinction !== undefined);
     if (distinctions.every((distinction) => distinction !== null && distinction !== undefined)) {
         G.publicPlayersOrder = distinctions;
@@ -31,8 +31,7 @@ export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }) => {
  * <li>При каждом получении преимуществ в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }) => {
@@ -53,8 +52,7 @@ export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }) => {
  * <li>При каждом действии с наёмником в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }) => EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
@@ -65,8 +63,7 @@ export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }) => EndTurnActio
  * <li>При завершении фазы 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }) => {
@@ -82,8 +79,7 @@ export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }) => {
  * <li>При завершении мува в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnTroopEvaluationMove = ({ G, ctx, ...rest }) => {
@@ -96,8 +92,7 @@ export const OnTroopEvaluationMove = ({ G, ctx, ...rest }) => {
  * <li>При начале хода в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
@@ -108,7 +103,6 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
             length = 1;
         }
         else {
-            // TODO Add 6 cards if player has Garm in his deck
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
@@ -139,14 +133,12 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
  * <li>При завершении хода в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
-export const OnTroopEvaluationTurnEnd = ({ G, ctx, random }) => {
+export const OnTroopEvaluationTurnEnd = ({ G, ctx, random, ...rest }) => {
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        G.secret.decks[1].splice(G.explorerDistinctionCardId, 1);
-        G.deckLength[1] = G.secret.decks[1].length;
+        GetCardsFromCardDeck({ G, ctx, random, ...rest }, 1, G.explorerDistinctionCardId, 1);
         G.secret.decks[1] = random.Shuffle(G.secret.decks[1]);
         G.explorerDistinctionCardId = null;
     }

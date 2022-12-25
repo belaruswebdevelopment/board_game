@@ -7,10 +7,30 @@ import { ThrowMyError } from "../Error";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
-import { IsGiantCard } from "../helpers/IsMythologicalCreatureTypeHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GiantBuffNames, RusCardTypeNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
+import { BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GiantBuffNames, GodNames, RusCardTypeNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
+export const ActivateGodAbilityMove = ({ G, ctx, playerID, ...rest }, godName) => {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot, CardMoveNames.ActivateGodAbilityMove, godName);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const player = G.publicPlayers[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+    }
+};
+export const NotActivateGodAbilityMove = ({ G, ctx, playerID, ...rest }, param) => {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot, ButtonMoveNames.NotActivateGodAbilityMove, param);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const player = G.publicPlayers[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+    }
+};
 /**
  * <h3>Выбор монеты для улучшения по способности Гиганта Hrungnir.</h3>
  * <p>Применения:</p>
@@ -18,8 +38,7 @@ import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, Gia
  * <li>Срабатывает при активации способности Гиганта Hrungnir при наличии героя Uline.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id улучшаемой монеты.
  * @returns
  */
@@ -52,9 +71,8 @@ export const ChooseCoinValueForHrungnirUpgradeMove = ({ G, ctx, playerID, ...res
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id выбранной карты таверны.
+ * @param context
+ * @param card Карта Дворфа.
  * @returns
  */
 export const ClickCardNotGiantAbilityMove = ({ G, ctx, playerID, ...rest }, card) => {
@@ -135,9 +153,8 @@ export const ClickCardNotGiantAbilityMove = ({ G, ctx, playerID, ...rest }, card
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param giantName Название Гиганта.
+ * @param context
+ * @param card Карта Дворфа.
  * @returns
  */
 export const ClickGiantAbilityNotCardMove = ({ G, ctx, playerID, ...rest }, card) => {
@@ -224,8 +241,7 @@ export const ClickGiantAbilityNotCardMove = ({ G, ctx, playerID, ...rest }, card
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Фракция дворфов.
  * @returns
  */
@@ -249,8 +265,7 @@ export const ChooseSuitOlrunMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id выбираемой карты Мифического существа.
  * @returns
  */

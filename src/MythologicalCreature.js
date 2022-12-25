@@ -26,6 +26,7 @@ export const BuildMythologicalCreatureCards = () => {
         const godData = godConfig[godName];
         cards.push(CreateGodCard({
             name: godData.name,
+            buff: godData.buff,
             description: godData.description,
             points: godData.points,
         }));
@@ -85,7 +86,7 @@ export const BuildMythologicalCreatureDecks = (mythologicalCreatureCardsDeck, pl
  * @param isActivated Активирована ли способность.
  * @returns Карта Гиганта.
  */
-const CreateGiantCard = ({ type = RusCardTypeNames.Giant_Card, name, buff, description, placedSuit, capturedCard = null, isActivated = false, }) => ({
+const CreateGiantCard = ({ type = RusCardTypeNames.Giant_Card, name, buff, description, placedSuit, capturedCard = null, isActivated = null, }) => ({
     type,
     name,
     buff,
@@ -103,18 +104,18 @@ const CreateGiantCard = ({ type = RusCardTypeNames.Giant_Card, name, buff, descr
  *
  * @param type Тип.
  * @param name Название.
+ * @param buff Баф.
  * @param description Описание.
- * @param isPowerTokenUsed Положен ли токен силы на карту Бога.
- * @param godPower Сила Бога.
+ * @param points Очки.
  * @param isActivated Активирована ли способность.
  * @returns Карта Бога.
  */
-const CreateGodCard = ({ type = RusCardTypeNames.God_Card, name, description, points, isPowerTokenUsed = null, isActivated = false, }) => ({
+const CreateGodCard = ({ type = RusCardTypeNames.God_Card, name, buff, description, points, isActivated = null, }) => ({
     type,
     name,
+    buff,
     description,
     points,
-    isPowerTokenUsed,
     isActivated,
 });
 /**

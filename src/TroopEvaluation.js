@@ -1,23 +1,24 @@
 import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
+import { GetCardsFromCardDeck } from "./helpers/DecksHelpers";
+import { DiscardCurrentCard } from "./helpers/DiscardCardHelpers";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ErrorNames, LogTypeNames, SuitNames, ValkyryBuffNames } from "./typescript/enums";
 /**
- * <h3>Высчитывает наличие игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
+ * <h3>Высчитывает наличие единственного игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При подсчёте преимуществ по количеству шевронов фракций в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Фракция.
- * @returns Индекс игрока с преимуществом по количеству шевронов фракции, если имеется.
+ * @returns Индекс единственного игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
 const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
-    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForDistinctions({ G, ctx, ...rest }, suit), maxPlayers = playersRanks.filter((count) => count === max);
+    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit), maxPlayers = playersRanks.filter((count) => count === max);
     if (maxPlayers.length === 1) {
         const maxPlayerIndex = maxPlayers[0];
         if (maxPlayerIndex === undefined) {
@@ -47,13 +48,12 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
  * <li>При подсчёте преимуществ по количеству шевронов фракции в конце игры (фракция воинов).</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns Индексы игроков с преимуществом по количеству шевронов конкретной фракции.
  */
-export const CheckCurrentSuitDistinctions = ({ G, ctx, ...rest }, suit) => {
-    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForDistinctions({ G, ctx, ...rest }, suit), maxPlayers = [];
+export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }, suit) => {
+    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit), maxPlayers = [];
     playersRanks.forEach((value, index) => {
         if (value === max) {
             maxPlayers.push(index);
@@ -76,11 +76,10 @@ export const CheckCurrentSuitDistinctions = ({ G, ctx, ...rest }, suit) => {
  * <li>Отрабатывает в начале фазы получения преимуществ по количеству шевронов каждой фракции в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
-export const CheckDistinction = ({ G, ctx, ...rest }) => {
+export const CheckAllSuitsDistinctions = ({ G, ctx, ...rest }) => {
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Преимущество по фракциям в конце эпохи:`);
     let suit;
     for (suit in suitsConfig) {
@@ -97,12 +96,11 @@ export const CheckDistinction = ({ G, ctx, ...rest }) => {
  * <li>При получении преимущества по количеству шевронов фракции 'Воины' в конце игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns [Количество шевронов каждого игрока конкретной фракции, Максимальное количество шевронов конкретной фракции].
  */
-const CountPlayerRanksAndMaxRanksForDistinctions = ({ G, ctx, ...rest }, suit) => {
+const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }, suit) => {
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI = G.publicPlayers[i];
@@ -124,20 +122,19 @@ const CountPlayerRanksAndMaxRanksForDistinctions = ({ G, ctx, ...rest }, suit) =
  * <li>При получении преимуществ по количеству шевронов фракции 'Разведчики' в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @param result Id игрока, получившего преимущество (если имеется).
  * @returns
  */
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = ({ G, ctx, ...rest }, suit, result) => {
+    // TODO if (suit === SuitNames.explorer) here or in CheckAllSuitsDistinctions?
     if (suit === SuitNames.explorer && result === undefined) {
-        const deck1 = G.secret.decks[1], discardedCard = deck1.splice(0, 1)[0];
+        const discardedCard = GetCardsFromCardDeck({ G, ctx, ...rest }, 1, 0, 1)[0];
         if (discardedCard === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);
         }
-        G.deckLength[1] = deck1.length;
-        G.discardCardsDeck.push(discardedCard);
+        DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: '${discardedCard.name}'.`);
     }
 };

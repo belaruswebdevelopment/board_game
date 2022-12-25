@@ -46,10 +46,10 @@ const CreateMultiSuitCard = ({ type = RusCardTypeNames.Multi_Suit_Card, name, })
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
  * @returns Мультифракционная карта на поле игрока.
  */
 export const CreateMultiSuitPlayerCard = ({ type = RusCardTypeNames.Multi_Suit_Player_Card, name, suit, rank, points, }) => ({

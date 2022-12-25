@@ -8,7 +8,8 @@ import { ErrorNames, GiantNames, RusCardTypeNames } from "../typescript/enums";
  * <li>В конце игры, когда получаются победные очки по Гиганту, не имеющему специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
+ * @param value Значение.
  * @returns Количество очков по конкретному гиганту.
  */
 export const BasicGiantScoring = ({ G, ctx, myPlayerID, ...rest }, value) => {
@@ -28,7 +29,7 @@ export const BasicGiantScoring = ({ G, ctx, myPlayerID, ...rest }, value) => {
  * <li>В конце игры, когда получаются победные очки по Гиганту Gymir.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному гиганту.
  */
 export const GymirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -56,7 +57,7 @@ export const GymirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда получаются победные очки по Гиганту Surt.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному гиганту.
  */
 export const SurtScoring = ({ G, ctx, myPlayerID, ...rest }) => {

@@ -1,3 +1,4 @@
+import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, HeroNames, SuitNames } from "../typescript/enums";
 /**
@@ -20,7 +21,7 @@ export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue +
  * <li>Применяется при подсчёте очков за карты, зависящие от множителя за количество шевронов.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @param suit Фракция.
  * @param multiplier Множитель.
  * @returns Суммарное количество очков за множитель.
@@ -31,6 +32,36 @@ export const GetRanksValueMultiplier = ({ G, ctx, myPlayerID, ...rest }, suit, m
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     return player.cards[suit].reduce(TotalRank, 0) * multiplier;
+};
+/**
+ * <h3>Высчитывает текущее суммарное количество очков за карту артефакта Mjollnir.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется при текущем подсчёте очков при наличии карты артефакта Mjollnir.</li>
+ * </ol>
+ *
+ * @param context
+ * @returns Суммарное количество очков за карту артефакта Mjollnir.
+ */
+export const GetSuitValueWithMaxRanksValue = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+    }
+    const totalSuitsRanks = [];
+    let suit, maxRanks = 0, suitWithMaxRanks;
+    for (suit in suitsConfig) {
+        const ranks = totalSuitsRanks.push(player.cards[suit].reduce(TotalRank, 0) * 2);
+        if (ranks > maxRanks) {
+            maxRanks = ranks;
+            suitWithMaxRanks = suit;
+        }
+    }
+    if (suitWithMaxRanks === undefined) {
+        // TODO Duplicated error
+        throw new Error(`Должна быть хотя бы одна фракция с максимальным количеством шевронов.`);
+    }
+    return suitWithMaxRanks;
 };
 /**
  * <h3>Высчитывает суммарное количество очков фракции.</h3>

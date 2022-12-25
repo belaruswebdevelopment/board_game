@@ -14,8 +14,7 @@ import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames,
  * <li>При выборе базовой карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -34,8 +33,7 @@ export const SoloBotAndvariClickCardMove = ({ G, ctx, playerID, ...rest }, cardI
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -54,8 +52,7 @@ export const SoloBotAndvariClickCardToPickDistinctionMove = ({ G, ctx, playerID,
  * <li>При необходимости выбора героя соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */
@@ -74,8 +71,7 @@ export const SoloBotAndvariClickHeroCardMove = ({ G, ctx, playerID, ...rest }, h
  * <li>Когда соло боту Андвари нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinsOrder Порядок выкладки монет.
  * @returns
  */
@@ -99,8 +95,7 @@ export const SoloBotAndvariPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, c
  * <li>При выборе героя Труд со способностью перемещения на планшете соло бота Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -119,8 +114,7 @@ export const SoloBotAndvariPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, 
  * <li>При выборе героя Илуд со способностью размещения на планшете соло бота Андвари в конце эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -139,8 +133,7 @@ export const SoloBotAndvariPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, s
  * <li>При клике по монете соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @returns

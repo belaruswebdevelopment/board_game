@@ -1,5 +1,6 @@
 import { ThrowMyError } from "./Error";
-import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
+import { GetCardsFromCardDeck, GetMythologicalCreatureCardsFromMythologicalCreatureCardDeck } from "./helpers/DecksHelpers";
+import { DiscardCurrentCard, RemoveCardFromTavern } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
 /**
@@ -12,7 +13,7 @@ import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescri
  * <li>При завершении хода последнего игрока в фазу 'Посещение таверн' при игре на двух игроков или в соло режиме, чтобы сбросить одну лишнюю карту из таверны в стопку сброса (чтобы убедиться, что остались карты в текущей таверне).</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Нет ли карт в текущей таверне.
  */
 export const CheckIfCurrentTavernEmpty = ({ G }) => {
@@ -26,8 +27,7 @@ export const CheckIfCurrentTavernEmpty = ({ G }) => {
  * <li>При завершении хода последнего игрока в фазу 'Посещение таверн' при игре на двух игроков или в соло режиме, чтобы сбросить одну лишнюю карту из таверны в стопку сброса.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }) => {
@@ -36,10 +36,7 @@ export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }) => {
     }
     const currentTavernConfig = tavernsConfig[G.currentTavern];
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при игре ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) ? `в соло режиме` : `на двух игроков в игре`}.`);
-    const isCardDiscarded = DiscardCardFromTavern({ G, ctx, ...rest });
-    if (!isCardDiscarded) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame, G.currentTavern);
-    }
+    DiscardCardFromTavern({ G, ctx, ...rest });
 };
 /**
  * <h3>Автоматически сбрасывает одну лишнюю карту из таверны в стопку сброса.</h3>
@@ -50,8 +47,7 @@ export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }) => {
  * <li>При сбросе одной лишней карты таверны в колоду сброса, если какой-то игрок выбрал в лагере артефакт Jarnglofi и если сброшенная обменная монета была выложена на месте одной из таверн.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = ({ G, ctx, ...rest }) => {
@@ -59,7 +55,7 @@ export const DiscardCardFromTavern = ({ G, ctx, ...rest }) => {
     if (cardIndex === -1) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern, G.currentTavern);
     }
-    return DiscardConcreteCardFromTavern({ G, ctx, ...rest }, cardIndex);
+    DiscardConcreteCardFromTavern({ G, ctx, ...rest }, cardIndex);
 };
 /**
  * <h3>Сбрасывает конкретную карту из таверны в стопку сброса.</h3>
@@ -69,24 +65,15 @@ export const DiscardCardFromTavern = ({ G, ctx, ...rest }) => {
  * <li>При сбросе конкретной карты из таверны после выбора первым игроком карты из лагеря при игре на двух игроков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @param context
+ * @param tavernCardId Индекс сбрасываемой карты в таверне.
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }, discardCardIndex) => {
-    const currentTavern = G.taverns[G.currentTavern], discardedCard = currentTavern[discardCardIndex];
-    if (discardedCard === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined, G.currentTavern, discardCardIndex);
-    }
-    if (discardedCard !== null) {
-        DiscardPickedCard({ G, ctx, ...rest }, discardedCard);
-        currentTavern.splice(discardCardIndex, 1, null);
-        const currentTavernConfig = tavernsConfig[G.currentTavern];
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
-        return true;
-    }
-    return false;
+export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }, tavernCardId) => {
+    const discardedCard = RemoveCardFromTavern({ G, ctx, ...rest }, tavernCardId);
+    DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
+    const currentTavernConfig = tavernsConfig[G.currentTavern];
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
 };
 /**
  * <h3>Автоматически заполняет все таверны картами текущей эпохи.</h3>
@@ -95,24 +82,17 @@ export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }, discardCardIn
  * <li>Происходит при подготовке к фазе 'Ставки'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const RefillTaverns = ({ G, ctx, ...rest }) => {
     for (let t = 0; t < G.tavernsNum; t++) {
         let refillDeck;
         if (G.expansions.Idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
-            refillDeck = G.secret.mythologicalCreatureDeck.splice(0, G.drawSize);
-            G.mythologicalCreatureDeckLength = G.secret.mythologicalCreatureDeck.length;
+            refillDeck = GetMythologicalCreatureCardsFromMythologicalCreatureCardDeck({ G, ctx, ...rest }, 0, G.drawSize);
         }
         else {
-            const currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
-            if (currentDeck === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTierDeckIsUndefined);
-            }
-            refillDeck = currentDeck.splice(0, G.drawSize);
-            G.deckLength[G.secret.decks.length - G.tierToEnd] = currentDeck.length;
+            refillDeck = GetCardsFromCardDeck({ G, ctx, ...rest }, 0, (G.secret.decks.length - G.tierToEnd), G.drawSize);
         }
         if (refillDeck.length !== G.drawSize) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.TavernCanNotBeRefilledBecauseNotEnoughCards, t);

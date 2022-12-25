@@ -34,22 +34,22 @@ export const BuildSpecialCards = (): ISpecialCard[] => {
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
  * @returns Карта дворфа.
  */
 const CreateSpecialCard = ({
     type = RusCardTypeNames.Special_Card,
+    name,
     suit,
     rank,
     points,
-    name,
 }: CreateSpecialCardType): ISpecialCard => ({
     type,
+    name,
     suit,
     rank,
     points,
-    name,
 });

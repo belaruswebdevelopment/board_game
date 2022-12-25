@@ -10,7 +10,8 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по Мифическому животному, не имеющему специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
+ * @param value Значение.
  * @returns Количество очков по конкретному мифическому животному.
  */
 export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = ({ G, ctx, ...rest }:
@@ -28,7 +29,7 @@ export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = ({ G, 
  * <li>В конце игры, когда получаются победные очки по мифическому существу Garm.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному мифическому животному.
  */
 export const GarmScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
@@ -42,7 +43,7 @@ export const GarmScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID
  * <li>В конце игры, когда получаются победные очки по мифическому существу Nidhogg.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному мифическому животному.
  */
 export const NidhoggScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:

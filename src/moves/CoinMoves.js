@@ -1,8 +1,9 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, TavernsResolutionStageNames } from "../typescript/enums";
 // TODO Check moves with solo mode!
@@ -13,8 +14,7 @@ import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTy
  * <li>При клике по месту для монет на столе.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @returns
  */
@@ -100,8 +100,7 @@ export const ClickBoardCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @returns
@@ -124,8 +123,7 @@ export const ClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, ty
  * <li>При клике по конкретной монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @returns
@@ -147,8 +145,7 @@ export const PickConcreteCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coi
  * <li>При клике по монете в руке.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @returns
  */
@@ -170,8 +167,7 @@ export const ClickHandCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * <li>При клике по монете в руке.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @returns
  */
@@ -229,8 +225,7 @@ export const ClickHandCoinUlineMove = ({ G, ctx, playerID, ...rest }, coinId) =>
  * <li>При клике по монете в руке.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @returns
  */

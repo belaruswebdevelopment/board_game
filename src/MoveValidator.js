@@ -1,19 +1,19 @@
-import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
+import { CompareTavernCards, EvaluateTavernCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { CheckSoloBotAndvariMustTakeCardFromGeneralStrategy, CheckSoloBotAndvariMustTakeCardToPickHero, CheckSoloBotAndvariMustTakeRoyalOfferingCard, SoloBotMustTakeCardFromReserveStrategy } from "./bot_logic/SoloBotAndvariCardLogic";
 import { CheckSoloBotCanPickHero, CheckSoloBotMustTakeCardToPickHero, CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard, CheckSoloBotMustTakeRoyalOfferingCard, CheckSuitsLeastPresentOnPlayerBoard, SoloBotMustTakeRandomCard } from "./bot_logic/SoloBotCardLogic";
-import { IsCoin } from "./Coin";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { IsMercenaryCampCard } from "./helpers/IsCampTypeHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
+import { IsMercenaryCampCard } from "./is_helpers/IsCampTypeHelpers";
+import { IsCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RusCardTypeNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GodNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit } from "./ui/ProfitUI";
+import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ui/ProfitUI";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -22,8 +22,7 @@ import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfol
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @param coinData Данные монеты.
  * @returns Валидация обмена монет.
  */
@@ -90,9 +89,9 @@ export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }, coinData)
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @param stage Стадия.
+ * @param type Тип мува.
  * @param id Данные для валидации.
  * @returns Валидный ли мув.
  */
@@ -102,11 +101,11 @@ export const IsValidMove = ({ G, ctx, myPlayerID, ...rest }, stage, type, id) =>
     if (validator !== null) {
         if (typeof id === `number`) {
             isValid =
-                ValidateByValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
+                ValidateByArrayValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
         }
         else if (typeof id === `string`) {
             isValid =
-                ValidateByValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
+                ValidateByArrayValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
         }
         else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
             if (`coinId` in id) {
@@ -119,10 +118,7 @@ export const IsValidMove = ({ G, ctx, myPlayerID, ...rest }, stage, type, id) =>
                 isValid = ValidateByObjectCardIdValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
             }
             else if (`suit` in id) {
-                isValid = ValidateByObjectSuitCardIdValues(id, validator.getRange({
-                    G, ctx,
-                    myPlayerID, ...rest
-                }));
+                isValid = ValidateByObjectSuitCardIdValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }));
             }
         }
         else {
@@ -208,6 +204,26 @@ export const GetValidator = (phase, stage, type) => {
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators = {
+    // TODO Fix it!
+    ActivateGodAbilityMoveValidator: {
+        getRange: ({ G, ctx, ...rest }) => ActivateGodAbilityOrNotProfit({ G, ctx, ...rest }, ActivateGodAbilityOrNotSubMoveValidatorNames.ActivateGodAbilityMoveValidator),
+        getValue: ({ G, ctx, ...rest }, currentMoveArguments) => {
+            const moveArgument = currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
+            if (moveArgument === undefined) {
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentMoveArgumentIsUndefined);
+            }
+            return moveArgument;
+        },
+        moveName: CardMoveNames.ActivateGodAbilityMove,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
+    },
+    NotActivateGodAbilityMoveValidator: {
+        getRange: ({ G, ctx, ...rest }) => ActivateGodAbilityOrNotProfit({ G, ctx, ...rest }, ActivateGodAbilityOrNotSubMoveValidatorNames.NotActivateGodAbilityMoveValidator),
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        getValue: ({ G }, currentMoveArguments) => currentMoveArguments,
+        moveName: ButtonMoveNames.NotActivateGodAbilityMove,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
+    },
     ClickCardNotGiantAbilityMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -303,16 +319,15 @@ export const moveValidators = {
                 }
                 const tavernCard = currentTavern[moveArgument];
                 if (tavernCard === undefined) {
-                    throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined, moveArgument);
                 }
                 if (tavernCard === null) {
-                    throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${moveArgument}'.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
                 }
-                if (currentTavern.some((card) => CompareCards(tavernCard, card) < 0)) {
+                if (currentTavern.some((card) => CompareTavernCards(tavernCard, card) < 0)) {
                     continue;
                 }
-                const isCurrentCardWorse = EvaluateCard({ G, ctx, ...rest }, tavernCard, moveArgument, currentTavern) < 0, isExistCardNotWorse = currentTavern.some((card) => (card !== null)
-                    && (EvaluateCard({ G, ctx, ...rest }, tavernCard, moveArgument, currentTavern) >= 0));
+                const isCurrentCardWorse = EvaluateTavernCard({ G, ctx, ...rest }, tavernCard, moveArgument, currentTavern) < 0, isExistCardNotWorse = currentTavern.some((card) => EvaluateTavernCard({ G, ctx, ...rest }, card, moveArgument, currentTavern) >= 0);
                 if (isCurrentCardWorse && isExistCardNotWorse) {
                     continue;
                 }
@@ -322,10 +337,7 @@ export const moveValidators = {
                     if (uniqueCard === undefined) {
                         throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
                     }
-                    if (tavernCard.type === RusCardTypeNames.Dwarf_Card
-                        && uniqueCard.type === RusCardTypeNames.Dwarf_Card
-                        && tavernCard.suit === uniqueCard.suit
-                        && CompareCards(tavernCard, uniqueCard) === 0) {
+                    if (CompareTavernCards(tavernCard, uniqueCard) === 0) {
                         flag = false;
                         break;
                     }
@@ -456,12 +468,11 @@ export const moveValidators = {
     GetMjollnirProfitMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, GetMjollnirProfitMoveValidatorNames.GetMjollnirProfitMoveValidator),
         getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
-            const totalSuitsRanks = [];
+            const totalSuitsRanks = [], player = G.publicPlayers[Number(myPlayerID)];
+            if (player === undefined) {
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+            }
             for (let j = 0; j < currentMoveArguments.length; j++) {
-                const player = G.publicPlayers[Number(myPlayerID)];
-                if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
-                }
                 const moveArgumentI = currentMoveArguments[j];
                 if (moveArgumentI === undefined) {
                     throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${j}'.`);
@@ -483,8 +494,9 @@ export const moveValidators = {
         validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     PassEnlistmentMercenariesMoveValidator: {
-        getRange: () => null,
-        getValue: () => null,
+        getRange: ({ G, ctx, ...rest }) => StartOrPassEnlistmentMercenariesProfit({ G, ctx, ...rest }, EnlistmentMercenariesMoveValidatorNames.StartEnlistmentMercenariesMoveValidator),
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        getValue: ({ G }, currentMoveArguments) => currentMoveArguments,
         moveName: ButtonMoveNames.PassEnlistmentMercenariesMove,
         validate: ({ G, ctx, myPlayerID, ...rest }) => {
             const player = G.publicPlayers[Number(myPlayerID)];
@@ -521,8 +533,9 @@ export const moveValidators = {
         validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     StartEnlistmentMercenariesMoveValidator: {
-        getRange: () => null,
-        getValue: () => null,
+        getRange: ({ G, ctx, ...rest }) => StartOrPassEnlistmentMercenariesProfit({ G, ctx, ...rest }, EnlistmentMercenariesMoveValidatorNames.StartEnlistmentMercenariesMoveValidator),
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        getValue: ({ G }, currentMoveArguments) => currentMoveArguments,
         moveName: ButtonMoveNames.StartEnlistmentMercenariesMove,
         validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
@@ -692,10 +705,10 @@ export const moveValidators = {
         getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
             let moveArgument;
-            moveArgument =
-                CheckSoloBotMustTakeCardToPickHero({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
+            moveArgument = CheckSoloBotMustTakeCardToPickHero({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             if (moveArgument === undefined) {
-                moveArgument = CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
+                moveArgument =
+                    CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
             if (moveArgument === undefined) {
                 moveArgument = CheckSoloBotMustTakeRoyalOfferingCard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
@@ -1325,6 +1338,10 @@ export const moveBy = {
             ClickCardNotGiantAbilityMove: moveValidators.ClickCardNotGiantAbilityMoveValidator,
             ClickGiantAbilityNotCardMove: moveValidators.ClickGiantAbilityNotCardMoveValidator,
         },
+        ActivateGodAbilityOrNot: {
+            ActivateGodAbilityMove: moveValidators.ActivateGodAbilityMoveValidator,
+            NotActivateGodAbilityMove: moveValidators.NotActivateGodAbilityMoveValidator,
+        },
         ChooseCoinValueForHrungnirUpgrade: {
             ChooseCoinValueForHrungnirUpgradeMove: moveValidators.ChooseCoinValueForHrungnirUpgradeMoveValidator,
         },
@@ -1596,7 +1613,7 @@ export const moveBy = {
  * @param values Массив значений, допустимых для прохождения валидации.
  * @returns Валидация значений мувов.
  */
-const ValidateByValues = (value, values) => values.includes(value);
+const ValidateByArrayValues = (value, values) => values.includes(value);
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -1639,6 +1656,18 @@ const ValidateByObjectSuitCardIdValues = (value, values) => {
  * @returns Валидация карт.
  */
 const ValidateByObjectCardIdValues = (value, values) => values.cards.includes(value.cardId);
+/**
+* <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+* </oL>
+*
+* @TODO Саше: сделать описание функции и параметров.
+* @param value
+* @param values
+* @returns Валидация карт.
+*/
 const ValidateObjectEqualValues = (value, values) => {
     const props1 = Object.getOwnPropertyNames(value), props2 = Object.getOwnPropertyNames(values);
     if (props1.length !== props2.length) {

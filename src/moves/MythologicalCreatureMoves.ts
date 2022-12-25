@@ -7,11 +7,43 @@ import { ThrowMyError } from "../Error";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
-import { IsGiantCard } from "../helpers/IsMythologicalCreatureTypeHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BuffNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GiantBuffNames, RusCardTypeNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
+import { BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GiantBuffNames, GodNames, RusCardTypeNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, IDwarfCard, InvalidMoveType, IPublicPlayer, IStack, Move, MyFnContext, MythologicalCreatureCommandZoneCardType, MythologicalCreatureDeckCardType } from "../typescript/interfaces";
+
+export const ActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, godName: GodNames):
+    CanBeVoidType<InvalidMoveType> => {
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot,
+        CardMoveNames.ActivateGodAbilityMove, godName);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
+    }
+
+};
+
+export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, param: null):
+    CanBeVoidType<InvalidMoveType> => {
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+        TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot,
+        ButtonMoveNames.NotActivateGodAbilityMove, param);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            playerID);
+    }
+
+};
 
 /**
  * <h3>Выбор монеты для улучшения по способности Гиганта Hrungnir.</h3>
@@ -20,8 +52,7 @@ import type { CanBeUndefType, CanBeVoidType, IDwarfCard, InvalidMoveType, IPubli
  * <li>Срабатывает при активации способности Гиганта Hrungnir при наличии героя Uline.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id улучшаемой монеты.
  * @returns
  */
@@ -61,9 +92,8 @@ export const ChooseCoinValueForHrungnirUpgradeMove: Move = ({ G, ctx, playerID, 
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id выбранной карты таверны.
+ * @param context
+ * @param card Карта Дворфа.
  * @returns
  */
 export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, card: IDwarfCard):
@@ -153,9 +183,8 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param giantName Название Гиганта.
+ * @param context
+ * @param card Карта Дворфа.
  * @returns
  */
 export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, card: IDwarfCard):
@@ -252,8 +281,7 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Фракция дворфов.
  * @returns
  */
@@ -281,8 +309,7 @@ export const ChooseSuitOlrunMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCon
  * <li>Срабатывает при выборе игроком карты Olrun.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id выбираемой карты Мифического существа.
  * @returns
  */

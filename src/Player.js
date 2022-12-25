@@ -63,8 +63,7 @@ export const BuildPublicPlayer = (nickname, priority, isPrivate) => {
 * <li>Происходит при необходимости выставления монет на игровое поле при наличии героя Улина.</li>
 * </ol>
 *
-* @param G
-* @param ctx
+* @param context
 * @returns
 */
 export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }) => {
@@ -92,13 +91,13 @@ export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }) => {
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param handCoins Массив монет в руке.
  * @param boardCoins Массив монет на столе.
+ * @param handCoins Массив монет в руке.
  * @returns Приватные данные игрока.
  */
-const CreatePlayer = ({ handCoins, boardCoins, }) => ({
-    handCoins,
+const CreatePlayer = ({ boardCoins, handCoins, }) => ({
     boardCoins,
+    handCoins,
 });
 /**
  * <h3>Создание публичных данных игрока.</h3>
@@ -109,6 +108,7 @@ const CreatePlayer = ({ handCoins, boardCoins, }) => ({
  *
  * @param nickname Никнейм.
  * @param cards Массив карт.
+ * @param giantTokenSuits Состояние токенов Гигантов.
  * @param heroes Массив героев.
  * @param campCards Массив карт лагеря.
  * @param mythologicalCreatureCards Массив карт мифических существ.

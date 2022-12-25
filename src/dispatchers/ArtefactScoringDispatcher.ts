@@ -9,17 +9,18 @@ import type { IAction, IArtefactScoringFunction, MyFnContextWithMyPlayerID, Scor
  * <li>Выполняется при необходимости получить победные очки по артефакту.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @param action Объект действия.
+ * @param isFinal Происходит ли подсчёт очков в конце игры.
  * @returns Количество победных очков по артефакту.
  */
 export const StartArtefactScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    action: IAction<ArtefactScoringFunctionNames, ScoringArgsType>): number => {
+    action: IAction<ArtefactScoringFunctionNames, ScoringArgsType>, isFinal = false): number => {
     const actionDispatcher: IArtefactScoringFunction = ArtefactScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
-        return actionDispatcher?.({ G, ctx, myPlayerID, ...rest });
+        return actionDispatcher?.({ G, ctx, myPlayerID, ...rest }, isFinal);
     } else {
-        return actionDispatcher?.({ G, ctx, myPlayerID, ...rest }, ...action.params);
+        return actionDispatcher?.({ G, ctx, myPlayerID, ...rest }, isFinal, ...action.params);
     }
 };
 

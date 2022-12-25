@@ -13,8 +13,8 @@ import { ErrorNames, GameModeNames, HeroNames, PhaseNames } from "../typescript/
  * <li>При начале фазы 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @returns
  */
 export const CheckChooseDifficultySoloModeOrder = ({ G, ctx, ...rest }) => {
     CheckPlayersBasicOrder({ G, ctx, ...rest });
@@ -26,8 +26,7 @@ export const CheckChooseDifficultySoloModeOrder = ({ G, ctx, ...rest }) => {
  * <li>При каждом действии с монеткой в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }) => {
@@ -51,8 +50,7 @@ export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }) => {
  * <li>При каждом действии в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseDifficultySoloModeTurn = ({ G, ctx }) => {
@@ -67,7 +65,7 @@ export const CheckEndChooseDifficultySoloModeTurn = ({ G, ctx }) => {
  * <li>При завершении фазы 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
+ * @param returns
  * @returns
  */
 export const EndChooseDifficultySoloModeActions = ({ G }) => {
@@ -80,8 +78,7 @@ export const EndChooseDifficultySoloModeActions = ({ G }) => {
  * <li>При завершении мува в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }) => {
@@ -94,8 +91,7 @@ export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }) => {
  * <li>При начале хода в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }) => {
@@ -126,7 +122,7 @@ export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }) => {
  * <li>При действиях, после которых может начаться фаза 'Ставки' или фаза 'ChooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartChooseDifficultySoloModeAndvariOrBidsPhase = ({ G }) => {

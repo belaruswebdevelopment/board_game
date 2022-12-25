@@ -1,11 +1,12 @@
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { StackData } from "../data/StackData";
 import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
-import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
+import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards, RemoveCardsFromCampAndAddIfNeeded } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 /**
@@ -15,8 +16,7 @@ import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, 
  * <li>При выборе карты лагеря Vidofnir Vedrfolnir и наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @returns
  */
@@ -67,8 +67,7 @@ export const AddCoinToPouchAction = ({ G, ctx, myPlayerID, ...rest }, coinId) =>
  * <li>При выборе карты лагеря Vidofnir Vedrfolnir и наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param value Значение улучшения монеты.
  * @returns
  */
@@ -90,8 +89,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = ({ G, ctx, myPl
  * <li>При выборе карты для сброса по действию карты лагеря артефакта Hofud.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
@@ -100,11 +98,8 @@ export const DiscardSuitCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) =
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    const discardedCard = player.cards[SuitNames.warrior].splice(cardId, 1)[0];
-    if (discardedCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
-    }
-    DiscardPickedCard({ G, ctx, ...rest }, discardedCard);
+    const discardedCard = RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID, ...rest }, SuitNames.warrior, cardId);
+    DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Artefact_Card}' '${ArtefactNames.Hofud}'.`);
     player.stack = [];
 };
@@ -116,8 +111,7 @@ export const DiscardSuitCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) =
  * <li>При выборе карты лагеря по действию персонажа Хольда.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id выбранной карты.
  * @returns
  */
@@ -127,7 +121,7 @@ export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) => {
     if (campCard === null) {
         throw new Error(`Не существует кликнутая карта лагеря с id '${cardId}'.`);
     }
-    G.camp.splice(cardId, 1, null);
+    RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, cardId, [null]);
     AddCampCardToCards({ G, ctx, myPlayerID, ...rest }, campCard);
     if (campCard.type === RusCardTypeNames.Artefact_Card) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_a = campCard.stack) === null || _a === void 0 ? void 0 : _a.player, campCard);
@@ -137,7 +131,7 @@ export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) => {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.placeEnlistmentMercenaries(campCard)]);
     }
     if (G.odroerirTheMythicCauldron) {
-        AddCoinOnOdroerirTheMythicCauldronCampCard({ G, ctx, myPlayerID, ...rest });
+        AddCoinOnOdroerirTheMythicCauldronCampCard({ G, ctx, ...rest });
     }
 };
 /**
@@ -147,8 +141,7 @@ export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) => {
  * <li>При старте улучшения монеты карты лагеря артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @returns

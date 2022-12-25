@@ -9,7 +9,7 @@ import type { IAction, IGiantScoringFunction, MyFnContextWithMyPlayerID, Scoring
  * <li>Выполняется при необходимости получить победные очки по Гиганту.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @param action Объект действия.
  * @returns Количество победных очков по Гиганту.
  */

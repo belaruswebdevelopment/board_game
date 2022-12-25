@@ -5,14 +5,15 @@ import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { ChangeBuffValue, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
-import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
+import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelpers";
+import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
 import { AddHeroCardToPlayerCards, AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { CreateMultiSuitPlayerCard } from "../MultiSuitCard";
-import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, IHeroCard, IHeroPlayerCard, IMultiSuitCard, IMultiSuitPlayerCard, IPublicPlayer, IStack, MyFnContextWithMyPlayerID, PlayerCardType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
@@ -23,8 +24,7 @@ import type { CanBeUndefType, IHeroCard, IHeroPlayerCard, IMultiSuitCard, IMulti
  * <li>При необходимости выбора героя соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */
@@ -42,7 +42,14 @@ export const AddHeroToPlayerCardsAction = ({ G, ctx, myPlayerID, ...rest }: MyFn
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
             hero.stack?.soloBotAndvari ?? hero.stack?.player, hero);
     } else {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, hero.stack?.player, hero);
+        if (!(G.expansions.Idavoll.active
+            && (hero.name === HeroNames.Bonfur || hero.name === HeroNames.Crovax_The_Doppelganger
+                || (hero.name === HeroNames.Dagda && CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
+                    MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards)))
+            && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Thor))) {
+            // TODO Check if Thor & Durathor add for Dagda can not discard both cards at all!?
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, hero.stack?.player, hero);
+        }
     }
     StartAutoAction({ G, ctx, myPlayerID, ...rest }, hero.actions);
 };
@@ -54,8 +61,7 @@ export const AddHeroToPlayerCardsAction = ({ G, ctx, myPlayerID, ...rest }: MyFn
  * <li>При выборе конкретных героев, сбрасывающих карты с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  * @returns
@@ -67,16 +73,16 @@ export const DiscardCardsFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...rest 
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
             myPlayerID);
     }
-    const discardedCard: CanBeUndefType<PlayerCardType> = player.cards[suit].splice(cardId, 1)[0];
-    if (discardedCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
-    }
-    DiscardPickedCard({ G, ctx, ...rest }, discardedCard);
+    const discardedCard: PlayerCardType =
+        RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID, ...rest }, suit, cardId);
+    DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Hero_Card}' '${player.stack[0]?.name}'.`);
     if (player.stack[0]?.name === HeroNames.Dagda && player.stack[0]?.pickedSuit === undefined) {
         if (!G.expansions.Idavoll.active || (G.expansions.Idavoll.active
-            && !CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
-                MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards))) {
+            && (!CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
+                MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards))
+            || (CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
+                GodNames.Thor)))) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                 [StackData.discardCardFromBoardDagda(suit)]);
         }
@@ -90,8 +96,7 @@ export const DiscardCardsFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...rest 
  * <li>При добавлении героя Ольвин на игровое поле игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -166,8 +171,7 @@ export const PlaceMultiSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
  * <li>При добавлении героя Труд на игровое поле соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -202,8 +206,7 @@ export const PlaceThrudAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWit
  * <li>При добавлении героя Илуд на игровом поле соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */

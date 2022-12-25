@@ -10,8 +10,7 @@ import type { CanBeUndefType, FnContext, IPriority, IPublicPlayer, MyFnContextWi
  * <li>Используется для ботов при определении приоритета выставления монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Имеет ли игрок наименьший кристалл.
  */
 export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): boolean => {
@@ -34,8 +33,7 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
  * <li>Используется в конце фазы выбора карт.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const ChangePlayersPriorities = ({ G, ctx, ...rest }: FnContext): void => {

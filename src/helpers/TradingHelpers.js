@@ -1,7 +1,8 @@
 import { UpgradeCoinAction } from "../actions/CoinActions";
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
@@ -14,8 +15,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * <li>Когда заканчивается базовый выбор карты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const ActivateTrading = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -43,8 +43,7 @@ export const ActivateTrading = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>Когда заканчивается ход соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param isSoloBotEndRound Является ли данное действие в конце хода соло бота.
  * @returns
  */
@@ -114,8 +113,7 @@ export const StartTrading = ({ G, ctx, myPlayerID, ...rest }, isSoloBotEndRound 
  * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param tradingCoins Монеты для обмена.
  * @param soloBotOnlyOneCoinTrading У соло бота доступна только 1 монета для обмена с рынка.
  * @returns

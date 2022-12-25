@@ -15,8 +15,7 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  * <li>При выборе базовой карты из таверны игроком.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -37,8 +36,7 @@ export const ClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, 
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -60,8 +58,7 @@ export const ClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest
  * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Фракция.
  * @returns
  */
@@ -83,8 +80,7 @@ export const ClickDistinctionCardMove: Move = ({ G, ctx, playerID, ...rest }: My
  * <li>Применяется при отправке карты в колоду сброса в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @param cardId Id сбрасываемой карты.
  * @returns
@@ -110,15 +106,15 @@ export const DiscardCardFromPlayerBoardMove: Move = ({ G, ctx, playerID, ...rest
  * <li>Применяется при выборе первым игроком карты из лагеря.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
 export const DiscardCard2PlayersMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
-        TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove, cardId);
+        TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove,
+        cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -132,8 +128,7 @@ export const DiscardCard2PlayersMove: Move = ({ G, ctx, playerID, ...rest }: MyF
  * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -155,8 +150,7 @@ export const GetEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }
  * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -178,15 +172,15 @@ export const GetMjollnirProfitMove: Move = ({ G, ctx, playerID, ...rest }: MyFnC
  * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @param param Параметр.
  * @returns
  */
-export const PassEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext):
+export const PassEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, param: null):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries,
-        ButtonMoveNames.PassEnlistmentMercenariesMove, null);
+        ButtonMoveNames.PassEnlistmentMercenariesMove, param);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -201,8 +195,7 @@ export const PassEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest 
  * <li>Выбор карт из колоды сброса по действию артефактов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -223,8 +216,7 @@ export const PickDiscardCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCon
  * <li>При выборе фракции, куда будет завербован наёмник.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -246,15 +238,15 @@ export const PlaceEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest
  * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @param param Параметр.
  * @returns
  */
-export const StartEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext):
+export const StartEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, param: null):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries,
-        ButtonMoveNames.StartEnlistmentMercenariesMove, null);
+        ButtonMoveNames.StartEnlistmentMercenariesMove, param);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

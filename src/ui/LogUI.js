@@ -7,7 +7,7 @@ import { LogTypeNames } from "../typescript/enums";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Поле для вывода логов.
  */
 export const DrawLogData = ({ G }) => {

@@ -1,10 +1,10 @@
-import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
 import { UpgradeCoinAction } from "./CoinActions";
@@ -15,8 +15,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * <li>При игровых моментах, дающих возможность взять карту героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param priority Приоритет выбора героя.
  * @returns
  */
@@ -43,8 +42,7 @@ export const AddPickHeroAction = ({ G, ctx, myPlayerID, ...rest }, priority /* O
  * <li>При выборе конкретных героев, возвращающих закрытые монеты со стола в руку.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -66,7 +64,7 @@ export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, myPlayerID, ...rest 
     }
 };
 // TODO Add code for Thrud Grid action!
-// TODO Refactor and add throw errors
+// TODO Refactor & split into different functions and add throw errors
 /**
  * <h3>Действия, связанные с улучшением минимальной монеты игрока.</h3>
  * <p>Применения:</p>
@@ -74,8 +72,7 @@ export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, myPlayerID, ...rest 
  * <li>При выборе конкретных героев, улучшающих минимальную монету игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param value Значение обмена монеты.
  * @returns
  */

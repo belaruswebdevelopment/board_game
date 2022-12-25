@@ -53,10 +53,10 @@ const CreateMultiSuitCard = ({
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
  * @returns Мультифракционная карта на поле игрока.
  */
 export const CreateMultiSuitPlayerCard = ({

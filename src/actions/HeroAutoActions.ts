@@ -1,10 +1,10 @@
-import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
 import type { CanBeUndefType, IActionFunctionWithoutParams, ICoin, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, OneOrTwoType, PublicPlayerCoinType } from "../typescript/interfaces";
@@ -17,8 +17,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * <li>При игровых моментах, дающих возможность взять карту героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param priority Приоритет выбора героя.
  * @returns
  */
@@ -49,8 +48,7 @@ export const AddPickHeroAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
  * <li>При выборе конкретных героев, возвращающих закрытые монеты со стола в руку.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }:
@@ -76,7 +74,7 @@ export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = (
 };
 
 // TODO Add code for Thrud Grid action!
-// TODO Refactor and add throw errors
+// TODO Refactor & split into different functions and add throw errors
 /**
  * <h3>Действия, связанные с улучшением минимальной монеты игрока.</h3>
  * <p>Применения:</p>
@@ -84,12 +82,12 @@ export const GetClosedCoinIntoPlayerHandAction: IActionFunctionWithoutParams = (
  * <li>При выборе конкретных героев, улучшающих минимальную монету игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param value Значение обмена монеты.
  * @returns
  */
-export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, value: number): void => {
+export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, value: number):
+    void => {
     // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
     const currentPlayer: number = G.mode === GameModeNames.Solo ? 1 : Number(myPlayerID),
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[currentPlayer],

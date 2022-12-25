@@ -15,8 +15,8 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IHeroCard, IPublicPlayer
  * <li>При начале фазы 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @returns
  */
 export const CheckChooseDifficultySoloModeOrder = ({ G, ctx, ...rest }: FnContext): void => {
     CheckPlayersBasicOrder({ G, ctx, ...rest });
@@ -29,8 +29,7 @@ export const CheckChooseDifficultySoloModeOrder = ({ G, ctx, ...rest }: FnContex
  * <li>При каждом действии с монеткой в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
@@ -55,8 +54,7 @@ export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }: FnCon
  * <li>При каждом действии в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseDifficultySoloModeTurn = ({ G, ctx }: FnContext): CanBeVoidType<boolean> => {
@@ -72,7 +70,7 @@ export const CheckEndChooseDifficultySoloModeTurn = ({ G, ctx }: FnContext): Can
  * <li>При завершении фазы 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
+ * @param returns
  * @returns
  */
 export const EndChooseDifficultySoloModeActions = ({ G }: FnContext): void => {
@@ -86,8 +84,7 @@ export const EndChooseDifficultySoloModeActions = ({ G }: FnContext): void => {
  * <li>При завершении мува в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }: FnContext): void => {
@@ -101,8 +98,7 @@ export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }: FnContext): 
  * <li>При начале хода в фазе 'chooseDifficultySoloMode'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
@@ -135,7 +131,7 @@ export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }: FnConte
  * <li>При действиях, после которых может начаться фаза 'Ставки' или фаза 'ChooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartChooseDifficultySoloModeAndvariOrBidsPhase = ({ G }: FnContext): PhaseNames => {

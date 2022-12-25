@@ -1,7 +1,7 @@
-import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
@@ -13,8 +13,7 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PublicPla
  * <li>При каждой выкладке монеты на стол игрока в фазе 'Ставки Улина'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBidUlinePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
@@ -55,8 +54,7 @@ export const CheckEndBidUlinePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoid
  * <li>При начале фазы 'Ставки Улина'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const CheckBidUlineOrder = ({ G, ctx, ...rest }: FnContext): void => {
@@ -71,7 +69,7 @@ export const CheckBidUlineOrder = ({ G, ctx, ...rest }: FnContext): void => {
  * <li>При завершении фазы 'Ставки Улина'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndBidUlineActions = ({ G }: FnContext): void => {

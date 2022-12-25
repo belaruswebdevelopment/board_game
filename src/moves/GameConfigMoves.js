@@ -13,8 +13,7 @@ import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultS
  * <li>Когда игрок выбирает уровень сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param level Уровень сложности в режиме соло игры.
  * @returns
  */
@@ -32,8 +31,7 @@ export const ChooseStrategyForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest
  * <li>Когда игрок выбирает вариант уровня сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param level Вариант уровня сложности в режиме соло игры.
  * @returns
  */
@@ -52,8 +50,7 @@ export const ChooseStrategyVariantForSoloModeAndvariMove = ({ G, ctx, playerID, 
  * <li>Когда игрок выбирает уровень сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param level Уровень сложности в режиме соло игры.
  * @returns
  */
@@ -72,8 +69,7 @@ export const ChooseDifficultyLevelForSoloModeMove = ({ G, ctx, playerID, ...rest
  * <li>Когда игрок выбирает героя для выбранного уровня сложности в режиме соло игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */

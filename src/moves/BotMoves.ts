@@ -1,6 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPlayer, Move, MyFnContext, PublicPlayerCoinType } from "../typescript/interfaces";
@@ -14,8 +15,7 @@ import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPl
  * <li>Когда ботам нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinsOrder Порядок выкладки монет.
  * @returns
  */

@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
+import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { ScoreWinner } from "../Score";
 import { CampBuffNames, ErrorNames, HeroBuffNames } from "../typescript/enums";
 /**
@@ -10,8 +10,7 @@ import { CampBuffNames, ErrorNames, HeroBuffNames } from "../typescript/enums";
  * <li>При любом действии.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения игры.
  */
 export const CheckEndGame = ({ G, ctx, ...rest }) => {
@@ -52,8 +51,7 @@ export const CheckEndGame = ({ G, ctx, ...rest }) => {
  * <li>При завершении игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Финальные данные о игре.
  */
 export const ReturnEndGameData = ({ G, ctx, ...rest }) => ScoreWinner({ G, ctx, ...rest });

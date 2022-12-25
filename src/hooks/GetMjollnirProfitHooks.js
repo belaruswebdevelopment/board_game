@@ -12,8 +12,7 @@ import { BuffNames, CampBuffNames, ErrorNames } from "../typescript/enums";
  * <li>При выборе фракции для применения эффекта артефакта Mjollnir в фазе 'getMjollnirProfit'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }) => {
@@ -34,7 +33,7 @@ export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }) => {
  * <li>При начале фазы 'getMjollnirProfit'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }) => {
@@ -51,8 +50,7 @@ export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }) => {
  * <li>При завершении мува в фазе 'getMjollnirProfit'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }) => {
@@ -65,8 +63,7 @@ export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }) => {
  * <li>При начале хода в фазе 'getMjollnirProfit'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnGetMjollnirProfitTurnBegin = ({ G, ctx, events, ...rest }) => {
@@ -80,8 +77,7 @@ export const OnGetMjollnirProfitTurnBegin = ({ G, ctx, events, ...rest }) => {
  * <li>При завершении фазы 'getMjollnirProfit'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const StartEndGame = ({ G, events }) => {

@@ -2,6 +2,7 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, SuitNames } from "../typescript/enums";
@@ -14,8 +15,7 @@ import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, IHeroCard
  * <li>При каждом действии с монеткой в фазе 'Ставки'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> => {
@@ -64,8 +64,7 @@ export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoi
  * <li>При начале фазы 'Поместить Труд'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
@@ -100,7 +99,8 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
                 const yludCardIndex: number =
                     player.cards[suit].findIndex((card: PlayerCardType): boolean =>
                         card.name === HeroNames.Ylud);
-                player.cards[suit].splice(yludCardIndex, 1);
+                RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID: String(yludIndex), ...rest }, suit,
+                    yludCardIndex);
             }
         }
     }
@@ -114,8 +114,7 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
  * <li>При каждом действии в фазе 'Поместить Труд'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndPlaceYludTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> =>
@@ -128,8 +127,7 @@ export const CheckEndPlaceYludTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoid
  * <li>При завершении фазы 'Поместить Труд'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  */
 export const EndPlaceYludActions = ({ G, ctx, ...rest }: FnContext): void => {
     if (G.tierToEnd === 0) {
@@ -145,8 +143,7 @@ export const EndPlaceYludActions = ({ G, ctx, ...rest }: FnContext): void => {
  * <li>При завершении мува в фазе 'Поместить Труд'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnPlaceYludMove = ({ G, ctx, ...rest }: FnContext): void => {
@@ -160,8 +157,7 @@ export const OnPlaceYludMove = ({ G, ctx, ...rest }: FnContext): void => {
  * <li>При начале хода в фазе 'Поместить Труд'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnPlaceYludTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
@@ -172,7 +168,8 @@ export const OnPlaceYludTurnBegin = ({ G, ctx, events, ...rest }: FnContext): vo
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
             [StackData.placeYludHeroSoloBotAndvari()]);
     } else {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.placeYludHero()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
+            [StackData.placeYludHero()]);
     }
     DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
 };

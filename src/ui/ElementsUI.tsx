@@ -1,7 +1,7 @@
-import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { ArtefactNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, RusCardTypeNames, SuitMoveNames, SuitNames } from "../typescript/enums";
 import type { AllCardType, ArgsType, BoardProps, ButtonNameType, CanBeNullType, IBackground, IndexOf, IPublicPlayer, MoveFunctionType, MyFnContextWithMyPlayerID, PublicPlayerCoinType, TavernsConfigType } from "../typescript/interfaces";
 
@@ -25,7 +25,9 @@ export const DrawButton = (data: BoardProps, boardCells: JSX.Element[], name: Bu
     let action: MoveFunctionType,
         _exhaustiveCheck: never;
     switch (moveName) {
-        // TODO Think about all data.moves.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove -> ChooseCoinValueForVidofnirVedrfolnirUpgradeMove but get dependency cycle...
+        case ButtonMoveNames.NotActivateGodAbilityMove:
+            action = data.moves.NotActivateGodAbilityMove;
+            break;
         case ButtonMoveNames.PassEnlistmentMercenariesMove:
             action = data.moves.PassEnlistmentMercenariesMove;
             break;
@@ -99,6 +101,9 @@ export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: All
     }
     let _exhaustiveCheck: never;
     switch (moveName) {
+        case CardMoveNames.ActivateGodAbilityMove:
+            action = data.moves.ActivateGodAbilityMove;
+            break;
         case CardMoveNames.ClickCardNotGiantAbilityMove:
             action = data.moves.ClickCardNotGiantAbilityMove;
             break;
@@ -269,8 +274,8 @@ export const DrawCard = (data: BoardProps, playerCells: JSX.Element[], card: All
  * @returns
  */
 export const DrawEmptyCard = (data: BoardProps, playerCells: JSX.Element[], cardType: RusCardTypeNames, id: number,
-    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNames>,
-    moveName?: EmptyCardMoveNames, ...args: ArgsType): void => {
+    player: CanBeNullType<IPublicPlayer>, suit: CanBeNullType<SuitNames>, moveName?: EmptyCardMoveNames,
+    ...args: ArgsType): void => {
     let tdClasses = ``,
         action: MoveFunctionType;
     if (suit !== null) {

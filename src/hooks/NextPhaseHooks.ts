@@ -9,7 +9,7 @@ import type { CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/inte
  * <li>При действиях, после которых может начаться фаза 'Ставки Улина' или фаза 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionPhase = ({ G, ctx, ...rest }: FnContext): PhaseNames => {
@@ -31,7 +31,7 @@ export const StartBidUlineOrTavernsResolutionPhase = ({ G, ctx, ...rest }: FnCon
  * <li>После завершения действий в каждой фазе конца игры.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {
@@ -65,7 +65,7 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVo
 * <li>После завершения фазы 'enlistmentMercenaries'.</li>
 * </ol>
 *
-* @param G
+* @param context
 * @returns Фаза игры.
 */
 export const StartEndTierPhaseOrEndGameLastActions = ({ G, ctx, ...rest }: FnContext):

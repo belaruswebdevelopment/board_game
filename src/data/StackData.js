@@ -1,4 +1,4 @@
-import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, GodNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 /**
  * <h3>Данные об стеке действий.</h3>
  * <p>Применения:</p>
@@ -13,6 +13,12 @@ export const StackData = {
         drawName: DrawNames.ActivateGiantAbilityOrPickCard,
         giantName,
         card,
+    }),
+    activateGodAbilityOrNot: (godName) => ({
+        configName: ConfigNames.ActivateGodAbilityOrNot,
+        stageName: TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot,
+        drawName: DrawNames.ActivateGodAbilityOrNot,
+        godName,
     }),
     addCoinToPouch: () => ({
         stageName: CommonStageNames.AddCoinToPouch,

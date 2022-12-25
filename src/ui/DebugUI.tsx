@@ -7,8 +7,7 @@ import type { CanBeNullType, CanBeUndefType, Ctx, DebugDrawDataType, FnContext, 
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Дебаг панель.
  */
 export const DrawDebugData = ({ G, ctx, ...rest }: FnContext): CanBeNullType<JSX.Element> => {
@@ -89,8 +88,7 @@ const DrawObjectData = (obj: DebugDrawDataType): JSX.Element => {
  * <li>Используется в отображении дебаг панели.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Данные для отрисовки дебаг информации.
  */
 const GetDebugData = ({ G, ctx }: FnContext): CanBeUndefType<IDebugData> => {

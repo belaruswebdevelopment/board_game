@@ -16,8 +16,7 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * <li>Происходит при перемещении на планшете игрока карта героя Труд.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {

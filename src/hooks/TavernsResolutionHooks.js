@@ -1,4 +1,3 @@
-import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
@@ -6,13 +5,16 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { OpenCurrentTavernClosedCoinsOnPlayerBoard, ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
+import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
+import { IsLastRound } from "../helpers/RoundHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
+import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastActions } from "./NextPhaseHooks";
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -21,15 +23,13 @@ import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastAc
  * <li>После того как опустела последняя таверна.</li>
  * </oL>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Фаза игры.
  */
 const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }) => {
-    const isLastRound = ctx.numPlayers < 4 ? ((G.round === 3 || G.round === 6) ? true : false) :
-        ((G.round === 2 || G.round === 5) ? true : false), currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
+    const isLastRound = IsLastRound({ G, ctx, ...rest }), currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
     if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTierDeckIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined, G.secret.decks.length - G.tierToEnd - Number(isLastRound));
     }
     if (currentDeck.length === 0) {
         if (G.expansions.Thingvellir.active) {
@@ -50,8 +50,7 @@ const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }) => {
  * <li>При наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }) => {
@@ -96,8 +95,7 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }) => {
  * <li>При каждом пике карты в фазе 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndTavernsResolutionPhase = ({ G, ctx, ...rest }) => {
@@ -119,11 +117,17 @@ export const CheckEndTavernsResolutionPhase = ({ G, ctx, ...rest }) => {
  * <li>При каждом пике карты в фазе 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
-export const CheckEndTavernsResolutionTurn = ({ G, ctx, ...rest }) => EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
+export const CheckEndTavernsResolutionTurn = ({ G, ctx, ...rest }) => {
+    if (EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest })) {
+        if (!(G.expansions.Idavoll.active
+            && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Odin))) {
+            return true;
+        }
+    }
+};
 /**
 * <h3>Проверяет есть ли у игроков наёмники для начала их вербовки.</h3>
 * <p>Применения:</p>
@@ -131,7 +135,7 @@ export const CheckEndTavernsResolutionTurn = ({ G, ctx, ...rest }) => EndTurnAct
 * <li>При наличии у игроков наёмников в конце текущей эпохи.</li>
 * </ol>
 *
-* @param G
+* @param context
 * @returns Фаза игры.
 */
 const CheckEnlistmentMercenaries = ({ G, ctx, ...rest }) => {
@@ -160,8 +164,7 @@ const CheckEnlistmentMercenaries = ({ G, ctx, ...rest }) => {
  * <li>При завершении фазы 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
@@ -175,7 +178,7 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
     const currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTierDeckIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined, G.secret.decks.length - G.tierToEnd);
     }
     if (G.tavernsNum - 1 === G.currentTavern && currentDeck.length === 0) {
         G.tierToEnd--;
@@ -222,8 +225,7 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
  * <li>При завершении мува в фазе 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }) => {
@@ -259,8 +261,7 @@ export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }) => {
  * <li>При начале хода в фазе 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }) => {
@@ -271,7 +272,10 @@ export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }) => {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.pickCardSoloBotAndvari()]);
     }
     else {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.pickCard()]);
+        if (!(G.expansions.Idavoll.active
+            && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Frigg))) {
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.pickCard()]);
+        }
     }
 };
 /**
@@ -281,8 +285,7 @@ export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }) => {
  * <li>При завершении хода в фазе 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnTavernsResolutionTurnEnd = ({ G, ctx, ...rest }) => {
@@ -327,8 +330,7 @@ export const OnTavernsResolutionTurnEnd = ({ G, ctx, ...rest }) => {
  * <li>При начале фазы 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const ResolveCurrentTavernOrders = ({ G, ctx, ...rest }) => {
@@ -346,8 +348,7 @@ export const ResolveCurrentTavernOrders = ({ G, ctx, ...rest }) => {
  * <li>При действиях, после которых может начаться фаза 'Ставки Улина' или фаза 'Посещение таверн' или фаза 'EndTier' или фазы конца игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionOrEndTierPhaseOrEndGameLastActionsPhase = ({ G, ctx, ...rest }) => {

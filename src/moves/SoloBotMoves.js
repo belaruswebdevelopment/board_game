@@ -16,8 +16,7 @@ import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames,
  * <li>При выборе базовой карты из таверны соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -36,8 +35,7 @@ export const SoloBotClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -56,8 +54,7 @@ export const SoloBotClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...res
  * <li>При необходимости выбора героя соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */
@@ -79,8 +76,7 @@ export const SoloBotClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) 
  * <li>Когда соло боту нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinsOrder Порядок выкладки монет.
  * @returns
  */
@@ -99,8 +95,7 @@ export const SoloBotPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrd
  * <li>При выборе героя Труд со способностью перемещения на планшете соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -119,8 +114,7 @@ export const SoloBotPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) =
  * <li>При выборе героя Илуд со способностью размещения на планшете соло бота в конце эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -139,8 +133,7 @@ export const SoloBotPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) =>
  * <li>При клике по монете соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @returns

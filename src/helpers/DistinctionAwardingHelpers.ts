@@ -18,8 +18,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * <li>В конце игры, когда получается преимущество по фракции кузнецов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
@@ -51,8 +50,7 @@ export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = ({ G,
  * <li>В конце игры, когда получается преимущество по фракции разведчиков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
@@ -83,8 +81,7 @@ export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, c
  * <li>В конце игры, когда получается преимущество по фракции охотников.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const HunterDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
@@ -140,12 +137,11 @@ export const HunterDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx
  * <li>В конце игры, когда получается преимущество по фракции горняков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const MinerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    number => {
+export const MinerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -159,12 +155,8 @@ export const MinerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx,
         });
         G.distinctions[SuitNames.miner] = undefined;
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);
-    } else {
-        if (player.priority.value === 6) {
-            return 3;
-        }
     }
-    return 0;
+    return GetMinerDistinctionsScore({ G, ctx, myPlayerID, ...rest });
 };
 
 /**
@@ -175,12 +167,11 @@ export const MinerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx,
  * <li>В конце игры, когда получается преимущество по фракции воинов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    number => {
+export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -188,7 +179,8 @@ export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ct
     }
     if (G.tierToEnd !== 0) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest },
+                [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
         } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                 [StackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
@@ -202,6 +194,18 @@ export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ct
     return 0;
 };
 
+export const GetMinerDistinctionsScore = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+            myPlayerID);
+    }
+    if (player.priority.value === 6) {
+        return 3;
+    }
+    return 0;
+};
+
 /**
  * <h3>Завершение получения преимущества по фракции воинов или разведчиков.</h3>
  * <p>Применения:</p>
@@ -210,7 +214,7 @@ export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ct
  * <li>В конце игры, когда получается преимущество по фракции воинов или разведчиков.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndWarriorOrExplorerDistinctionIfCoinUpgraded = ({ G }: MyFnContextWithMyPlayerID): void => {

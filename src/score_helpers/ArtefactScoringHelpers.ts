@@ -1,10 +1,10 @@
-import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { IsMercenaryPlayerCampCard } from "../helpers/IsCampTypeHelpers";
+import { IsMercenaryPlayerCampCard } from "../is_helpers/IsCampTypeHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { BuffNames, ErrorNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, IArtefactScoringFunction, IBuffs, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
-import { TotalRank } from "./ScoreHelpers";
+import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
 
 /**
  * <h3>Получение победных очков по артефактам, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -13,12 +13,14 @@ import { TotalRank } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по артефактам, не имеющим специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param G
+ * @param context
+ * @param isFinal Является ли финальным подсчётом очков.
  * @param value Значение очков артефакта.
  * @returns Количество очков по конкретному артефакту.
  */
-export const BasicArtefactScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
-    MyFnContextWithMyPlayerID, value?: number): number => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, isFinal = false,
+    value?: number): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -37,16 +39,26 @@ export const BasicArtefactScoring: IArtefactScoringFunction = ({ G, ctx, myPlaye
  * <li>В конце игры, когда получаются победные очки по артефакту Draupnir.</li>
  * </ol>
  *
- * @param G
+ * @param context
+ * @param isFinal Является ли финальным подсчётом очков.
  * @returns Количество очков по конкретному артефакту.
  */
-export const DraupnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    number => {
+export const DraupnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    isFinal = false): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
+    if (isFinal) {
+        return player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
+            if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
+                throw new Error(`В массиве монет игрока '${player.nickname}' на столе не может быть закрыта монета с id '${index}'.`);
+            }
+            return IsCoin(coin) && coin.value >= 15;
+        }).length * 6;
+    }
+    // TODO Fix: Add all hand/board coins for bots and players: public and how to count private!?
     return player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean => {
         if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
             throw new Error(`В массиве монет игрока '${player.nickname}' на столе не может быть закрыта монета с id '${index}'.`);
@@ -62,8 +74,7 @@ export const DraupnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, 
  * <li>В конце игры, когда получаются победные очки по артефакту Hrafnsmerki.</li>
  * </ol>
  *
- * @param G
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному артефакту.
  */
 export const HrafnsmerkiScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
@@ -88,21 +99,26 @@ export const HrafnsmerkiScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerI
  * <li>В конце игры, когда получаются победные очки по артефакту Mjollnir.</li>
  * </ol>
  *
- * @param G
- * @param player Игрок.
+ * @param context
+ * @param isFinal Является ли финальным подсчётом очков.
  * @returns Количество очков по конкретному артефакту.
  */
-export const MjollnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    number => {
+export const MjollnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    isFinal = false): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const suit: CanBeUndefType<SuitNames> = player.buffs.find((buff: IBuffs): boolean =>
-        buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
-    if (suit === undefined) {
-        throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
+    let suit: CanBeUndefType<SuitNames>;
+    if (isFinal) {
+        suit = player.buffs.find((buff: IBuffs): boolean =>
+            buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
+        if (suit === undefined) {
+            throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
+        }
+    } else {
+        suit = GetSuitValueWithMaxRanksValue({ G, ctx, myPlayerID, ...rest });
     }
     return player.cards[suit].reduce(TotalRank, 0) * 2;
 };
@@ -114,7 +130,7 @@ export const MjollnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, 
  * <li>В конце игры, когда получаются победные очки по артефакту Odroerir The Mythic Cauldron.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Количество очков по конкретному артефакту.
  */
 export const OdroerirTheMythicCauldronScoring: IArtefactScoringFunction = ({ G, ...rest }: MyFnContextWithMyPlayerID):
@@ -127,7 +143,7 @@ export const OdroerirTheMythicCauldronScoring: IArtefactScoringFunction = ({ G, 
  * <li>В конце игры, когда получаются победные очки по артефакту Svalinn.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Количество очков по конкретному артефакту.
  */
 export const SvalinnScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):

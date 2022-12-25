@@ -1,4 +1,4 @@
-import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, GodNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { IDwarfCard, IMercenaryCampCard, IStack, IStackData, OneOrTwoType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
 /**
@@ -15,6 +15,12 @@ export const StackData: IStackData = {
         drawName: DrawNames.ActivateGiantAbilityOrPickCard,
         giantName,
         card,
+    }),
+    activateGodAbilityOrNot: (godName: GodNames): IStack => ({
+        configName: ConfigNames.ActivateGodAbilityOrNot,
+        stageName: TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot,
+        drawName: DrawNames.ActivateGodAbilityOrNot,
+        godName,
     }),
     addCoinToPouch: (): IStack => ({
         stageName: CommonStageNames.AddCoinToPouch,

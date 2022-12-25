@@ -13,8 +13,7 @@ import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, C
  * <li>При выборе базовой карты из таверны игроком.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -32,8 +31,7 @@ export const ClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -51,8 +49,7 @@ export const ClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, ca
  * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Фракция.
  * @returns
  */
@@ -70,8 +67,7 @@ export const ClickDistinctionCardMove = ({ G, ctx, playerID, ...rest }, suit) =>
  * <li>Применяется при отправке карты в колоду сброса в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @param cardId Id сбрасываемой карты.
  * @returns
@@ -93,8 +89,7 @@ export const DiscardCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, su
  * <li>Применяется при выборе первым игроком карты из лагеря.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
@@ -112,8 +107,7 @@ export const DiscardCard2PlayersMove = ({ G, ctx, playerID, ...rest }, cardId) =
  * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -131,8 +125,7 @@ export const GetEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, card
  * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -150,12 +143,12 @@ export const GetMjollnirProfitMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @param param Параметр.
  * @returns
  */
-export const PassEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => {
-    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries, ButtonMoveNames.PassEnlistmentMercenariesMove, null);
+export const PassEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, param) => {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.PassEnlistmentMercenaries, ButtonMoveNames.PassEnlistmentMercenariesMove, param);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -169,8 +162,7 @@ export const PassEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => 
  * <li>Выбор карт из колоды сброса по действию артефактов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -188,8 +180,7 @@ export const PickDiscardCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * <li>При выборе фракции, куда будет завербован наёмник.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -207,12 +198,12 @@ export const PlaceEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, su
  * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @param param Параметр.
  * @returns
  */
-export const StartEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }) => {
-    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries, ButtonMoveNames.StartEnlistmentMercenariesMove, null);
+export const StartEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, param) => {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, EnlistmentMercenariesDefaultStageNames.StartEnlistmentMercenaries, ButtonMoveNames.StartEnlistmentMercenariesMove, param);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

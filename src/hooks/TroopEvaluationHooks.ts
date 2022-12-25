@@ -2,9 +2,10 @@ import { StackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
+import { GetCardsFromCardDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { CheckDistinction } from "../TroopEvaluation";
+import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, ExplorerDistinctionCardsArrayType, FnContext, IPublicPlayer, PlayerID } from "../typescript/interfaces";
 
@@ -15,12 +16,11 @@ import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, Expl
  * <li>При начале фазы 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }: FnContext): void => {
-    CheckDistinction({ G, ctx, ...rest });
+    CheckAllSuitsDistinctions({ G, ctx, ...rest });
     const distinctions: PlayerID[] =
         Object.values(G.distinctions).filter((distinction: DistinctionType): boolean =>
             distinction !== null && distinction !== undefined) as PlayerID[];
@@ -37,8 +37,7 @@ export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }: FnCont
  * <li>При каждом получении преимуществ в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
@@ -63,8 +62,7 @@ export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }: FnContext): Ca
  * <li>При каждом действии с наёмником в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> =>
@@ -77,8 +75,7 @@ export const CheckEndTroopEvaluationTurn = ({ G, ctx, ...rest }: FnContext): Can
  * <li>При завершении фазы 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }: FnContext): void => {
@@ -95,8 +92,7 @@ export const EndTroopEvaluationPhaseActions = ({ G, ctx, ...rest }: FnContext): 
  * <li>При завершении мува в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnTroopEvaluationMove = ({ G, ctx, ...rest }: FnContext): void => {
@@ -110,8 +106,7 @@ export const OnTroopEvaluationMove = ({ G, ctx, ...rest }: FnContext): void => {
  * <li>При начале хода в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
@@ -121,7 +116,6 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             length = 1;
         } else {
-            // TODO Add 6 cards if player has Garm in his deck
             const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -154,14 +148,12 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void
  * <li>При завершении хода в фазе 'Смотр войск'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
-export const OnTroopEvaluationTurnEnd = ({ G, ctx, random }: FnContext): void => {
+export const OnTroopEvaluationTurnEnd = ({ G, ctx, random, ...rest }: FnContext): void => {
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        G.secret.decks[1].splice(G.explorerDistinctionCardId, 1);
-        G.deckLength[1] = G.secret.decks[1].length;
+        GetCardsFromCardDeck({ G, ctx, random, ...rest }, 1, G.explorerDistinctionCardId, 1);
         G.secret.decks[1] = random.Shuffle(G.secret.decks[1]);
         G.explorerDistinctionCardId = null;
     }

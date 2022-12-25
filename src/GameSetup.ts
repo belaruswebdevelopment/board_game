@@ -22,7 +22,7 @@ import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeU
  * <li>Данные используются в игре.</li>
  * </ol>
  *
- * @param ctx
+ * @param context
  * @returns Данные игры.
  */
 export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {

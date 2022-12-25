@@ -60,22 +60,22 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
  * @returns Карта дворфа.
  */
 export const CreateDwarfCard = ({
     type = RusCardTypeNames.Dwarf_Card,
+    name,
     suit,
     rank = 1,
     points,
-    name,
 }: CreateDwarfCardType): IDwarfCard => ({
     type,
+    name,
     suit,
     rank,
     points,
-    name,
 });

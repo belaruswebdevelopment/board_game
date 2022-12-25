@@ -8,7 +8,8 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по Мифическому животному, не имеющему специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
+ * @param value Значение.
  * @returns Количество очков по конкретному мифическому животному.
  */
 export const BasicMythicalAnimalScoring = ({ G, ctx, ...rest }, value) => {
@@ -24,7 +25,7 @@ export const BasicMythicalAnimalScoring = ({ G, ctx, ...rest }, value) => {
  * <li>В конце игры, когда получаются победные очки по мифическому существу Garm.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному мифическому животному.
  */
 export const GarmScoring = ({ G, ctx, myPlayerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 1);
@@ -35,7 +36,7 @@ export const GarmScoring = ({ G, ctx, myPlayerID, ...rest }) => GetRanksValueMul
  * <li>В конце игры, когда получаются победные очки по мифическому существу Nidhogg.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному мифическому животному.
  */
 export const NidhoggScoring = ({ G, ctx, myPlayerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.warrior, 2);

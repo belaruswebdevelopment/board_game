@@ -11,8 +11,7 @@ import type { AllBuffNames, BuffTypes, BuffValueType, CanBeUndefType, IBuffs, IP
  * <li>При выборе конкретных артефактов, добавляющих бафы игроку.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param buff Баф.
  * @param value Значение бафа.
  * @returns
@@ -39,8 +38,7 @@ export const AddBuffToPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
  * <li>При необходимости изменить значение бафа игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param buffName Баф.
  * @param value Новое значение бафа.
  * @returns
@@ -70,7 +68,7 @@ export const ChangeBuffValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
  * <li>В любой ситуации, требующей наличия конкретного бафа у игрока.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @param buffName Баф.
  * @returns
  */
@@ -91,8 +89,7 @@ export const CheckPlayerHasBuff = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
 * <li>>В любой ситуации, требующей удаления конкретного бафа у игрока.</li>
 * </ol>
 *
-* @param G
-* @param ctx
+* @param context
 * @param buffName Баф.
 * @returns
 */
@@ -119,8 +116,7 @@ export const DeleteBuffFromPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContex
  * <li>При необходимости получения значения бафа игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param buffName Баф.
  * @returns
  */

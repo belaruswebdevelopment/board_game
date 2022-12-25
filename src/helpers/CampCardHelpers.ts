@@ -2,9 +2,10 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CampBuffNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, IArtefactPlayerCampCard, ICoin, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, FnContext, IArtefactPlayerCampCard, ICoin, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
+import { RemoveCoinFromMarket } from "./DiscardCoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 
 /**
@@ -14,8 +15,7 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  * <li>При выборе карт лагеря, добавляющихся на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта.
  * @returns
  */
@@ -52,8 +52,7 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
  * <li>Происходит при взятии карты лагеря игроком.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта лагеря.
  * @returns
  */
@@ -75,13 +74,12 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
  * <li>Происходит при добавлении карты лагеря в конкретную фракцию игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта лагеря.
  * @returns Добавлен ли артефакт на планшет игрока.
  */
-const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: IArtefactPlayerCampCard):
-    boolean => {
+const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    card: IArtefactPlayerCampCard): boolean => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -99,10 +97,10 @@ const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyF
  * <li>При выборе карты лагеря.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
-export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }: MyFnContextWithMyPlayerID): void => {
+export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G, ctx, ...rest }: FnContext): void => {
     const minCoinValue: number = G.marketCoins.reduceRight((prev: ICoin, curr: ICoin): ICoin =>
         prev.value < curr.value ? prev : curr).value,
         minCoinIndex: number =
@@ -110,10 +108,7 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }: MyFnContextWit
     if (minCoinIndex === -1) {
         throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
     }
-    const coin: CanBeUndefType<ICoin> = G.marketCoins.splice(minCoinIndex, 1)[0];
-    if (coin === undefined) {
-        throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
-    }
+    const coin: CanBeUndefType<ICoin> = RemoveCoinFromMarket({ G, ctx, ...rest }, minCoinIndex);
     G.odroerirTheMythicCauldronCoins.push(coin);
 };
 
@@ -125,7 +120,7 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }: MyFnContextWit
  * <li>При финальном подсчёте очков за артефакт Odroerir The Mythic Cauldron.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Значение всех монет на артефакте Odroerir The Mythic Cauldron.
  */
 export const GetOdroerirTheMythicCauldronCoinsValues = ({ G }: MyFnContextWithMyPlayerID): number =>

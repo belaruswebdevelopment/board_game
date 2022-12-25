@@ -13,8 +13,7 @@ import { CheckIfRecruitedCardHasNotLeastRankOfChosenClass, CheckValkyryRequireme
  * <li>Происходит при добавлении героя на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Герой.
  * @returns
  */
@@ -47,8 +46,7 @@ export const AddHeroCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, hero) 
  * <li>Происходит при добавлении героя на планшет соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Герой.
  * @returns
  */
@@ -75,8 +73,7 @@ export const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }, he
  * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Карта героя.
  * @returns
  */
@@ -99,8 +96,7 @@ export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
  * <li>При выборе конкретных героев, добавляющихся в массив карт соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param hero Карта героя.
  * @returns
  */

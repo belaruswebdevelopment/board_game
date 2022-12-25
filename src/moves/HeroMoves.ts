@@ -11,8 +11,7 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  * <li>При необходимости выбора героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */
@@ -33,8 +32,7 @@ export const ClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
  * <li>При выборе героя со способностью сброса карт с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  * @returns
@@ -59,8 +57,7 @@ export const DiscardTopCardFromSuitMove: Move = ({ G, ctx, playerID, ...rest }: 
  * <li>При выборе героя Ольвин со способностью выкладки карт на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -81,8 +78,7 @@ export const PlaceMultiSuitCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  * <li>При выборе героя Труд со способностью перемещения на планшете игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -103,8 +99,7 @@ export const PlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
  * <li>При выборе героя Илуд со способностью размещения на планшете игрока в конце эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */

@@ -1,8 +1,10 @@
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
+import { RemoveCoinFromPlayer } from "./DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 /**
  * <h3>Сброс обменной монеты.</h3>
@@ -12,8 +14,7 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * <li>Действия, связанные со сбросом обменной монеты по карте лагеря артефакта Jarnglofi.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Тип и индекс сбрасываемой обменной монеты.
  */
 export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -52,9 +53,9 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
         }
         type = CoinTypeNames.Hand;
-        handCoins.splice(tradingCoinIndex, 1, null);
+        RemoveCoinFromPlayer(handCoins, tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            player.handCoins.splice(tradingCoinIndex, 1, null);
+            RemoveCoinFromPlayer(player.handCoins, tradingCoinIndex);
         }
     }
     else {
@@ -62,9 +63,9 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
             throw new Error(`У игрока с id '${myPlayerID}' на столе не может отсутствовать обменная монета.`);
         }
         if (G.mode === GameModeNames.Multiplayer) {
-            privatePlayer.boardCoins.splice(tradingCoinIndex, 1, null);
+            RemoveCoinFromPlayer(privatePlayer.boardCoins, tradingCoinIndex);
         }
-        player.boardCoins.splice(tradingCoinIndex, 1, null);
+        RemoveCoinFromPlayer(player.boardCoins, tradingCoinIndex);
     }
     return [type, tradingCoinIndex];
 };
@@ -76,7 +77,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, если получено преимущество по фракции воинов.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Максимальная монета игрока.
  */
 export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -98,8 +99,7 @@ export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда нужно открыть все закрытые монеты всех игроков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OpenClosedCoinsOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -145,8 +145,7 @@ export const OpenClosedCoinsOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }) =>
  * <li>В момент игры, когда нужно открыть все закрытые монеты текущей таверны всех игроков в фазу 'Ставки Улина'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OpenCurrentTavernClosedCoinsOnPlayerBoard = ({ G, ctx, ...rest }) => {
@@ -187,8 +186,7 @@ export const OpenCurrentTavernClosedCoinsOnPlayerBoard = ({ G, ctx, ...rest }) =
  * <li>После выкладки всех монет игроками.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
 export const ResolveBoardCoins = ({ G, ctx, ...rest }) => {
@@ -310,11 +308,10 @@ export const ResolveBoardCoins = ({ G, ctx, ...rest }) => {
  * <li>При завершении игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
-export const ReturnCoinsToPlayerBoard = ({ G, ctx, myPlayerID, ...rest }) => {
+export const ReturnCoinsFromPlayerHandsToPlayerBoard = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
@@ -361,8 +358,7 @@ export const ReturnCoinsToPlayerBoard = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В начале фазы выставления монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }) => {
@@ -409,8 +405,7 @@ export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }) => {
  * <li>При возврате монет в руку, когда взят герой Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param close Нужно ли закрыть монету.
  * @returns Вернулась ли монета в руку.
@@ -486,8 +481,7 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }, coinId,
  * <li>В момент подготовки к новому раунду.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 const MixUpCoins = ({ G, ctx, myPlayerID, random, ...rest }) => {
@@ -504,8 +498,7 @@ const MixUpCoins = ({ G, ctx, myPlayerID, random, ...rest }) => {
  * <li>В момент подготовки к новому раунду.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const MixUpCoinsInPlayerHands = ({ G, ctx, random, ...rest }) => {

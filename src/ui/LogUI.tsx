@@ -8,7 +8,7 @@ import type { CanBeNullType, CanBeUndefType, FnContext, ILogData } from "../type
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Поле для вывода логов.
  */
 export const DrawLogData = ({ G }: FnContext): CanBeNullType<JSX.Element> => {

@@ -10,8 +10,7 @@ import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, IStack, MyFnCont
  * <li>Выполняется при необходимости добавить действия в стек действий после текущего.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param stack Стэк действий.
  * @param card Карта.
  * @returns

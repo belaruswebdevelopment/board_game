@@ -15,7 +15,7 @@ import type { IAction, ISuitScoringFunction, SuitScoringArgsType } from "../type
  */
 export const StartSuitScoring = (action: IAction<SuitScoringFunctionNames, undefined>, params: SuitScoringArgsType):
     number => {
-    const actionDispatcher: ISuitScoringFunction = HeroScoringDispatcherSwitcher(action.name);
+    const actionDispatcher: ISuitScoringFunction = SuitScoringDispatcherSwitcher(action.name);
     return actionDispatcher?.(...params);
 };
 
@@ -29,7 +29,7 @@ export const StartSuitScoring = (action: IAction<SuitScoringFunctionNames, undef
 * @param actionName Название действия.
 * @returns Действие.
 */
-const HeroScoringDispatcherSwitcher = (actionName: SuitScoringFunctionNames): ISuitScoringFunction => {
+const SuitScoringDispatcherSwitcher = (actionName: SuitScoringFunctionNames): ISuitScoringFunction => {
     let action: ISuitScoringFunction,
         _exhaustiveCheck: never;
     switch (actionName) {

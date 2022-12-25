@@ -1,8 +1,8 @@
-import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { ErrorNames, GameModeNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 // Check all types in this file!
 /**
@@ -17,11 +17,12 @@ import { ErrorNames, GameModeNames, RusCardTypeNames, SuitNames } from "../types
  * @param card2 Вторая карта.
  * @returns Сравнительное значение.
  */
-export const CompareCards = (card1, card2) => {
+export const CompareTavernCards = (card1, card2) => {
     var _a, _b;
     if (card1 === null || card2 === null) {
         return 0;
     }
+    // TODO If Mythological Creatures cards!?
     if (card1.type === RusCardTypeNames.Dwarf_Card && card2.type === RusCardTypeNames.Dwarf_Card) {
         if (card1.suit === card2.suit) {
             const result = ((_a = card1.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
@@ -41,21 +42,21 @@ export const CompareCards = (card1, card2) => {
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @param compareCard Карта для сравнения.
  * @param cardId Id карты.
  * @param tavern Таверна.
  * @returns Сравнительное значение.
  */
-export const EvaluateCard = ({ G, ctx, ...rest }, compareCard, cardId, tavern) => {
+export const EvaluateTavernCard = ({ G, ctx, ...rest }, compareCard, cardId, tavern) => {
     if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
         if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-            return CompareCards(compareCard, G.averageCards[compareCard.suit]);
+            return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
+    // TODO If Mythological Creatures cards!?
     if (G.secret.decks[1].length < G.botData.deckLength) {
-        const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring({ G, ctx, myPlayerID: String(index), ...rest }, card))), tavernCardResults = temp[cardId];
+        const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialTavernCardScoring({ G, ctx, myPlayerID: String(index), ...rest }, card))), tavernCardResults = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
         }
@@ -68,7 +69,7 @@ export const EvaluateCard = ({ G, ctx, ...rest }, compareCard, cardId, tavern) =
         return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
     if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
-        return CompareCards(compareCard, G.averageCards[compareCard.suit]);
+        return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
     }
     return 0;
 };
@@ -123,12 +124,11 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
+const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
     var _a;
     const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {

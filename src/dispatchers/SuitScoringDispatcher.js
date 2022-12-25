@@ -12,7 +12,7 @@ import { SuitScoringFunctionNames } from "../typescript/enums";
  * @returns Количество победных очков по фракции дворфа.
  */
 export const StartSuitScoring = (action, params) => {
-    const actionDispatcher = HeroScoringDispatcherSwitcher(action.name);
+    const actionDispatcher = SuitScoringDispatcherSwitcher(action.name);
     return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(...params);
 };
 /**
@@ -25,7 +25,7 @@ export const StartSuitScoring = (action, params) => {
 * @param actionName Название действия.
 * @returns Действие.
 */
-const HeroScoringDispatcherSwitcher = (actionName) => {
+const SuitScoringDispatcherSwitcher = (actionName) => {
     let action, _exhaustiveCheck;
     switch (actionName) {
         case SuitScoringFunctionNames.BlacksmithScoring:

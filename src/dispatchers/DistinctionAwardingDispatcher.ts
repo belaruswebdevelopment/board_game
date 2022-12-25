@@ -9,10 +9,8 @@ import type { IAction, IDistinctionAwardingFunction, MyFnContextWithMyPlayerID }
  * <li>Выполняется при необходимости получить преимущество по фракции дворфов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param action Объект действия.
- * @param params Параметры действия.
  * @returns Количество очков по преимуществу по фракции.
  */
 export const StartDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,

@@ -18,8 +18,7 @@ import type { CanBeVoidType, HeroesForSoloGameArrayType, IndexOf, InvalidMoveTyp
  * <li>При выборе базовой карты из таверны соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
@@ -41,15 +40,15 @@ export const SoloBotClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCo
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id карты.
  * @returns
  */
 export const SoloBotClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationStageNames.SoloBotClickCardToPickDistinction,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+            TroopEvaluationStageNames.SoloBotClickCardToPickDistinction,
             CardMoveNames.SoloBotClickCardToPickDistinctionMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -64,8 +63,7 @@ export const SoloBotClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, 
  * <li>При необходимости выбора героя соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */
@@ -91,8 +89,7 @@ export const SoloBotClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: My
  * <li>Когда соло боту нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinsOrder Порядок выкладки монет.
  * @returns
  */
@@ -114,8 +111,7 @@ export const SoloBotPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: My
  * <li>При выборе героя Труд со способностью перемещения на планшете соло бота.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -137,8 +133,7 @@ export const SoloBotPlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: M
  * <li>При выборе героя Илуд со способностью размещения на планшете соло бота в конце эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -161,8 +156,7 @@ export const SoloBotPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...rest }: My
  * <li>При клике по монете соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @returns
@@ -170,7 +164,8 @@ export const SoloBotPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...rest }: My
 export const SoloBotClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1`
-        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
+        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+            SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
             CoinMoveNames.SoloBotClickCoinToUpgradeMove, {
             coinId,
             type,

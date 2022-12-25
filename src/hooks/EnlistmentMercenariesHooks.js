@@ -3,8 +3,8 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { ErrorNames, HeroBuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -13,8 +13,7 @@ import { ErrorNames, HeroBuffNames } from "../typescript/enums";
  * <li>При каждом действии с наёмником в фазе 'enlistmentMercenaries'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }) => {
@@ -48,8 +47,7 @@ export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }) => {
  * <li>При каждом действии в фазе 'enlistmentMercenaries'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }) => {
@@ -71,8 +69,7 @@ export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }) => {
  * <li>При завершении фазы 'enlistmentMercenaries'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }) => {
@@ -91,8 +88,7 @@ export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }) => {
  * <li>При завершении мува в фазе 'enlistmentMercenaries'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }) => {
@@ -116,8 +112,7 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }) => {
  * <li>При начале хода в фазе 'enlistmentMercenaries'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }) => {
@@ -144,7 +139,8 @@ export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }) =>
 * <li>При начале фазы 'enlistmentMercenaries'.</li>
 * </ol>
 *
-* @param G
+* @param context
+* @returns
 */
 export const PrepareMercenaryPhaseOrders = ({ G }) => {
     const sortedPlayers = Object.values(G.publicPlayers).map((player) => player), playersIndexes = [];

@@ -7,7 +7,7 @@ import { MythicalAnimalScoringFunctionNames } from "../typescript/enums";
  * <li>Выполняется при необходимости получить победные очки по мифическому животному.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @param action Объект действия.
  * @returns Количество победных очков по мифическому животному.
  */

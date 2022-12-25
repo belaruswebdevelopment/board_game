@@ -1,4 +1,4 @@
-import { ErrorNames, GameModeNames } from "./typescript/enums";
+import { ErrorNames, GameModeNames, RusCardTypeNames } from "./typescript/enums";
 /**
  * <h3>Все возможные ошибки/исключения в игре.</h3>
  * <p>Применения:</p>
@@ -6,8 +6,7 @@ import { ErrorNames, GameModeNames } from "./typescript/enums";
  * <li>Происходит при любой ошибке/исключении.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param error Ошибка.
  * @param errorArgs Аргументы действия.
  * @returns
@@ -17,22 +16,24 @@ export const ThrowMyError = ({ G, ctx }, error, ...errorArgs) => {
     switch (error) {
         case ErrorNames.CurrentMoveArgumentIsUndefined:
             throw new Error(`Отсутствует необходимый аргумент мува.`);
-        case ErrorNames.CurrentTierDeckIsUndefined:
-            throw new Error(`Отсутствует колода карт текущей эпохи с id '${G.secret.decks.length - G.tierToEnd}'.`);
+        case ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard:
+            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта '${RusCardTypeNames.Royal_Offering_Card}' с id  '${errorArgs[0]}'`);
+        case ErrorNames.CurrentTavernCardWithCurrentIdIsNull:
+            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${errorArgs[0]}'`);
+        case ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined:
+            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${errorArgs[0]}'`);
+        case ErrorNames.CampDeckWithTierCurrentIdIsUndefined:
+            throw new Error(`Отсутствует колода карт лагеря эпохи с id '${errorArgs[0]}'.`);
+        case ErrorNames.DeckWithTierCurrentIdIsUndefined:
+            throw new Error(`Отсутствует колода карт эпохи с id '${errorArgs[0]}'.`);
         case ErrorNames.CurrentPrivatePlayerIsUndefined:
             throw new Error(`В массиве приватных игроков отсутствует ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === `1` ? `текущий соло бот` : `текущий игрок`} с id '${errorArgs[0]}'.`);
         case ErrorNames.CurrentPublicPlayerIsUndefined:
             throw new Error(`В массиве публичных игроков отсутствует ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === `1` ? `текущий соло бот` : `текущий игрок`} с id '${errorArgs[0]}'.`);
         case ErrorNames.CurrentSuitDistinctionPlayerIndexIsUndefined:
             throw new Error(`Отсутствует игрок с максимальным количеством шевронов в фракции '${errorArgs[0]}'.`);
-        case ErrorNames.DeckIsUndefined:
-            throw new Error(`В массиве колод карт отсутствует колода с id '${errorArgs[0]}'.`);
-        case ErrorNames.DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined:
-            throw new Error(`В текущей таверне с id '${errorArgs[0]}' отсутствует карта для сброса с id '${errorArgs[1]}'.`);
         case ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern:
             throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${errorArgs[0]}' из-за её отсутствия в таверне.`);
-        case ErrorNames.DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame:
-            throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${errorArgs[0]}' при игре ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) ? `в соло режиме` : `на двух игроков`}.`);
         // TODO Move ctx.currentPlayer to Error(..., ctx.currentPlayer)?
         case ErrorNames.FirstStackActionIsUndefined:
             throw new Error(`В массиве стека действий текущего ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);

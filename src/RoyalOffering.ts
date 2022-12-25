@@ -9,7 +9,6 @@ import type { CanBeUndefType, CreateRoyalOfferingCardType, IndexOf, INumberValue
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *.
- * @param deckConfig Конфиг карт.
  * @param data Данные для создания карт.
  * @returns Все карты королевских наград.
  */
@@ -44,10 +43,6 @@ export const BuildRoyalOfferingCards = (data: IPlayersNumberTierCardData): IRoya
  * <li>Происходит при создании всех карт королевской награды во время инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param value Значение.
- * @param action Действие.
- * @param name Название.
  * @param type Тип.
  * @param value Значение.
  * @param stack Действие.

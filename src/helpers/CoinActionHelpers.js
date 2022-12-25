@@ -11,8 +11,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * <li>При действиях улучшающих монеты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип обменной монеты.
  * @returns Значение на которое улучшается монета.

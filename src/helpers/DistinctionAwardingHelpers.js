@@ -16,8 +16,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * <li>В конце игры, когда получается преимущество по фракции кузнецов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const BlacksmithDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -45,8 +44,7 @@ export const BlacksmithDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) =
  * <li>В конце игры, когда получается преимущество по фракции разведчиков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const ExplorerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -76,8 +74,7 @@ export const ExplorerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => 
  * <li>В конце игры, когда получается преимущество по фракции охотников.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const HunterDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -126,8 +123,7 @@ export const HunterDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда получается преимущество по фракции горняков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const MinerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -144,12 +140,7 @@ export const MinerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
         G.distinctions[SuitNames.miner] = undefined;
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);
     }
-    else {
-        if (player.priority.value === 6) {
-            return 3;
-        }
-    }
-    return 0;
+    return GetMinerDistinctionsScore({ G, ctx, myPlayerID, ...rest });
 };
 /**
  * <h3>Получение преимущества по фракции воинов.</h3>
@@ -159,8 +150,7 @@ export const MinerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда получается преимущество по фракции воинов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const WarriorDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -185,6 +175,16 @@ export const WarriorDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
     }
     return 0;
 };
+export const GetMinerDistinctionsScore = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
+    }
+    if (player.priority.value === 6) {
+        return 3;
+    }
+    return 0;
+};
 /**
  * <h3>Завершение получения преимущества по фракции воинов или разведчиков.</h3>
  * <p>Применения:</p>
@@ -193,7 +193,7 @@ export const WarriorDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда получается преимущество по фракции воинов или разведчиков.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndWarriorOrExplorerDistinctionIfCoinUpgraded = ({ G }) => {

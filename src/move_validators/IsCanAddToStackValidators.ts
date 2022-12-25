@@ -7,7 +7,7 @@ import type { CanBeUndefType, CardsHasStackValidatorsType, MyFnContextWithMyPlay
  * <li>При выборе конкретных героев, дающих возможность взять карты из лагеря.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @param card Карта.
  * @returns Возможен ли выбор карты из лагеря.
  */
@@ -31,7 +31,7 @@ export const IsCanPickPickCampCardToStack = ({ G }: MyFnContextWithMyPlayerID, c
  * <li>При выборе конкретных карт лагеря, дающих возможность взять карты из колоды сброса.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @param card Карта.
  * @returns Возможен ли выбор карты из колоды сброса.
  */

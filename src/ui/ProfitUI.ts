@@ -1,9 +1,10 @@
 import { ThrowMyError } from "../Error";
-import { IsDwarfCard } from "../helpers/IsDwarfTypeHelpers";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, ErrorNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { IsDwarfCard } from "../is_helpers/IsDwarfTypeHelpers";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GiantNames, GodNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardType, FnContext, IDwarfCard, IHeroCard, IPublicPlayer, IStack, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, MythologicalCreatureDeckCardType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StackCardType, StageNames, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
+// TODO Add common ProfitFunctionType to all function here with common args and different return type!?
 /**
  * <h3>Отрисовка для выбора карты Дворфа или активации способности Гиганта.</h3>
  * <p>Применения:</p>
@@ -11,8 +12,7 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
@@ -51,14 +51,15 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
                 throw new Error(`Не добавлен валидатор '${validatorName}'.`);
             }
         } else if (G.publicPlayersOrder.length > 1) {
-            if (stack.giantName === undefined) {
+            const giantName: CanBeUndefType<GiantNames> = stack.giantName;
+            if (giantName === undefined) {
                 throw new Error(`В стеке игрока отсутствует 'giantName'.`);
             }
             const giant: CanBeUndefType<MythologicalCreatureCommandZoneCardType> =
                 player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
-                    boolean => card.name === stack.giantName);
+                    boolean => card.name === giantName);
             if (giant === undefined) {
-                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта Гиганта с названием '${stack.giantName}'.`);
+                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${RusCardTypeNames.Giant_Card}' с названием '${giantName}'.`);
             }
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard(data, boardCells, giant, j, player, null,
@@ -80,14 +81,82 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
 };
 
 /**
+ * <h3>Отрисовка для выбора активировать или нет способности Бога.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param context
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Поле для выбора активировать или нет способности Бога.
+ */
+export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }: FnContext,
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
+    CanBeVoidType<MoveArgumentsType<CanBeNullType<GodNames[]>>> => {
+    let moveMainArgs: CanBeUndefType<MoveArgumentsType<CanBeNullType<GodNames[]>>>;
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            ctx.currentPlayer);
+    }
+    const stack: CanBeUndefType<IStack> = player.stack[0];
+    if (stack === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+            ctx.currentPlayer);
+    }
+    const godName: CanBeUndefType<GodNames> = stack.godName;
+    if (godName === undefined) {
+        throw new Error(`В стеке игрока отсутствует 'godName'.`);
+    }
+    const god: CanBeUndefType<MythologicalCreatureCommandZoneCardType> =
+        player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
+            boolean => card.name === godName);
+    if (god === undefined) {
+        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${RusCardTypeNames.God_Card}' с названием '${godName}'.`);
+    }
+    for (let j = 0; j < 2; j++) {
+        if (j === 0) {
+            if (data !== undefined && boardCells !== undefined) {
+                DrawCard(data, boardCells, god, j, player, null,
+                    CardMoveNames.ClickCardNotGiantAbilityMove, godName);
+            } else if (validatorName ===
+                ActivateGodAbilityOrNotSubMoveValidatorNames.ActivateGodAbilityMoveValidator) {
+                moveMainArgs = [];
+                moveMainArgs.push(godName);
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+            }
+        } else {
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, ButtonNames.Start, player,
+                    ButtonMoveNames.StartEnlistmentMercenariesMove, null);
+            } else if (validatorName ===
+                ActivateGodAbilityOrNotSubMoveValidatorNames.NotActivateGodAbilityMoveValidator) {
+                moveMainArgs = null;
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+            }
+        }
+    }
+    if (validatorName !== null) {
+        if (moveMainArgs === undefined) {
+            throw new Error(`Не задан параметр аргумента мува.`);
+        }
+        return moveMainArgs;
+    }
+};
+
+/**
  * <h3>Отрисовка для выбора карты Мифического существа при выборе Skymir.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
@@ -137,8 +206,7 @@ export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }: FnContext,
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
@@ -212,8 +280,7 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
@@ -251,8 +318,7 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
@@ -292,8 +358,8 @@ export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }: FnCo
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
  * @returns Игровое поле для отрисовки выбора значения улучшения монеты по артефакту 'Vidofnir Vedrfolnir'.
@@ -343,8 +409,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
@@ -409,8 +474,7 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }: FnContext,
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
@@ -463,14 +527,16 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
  * @returns Игровое поле для отрисовки старта фазы 'enlistmentMercenaries'.
  */
-export const StartEnlistmentMercenariesProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps,
-    boardCells: JSX.Element[]): void => {
+export const StartOrPassEnlistmentMercenariesProfit = ({ G, ctx, ...rest }: FnContext,
+    validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
+    CanBeVoidType<MoveArgumentsType<null>> => {
+    let moveMainArgs: CanBeUndefType<MoveArgumentsType<null>>;
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -478,11 +544,28 @@ export const StartEnlistmentMercenariesProfit = ({ G, ctx, ...rest }: FnContext,
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
-            DrawButton(data, boardCells, ButtonNames.Start, player,
-                ButtonMoveNames.StartEnlistmentMercenariesMove);
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, ButtonNames.Start, player,
+                    ButtonMoveNames.StartEnlistmentMercenariesMove, null);
+            } else if (validatorName ===
+                EnlistmentMercenariesMoveValidatorNames.StartEnlistmentMercenariesMoveValidator) {
+                moveMainArgs = null;
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+            }
         } else if (G.publicPlayersOrder.length > 1) {
-            DrawButton(data, boardCells, ButtonNames.Pass, player,
-                ButtonMoveNames.PassEnlistmentMercenariesMove);
+            if (data !== undefined && boardCells !== undefined) {
+                DrawButton(data, boardCells, ButtonNames.Pass, player,
+                    ButtonMoveNames.PassEnlistmentMercenariesMove, null);
+            } else if (validatorName ===
+                EnlistmentMercenariesMoveValidatorNames.PassEnlistmentMercenariesMoveValidator) {
+                moveMainArgs = null;
+            } else {
+                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+            }
         }
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
     }
 };

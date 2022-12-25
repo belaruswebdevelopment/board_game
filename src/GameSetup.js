@@ -20,7 +20,7 @@ import { GameModeNames, SuitNames } from "./typescript/enums";
  * <li>Данные используются в игре.</li>
  * </ol>
  *
- * @param ctx
+ * @param context
  * @returns Данные игры.
  */
 export const SetupGame = ({ ctx, random }) => {

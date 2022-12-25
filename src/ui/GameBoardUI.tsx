@@ -7,7 +7,7 @@ import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import type { ActiveStageNames, BoardProps, CampCardArrayType, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, FnContext, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IHeroCard, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, MoveValidatorNamesTypes, StageNames, StageNameTextType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
-import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 
 // TODO Check Solo Bot & multiplayer actions!
 /**
@@ -17,8 +17,7 @@ import { ActivateGiantAbilityOrPickCardProfit, ChooseCoinValueForVidofnirVedrfol
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Поле лагеря | данные для списка доступных аргументов мува.
@@ -49,7 +48,8 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
-                    || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.ClickCampCardHolda)) {
+                    || (ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
+                        CommonStageNames.ClickCampCardHolda)) {
                     if (data !== undefined) {
                         // TODO StageNames => CommonStageNames???
                         const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
@@ -117,7 +117,7 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
  * <li>Отрисовка фазы и стадии игры на игровом поле.</li>
  * </ol>
  *
- * @param ctx
+ * @param context
  * @returns Поле информации о текущей фазе и стадии игры.
  */
 export const DrawCurrentPhaseStage = ({ ctx }: FnContext): JSX.Element => {
@@ -136,7 +136,7 @@ export const DrawCurrentPhaseStage = ({ ctx }: FnContext): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param ctx
+ * @param context
  * @returns Поле информации о текущем ходу.
  */
 export const DrawCurrentPlayerTurn = ({ ctx }: FnContext): JSX.Element => (
@@ -151,8 +151,7 @@ export const DrawCurrentPlayerTurn = ({ ctx }: FnContext): JSX.Element => (
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Поле преимуществ в конце эпохи.
@@ -228,8 +227,7 @@ export const DrawDistinctions = ({ G, ctx }: FnContext, validatorName: CanBeNull
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Поле колоды сброса карт.
@@ -295,8 +293,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }: FnContext,
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Поле героев.
@@ -315,7 +312,8 @@ export const DrawHeroes = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeN
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit: CanBeNullType<SuitNames> = hero.suit;
-            if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.ClickHeroCard) {
+            if (hero.active
+                && ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.ClickHeroCard) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -385,8 +383,7 @@ export const DrawHeroes = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeN
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Поле героев для соло бота.
@@ -403,7 +400,8 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
             const hero: IHeroCard = G.heroesForSoloBot[j as IndexOf<HeroesForSoloGameArrayType>];
             if (hero.active && Number(ctx.currentPlayer) === 1
-                && ctx.activePlayers?.[Number(ctx.currentPlayer)] === SoloBotCommonStageNames.SoloBotClickHeroCard) {
+                && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
+                SoloBotCommonStageNames.SoloBotClickHeroCard) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -452,7 +450,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
+ * @param conext
  * @param data Глобальные параметры.
  * @returns Поле рынка монет.
  */
@@ -501,8 +499,7 @@ export const DrawMarketCoins = ({ G, ...rest }: FnContext, data: BoardProps): JS
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param data Глобальные параметры.
  * @returns Поле профита.
  */
@@ -520,6 +517,10 @@ export const DrawProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JS
         case ConfigNames.ActivateGiantAbilityOrPickCard:
             caption += `Activate Giant ability or pick dwarf card.`;
             ActivateGiantAbilityOrPickCardProfit({ G, ctx, ...rest }, null, data, boardCells);
+            break;
+        case ConfigNames.ActivateGodAbilityOrNot:
+            caption += `Activate God ability or not.`;
+            ActivateGodAbilityOrNotProfit({ G, ctx, ...rest }, null, data, boardCells);
             break;
         case ConfigNames.ChooseGetMythologyCard:
             caption += `Get Mythology card.`;
@@ -555,7 +556,7 @@ export const DrawProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JS
             break;
         case ConfigNames.StartOrPassEnlistmentMercenaries:
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
-            StartEnlistmentMercenariesProfit({ G, ctx, ...rest }, data, boardCells);
+            StartOrPassEnlistmentMercenariesProfit({ G, ctx, ...rest }, null, data, boardCells);
             break;
         case null:
             throw new Error(`Не задан обязательный параметр '${option}'.`);
@@ -584,8 +585,7 @@ export const DrawProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JS
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param data Глобальные параметры.
  * @returns Поле стратегий соло бота Андвари.
  */
@@ -632,8 +632,7 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G }: FnContext, data: BoardPro
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param gridClass Класс для отрисовки таверны.
@@ -775,7 +774,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Поле информации о количестве карт по эпохам.
  */
 export const DrawTierCards = ({ G }: FnContext): JSX.Element => {
@@ -796,8 +795,7 @@ export const DrawTierCards = ({ G }: FnContext): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Поле информации о ходе/победителях игры.
  */
 export const DrawWinner = ({ G, ctx }: FnContext): JSX.Element => {

@@ -6,8 +6,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Дебаг панель.
  */
 export const DrawDebugData = ({ G, ctx, ...rest }) => {
@@ -54,8 +53,7 @@ const DrawObjectData = (obj) => {
  * <li>Используется в отображении дебаг панели.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Данные для отрисовки дебаг информации.
  */
 const GetDebugData = ({ G, ctx }) => {

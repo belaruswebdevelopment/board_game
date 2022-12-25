@@ -3,8 +3,9 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { CampBuffNames, ErrorNames, PhaseNames } from "../typescript/enums";
+import { CampBuffNames, ErrorNames, GodNames, PhaseNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
  * <p>Применения:</p>
@@ -12,7 +13,7 @@ import { CampBuffNames, ErrorNames, PhaseNames } from "../typescript/enums";
  * <li>При начале фазы 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }) => {
@@ -28,8 +29,7 @@ export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }) => {
  * <ol>
  * <li>При завершении фазы 'brisingamensEndGame'.</li>
  * </ol>
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }) => {
@@ -54,7 +54,7 @@ export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }) => {
  * <li>При завершении фазы 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndBrisingamensEndGameActions = ({ G }) => {
@@ -67,8 +67,7 @@ export const EndBrisingamensEndGameActions = ({ G }) => {
  * <li>При завершении мува в фазе 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnBrisingamensEndGameMove = ({ G, ctx, ...rest }) => {
@@ -81,13 +80,15 @@ export const OnBrisingamensEndGameMove = ({ G, ctx, ...rest }) => {
  * <li>При начале хода в фазе 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }) => {
-    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.brisingamensEndGameAction()]);
-    DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
+    if (!(G.expansions.Idavoll.active
+        && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Thor))) {
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.brisingamensEndGameAction()]);
+        DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
+    }
 };
 /**
  * <h3>Проверяет необходимость начала фазы 'getMjollnirProfit'.</h3>
@@ -96,7 +97,7 @@ export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }) => {
  * <li>При действиях, после которых может начаться фаза 'getMjollnirProfit'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartGetMjollnirProfitPhase = ({ G, ctx, ...rest }) => {

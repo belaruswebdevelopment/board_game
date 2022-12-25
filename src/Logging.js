@@ -6,7 +6,7 @@ import { LogTypeNames } from "./typescript/enums";
  * <li>Используется в выводе данных логов на игровом поле.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @param type Тип лога.
  * @param value Значение, заносимое в лог.
  * @returns

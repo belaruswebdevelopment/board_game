@@ -1,8 +1,8 @@
-import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { ErrorNames, GameModeNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, FnContext, IDwarfCard, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, MyFnContextWithMyPlayerID, PointsType, PointsValuesType, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
@@ -19,10 +19,11 @@ import type { CanBeUndefType, FnContext, IDwarfCard, IPlayer, IPlayersNumberTier
  * @param card2 Вторая карта.
  * @returns Сравнительное значение.
  */
-export const CompareCards = (card1: TavernCardType, card2: TavernCardType): number => {
+export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType): number => {
     if (card1 === null || card2 === null) {
         return 0;
     }
+    // TODO If Mythological Creatures cards!?
     if (card1.type === RusCardTypeNames.Dwarf_Card && card2.type === RusCardTypeNames.Dwarf_Card) {
         if (card1.suit === card2.suit) {
             const result: number = (card1.points ?? 1) - (card2.points ?? 1);
@@ -43,24 +44,24 @@ export const CompareCards = (card1: TavernCardType, card2: TavernCardType): numb
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @param compareCard Карта для сравнения.
  * @param cardId Id карты.
  * @param tavern Таверна.
  * @returns Сравнительное значение.
  */
-export const EvaluateCard = ({ G, ctx, ...rest }: FnContext, compareCard: TavernCardType, cardId: number,
+export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: TavernCardType, cardId: number,
     tavern: TavernAllCardType): number => {
     if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
         if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-            return CompareCards(compareCard, G.averageCards[compareCard.suit]);
+            return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
+    // TODO If Mythological Creatures cards!?
     if (G.secret.decks[1].length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardType): number[] =>
             Object.values(G.publicPlayers).map((player: IPublicPlayer, index: number): number =>
-                PotentialScoring({ G, ctx, myPlayerID: String(index), ...rest }, card))),
+                PotentialTavernCardScoring({ G, ctx, myPlayerID: String(index), ...rest }, card))),
             tavernCardResults: CanBeUndefType<number[]> = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
@@ -76,7 +77,7 @@ export const EvaluateCard = ({ G, ctx, ...rest }: FnContext, compareCard: Tavern
             Math.max(...player)));
     }
     if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
-        return CompareCards(compareCard, G.averageCards[compareCard.suit]);
+        return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
     }
     return 0;
 };
@@ -132,12 +133,11 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCa
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: TavernCardType):
+const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: TavernCardType):
     number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];

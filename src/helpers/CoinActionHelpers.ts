@@ -13,14 +13,13 @@ import { AddActionsToStack } from "./StackHelpers";
  * <li>При действиях улучшающих монеты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип обменной монеты.
  * @returns Значение на которое улучшается монета.
  */
-export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number, type: CoinTypeNames):
-    number => {
+export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number,
+    type: CoinTypeNames): number => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
@@ -39,7 +38,8 @@ export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
     return value;
 };
 
-export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number): void => {
+export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number):
+    void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
@@ -71,6 +71,5 @@ export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
         UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, 2, j,
             CoinTypeNames.Board);
     }
-    AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-        [StackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
+    AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
 };

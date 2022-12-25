@@ -9,7 +9,7 @@ import type { IAction, IHeroScoringFunction, MyFnContextWithMyPlayerID, ScoringA
  * <li>Выполняется при необходимости получить победные очки по герою.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @param action Объект действия.
  * @returns Количество победных очков по герою.
  */

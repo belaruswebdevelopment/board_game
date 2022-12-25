@@ -9,7 +9,8 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по герою, не имеющему специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
+ * @param value Значение.
  * @returns Количество очков по конкретному герою.
  */
 export const BasicHeroScoring = ({ G, ctx, ...rest }, value) => {
@@ -25,7 +26,7 @@ export const BasicHeroScoring = ({ G, ctx, ...rest }, value) => {
  * <li>В конце игры, когда получаются победные очки по герою Astrid.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному герою.
  */
 export const AstridScoring = ({ G, ctx, myPlayerID, ...rest }) => GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
@@ -36,7 +37,7 @@ export const AstridScoring = ({ G, ctx, myPlayerID, ...rest }) => GetMaxCoinValu
  * <li>В конце игры, когда получаются победные очки по герою Idunn.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному герою.
  */
 export const IdunnScoring = ({ G, ctx, myPlayerID, ...rest }) => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 2);

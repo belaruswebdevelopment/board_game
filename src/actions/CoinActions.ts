@@ -1,7 +1,9 @@
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { RemoveCoinFromMarket } from "../helpers/DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
 import type { CanBeUndefType, CoinType, ICoin, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
@@ -13,8 +15,7 @@ import type { CanBeUndefType, CoinType, ICoin, IPlayer, IPublicPlayer, MyFnConte
  * <li>При выборе карт, улучшающих монеты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param isTrading Является ли монета обменной.
  * @param value Значение улучшения монеты.
  * @param upgradingCoinId Id обменной монеты.
@@ -91,7 +92,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         }
         if (newValue > lastMarketCoin.value) {
             upgradedCoin = lastMarketCoin;
-            G.marketCoins.splice(G.marketCoins.length - 1, 1);
+            RemoveCoinFromMarket({ G, ctx, ...rest }, G.marketCoins.length - 1);
         } else {
             for (let i = 0; i < G.marketCoins.length; i++) {
                 const marketCoin: CanBeUndefType<ICoin> = G.marketCoins[i];
@@ -102,7 +103,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
                     upgradedCoin = marketCoin;
                 } else if (marketCoin.value >= newValue) {
                     upgradedCoin = marketCoin;
-                    G.marketCoins.splice(i, 1);
+                    RemoveCoinFromMarket({ G, ctx, ...rest }, i);
                     if (G.expansions.Idavoll.active) {
                         const betterment: number = marketCoin.value - newValue;
                         if (betterment > 0) {
@@ -115,7 +116,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
                     break;
                 }
                 if (i === G.marketCoins.length - 1) {
-                    G.marketCoins.splice(i, 1);
+                    RemoveCoinFromMarket({ G, ctx, ...rest }, i);
                 }
             }
         }

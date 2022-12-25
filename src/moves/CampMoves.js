@@ -9,8 +9,7 @@ import { ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, CommonSta
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @returns
  */
@@ -28,8 +27,7 @@ export const AddCoinToPouchMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * <li>При клике по конкретному значению обмена монеты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param value Значение улучшения монеты.
  * @returns
  */
@@ -47,8 +45,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, player
  * <li>Срабатывает при выборе карты из лагеря по действию персонажа Хольда.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
@@ -66,8 +63,7 @@ export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, cardId) =>
  * <li>Срабатывает при выборе карты из лагеря.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
@@ -85,8 +81,7 @@ export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
  * <li>Применяется при сбросе карты конкретной фракции в колоду сброса при взятии артефакта Hofud.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
@@ -106,8 +101,7 @@ export const DiscardSuitCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @returns

@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IMyGameState, IPublicPlayer, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerCardType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DeckCardType, IPublicPlayer, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerCardType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>
@@ -11,8 +11,7 @@ import type { CanBeNullType, CanBeUndefType, Ctx, DeckCardType, IMyGameState, IP
  * <li>При необходимости выбора карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Фракция дворфов для выбора карты, чтобы получить нового героя.
  */
 const CheckSoloBotAndvariCanPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
@@ -54,8 +53,7 @@ const CheckSoloBotAndvariCanPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
  * <li>При необходимости выбора карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить нового героя.
  */
@@ -74,10 +72,12 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
             const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> =
                 currentTavern[moveArgument] as CanBeUndefType<CanBeNullType<DeckCardType>>;
             if (tavernCard === undefined) {
-                throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined,
+                    moveArgument);
             }
             if (tavernCard === null) {
-                throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${moveArgument}'.`);
+                return ThrowMyError({ G, ctx, ...rest },
+                    ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
             if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
                 continue;
@@ -90,7 +90,8 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
     if (availableMoveArguments.length === 1) {
         return availableMoveArguments[0];
     } else if (availableMoveArguments.length > 1) {
-        return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest }, availableMoveArguments);
+        return CheckSoloBotAndvariMustTakeCardWithHighestValue({ G, ctx, myPlayerID, ...rest },
+            availableMoveArguments);
     }
     return undefined;
 };
@@ -102,12 +103,11 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
  * <li>При необходимости выбора карты из таверны соло ботом Andvari.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота Andvari.
  * @returns Id карты из таверны, при выборе которой можно получить карту с наибольшим значением.
  */
-const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }: MyFnContextWithMyPlayerID,
+const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): number => {
     const currentTavern: CanBeNullType<DeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[];
     let maxValue = 0,
@@ -119,16 +119,19 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }: MyFnContext
         }
         const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> = currentTavern[moveArgument];
         if (tavernCard === undefined) {
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+            return ThrowMyError({ G, ctx, ...rest },
+                ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined, moveArgument);
         }
         if (tavernCard === null) {
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
+            return ThrowMyError({ G, ctx, ...rest },
+                ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
         if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта обмена монет с id '${moveArgument}'.`);
+            return ThrowMyError({ G, ctx, ...rest },
+                ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard, moveArgument);
         }
         if (tavernCard.points === null) {
-            return SoloBotAndvariMustTakeRandomCard(G, ctx, moveArguments);
+            return SoloBotAndvariMustTakeRandomCard(moveArguments);
         } else if (tavernCard.points !== null) {
             if (tavernCard.points > maxValue) {
                 maxValue = tavernCard.points;
@@ -138,7 +141,8 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }: MyFnContext
     }
     const finalMoveArgument: CanBeUndefType<number> = moveArguments[index];
     if (finalMoveArgument === undefined) {
-        throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карты с id '${index}'.`);
+        return ThrowMyError({ G, ctx, ...rest },
+            ErrorNames.CurrentTavernCardWithCurrentIdIsNull, index);
     }
     return finalMoveArgument;
 };
@@ -150,8 +154,7 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx }: MyFnContext
  * <li>При необходимости выбора карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @param suit Название фракции дворфов.
  * @returns Id карты из таверны, при выборе которой можно получить карту по указанной стратегии соло бота Андвари.
@@ -174,10 +177,12 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID
         }
         const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> = currentTavern[moveArgument];
         if (tavernCard === undefined) {
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+            return ThrowMyError({ G, ctx, ...rest },
+                ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined, moveArgument);
         }
         if (tavernCard === null) {
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
+            return ThrowMyError({ G, ctx, ...rest },
+                ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
         if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
             continue;
@@ -197,13 +202,12 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID
  * <li>При необходимости выбора карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить карту по главной стратегии соло бота Андвари.
  */
-export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
+export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID, moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     if (G.soloGameAndvariStrategyVariantLevel === null) {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
@@ -232,8 +236,7 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myP
  * <li>При необходимости выбора карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты из таверны, при выборе которой можно получить карту по резервной стратегии соло бота Андвари.
  */
@@ -270,12 +273,11 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, myPlayerID, ...
  * <li>При необходимости выбора карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id карты Королевской награды из таверны.
  */
-export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G }: MyFnContextWithMyPlayerID,
+export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     // TODO Move code here and for solo bot royal to one helper function
     const currentTavern: CanBeNullType<DeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DeckCardType>[];
@@ -286,10 +288,12 @@ export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G }: MyFnContextW
         }
         const tavernCard: CanBeUndefType<CanBeNullType<DeckCardType>> = currentTavern[moveArgument];
         if (tavernCard === undefined) {
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
+            return ThrowMyError({ G, ctx, ...rest },
+                ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined, moveArgument);
         }
         if (tavernCard === null) {
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карта с id '${moveArgument}'.`);
+            return ThrowMyError({ G, ctx, ...rest },
+                ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
         if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
             return moveArgument;
@@ -305,13 +309,10 @@ export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G }: MyFnContextW
  * <li>При необходимости выбора карты из таверны соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
  * @param moveArguments Аргументы действия соло бота Андвари.
  * @returns Id случайной карты из таверны.
  */
-export const SoloBotAndvariMustTakeRandomCard = (G: IMyGameState, ctx: Ctx,
-    moveArguments: MoveArgumentsType<number[]>): number => {
+const SoloBotAndvariMustTakeRandomCard = (moveArguments: MoveArgumentsType<number[]>): number => {
     // TODO Move code here and for solo bot and for move validators to one helper function
     const moveArgument: CanBeUndefType<number> = moveArguments[Math.floor(Math.random() * moveArguments.length)];
     if (moveArgument === undefined) {

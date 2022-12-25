@@ -175,6 +175,17 @@ export var GiantBuffNames;
     GiantBuffNames["PlayerHasActiveGiantThrivaldi"] = "playerHasActiveGiantThrivaldi";
 })(GiantBuffNames || (GiantBuffNames = {}));
 /**
+ * <h3>Перечисление для названия бафов Богов в конфиге.</h3>
+ */
+export var GodBuffNames;
+(function (GodBuffNames) {
+    GodBuffNames["PlayerHasActiveGodFreyja"] = "playerHasActiveGodFreyja";
+    GodBuffNames["PlayerHasActiveGodFrigg"] = "playerHasActiveGodFrigg";
+    GodBuffNames["PlayerHasActiveGodLoki"] = "playerHasActiveGodLoki";
+    GodBuffNames["PlayerHasActiveGodOdin"] = "playerHasActiveGodOdin";
+    GodBuffNames["PlayerHasActiveGodThor"] = "playerHasActiveGodThor";
+})(GodBuffNames || (GodBuffNames = {}));
+/**
  * <h3>Перечисление для названия бафов Мистических животных в конфиге.</h3>
  */
 export var MythicalAnimalBuffNames;
@@ -250,6 +261,7 @@ export var CoinTypeNames;
 export var ConfigNames;
 (function (ConfigNames) {
     ConfigNames["ActivateGiantAbilityOrPickCard"] = "ActivateGiantAbilityOrPickCard";
+    ConfigNames["ActivateGodAbilityOrNot"] = "ActivateGodAbilityOrNot";
     ConfigNames["ChooseGetMythologyCard"] = "ChooseGetMythologyCard";
     ConfigNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "ChooseCoinValueForVidofnirVedrfolnirUpgrade";
     ConfigNames["ChooseStrategyLevelForSoloModeAndvari"] = "ChooseStrategyLevelForSoloModeAndvari";
@@ -266,6 +278,7 @@ export var DrawNames;
 (function (DrawNames) {
     // TODO Give normal names to all?!
     DrawNames["ActivateGiantAbilityOrPickCard"] = "Activate Giant ability or pick card";
+    DrawNames["ActivateGodAbilityOrNot"] = "Activate God ability or not";
     DrawNames["AddCoinToPouchVidofnirVedrfolnir"] = "Add coin to pouch Vidofnir Vedrfolnir";
     DrawNames["Andumia"] = "Andumia";
     DrawNames["Bonfur"] = "Bonfur";
@@ -321,14 +334,15 @@ export var DrawNames;
 export var ErrorNames;
 (function (ErrorNames) {
     ErrorNames["CurrentMoveArgumentIsUndefined"] = "CurrentMoveArgumentIsUndefined";
-    ErrorNames["CurrentTierDeckIsUndefined"] = "CurrentTierDeckIsUndefined";
+    ErrorNames["CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard"] = "CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard";
+    ErrorNames["CurrentTavernCardWithCurrentIdIsNull"] = "CurrentTavernCardWithCurrentIdIsNull";
+    ErrorNames["CurrentTavernCardWithCurrentIdIsUndefined"] = "CurrentTavernCardWithCurrentIdIsUndefined";
+    ErrorNames["CampDeckWithTierCurrentIdIsUndefined"] = "CampDeckWithTierCurrentIdIsUndefined";
+    ErrorNames["DeckWithTierCurrentIdIsUndefined"] = "DeckWithTierCurrentIdIsUndefined";
     ErrorNames["CurrentPrivatePlayerIsUndefined"] = "CurrentPrivatePlayerIsUndefined";
     ErrorNames["CurrentPublicPlayerIsUndefined"] = "CurrentPublicPlayerIsUndefined";
     ErrorNames["CurrentSuitDistinctionPlayerIndexIsUndefined"] = "CurrentSuitDistinctionPlayerIndexIsUndefined";
-    ErrorNames["DeckIsUndefined"] = "DeckIsUndefined";
-    ErrorNames["DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined"] = "DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined";
     ErrorNames["DoNotDiscardCardFromCurrentTavernIfNoCardInTavern"] = "DoNotDiscardCardFromCurrentTavernIfNoCardInTavern";
-    ErrorNames["DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame"] = "DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame";
     ErrorNames["FirstStackActionIsUndefined"] = "FirstStackActionIsUndefined";
     ErrorNames["FunctionParamIsUndefined"] = "FunctionParamIsUndefined";
     ErrorNames["NoCardsToDiscardWhenNoWinnerInExplorerDistinction"] = "NoCardsToDiscardWhenNoWinnerInExplorerDistinction";
@@ -366,8 +380,8 @@ export var GiantNames;
 export var RusGiantNames;
 (function (RusGiantNames) {
     RusGiantNames["Gymir"] = "\u0413\u044E\u043C\u0438\u0440";
-    RusGiantNames["Hrungnir"] = "\u0413\u0440\u0443\u043D\u0433\u043D\u0438\u0440";
-    RusGiantNames["Skymir"] = "\u0421\u043A\u0430\u0439\u043C\u0438\u0440";
+    RusGiantNames["Hrungnir"] = "\u0425\u0440\u0443\u043D\u0433\u043D\u0438\u0440";
+    RusGiantNames["Skymir"] = "\u0421\u043A\u0440\u044E\u043C\u0438\u0440";
     RusGiantNames["Surt"] = "\u0421\u0443\u0440\u0442";
     RusGiantNames["Thrivaldi"] = "\u0422\u0440\u0438\u0432\u0430\u043B\u044C\u0434\u0438";
 })(RusGiantNames || (RusGiantNames = {}));
@@ -409,10 +423,10 @@ export var MythicalAnimalNames;
  */
 export var RusMythicalAnimalNames;
 (function (RusMythicalAnimalNames) {
-    RusMythicalAnimalNames["Durathor"] = "\u0414\u0443\u0440\u0430\u0442\u043E\u0440";
+    RusMythicalAnimalNames["Durathor"] = "\u0414\u0443\u0440\u0430\u0442\u0440\u043E\u0440";
     RusMythicalAnimalNames["Garm"] = "\u0413\u0430\u0440\u043C";
-    RusMythicalAnimalNames["Hraesvelg"] = "\u0425\u0440\u044D\u0441\u0432\u0435\u043B\u0433";
-    RusMythicalAnimalNames["Nidhogg"] = "\u041D\u0438\u0434\u0445\u043E\u0433\u0433";
+    RusMythicalAnimalNames["Hraesvelg"] = "\u0425\u0440\u0435\u0441\u0432\u0435\u043B\u044C\u0433";
+    RusMythicalAnimalNames["Nidhogg"] = "\u041D\u0438\u0434\u0445\u0451\u0433\u0433";
     RusMythicalAnimalNames["Ratatosk"] = "\u0420\u0430\u0442\u0430\u0442\u043E\u0441\u043A";
 })(RusMythicalAnimalNames || (RusMythicalAnimalNames = {}));
 /**
@@ -431,9 +445,9 @@ export var ValkyryNames;
  */
 export var RusValkyryNames;
 (function (RusValkyryNames) {
-    RusValkyryNames["Brynhildr"] = "\u0411\u0440\u044E\u043D\u0445\u0438\u043B\u044C\u0434\u0430";
+    RusValkyryNames["Brynhildr"] = "\u0411\u0440\u044E\u043D\u0445\u0438\u043B\u044C\u0434";
     RusValkyryNames["Hildr"] = "\u0425\u0438\u043B\u044C\u0434";
-    RusValkyryNames["Olrun"] = "\u041E\u043B\u044C\u0440\u0443\u043D";
+    RusValkyryNames["Olrun"] = "\u042D\u043B\u044C\u0440\u0443\u043D";
     RusValkyryNames["Sigrdrifa"] = "\u0421\u0438\u0433\u0440\u0434\u0440\u0438\u0432\u0430";
     RusValkyryNames["Svafa"] = "\u0421\u0432\u0430\u0432\u0430";
 })(RusValkyryNames || (RusValkyryNames = {}));
@@ -519,6 +533,7 @@ export var LogTypeNames;
  */
 export var ButtonMoveNames;
 (function (ButtonMoveNames) {
+    ButtonMoveNames["NotActivateGodAbilityMove"] = "NotActivateGodAbilityMove";
     ButtonMoveNames["PassEnlistmentMercenariesMove"] = "PassEnlistmentMercenariesMove";
     ButtonMoveNames["StartEnlistmentMercenariesMove"] = "StartEnlistmentMercenariesMove";
     // start
@@ -534,6 +549,7 @@ export var ButtonMoveNames;
  */
 export var CardMoveNames;
 (function (CardMoveNames) {
+    CardMoveNames["ActivateGodAbilityMove"] = "ActivateGodAbilityMove";
     CardMoveNames["ClickCardNotGiantAbilityMove"] = "ClickCardNotGiantAbilityMove";
     CardMoveNames["ClickGiantAbilityNotCardMove"] = "ClickGiantAbilityNotCardMove";
     CardMoveNames["ClickCardMove"] = "ClickCardMove";
@@ -697,6 +713,14 @@ export var ActivateGiantAbilityOrPickCardSubStageNames;
     ActivateGiantAbilityOrPickCardSubStageNames["ClickGiantAbilityNotCard"] = "ClickGiantAbilityNotCard";
 })(ActivateGiantAbilityOrPickCardSubStageNames || (ActivateGiantAbilityOrPickCardSubStageNames = {}));
 /**
+ * <h3>Перечисление для суб стадий игры `ActivateGodAbilityOrNotSubStageNames`.</h3>
+ */
+export var ActivateGodAbilityOrNotSubStageNames;
+(function (ActivateGodAbilityOrNotSubStageNames) {
+    ActivateGodAbilityOrNotSubStageNames["ActivateGodAbility"] = "ActivateGodAbility";
+    ActivateGodAbilityOrNotSubStageNames["NotActivateGodAbility"] = "NotActivateGodAbility";
+})(ActivateGodAbilityOrNotSubStageNames || (ActivateGodAbilityOrNotSubStageNames = {}));
+/**
  * <h3>Перечисление для дефолтных стадий игры `ChooseDifficultySoloMode`.</h3>
  */
 export var ChooseDifficultySoloModeDefaultStageNames;
@@ -807,6 +831,7 @@ export var TavernsResolutionDefaultStageNames;
 export var TavernsResolutionWithSubStageNames;
 (function (TavernsResolutionWithSubStageNames) {
     TavernsResolutionWithSubStageNames["ActivateGiantAbilityOrPickCard"] = "ActivateGiantAbilityOrPickCard";
+    TavernsResolutionWithSubStageNames["ActivateGodAbilityOrNot"] = "ActivateGodAbilityOrNot";
 })(TavernsResolutionWithSubStageNames || (TavernsResolutionWithSubStageNames = {}));
 /**
  * <h3>Перечисление для стадий игры `TavernsResolution`.</h3>
@@ -867,6 +892,7 @@ export var CommonStageNames;
 export var RusStageNames;
 (function (RusStageNames) {
     RusStageNames["ActivateGiantAbilityOrPickCard"] = "ActivateGiantAbilityOrPickCard";
+    RusStageNames["ActivateGodAbilityOrNot"] = "ActivateGodAbilityOrNot";
     RusStageNames["AddCoinToPouch"] = "AddCoinToPouch";
     RusStageNames["ChooseSuitOlrun"] = "ChooseSuitOlrun";
     RusStageNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "ChooseCoinValueForVidofnirVedrfolnirUpgrade";
@@ -958,6 +984,14 @@ export var ActivateGiantAbilityOrPickCardSubMoveValidatorNames;
     ActivateGiantAbilityOrPickCardSubMoveValidatorNames["ClickCardNotGiantAbilityMoveValidator"] = "ClickCardNotGiantAbilityMoveValidator";
     ActivateGiantAbilityOrPickCardSubMoveValidatorNames["ClickGiantAbilityNotCardMoveValidator"] = "ClickGiantAbilityNotCardMoveValidator";
 })(ActivateGiantAbilityOrPickCardSubMoveValidatorNames || (ActivateGiantAbilityOrPickCardSubMoveValidatorNames = {}));
+/**
+ * <h3>Перечисление для названия суб валидаторов мувов в стадию 'ActivateGiantAbilityOrPickCard'.</h3>
+ */
+export var ActivateGodAbilityOrNotSubMoveValidatorNames;
+(function (ActivateGodAbilityOrNotSubMoveValidatorNames) {
+    ActivateGodAbilityOrNotSubMoveValidatorNames["ActivateGodAbilityMoveValidator"] = "ActivateGodAbilityMoveValidator";
+    ActivateGodAbilityOrNotSubMoveValidatorNames["NotActivateGodAbilityMoveValidator"] = "NotActivateGodAbilityMoveValidator";
+})(ActivateGodAbilityOrNotSubMoveValidatorNames || (ActivateGodAbilityOrNotSubMoveValidatorNames = {}));
 /**
  * <h3>Перечисление для названия валидаторов мувов в фазу 'ChooseDifficultySoloMode'.</h3>
  */

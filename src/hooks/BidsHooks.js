@@ -1,8 +1,8 @@
-import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
@@ -13,8 +13,7 @@ import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
  * <li>При каждом действии с монетой в фазе 'Ставки'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBidsPhase = ({ G, ctx, ...rest }) => {
@@ -53,8 +52,7 @@ export const CheckEndBidsPhase = ({ G, ctx, ...rest }) => {
  * <li>При каждом действии с монеткой в фазе 'Ставки'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndBidsTurn = ({ G, ctx, ...rest }) => {
@@ -91,7 +89,7 @@ export const CheckEndBidsTurn = ({ G, ctx, ...rest }) => {
  * <li>При завершении фазы 'Ставки'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndBidsActions = ({ G }) => {
@@ -104,8 +102,7 @@ export const EndBidsActions = ({ G }) => {
  * <li>При начале фазы 'Ставки'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const PreparationPhaseActions = ({ G, ctx, random, ...rest }) => {

@@ -31,17 +31,17 @@ export const BuildSpecialCards = () => {
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
  * @returns Карта дворфа.
  */
-const CreateSpecialCard = ({ type = RusCardTypeNames.Special_Card, suit, rank, points, name, }) => ({
+const CreateSpecialCard = ({ type = RusCardTypeNames.Special_Card, name, suit, rank, points, }) => ({
     type,
+    name,
     suit,
     rank,
     points,
-    name,
 });
 //# sourceMappingURL=SpecialCard.js.map

@@ -13,8 +13,7 @@ import type { CanBeUndefType, IPublicPlayer, IStack, MyFnContextWithMyPlayerID }
  * <li>При игровых моментах, дающих профит.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }: MyFnContextWithMyPlayerID): void => {
@@ -44,12 +43,12 @@ export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }: MyFnC
  * <li>При начале действий, требующих старта конкретной стадии.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param stack Стек действий героя.
  * @returns
  */
-const StartOrEndActionStage = ({ G, ctx, myPlayerID, events, ...rest }: MyFnContextWithMyPlayerID, stack: IStack): void => {
+const StartOrEndActionStage = ({ G, ctx, myPlayerID, events, ...rest }: MyFnContextWithMyPlayerID, stack: IStack):
+    void => {
     if (stack.stageName !== undefined) {
         events.setActivePlayers({
             currentPlayer: stack.stageName,

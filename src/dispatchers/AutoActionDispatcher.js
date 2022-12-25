@@ -53,8 +53,7 @@ const AutoActionDispatcherSwitcher = (actionName) => {
  * <li>Выполняется при необходимости активировать автоматическое действие карты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param action Объект автоматического действия.
  * @returns
  */

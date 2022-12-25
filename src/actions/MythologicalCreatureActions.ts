@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IActionFunctionWithoutParams, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, IActionFunctionWithoutParams, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -13,8 +13,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * <li>При активации способности Гиганта Hrungnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const AddPlusTwoValueToAllCoinsAction: IActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }:
@@ -29,28 +28,35 @@ export const AddPlusTwoValueToAllCoinsAction: IActionFunctionWithoutParams = ({ 
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
             myPlayerID);
     }
-    if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
-        UpgradeNextCoinsHrungnir({ G, ctx, myPlayerID, ...rest }, 0);
-    } else {
-        for (let j = 0; j < 5; j++) {
-            // TODO Check for Local and Multiplayer games!
-            const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[j];
-            if (privateBoardCoin === undefined) {
-                throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-            }
-            // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
-            if (G.mode === GameModeNames.Multiplayer) {
-                // TODO Trading coin can be null if trading coin was deleted!?
-                if (privateBoardCoin === null) {
-                    throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на столе не может не быть монеты с id '${j}'.`);
-                }
+    for (let j = 0; j < 5; j++) {
+        // TODO Check for Local and Multiplayer games!
+        const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[j];
+        if (privateBoardCoin === undefined) {
+            throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
+        }
+        let publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[j];
+        if (publicBoardCoin === undefined) {
+            throw new Error(`В массиве монет публичного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
+        }
+        // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
+        if (G.mode === GameModeNames.Multiplayer) {
+            if (privateBoardCoin !== null) {
                 if (!privateBoardCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(privateBoardCoin, true);
                 }
-                player.boardCoins[j] = privateBoardCoin;
+                publicBoardCoin = privateBoardCoin;
             }
+        }
+        // TODO Duplicate opening
+        // if (!publicBoardCoin.isOpened) {
+        //     ChangeIsOpenedCoinStatus(publicBoardCoin, true);
+        // }
+        if (publicBoardCoin !== null) {
             UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, 2, j,
                 CoinTypeNames.Board);
         }
+    }
+    if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
+        UpgradeNextCoinsHrungnir({ G, ctx, myPlayerID, ...rest }, 0);
     }
 };

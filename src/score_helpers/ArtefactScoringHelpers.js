@@ -1,9 +1,9 @@
-import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { IsMercenaryPlayerCampCard } from "../helpers/IsCampTypeHelpers";
+import { IsMercenaryPlayerCampCard } from "../is_helpers/IsCampTypeHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { BuffNames, ErrorNames, SuitNames } from "../typescript/enums";
-import { TotalRank } from "./ScoreHelpers";
+import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
 /**
  * <h3>Получение победных очков по артефактам, не имеющим специфических вариантов подсчёта очков.</h3>
  * <p>Применения:</p>
@@ -11,11 +11,13 @@ import { TotalRank } from "./ScoreHelpers";
  * <li>В конце игры, когда получаются победные очки по артефактам, не имеющим специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param G
+ * @param context
+ * @param isFinal Является ли финальным подсчётом очков.
  * @param value Значение очков артефакта.
  * @returns Количество очков по конкретному артефакту.
  */
-export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, value) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, isFinal = false, value) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
@@ -32,14 +34,24 @@ export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, value) => 
  * <li>В конце игры, когда получаются победные очки по артефакту Draupnir.</li>
  * </ol>
  *
- * @param G
+ * @param context
+ * @param isFinal Является ли финальным подсчётом очков.
  * @returns Количество очков по конкретному артефакту.
  */
-export const DraupnirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+export const DraupnirScoring = ({ G, ctx, myPlayerID, ...rest }, isFinal = false) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
+    if (isFinal) {
+        return player.boardCoins.filter((coin, index) => {
+            if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
+                throw new Error(`В массиве монет игрока '${player.nickname}' на столе не может быть закрыта монета с id '${index}'.`);
+            }
+            return IsCoin(coin) && coin.value >= 15;
+        }).length * 6;
+    }
+    // TODO Fix: Add all hand/board coins for bots and players: public and how to count private!?
     return player.boardCoins.filter((coin, index) => {
         if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
             throw new Error(`В массиве монет игрока '${player.nickname}' на столе не может быть закрыта монета с id '${index}'.`);
@@ -54,8 +66,7 @@ export const DraupnirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда получаются победные очки по артефакту Hrafnsmerki.</li>
  * </ol>
  *
- * @param G
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному артефакту.
  */
 export const HrafnsmerkiScoring = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -76,19 +87,25 @@ export const HrafnsmerkiScoring = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда получаются победные очки по артефакту Mjollnir.</li>
  * </ol>
  *
- * @param G
- * @param player Игрок.
+ * @param context
+ * @param isFinal Является ли финальным подсчётом очков.
  * @returns Количество очков по конкретному артефакту.
  */
-export const MjollnirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+export const MjollnirScoring = ({ G, ctx, myPlayerID, ...rest }, isFinal = false) => {
     var _a;
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    const suit = (_a = player.buffs.find((buff) => buff.suitIdForMjollnir !== undefined)) === null || _a === void 0 ? void 0 : _a.suitIdForMjollnir;
-    if (suit === undefined) {
-        throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
+    let suit;
+    if (isFinal) {
+        suit = (_a = player.buffs.find((buff) => buff.suitIdForMjollnir !== undefined)) === null || _a === void 0 ? void 0 : _a.suitIdForMjollnir;
+        if (suit === undefined) {
+            throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
+        }
+    }
+    else {
+        suit = GetSuitValueWithMaxRanksValue({ G, ctx, myPlayerID, ...rest });
     }
     return player.cards[suit].reduce(TotalRank, 0) * 2;
 };
@@ -99,7 +116,7 @@ export const MjollnirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
  * <li>В конце игры, когда получаются победные очки по артефакту Odroerir The Mythic Cauldron.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Количество очков по конкретному артефакту.
  */
 export const OdroerirTheMythicCauldronScoring = ({ G, ...rest }) => GetOdroerirTheMythicCauldronCoinsValues({ G, ...rest });
@@ -110,7 +127,7 @@ export const OdroerirTheMythicCauldronScoring = ({ G, ...rest }) => GetOdroerirT
  * <li>В конце игры, когда получаются победные очки по артефакту Svalinn.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Количество очков по конкретному артефакту.
  */
 export const SvalinnScoring = ({ G, ctx, myPlayerID, ...rest }) => {

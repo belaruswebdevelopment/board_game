@@ -10,7 +10,8 @@ import type { CanBeNullType, CanBeUndefType, IDwarfCard, IGiantCard, IGiantScori
  * <li>В конце игры, когда получаются победные очки по Гиганту, не имеющему специфических вариантов подсчёта очков.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
+ * @param value Значение.
  * @returns Количество очков по конкретному гиганту.
  */
 export const BasicGiantScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
@@ -33,7 +34,7 @@ export const BasicGiantScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, .
  * <li>В конце игры, когда получаются победные очки по Гиганту Gymir.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному гиганту.
  */
 export const GymirScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
@@ -66,7 +67,7 @@ export const GymirScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...res
  * <li>В конце игры, когда получаются победные очки по Гиганту Surt.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Количество очков по конкретному гиганту.
  */
 export const SurtScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):

@@ -1,9 +1,11 @@
-import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
 import type { CanBeUndefType, CoinType, FnContext, ICoin, INumberValues, IPlayer, IPriority, IPublicPlayer, IResolveBoardCoins, MyFnContextWithMyPlayerID, PlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
+import { RemoveCoinFromPlayer } from "./DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 
 /**
@@ -14,8 +16,7 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * <li>Действия, связанные со сбросом обменной монеты по карте лагеря артефакта Jarnglofi.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Тип и индекс сбрасываемой обменной монеты.
  */
 export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
@@ -59,18 +60,18 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
         }
         type = CoinTypeNames.Hand;
-        handCoins.splice(tradingCoinIndex, 1, null);
+        RemoveCoinFromPlayer(handCoins, tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            player.handCoins.splice(tradingCoinIndex, 1, null);
+            RemoveCoinFromPlayer(player.handCoins, tradingCoinIndex);
         }
     } else {
         if (tradingCoinIndex === -1) {
             throw new Error(`У игрока с id '${myPlayerID}' на столе не может отсутствовать обменная монета.`);
         }
         if (G.mode === GameModeNames.Multiplayer) {
-            privatePlayer.boardCoins.splice(tradingCoinIndex, 1, null);
+            RemoveCoinFromPlayer(privatePlayer.boardCoins, tradingCoinIndex);
         }
-        player.boardCoins.splice(tradingCoinIndex, 1, null);
+        RemoveCoinFromPlayer(player.boardCoins, tradingCoinIndex);
     }
     return [type, tradingCoinIndex];
 };
@@ -83,7 +84,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
  * <li>В конце игры, если получено преимущество по фракции воинов.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @returns Максимальная монета игрока.
  */
 export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
@@ -92,8 +93,8 @@ export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    return Math.max(...player.boardCoins.filter(IsCoin).map((coin: ICoin, index: number):
-        number => {
+    return Math.max(...player.boardCoins.filter(IsCoin).map((coin: ICoin,
+        index: number): number => {
         if (!coin.isOpened) {
             throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
         }
@@ -108,8 +109,7 @@ export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
  * <li>В конце игры, когда нужно открыть все закрытые монеты всех игроков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OpenClosedCoinsOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
@@ -159,8 +159,7 @@ export const OpenClosedCoinsOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: My
  * <li>В момент игры, когда нужно открыть все закрытые монеты текущей таверны всех игроков в фазу 'Ставки Улина'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OpenCurrentTavernClosedCoinsOnPlayerBoard = ({ G, ctx, ...rest }: FnContext): void => {
@@ -202,8 +201,7 @@ export const OpenCurrentTavernClosedCoinsOnPlayerBoard = ({ G, ctx, ...rest }: F
  * <li>После выкладки всех монет игроками.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
 export const ResolveBoardCoins = ({ G, ctx, ...rest }: FnContext): IResolveBoardCoins => {
@@ -346,11 +344,11 @@ export const ResolveBoardCoins = ({ G, ctx, ...rest }: FnContext): IResolveBoard
  * <li>При завершении игры.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
-export const ReturnCoinsToPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
+export const ReturnCoinsFromPlayerHandsToPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
@@ -400,8 +398,7 @@ export const ReturnCoinsToPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
  * <li>В начале фазы выставления монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }: FnContext): void => {
@@ -417,7 +414,8 @@ export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }: FnContext): void =
                 i);
         }
         if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-            && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest }, HeroBuffNames.EveryTurn)) {
+            && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest },
+                HeroBuffNames.EveryTurn)) {
             for (let j = 0; j < player.handCoins.length; j++) {
                 const handCoin: CanBeUndefType<PublicPlayerCoinType> = player.handCoins[j];
                 if (handCoin === undefined) {
@@ -453,14 +451,13 @@ export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }: FnContext): void =
  * <li>При возврате монет в руку, когда взят герой Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param coinId Id монеты.
  * @param close Нужно ли закрыть монету.
  * @returns Вернулась ли монета в руку.
  */
-export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number, close: boolean):
-    boolean => {
+export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number,
+    close: boolean): boolean => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
@@ -532,8 +529,7 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
  * <li>В момент подготовки к новому раунду.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 const MixUpCoins = ({ G, ctx, myPlayerID, random, ...rest }: MyFnContextWithMyPlayerID): void => {
@@ -552,8 +548,7 @@ const MixUpCoins = ({ G, ctx, myPlayerID, random, ...rest }: MyFnContextWithMyPl
  * <li>В момент подготовки к новому раунду.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const MixUpCoinsInPlayerHands = ({ G, ctx, random, ...rest }: FnContext): void => {

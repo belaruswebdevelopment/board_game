@@ -2,13 +2,13 @@ import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
+import { IsDwarfCard } from "../is_helpers/IsDwarfTypeHelpers";
+import { IsMythicalAnimalCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, GameModeNames, GiantBuffNames, GiantNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames, ValkyryBuffNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
-import { DiscardPickedCard } from "./DiscardCardHelpers";
+import { DiscardCurrentCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
-import { IsDwarfCard } from "./IsDwarfTypeHelpers";
-import { IsMythicalAnimalCard } from "./IsMythologicalCreatureTypeHelpers";
 import { CheckIfRecruitedCardHasNotLeastRankOfChosenClass, CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 /**
@@ -21,8 +21,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * <li>Происходит при взятии карты из сброса при активации карты лагеря.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта.
  * @returns
  */
@@ -114,8 +113,7 @@ export const AddCardToPlayer = ({ G, ctx, myPlayerID, ...rest }, card) => {
  * <li>Происходит при взятии карты из текущей таверны.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта.
  * @returns
  */
@@ -125,13 +123,13 @@ const AddMythologicalCreatureCardToPlayerCommandZone = ({ G, ctx, myPlayerID, ..
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
-    player.mythologicalCreatureCards.push(card);
     let _exhaustiveCheck;
     switch (card.type) {
         case RusCardTypeNames.God_Card:
-            card.isPowerTokenUsed = false;
+            card.isActivated = false;
             break;
         case RusCardTypeNames.Giant_Card:
+            card.isActivated = false;
             player.giantTokenSuits[card.placedSuit] = true;
             break;
         case RusCardTypeNames.Valkyry_Card:
@@ -144,6 +142,7 @@ const AddMythologicalCreatureCardToPlayerCommandZone = ({ G, ctx, myPlayerID, ..
             throw new Error(`Добавленная в командную зону для карт мифических существ карта не может быть с недопустимым типом.`);
             return _exhaustiveCheck;
     }
+    player.mythologicalCreatureCards.push(card);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' в командную зону карт Idavoll.`);
 };
 /**
@@ -156,52 +155,51 @@ const AddMythologicalCreatureCardToPlayerCommandZone = ({ G, ctx, myPlayerID, ..
  * <li>Происходит при взятии карты из сброса при активации карты лагеря.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Выбранная карта дворфа или улучшения монет.
+ * @param context
+ * @param tavernCard Выбранная карта дворфа или улучшения монет.
  * @returns Добавлена ли карта на планшет игрока.
  */
-export const PickCardOrActionCardActions = ({ G, ctx, myPlayerID, ...rest }, card) => {
+export const PickCardOrActionCardActions = ({ G, ctx, myPlayerID, ...rest }, tavernCard) => {
     var _a, _b, _c, _d;
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
     }
-    AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
+    AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, tavernCard);
     let _exhaustiveCheck;
-    switch (card.type) {
+    switch (tavernCard.type) {
         case RusCardTypeNames.Dwarf_Card:
         case RusCardTypeNames.Mythical_Animal_Card:
-            if (IsMythicalAnimalCard(card)) {
-                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_a = card.stack) === null || _a === void 0 ? void 0 : _a.player, card);
-                StartAutoAction({ G, ctx, myPlayerID, ...rest }, card.actions);
+            if (IsMythicalAnimalCard(tavernCard)) {
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_a = tavernCard.stack) === null || _a === void 0 ? void 0 : _a.player, tavernCard);
+                StartAutoAction({ G, ctx, myPlayerID, ...rest }, tavernCard.actions);
             }
-            CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
+            CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, tavernCard);
+            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал карту '${tavernCard.type}' '${tavernCard.name}' во фракцию '${suitsConfig[tavernCard.suit].suitName}'.`);
             break;
         case RusCardTypeNames.Royal_Offering_Card:
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}'.`);
+            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${tavernCard.type}' '${tavernCard.name}'.`);
             if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_b = card.stack) === null || _b === void 0 ? void 0 : _b.soloBot, card);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_b = tavernCard.stack) === null || _b === void 0 ? void 0 : _b.soloBot, tavernCard);
             }
             else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_c = card.stack) === null || _c === void 0 ? void 0 : _c.soloBotAndvari, card);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_c = tavernCard.stack) === null || _c === void 0 ? void 0 : _c.soloBotAndvari, tavernCard);
             }
             else {
-                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_d = card.stack) === null || _d === void 0 ? void 0 : _d.player, card);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_d = tavernCard.stack) === null || _d === void 0 ? void 0 : _d.player, tavernCard);
             }
-            DiscardPickedCard({ G, ctx, ...rest }, card);
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${card.type}' '${card.name}' убрана в сброс после применения её эффекта.`);
+            DiscardCurrentCard({ G, ctx, ...rest }, tavernCard);
+            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${tavernCard.type}' '${tavernCard.name}' убрана в сброс после применения её эффекта.`);
             break;
         case RusCardTypeNames.God_Card:
         case RusCardTypeNames.Giant_Card:
         case RusCardTypeNames.Valkyry_Card:
             if (G.expansions.Idavoll.active) {
-                AddMythologicalCreatureCardToPlayerCommandZone({ G, ctx, myPlayerID, ...rest }, card);
+                AddMythologicalCreatureCardToPlayerCommandZone({ G, ctx, myPlayerID, ...rest }, tavernCard);
             }
             break;
         default:
-            _exhaustiveCheck = card;
+            _exhaustiveCheck = tavernCard;
             throw new Error(`Добавленная на поле игрока карта не может быть с недопустимым типом.`);
             return _exhaustiveCheck;
     }

@@ -15,8 +15,7 @@ import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, HeroesFor
  * <li>При начале фазы 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const CheckChooseStrategyForSoloModeAndvariOrder = ({ G, ctx, ...rest }: FnContext): void => {
@@ -30,8 +29,7 @@ export const CheckChooseStrategyForSoloModeAndvariOrder = ({ G, ctx, ...rest }: 
  * <li>При каждом действии в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckChooseStrategyForSoloModeAndvariPhase = ({ G, ctx }: FnContext): CanBeVoidType<boolean> => {
@@ -49,8 +47,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = ({ G, ctx }: FnContext
  * <li>При каждом действии в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseStrategyForSoloModeAndvariTurn = ({ G, ctx }: FnContext): CanBeVoidType<boolean> => {
@@ -66,7 +63,7 @@ export const CheckEndChooseStrategyForSoloModeAndvariTurn = ({ G, ctx }: FnConte
  * <li>При завершении фазы 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndChooseStrategyForSoloModeAndvariActions = ({ G }: FnContext): void => {
@@ -80,8 +77,7 @@ export const EndChooseStrategyForSoloModeAndvariActions = ({ G }: FnContext): vo
  * <li>При завершении мува в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }: FnContext): void => {
@@ -95,8 +91,8 @@ export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }: FnCo
  * <li>При начале хода в фазе 'chooseDifficultySoloModeAndvari'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ...rest }: FnContext): void => {
     if (ctx.currentPlayer === `0`) {

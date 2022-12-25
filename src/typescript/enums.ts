@@ -175,6 +175,17 @@ export const enum GiantBuffNames {
 }
 
 /**
+ * <h3>Перечисление для названия бафов Богов в конфиге.</h3>
+ */
+export const enum GodBuffNames {
+    PlayerHasActiveGodFreyja = `playerHasActiveGodFreyja`,
+    PlayerHasActiveGodFrigg = `playerHasActiveGodFrigg`,
+    PlayerHasActiveGodLoki = `playerHasActiveGodLoki`,
+    PlayerHasActiveGodOdin = `playerHasActiveGodOdin`,
+    PlayerHasActiveGodThor = `playerHasActiveGodThor`,
+}
+
+/**
  * <h3>Перечисление для названия бафов Мистических животных в конфиге.</h3>
  */
 export const enum MythicalAnimalBuffNames {
@@ -249,6 +260,7 @@ export const enum CoinTypeNames {
  */
 export const enum ConfigNames {
     ActivateGiantAbilityOrPickCard = `ActivateGiantAbilityOrPickCard`,
+    ActivateGodAbilityOrNot = `ActivateGodAbilityOrNot`,
     ChooseGetMythologyCard = `ChooseGetMythologyCard`,
     ChooseCoinValueForVidofnirVedrfolnirUpgrade = `ChooseCoinValueForVidofnirVedrfolnirUpgrade`,
     ChooseStrategyLevelForSoloModeAndvari = `ChooseStrategyLevelForSoloModeAndvari`,
@@ -265,6 +277,7 @@ export const enum ConfigNames {
 export const enum DrawNames {
     // TODO Give normal names to all?!
     ActivateGiantAbilityOrPickCard = `Activate Giant ability or pick card`,
+    ActivateGodAbilityOrNot = `Activate God ability or not`,
     AddCoinToPouchVidofnirVedrfolnir = `Add coin to pouch Vidofnir Vedrfolnir`,
     Andumia = `Andumia`,
     Bonfur = `Bonfur`,
@@ -320,15 +333,15 @@ export const enum DrawNames {
  */
 export const enum ErrorNames {
     CurrentMoveArgumentIsUndefined = `CurrentMoveArgumentIsUndefined`,
-    CurrentTierDeckIsUndefined = `CurrentTierDeckIsUndefined`,
+    CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard = `CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard`,
+    CurrentTavernCardWithCurrentIdIsNull = `CurrentTavernCardWithCurrentIdIsNull`,
+    CurrentTavernCardWithCurrentIdIsUndefined = `CurrentTavernCardWithCurrentIdIsUndefined`,
+    CampDeckWithTierCurrentIdIsUndefined = `CampDeckWithTierCurrentIdIsUndefined`,
+    DeckWithTierCurrentIdIsUndefined = `DeckWithTierCurrentIdIsUndefined`,
     CurrentPrivatePlayerIsUndefined = `CurrentPrivatePlayerIsUndefined`,
     CurrentPublicPlayerIsUndefined = `CurrentPublicPlayerIsUndefined`,
     CurrentSuitDistinctionPlayerIndexIsUndefined = `CurrentSuitDistinctionPlayerIndexIsUndefined`,
-    DeckIsUndefined = `DeckIsUndefined`,
-    DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined =
-    `DoNotDiscardCardFromCurrentTavernIfCardWithCurrentIdIsUndefined`,
     DoNotDiscardCardFromCurrentTavernIfNoCardInTavern = `DoNotDiscardCardFromCurrentTavernIfNoCardInTavern`,
-    DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame = `DoNotDiscardCardFromTavernInSoloOrTwoPlayersGame`,
     FirstStackActionIsUndefined = `FirstStackActionIsUndefined`,
     FunctionParamIsUndefined = `FunctionParamIsUndefined`,
     NoCardsToDiscardWhenNoWinnerInExplorerDistinction = `NoCardsToDiscardWhenNoWinnerInExplorerDistinction`,
@@ -367,8 +380,8 @@ export const enum GiantNames {
  */
 export const enum RusGiantNames {
     Gymir = `Гюмир`,
-    Hrungnir = `Грунгнир`,
-    Skymir = `Скаймир`,
+    Hrungnir = `Хрунгнир`,
+    Skymir = `Скрюмир`,
     Surt = `Сурт`,
     Thrivaldi = `Тривальди`,
 }
@@ -410,10 +423,10 @@ export const enum MythicalAnimalNames {
  * <h3>Перечисление для русских названий Мифических животных.</h3>
  */
 export const enum RusMythicalAnimalNames {
-    Durathor = `Дуратор`,
+    Durathor = `Дуратрор`,
     Garm = `Гарм`,
-    Hraesvelg = `Хрэсвелг`,
-    Nidhogg = `Нидхогг`,
+    Hraesvelg = `Хресвельг`,
+    Nidhogg = `Нидхёгг`,
     Ratatosk = `Рататоск`,
 }
 
@@ -432,9 +445,9 @@ export const enum ValkyryNames {
  * <h3>Перечисление для русских названия Мифических животных.</h3>
  */
 export const enum RusValkyryNames {
-    Brynhildr = `Брюнхильда`,
+    Brynhildr = `Брюнхильд`,
     Hildr = `Хильд`,
-    Olrun = `Ольрун`,
+    Olrun = `Эльрун`,
     Sigrdrifa = `Сигрдрива`,
     Svafa = `Свава`,
 }
@@ -520,6 +533,7 @@ export const enum LogTypeNames {
  * <h3>Перечисление для описаний отображения действий на кнопках.</h3>
  */
 export const enum ButtonMoveNames {
+    NotActivateGodAbilityMove = `NotActivateGodAbilityMove`,
     PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
     StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
     // start
@@ -535,6 +549,7 @@ export const enum ButtonMoveNames {
  * <h3>Перечисление для описаний отображения действий на картах.</h3>
  */
 export const enum CardMoveNames {
+    ActivateGodAbilityMove = `ActivateGodAbilityMove`,
     ClickCardNotGiantAbilityMove = `ClickCardNotGiantAbilityMove`,
     ClickGiantAbilityNotCardMove = `ClickGiantAbilityNotCardMove`,
     ClickCardMove = `ClickCardMove`,
@@ -699,6 +714,14 @@ export const enum ActivateGiantAbilityOrPickCardSubStageNames {
 }
 
 /**
+ * <h3>Перечисление для суб стадий игры `ActivateGodAbilityOrNotSubStageNames`.</h3>
+ */
+export const enum ActivateGodAbilityOrNotSubStageNames {
+    ActivateGodAbility = `ActivateGodAbility`,
+    NotActivateGodAbility = `NotActivateGodAbility`,
+}
+
+/**
  * <h3>Перечисление для дефолтных стадий игры `ChooseDifficultySoloMode`.</h3>
  */
 export const enum ChooseDifficultySoloModeDefaultStageNames {
@@ -808,6 +831,7 @@ export const enum TavernsResolutionDefaultStageNames {
  */
 export const enum TavernsResolutionWithSubStageNames {
     ActivateGiantAbilityOrPickCard = `ActivateGiantAbilityOrPickCard`,
+    ActivateGodAbilityOrNot = `ActivateGodAbilityOrNot`,
 }
 
 /**
@@ -868,6 +892,7 @@ export const enum CommonStageNames {
  */
 export enum RusStageNames {
     ActivateGiantAbilityOrPickCard = `ActivateGiantAbilityOrPickCard`,
+    ActivateGodAbilityOrNot = `ActivateGodAbilityOrNot`,
     AddCoinToPouch = `AddCoinToPouch`,
     ChooseSuitOlrun = `ChooseSuitOlrun`,
     ChooseCoinValueForVidofnirVedrfolnirUpgrade = `ChooseCoinValueForVidofnirVedrfolnirUpgrade`,
@@ -958,6 +983,14 @@ export const enum TavernNames {
 export const enum ActivateGiantAbilityOrPickCardSubMoveValidatorNames {
     ClickCardNotGiantAbilityMoveValidator = `ClickCardNotGiantAbilityMoveValidator`,
     ClickGiantAbilityNotCardMoveValidator = `ClickGiantAbilityNotCardMoveValidator`,
+}
+
+/**
+ * <h3>Перечисление для названия суб валидаторов мувов в стадию 'ActivateGiantAbilityOrPickCard'.</h3>
+ */
+export const enum ActivateGodAbilityOrNotSubMoveValidatorNames {
+    ActivateGodAbilityMoveValidator = `ActivateGodAbilityMoveValidator`,
+    NotActivateGodAbilityMoveValidator = `NotActivateGodAbilityMoveValidator`,
 }
 
 /**

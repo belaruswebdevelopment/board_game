@@ -4,6 +4,7 @@ import { AddDataToLog } from "../Logging";
 import { CampBuffNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
+import { RemoveCoinFromMarket } from "./DiscardCoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 /**
  * <h3>Действия, связанные с добавлением карт лагеря в массив карт игрока.</h3>
@@ -12,8 +13,7 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
  * <li>При выборе карт лагеря, добавляющихся на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта.
  * @returns
  */
@@ -48,8 +48,7 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
  * <li>Происходит при взятии карты лагеря игроком.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта лагеря.
  * @returns
  */
@@ -68,8 +67,7 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }, card) => 
  * <li>Происходит при добавлении карты лагеря в конкретную фракцию игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param card Карта лагеря.
  * @returns Добавлен ли артефакт на планшет игрока.
  */
@@ -89,18 +87,15 @@ const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, car
  * <li>При выборе карты лагеря.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
-export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }) => {
+export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G, ctx, ...rest }) => {
     const minCoinValue = G.marketCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value, minCoinIndex = G.marketCoins.findIndex((coin) => coin.value === minCoinValue);
     if (minCoinIndex === -1) {
         throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
     }
-    const coin = G.marketCoins.splice(minCoinIndex, 1)[0];
-    if (coin === undefined) {
-        throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
-    }
+    const coin = RemoveCoinFromMarket({ G, ctx, ...rest }, minCoinIndex);
     G.odroerirTheMythicCauldronCoins.push(coin);
 };
 /**
@@ -111,7 +106,7 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G }) => {
  * <li>При финальном подсчёте очков за артефакт Odroerir The Mythic Cauldron.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Значение всех монет на артефакте Odroerir The Mythic Cauldron.
  */
 export const GetOdroerirTheMythicCauldronCoinsValues = ({ G }) => G.odroerirTheMythicCauldronCoins.reduce((prev, curr) => prev + curr.value, 0);

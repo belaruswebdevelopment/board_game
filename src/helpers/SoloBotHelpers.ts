@@ -1,5 +1,5 @@
-import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
 import type { CanBeUndefType, CoinType, IMoveCoinsArguments, IPlayer, IPublicPlayer, MoveArgumentsType, MyFnContextWithMyPlayerID, PublicPlayerCoinType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
@@ -38,8 +38,7 @@ export const CheckMinCoinIndexForSoloBotAndvari = (coins: PublicPlayerCoinType[]
  * <li>Происходит при необходимости обмена минимальной видимой монеты соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота.
  * @param type Тип минимальной видимой монеты соло бота.
  * @returns Значение минимальной видимой монеты соло бота.
@@ -94,8 +93,7 @@ export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest
  * <li>Происходит при необходимости обмена минимальной монеты соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота.
  * @returns Значение минимальной монеты соло бота Андвари.
  */
@@ -162,11 +160,11 @@ export const GetMinCoinVisibleIndex = (coins: PublicPlayerCoinType[], minValue: 
  * <li>Когда соло боту Андвари нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
-export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
+export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
@@ -203,12 +201,11 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...r
  * <li>Когда соло боту Андвари нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
-export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    void => {
+export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {

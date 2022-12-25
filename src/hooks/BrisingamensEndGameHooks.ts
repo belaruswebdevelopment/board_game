@@ -3,8 +3,9 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { CampBuffNames, ErrorNames, PhaseNames } from "../typescript/enums";
+import { CampBuffNames, ErrorNames, GodNames, PhaseNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -14,7 +15,7 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "..
  * <li>При начале фазы 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }: FnContext): void => {
@@ -34,8 +35,7 @@ export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }: FnContext): v
  * <ol>
  * <li>При завершении фазы 'brisingamensEndGame'.</li>
  * </ol>
- * @param G
- * @param ctx
+ * @param context
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> => {
@@ -66,7 +66,7 @@ export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }: FnContext)
  * <li>При завершении фазы 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const EndBrisingamensEndGameActions = ({ G }: FnContext): void => {
@@ -80,8 +80,7 @@ export const EndBrisingamensEndGameActions = ({ G }: FnContext): void => {
  * <li>При завершении мува в фазе 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnBrisingamensEndGameMove = ({ G, ctx, ...rest }: FnContext): void => {
@@ -95,13 +94,16 @@ export const OnBrisingamensEndGameMove = ({ G, ctx, ...rest }: FnContext): void 
  * <li>При начале хода в фазе 'brisingamensEndGame'.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
-    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.brisingamensEndGameAction()]);
-    DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
+    if (!(G.expansions.Idavoll.active
+        && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Thor))) {
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
+            [StackData.brisingamensEndGameAction()]);
+        DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
+    }
 };
 
 /**
@@ -111,7 +113,7 @@ export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }: FnContext): 
  * <li>При действиях, после которых может начаться фаза 'getMjollnirProfit'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {

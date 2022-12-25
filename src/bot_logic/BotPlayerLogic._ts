@@ -7,8 +7,7 @@
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param context
  * @returns Профит карты.
  */
 /*const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {

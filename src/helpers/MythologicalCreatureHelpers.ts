@@ -5,19 +5,47 @@ import type { BuffValueType, CanBeUndefType, IPublicPlayer, IValkyryCard, MyFnCo
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 
 /**
+ * <h3>Проверяет выполнение условия свойства валькирии Olrun.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при каждом действии, которое может выполнить условие свойства валькирии Olrun.</li>
+ * </ol>
+ *
+ * @param context
+ * @returns Может ли быть выполнено свойство валькирии Olrun.
+ */
+export const CheckIfRecruitedCardHasNotLeastRankOfChosenClass = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID, suit: SuitNames): boolean => {
+    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+            myPlayerID);
+    }
+    const chosenSuit: BuffValueType = GetBuffValue({ G, ctx, myPlayerID, ...rest }, BuffNames.SuitIdForOlrun);
+    if (chosenSuit === true) {
+        throw new Error(`У бафа с названием '${BuffNames.SuitIdForOlrun}' не может не быть выбрана фракция.`);
+    }
+    const recruitedCardRank: number = player.cards[suit].reduce(TotalRank, 0),
+        chosenClassRank: number = player.cards[chosenSuit].reduce(TotalRank, 0);
+    if (recruitedCardRank >= chosenClassRank) {
+        return true;
+    }
+    return false;
+};
+
+/**
  * <h3>Проверяет выполнение условия свойства валькирии.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при каждом действии, которое может выполнить условие свойства валькирии.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param buffName Баф.
  * @returns
  */
-export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, buffName: ValkyryBuffNames):
-    void => {
+export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    buffName: ValkyryBuffNames): void => {
     // TODO Check only if not maximum count!
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
@@ -57,34 +85,4 @@ export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
         }
         valkyryCard.strengthTokenNotch += 1;
     }
-};
-
-/**
- * <h3>Проверяет выполнение условия свойства валькирии Olrun.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при каждом действии, которое может выполнить условие свойства валькирии Olrun.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @returns Может ли быть выполнено свойство валькирии Olrun.
- */
-export const CheckIfRecruitedCardHasNotLeastRankOfChosenClass = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    suit: SuitNames): boolean => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
-    if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            myPlayerID);
-    }
-    const chosenSuit: BuffValueType = GetBuffValue({ G, ctx, myPlayerID, ...rest }, BuffNames.SuitIdForOlrun);
-    if (chosenSuit === true) {
-        throw new Error(`У бафа с названием '${BuffNames.SuitIdForOlrun}' не может не быть выбрана фракция.`);
-    }
-    const recruitedCardRank: number = player.cards[suit].reduce(TotalRank, 0),
-        chosenClassRank: number = player.cards[chosenSuit].reduce(TotalRank, 0);
-    if (recruitedCardRank >= chosenClassRank) {
-        return true;
-    }
-    return false;
 };

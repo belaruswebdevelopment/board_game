@@ -1,5 +1,5 @@
-import { IsCoin } from "../Coin";
 import { ThrowMyError } from "../Error";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
 /**
  * <h3>Определяет минимальную видимую монету соло бота.</h3>
@@ -32,8 +32,7 @@ export const CheckMinCoinIndexForSoloBotAndvari = (coins, minValue) => GetMinCoi
  * <li>Происходит при необходимости обмена минимальной видимой монеты соло ботом.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота.
  * @param type Тип минимальной видимой монеты соло бота.
  * @returns Значение минимальной видимой монеты соло бота.
@@ -84,8 +83,7 @@ export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest
  * <li>Происходит при необходимости обмена минимальной монеты соло ботом Андвари.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param moveArguments Аргументы действия соло бота.
  * @returns Значение минимальной монеты соло бота Андвари.
  */
@@ -148,8 +146,7 @@ export const GetMinCoinVisibleIndex = (coins, minValue) => {
  * <li>Когда соло боту Андвари нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -185,8 +182,7 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...r
  * <li>Когда соло боту Андвари нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }) => {

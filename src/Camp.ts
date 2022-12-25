@@ -90,8 +90,8 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
  * </ol>
  *
  * @param type Тип.
- * @param path URL путь.
  * @param name Название.
+ * @param path URL путь.
  * @param description Описание.
  * @param buff Баф.
  * @param validators Валидаторы карты.
@@ -101,8 +101,8 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
  */
 const CreateArtefactCampCard = ({
     type = RusCardTypeNames.Artefact_Card,
-    path,
     name,
+    path,
     description,
     buff,
     validators,
@@ -110,8 +110,8 @@ const CreateArtefactCampCard = ({
     stack,
 }: CreateArtefactCampCardType): IArtefactCampCard => ({
     type,
-    path,
     name,
+    path,
     description,
     buff,
     validators,
@@ -127,8 +127,8 @@ const CreateArtefactCampCard = ({
  * </ol>
  *
  * @param type Тип.
- * @param path URL путь.
  * @param name Название.
+ * @param path URL путь.
  * @param description Описание.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
@@ -137,16 +137,16 @@ const CreateArtefactCampCard = ({
  */
 const CreateArtefactPlayerCampCard = ({
     type = RusCardTypeNames.Artefact_Player_Card,
-    path,
     name,
+    path,
     description,
     suit,
     rank,
     points = null,
 }: CreateArtefactPlayerCampCardType): IArtefactPlayerCampCard => ({
     type,
-    path,
     name,
+    path,
     description,
     suit,
     rank,
@@ -161,23 +161,20 @@ const CreateArtefactPlayerCampCard = ({
  * </ol>
  *
  * @param type Тип.
- * @param path URL путь.
  * @param name Название.
+ * @param path URL путь.
  * @param variants Варианты расположения карты лагеря Наёмник на поле игрока.
- * @param suit Название фракции дворфов.
- * @param rank Шевроны.
- * @param points Очки.
  * @returns Карта лагеря Наёмник.
  */
 const CreateMercenaryCampCard = ({
     type = RusCardTypeNames.Mercenary_Card,
-    path,
     name,
+    path,
     variants,
 }: CreateMercenaryCampCardType): IMercenaryCampCard => ({
     type,
-    path,
     name,
+    path,
     variants,
 });
 
@@ -189,25 +186,25 @@ const CreateMercenaryCampCard = ({
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
+ * @param path URL путь.
  * @param suit Название фракции дворфов.
  * @param rank Шевроны.
  * @param points Очки.
- * @param name Название.
- * @param path URL путь.
  * @returns Карта лагеря Наёмник на поле игрока.
  */
 export const CreateMercenaryPlayerCampCard = ({
     type = RusCardTypeNames.Mercenary_Player_Card,
+    name,
+    path,
     suit,
     rank = 1,
     points,
-    name,
-    path,
 }: CreateMercenaryPlayerCampCardType): IMercenaryPlayerCampCard => ({
     type,
+    name,
+    path,
     suit,
     rank,
     points,
-    name,
-    path,
 });

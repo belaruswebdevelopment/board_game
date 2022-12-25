@@ -9,8 +9,7 @@ import { ErrorNames, PickHeroCardValidatorNames, RusCardTypeNames, SuitNames } f
  * <li>При выборе конкретных героев, дающих возможность сброса карт с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */
@@ -53,8 +52,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
  * <li>При выборе конкретных героев, получаемых по определённым условиям.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param id Id героя.
  * @returns Можно ли пикнуть конкретного героя.
  */

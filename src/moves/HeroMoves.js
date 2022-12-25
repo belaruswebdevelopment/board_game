@@ -9,8 +9,7 @@ import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, PlaceYludDefaultSt
  * <li>При необходимости выбора героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param heroId Id героя.
  * @returns
  */
@@ -28,8 +27,7 @@ export const ClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
  * <li>При выборе героя со способностью сброса карт с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @param cardId Id карты.
  * @returns
@@ -51,8 +49,7 @@ export const DiscardTopCardFromSuitMove = ({ G, ctx, playerID, ...rest }, suit, 
  * <li>При выборе героя Ольвин со способностью выкладки карт на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -70,8 +67,7 @@ export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * <li>При выборе героя Труд со способностью перемещения на планшете игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */
@@ -89,8 +85,7 @@ export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
  * <li>При выборе героя Илуд со способностью размещения на планшете игрока в конце эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param suit Название фракции дворфов.
  * @returns
  */

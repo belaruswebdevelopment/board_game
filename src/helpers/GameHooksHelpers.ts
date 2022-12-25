@@ -4,6 +4,7 @@ import { ErrorNames, HeroBuffNames, HeroNames, LogTypeNames } from "../typescrip
 import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerCardType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
+import { RemoveCardFromPlayerBoardSuitCards } from "./DiscardCardHelpers";
 import { CheckPickHero } from "./HeroHelpers";
 
 /**
@@ -13,8 +14,7 @@ import { CheckPickHero } from "./HeroHelpers";
  * <li>При проверке завершения любой фазы.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns Должна ли быть завершена фаза.
  */
 export const EndTurnActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): CanBeVoidType<true> => {
@@ -35,14 +35,14 @@ export const EndTurnActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithM
  * <li>Происходит в конце матча после всех игровых событий.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }: FnContext): void => {
     const thrudPlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
-            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.MoveThrud));
+            CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
+                HeroBuffNames.MoveThrud));
     if (thrudPlayerIndex !== -1) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
@@ -59,7 +59,8 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }: FnCo
             if (thrudIndex === -1) {
                 throw new Error(`У игрока с id '${thrudPlayerIndex}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
             }
-            player.cards[thrud.suit].splice(thrudIndex, 1);
+            RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID: String(thrudPlayerIndex), ...rest },
+                thrud.suit, thrudIndex);
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Герой '${HeroNames.Thrud}' игрока '${player.nickname}' уходит с игрового поля.`);
         }
     }
@@ -72,8 +73,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }: FnCo
  * <li>При завершении мува в любой фазе.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @returns
  */
 export const StartOrEndActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {

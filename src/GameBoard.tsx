@@ -48,8 +48,8 @@ export class GameBoard extends React.Component<BoardProps> {
             tavernsUI: JSX.Element[] = DrawTaverns({ G: this.props.G, ctx: this.props.ctx } as FnContext,
                 null, this.props, gridClasses) as JSX.Element[],
             playersBoardsCoinsUI: JSX.Element[] =
-                DrawPlayersBoardsCoins({ G: this.props.G, ctx: this.props.ctx } as FnContext, null, this.props) as
-                JSX.Element[],
+                DrawPlayersBoardsCoins({ G: this.props.G, ctx: this.props.ctx } as FnContext, null,
+                    this.props) as JSX.Element[],
             playersHandsCoinsUI: JSX.Element[] =
                 DrawPlayersHandsCoins({ G: this.props.G, ctx: this.props.ctx } as FnContext, null,
                     this.props) as JSX.Element[],

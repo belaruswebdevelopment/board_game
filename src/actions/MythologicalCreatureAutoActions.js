@@ -5,7 +5,7 @@
  * <li>При активации способности Гиганта Skymir.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns
  */
 export const AddMythologyCreatureCardsSkymirAction = ({ G }) => {

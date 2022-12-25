@@ -1,11 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { IsMercenaryCampCard } from "../helpers/IsCampTypeHelpers";
-import { CurrentScoring } from "../Score";
+import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, RusCardTypeNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
@@ -19,8 +19,9 @@ import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
+ * @param validatorName Название валидатора.
+ * @param playerId Id игрока.
  * @param data Глобальные параметры.
  * @returns Игровые поля для планшета всех карт игрока.
  */
@@ -142,7 +143,8 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                 const card = player.cards[suit][i], last = player.cards[suit].length - 1;
                 if (card !== undefined) {
                     isDrawRow = true;
-                    if (p !== Number(ctx.currentPlayer) && stage === CommonStageNames.DiscardSuitCardFromPlayerBoard
+                    if (p !== Number(ctx.currentPlayer)
+                        && stage === CommonStageNames.DiscardSuitCardFromPlayerBoard
                         && suit === SuitNames.warrior && card.type !== RusCardTypeNames.Hero_Player_Card) {
                         if (data !== undefined) {
                             DrawCard(data, playerCells, card, id, player, suit, CardMoveNames.DiscardSuitCardFromPlayerBoardMove, i);
@@ -150,10 +152,12 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                         else if (validatorName ===
                             CommonMoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator) {
                             if (p === playerId) {
-                                if (moveMainArgs === undefined || !(`cards` in moveMainArgs)) {
+                                if (moveMainArgs !== undefined && `cards` in moveMainArgs) {
+                                    moveMainArgs.cards.push(i);
+                                }
+                                else {
                                     throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем 'cards'.`);
                                 }
-                                moveMainArgs.cards.push(i);
                             }
                         }
                         else {
@@ -451,7 +455,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
             }
         }
         if (data !== undefined) {
-            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring({ G, ctx, myPlayerID: String(p), ...rest }), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
+            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : AllCurrentScoring({ G, ctx, myPlayerID: String(p), ...rest }), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
         }
     }
     if (data !== undefined) {
@@ -472,8 +476,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Игровые поля для пользовательских монет на столе | данные для списка доступных аргументов мува.
@@ -758,8 +761,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Игровые поля для пользовательских монет в руке.

@@ -7,7 +7,7 @@ import { CampBuffNames, GameModeNames, HeroBuffNames, PhaseNames } from "../type
  * <li>При действиях, после которых может начаться фаза 'Ставки Улина' или фаза 'Посещение таверн'.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartBidUlineOrTavernsResolutionPhase = ({ G, ctx, ...rest }) => {
@@ -26,7 +26,7 @@ export const StartBidUlineOrTavernsResolutionPhase = ({ G, ctx, ...rest }) => {
  * <li>После завершения действий в каждой фазе конца игры.</li>
  * </ol>
  *
- * @param G
+ * @param context
  * @returns Фаза игры.
  */
 export const StartEndGameLastActions = ({ G, ctx, ...rest }) => {
@@ -54,7 +54,7 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }) => {
 * <li>После завершения фазы 'enlistmentMercenaries'.</li>
 * </ol>
 *
-* @param G
+* @param context
 * @returns Фаза игры.
 */
 export const StartEndTierPhaseOrEndGameLastActions = ({ G, ctx, ...rest }) => {

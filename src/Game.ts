@@ -20,7 +20,7 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, ClickHan
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove, ChooseStrategyForSoloModeAndvariMove, ChooseStrategyVariantForSoloModeAndvariMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardTopCardFromSuitMove, PlaceMultiSuitCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
-import { ChooseCoinValueForHrungnirUpgradeMove, ChooseSuitOlrunMove, ClickCardNotGiantAbilityMove, ClickGiantAbilityNotCardMove, GetMythologyCardMove } from "./moves/MythologicalCreatureMoves";
+import { ActivateGodAbilityMove, ChooseCoinValueForHrungnirUpgradeMove, ChooseSuitOlrunMove, ClickCardNotGiantAbilityMove, ClickGiantAbilityNotCardMove, GetMythologyCardMove, NotActivateGodAbilityMove } from "./moves/MythologicalCreatureMoves";
 import { SoloBotAndvariClickCardMove, SoloBotAndvariClickCardToPickDistinctionMove, SoloBotAndvariClickCoinToUpgradeMove, SoloBotAndvariClickHeroCardMove, SoloBotAndvariPlaceAllCoinsMove, SoloBotAndvariPlaceThrudHeroMove, SoloBotAndvariPlaceYludHeroMove } from "./moves/SoloBotAndvariMoves";
 import { SoloBotClickCardMove, SoloBotClickCardToPickDistinctionMove, SoloBotClickCoinToUpgradeMove, SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove, SoloBotPlaceThrudHeroMove, SoloBotPlaceYludHeroMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
@@ -208,6 +208,12 @@ export const BoardGame: Game = {
                         moves: {
                             ClickCardNotGiantAbilityMove,
                             ClickGiantAbilityNotCardMove,
+                        },
+                    },
+                    ActivateGodAbilityOrNot: {
+                        moves: {
+                            ActivateGodAbilityMove,
+                            NotActivateGodAbilityMove,
                         },
                     },
                     ChooseCoinValueForHrungnirUpgrade: {

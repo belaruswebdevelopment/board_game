@@ -9,8 +9,7 @@ import { ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
  * <li>При выборе конкретных артефактов, добавляющих бафы игроку.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param buff Баф.
  * @param value Значение бафа.
  * @returns
@@ -34,8 +33,7 @@ export const AddBuffToPlayer = ({ G, ctx, myPlayerID, ...rest }, buff, value) =>
  * <li>При необходимости изменить значение бафа игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param buffName Баф.
  * @param value Новое значение бафа.
  * @returns
@@ -61,7 +59,7 @@ export const ChangeBuffValue = ({ G, ctx, myPlayerID, ...rest }, buffName, value
  * <li>В любой ситуации, требующей наличия конкретного бафа у игрока.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param context
  * @param buffName Баф.
  * @returns
  */
@@ -79,8 +77,7 @@ export const CheckPlayerHasBuff = ({ G, ctx, myPlayerID, ...rest }, buffName) =>
 * <li>>В любой ситуации, требующей удаления конкретного бафа у игрока.</li>
 * </ol>
 *
-* @param G
-* @param ctx
+* @param context
 * @param buffName Баф.
 * @returns
 */
@@ -103,8 +100,7 @@ export const DeleteBuffFromPlayer = ({ G, ctx, myPlayerID, ...rest }, buffName) 
  * <li>При необходимости получения значения бафа игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param context
  * @param buffName Баф.
  * @returns
  */
