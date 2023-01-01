@@ -1,4 +1,4 @@
-import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContextWithMyPlayerID, MythologicalCreatureCardsArrayType, MythologicalCreatureDeckCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContextWithMyPlayerID, MythologicalCreatureCardsArrayType, MythologicalCreatureCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением карт Мифических существ для выбора Skymir.</h3>
@@ -12,9 +12,9 @@ import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContextWithMyPla
  */
 export const AddMythologyCreatureCardsSkymirAction: IActionFunctionWithoutParams = ({ G }: MyFnContextWithMyPlayerID):
     void => {
-    const mythologyCreatureCardsSkymir: MythologicalCreatureDeckCardType[] = [];
+    const mythologyCreatureCardsSkymir: MythologicalCreatureCardType[] = [];
     for (let j = 0; j < 5; j++) {
-        const mythologyCreatureCard: CanBeUndefType<MythologicalCreatureDeckCardType> =
+        const mythologyCreatureCard: CanBeUndefType<MythologicalCreatureCardType> =
             G.secret.mythologicalCreatureNotInGameDeck.splice(0, 1)[0];
         if (mythologyCreatureCard === undefined) {
             throw new Error(`В массиве карт Мифических существ не в игре отсутствует карта с id '${j}'.`);

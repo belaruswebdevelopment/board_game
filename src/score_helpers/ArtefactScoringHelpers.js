@@ -2,7 +2,7 @@ import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsMercenaryPlayerCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { BuffNames, ErrorNames, SuitNames } from "../typescript/enums";
+import { CommonBuffNames, ErrorNames, SuitNames } from "../typescript/enums";
 import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
 /**
  * <h3>Получение победных очков по артефактам, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -101,7 +101,7 @@ export const MjollnirScoring = ({ G, ctx, myPlayerID, ...rest }, isFinal = false
     if (isFinal) {
         suit = (_a = player.buffs.find((buff) => buff.suitIdForMjollnir !== undefined)) === null || _a === void 0 ? void 0 : _a.suitIdForMjollnir;
         if (suit === undefined) {
-            throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
+            throw new Error(`У игрока отсутствует обязательный баф '${CommonBuffNames.SuitIdForMjollnir}'.`);
         }
     }
     else {

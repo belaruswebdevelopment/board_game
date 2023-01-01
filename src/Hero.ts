@@ -1,6 +1,6 @@
 import { heroesConfig, soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig, soloGameAndvariHeroesForPlayersConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { GameModeNames, RusCardTypeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CanBeNullType, CreateHeroCardType, CreateHeroPlayerCardType, GameNamesKeyofTypeofType, HeroesForSoloGameArrayType, HeroesInitialForSoloGameForBotAndvariArrayType, HeroNamesKeyofTypeofType, IHeroCard, IHeroData, IHeroPlayerCard } from "./typescript/interfaces";
+import { CardTypeRusNames, GameModeNames } from "./typescript/enums";
+import type { BuildHeroesArraysType, CanBeNullType, CreateHeroCardFromData, CreateHeroPlayerCardFromData, GameNamesKeyofTypeofType, HeroCard, HeroCardData, HeroesForSoloGameArrayType, HeroesInitialForSoloGameForBotAndvariArrayType, HeroNamesKeyofTypeofType, HeroPlayerCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -14,23 +14,24 @@ import type { BuildHeroesArraysType, CanBeNullType, CreateHeroCardType, CreateHe
  * @returns Массив всех героев.
  */
 export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: GameModeNames): BuildHeroesArraysType => {
-    const heroes: IHeroCard[] = [];
-    let heroesForSoloBot: CanBeNullType<IHeroCard[]> = [],
-        heroesForSoloGameDifficultyLevel: CanBeNullType<IHeroCard[]> = [],
-        heroesInitialForSoloGameForBotAndvari: CanBeNullType<IHeroCard[]> = [],
+    const heroes: HeroCard[] = [];
+    let heroesForSoloBot: CanBeNullType<HeroCard[]> = [],
+        heroesForSoloGameDifficultyLevel: CanBeNullType<HeroCard[]> = [],
+        heroesInitialForSoloGameForBotAndvari: CanBeNullType<HeroCard[]> = [],
         heroName: HeroNamesKeyofTypeofType;
     for (heroName in heroesConfig) {
-        const heroData: IHeroData = heroesConfig[heroName];
+        const heroData: HeroCardData = heroesConfig[heroName];
         if ((mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari)
             || ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
                 && configOptions.includes(heroData.game))) {
-            const hero: IHeroCard = CreateHero({
+            const hero: HeroCard = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
                 suit: heroData.suit,
                 rank: heroData.rank,
                 points: heroData.points,
                 buff: heroData.buff,
+                pickValidators: heroData.pickValidators,
                 validators: heroData.validators,
                 actions: heroData.actions,
                 stack: heroData.stack,
@@ -92,11 +93,11 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
  * @param pickValidators Валидаторы выбора карты.
  * @param validators Валидаторы карты.
  * @param actions Действия.
- * @param stack Действия.
+ * @param stack Стек действий.
  * @returns Герой.
  */
 const CreateHero = ({
-    type = RusCardTypeNames.Hero_Card,
+    type = CardTypeRusNames.Hero_Card,
     name,
     description,
     suit = null,
@@ -108,7 +109,7 @@ const CreateHero = ({
     validators,
     actions,
     stack,
-}: CreateHeroCardType): IHeroCard => ({
+}: CreateHeroCardFromData): HeroCard => ({
     type,
     name,
     description,
@@ -139,13 +140,13 @@ const CreateHero = ({
  * @returns Карта героя на поле игрока.
  */
 export const CreateHeroPlayerCard = ({
-    type = RusCardTypeNames.Hero_Player_Card,
+    type = CardTypeRusNames.Hero_Player_Card,
     name,
     description,
     suit,
-    rank,
-    points,
-}: CreateHeroPlayerCardType): IHeroPlayerCard => ({
+    rank = 1,
+    points = null,
+}: CreateHeroPlayerCardFromData): HeroPlayerCard => ({
     type,
     name,
     description,

@@ -114,7 +114,7 @@ const CreatePlayer = ({ boardCoins, handCoins, }) => ({
  * @param mythologicalCreatureCards Массив карт мифических существ.
  * @param handCoins Массив монет в руке.
  * @param boardCoins Массив монет на столе.
- * @param stack Стэк действий.
+ * @param stack Стек действий.
  * @param priority Кристалл.
  * @param buffs Бафы.
  * @param selectedCoin Выбранная монета.

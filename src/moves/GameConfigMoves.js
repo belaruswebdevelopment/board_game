@@ -1,5 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
@@ -41,7 +41,7 @@ export const ChooseStrategyVariantForSoloModeAndvariMove = ({ G, ctx, playerID, 
         return INVALID_MOVE;
     }
     G.soloGameAndvariStrategyVariantLevel = level;
-    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.chooseStrategyLevelForSoloModeAndvari()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [AllStackData.chooseStrategyLevelForSoloModeAndvari()]);
 };
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
@@ -60,7 +60,7 @@ export const ChooseDifficultyLevelForSoloModeMove = ({ G, ctx, playerID, ...rest
         return INVALID_MOVE;
     }
     G.soloGameDifficultyLevel = level;
-    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [AllStackData.getHeroesForSoloMode()]);
 };
 /**
  * <h3>Выбор героя для выбранного уровня сложности в режиме соло игры.</h3>
@@ -80,7 +80,7 @@ export const ChooseHeroForDifficultySoloModeMove = ({ G, ctx, playerID, ...rest 
     }
     const player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
     }
     if (G.heroesForSoloGameDifficultyLevel === null) {
         throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
@@ -95,7 +95,7 @@ export const ChooseHeroForDifficultySoloModeMove = ({ G, ctx, playerID, ...rest 
     }
     G.soloGameDifficultyLevel--;
     if (G.soloGameDifficultyLevel) {
-        AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+        AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [AllStackData.getHeroesForSoloMode()]);
     }
 };
 //# sourceMappingURL=GameConfigMoves.js.map

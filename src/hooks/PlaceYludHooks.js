@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -24,7 +24,7 @@ export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }) => {
         }
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
         }
         if (!player.stack.length) {
             const yludIndex = Object.values(G.publicPlayers).findIndex((player, index) => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
@@ -140,13 +140,13 @@ export const OnPlaceYludMove = ({ G, ctx, ...rest }) => {
  */
 export const OnPlaceYludTurnBegin = ({ G, ctx, events, ...rest }) => {
     if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.placeYludHeroSoloBot()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.placeYludHeroSoloBot()]);
     }
     else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.placeYludHeroSoloBotAndvari()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.placeYludHeroSoloBotAndvari()]);
     }
     else {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.placeYludHero()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.placeYludHero()]);
     }
     DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
 };

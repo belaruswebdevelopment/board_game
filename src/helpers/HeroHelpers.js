@@ -1,7 +1,7 @@
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, CampBuffNames, CommonStageNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
+import { CampBuffNames, CommonBuffNames, CommonStageNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 /**
  * <h3>Проверяет возможность взятия нового героя.</h3>
@@ -20,10 +20,10 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
 export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (!CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CampBuffNames.NoHero)) {
-        const playerHasNotCountHero = CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, BuffNames.HasOneNotCountHero), playerCards = Object.values(player.cards), heroesLength = G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
+        const playerHasNotCountHero = CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CommonBuffNames.HasOneNotCountHero), playerCards = Object.values(player.cards), heroesLength = G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
             ? player.heroes.filter((hero) => hero.name.startsWith(`Dwerg`)).length : player.heroes.length -
             ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
                 || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy)

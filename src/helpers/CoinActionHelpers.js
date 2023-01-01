@@ -1,6 +1,6 @@
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ChangeIsOpenedCoinStatus } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
 import { AddActionsToStack } from "./StackHelpers";
@@ -19,11 +19,11 @@ import { AddActionsToStack } from "./StackHelpers";
 export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }, coinId, type) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const value = stack.value;
     if (value === undefined) {
@@ -35,10 +35,10 @@ export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }, coinId, type
 export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }, coinId) => {
     const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     for (let j = coinId; j < 5; j++) {
         // TODO Check for Local and Multiplayer games!
@@ -60,6 +60,6 @@ export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }, coinId
         }
         UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, 2, j, CoinTypeNames.Board);
     }
-    AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
+    AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
 };
 //# sourceMappingURL=CoinActionHelpers.js.map

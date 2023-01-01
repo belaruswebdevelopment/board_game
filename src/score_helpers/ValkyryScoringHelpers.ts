@@ -1,4 +1,4 @@
-import { RusCardTypeNames, ValkyryNames } from "../typescript/enums";
+import { CardTypeRusNames, ValkyryNames } from "../typescript/enums";
 import type { CanBeUndefType, IValkyryScoringFunction } from "../typescript/interfaces";
 
 /**
@@ -17,7 +17,7 @@ export const BrynhildrScoring: IValkyryScoringFunction = (strengthTokenNotch: nu
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -38,7 +38,7 @@ export const HildrScoring: IValkyryScoringFunction = (strengthTokenNotch: number
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -59,7 +59,7 @@ export const OlrunScoring: IValkyryScoringFunction = (strengthTokenNotch: number
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -80,7 +80,7 @@ export const SigrdrifaScoring: IValkyryScoringFunction = (strengthTokenNotch: nu
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -101,7 +101,7 @@ export const SvafaScoring: IValkyryScoringFunction = (strengthTokenNotch: number
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${RusCardTypeNames.Valkyry_Card}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };

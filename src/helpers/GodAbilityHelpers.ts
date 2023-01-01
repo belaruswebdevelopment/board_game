@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, GodBuffNames, GodNames } from "../typescript/enums";
 import type { CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
@@ -53,7 +53,7 @@ export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }: MyFnC
             return _exhaustiveCheck;
     }
     if (isStart) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.activateGodAbilityOrNot(godName)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.activateGodAbilityOrNot(godName)]);
     }
     return isStart;
 };

@@ -305,11 +305,20 @@ export const ResolveBoardCoins = ({ G, ctx, ...rest }: FnContext): IResolveBoard
                         player.priority.value === maxPriority),
                 minIndex: number =
                     Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
-                        player.priority.value === minPriority);
-            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                player.priority.value === maxPriority), 1);
-            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                player.priority.value === minPriority), 1);
+                        player.priority.value === minPriority),
+                amount = 1,
+                removedTiePlayersWithMaxPriority: IPublicPlayer[] =
+                    tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
+                        player.priority.value === maxPriority), amount),
+                removedTiePlayersWithMinPriority: IPublicPlayer[] =
+                    tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
+                        player.priority.value === minPriority), amount);
+            if (amount !== removedTiePlayersWithMaxPriority.length) {
+                throw new Error(`Недостаточно игроков в массиве игроков с максимальным приоритетом: требуется - '${amount}', в наличии - '${removedTiePlayersWithMaxPriority.length}'.`);
+            }
+            if (amount !== removedTiePlayersWithMinPriority.length) {
+                throw new Error(`Недостаточно игроков в массиве игроков с минимальным приоритетом: требуется - '${amount}', в наличии - '${removedTiePlayersWithMinPriority.length}'.`);
+            }
             const exchangeOrderMax: CanBeUndefType<number> = exchangeOrder[maxIndex],
                 exchangeOrderMin: CanBeUndefType<number> = exchangeOrder[minIndex];
             if (exchangeOrderMax === undefined) {

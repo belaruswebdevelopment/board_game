@@ -1,5 +1,5 @@
 import { ThrowMyError } from "./Error";
-import { GetCardsFromCardDeck, GetMythologicalCreatureCardsFromMythologicalCreatureCardDeck } from "./helpers/DecksHelpers";
+import { GetCardsFromSecretDwarfDeck, GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard, RemoveCardFromTavern } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
@@ -97,18 +97,22 @@ export const RefillTaverns = ({ G, ctx, ...rest }: FnContext): void => {
     for (let t = 0; t < G.tavernsNum; t++) {
         let refillDeck: TavernAllCardType;
         if (G.expansions.Idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
-            refillDeck = GetMythologicalCreatureCardsFromMythologicalCreatureCardDeck({ G, ctx, ...rest }, 0,
+            refillDeck = GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck({ G, ctx, ...rest }, 0,
                 G.drawSize);
         } else {
-            refillDeck = GetCardsFromCardDeck({ G, ctx, ...rest }, 0,
+            refillDeck = GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, 0,
                 (G.secret.decks.length - G.tierToEnd) as TierType, G.drawSize);
         }
         if (refillDeck.length !== G.drawSize) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.TavernCanNotBeRefilledBecauseNotEnoughCards,
                 t);
         }
-        const tavern: TavernCardType[] = G.taverns[t as IndexOf<TavernsType>];
-        tavern.splice(0, tavern.length, ...refillDeck);
+        const tavern: TavernCardType[] = G.taverns[t as IndexOf<TavernsType>],
+            removedCardsFromTavern: TavernCardType[] =
+                tavern.splice(0, tavern.length, ...refillDeck);
+        if (tavern.length !== removedCardsFromTavern.length) {
+            throw new Error(`Недостаточно карт в массиве карт таверны с id '${t}': требуется - '${tavern.length}', в наличии - '${removedCardsFromTavern.length}'.`);
+        }
         const tavernConfig: ITavernInConfig = tavernsConfig[t as IndexOf<TavernsConfigType>];
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна ${tavernConfig.name} заполнена новыми картами.`);
     }
@@ -133,4 +137,4 @@ export const tavernsConfig: TavernsConfigType = [
     {
         name: TavernNames.ShiningHorse,
     },
-] as const;
+];

@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { ErrorNames, GiantNames, RusCardTypeNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, IDwarfCard, IGiantCard, IGiantScoringFunction, IPublicPlayer, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import { CardTypeRusNames, ErrorNames, GiantNames } from "../typescript/enums";
+import type { CanBeNullType, CanBeUndefType, DwarfCard, GiantCard, IGiantScoringFunction, IPublicPlayer, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Получение победных очков по Гиганту, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -44,13 +44,13 @@ export const GymirScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...res
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const gymirCard: CanBeUndefType<IGiantCard> =
+    const gymirCard: CanBeUndefType<GiantCard> =
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType): boolean =>
-            card.name === GiantNames.Gymir) as IGiantCard;
+            card.name === GiantNames.Gymir) as GiantCard;
     if (gymirCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${RusCardTypeNames.Giant_Card}' с названием '${GiantNames.Gymir}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Gymir}'.`);
     }
-    const capturedGymirCard: CanBeNullType<IDwarfCard> = gymirCard.capturedCard;
+    const capturedGymirCard: CanBeNullType<DwarfCard> = gymirCard.capturedCard;
     if (capturedGymirCard === null) {
         return 0;
     }
@@ -77,13 +77,13 @@ export const SurtScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const surtCard: CanBeUndefType<IGiantCard> =
+    const surtCard: CanBeUndefType<GiantCard> =
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType): boolean =>
-            card.name === GiantNames.Surt) as IGiantCard;
+            card.name === GiantNames.Surt) as GiantCard;
     if (surtCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${RusCardTypeNames.Giant_Card}' с названием '${GiantNames.Surt}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Surt}'.`);
     }
-    const capturedSurtCard: CanBeNullType<IDwarfCard> = surtCard.capturedCard;
+    const capturedSurtCard: CanBeNullType<DwarfCard> = surtCard.capturedCard;
     if (capturedSurtCard === null) {
         return 0;
     }

@@ -1,6 +1,6 @@
-import { AutoActionFunctionNames, GiantBuffNames, GiantNames, GiantScoringFunctionNames, GodBuffNames, GodNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryBuffNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
-import type { GiantConfigType, GodConfigType, IGiantData, IGodData, IMythicalAnimalData, IValkyryData, MythicalAnimalConfigType, MythologicalCreatureConfigType, ValkyryConfigType } from "../typescript/interfaces";
-import { StackData } from "./StackData";
+import { AutoActionFunctionNames, GiantBuffNames, GiantDescriptionNames, GiantNames, GiantScoringFunctionNames, GodBuffNames, GodDescriptionNames, GodNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalDescriptionNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, SuitNames, ValkyryBuffNames, ValkyryDescriptionNames, ValkyryNames, ValkyryScoringFunctionNames } from "../typescript/enums";
+import type { GiantConfig, GiantData, GodConfig, GodData, MythicalAnimalConfig, MythicalAnimalData, MythologicalCreatureConfig, ValkyryConfig, ValkyryData } from "../typescript/interfaces";
+import { AllStackData } from "./StackData";
 
 /**
  * <h3>Данные об Гиганте.</h3>
@@ -9,9 +9,9 @@ import { StackData } from "./StackData";
  * <li>Используется при обращении к данным Гиганта.</li>
  * </ol>
  */
-const Gymir: IGiantData = {
-    description: `Плените следующую карту разведчика, которую вы призовёте. Прибавьте очки храбрости пленённой карты, умноженные на 3, к итоговому показателю храбрости вашей армии в конце игры.`,
+const Gymir: GiantData = {
     name: GiantNames.Gymir,
+    description: GiantDescriptionNames.Gymir,
     placedSuit: SuitNames.explorer,
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantGymir,
@@ -28,9 +28,9 @@ const Gymir: IGiantData = {
  * <li>Используется при обращении к данным Гиганта.</li>
  * </ol>
  */
-const Hrungnir: IGiantData = {
-    description: `Плените следующую карту горняка, которую вы призовёте, и сразу же обменяйте каждую из ваших монет на монету с номиналом +2. Этот эффект не распространяется на обменные монеты с номиналом 0 или 3. Совершите обмен в порядке сверху вниз, начиная с монеты для таверны «Весёлый гоблин» и заканчивая монетами в вашем кошеле (сначала монета слева, затем справа). Сам процесс обмена монет происходит по обычным правилам. Если у вас есть Улина, то примените способность Хрунгира сначала к монетам, которые уже находятся на вашем планшете, а затем в любом порядке обменяйте монеты в вашей руке.`,
+const Hrungnir: GiantData = {
     name: GiantNames.Hrungnir,
+    description: GiantDescriptionNames.Hrungnir,
     placedSuit: SuitNames.miner,
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantHrungnir,
@@ -48,9 +48,9 @@ const Hrungnir: IGiantData = {
  * <li>Используется при обращении к данным Гиганта.</li>
  * </ol>
  */
-const Skymir: IGiantData = {
-    description: `Плените следующую карту охотника, которую вы призовёте. Затем возьмите 5 карт из резерва легенд рядом с королевской сокровищницей и выберите себе 2. Оставшиеся карты положите под низ стопки резерва легенд.`,
+const Skymir: GiantData = {
     name: GiantNames.Surt,
+    description: GiantDescriptionNames.Skymir,
     placedSuit: SuitNames.hunter,
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantSkymir,
@@ -71,9 +71,9 @@ const Skymir: IGiantData = {
  * <li>Используется при обращении к данным Гиганта.</li>
  * </ol>
  */
-const Surt: IGiantData = {
-    description: `Плените следующую карту воина, которую вы призовёте. Прибавьте номинал вашей самой ценной монеты к итоговому показателю храбрости вашей армии в конце игры.`,
+const Surt: GiantData = {
     name: GiantNames.Surt,
+    description: GiantDescriptionNames.Surt,
     placedSuit: SuitNames.warrior,
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantSurt,
@@ -91,9 +91,9 @@ const Surt: IGiantData = {
  * <li>Используется при обращении к данным Гиганта.</li>
  * </ol>
  */
-const Thrivaldi: IGiantData = {
-    description: `Плените следующую карту кузнеца, которую вы призовёте,и сразу же призовите героя. Этот новый герой не учитывается в общем количестве героев игрока, и не требует для себя линии 5 шевронов. • Невозможно призвать героя, если нельзя выполнить требования его призыва. • Если вы играете с дополнением Тингвеллир, Тривальди позволяет вам призвать карту героя, даже если вы владеете картой Мегингьорд.`,
+const Thrivaldi: GiantData = {
     name: GiantNames.Thrivaldi,
+    description: GiantDescriptionNames.Thrivaldi,
     placedSuit: SuitNames.blacksmith,
     buff: {
         name: GiantBuffNames.PlayerHasActiveGiantThrivaldi,
@@ -111,9 +111,9 @@ const Thrivaldi: IGiantData = {
  * <li>Используется при обращении к данным Бога.</li>
  * </ol>
  */
-const Freyja: IGodData = {
-    description: `В конце этапа «Появление дворфов» и до этапа «Ставки» вы можете поменять местами одну карту в таверне с картой в другой таверне. Однако Фрейя не может выбрать карту, отмеченную способностью ЛОКИ. Прибавьте 15 очков к итоговому показателю храбрости вашей армии в конце игры. Способность Фрейи применяется после способности Локи.`,
+const Freyja: GodData = {
     name: GodNames.Freyja,
+    description: GodDescriptionNames.Freyja,
     points: 15,
     buff: {
         name: GodBuffNames.PlayerHasActiveGodFreyja,
@@ -127,9 +127,9 @@ const Freyja: IGodData = {
  * <li>Используется при обращении к данным Бога.</li>
  * </ol>
  */
-const Frigg: IGodData = {
-    description: `Когда вы выбираете карту дворфа или королевской награды в таверне, поместите её под колоду текущей эпохи, затем возьмите с верха колоды 3 карты и оставьте у себя 1 из них. Положите 2 оставшиеся карты под колоду текущей эпохи в любом порядке. Теперь вы знаете 3 карты, которые появятся в последней таверне в конце эпохи. Прибавьте 12 очков к итоговому показателю храбрости вашей армии в конце игры. Способность Фригг не может быть активирована на последнем ходу эпохи 1 или 2.`,
+const Frigg: GodData = {
     name: GodNames.Frigg,
+    description: GodDescriptionNames.Frigg,
     points: 12,
     buff: {
         name: GodBuffNames.PlayerHasActiveGodFrigg,
@@ -143,9 +143,9 @@ const Frigg: IGodData = {
  * <li>Используется при обращении к данным Бога.</li>
  * </ol>
  */
-const Loki: IGodData = {
-    description: `В конце этапа «Появление дворфов» и до этапа «Ставки» вы можете поместить жетон власти Локи на 1 любую карту дворфа или королевской награды и зарезервировать её. Только вы можете забрать эту карту. Если вместо отмеченной жетоном власти ЛОКИ карты вы выбрали другую карту, сбросьте жетон власти Локи в конце вашего хода. Прибавьте 8 очков к итоговому показателю храбрости вашей армии в конце игры. Способность Локи применяется перед способностью Фрейи.`,
+const Loki: GodData = {
     name: GodNames.Loki,
+    description: GodDescriptionNames.Loki,
     points: 8,
     buff: {
         name: GodBuffNames.PlayerHasActiveGodLoki,
@@ -159,9 +159,9 @@ const Loki: IGodData = {
  * <li>Используется при обращении к данным Бога.</li>
  * </ol>
  */
-const Odin: IGodData = {
-    description: `В конце своего хода вы можете вернуть одного из своих нейтральных героев в резерв и вместо него призвать другого нейтрального героя. Если возможно, примените эффект только что призванного героя. Не приносит победных очков в конце игры.`,
+const Odin: GodData = {
     name: GodNames.Odin,
+    description: GodDescriptionNames.Odin,
     points: 0,
     buff: {
         name: GodBuffNames.PlayerHasActiveGodOdin,
@@ -175,9 +175,9 @@ const Odin: IGodData = {
  * <li>Используется при обращении к данным Бога.</li>
  * </ol>
  */
-const Thor: IGodData = {
-    description: `Вы можете отменить эффект, обязывающий сбросить карту. Способность Тора предотвращает сброс 1 карты в результате эффектов карт Бонфур, Дагда, Брисингамен и Хёфуд. Прибавьте 8 очков к итоговому показателю храбрости вашей армии в конце игры.`,
+const Thor: GodData = {
     name: GodNames.Thor,
+    description: GodDescriptionNames.Thor,
     points: 8,
     buff: {
         name: GodBuffNames.PlayerHasActiveGodThor,
@@ -191,9 +191,9 @@ const Thor: IGodData = {
  * <li>Используется при обращении к данным Мифического животного.</li>
  * </ol>
  */
-const Durathor: IMythicalAnimalData = {
-    description: `Обладает 1 шевроном охотников. Олень Дуратрор делает Дагду менее вспыльчивой, и когда она появляется в армии игрока, он сбрасывает на одну карту дворфов меньше.`,
+const Durathor: MythicalAnimalData = {
     name: MythicalAnimalNames.Durathor,
+    description: MythicalAnimalDescriptionNames.Durathor,
     suit: SuitNames.hunter,
     buff: {
         name: MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards,
@@ -211,9 +211,9 @@ const Durathor: IMythicalAnimalData = {
  * <li>Используется при обращении к данным Мифического животного.</li>
  * </ol>
  */
-const Garm: IMythicalAnimalData = {
-    description: `Обладает 2 шевронами разведчиков. Прибавьте 9 очков к вашему показателю храбрости разведчиков + 1 очко за каждый шеврон в колонке разведчиков (включая его собственные). Если во время смотра войск вы получили знак отличия разведчиков, возьмите 6 карт из колоды эпохи 2 (вместо 3) и оставьте себе 1, вернув оставшиеся карты в колоду.`,
+const Garm: MythicalAnimalData = {
     name: MythicalAnimalNames.Garm,
+    description: MythicalAnimalDescriptionNames.Garm,
     points: 9,
     rank: 2,
     suit: SuitNames.explorer,
@@ -232,12 +232,12 @@ const Garm: IMythicalAnimalData = {
  * <li>Используется при обращении к данным Мифического животного.</li>
  * </ol>
  */
-const Hraesvelg: IMythicalAnimalData = {
-    description: `Обладает 1 шевроном кузнецов. Возьмите карту «Гуллинбурсти» и поместите её в любую колонку своей армии.`,
+const Hraesvelg: MythicalAnimalData = {
     name: MythicalAnimalNames.Hraesvelg,
+    description: MythicalAnimalDescriptionNames.Hraesvelg,
     suit: SuitNames.blacksmith,
     stack: {
-        player: [StackData.placeMultiSuitsCards(MultiSuitCardNames.Gullinbursti)],
+        player: [AllStackData.placeMultiSuitsCards(MultiSuitCardNames.Gullinbursti)],
     },
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring,
@@ -252,9 +252,9 @@ const Hraesvelg: IMythicalAnimalData = {
  * <li>Используется при обращении к данным Мифического животного.</li>
  * </ol>
  */
-const Nidhogg: IMythicalAnimalData = {
-    description: `Обладает 1 шевроном воинов. Прибавьте 5 очков к показателю храбрости воинов +2 очка за каждый шеврон в колонке воинов (включая его собственный).`,
+const Nidhogg: MythicalAnimalData = {
     name: MythicalAnimalNames.Nidhogg,
+    description: MythicalAnimalDescriptionNames.Nidhogg,
     points: 5,
     suit: SuitNames.warrior,
     scoringRule: {
@@ -270,9 +270,9 @@ const Nidhogg: IMythicalAnimalData = {
  * <li>Используется при обращении к данным Мифического животного.</li>
  * </ol>
  */
-const Ratatosk: IMythicalAnimalData = {
-    description: `Обладает 1 шевроном горняков. Прибавьте 2 очка к показателю храбрости горняков. При подсчёте показателя храбрости горняков каждая пара шевронов со значением 0 добавляет 1 очко храбрости перед умножением на количество шевронов.`,
+const Ratatosk: MythicalAnimalData = {
     name: MythicalAnimalNames.Ratatosk,
+    description: MythicalAnimalDescriptionNames.Ratatosk,
     points: 2,
     suit: SuitNames.miner,
     buff: {
@@ -291,9 +291,9 @@ const Ratatosk: IMythicalAnimalData = {
  * <li>Используется при обращении к данным валькирии.</li>
  * </ol>
  */
-const Brynhildr: IValkyryData = {
-    description: `Каждый раз, когда вы побеждаете на этапе «Открытие ставок» и можете первым выбрать дворфа в таверне, переместите жетон силы на 1 деление вниз по шкале силы этой валькирии. Значения шкалы силы: 0 – 3 – 6 – 10 – 16`,
+const Brynhildr: ValkyryData = {
     name: ValkyryNames.Brynhildr,
+    description: ValkyryDescriptionNames.Brynhildr,
     buff: {
         name: ValkyryBuffNames.CountBidWinnerAmount,
     },
@@ -309,9 +309,9 @@ const Brynhildr: IValkyryData = {
  * <li>Используется при обращении к данным валькирии.</li>
  * </ol>
  */
-const Hildr: IValkyryData = {
-    description: `Во время смотра войск, за каждый полученный знак отличия, переместите жетон силы на 1 деление вниз по шкале силы этой валькирии. Значения шкалы силы: 0 – 8 – 16 – 0`,
+const Hildr: ValkyryData = {
     name: ValkyryNames.Hildr,
+    description: ValkyryDescriptionNames.Hildr,
     buff: {
         name: ValkyryBuffNames.CountDistinctionAmount,
     },
@@ -327,14 +327,14 @@ const Hildr: IValkyryData = {
  * <li>Используется при обращении к данным валькирии.</li>
  * </ol>
  */
-const Olrun: IValkyryData = {
-    description: `Поместите Эльрун в свою командную зону, а затем поместите на неё 1 жетон воинского класса. Каждый раз, когда вы помещаете в свою армию карту, содержащую шеврон выбранного класса, переместите жетон силы на 1 деление вниз по шкале силы этой валькирии. Нейтральные герои Илуд и Труд, а также Двойники Ольвюна и Гуллинбурсти не активируют способность Эльрун, так как шевроны этих карт нейтральны. Значения шкалы силы: 0 – 3 – 6 – 10 – 16`,
+const Olrun: ValkyryData = {
     name: ValkyryNames.Olrun,
+    description: ValkyryDescriptionNames.Olrun,
     buff: {
         name: ValkyryBuffNames.CountPickedCardClassRankAmount,
     },
     stack: {
-        player: [StackData.chooseSuitOlrun()],
+        player: [AllStackData.chooseSuitOlrun()],
     },
     scoringRule: {
         name: ValkyryScoringFunctionNames.OlrunScoring,
@@ -348,9 +348,9 @@ const Olrun: IValkyryData = {
  * <li>Используется при обращении к данным валькирии.</li>
  * </ol>
  */
-const Sigrdrifa: IValkyryData = {
-    description: `Каждый раз, когда вы призываете карту героя (любым образом), переместите жетон силы на 1 деление вниз по шкале силы этой валькирии. Способность Одина не активирует способность Сигдрифы. Значения шкалы силы: 0 – 0 – 8 – 16`,
+const Sigrdrifa: ValkyryData = {
     name: ValkyryNames.Sigrdrifa,
+    description: ValkyryDescriptionNames.Sigrdrifa,
     buff: {
         name: ValkyryBuffNames.CountPickedHeroAmount,
     },
@@ -366,9 +366,9 @@ const Sigrdrifa: IValkyryData = {
  * <li>Используется при обращении к данным валькирии.</li>
  * </ol>
  */
-const Svafa: IValkyryData = {
-    description: `Каждый раз, когда вы обмениваете или улучшаете монету с приростом переместите жетон силы на 1 деление вниз по шкале силы этой валькирии за каждую единицу прироста. Значения шкалы силы: 0 - 4 - 8 - 16`,
+const Svafa: ValkyryData = {
     name: ValkyryNames.Svafa,
+    description: ValkyryDescriptionNames.Svafa,
     buff: {
         name: ValkyryBuffNames.CountBettermentAmount,
     },
@@ -384,7 +384,7 @@ const Svafa: IValkyryData = {
  * <li>Происходит при создании всех Мифических существ при инициализации игры.</li>
  * </ol>
  */
-export const giantConfig: GiantConfigType = {
+export const giantConfig: GiantConfig = {
     Gymir,
     Hrungnir,
     Skymir,
@@ -399,7 +399,7 @@ export const giantConfig: GiantConfigType = {
  * <li>Происходит при создании всех Богов при инициализации игры.</li>
  * </ol>
  */
-export const godConfig: GodConfigType = {
+export const godConfig: GodConfig = {
     Freyja,
     Frigg,
     Loki,
@@ -414,7 +414,7 @@ export const godConfig: GodConfigType = {
  * <li>Происходит при создании всех Мифических животных при инициализации игры.</li>
  * </ol>
  */
-export const mythicalAnimalConfig: MythicalAnimalConfigType = {
+export const mythicalAnimalConfig: MythicalAnimalConfig = {
     Durathor,
     Garm,
     Hraesvelg,
@@ -429,7 +429,7 @@ export const mythicalAnimalConfig: MythicalAnimalConfigType = {
  * <li>Происходит при создании всех Валькирий при инициализации игры.</li>
  * </ol>
  */
-export const valkyryConfig: ValkyryConfigType = {
+export const valkyryConfig: ValkyryConfig = {
     Brynhildr,
     Hildr,
     Olrun,
@@ -444,7 +444,7 @@ export const valkyryConfig: ValkyryConfigType = {
  * <li>Происходит при создании всех Мифических существ при инициализации игры.</li>
  * </ol>
  */
-export const mythologicalCreatureConfig: MythologicalCreatureConfigType = {
+export const mythologicalCreatureConfig: MythologicalCreatureConfig = {
     2: 9,
     3: 9,
     4: 12,

@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, ErrorNames, RusCardTypeNames, SuitNames, ValkyryBuffNames, ValkyryNames } from "../typescript/enums";
-import type { BuffValueType, CanBeUndefType, IPublicPlayer, IValkyryCard, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import { CardTypeRusNames, CommonBuffNames, ErrorNames, SuitNames, ValkyryBuffNames, ValkyryNames } from "../typescript/enums";
+import type { BuffValueType, CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, ValkyryCard } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 
 /**
@@ -21,9 +21,9 @@ export const CheckIfRecruitedCardHasNotLeastRankOfChosenClass = ({ G, ctx, myPla
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const chosenSuit: BuffValueType = GetBuffValue({ G, ctx, myPlayerID, ...rest }, BuffNames.SuitIdForOlrun);
+    const chosenSuit: BuffValueType = GetBuffValue({ G, ctx, myPlayerID, ...rest }, CommonBuffNames.SuitIdForOlrun);
     if (chosenSuit === true) {
-        throw new Error(`У бафа с названием '${BuffNames.SuitIdForOlrun}' не может не быть выбрана фракция.`);
+        throw new Error(`У бафа с названием '${CommonBuffNames.SuitIdForOlrun}' не может не быть выбрана фракция.`);
     }
     const recruitedCardRank: number = player.cards[suit].reduce(TotalRank, 0),
         chosenClassRank: number = player.cards[chosenSuit].reduce(TotalRank, 0);
@@ -72,16 +72,16 @@ export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
                 valkyryName = ValkyryNames.Svafa;
                 break;
             default:
-                throw new Error(`Нет такого бафа '${buffName}' у мифических существ типа '${RusCardTypeNames.Valkyry_Card}}'.`);
+                throw new Error(`Нет такого бафа '${buffName}' у мифических существ типа '${CardTypeRusNames.Valkyry_Card}}'.`);
         }
-        const valkyryCard: CanBeUndefType<IValkyryCard> =
+        const valkyryCard: CanBeUndefType<ValkyryCard> =
             player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
-                boolean => card.name === valkyryName) as CanBeUndefType<IValkyryCard>;
+                boolean => card.name === valkyryName) as CanBeUndefType<ValkyryCard>;
         if (valkyryCard === undefined) {
-            throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' не удалось найти карту типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryName}'.`);
+            throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' не удалось найти карту типа '${CardTypeRusNames.Valkyry_Card}' с названием '${valkyryName}'.`);
         }
         if (valkyryCard.strengthTokenNotch === null) {
-            throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);
+            throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' у карты типа '${CardTypeRusNames.Valkyry_Card}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);
         }
         valkyryCard.strengthTokenNotch += 1;
     }

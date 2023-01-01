@@ -3,7 +3,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { AllCurrentScoring } from "./Score";
-import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -20,7 +20,7 @@ export const enumerate = (G, ctx, playerID) => {
     var _a;
     const moves = [], player = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx }, ErrorNames.CurrentPublicPlayerIsUndefined, playerID);
+        return ThrowMyError({ G, ctx }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, playerID);
     }
     const phase = ctx.phase;
     if (phase !== null) {
@@ -58,7 +58,7 @@ export const enumerate = (G, ctx, playerID) => {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotPlaceAllCoins;
                             }
                             else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                return ThrowMyError({ G, ctx }, ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         case GameModeNames.SoloAndvari:
@@ -69,12 +69,12 @@ export const enumerate = (G, ctx, playerID) => {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotAndvariPlaceAllCoins;
                             }
                             else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                return ThrowMyError({ G, ctx }, ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         default:
                             _exhaustiveCheck = G.mode;
-                            throw new Error(`Нет такого режима игры.`);
+                            return ThrowMyError({ G, ctx }, ErrorNames.NoSuchGameMode);
                             return _exhaustiveCheck;
                     }
                     break;
@@ -108,7 +108,7 @@ export const enumerate = (G, ctx, playerID) => {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotClickCard;
                             }
                             else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                return ThrowMyError({ G, ctx }, ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         case GameModeNames.SoloAndvari:
@@ -119,12 +119,12 @@ export const enumerate = (G, ctx, playerID) => {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard;
                             }
                             else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                return ThrowMyError({ G, ctx }, ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         default:
                             _exhaustiveCheck = G.mode;
-                            throw new Error(`Нет такого режима игры.`);
+                            return ThrowMyError({ G, ctx }, ErrorNames.NoSuchGameMode);
                             return _exhaustiveCheck;
                     }
                     break;
@@ -283,7 +283,7 @@ export const iterations = (G, ctx, playerID) => {
             }
             const deck0 = G.secret.decks[0];
             if (deck0.length > 18) {
-                if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
+                if (tavernCard.type === CardTypeRusNames.Dwarf_Card) {
                     if (CompareTavernCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card) => CompareTavernCards(card, G.averageCards[tavernCard.suit]) > -1)) {
                         continue;
@@ -326,7 +326,7 @@ export const objectives = (G, ctx, playerID) => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
@@ -361,7 +361,7 @@ export const objectives = (G, ctx, playerID) => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
@@ -396,7 +396,7 @@ export const objectives = (G, ctx, playerID) => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }

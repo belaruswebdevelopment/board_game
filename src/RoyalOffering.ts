@@ -1,6 +1,6 @@
 import { actionCardsConfigArray } from "./data/RoyalOfferingCardData";
-import { RusCardTypeNames } from "./typescript/enums";
-import type { CanBeUndefType, CreateRoyalOfferingCardType, IndexOf, INumberValues, IPlayersNumberTierCardData, IRoyalOfferingCard, IRoyalOfferingCardConfig, RoyalOfferingsConfigType } from "./typescript/interfaces";
+import { CardTypeRusNames } from "./typescript/enums";
+import type { CreateRoyalOfferingCardFromData, IndexOf, IPlayersNumberTierCardData, NumberTierValues, RoyalOfferingCard, RoyalOfferingCardData, RoyalOfferingsConfig } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты королевских наград.</h3>
@@ -12,19 +12,13 @@ import type { CanBeUndefType, CreateRoyalOfferingCardType, IndexOf, INumberValue
  * @param data Данные для создания карт.
  * @returns Все карты королевских наград.
  */
-export const BuildRoyalOfferingCards = (data: IPlayersNumberTierCardData): IRoyalOfferingCard[] => {
-    const cards: IRoyalOfferingCard[] = [];
+export const BuildRoyalOfferingCards = (data: IPlayersNumberTierCardData): RoyalOfferingCard[] => {
+    const cards: RoyalOfferingCard[] = [];
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
-        const currentActionCardConfig: IRoyalOfferingCardConfig =
-            actionCardsConfigArray[i as IndexOf<RoyalOfferingsConfigType>],
-            amountPlayersValue: CanBeUndefType<INumberValues> = currentActionCardConfig.amount()[data.players];
-        if (amountPlayersValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}'.`);
-        }
-        const amountTierValue: CanBeUndefType<number> = amountPlayersValue[data.tier];
-        if (amountTierValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт '${RusCardTypeNames.Royal_Offering_Card}' для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
-        }
+        const currentActionCardConfig: RoyalOfferingCardData =
+            actionCardsConfigArray[i as IndexOf<RoyalOfferingsConfig>],
+            amountPlayersValue: NumberTierValues = currentActionCardConfig.amount()[data.players],
+            amountTierValue: number = amountPlayersValue[data.tier];
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateRoyalOfferingCard({
                 value: currentActionCardConfig.value,
@@ -45,16 +39,16 @@ export const BuildRoyalOfferingCards = (data: IPlayersNumberTierCardData): IRoya
  *
  * @param type Тип.
  * @param value Значение.
- * @param stack Действие.
+ * @param stack Стек действий.
  * @param name Название.
  * @returns Карта королевской награды.
  */
 const CreateRoyalOfferingCard = ({
-    type = RusCardTypeNames.Royal_Offering_Card,
+    type = CardTypeRusNames.Royal_Offering_Card,
     value,
     stack,
     name,
-}: CreateRoyalOfferingCardType): IRoyalOfferingCard => ({
+}: CreateRoyalOfferingCardFromData): RoyalOfferingCard => ({
     type,
     value,
     stack,

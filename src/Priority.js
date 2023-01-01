@@ -30,6 +30,7 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers, solo) => {
     const priorityNum = ((solo ? 1 : numPlayers) - 1);
     return prioritiesConfig[priorityNum].map((priority) => priority);
 };
+// TODO Move to PriorityData?!
 /**
  * <h3>Массив кристаллов приоритетов.</h3>
  * <p>Применения:</p>

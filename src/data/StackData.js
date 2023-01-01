@@ -6,7 +6,7 @@ import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, Draw
  * <li>Используется при обращении к данным об стеке действий.</li>
  * </ol>
  */
-export const StackData = {
+export const AllStackData = {
     activateGiantAbilityOrPickCard: (giantName, card) => ({
         configName: ConfigNames.ActivateGiantAbilityOrPickCard,
         stageName: TavernsResolutionWithSubStageNames.ActivateGiantAbilityOrPickCard,

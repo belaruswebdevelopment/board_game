@@ -1,5 +1,5 @@
-import { RusCardTypeNames } from "../typescript/enums";
-import type { IGiantCard, IGodCard, IMythicalAnimalCard } from "../typescript/interfaces";
+import { CardTypeRusNames } from "../typescript/enums";
+import type { GiantCard, GodCard, MythicalAnimalCard } from "../typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект картой Гиганта.</h3>
@@ -11,8 +11,8 @@ import type { IGiantCard, IGodCard, IMythicalAnimalCard } from "../typescript/in
  * @param card Карта.
  * @returns Является ли объект картой Гиганта.
  */
-export const IsGiantCard = (card: unknown): card is IGiantCard =>
-    (card as IGiantCard).type === RusCardTypeNames.Giant_Card;
+export const IsGiantCard = (card: unknown): card is GiantCard =>
+    (card as GiantCard).type === CardTypeRusNames.Giant_Card;
 
 /**
  * <h3>Проверка, является ли объект картой Мифического животного.</h3>
@@ -24,7 +24,7 @@ export const IsGiantCard = (card: unknown): card is IGiantCard =>
  * @param card Карта.
  * @returns Является ли объект картой Мифического животного.
  */
-export const IsGodCard = (card: unknown): card is IGodCard => (card as IGodCard).type === RusCardTypeNames.God_Card;
+export const IsGodCard = (card: unknown): card is GodCard => (card as GodCard).type === CardTypeRusNames.God_Card;
 
 /**
  * <h3>Проверка, является ли объект картой Мифического животного.</h3>
@@ -36,5 +36,5 @@ export const IsGodCard = (card: unknown): card is IGodCard => (card as IGodCard)
  * @param card Карта.
  * @returns Является ли объект картой Мифического животного.
  */
-export const IsMythicalAnimalCard = (card: unknown): card is IMythicalAnimalCard =>
-    (card as IMythicalAnimalCard).type === RusCardTypeNames.Mythical_Animal_Card;
+export const IsMythicalAnimalCard = (card: unknown): card is MythicalAnimalCard =>
+    (card as MythicalAnimalCard).type === CardTypeRusNames.Mythical_Animal_Card;

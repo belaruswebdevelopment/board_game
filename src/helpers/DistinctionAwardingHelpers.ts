@@ -1,10 +1,10 @@
 import { CreateCoin } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, ICoin, IDistinctionAwardingFunction, IPlayer, IPublicPlayer, ISpecialCard, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { CanBeUndefType, ICoin, IDistinctionAwardingFunction, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, SpecialCard } from "../typescript/interfaces";
 import { AddCardToPlayer } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -29,7 +29,7 @@ export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = ({ G,
             myPlayerID);
     }
     if (G.tierToEnd !== 0) {
-        const card: CanBeUndefType<ISpecialCard> = G.specialCardsDeck.find((card: ISpecialCard): boolean =>
+        const card: CanBeUndefType<SpecialCard> = G.specialCardsDeck.find((card: SpecialCard): boolean =>
             card.name === SpecialCardNames.ChiefBlacksmith);
         if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
@@ -62,11 +62,11 @@ export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, c
     }
     if (G.tierToEnd !== 0) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCardSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCardSoloBot()]);
         } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCardSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCardSoloBotAndvari()]);
         } else {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCard()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCard()]);
         }
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
@@ -180,12 +180,12 @@ export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ct
     if (G.tierToEnd !== 0) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-                [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
+                [AllStackData.upgradeCoinWarriorDistinctionSoloBot()]);
         } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-                [StackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
+                [AllStackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
         } else {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinction()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.upgradeCoinWarriorDistinction()]);
         }
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
     } else {

@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypeNames, SuitNames } from "./typescript/enums";
+import { CardTypeRusNames, SuitNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты дворфов.</h3>
  * <p>Применения:</p>
@@ -14,14 +14,7 @@ export const BuildDwarfCards = (data) => {
     const cards = [];
     let suit;
     for (suit in suitsConfig) {
-        const pointValuesPlayers = suitsConfig[suit].pointsValues()[data.players];
-        if (pointValuesPlayers === undefined) {
-            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
-        }
-        const points = pointValuesPlayers[data.tier];
-        if (points === undefined) {
-            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
-        }
+        const pointValuesPlayers = suitsConfig[suit].pointsValues()[data.players], points = pointValuesPlayers[data.tier];
         let count = 0;
         if (Array.isArray(points)) {
             count = points.length;
@@ -38,13 +31,10 @@ export const BuildDwarfCards = (data) => {
                 }
                 currentPoints = cardPoints;
             }
-            else {
-                currentPoints = null;
-            }
             cards.push(CreateDwarfCard({
                 suit: suitsConfig[suit].suit,
                 points: currentPoints,
-                name: `(фракция: ${suitsConfig[suitsConfig[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
+                name: `(фракция: ${suitsConfig[suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
             }));
         }
     }
@@ -64,7 +54,7 @@ export const BuildDwarfCards = (data) => {
  * @param points Очки.
  * @returns Карта дворфа.
  */
-export const CreateDwarfCard = ({ type = RusCardTypeNames.Dwarf_Card, name, suit, rank = 1, points, }) => ({
+export const CreateDwarfCard = ({ type = CardTypeRusNames.Dwarf_Card, name, suit, rank = 1, points = null, }) => ({
     type,
     name,
     suit,

@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypeNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CreateDwarfCardType, IDwarfCard, IPlayersNumberTierCardData, PointsType, PointsValuesType } from "./typescript/interfaces";
+import { CardTypeRusNames, SuitNames } from "./typescript/enums";
+import type { CanBeUndefType, CreateDwarfCardFromData, DwarfCard, IPlayersNumberTierCardData, PointsType, PointsValuesType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -12,19 +12,12 @@ import type { CanBeNullType, CanBeUndefType, CreateDwarfCardType, IDwarfCard, IP
  * @param data Данные для создания карт.
  * @returns Все карты дворфов.
  */
-export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] => {
-    const cards: IDwarfCard[] = [];
+export const BuildDwarfCards = (data: IPlayersNumberTierCardData): DwarfCard[] => {
+    const cards: DwarfCard[] = [];
     let suit: SuitNames;
     for (suit in suitsConfig) {
-        const pointValuesPlayers: CanBeUndefType<PointsValuesType> =
-            suitsConfig[suit].pointsValues()[data.players];
-        if (pointValuesPlayers === undefined) {
-            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
-        }
-        const points: CanBeUndefType<PointsType> = pointValuesPlayers[data.tier];
-        if (points === undefined) {
-            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
-        }
+        const pointValuesPlayers: PointsValuesType = suitsConfig[suit].pointsValues()[data.players],
+            points: PointsType = pointValuesPlayers[data.tier];
         let count = 0;
         if (Array.isArray(points)) {
             count = points.length;
@@ -32,20 +25,18 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
             count = points;
         }
         for (let j = 0; j < count; j++) {
-            let currentPoints: CanBeNullType<number>;
+            let currentPoints: CanBeUndefType<number>;
             if (Array.isArray(points)) {
                 const cardPoints: CanBeUndefType<number> = points[j];
                 if (cardPoints === undefined) {
                     throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                 }
                 currentPoints = cardPoints;
-            } else {
-                currentPoints = null;
             }
             cards.push(CreateDwarfCard({
                 suit: suitsConfig[suit].suit,
                 points: currentPoints,
-                name: `(фракция: ${suitsConfig[suitsConfig[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
+                name: `(фракция: ${suitsConfig[suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
             }));
         }
     }
@@ -67,12 +58,12 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): IDwarfCard[] 
  * @returns Карта дворфа.
  */
 export const CreateDwarfCard = ({
-    type = RusCardTypeNames.Dwarf_Card,
+    type = CardTypeRusNames.Dwarf_Card,
     name,
     suit,
     rank = 1,
-    points,
-}: CreateDwarfCardType): IDwarfCard => ({
+    points = null,
+}: CreateDwarfCardFromData): DwarfCard => ({
     type,
     name,
     suit,

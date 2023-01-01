@@ -1,5 +1,5 @@
 import { heroesConfig, soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig, soloGameAndvariHeroesForPlayersConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
-import { GameModeNames, RusCardTypeNames } from "./typescript/enums";
+import { CardTypeRusNames, GameModeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -26,6 +26,7 @@ export const BuildHeroes = (configOptions, mode) => {
                 rank: heroData.rank,
                 points: heroData.points,
                 buff: heroData.buff,
+                pickValidators: heroData.pickValidators,
                 validators: heroData.validators,
                 actions: heroData.actions,
                 stack: heroData.stack,
@@ -86,10 +87,10 @@ export const BuildHeroes = (configOptions, mode) => {
  * @param pickValidators Валидаторы выбора карты.
  * @param validators Валидаторы карты.
  * @param actions Действия.
- * @param stack Действия.
+ * @param stack Стек действий.
  * @returns Герой.
  */
-const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, }) => ({
+const CreateHero = ({ type = CardTypeRusNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, }) => ({
     type,
     name,
     description,
@@ -118,7 +119,7 @@ const CreateHero = ({ type = RusCardTypeNames.Hero_Card, name, description, suit
  * @param points Очки.
  * @returns Карта героя на поле игрока.
  */
-export const CreateHeroPlayerCard = ({ type = RusCardTypeNames.Hero_Player_Card, name, description, suit, rank, points, }) => ({
+export const CreateHeroPlayerCard = ({ type = CardTypeRusNames.Hero_Player_Card, name, description, suit, rank = 1, points = null, }) => ({
     type,
     name,
     description,

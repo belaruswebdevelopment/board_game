@@ -1,5 +1,5 @@
-import { RusCardTypeNames } from "../typescript/enums";
-import type { IMercenaryCampCard, IMercenaryPlayerCampCard } from "../typescript/interfaces";
+import { CardTypeRusNames } from "../typescript/enums";
+import type { MercenaryCampCard, MercenaryPlayerCampCard } from "../typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект картой Наёмника для лагеря.</h3>
@@ -11,8 +11,8 @@ import type { IMercenaryCampCard, IMercenaryPlayerCampCard } from "../typescript
  * @param card Карта.
  * @returns Является ли объект картой Наёмника для лагеря.
  */
-export const IsMercenaryCampCard = (card: unknown): card is IMercenaryCampCard =>
-    (card as IMercenaryCampCard).type === RusCardTypeNames.Mercenary_Card;
+export const IsMercenaryCampCard = (card: unknown): card is MercenaryCampCard =>
+    (card as MercenaryCampCard).type === CardTypeRusNames.Mercenary_Card;
 
 /**
 * <h3>Проверка, является ли объект картой лагеря Наёмник на поле игрока.</h3>
@@ -24,5 +24,5 @@ export const IsMercenaryCampCard = (card: unknown): card is IMercenaryCampCard =
 * @param card Карта.
 * @returns Является ли объект картой лагеря Наёмник на поле игрока.
 */
-export const IsMercenaryPlayerCampCard = (card: unknown): card is IMercenaryPlayerCampCard =>
-    (card as IMercenaryPlayerCampCard).type === RusCardTypeNames.Mercenary_Player_Card;
+export const IsMercenaryPlayerCampCard = (card: unknown): card is MercenaryPlayerCampCard =>
+    (card as MercenaryPlayerCampCard).type === CardTypeRusNames.Mercenary_Player_Card;

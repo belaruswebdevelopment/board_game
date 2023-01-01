@@ -1,5 +1,5 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
@@ -8,8 +8,8 @@ import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards, RemoveCardsFrom
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArrayType, CampCardType, CanBeUndefType, IndexOf, IPlayer, IPublicPlayer, IStack, MyFnContextWithMyPlayerID, PlayerCardType, PublicPlayerCoinType } from "../typescript/interfaces";
+import { ArtefactNames, CardTypeRusNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, SuitNames } from "../typescript/enums";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArrayType, CampCardType, CanBeUndefType, IndexOf, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerCardType, PublicPlayerCoinType, Stack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -27,11 +27,11 @@ export const AddCoinToPouchAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContex
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     const tempId: number =
@@ -83,16 +83,16 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = ({ G, ctx, myPl
     MyFnContextWithMyPlayerID, value: BasicVidofnirVedrfolnirUpgradeValueType): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-        [StackData.upgradeCoinVidofnirVedrfolnir(value, stack.coinId,
+        [AllStackData.upgradeCoinVidofnirVedrfolnir(value, stack.coinId,
             stack.priority === 0 ? undefined : 3)]);
 };
 
@@ -117,7 +117,7 @@ export const DiscardSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
     const discardedCard: PlayerCardType =
         RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID, ...rest }, SuitNames.warrior, cardId);
     DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${RusCardTypeNames.Artefact_Card}' '${ArtefactNames.Hofud}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${CardTypeRusNames.Artefact_Card}' '${ArtefactNames.Hofud}'.`);
     player.stack = [];
 };
 
@@ -141,13 +141,13 @@ export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
     }
     RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, cardId, [null]);
     AddCampCardToCards({ G, ctx, myPlayerID, ...rest }, campCard);
-    if (campCard.type === RusCardTypeNames.Artefact_Card) {
+    if (campCard.type === CardTypeRusNames.Artefact_Card) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest }, campCard.stack?.player, campCard);
         StartAutoAction({ G, ctx, myPlayerID, ...rest }, campCard.actions);
     }
-    if (campCard.type === RusCardTypeNames.Mercenary_Card && ctx.phase === PhaseNames.EnlistmentMercenaries) {
+    if (campCard.type === CardTypeRusNames.Mercenary_Card && ctx.phase === PhaseNames.EnlistmentMercenaries) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-            [StackData.placeEnlistmentMercenaries(campCard)]);
+            [AllStackData.placeEnlistmentMercenaries(campCard)]);
     }
     if (G.odroerirTheMythicCauldron) {
         AddCoinOnOdroerirTheMythicCauldronCampCard({ G, ctx, ...rest });
@@ -170,17 +170,18 @@ export const UpgradeCoinVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...res
     coinId: number, type: CoinTypeNames): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
+            myPlayerID);
     }
     const value: number = UpgradeCoinActions({ G, ctx, myPlayerID, ...rest }, coinId, type);
     if (value !== 5 && stack.priority === 0) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-            [StackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([value === 2 ? 3 : 2],
+            [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([value === 2 ? 3 : 2],
                 coinId, 3)]);
     }
 };

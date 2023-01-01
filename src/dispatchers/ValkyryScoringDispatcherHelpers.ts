@@ -1,6 +1,6 @@
 import { BrynhildrScoring, HildrScoring, OlrunScoring, SigrdrifaScoring, SvafaScoring } from "../score_helpers/ValkyryScoringHelpers";
 import { ValkyryScoringFunctionNames } from "../typescript/enums";
-import type { IAction, IValkyryScoringFunction, ScoringArgsType } from "../typescript/interfaces";
+import type { Action, IValkyryScoringFunction, ScoringArgsType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по Валькирии.</h3>
@@ -13,8 +13,7 @@ import type { IAction, IValkyryScoringFunction, ScoringArgsType } from "../types
  * @param params Параметры действия.
  * @returns Количество победных очков по Валькирии.
  */
-export const StartValkyryScoring = (action: IAction<ValkyryScoringFunctionNames, undefined>,
-    params: ScoringArgsType): number => {
+export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>, params: ScoringArgsType): number => {
     const actionDispatcher: IValkyryScoringFunction = ValkyryScoringDispatcherSwitcher(action.name);
     if (params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);

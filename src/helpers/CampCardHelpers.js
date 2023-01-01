@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { CampBuffNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
+import { CampBuffNames, CardTypeRusNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
 import { RemoveCoinFromMarket } from "./DiscardCoinHelpers";
@@ -20,7 +20,7 @@ import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null
         && (ctx.currentPlayer === G.publicPlayersOrder[0]
@@ -30,13 +30,13 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime);
     }
-    if (card.type === RusCardTypeNames.Artefact_Player_Card) {
+    if (card.type === CardTypeRusNames.Artefact_Player_Card) {
         AddArtefactPlayerCardToPlayerCards({ G, ctx, myPlayerID, ...rest }, card);
         CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
     }
     else {
         AddCampCardToPlayerCampCards({ G, ctx, myPlayerID, ...rest }, card);
-        if (card.type === RusCardTypeNames.Artefact_Card) {
+        if (card.type === CardTypeRusNames.Artefact_Card) {
             AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, card.buff);
         }
     }
@@ -55,7 +55,7 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
 const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     player.campCards.push(card);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}'.`);
@@ -74,7 +74,7 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }, card) => 
 const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);

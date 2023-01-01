@@ -1,6 +1,6 @@
 import { AstridScoring, BasicHeroScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
 import { HeroScoringFunctionNames } from "../typescript/enums";
-import type { IAction, IHeroScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsType } from "../typescript/interfaces";
+import type { Action, IHeroScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по герою.</h3>
@@ -14,7 +14,7 @@ import type { IAction, IHeroScoringFunction, MyFnContextWithMyPlayerID, ScoringA
  * @returns Количество победных очков по герою.
  */
 export const StartHeroScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    action: IAction<HeroScoringFunctionNames, ScoringArgsType>): number => {
+    action: Action<HeroScoringFunctionNames, ScoringArgsType>): number => {
     const actionDispatcher: IHeroScoringFunction = HeroScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
         return actionDispatcher?.({ G, ctx, myPlayerID, ...rest });

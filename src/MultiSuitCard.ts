@@ -1,6 +1,6 @@
 import { multiCardsConfig } from "./data/MultiSuitCardData";
-import { RusCardTypeNames } from "./typescript/enums";
-import type { CreateMultiSuitCardType, CreateMultiSuitPlayerCardType, GameNamesKeyofTypeofType, IMultiSuitCard, IMultiSuitPlayerCard, MultiSuitCardDataType, MultiSuitCardNamesKeyofTypeofType } from "./typescript/interfaces";
+import { CardTypeRusNames } from "./typescript/enums";
+import type { CreateMultiSuitCardFromData, CreateMultiSuitPlayerCardFromData, GameNamesKeyofTypeofType, MultiSuitCard, MultiSuitCardData, MultiSuitCardNamesKeyofTypeofType, MultiSuitPlayerCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создание особых мультифракционных карт.</h3>
@@ -12,11 +12,11 @@ import type { CreateMultiSuitCardType, CreateMultiSuitPlayerCardType, GameNamesK
  * @param configOptions Конфиг опций мультифракционных карт.
  * @returns Массив мультифракционных карт.
  */
-export const BuildMultiSuitCards = (configOptions: GameNamesKeyofTypeofType[]): IMultiSuitCard[] => {
-    const cards: IMultiSuitCard[] = [];
+export const BuildMultiSuitCards = (configOptions: GameNamesKeyofTypeofType[]): MultiSuitCard[] => {
+    const cards: MultiSuitCard[] = [];
     let cardName: MultiSuitCardNamesKeyofTypeofType;
     for (cardName in multiCardsConfig) {
-        const card: MultiSuitCardDataType = multiCardsConfig[cardName];
+        const card: MultiSuitCardData = multiCardsConfig[cardName];
         if (configOptions.includes(card.game)) {
             cards.push(CreateMultiSuitCard({
                 name: card.name,
@@ -38,9 +38,9 @@ export const BuildMultiSuitCards = (configOptions: GameNamesKeyofTypeofType[]): 
  * @returns Мультифракционная карта.
  */
 const CreateMultiSuitCard = ({
-    type = RusCardTypeNames.Multi_Suit_Card,
+    type = CardTypeRusNames.Multi_Suit_Card,
     name,
-}: CreateMultiSuitCardType): IMultiSuitCard => ({
+}: CreateMultiSuitCardFromData): MultiSuitCard => ({
     type,
     name,
 });
@@ -60,12 +60,12 @@ const CreateMultiSuitCard = ({
  * @returns Мультифракционная карта на поле игрока.
  */
 export const CreateMultiSuitPlayerCard = ({
-    type = RusCardTypeNames.Multi_Suit_Player_Card,
+    type = CardTypeRusNames.Multi_Suit_Player_Card,
     name,
     suit,
-    rank,
-    points,
-}: CreateMultiSuitPlayerCardType): IMultiSuitPlayerCard => ({
+    rank = 1,
+    points = null,
+}: CreateMultiSuitPlayerCardFromData): MultiSuitPlayerCard => ({
     type,
     name,
     suit,

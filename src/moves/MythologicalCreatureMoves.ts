@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { AddPlusTwoValueToAllCoinsAction } from "../actions/MythologicalCreatureActions";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
@@ -10,8 +10,8 @@ import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BuffNames, ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, ErrorNames, GiantBuffNames, GodNames, RusCardTypeNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IDwarfCard, InvalidMoveType, IPublicPlayer, IStack, Move, MyFnContext, MythologicalCreatureCommandZoneCardType, MythologicalCreatureDeckCardType } from "../typescript/interfaces";
+import { ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonBuffNames, ErrorNames, GiantBuffNames, GodNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, DwarfCard, InvalidMoveType, IPublicPlayer, Move, MyFnContext, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, Stack } from "../typescript/interfaces";
 
 export const ActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, godName: GodNames):
     CanBeVoidType<InvalidMoveType> => {
@@ -23,7 +23,7 @@ export const ActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
 
@@ -39,7 +39,7 @@ export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: M
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
 
@@ -66,12 +66,12 @@ export const ChooseCoinValueForHrungnirUpgradeMove: Move = ({ G, ctx, playerID, 
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     let nextCoinId: CanBeUndefType<number> = stack.coinId;
@@ -96,7 +96,7 @@ export const ChooseCoinValueForHrungnirUpgradeMove: Move = ({ G, ctx, playerID, 
  * @param card Карта Дворфа.
  * @returns
  */
-export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, card: IDwarfCard):
+export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, card: DwarfCard):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionWithSubStageNames.ActivateGiantAbilityOrPickCard,
@@ -106,12 +106,12 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     const giant: CanBeUndefType<MythologicalCreatureCommandZoneCardType> =
@@ -121,7 +121,7 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
         throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне отсутствует карта Гиганта с названием '${stack.giantName}'.`);
     }
     if (!IsGiantCard(giant)) {
-        throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне не может быть карта с типом '${giant.type}' вместо типа '${RusCardTypeNames.Giant_Card}' с названием '${stack.giantName}'.`);
+        throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне не может быть карта с типом '${giant.type}' вместо типа '${CardTypeRusNames.Giant_Card}' с названием '${stack.giantName}'.`);
     }
     giant.isActivated = true;
     let buffName: GiantBuffNames,
@@ -187,7 +187,7 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
  * @param card Карта Дворфа.
  * @returns
  */
-export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, card: IDwarfCard):
+export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, card: DwarfCard):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionWithSubStageNames.ActivateGiantAbilityOrPickCard,
@@ -197,12 +197,12 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     const giant: CanBeUndefType<MythologicalCreatureCommandZoneCardType> =
@@ -212,7 +212,7 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
         throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне отсутствует карта Гиганта с названием '${stack.giantName}'.`);
     }
     if (!IsGiantCard(giant)) {
-        throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне не может быть карта с типом '${giant.type}' вместо типа '${RusCardTypeNames.Giant_Card}' с названием '${stack.giantName}'.`);
+        throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне не может быть карта с типом '${giant.type}' вместо типа '${CardTypeRusNames.Giant_Card}' с названием '${stack.giantName}'.`);
     }
     giant.capturedCard = card;
     giant.isActivated = true;
@@ -224,7 +224,7 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
                 GiantBuffNames.PlayerHasActiveGiantThrivaldi)) {
                 buffName = GiantBuffNames.PlayerHasActiveGiantThrivaldi;
                 AddBuffToPlayer({ G, ctx, myPlayerID: playerID, ...rest }, {
-                    name: BuffNames.HasOneNotCountHero,
+                    name: CommonBuffNames.HasOneNotCountHero,
                 });
                 AddPickHeroAction({ G, ctx, myPlayerID: playerID, ...rest }, 1);
             } else {
@@ -244,7 +244,7 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
                 GiantBuffNames.PlayerHasActiveGiantSkymir)) {
                 buffName = GiantBuffNames.PlayerHasActiveGiantSkymir;
                 AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest },
-                    [StackData.getMythologyCardSkymir()]);
+                    [AllStackData.getMythologyCardSkymir()]);
             } else {
                 throw new Error(`Игрок с id '${playerID}' должен иметь баф '${GiantBuffNames.PlayerHasActiveGiantSkymir}'.`);
             }
@@ -294,11 +294,11 @@ export const ChooseSuitOlrunMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCon
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     AddBuffToPlayer({ G, ctx, myPlayerID: playerID, ...rest }, {
-        name: BuffNames.SuitIdForOlrun,
+        name: CommonBuffNames.SuitIdForOlrun,
     }, suit);
 };
 
@@ -323,13 +323,13 @@ export const GetMythologyCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCo
     if (G.mythologicalCreatureDeckForSkymir === null) {
         throw new Error(`Массив всех карт мифических существ для Skymir не может не быть заполнен картами.`);
     }
-    const mythologyCard: CanBeUndefType<MythologicalCreatureDeckCardType> = G.mythologicalCreatureDeckForSkymir[cardId];
+    const mythologyCard: CanBeUndefType<MythologicalCreatureCardType> = G.mythologicalCreatureDeckForSkymir[cardId];
     if (mythologyCard === undefined) {
         throw new Error(`В массиве карт мифических существ для Skymir отсутствует мифическое существо с id '${cardId}'.`);
     }
     PickCardOrActionCardActions({ G, ctx, myPlayerID: playerID, ...rest }, mythologyCard);
     if (G.mythologicalCreatureDeckForSkymir.length === 4) {
         AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest },
-            [StackData.getMythologyCardSkymir(3)]);
+            [AllStackData.getMythologyCardSkymir(3)]);
     }
 };

@@ -1,37 +1,36 @@
-import { ThrowMyError } from "../Error";
-import { ErrorNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, DeckCardType, FnContext, MythologicalCreatureDeckCardType, TierType } from "../typescript/interfaces";
+import type { CampDeckCardType, DwarfDeckCardType, FnContext, IndexOf, MythologicalCreatureCardType, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SecretMythologicalCreatureDeck, TierType } from "../typescript/interfaces";
 
 //TODO Rework it in one func with switch!?
-export const GetCardsFromCardDeck = ({ G, ctx, ...rest }: FnContext, tier: TierType, start: number, amount?: number):
-    DeckCardType[] => {
-    const currentDeck: CanBeUndefType<DeckCardType[]> = G.secret.decks[tier];
-    if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined,
-            tier);
+export const GetCardsFromSecretDwarfDeck = ({ G }: FnContext, tier: TierType, start: number, amount?: number):
+    DwarfDeckCardType[] => {
+    const currentDeck: SecretDwarfDeckType = G.secret.decks[tier satisfies IndexOf<SecretAllDwarfDecks>],
+        cards: DwarfDeckCardType[] = currentDeck.splice(start, amount);
+    if (amount !== cards.length) {
+        throw new Error(`Недостаточно карт в массиве карт дворфов конкретной эпохи: требуется - '${amount}', в наличии - '${cards.length}'.`);
     }
-    const cards: DeckCardType[] = currentDeck.splice(start, amount);
-    G.deckLength[tier] = currentDeck.length;
+    G.decksLength[tier] = currentDeck.length;
     return cards;
 };
 
-export const GetCampCardsFromCampCardDeck = ({ G, ctx, ...rest }: FnContext, tier: TierType, start: number,
+export const GetCampCardsFromSecretCampDeck = ({ G }: FnContext, tier: TierType, start: number,
     amount?: number): CampDeckCardType[] => {
-    const currentCampDeck: CanBeUndefType<CampDeckCardType[]> = G.secret.campDecks[tier];
-    if (currentCampDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CampDeckWithTierCurrentIdIsUndefined,
-            tier);
+    const campDeck: SecretCampDeckType = G.secret.campDecks[tier satisfies IndexOf<SecretAllCampDecks>],
+        campCards: CampDeckCardType[] = campDeck.splice(start, amount);
+    if (amount !== campCards.length) {
+        throw new Error(`Недостаточно карт в массиве карт лагеря конкретной эпохи: требуется - '${amount}', в наличии - '${campCards.length}'.`);
     }
-    const campCards: CampDeckCardType[] = currentCampDeck.splice(start, amount);
-    G.campDeckLength[tier] = currentCampDeck.length;
+    G.campDecksLength[tier] = campDeck.length;
     return campCards;
 };
 
-export const GetMythologicalCreatureCardsFromMythologicalCreatureCardDeck = ({ G }: FnContext, start: number,
-    amount?: number): MythologicalCreatureDeckCardType[] => {
-    const currentCampDeck: MythologicalCreatureDeckCardType[] = G.secret.mythologicalCreatureDeck,
-        mythologicalCreatureCards: MythologicalCreatureDeckCardType[] =
+export const GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck = ({ G }: FnContext, start: number,
+    amount?: number): MythologicalCreatureCardType[] => {
+    const currentCampDeck: SecretMythologicalCreatureDeck = G.secret.mythologicalCreatureDeck,
+        mythologicalCreatureCards: MythologicalCreatureCardType[] =
             currentCampDeck.splice(start, amount);
+    if (amount !== mythologicalCreatureCards.length) {
+        throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${amount}', в наличии - '${mythologicalCreatureCards.length}'.`);
+    }
     G.mythologicalCreatureDeckLength = currentCampDeck.length;
     return mythologicalCreatureCards;
 };

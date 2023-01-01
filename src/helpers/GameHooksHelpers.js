@@ -18,7 +18,7 @@ import { CheckPickHero } from "./HeroHelpers";
 export const EndTurnActions = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (!player.stack.length) {
         return true;
@@ -66,7 +66,7 @@ export const StartOrEndActions = ({ G, ctx, myPlayerID, ...rest }) => {
     var _a, _b, _c, _d;
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(myPlayerID)]) !== undefined) {
         player.stack.shift();

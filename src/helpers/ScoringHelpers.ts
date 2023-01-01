@@ -14,8 +14,8 @@ import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsMythicalAnimalCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckCurrentSuitDistinctionPlayers } from "../TroopEvaluation";
-import { ErrorNames, GameModeNames, LogTypeNames, MythicalAnimalBuffNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
-import type { CampDeckCardType, CanBeUndefType, IGiantData, IGodData, IHeroCard, IHeroData, IMythicalAnimalCard, IMythicalAnimalData, IPublicPlayer, IValkyryData, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayerCoinType } from "../typescript/interfaces";
+import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, MythicalAnimalBuffNames, SuitNames, SuitRusNames } from "../typescript/enums";
+import type { CampCardType, CanBeUndefType, GiantData, GodData, HeroCard, HeroCardData, IPublicPlayer, MyFnContextWithMyPlayerID, MythicalAnimalCard, MythicalAnimalData, MythologicalCreatureCommandZoneCardType, PublicPlayerCoinType, ValkyryData } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { GetMinerDistinctionsScore } from "./DistinctionAwardingHelpers";
@@ -55,11 +55,11 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }: 
         dwerg_brothers = 0;
     const dwerg_brothers_scoring: number[] = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const hero: CanBeUndefType<IHeroCard> = player.heroes[i];
+        const hero: CanBeUndefType<HeroCard> = player.heroes[i];
         if (hero === undefined) {
             throw new Error(`Не существует карта героя с id '${i}'.`);
         }
-        const heroData: IHeroData = heroesConfig[hero.name];
+        const heroData: HeroCardData = heroesConfig[hero.name];
         if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
             || G.mode === GameModeNames.SoloAndvari) || G.mode === GameModeNames.Solo && myPlayerID === `1`)
             && hero.name.startsWith(`Dwerg`)) {
@@ -70,7 +70,7 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }: 
                 StartHeroScoring({ G, ctx, myPlayerID: myPlayerID, ...rest }, heroData.scoringRule);
             heroesScore += currentHeroScore;
             if (isFinal) {
-                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Hero_Card}' '${hero.name}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}': '${currentHeroScore}';`);
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${CardTypeRusNames.Hero_Card}' '${hero.name}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}': '${currentHeroScore}';`);
             }
 
         }
@@ -89,7 +89,7 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }: 
     }
     totalScore += heroesScore;
     if (isFinal) {
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Hero_Card}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.Hero_Card}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
     }
     return totalScore;
 };
@@ -112,39 +112,39 @@ export const CurrentOrFinalAllMythologicalCreaturesScoring = ({ G, ctx, myPlayer
         if (mythologicalCreatureCard === undefined) {
             throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' в командной зоне отсутствует карта с id '${i}'.`);
         }
-        let godCard: CanBeUndefType<IGodData>,
-            giantCard: CanBeUndefType<IGiantData>,
-            valkyryCard: CanBeUndefType<IValkyryData>,
+        let godCard: CanBeUndefType<GodData>,
+            giantCard: CanBeUndefType<GiantData>,
+            valkyryCard: CanBeUndefType<ValkyryData>,
             currentGiantScore: number,
             currentValkyryScore: number,
             _exhaustiveCheck: never;
         switch (mythologicalCreatureCard.type) {
-            case RusCardTypeNames.God_Card:
+            case CardTypeRusNames.God_Card:
                 godCard = godConfig[mythologicalCreatureCard.name];
                 godsScore += godCard.points;
                 if (isFinal) {
-                    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.God_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${godCard.points}';`);
+                    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${CardTypeRusNames.God_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${godCard.points}';`);
                 }
                 break;
-            case RusCardTypeNames.Giant_Card:
+            case CardTypeRusNames.Giant_Card:
                 giantCard = giantConfig[mythologicalCreatureCard.name];
                 currentGiantScore =
                     StartGiantScoring({ G, ctx, myPlayerID: myPlayerID, ...rest }, giantCard.scoringRule);
                 giantsScore += currentGiantScore;
                 if (isFinal) {
-                    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Giant_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentGiantScore}';`);
+                    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${CardTypeRusNames.Giant_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentGiantScore}';`);
                 }
                 break;
-            case RusCardTypeNames.Valkyry_Card:
+            case CardTypeRusNames.Valkyry_Card:
                 valkyryCard = valkyryConfig[mythologicalCreatureCard.name];
                 if (mythologicalCreatureCard.strengthTokenNotch === null) {
-                    throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' у карты типа '${RusCardTypeNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}' не может не быть выставлен токен силы.`);
+                    throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' у карты типа '${CardTypeRusNames.Valkyry_Card}' с названием '${mythologicalCreatureCard.name}' не может не быть выставлен токен силы.`);
                 }
                 currentValkyryScore = StartValkyryScoring(valkyryCard.scoringRule,
                     [mythologicalCreatureCard.strengthTokenNotch]);
                 valkyriesScore += currentValkyryScore;
                 if (isFinal) {
-                    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Valkyry_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentValkyryScore}';`);
+                    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту типа '${CardTypeRusNames.Valkyry_Card}' '${mythologicalCreatureCard.name}' игрока '${player.nickname}': '${currentValkyryScore}';`);
                 }
                 break;
             default:
@@ -153,30 +153,30 @@ export const CurrentOrFinalAllMythologicalCreaturesScoring = ({ G, ctx, myPlayer
                 return _exhaustiveCheck;
         }
     }
-    const cards: IMythicalAnimalCard[] =
+    const cards: MythicalAnimalCard[] =
         Object.values(player.cards).flat().filter(IsMythicalAnimalCard);
     for (let m = 0; m < cards.length; m++) {
-        const playerMythicalAnimalCard: CanBeUndefType<IMythicalAnimalCard> = cards[m];
+        const playerMythicalAnimalCard: CanBeUndefType<MythicalAnimalCard> = cards[m];
         if (playerMythicalAnimalCard === undefined) {
             throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' отсутствует карта с id '${m}'.`);
         }
-        const mythicalAnimalCard: IMythicalAnimalData = mythicalAnimalConfig[playerMythicalAnimalCard.name],
+        const mythicalAnimalCard: MythicalAnimalData = mythicalAnimalConfig[playerMythicalAnimalCard.name],
             currentMythicalAnimalScore: number =
                 StartMythicalAnimalScoring({ G, ctx, myPlayerID: myPlayerID, ...rest },
                     mythicalAnimalCard.scoringRule);
         mythicalAnimalScore += currentMythicalAnimalScore;
         if (isFinal) {
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту типа '${RusCardTypeNames.Mythical_Animal_Card}' '${playerMythicalAnimalCard.name}' игрока '${player.nickname}': '${currentMythicalAnimalScore}';`);
+            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту типа '${CardTypeRusNames.Mythical_Animal_Card}' '${playerMythicalAnimalCard.name}' игрока '${player.nickname}': '${currentMythicalAnimalScore}';`);
         }
     }
     totalScore += godsScore;
     totalScore += giantsScore;
     totalScore += valkyriesScore;
     if (isFinal) {
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.God_Card}' игрока '${player.nickname}': '${godsScore}';`);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Giant_Card}' игрока '${player.nickname}': '${giantsScore}';`);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Valkyry_Card}' игрока '${player.nickname}': '${valkyriesScore}';`);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Mythical_Animal_Card}' игрока '${player.nickname}': '${mythicalAnimalScore}';`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.God_Card}' игрока '${player.nickname}': '${godsScore}';`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.Giant_Card}' игрока '${player.nickname}': '${giantsScore}';`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.Valkyry_Card}' игрока '${player.nickname}': '${valkyriesScore}';`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.Mythical_Animal_Card}' игрока '${player.nickname}': '${mythicalAnimalScore}';`);
     }
     return totalScore;
 };
@@ -191,25 +191,25 @@ export const CurrentOrFinalAllArtefactScoring = ({ G, ctx, myPlayerID, ...rest }
     let totalScore = 0,
         artifactsScore = 0;
     for (let i = 0; i < player.campCards.length; i++) {
-        const campCard: CanBeUndefType<CampDeckCardType> = player.campCards[i];
+        const campCard: CanBeUndefType<CampCardType> = player.campCards[i];
         if (campCard === undefined) {
             throw new Error(`В массиве карт лагеря игрока отсутствует карта с id '${i}'.`);
         }
         let currentArtefactScore = 0,
             _exhaustiveCheck: never;
         switch (campCard.type) {
-            case RusCardTypeNames.Artefact_Card:
+            case CardTypeRusNames.Artefact_Card:
                 currentArtefactScore = StartArtefactScoring({ G, ctx, myPlayerID: myPlayerID, ...rest },
                     artefactsConfig[campCard.name].scoringRule, isFinal);
                 if (currentArtefactScore) {
                     artifactsScore += currentArtefactScore;
                     if (isFinal) {
-                        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${RusCardTypeNames.Artefact_Card}' '${campCard.name}' игрока '${player.nickname}': '${currentArtefactScore}';`);
+                        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${CardTypeRusNames.Artefact_Card}' '${campCard.name}' игрока '${player.nickname}': '${currentArtefactScore}';`);
                     }
                 }
                 break;
-            case RusCardTypeNames.Mercenary_Card:
-                throw new Error(`В командной зоне карт лагеря игрока не может в конце игры быть карта c типом '${RusCardTypeNames.Mercenary_Card}' с id '${i}'.`);
+            case CardTypeRusNames.Mercenary_Card:
+                throw new Error(`В командной зоне карт лагеря игрока не может в конце игры быть карта c типом '${CardTypeRusNames.Mercenary_Card}' с id '${i}'.`);
             default:
                 _exhaustiveCheck = campCard;
                 throw new Error(`В командной зоне карт лагеря игрока не может быть карта запрещённого типа с id '${i}'.`);
@@ -218,7 +218,7 @@ export const CurrentOrFinalAllArtefactScoring = ({ G, ctx, myPlayerID, ...rest }
     }
     totalScore += artifactsScore;
     if (isFinal) {
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${RusCardTypeNames.Artefact_Card}' игрока '${player.nickname}': '${artifactsScore}';`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.Artefact_Card}' игрока '${player.nickname}': '${artifactsScore}';`);
     }
     return totalScore;
 };
@@ -234,10 +234,10 @@ export const FinalAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContex
         suit: SuitNames;
     for (suit in suitsConfig) {
         suitScore += GetCurrentSuitTotalScore({ G, ctx, myPlayerID, ...rest }, suit);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты '${RusCardTypeNames.Dwarf_Card}' фракции '${RusSuitNames[suit]}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ${suitScore}`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты '${CardTypeRusNames.Dwarf_Card}' фракции '${SuitRusNames[suit]}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ${suitScore}`);
         totalScore += suitScore;
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все карты '${RusCardTypeNames.Dwarf_Card}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ${totalScore}`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все карты '${CardTypeRusNames.Dwarf_Card}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ${totalScore}`);
     return totalScore;
 };
 

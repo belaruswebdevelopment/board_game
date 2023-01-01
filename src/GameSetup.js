@@ -49,15 +49,17 @@ export const SetupGame = ({ ctx, random }) => {
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
-    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDeckLength = [0, 0], camp = Array(campNum).fill(null), deckLength = [0, 0], mythologicalCreatureDeckForSkymir = null;
+    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDecksLength = [0, 0], camp = Array(campNum).fill(null), 
+    // TODO DecksLength
+    decksLength = [0, 0], mythologicalCreatureDeckForSkymir = null;
     for (let i = 0; i < tierToEnd; i++) {
         if (expansions.Thingvellir.active) {
             secret.campDecks[i] = BuildCampCards(i);
             let campDeck = secret.campDecks[i];
             campDeck = random.Shuffle(campDeck);
             secret.campDecks[i] = campDeck;
-            campDeckLength[i] = campDeck.length;
-            campDeckLength[0] = secret.campDecks[0].length;
+            campDecksLength[i] = campDeck.length;
+            campDecksLength[0] = secret.campDecks[0].length;
         }
         secret.decks[i] = [];
         const data = {
@@ -66,7 +68,7 @@ export const SetupGame = ({ ctx, random }) => {
         }, dwarfDeck = BuildDwarfCards(data), royalOfferingDeck = BuildRoyalOfferingCards(data);
         let deck = secret.decks[i];
         deck = deck.concat(dwarfDeck, royalOfferingDeck);
-        deckLength[i] = deck.length;
+        decksLength[i] = deck.length;
         secret.decks[i] = random.Shuffle(deck);
     }
     let expansion;
@@ -76,7 +78,7 @@ export const SetupGame = ({ ctx, random }) => {
         }
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari] = BuildHeroes(configOptions, mode), heroesForSoloGameForStrategyBotAndvari = null, multiCardsDeck = BuildMultiSuitCards(configOptions), taverns = [[], [], []], tavernsNum = 3, currentTavern = 0;
-    deckLength[0] = secret.decks[0].length;
+    decksLength[0] = secret.decks[0].length;
     let mythologicalCreatureDeckLength = 0, mythologicalCreatureNotInGameDeckLength = 0;
     if (expansions.Idavoll.active) {
         let mythologicalCreatureCardsDeck = BuildMythologicalCreatureCards();
@@ -106,7 +108,7 @@ export const SetupGame = ({ ctx, random }) => {
         players: ctx.numPlayers,
     }), averageCards = {};
     for (suit in suitsConfig) {
-        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
+        averageCards[suit] = GetAverageSuitCard(suit, {
             players: ctx.numPlayers,
             tier: 0,
         });
@@ -140,8 +142,8 @@ export const SetupGame = ({ ctx, random }) => {
         camp,
         explorerDistinctionCards,
         explorerDistinctionCardId,
-        deckLength,
-        campDeckLength,
+        decksLength,
+        campDecksLength,
         mythologicalCreatureDeckLength,
         mythologicalCreatureNotInGameDeckLength,
         mythologicalCreatureDeckForSkymir,

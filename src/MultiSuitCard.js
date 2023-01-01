@@ -1,5 +1,5 @@
 import { multiCardsConfig } from "./data/MultiSuitCardData";
-import { RusCardTypeNames } from "./typescript/enums";
+import { CardTypeRusNames } from "./typescript/enums";
 /**
  * <h3>Создание особых мультифракционных карт.</h3>
  * <p>Применения:</p>
@@ -34,7 +34,7 @@ export const BuildMultiSuitCards = (configOptions) => {
  * @param name Название.
  * @returns Мультифракционная карта.
  */
-const CreateMultiSuitCard = ({ type = RusCardTypeNames.Multi_Suit_Card, name, }) => ({
+const CreateMultiSuitCard = ({ type = CardTypeRusNames.Multi_Suit_Card, name, }) => ({
     type,
     name,
 });
@@ -52,7 +52,7 @@ const CreateMultiSuitCard = ({ type = RusCardTypeNames.Multi_Suit_Card, name, })
  * @param points Очки.
  * @returns Мультифракционная карта на поле игрока.
  */
-export const CreateMultiSuitPlayerCard = ({ type = RusCardTypeNames.Multi_Suit_Player_Card, name, suit, rank, points, }) => ({
+export const CreateMultiSuitPlayerCard = ({ type = CardTypeRusNames.Multi_Suit_Player_Card, name, suit, rank = 1, points = null, }) => ({
     type,
     name,
     suit,

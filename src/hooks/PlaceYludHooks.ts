@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -6,7 +6,7 @@ import { RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelper
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, IHeroCard, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, HeroCard, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -26,7 +26,7 @@ export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoi
         }
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (!player.stack.length) {
@@ -80,8 +80,8 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             yludIndex);
     }
-    const yludHeroCard: CanBeUndefType<IHeroCard> =
-        player.heroes.find((hero: IHeroCard): boolean => hero.name === HeroNames.Ylud);
+    const yludHeroCard: CanBeUndefType<HeroCard> =
+        player.heroes.find((hero: HeroCard): boolean => hero.name === HeroNames.Ylud);
     if (yludHeroCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}'.`);
     }
@@ -163,13 +163,13 @@ export const OnPlaceYludMove = ({ G, ctx, ...rest }: FnContext): void => {
 export const OnPlaceYludTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
     if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
-            [StackData.placeYludHeroSoloBot()]);
+            [AllStackData.placeYludHeroSoloBot()]);
     } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
-            [StackData.placeYludHeroSoloBotAndvari()]);
+            [AllStackData.placeYludHeroSoloBotAndvari()]);
     } else {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
-            [StackData.placeYludHero()]);
+            [AllStackData.placeYludHero()]);
     }
     DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
 };

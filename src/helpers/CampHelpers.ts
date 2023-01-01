@@ -1,9 +1,8 @@
-import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
-import { ArtefactNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardArrayType, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, ITavernInConfig, TierType } from "../typescript/interfaces";
-import { GetCampCardsFromCampCardDeck } from "./DecksHelpers";
+import { ArtefactNames, LogTypeNames } from "../typescript/enums";
+import type { CampCardArrayType, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, ITavernInConfig, SecretAllCampDecks, SecretCampDeckTier1, SecretCampDeckType, TierType } from "../typescript/interfaces";
+import { GetCampCardsFromSecretCampDeck } from "./DecksHelpers";
 import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIfNeeded } from "./DiscardCardHelpers";
 
 /**
@@ -19,7 +18,7 @@ import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIf
 * @returns
 */
 const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: number): void => {
-    const newCampCard: CanBeUndefType<CampDeckCardType> = GetCampCardsFromCampCardDeck({ G, ctx, ...rest },
+    const newCampCard: CanBeUndefType<CampDeckCardType> = GetCampCardsFromSecretCampDeck({ G, ctx, ...rest },
         (G.secret.campDecks.length - G.tierToEnd) as TierType, 0, 1)[0];
     if (newCampCard === undefined) {
         throw new Error(`Отсутствует карта лагеря в колоде карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
@@ -49,15 +48,12 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }: FnContext): void =>
             }
         }
     }
-    const discardedCardsArray: CanBeUndefType<CampDeckCardType[]> =
-        G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd - 1];
-    if (discardedCardsArray === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CampDeckWithTierCurrentIdIsUndefined,
-            G.secret.campDecks.length - G.tierToEnd - 1);
-    }
+    // TODO DiscardCardType!?
+    const discardedCardsArray: CampDeckCardType[] =
+        G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd - 1) as IndexOf<SecretAllCampDecks>];
     if (discardedCardsArray.length) {
         DiscardAllCurrentCards({ G, ctx, ...rest }, discardedCardsArray);
-        GetCampCardsFromCampCardDeck({ G, ctx, ...rest },
+        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest },
             (G.secret.campDecks.length - G.tierToEnd - 1) as TierType, 0);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
@@ -111,7 +107,7 @@ export const DiscardCardIfCampCardPicked = ({ G, ctx, ...rest }: FnContext): voi
  */
 export const RefillCamp = ({ G, ctx, ...rest }: FnContext): void => {
     AddRemainingCampCardsToDiscard({ G, ctx, ...rest });
-    const campDeck1: CampDeckCardType[] = G.secret.campDecks[1],
+    const campDeck1: SecretCampDeckTier1 = G.secret.campDecks[1],
         index: number = campDeck1.findIndex((card: CampDeckCardType): boolean =>
             card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
     if (index === -1) {
@@ -153,14 +149,12 @@ export const RefillEmptyCampCards = ({ G, ctx, ...rest }: FnContext): void => {
             return null;
         }),
         isEmptyCampCards: boolean = emptyCampCards.length === 0,
-        campDeck: CanBeUndefType<CampDeckCardType[]> = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
-    if (campDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CampDeckWithTierCurrentIdIsUndefined,
-            G.secret.campDecks.length - G.tierToEnd);
-    }
+        campDeck: SecretCampDeckType =
+            G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd) as IndexOf<SecretAllCampDecks>];
     let isEmptyCurrentTierCampDeck: boolean = campDeck.length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex: CanBeNullType<number>): void => {
+            // TODO Is it dynamically change campDeck.length after AddCardToCamp!?
             isEmptyCurrentTierCampDeck = campDeck.length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
                 AddCardToCamp({ G, ctx, ...rest }, cardIndex);

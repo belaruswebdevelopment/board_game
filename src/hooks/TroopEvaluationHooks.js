@@ -1,8 +1,8 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
-import { GetCardsFromCardDeck } from "../helpers/DecksHelpers";
+import { GetCardsFromSecretDwarfDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
@@ -38,7 +38,7 @@ export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             return Object.values(G.distinctions).every((distinction) => distinction === undefined);
@@ -96,7 +96,7 @@ export const OnTroopEvaluationMove = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
-    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.getDistinctions()]);
+    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         let length;
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
@@ -105,7 +105,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
         else {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
             }
             if (G.expansions.Idavoll.active
                 && CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards)) {
@@ -138,7 +138,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
  */
 export const OnTroopEvaluationTurnEnd = ({ G, ctx, random, ...rest }) => {
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        GetCardsFromCardDeck({ G, ctx, random, ...rest }, 1, G.explorerDistinctionCardId, 1);
+        GetCardsFromSecretDwarfDeck({ G, ctx, random, ...rest }, 1, G.explorerDistinctionCardId, 1);
         G.secret.decks[1] = random.Shuffle(G.secret.decks[1]);
         G.explorerDistinctionCardId = null;
     }

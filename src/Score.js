@@ -18,11 +18,11 @@ import { ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "./typesc
  * @returns Текущий счёт указанного игрока.
  */
 export const AllCurrentScoring = ({ G, ctx, myPlayerID, ...rest }) => {
-    let totalScore = 0;
-    totalScore += CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
+    let totalScore = CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
     // TODO Add score for all board and hand coins!!!
     totalScore += CurrentPotentialWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += CurrentPotentialMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
+    // TODO Think about heros in players hands which can be deleted in end game scoring both suit and heroes!?
     totalScore += CurrentOrFinalAllHeroesScoring({ G, ctx, myPlayerID, ...rest });
     if (G.expansions.Thingvellir.active) {
         totalScore += CurrentOrFinalAllArtefactScoring({ G, ctx, myPlayerID, ...rest });
@@ -48,8 +48,7 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }) => {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}:`);
-    let totalScore = 0;
-    totalScore += FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
+    let totalScore = FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalAllBoardCoinsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });

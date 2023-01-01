@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ErrorNames, RusCardTypeNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>
  * <p>Применения:</p>
@@ -60,7 +60,7 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
             if (tavernCard === null) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
-            if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
+            if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
                 continue;
             }
             if (tavernCard.suit === suit) {
@@ -102,7 +102,7 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }, mo
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard, moveArgument);
         }
         if (tavernCard.points === null) {
@@ -153,7 +153,7 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
             continue;
         }
         if (suit === tavernCard.suit) {
@@ -252,7 +252,7 @@ export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === RusCardTypeNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
             return moveArgument;
         }
     }

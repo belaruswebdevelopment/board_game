@@ -37,6 +37,7 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers: NumPlayersType, s
     return prioritiesConfig[priorityNum].map((priority: IPriority): IPriority => priority);
 };
 
+// TODO Move to PriorityData?!
 /**
  * <h3>Массив кристаллов приоритетов.</h3>
  * <p>Применения:</p>

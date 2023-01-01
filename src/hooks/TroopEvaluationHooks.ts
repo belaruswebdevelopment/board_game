@@ -1,13 +1,13 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
-import { GetCardsFromCardDeck } from "../helpers/DecksHelpers";
+import { GetCardsFromSecretDwarfDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, ExplorerDistinctionCardsArrayType, FnContext, IPublicPlayer, PlayerID } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Distinctions, DwarfDeckCardType, ExplorerDistinctionCards, FnContext, IPublicPlayer, PlayerID } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -22,9 +22,9 @@ import type { CanBeUndefType, CanBeVoidType, DeckCardType, DistinctionType, Expl
 export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }: FnContext): void => {
     CheckAllSuitsDistinctions({ G, ctx, ...rest });
     const distinctions: PlayerID[] =
-        Object.values(G.distinctions).filter((distinction: DistinctionType): boolean =>
+        Object.values(G.distinctions).filter((distinction: Distinctions): boolean =>
             distinction !== null && distinction !== undefined) as PlayerID[];
-    if (distinctions.every((distinction: DistinctionType): boolean =>
+    if (distinctions.every((distinction: Distinctions): boolean =>
         distinction !== null && distinction !== undefined)) {
         G.publicPlayersOrder = distinctions;
     }
@@ -44,11 +44,11 @@ export const CheckEndTroopEvaluationPhase = ({ G, ctx, ...rest }: FnContext): Ca
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
-            return Object.values(G.distinctions).every((distinction: DistinctionType): boolean =>
+            return Object.values(G.distinctions).every((distinction: Distinctions): boolean =>
                 distinction === undefined);
         }
     }
@@ -110,7 +110,7 @@ export const OnTroopEvaluationMove = ({ G, ctx, ...rest }: FnContext): void => {
  * @returns
  */
 export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
-    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.getDistinctions()]);
+    AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         let length: number;
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
@@ -118,7 +118,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void
         } else {
             const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     ctx.currentPlayer);
             }
             if (G.expansions.Idavoll.active
@@ -129,15 +129,15 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void
                 length = 3;
             }
         }
-        const explorerDistinctionCards: DeckCardType[] = [];
+        const explorerDistinctionCards: DwarfDeckCardType[] = [];
         for (let j = 0; j < length; j++) {
-            const card: CanBeUndefType<DeckCardType> = G.secret.decks[1][j];
+            const card: CanBeUndefType<DwarfDeckCardType> = G.secret.decks[1][j];
             if (card === undefined) {
                 throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
             }
             explorerDistinctionCards.push(card);
         }
-        G.explorerDistinctionCards = explorerDistinctionCards as ExplorerDistinctionCardsArrayType;
+        G.explorerDistinctionCards = explorerDistinctionCards as ExplorerDistinctionCards;
     }
 };
 
@@ -153,7 +153,8 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void
  */
 export const OnTroopEvaluationTurnEnd = ({ G, ctx, random, ...rest }: FnContext): void => {
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        GetCardsFromCardDeck({ G, ctx, random, ...rest }, 1, G.explorerDistinctionCardId, 1);
+        GetCardsFromSecretDwarfDeck({ G, ctx, random, ...rest }, 1,
+            G.explorerDistinctionCardId, 1);
         G.secret.decks[1] = random.Shuffle(G.secret.decks[1]);
         G.explorerDistinctionCardId = null;
     }

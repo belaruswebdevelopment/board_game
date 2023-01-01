@@ -1,6 +1,6 @@
 import { BlacksmithScoring, ExplorerScoring, HunterScoring, MinerScoring, WarriorScoring } from "../score_helpers/SuitScoringHelpers";
 import { SuitScoringFunctionNames } from "../typescript/enums";
-import type { IAction, ISuitScoringFunction, SuitScoringArgsType } from "../typescript/interfaces";
+import type { Action, ISuitScoringFunction, SuitScoringArgsType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по фракции дворфа.</h3>
@@ -13,8 +13,7 @@ import type { IAction, ISuitScoringFunction, SuitScoringArgsType } from "../type
  * @param params Параметры действия.
  * @returns Количество победных очков по фракции дворфа.
  */
-export const StartSuitScoring = (action: IAction<SuitScoringFunctionNames, undefined>, params: SuitScoringArgsType):
-    number => {
+export const StartSuitScoring = (action: Action<SuitScoringFunctionNames>, params: SuitScoringArgsType): number => {
     const actionDispatcher: ISuitScoringFunction = SuitScoringDispatcherSwitcher(action.name);
     return actionDispatcher?.(...params);
 };

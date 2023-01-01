@@ -1,5 +1,5 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
@@ -21,7 +21,7 @@ import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, GodNames, H
 export const DiscardTradingCoinAction = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     DiscardTradingCoin({ G, ctx, myPlayerID, ...rest });
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
@@ -63,7 +63,7 @@ export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest
                 value[i] = {
                     stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
                 };
-                AddActionsToStack({ G, ctx, myPlayerID, events, ...rest }, [StackData.discardSuitCard(i)]);
+                AddActionsToStack({ G, ctx, myPlayerID, events, ...rest }, [AllStackData.discardSuitCard(String(i))]);
                 results++;
             }
         }
@@ -91,10 +91,10 @@ export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest
 export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -107,7 +107,7 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) =
         const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter(IsCoin).length;
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
-                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.addCoinToPouch()]);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.addCoinToPouch()]);
             }
         }
         else {
@@ -151,10 +151,10 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) =
             }
         }
         if (coinsValue === 1) {
-            stack = [StackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([5])];
+            stack = [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([5])];
         }
         else if (coinsValue === 2) {
-            stack = [StackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([2, 3])];
+            stack = [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([2, 3])];
         }
         else {
             throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '${coinsValue}' монет(ы).`);

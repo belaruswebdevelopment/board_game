@@ -1,4 +1,4 @@
-import type { CanBeUndefType, FnContext, ICardCharacteristics, IHeuristic, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
+import type { AICardCharacteristics, AIHeuristic, CanBeUndefType, FnContext, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 
 /**
@@ -15,7 +15,7 @@ import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext): number[] => {
     const taverns: TavernsType = G.taverns,
         temp: number[] = taverns.map((tavern: TavernAllCardType): number =>
-            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernAllCardType>):
+            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: AIHeuristic<TavernAllCardType>):
                 number => acc + (item.heuristic(tavern) ? item.weight : 0), 0)),
         result: number[] =
             Array(taverns.length).fill(0).map((value: number, index: number):
@@ -29,14 +29,14 @@ export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext)
         tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
             tavern.map((card: TavernCardType, index: number, arr: TavernAllCardType): number =>
                 EvaluateTavernCard({ G, ctx, ...rest }, card, index, arr))),
-        tempChars: ICardCharacteristics[] = tempNumbers.map((element: number[]): ICardCharacteristics =>
+        tempChars: AICardCharacteristics[] = tempNumbers.map((element: number[]): AICardCharacteristics =>
             GetCharacteristics(element))/*,
         averageCards: ICard[] = G.averageCards*/;
     let maxIndex = 0,
         minIndex: number = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {
-        const maxCard: CanBeUndefType<ICardCharacteristics> = tempChars[maxIndex],
-            tempCard1: CanBeUndefType<ICardCharacteristics> = tempChars[i];
+        const maxCard: CanBeUndefType<AICardCharacteristics> = tempChars[maxIndex],
+            tempCard1: CanBeUndefType<AICardCharacteristics> = tempChars[i];
         if (maxCard === undefined) {
             throw new Error(`Отсутствует значение максимальной карты с id '${maxIndex}'.`);
         }
@@ -46,8 +46,8 @@ export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext)
         if (CompareCharacteristics(maxCard, tempCard1) < 0) {
             maxIndex = i;
         }
-        const minCard: CanBeUndefType<ICardCharacteristics> = tempChars[minIndex],
-            tempCard2: CanBeUndefType<ICardCharacteristics> = tempChars[tempChars.length - 1 - i];
+        const minCard: CanBeUndefType<AICardCharacteristics> = tempChars[minIndex],
+            tempCard2: CanBeUndefType<AICardCharacteristics> = tempChars[tempChars.length - 1 - i];
         if (minCard === undefined) {
             throw new Error(`Отсутствует значение минимальной карты с id '${minIndex}'.`);
         }
@@ -75,7 +75,7 @@ export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext)
  * @param stat2
  * @returns Результат сравнения двух эвристик.
  */
-const CompareCharacteristics = (stat1: ICardCharacteristics, stat2: ICardCharacteristics): number => {
+const CompareCharacteristics = (stat1: AICardCharacteristics, stat2: AICardCharacteristics): number => {
     const eps = 0.0001,
         tempVariation: number = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps) {
@@ -124,7 +124,7 @@ export const GetAllPicks = (tavernsNum: number, playersNum: number): number[][] 
  * @param array
  * @returns Характеристики карты для ботов.
  */
-const GetCharacteristics = (array: number[]): ICardCharacteristics => {
+const GetCharacteristics = (array: number[]): AICardCharacteristics => {
     const mean: number = array.reduce((acc: number, item: number): number =>
         acc + item / array.length, 0),
         variation: number = array.reduce((acc: number, item: number): number =>
@@ -144,7 +144,7 @@ const GetCharacteristics = (array: number[]): ICardCharacteristics => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: IHeuristic<TavernAllCardType> = {
+const isAllCardsEqual: AIHeuristic<TavernAllCardType> = {
     // TODO Add errors for undefined
     heuristic: (cards: TavernCardType[]): boolean => cards.every((card: TavernCardType): boolean =>
         (cards[0] !== undefined && CompareTavernCards(card, cards[0]) === 0)),
@@ -309,7 +309,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: IHeuristic<TavernAllCardType>[] = [isAllCardsEqual];
+const absoluteHeuristicsForTradingCoin: AIHeuristic<TavernAllCardType>[] = [isAllCardsEqual];
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

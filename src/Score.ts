@@ -4,7 +4,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsFromPlayerHandsToPlayerBoard }
 import { CurrentAllSuitsScoring, CurrentOrFinalAllArtefactScoring, CurrentOrFinalAllHeroesScoring, CurrentOrFinalAllMythologicalCreaturesScoring, CurrentPotentialMinerDistinctionsScoring, CurrentPotentialWarriorDistinctionsScoring, FinalAllBoardCoinsScoring, FinalAllSuitsScoring, FinalMinerDistinctionsScoring, FinalWarriorDistinctionsScoring } from "./helpers/ScoringHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "./typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IMyGameState, IPublicPlayer, MyFnContextWithMyPlayerID } from "./typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, MyFnContextWithMyPlayerID, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -20,11 +20,11 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IMyGameState, IPublicPla
  * @returns Текущий счёт указанного игрока.
  */
 export const AllCurrentScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
-    let totalScore = 0;
-    totalScore += CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
+    let totalScore = CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
     // TODO Add score for all board and hand coins!!!
     totalScore += CurrentPotentialWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += CurrentPotentialMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
+    // TODO Think about heros in players hands which can be deleted in end game scoring both suit and heroes!?
     totalScore += CurrentOrFinalAllHeroesScoring({ G, ctx, myPlayerID, ...rest });
     if (G.expansions.Thingvellir.active) {
         totalScore += CurrentOrFinalAllArtefactScoring({ G, ctx, myPlayerID, ...rest });
@@ -52,8 +52,7 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID
             myPlayerID);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}:`);
-    let totalScore = 0;
-    totalScore += FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
+    let totalScore = FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalAllBoardCoinsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
@@ -78,7 +77,7 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID
  * @param context
  * @returns Финальные данные о победителях, если закончилась игра.
  */
-export const ScoreWinner = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<IMyGameState> => {
+export const ScoreWinner = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<MyGameState> => {
     Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
         if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
             || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)

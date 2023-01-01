@@ -2,8 +2,8 @@ import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsMercenaryPlayerCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { BuffNames, ErrorNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IArtefactScoringFunction, IBuffs, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
+import { CommonBuffNames, ErrorNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndefType, IArtefactScoringFunction, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerBuffs, PublicPlayerCoinType } from "../typescript/interfaces";
 import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -112,10 +112,10 @@ export const MjollnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, 
     }
     let suit: CanBeUndefType<SuitNames>;
     if (isFinal) {
-        suit = player.buffs.find((buff: IBuffs): boolean =>
+        suit = player.buffs.find((buff: PlayerBuffs): boolean =>
             buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
         if (suit === undefined) {
-            throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
+            throw new Error(`У игрока отсутствует обязательный баф '${CommonBuffNames.SuitIdForMjollnir}'.`);
         }
     } else {
         suit = GetSuitValueWithMaxRanksValue({ G, ctx, myPlayerID, ...rest });

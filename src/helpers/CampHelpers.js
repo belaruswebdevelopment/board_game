@@ -1,8 +1,7 @@
-import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
-import { ArtefactNames, ErrorNames, LogTypeNames } from "../typescript/enums";
-import { GetCampCardsFromCampCardDeck } from "./DecksHelpers";
+import { ArtefactNames, LogTypeNames } from "../typescript/enums";
+import { GetCampCardsFromSecretCampDeck } from "./DecksHelpers";
 import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIfNeeded } from "./DiscardCardHelpers";
 /**
 * <h3>Заполняет лагерь новой картой из карт лагерь деки текущей эпохи.</h3>
@@ -17,7 +16,7 @@ import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIf
 * @returns
 */
 const AddCardToCamp = ({ G, ctx, ...rest }, cardId) => {
-    const newCampCard = GetCampCardsFromCampCardDeck({ G, ctx, ...rest }, (G.secret.campDecks.length - G.tierToEnd), 0, 1)[0];
+    const newCampCard = GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, (G.secret.campDecks.length - G.tierToEnd), 0, 1)[0];
     if (newCampCard === undefined) {
         throw new Error(`Отсутствует карта лагеря в колоде карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
     }
@@ -44,13 +43,11 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }) => {
             }
         }
     }
-    const discardedCardsArray = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd - 1];
-    if (discardedCardsArray === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CampDeckWithTierCurrentIdIsUndefined, G.secret.campDecks.length - G.tierToEnd - 1);
-    }
+    // TODO DiscardCardType!?
+    const discardedCardsArray = G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd - 1)];
     if (discardedCardsArray.length) {
         DiscardAllCurrentCards({ G, ctx, ...rest }, discardedCardsArray);
-        GetCampCardsFromCampCardDeck({ G, ctx, ...rest }, (G.secret.campDecks.length - G.tierToEnd - 1), 0);
+        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, (G.secret.campDecks.length - G.tierToEnd - 1), 0);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
 };
@@ -136,13 +133,11 @@ export const RefillEmptyCampCards = ({ G, ctx, ...rest }) => {
             return index;
         }
         return null;
-    }), isEmptyCampCards = emptyCampCards.length === 0, campDeck = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
-    if (campDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CampDeckWithTierCurrentIdIsUndefined, G.secret.campDecks.length - G.tierToEnd);
-    }
+    }), isEmptyCampCards = emptyCampCards.length === 0, campDeck = G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd)];
     let isEmptyCurrentTierCampDeck = campDeck.length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex) => {
+            // TODO Is it dynamically change campDeck.length after AddCardToCamp!?
             isEmptyCurrentTierCampDeck = campDeck.length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
                 AddCardToCamp({ G, ctx, ...rest }, cardIndex);

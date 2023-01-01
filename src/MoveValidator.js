@@ -10,7 +10,7 @@ import { IsMercenaryCampCard } from "./is_helpers/IsCampTypeHelpers";
 import { IsCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GodNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GodNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ui/ProfitUI";
@@ -29,10 +29,10 @@ import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, Ch
 export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }, coinData) => {
     const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let handCoins, boardCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -299,7 +299,7 @@ export const moveValidators = {
         validate: ({ G, ctx, myPlayerID, ...rest }) => {
             const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             return myPlayerID === ctx.currentPlayer && G.expansions.Thingvellir.active
                 && (ctx.currentPlayer === G.publicPlayersOrder[0] || (!G.campPicked
@@ -374,7 +374,7 @@ export const moveValidators = {
             }
             return moveArgument;
         },
-        moveName: CardMoveNames.ClickDistinctionCardMove,
+        moveName: DistinctionCardMoveNames.ClickDistinctionCardMove,
         validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
     ClickHandCoinMoveValidator: {
@@ -470,7 +470,7 @@ export const moveValidators = {
         getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             const totalSuitsRanks = [], player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             for (let j = 0; j < currentMoveArguments.length; j++) {
                 const moveArgumentI = currentMoveArguments[j];
@@ -501,7 +501,7 @@ export const moveValidators = {
         validate: ({ G, ctx, myPlayerID, ...rest }) => {
             const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
             return myPlayerID === ctx.currentPlayer && ctx.playOrderPos === 0
@@ -560,10 +560,10 @@ export const moveValidators = {
             // TODO Check it bot can't play in multiplayer now...
             const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             if (privatePlayer === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             let handCoins;
             if (G.mode === GameModeNames.Multiplayer) {
@@ -704,8 +704,7 @@ export const moveValidators = {
         getRange: ({ G, ctx, ...rest }) => DrawTaverns({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.SoloBotClickCardMoveValidator),
         getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             // TODO If last round of tier 0 => get card not given distinction to other player and get for you if can' take hero or least present! If last round of the game => get most valuable points if can't pick hero anymore (can't check least present)!
-            let moveArgument;
-            moveArgument = CheckSoloBotMustTakeCardToPickHero({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
+            let moveArgument = CheckSoloBotMustTakeCardToPickHero({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             if (moveArgument === undefined) {
                 moveArgument =
                     CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
@@ -802,7 +801,7 @@ export const moveValidators = {
         getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             let type, coins;
             if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
@@ -895,8 +894,7 @@ export const moveValidators = {
     SoloBotAndvariClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawTaverns({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.SoloBotAndvariClickCardMoveValidator),
         getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
-            let moveArgument;
-            moveArgument = CheckSoloBotAndvariMustTakeCardFromGeneralStrategy({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
+            let moveArgument = CheckSoloBotAndvariMustTakeCardFromGeneralStrategy({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             if (moveArgument === undefined) {
                 moveArgument = CheckSoloBotAndvariMustTakeCardToPickHero({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
@@ -985,7 +983,7 @@ export const moveValidators = {
         getValue: ({ G, ctx, myPlayerID, ...rest }, currentMoveArguments) => {
             const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             const coins = player.boardCoins, minValue = CheckMinCoinVisibleValueForSoloBotAndvari({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             if (minValue === 0) {
@@ -1225,7 +1223,7 @@ export const moveValidators = {
             var _a;
             const player = G.publicPlayers[Number(myPlayerID)];
             if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
             }
             return myPlayerID === ctx.currentPlayer && ((_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.coinId) !== id.coinId
                 && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id);

@@ -1,4 +1,4 @@
-import type { CanBeNullType, CanBeUndefType, Ctx, DebugDrawDataType, FnContext, IDebugData, KeyofType, ObjectEntriesCtxType, ObjectEntriesType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Ctx, DebugData, DebugDrawDataType, FnContext, KeyofType, ObjectEntriesCtxType, ObjectEntriesTypesForKeyValue } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -11,7 +11,7 @@ import type { CanBeNullType, CanBeUndefType, Ctx, DebugDrawDataType, FnContext, 
  * @returns Дебаг панель.
  */
 export const DrawDebugData = ({ G, ctx, ...rest }: FnContext): CanBeNullType<JSX.Element> => {
-    const debugData: CanBeUndefType<IDebugData> = GetDebugData({ G, ctx, ...rest });
+    const debugData: CanBeUndefType<DebugData> = GetDebugData({ G, ctx, ...rest });
     if (debugData === undefined) {
         return null;
     } else {
@@ -91,13 +91,13 @@ const DrawObjectData = (obj: DebugDrawDataType): JSX.Element => {
  * @param context
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = ({ G, ctx }: FnContext): CanBeUndefType<IDebugData> => {
+const GetDebugData = ({ G, ctx }: FnContext): CanBeUndefType<DebugData> => {
     if (G.debug) {
-        const debugData: IDebugData = {
+        const debugData: DebugData = {
             G: {},
             ctx: {},
         };
-        for (const [key, value] of Object.entries(G) as ObjectEntriesType<typeof G>) {
+        for (const [key, value] of Object.entries(G) as ObjectEntriesTypesForKeyValue<typeof G>) {
             debugData.G[key] = value;
         }
         let key: KeyofType<Ctx>,

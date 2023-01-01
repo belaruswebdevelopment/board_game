@@ -1,5 +1,5 @@
 import { ArtefactNames, CommonStageNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, SuitNames } from "../../typescript/enums";
-import type { CoinType, Ctx, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContextWithMyPlayerID, PlayerCardType, PublicPlayerCoinType } from "../../typescript/interfaces";
+import type { CoinType, Ctx, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, MyGameState, PlayerBuffs, PlayerCardType, PublicPlayerCoinType, Stack } from "../../typescript/interfaces";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {
@@ -18,11 +18,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             isTriggerTrading: true,
                         },
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -38,7 +38,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [
@@ -47,7 +47,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard trading coin isOpened=false from board (multiplayer=false)`, (): void => {
         const G = {
@@ -64,11 +64,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             isTriggerTrading: true,
                         },
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -84,7 +84,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [
@@ -93,7 +93,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard closed trading coin from board (multiplayer=true)`, (): void => {
         const G = {
@@ -114,11 +114,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         {},
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -138,7 +138,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [
@@ -147,7 +147,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard opened trading coin from board (multiplayer=true)`, (): void => {
         const G = {
@@ -171,11 +171,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -195,7 +195,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                 } as IPublicPlayer,
             },
             logData: [
@@ -204,7 +204,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard trading coin isOpened=true from board if player has Uline but trading coin on the board (multiplayer=false)`, (): void => {
         const G = {
@@ -229,7 +229,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -258,7 +258,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard trading coin isOpened=false from board if player has Uline but trading coin on the board (multiplayer=false)`, (): void => {
         const G = {
@@ -283,7 +283,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -312,7 +312,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard trading coin from board if player has Uline but trading coin on the board but opened (multiplayer=true)`, (): void => {
         const G = {
@@ -344,7 +344,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -377,7 +377,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard trading coin from board if player has Uline but trading coin on the board but closed (multiplayer=true)`, (): void => {
         const G = {
@@ -406,7 +406,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -439,7 +439,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard trading coin from hand if player has Uline but trading coin in the hand (multiplayer=false)`, (): void => {
         const G = {
@@ -465,7 +465,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -495,7 +495,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard closed trading coin from hand if player has Uline but trading coin in the hand (multiplayer=true)`, (): void => {
         const G = {
@@ -526,7 +526,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -561,7 +561,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     it(`should discard trading coin isOpened=true from hand if player has Uline but trading coin in the hand (multiplayer=true)`, (): void => {
         const G = {
@@ -595,7 +595,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -630,7 +630,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
     });
     // Unreal Errors to reproduce
     it(`shouldn't discard trading coin if player hasn't trading coin and must throw Error (multiplayer=false)`,
@@ -643,10 +643,10 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 publicPlayers: {
                     0: {
                         boardCoins: [] as PublicPlayerCoinType[],
-                        buffs: [] as IBuffs[],
+                        buffs: [] as PlayerBuffs[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+            } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
                 ctx = {
                     currentPlayer: `0`,
                 } as Ctx;
@@ -666,10 +666,10 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 publicPlayers: {
                     0: {
                         boardCoins: [] as PublicPlayerCoinType[],
-                        buffs: [] as IBuffs[],
+                        buffs: [] as PlayerBuffs[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+            } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
                 ctx = {
                     currentPlayer: `0`,
                 } as Ctx;
@@ -695,7 +695,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         ],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+            } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
                 ctx = {
                     currentPlayer: `0`,
                 } as Ctx;
@@ -723,7 +723,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -737,12 +737,12 @@ describe(`Test FinishOdroerirTheMythicCauldronAction method`, (): void => {
     it(`should finish odroerirTheMythicCauldron action`, (): void => {
         const G = {
             odroerirTheMythicCauldron: true,
-        } as Pick<IMyGameState, `odroerirTheMythicCauldron`>,
+        } as Pick<MyGameState, `odroerirTheMythicCauldron`>,
             ctx: Ctx = {} as Ctx;
         FinishOdroerirTheMythicCauldronAction({ G, ctx } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             odroerirTheMythicCauldron: false,
-        } as Pick<IMyGameState, `odroerirTheMythicCauldron`>);
+        } as Pick<MyGameState, `odroerirTheMythicCauldron`>);
     });
 });
 
@@ -757,10 +757,10 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                             {},
                         ],
                     },
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers`>,
+        } as Pick<MyGameState, `publicPlayers`>,
             ctx = {
                 currentPlayer: `0`,
                 numPlayers: 2,
@@ -777,13 +777,13 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     },
                     stack: [
                         {
-                            playerId: 1,
+                            playerId: `1`,
                             priority: 0,
                         },
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers`>);
+        } as Pick<MyGameState, `publicPlayers`>);
         expect(ctx).toEqual({
             currentPlayer: `0`,
             numPlayers: 2,
@@ -797,7 +797,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     cards: {
                         warrior: [] as PlayerCardType[],
                     },
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
                 2: {
                     cards: {
@@ -805,10 +805,10 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                             {},
                         ],
                     },
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers`>,
+        } as Pick<MyGameState, `publicPlayers`>,
             ctx = {
                 currentPlayer: `0`,
                 numPlayers: 3,
@@ -821,7 +821,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     cards: {
                         warrior: [] as PlayerCardType[],
                     },
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
                 2: {
                     cards: {
@@ -831,13 +831,13 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     },
                     stack: [
                         {
-                            playerId: 2,
+                            playerId: `2`,
                             priority: 0,
                         },
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers`>);
+        } as Pick<MyGameState, `publicPlayers`>);
         expect(ctx).toEqual({
             currentPlayer: `0`,
             numPlayers: 3,
@@ -854,7 +854,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     },
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers`>,
+        } as Pick<MyGameState, `publicPlayers`>,
             ctx = {
                 currentPlayer: `0`,
                 numPlayers: 2,
@@ -891,11 +891,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -924,7 +924,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                     stack: [
                         {
                             coinId: undefined,
@@ -940,7 +940,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 2 coins isOpened=false value=3 (multiplayer=false)`, (): void => {
         const G = {
@@ -967,11 +967,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1000,7 +1000,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                     stack: [
                         {
                             coinId: undefined,
@@ -1016,7 +1016,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 2 closed coins value=3 (multiplayer=true)`, (): void => {
         const G = {
@@ -1051,11 +1051,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {},
                         {},
                     ],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1100,7 +1100,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                     stack: [
                         {
                             coinId: undefined,
@@ -1116,7 +1116,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 2 coins isOpened=true value=3 (multiplayer=true)`, (): void => {
         const G = {
@@ -1159,11 +1159,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1208,7 +1208,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                     stack: [
                         {
                             coinId: undefined,
@@ -1224,7 +1224,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 2 coins, but 1 isTriggerTrading, value=5 (multiplayer=false)`,
         (): void => {
@@ -1252,11 +1252,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             },
                         ],
                         handCoins: [] as PublicPlayerCoinType[],
-                        buffs: [] as IBuffs[],
-                        stack: [] as IStack[],
+                        buffs: [] as PlayerBuffs[],
+                        stack: [] as Stack[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
                 ctx = {
                     currentPlayer: `0`,
                 } as Ctx;
@@ -1285,7 +1285,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             },
                         ],
                         handCoins: [] as PublicPlayerCoinType[],
-                        buffs: [] as IBuffs[],
+                        buffs: [] as PlayerBuffs[],
                         stack: [
                             {
                                 coinId: undefined,
@@ -1300,7 +1300,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         ],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+            } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
         });
     it(`should start VidofnirVedrfolnir action for 2 coins, but 1 isTriggerTrading, value=5 (multiplayer=true)`,
         (): void => {
@@ -1336,11 +1336,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                         ],
-                        buffs: [] as IBuffs[],
-                        stack: [] as IStack[],
+                        buffs: [] as PlayerBuffs[],
+                        stack: [] as Stack[],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+            } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
                 ctx = {
                     currentPlayer: `0`,
                 } as Ctx;
@@ -1385,7 +1385,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                        buffs: [] as IBuffs[],
+                        buffs: [] as PlayerBuffs[],
                         stack: [
                             {
                                 coinId: undefined,
@@ -1400,7 +1400,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         ],
                     } as IPublicPlayer,
                 },
-            } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+            } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
         });
     it(`should start VidofnirVedrfolnir action for 1 coins (1 is discarded coin=null), value=5 (multiplayer=false)`, (): void => {
         const G = {
@@ -1423,11 +1423,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1452,7 +1452,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                     stack: [
                         {
                             coinId: undefined,
@@ -1467,7 +1467,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 1 coins (1 is discarded coin=null), value=5 (multiplayer=true)`, (): void => {
         const G = {
@@ -1498,11 +1498,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         {},
                     ],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1539,7 +1539,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                    buffs: [] as IBuffs[],
+                    buffs: [] as PlayerBuffs[],
                     stack: [
                         {
                             coinId: undefined,
@@ -1554,7 +1554,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 2 coins if player has Uline (multiplayer=false)`, (): void => {
         const G = {
@@ -1587,10 +1587,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1639,7 +1639,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 2 coins if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -1680,10 +1680,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1740,7 +1740,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 1 coins (1 coin just on the pouch and 1 coin in player's hands after trading) if player has Uline (multiplayer=false)`, (): void => {
         const G = {
@@ -1772,10 +1772,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1818,7 +1818,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 1 coins (1 coin just on the pouch and 1 coin in player's hands after trading) if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -1861,10 +1861,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1918,7 +1918,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 1 coins (0 coin on the pouch because trading coin was discarded and just 1 coin in player's hands) if player has Uline (multiplayer=false)`, (): void => {
         const G = {
@@ -1947,10 +1947,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -1995,7 +1995,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 1 coins (0 coin on the pouch because trading coin was discarded and just 1 coin in player's hands) if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -2032,10 +2032,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2088,7 +2088,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 2 coins (0 coin on the pouch because trading isn't happened and more then 2 coins in player's hands) if player has Uline (multiplayer=false)`, (): void => {
         const G = {
@@ -2129,10 +2129,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2189,7 +2189,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 2 coins (0 coin on the pouch because trading isn't happened and more then 2 coins in player's hands) if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -2238,10 +2238,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2306,7 +2306,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 1 coins (1 coin on the pouch because trading was happened and more then 1 coins in player's hands) if player has Uline (multiplayer=false)`, (): void => {
         const G = {
@@ -2342,10 +2342,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2392,7 +2392,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start AddCoinToPouch action for 1 coins (1 coin on the pouch because trading was happened and more then 1 coins in player's hands) if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -2439,10 +2439,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2500,7 +2500,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 2 coins value=3 if player has Uline (if multiplayer=false)`, (): void => {
         const G = {
@@ -2532,10 +2532,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2579,7 +2579,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 2 coins value=3 /all public board coin just opened by effect of adding coin to pouch Uline/ if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -2623,10 +2623,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2682,7 +2682,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 2 coins value=3 /some public board coin just opened by effect of adding coin to pouch Uline/ if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -2726,10 +2726,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2789,7 +2789,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 1 coins (1 is discarded coin=null), value=5 if player has Uline (multiplayer=false)`, (): void => {
         const G = {
@@ -2817,10 +2817,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2860,7 +2860,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     it(`should start VidofnirVedrfolnir action for 1 coins (1 is discarded coin=null), value=5 if player has Uline (multiplayer=true)`, (): void => {
         const G = {
@@ -2896,10 +2896,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -2951,7 +2951,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
     // Unreal Errors to reproduce
     it(`shouldn't have 0 coins in player's hands and 0 coins on the pouch if player has Uline (if multiplayer=false) and must throw Error`, (): void => {
@@ -2976,10 +2976,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -3007,11 +3007,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -3036,11 +3036,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -3073,11 +3073,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                    buffs: [] as IBuffs[],
-                    stack: [] as IStack[],
+                    buffs: [] as PlayerBuffs[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
-        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;

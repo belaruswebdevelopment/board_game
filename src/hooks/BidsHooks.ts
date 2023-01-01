@@ -67,11 +67,11 @@ export const CheckEndBidsTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinType[];

@@ -24,7 +24,7 @@ import { ActivateGodAbilityMove, ChooseCoinValueForHrungnirUpgradeMove, ChooseSu
 import { SoloBotAndvariClickCardMove, SoloBotAndvariClickCardToPickDistinctionMove, SoloBotAndvariClickCoinToUpgradeMove, SoloBotAndvariClickHeroCardMove, SoloBotAndvariPlaceAllCoinsMove, SoloBotAndvariPlaceThrudHeroMove, SoloBotAndvariPlaceYludHeroMove } from "./moves/SoloBotAndvariMoves";
 import { SoloBotClickCardMove, SoloBotClickCardToPickDistinctionMove, SoloBotClickCoinToUpgradeMove, SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove, SoloBotPlaceThrudHeroMove, SoloBotPlaceYludHeroMove } from "./moves/SoloBotMoves";
 import { PhaseNames } from "./typescript/enums";
-import type { CanBeVoidType, FnContext, Game, IMyGameState, StripSecretsType } from "./typescript/interfaces";
+import type { CanBeVoidType, FnContext, Game, MyGameState, StripSecretsType } from "./typescript/interfaces";
 
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add Log data fo Solo Bot fo all files!
@@ -38,7 +38,7 @@ import type { CanBeVoidType, FnContext, Game, IMyGameState, StripSecretsType } f
  * <li>При определении хода в каждую фазу игры.</li>
  * </ol>
  */
-const order: TurnOrderConfig<IMyGameState> = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
+const order: TurnOrderConfig<MyGameState> = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
 
 /**
  * <h3>Параметры игры.</h3>
@@ -675,7 +675,7 @@ export const BoardGame: Game = {
         },
     },
     endIf: ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => CheckEndGame({ G, ctx, ...rest }),
-    onEnd: ({ G, ctx, ...rest }: FnContext): CanBeVoidType<IMyGameState> => ReturnEndGameData({ G, ctx, ...rest }),
+    onEnd: ({ G, ctx, ...rest }: FnContext): CanBeVoidType<MyGameState> => ReturnEndGameData({ G, ctx, ...rest }),
     ai: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore

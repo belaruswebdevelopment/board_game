@@ -31,5 +31,9 @@ export const RemoveCoinFromMarket = ({ G }: FnContext, coinId: number): ICoin =>
  * @returns Убираемая монета у игрока.
  */
 export const RemoveCoinFromPlayer = (coins: PublicPlayerCoinType[], coinId: number): void => {
-    coins.splice(coinId, 1, null);
+    const amount = 1,
+        removedCoin: PublicPlayerCoinType[] = coins.splice(coinId, 1, null);
+    if (amount !== removedCoin.length) {
+        throw new Error(`Недостаточно монет в массиве монет игрока: требуется - '${amount}', в наличии - '${removedCoin.length}'.`);
+    }
 };

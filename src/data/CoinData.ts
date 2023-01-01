@@ -1,4 +1,4 @@
-import type { CoinConfigType, IMarketCoinConfig, InitialTradingCoinConfigType, INumberValues } from "../typescript/interfaces";
+import type { CoinConfigType, IMarketCoinConfig, InitialTradingCoinConfigType, NumberPlayersValues } from "../typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
@@ -53,7 +53,7 @@ export const initialPlayerCoinsConfig: InitialTradingCoinConfigType[] = [
 export const marketCoinsConfig: IMarketCoinConfig[] = [
     {
         value: 5,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 2,
             3: 2,
             4: 2,
@@ -62,7 +62,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 6,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 2,
             3: 2,
             4: 2,
@@ -71,7 +71,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 7,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 3,
@@ -80,7 +80,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 8,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 2,
             3: 2,
             4: 2,
@@ -89,7 +89,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 9,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 3,
@@ -98,7 +98,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 10,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 2,
             3: 2,
             4: 2,
@@ -107,7 +107,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 11,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 3,
@@ -116,7 +116,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 12,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 2,
             3: 2,
             4: 2,
@@ -125,7 +125,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 13,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 2,
             3: 2,
             4: 2,
@@ -134,7 +134,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 14,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 2,
             3: 2,
             4: 2,
@@ -143,7 +143,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 15,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -152,7 +152,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 16,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -161,7 +161,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 17,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -170,7 +170,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 18,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -179,7 +179,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 19,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -188,7 +188,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 20,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -197,7 +197,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 21,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -206,7 +206,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 22,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -215,7 +215,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 23,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -224,7 +224,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 24,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,
@@ -233,7 +233,7 @@ export const marketCoinsConfig: IMarketCoinConfig[] = [
     },
     {
         value: 25,
-        count: (): INumberValues => ({
+        count: (): NumberPlayersValues => ({
             2: 1,
             3: 1,
             4: 1,

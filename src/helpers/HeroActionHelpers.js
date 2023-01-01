@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames } from "../typescript/enums";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
@@ -19,7 +19,7 @@ const CheckAndMoveThrud = ({ G, ctx, myPlayerID, ...rest }, card) => {
     if (card.suit !== null) {
         const player = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
         }
         if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.MoveThrud)
             && GetBuffValue({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.MoveThrud) === card.suit) {
@@ -51,13 +51,13 @@ export const CheckAndMoveThrudAction = ({ G, ctx, myPlayerID, ...rest }, card) =
     const isMoveThrud = CheckAndMoveThrud({ G, ctx, myPlayerID, ...rest }, card);
     if (isMoveThrud) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.placeThrudHeroSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeThrudHeroSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.placeThrudHeroSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeThrudHeroSoloBotAndvari()]);
         }
         else {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.placeThrudHero()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeThrudHero()]);
         }
     }
 };

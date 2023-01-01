@@ -58,10 +58,10 @@ export const CheckEndBidsPhase = ({ G, ctx, ...rest }) => {
 export const CheckEndBidsTurn = ({ G, ctx, ...rest }) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
     if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)

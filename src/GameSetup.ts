@@ -13,7 +13,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames, SuitNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeUndefType, DeckCardType, DistinctionType, DrawSizeType, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IBotData, ICoin, IDwarfCard, ILogData, IMultiSuitCard, IMultiSuitPlayerCard, IMyGameState, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IRoyalOfferingCard, ISecret, ISpecialCard, IStrategyForSoloBotAndvari, MythologicalCreatureDeckCardType, NumPlayersType, PlayerID, SecretCampDecksType, SecretDecksType, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { AIBotData, AllSecretData, BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CampDecksLength, CanBeUndefType, Distinctions, DrawSizeType, DwarfCard, DwarfDeckCardType, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, ICoin, ILogData, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IStrategyForSoloBotAndvari, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, NumPlayersType, PlayerID, RoyalOfferingCard, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -25,7 +25,7 @@ import type { BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CanBeU
  * @param context
  * @returns Данные игры.
  */
-export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
+export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
     // TODO Rework it!
     const mode: GameModeNames = ctx.numPlayers === 2 ? GameModeNames.Solo : ctx.numPlayers === 3
         ? GameModeNames.SoloAndvari : ctx.numPlayers === 4 ? GameModeNames.Multiplayer : GameModeNames.Basic,
@@ -59,13 +59,13 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
         totalScore: number[] = [],
         logData: ILogData[] = [],
         odroerirTheMythicCauldronCoins: ICoin[] = [],
-        specialCardsDeck: ISpecialCard[] = BuildSpecialCards(),
+        specialCardsDeck: SpecialCard[] = BuildSpecialCards(),
         configOptions: GameNamesKeyofTypeofType[] = [],
-        discardCardsDeck: DeckCardType[] = [],
+        discardCardsDeck: DwarfDeckCardType[] = [],
         explorerDistinctionCards = null,
-        distinctions: SuitPropertyType<DistinctionType> = {} as SuitPropertyType<DistinctionType>,
+        distinctions: SuitPropertyType<Distinctions> = {} as SuitPropertyType<Distinctions>,
         strategyForSoloBotAndvari: IStrategyForSoloBotAndvari = {} as IStrategyForSoloBotAndvari,
-        secret: ISecret = {
+        secret: AllSecretData = {
             campDecks: [[], []],
             decks: [[], []],
             mythologicalCreatureDeck: [],
@@ -79,32 +79,33 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
         campPicked = false,
         mustDiscardTavernCardJarnglofi = null,
         discardCampCardsDeck: CampDeckCardType[] = [],
-        discardMythologicalCreaturesCards: MythologicalCreatureDeckCardType[] = [],
-        discardMultiCards: IMultiSuitPlayerCard[] = [],
-        discardSpecialCards: ISpecialCard[] = [],
-        campDeckLength: [number, number] = [0, 0],
+        discardMythologicalCreaturesCards: MythologicalCreatureCardType[] = [],
+        discardMultiCards: MultiSuitPlayerCard[] = [],
+        discardSpecialCards: SpecialCard[] = [],
+        campDecksLength: CampDecksLength = [0, 0],
         camp: CampCardArrayType = Array(campNum).fill(null) as CampCardArrayType,
-        deckLength: [number, number] = [0, 0],
+        // TODO DecksLength
+        decksLength: DwarfDecksLength = [0, 0],
         mythologicalCreatureDeckForSkymir = null;
     for (let i = 0; i < tierToEnd; i++) {
         if (expansions.Thingvellir.active) {
             secret.campDecks[i] = BuildCampCards(i as TierType);
-            let campDeck: CampDeckCardType[] = secret.campDecks[i as IndexOf<SecretCampDecksType>];
+            let campDeck: SecretCampDeckType = secret.campDecks[i as IndexOf<SecretAllCampDecks>];
             campDeck = random.Shuffle(campDeck);
             secret.campDecks[i] = campDeck;
-            campDeckLength[i] = campDeck.length;
-            campDeckLength[0] = secret.campDecks[0].length;
+            campDecksLength[i] = campDeck.length;
+            campDecksLength[0] = secret.campDecks[0].length;
         }
         secret.decks[i] = [];
         const data: IPlayersNumberTierCardData = {
             players: ctx.numPlayers,
             tier: i as TierType,
         },
-            dwarfDeck: IDwarfCard[] = BuildDwarfCards(data),
-            royalOfferingDeck: IRoyalOfferingCard[] = BuildRoyalOfferingCards(data);
-        let deck: DeckCardType[] = secret.decks[i as IndexOf<SecretDecksType>];
+            dwarfDeck: DwarfCard[] = BuildDwarfCards(data),
+            royalOfferingDeck: RoyalOfferingCard[] = BuildRoyalOfferingCards(data);
+        let deck: SecretDwarfDeckType = secret.decks[i as IndexOf<SecretAllDwarfDecks>];
         deck = deck.concat(dwarfDeck, royalOfferingDeck);
-        deckLength[i] = deck.length;
+        decksLength[i] = deck.length;
         secret.decks[i] = random.Shuffle(deck);
     }
     let expansion: GameNamesKeyofTypeofType;
@@ -116,15 +117,15 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari]:
         BuildHeroesArraysType = BuildHeroes(configOptions, mode),
         heroesForSoloGameForStrategyBotAndvari = null,
-        multiCardsDeck: IMultiSuitCard[] = BuildMultiSuitCards(configOptions),
+        multiCardsDeck: MultiSuitCard[] = BuildMultiSuitCards(configOptions),
         taverns: TavernsType = [[], [], []],
         tavernsNum = 3,
         currentTavern = 0;
-    deckLength[0] = secret.decks[0].length;
+    decksLength[0] = secret.decks[0].length;
     let mythologicalCreatureDeckLength = 0,
         mythologicalCreatureNotInGameDeckLength = 0;
     if (expansions.Idavoll.active) {
-        let mythologicalCreatureCardsDeck: MythologicalCreatureDeckCardType[] = BuildMythologicalCreatureCards();
+        let mythologicalCreatureCardsDeck: MythologicalCreatureCardType[] = BuildMythologicalCreatureCards();
         mythologicalCreatureCardsDeck = random.Shuffle(mythologicalCreatureCardsDeck);
         [secret.mythologicalCreatureDeck, secret.mythologicalCreatureNotInGameDeck] =
             BuildMythologicalCreatureDecks(mythologicalCreatureCardsDeck, ctx.numPlayers);
@@ -159,9 +160,9 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
             count: marketCoinsUnique,
             players: ctx.numPlayers,
         }),
-        averageCards: SuitPropertyType<IDwarfCard> = {} as SuitPropertyType<IDwarfCard>;
+        averageCards: SuitPropertyType<DwarfCard> = {} as SuitPropertyType<DwarfCard>;
     for (suit in suitsConfig) {
-        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
+        averageCards[suit] = GetAverageSuitCard(suit, {
             players: ctx.numPlayers,
             tier: 0,
         });
@@ -177,7 +178,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
         }
         allCoinsOrder = allCoinsOrder.concat(Permute(coinsOrder));
     }
-    const botData: IBotData = {
+    const botData: AIBotData = {
         allCoinsOrder,
         allPicks: GetAllPicks(tavernsNum, ctx.numPlayers),
         maxIter: 1000,
@@ -196,8 +197,8 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): IMyGameState => {
         camp,
         explorerDistinctionCards,
         explorerDistinctionCardId,
-        deckLength,
-        campDeckLength,
+        decksLength,
+        campDecksLength,
         mythologicalCreatureDeckLength,
         mythologicalCreatureNotInGameDeckLength,
         mythologicalCreatureDeckForSkymir,

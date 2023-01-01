@@ -1,5 +1,5 @@
 import { ThrowMyError } from "../Error";
-import { ErrorNames, RusCardTypeNames, RusSuitNames, SuitNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, SuitNames, SuitRusNames } from "../typescript/enums";
 import type { CampCardType, CampDeckCardType, CanBeUndefType, DiscardCardType, FnContext, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerCardType, TavernAllCardType, TavernCardType, TavernCardWithExpansionType } from "../typescript/interfaces";
 
 /**
@@ -18,12 +18,12 @@ export const RemoveCardFromPlayerBoardSuitCards = ({ G, ctx, myPlayerID, ...rest
     suit: SuitNames, cardId: number): PlayerCardType => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     const removedCard: CanBeUndefType<PlayerCardType> = player.cards[suit].splice(cardId, 1)[0];
     if (removedCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует выбранная карта во фракции '${RusSuitNames[suit]}' с id '${cardId}': это должно проверяться в MoveValidator.`);
+        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует выбранная карта во фракции '${SuitRusNames[suit]}' с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     return removedCard;
 };
@@ -115,31 +115,31 @@ export const DiscardAllCurrentCards = ({ G, ...rest }: FnContext, discardedCards
 export const DiscardCurrentCard = ({ G }: FnContext, discardedCard: DiscardCardType): void => {
     let _exhaustiveCheck: never;
     switch (discardedCard.type) {
-        case RusCardTypeNames.Mercenary_Card:
-        case RusCardTypeNames.Mercenary_Player_Card:
-        case RusCardTypeNames.Artefact_Card:
-        case RusCardTypeNames.Artefact_Player_Card:
+        case CardTypeRusNames.Mercenary_Card:
+        case CardTypeRusNames.Mercenary_Player_Card:
+        case CardTypeRusNames.Artefact_Card:
+        case CardTypeRusNames.Artefact_Player_Card:
             // TODO Mercenary_Player_Card must be discarded as basic Mercenary_Card!?...
             G.discardCampCardsDeck.push(discardedCard);
             break;
-        case RusCardTypeNames.Dwarf_Card:
-        case RusCardTypeNames.Royal_Offering_Card:
+        case CardTypeRusNames.Dwarf_Card:
+        case CardTypeRusNames.Royal_Offering_Card:
             G.discardCardsDeck.push(discardedCard);
             break;
-        case RusCardTypeNames.Giant_Card:
-        case RusCardTypeNames.God_Card:
-        case RusCardTypeNames.Valkyry_Card:
-        case RusCardTypeNames.Mythical_Animal_Card:
+        case CardTypeRusNames.Giant_Card:
+        case CardTypeRusNames.God_Card:
+        case CardTypeRusNames.Valkyry_Card:
+        case CardTypeRusNames.Mythical_Animal_Card:
             G.discardMythologicalCreaturesCards.push(discardedCard);
             break;
-        case RusCardTypeNames.Special_Card:
+        case CardTypeRusNames.Special_Card:
             G.discardSpecialCards.push(discardedCard);
             break;
-        case RusCardTypeNames.Multi_Suit_Player_Card:
+        case CardTypeRusNames.Multi_Suit_Player_Card:
             G.discardMultiCards.push(discardedCard);
             break;
-        case RusCardTypeNames.Hero_Player_Card:
-            throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Player_Card}'.`);
+        case CardTypeRusNames.Hero_Player_Card:
+            throw new Error(`Сброшенная карта не может быть с типом '${CardTypeRusNames.Hero_Player_Card}'.`);
         default:
             _exhaustiveCheck = discardedCard;
             throw new Error(`Сброшенная карта не может быть с недопустимым для сброса типом.`);

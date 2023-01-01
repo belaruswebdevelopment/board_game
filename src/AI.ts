@@ -3,8 +3,8 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { AllCurrentScoring } from "./Score";
-import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, RusCardTypeNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
-import type { ActiveStageNames, CanBeNullType, CanBeUndefType, Ctx, DeckCardType, FnContext, GetValidatorStageNames, IMoves, IMoveValidator, IMyGameState, IObjectives, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, PlayerID, StageNames, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
+import type { ActiveStageNames, AIAllObjectives, CanBeNullType, CanBeUndefType, Ctx, FnContext, GetValidatorStageNames, IMoves, IMoveValidator, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, MyGameState, PlayerID, SecretDwarfDeckTier0, StageNames, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -18,11 +18,11 @@ import type { ActiveStageNames, CanBeNullType, CanBeUndefType, Ctx, DeckCardType
  * @param playerID Id игрока.
  * @returns Массив возможных мувов у ботов.
  */
-export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves[] => {
+export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): IMoves[] => {
     const moves: IMoves[] = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx } as FnContext, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx } as FnContext, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     const phase: PhaseNames = ctx.phase;
@@ -59,7 +59,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotPlaceAllCoins;
                             } else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                return ThrowMyError({ G, ctx } as FnContext,
+                                    ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         case GameModeNames.SoloAndvari:
@@ -68,12 +69,13 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotAndvariPlaceAllCoins;
                             } else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                return ThrowMyError({ G, ctx } as FnContext,
+                                    ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         default:
                             _exhaustiveCheck = G.mode;
-                            throw new Error(`Нет такого режима игры.`);
+                            return ThrowMyError({ G, ctx } as FnContext, ErrorNames.NoSuchGameMode);
                             return _exhaustiveCheck;
                     }
                     break;
@@ -105,7 +107,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotClickCard;
                             } else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                return ThrowMyError({ G, ctx } as FnContext,
+                                    ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         case GameModeNames.SoloAndvari:
@@ -114,12 +117,13 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
                             } else if (ctx.currentPlayer === `1`) {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard;
                             } else {
-                                throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                return ThrowMyError({ G, ctx } as FnContext,
+                                    ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                             }
                             break;
                         default:
                             _exhaustiveCheck = G.mode;
-                            throw new Error(`Нет такого режима игры.`);
+                            return ThrowMyError({ G, ctx } as FnContext, ErrorNames.NoSuchGameMode);
                             return _exhaustiveCheck;
                     }
                     break;
@@ -245,7 +249,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx, playerID: PlayerID): IMoves
 * @returns Итерации.
 */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const iterations = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): number => {
+export const iterations = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): number => {
     const maxIter: number = G.botData.maxIter;
     if (ctx.phase === PhaseNames.TavernsResolution) {
         const currentTavern: TavernCardType[] = G.taverns[G.currentTavern];
@@ -281,9 +285,9 @@ export const iterations = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): numb
                 CompareTavernCards(tavernCard, card) === -1)) {
                 continue;
             }
-            const deck0: DeckCardType[] = G.secret.decks[0];
+            const deck0: SecretDwarfDeckTier0 = G.secret.decks[0];
             if (deck0.length > 18) {
-                if (tavernCard.type === RusCardTypeNames.Dwarf_Card) {
+                if (tavernCard.type === CardTypeRusNames.Dwarf_Card) {
                     if (CompareTavernCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card: TavernCardType): boolean =>
                             CompareTavernCards(card, G.averageCards[tavernCard.suit]) > -1)) {
@@ -317,9 +321,9 @@ export const iterations = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): numb
  * @returns Цели.
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObjectives => ({
+export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAllObjectives => ({
     isEarlyGame: {
-        checker: (G: IMyGameState): boolean => G.secret.decks[0].length > 0,
+        checker: (G: MyGameState): boolean => G.secret.decks[0].length > 0,
         weight: -100.0,
     },
     // TODO Move same logic in one func?!
@@ -328,7 +332,7 @@ export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObj
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
@@ -363,7 +367,7 @@ export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObj
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
@@ -398,7 +402,7 @@ export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObj
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardTypes>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
@@ -429,15 +433,15 @@ export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObj
         weight: 0.1,
     }, */
     isFirst: {
-        checker: (G: IMyGameState, ctx: Ctx): boolean => {
+        checker: (G: MyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: CanBeNullType<DeckCardType>): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<TavernCardType>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
@@ -467,15 +471,15 @@ export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObj
         weight: 0.5,
     },
     isStronger: {
-        checker: (G: IMyGameState, ctx: Ctx): boolean => {
+        checker: (G: MyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== PhaseNames.TavernsResolution) {
                 return false;
             }
-            const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];
+            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: CanBeNullType<DeckCardType>): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<TavernCardType>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
@@ -520,8 +524,8 @@ export const objectives = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): IObj
  * @returns Глубина.
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const playoutDepth = (G: IMyGameState, ctx: Ctx, playerID?: PlayerID): number => {
-    const tavern0: CanBeNullType<DeckCardType>[] = G.taverns[0];
+export const playoutDepth = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): number => {
+    const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
     if (G.secret.decks[1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;
     }

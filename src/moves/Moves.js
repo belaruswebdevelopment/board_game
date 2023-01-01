@@ -1,11 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ClickCardAction, DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickCardToPickDistinctionAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, CommonStageNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, SuitMoveNames, SuitNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, CommonStageNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, SuitMoveNames, SuitNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -54,7 +54,7 @@ export const ClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, ca
  * @returns
  */
 export const ClickDistinctionCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
-    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationDefaultStageNames.ClickDistinctionCard, CardMoveNames.ClickDistinctionCardMove, suit);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationDefaultStageNames.ClickDistinctionCard, DistinctionCardMoveNames.ClickDistinctionCardMove, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -207,6 +207,6 @@ export const StartEnlistmentMercenariesMove = ({ G, ctx, playerID, ...rest }, pa
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.enlistmentMercenaries()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [AllStackData.enlistmentMercenaries()]);
 };
 //# sourceMappingURL=Moves.js.map

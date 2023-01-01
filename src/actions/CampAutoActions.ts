@@ -1,5 +1,5 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
@@ -8,7 +8,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IActionFunctionWithoutParams, IPlayer, IPublicPlayer, IStack, MyFnContextWithMyPlayerID, PublicPlayerCoinType, StageArg } from "../typescript/interfaces";
+import type { CanBeUndefType, IActionFunctionWithoutParams, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType, Stack, StageArg } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
@@ -24,7 +24,7 @@ export const DiscardTradingCoinAction: IActionFunctionWithoutParams = ({ G, ctx,
     MyFnContextWithMyPlayerID): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     DiscardTradingCoin({ G, ctx, myPlayerID, ...rest });
@@ -74,7 +74,7 @@ export const StartDiscardSuitCardAction: IActionFunctionWithoutParams = ({ G, ct
                     stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
                 };
                 AddActionsToStack({ G, ctx, myPlayerID, events, ...rest },
-                    [StackData.discardSuitCard(i)]);
+                    [AllStackData.discardSuitCard(String(i))]);
                 results++;
             }
         }
@@ -105,11 +105,11 @@ export const StartVidofnirVedrfolnirAction: IActionFunctionWithoutParams = ({ G,
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     let handCoins: PublicPlayerCoinType[];
@@ -125,14 +125,14 @@ export const StartVidofnirVedrfolnirAction: IActionFunctionWithoutParams = ({ G,
             handCoinsNumber: number = handCoins.filter(IsCoin).length;
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
-                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.addCoinToPouch()]);
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.addCoinToPouch()]);
             }
         } else {
             throw new Error(`При наличии бафа '${HeroBuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
         }
     } else {
         let coinsValue = 0,
-            stack: IStack[] = [];
+            stack: Stack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
             let boardCoin: CanBeUndefType<PublicPlayerCoinType>;
             if (G.mode === GameModeNames.Multiplayer) {
@@ -167,9 +167,9 @@ export const StartVidofnirVedrfolnirAction: IActionFunctionWithoutParams = ({ G,
             }
         }
         if (coinsValue === 1) {
-            stack = [StackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([5])];
+            stack = [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([5])];
         } else if (coinsValue === 2) {
-            stack = [StackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([2, 3])];
+            stack = [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([2, 3])];
         } else {
             throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '${coinsValue}' монет(ы).`);
         }

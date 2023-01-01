@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { ErrorNames, GameModeNames, HeroNames, LogTypeNames, RusCardTypeNames, ValkyryBuffNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { CheckIfRecruitedCardHasNotLeastRankOfChosenClass, CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -21,13 +21,13 @@ export const AddHeroCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, hero) 
     if (hero.suit !== null && hero.rank !== null) {
         const player = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
         }
         const heroCard = CreateHeroPlayerCard({
             suit: hero.suit,
             rank: hero.rank,
             points: hero.points,
-            type: RusCardTypeNames.Hero_Player_Card,
+            type: CardTypeRusNames.Hero_Player_Card,
             name: hero.name,
             description: hero.description,
         });
@@ -53,7 +53,7 @@ export const AddHeroCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, hero) 
 export const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (!hero.active) {
         throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
@@ -103,7 +103,7 @@ export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
 export const AddHeroForDifficultyToSoloBotCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
     const soloBotPublicPlayer = G.publicPlayers[1], player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);

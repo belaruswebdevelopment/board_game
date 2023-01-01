@@ -20,7 +20,7 @@ export const CheckEndBidUlinePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoid
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         const ulinePlayerIndex: number =

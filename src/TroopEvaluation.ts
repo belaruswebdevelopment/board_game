@@ -1,12 +1,12 @@
 import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
-import { GetCardsFromCardDeck } from "./helpers/DecksHelpers";
+import { GetCardsFromSecretDwarfDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard } from "./helpers/DiscardCardHelpers";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ErrorNames, LogTypeNames, SuitNames, ValkyryBuffNames } from "./typescript/enums";
-import type { CanBeUndefType, DeckCardType, DistinctionType, FnContext, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType } from "./typescript/interfaces";
+import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие единственного игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
@@ -19,7 +19,7 @@ import type { CanBeUndefType, DeckCardType, DistinctionType, FnContext, IPublicP
  * @param suit Фракция.
  * @returns Индекс единственного игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
-const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames): DistinctionType => {
+const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames): Distinctions => {
     const [playersRanks, max]: PlayerRanksAndMaxRanksForDistinctionsType =
         CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit),
         maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
@@ -97,7 +97,7 @@ export const CheckAllSuitsDistinctions = ({ G, ctx, ...rest }: FnContext): void 
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Преимущество по фракциям в конце эпохи:`);
     let suit: SuitNames;
     for (suit in suitsConfig) {
-        const result: DistinctionType = CheckCurrentSuitDistinction({ G, ctx, ...rest }, suit);
+        const result: Distinctions = CheckCurrentSuitDistinction({ G, ctx, ...rest }, suit);
         G.distinctions[suit] = result;
         RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction({ G, ctx, ...rest }, suit, result);
     }
@@ -148,11 +148,11 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: F
  * @returns
  */
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames,
-    result: DistinctionType): void => {
+    result: Distinctions): void => {
     // TODO if (suit === SuitNames.explorer) here or in CheckAllSuitsDistinctions?
     if (suit === SuitNames.explorer && result === undefined) {
-        const discardedCard: CanBeUndefType<DeckCardType> =
-            GetCardsFromCardDeck({ G, ctx, ...rest }, 1, 0, 1)[0];
+        const discardedCard: CanBeUndefType<DwarfDeckCardType> =
+            GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, 1, 0, 1)[0];
         if (discardedCard === undefined) {
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);

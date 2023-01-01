@@ -1,5 +1,5 @@
 import { ChooseDifficultySoloModeStageNames, CommonStageNames, ConfigNames, DrawNames, EnlistmentMercenariesStageNames, GiantNames, GodNames, HeroNames, MultiSuitCardNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationStageNames } from "../typescript/enums";
-import type { IDwarfCard, IMercenaryCampCard, IStack, IStackData, OneOrTwoType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { DwarfCard, MercenaryCampCard, OneOrTwoType, PlayerID, Stack, StackData, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 
 /**
  * <h3>Данные об стеке действий.</h3>
@@ -8,201 +8,201 @@ import type { IDwarfCard, IMercenaryCampCard, IStack, IStackData, OneOrTwoType, 
  * <li>Используется при обращении к данным об стеке действий.</li>
  * </ol>
  */
-export const StackData: IStackData = {
-    activateGiantAbilityOrPickCard: (giantName: GiantNames, card: IDwarfCard): IStack => ({
+export const AllStackData: StackData = {
+    activateGiantAbilityOrPickCard: (giantName: GiantNames, card: DwarfCard): Stack => ({
         configName: ConfigNames.ActivateGiantAbilityOrPickCard,
         stageName: TavernsResolutionWithSubStageNames.ActivateGiantAbilityOrPickCard,
         drawName: DrawNames.ActivateGiantAbilityOrPickCard,
         giantName,
         card,
     }),
-    activateGodAbilityOrNot: (godName: GodNames): IStack => ({
+    activateGodAbilityOrNot: (godName: GodNames): Stack => ({
         configName: ConfigNames.ActivateGodAbilityOrNot,
         stageName: TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot,
         drawName: DrawNames.ActivateGodAbilityOrNot,
         godName,
     }),
-    addCoinToPouch: (): IStack => ({
+    addCoinToPouch: (): Stack => ({
         stageName: CommonStageNames.AddCoinToPouch,
         drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
     }),
-    brisingamensEndGameAction: (): IStack => ({
+    brisingamensEndGameAction: (): Stack => ({
         drawName: DrawNames.BrisingamensEndGame,
     }),
-    chooseSuitOlrun: (): IStack => ({
+    chooseSuitOlrun: (): Stack => ({
         stageName: TavernsResolutionStageNames.ChooseSuitOlrun,
         drawName: DrawNames.ChooseSuitOlrun,
     }),
-    chooseStrategyLevelForSoloModeAndvari: (): IStack => ({
+    chooseStrategyLevelForSoloModeAndvari: (): Stack => ({
         configName: ConfigNames.ChooseStrategyLevelForSoloModeAndvari,
         drawName: DrawNames.ChooseStrategyLevelForSoloModeAndvari,
     }),
-    chooseStrategyVariantLevelForSoloModeAndvari: (): IStack => ({
+    chooseStrategyVariantLevelForSoloModeAndvari: (): Stack => ({
         configName: ConfigNames.ChooseStrategyVariantLevelForSoloModeAndvari,
         drawName: DrawNames.ChooseStrategyVariantLevelForSoloModeAndvari,
     }),
-    discardCardFromBoardBonfur: (): IStack => ({
+    discardCardFromBoardBonfur: (): Stack => ({
         stageName: CommonStageNames.DiscardTopCardFromSuit,
         drawName: DrawNames.Bonfur,
         suit: SuitNames.blacksmith,
     }),
-    discardCardFromBoardCrovaxTheDoppelganger: (): IStack => ({
+    discardCardFromBoardCrovaxTheDoppelganger: (): Stack => ({
         stageName: CommonStageNames.DiscardTopCardFromSuit,
         drawName: DrawNames.CrovaxTheDoppelganger,
     }),
-    discardCardFromBoardDagda: (pickedSuit?: SuitNames): IStack => ({
+    discardCardFromBoardDagda: (pickedSuit?: SuitNames): Stack => ({
         stageName: CommonStageNames.DiscardTopCardFromSuit,
         drawName: DrawNames.Dagda,
         suit: SuitNames.hunter,
         pickedSuit,
         name: HeroNames.Dagda,
     }),
-    discardSuitCard: (playerId: number): IStack => ({
+    discardSuitCard: (playerId: PlayerID): Stack => ({
         playerId,
     }),
-    discardSuitCardHofud: (): IStack => ({
+    discardSuitCardHofud: (): Stack => ({
         drawName: DrawNames.Hofud,
     }),
-    discardTavernCard: (): IStack => ({
+    discardTavernCard: (): Stack => ({
         stageName: TavernsResolutionStageNames.DiscardCard2Players,
         drawName: DrawNames.DiscardTavernCard,
     }),
-    enlistmentMercenaries: (): IStack => ({
+    enlistmentMercenaries: (): Stack => ({
         drawName: DrawNames.EnlistmentMercenaries,
     }),
-    getDifficultyLevelForSoloMode: (): IStack => ({
+    getDifficultyLevelForSoloMode: (): Stack => ({
         configName: ConfigNames.GetDifficultyLevelForSoloMode,
         drawName: DrawNames.GetDifficultyLevelForSoloMode,
     }),
-    getMythologyCardSkymir: (priority?: 3): IStack => ({
+    getMythologyCardSkymir: (priority?: 3): Stack => ({
         configName: ConfigNames.ChooseGetMythologyCard,
         stageName: TavernsResolutionStageNames.GetMythologyCard,
         drawName: DrawNames.GetMythologyCardSkymir,
         priority,
     }),
-    getHeroesForSoloMode: (): IStack => ({
+    getHeroesForSoloMode: (): Stack => ({
         configName: ConfigNames.GetHeroesForSoloMode,
         stageName: ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode,
         drawName: DrawNames.GetHeroesForSoloMode,
     }),
-    getDistinctions: (): IStack => ({
+    getDistinctions: (): Stack => ({
         drawName: DrawNames.GetMjollnirProfit,
     }),
-    getMjollnirProfit: (): IStack => ({
+    getMjollnirProfit: (): Stack => ({
         drawName: DrawNames.Mjollnir,
     }),
-    pickCampCardHolda: (): IStack => ({
+    pickCampCardHolda: (): Stack => ({
         stageName: CommonStageNames.ClickCampCardHolda,
         drawName: DrawNames.Holda,
     }),
-    pickCard: (): IStack => ({
+    pickCard: (): Stack => ({
         drawName: DrawNames.PickCard,
     }),
-    pickCardSoloBot: (): IStack => ({
+    pickCardSoloBot: (): Stack => ({
         drawName: DrawNames.PickCardSoloBot,
     }),
-    pickCardSoloBotAndvari: (): IStack => ({
+    pickCardSoloBotAndvari: (): Stack => ({
         drawName: DrawNames.PickCardSoloBotAndvari,
     }),
     // TODO Is it need for solo bot & Andvari?
-    pickConcreteCoinToUpgrade: (coinValue: number, value: number): IStack => ({
+    pickConcreteCoinToUpgrade: (coinValue: number, value: number): Stack => ({
         stageName: CommonStageNames.PickConcreteCoinToUpgrade,
         drawName: DrawNames.PickConcreteCoinToUpgrade,
         coinValue,
         value,
     }),
-    pickDiscardCardAndumia: (): IStack => ({
+    pickDiscardCardAndumia: (): Stack => ({
         stageName: CommonStageNames.PickDiscardCard,
         drawName: DrawNames.Andumia,
     }),
-    pickDiscardCardBrisingamens: (priority?: 3): IStack => ({
+    pickDiscardCardBrisingamens: (priority?: 3): Stack => ({
         stageName: CommonStageNames.PickDiscardCard,
         drawName: DrawNames.Brisingamens,
         priority,
     }),
-    pickDistinctionCard: (): IStack => ({
+    pickDistinctionCard: (): Stack => ({
         configName: ConfigNames.ExplorerDistinction,
         stageName: TroopEvaluationStageNames.ClickCardToPickDistinction,
         drawName: DrawNames.PickCardByExplorerDistinction,
     }),
-    pickDistinctionCardSoloBot: (): IStack => ({
+    pickDistinctionCardSoloBot: (): Stack => ({
         configName: ConfigNames.ExplorerDistinction,
         stageName: TroopEvaluationStageNames.SoloBotClickCardToPickDistinction,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBot,
     }),
-    pickDistinctionCardSoloBotAndvari: (): IStack => ({
+    pickDistinctionCardSoloBotAndvari: (): Stack => ({
         configName: ConfigNames.ExplorerDistinction,
         stageName: TroopEvaluationStageNames.SoloBotAndvariClickCardToPickDistinction,
         drawName: DrawNames.PickCardByExplorerDistinctionSoloBotAndvari,
     }),
-    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNames, priority?: 3): IStack => ({
+    placeMultiSuitsCards: (name: MultiSuitCardNames, pickedSuit?: SuitNames, priority?: 3): Stack => ({
         stageName: CommonStageNames.PlaceMultiSuitCard,
         drawName: DrawNames.PlaceMultiSuitsCards,
         pickedSuit,
         priority,
         name,
     }),
-    placeThrudHero: (): IStack => ({
+    placeThrudHero: (): Stack => ({
         stageName: CommonStageNames.PlaceThrudHero,
         drawName: DrawNames.PlaceThrudHero,
         priority: 2,
         name: HeroNames.Thrud,
     }),
-    placeThrudHeroSoloBot: (): IStack => ({
+    placeThrudHeroSoloBot: (): Stack => ({
         stageName: SoloBotCommonStageNames.SoloBotPlaceThrudHero,
         drawName: DrawNames.PlaceThrudHeroSoloBot,
         priority: 2,
         name: HeroNames.Thrud,
     }),
-    placeThrudHeroSoloBotAndvari: (): IStack => ({
+    placeThrudHeroSoloBotAndvari: (): Stack => ({
         stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariPlaceThrudHero,
         drawName: DrawNames.PlaceThrudHeroSoloBotAndvari,
         priority: 2,
         name: HeroNames.Thrud,
     }),
-    placeTradingCoinsUline: (): IStack => ({
+    placeTradingCoinsUline: (): Stack => ({
         stageName: TavernsResolutionStageNames.ClickHandTradingCoinUline,
         drawName: DrawNames.PlaceTradingCoinsUline,
     }),
-    placeYludHero: (): IStack => ({
+    placeYludHero: (): Stack => ({
         drawName: DrawNames.PlaceYludHero,
         name: HeroNames.Ylud,
     }),
-    placeYludHeroSoloBot: (): IStack => ({
+    placeYludHeroSoloBot: (): Stack => ({
         drawName: DrawNames.PlaceYludHero,
         name: HeroNames.Ylud,
     }),
-    placeYludHeroSoloBotAndvari: (): IStack => ({
+    placeYludHeroSoloBotAndvari: (): Stack => ({
         drawName: DrawNames.PlaceYludHero,
         name: HeroNames.Ylud,
     }),
-    pickHero: (priority: OneOrTwoType): IStack => ({
+    pickHero: (priority: OneOrTwoType): Stack => ({
         stageName: CommonStageNames.ClickHeroCard,
         drawName: DrawNames.PickHero,
         priority,
     }),
-    pickHeroSoloBot: (priority: OneOrTwoType): IStack => ({
+    pickHeroSoloBot: (priority: OneOrTwoType): Stack => ({
         stageName: SoloBotCommonStageNames.SoloBotClickHeroCard,
         drawName: DrawNames.PickHeroSoloBot,
         priority,
     }),
-    pickHeroSoloBotAndvari: (priority: OneOrTwoType): IStack => ({
+    pickHeroSoloBotAndvari: (priority: OneOrTwoType): Stack => ({
         stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariClickHeroCard,
         drawName: DrawNames.PickHeroSoloBotAndvari,
         priority,
     }),
-    placeEnlistmentMercenaries: (card: IMercenaryCampCard): IStack => ({
+    placeEnlistmentMercenaries: (card: MercenaryCampCard): Stack => ({
         stageName: EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries,
         drawName: DrawNames.PlaceEnlistmentMercenaries,
         card,
     }),
-    startAddPlusTwoValueToAllCoinsUline: (coinId: number): IStack => ({
+    startAddPlusTwoValueToAllCoinsUline: (coinId: number): Stack => ({
         stageName: TavernsResolutionStageNames.ChooseCoinValueForHrungnirUpgrade,
         drawName: DrawNames.StartAddPlusTwoValueToAllCoinsUline,
         coinId,
     }),
     startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueType,
-        coinId?: number, priority?: 3): IStack => ({
+        coinId?: number, priority?: 3): Stack => ({
             configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
             stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
             drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
@@ -210,43 +210,43 @@ export const StackData: IStackData = {
             coinId,
             priority,
         }),
-    startOrPassEnlistmentMercenaries: (): IStack => ({
+    startOrPassEnlistmentMercenaries: (): Stack => ({
         configName: ConfigNames.StartOrPassEnlistmentMercenaries,
         drawName: DrawNames.StartOrPassEnlistmentMercenaries,
     }),
-    upgradeCoin: (value: number): IStack => ({
+    upgradeCoin: (value: number): Stack => ({
         stageName: CommonStageNames.ClickCoinToUpgrade,
         value,
         drawName: DrawNames.UpgradeCoin,
     }),
-    upgradeCoinSoloBot: (value: number): IStack => ({
+    upgradeCoinSoloBot: (value: number): Stack => ({
         stageName: SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
         value,
         drawName: DrawNames.UpgradeCoinSoloBot,
     }),
-    upgradeCoinSoloBotAndvari: (value: number): IStack => ({
+    upgradeCoinSoloBotAndvari: (value: number): Stack => ({
         stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade,
         value,
         drawName: DrawNames.UpgradeCoinSoloBotAndvari,
     }),
-    upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3): IStack => ({
+    upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3): Stack => ({
         coinId,
         stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
         value,
         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
         priority,
     }),
-    upgradeCoinWarriorDistinction: (): IStack => ({
+    upgradeCoinWarriorDistinction: (): Stack => ({
         stageName: CommonStageNames.ClickCoinToUpgrade,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinction,
     }),
-    upgradeCoinWarriorDistinctionSoloBot: (): IStack => ({
+    upgradeCoinWarriorDistinctionSoloBot: (): Stack => ({
         stageName: SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinctionSoloBot,
     }),
-    upgradeCoinWarriorDistinctionSoloBotAndvari: (): IStack => ({
+    upgradeCoinWarriorDistinctionSoloBotAndvari: (): Stack => ({
         stageName: SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade,
         value: 5,
         drawName: DrawNames.UpgradeCoinWarriorDistinctionSoloBotAndvari,

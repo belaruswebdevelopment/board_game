@@ -275,9 +275,13 @@ export const ResolveBoardCoins = ({ G, ctx, ...rest }) => {
             return (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.value) === Number(prop) && player.priority.isExchangeable;
         });
         while (tiePlayers.length > 1) {
-            const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities), maxIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === maxPriority), minIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === minPriority);
-            tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), 1);
-            tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), 1);
+            const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities), maxIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === maxPriority), minIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === minPriority), amount = 1, removedTiePlayersWithMaxPriority = tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), amount), removedTiePlayersWithMinPriority = tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), amount);
+            if (amount !== removedTiePlayersWithMaxPriority.length) {
+                throw new Error(`Недостаточно игроков в массиве игроков с максимальным приоритетом: требуется - '${amount}', в наличии - '${removedTiePlayersWithMaxPriority.length}'.`);
+            }
+            if (amount !== removedTiePlayersWithMinPriority.length) {
+                throw new Error(`Недостаточно игроков в массиве игроков с минимальным приоритетом: требуется - '${amount}', в наличии - '${removedTiePlayersWithMinPriority.length}'.`);
+            }
             const exchangeOrderMax = exchangeOrder[maxIndex], exchangeOrderMin = exchangeOrder[minIndex];
             if (exchangeOrderMax === undefined) {
                 throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная '${exchangeOrder[maxIndex]}' с id '${maxIndex}'.`);

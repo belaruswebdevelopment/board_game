@@ -1,4 +1,4 @@
-import { RusCardTypeNames } from "../typescript/enums";
+import { CardTypeRusNames } from "../typescript/enums";
 /**
  * <h3>Проверка, является ли объект картой Дворфа.</h3>
  * <p>Применения:</p>
@@ -9,5 +9,5 @@ import { RusCardTypeNames } from "../typescript/enums";
  * @param card Карта.
  * @returns Является ли объект картой Дворфа.
  */
-export const IsDwarfCard = (card) => card.type === RusCardTypeNames.Dwarf_Card;
+export const IsDwarfCard = (card) => card.type === CardTypeRusNames.Dwarf_Card;
 //# sourceMappingURL=IsDwarfTypeHelpers.js.map

@@ -3,7 +3,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { ScoreWinner } from "../Score";
 import { CampBuffNames, ErrorNames, HeroBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, MyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения игры.</h3>
@@ -67,5 +67,5 @@ export const CheckEndGame = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<bool
  * @param context
  * @returns Финальные данные о игре.
  */
-export const ReturnEndGameData = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<IMyGameState> =>
+export const ReturnEndGameData = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<MyGameState> =>
     ScoreWinner({ G, ctx, ...rest });

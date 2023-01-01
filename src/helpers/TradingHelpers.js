@@ -1,6 +1,6 @@
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ChangeIsOpenedCoinStatus } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
@@ -21,7 +21,7 @@ import { AddActionsToStack } from "./StackHelpers";
 export const ActivateTrading = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const boardCoinCurrentTavern = player.boardCoins[G.currentTavern];
     if (boardCoinCurrentTavern === undefined) {
@@ -167,7 +167,7 @@ const Trading = ({ G, ctx, myPlayerID, ...rest }, tradingCoins, soloBotOnlyOneCo
     // TODO Check solo bot randomly picked concrete coin (or must always pick isInitial)!?
     if (!soloBotOnlyOneCoinTrading && (coinsMinValue === coinsMaxValue &&
         ((maxTradingCoin !== undefined && maxTradingCoin.isInitial) || minTradingCoin.isInitial))) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickConcreteCoinToUpgrade(coinsMaxValue, coinsMaxValue)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickConcreteCoinToUpgrade(coinsMaxValue, coinsMaxValue)]);
         DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
     }
     else {

@@ -1,11 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeStageNames, ErrorNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, IHeroCard, InvalidMoveType, IPublicPlayer, Move, MyFnContext, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, HeroCard, InvalidMoveType, IPublicPlayer, Move, MyFnContext, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
 
 // TODO Move all playerID === `0` to validate!
 /**
@@ -51,7 +51,7 @@ export const ChooseStrategyVariantForSoloModeAndvariMove: Move = ({ G, ctx, play
     }
     G.soloGameAndvariStrategyVariantLevel = level;
     AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest },
-        [StackData.chooseStrategyLevelForSoloModeAndvari()]);
+        [AllStackData.chooseStrategyLevelForSoloModeAndvari()]);
 };
 
 /**
@@ -75,7 +75,7 @@ export const ChooseDifficultyLevelForSoloModeMove: Move = ({ G, ctx, playerID, .
         return INVALID_MOVE;
     }
     G.soloGameDifficultyLevel = level;
-    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+    AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [AllStackData.getHeroesForSoloMode()]);
 };
 
 /**
@@ -99,13 +99,13 @@ export const ChooseHeroForDifficultySoloModeMove: Move = ({ G, ctx, playerID, ..
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     if (G.heroesForSoloGameDifficultyLevel === null) {
         throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
     }
-    const hero: CanBeUndefType<IHeroCard> = G.heroesForSoloGameDifficultyLevel.splice(heroId, 1)[0];
+    const hero: CanBeUndefType<HeroCard> = G.heroesForSoloGameDifficultyLevel.splice(heroId, 1)[0];
     if (hero === undefined) {
         throw new Error(`Не существует выбранная карта героя с id '${heroId}'.`);
     }
@@ -115,6 +115,6 @@ export const ChooseHeroForDifficultySoloModeMove: Move = ({ G, ctx, playerID, ..
     }
     G.soloGameDifficultyLevel--;
     if (G.soloGameDifficultyLevel) {
-        AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [StackData.getHeroesForSoloMode()]);
+        AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [AllStackData.getHeroesForSoloMode()]);
     }
 };

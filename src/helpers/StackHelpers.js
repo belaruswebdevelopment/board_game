@@ -9,7 +9,7 @@ import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
  * </ol>
  *
  * @param context
- * @param stack Стэк действий.
+ * @param stack Стек действий.
  * @param card Карта.
  * @returns
  */
@@ -50,7 +50,7 @@ export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }, stack, card) 
                     throw new Error(`В массиве стека новых действий отсутствует действие с id '${i}'.`);
                 }
                 stackI.priority = (_a = stackI.priority) !== null && _a !== void 0 ? _a : 0;
-                const playerId = (_b = stackI.playerId) !== null && _b !== void 0 ? _b : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];
+                const playerId = (_b = stackI.playerId) !== null && _b !== void 0 ? _b : ctx.currentPlayer, player = G.publicPlayers[Number(playerId)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
                 }

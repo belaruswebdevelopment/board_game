@@ -3,8 +3,8 @@ import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { ErrorNames, GameModeNames, RusCardTypeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, FnContext, IDwarfCard, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, ISuit, MyFnContextWithMyPlayerID, PointsType, PointsValuesType, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import { CardTypeRusNames, ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
+import type { CanBeUndefType, DwarfCard, FnContext, IPlayer, IPlayersNumberTierCardData, IPublicPlayer, MyFnContextWithMyPlayerID, PointsType, PointsValuesType, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -24,7 +24,7 @@ export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType)
         return 0;
     }
     // TODO If Mythological Creatures cards!?
-    if (card1.type === RusCardTypeNames.Dwarf_Card && card2.type === RusCardTypeNames.Dwarf_Card) {
+    if (card1.type === CardTypeRusNames.Dwarf_Card && card2.type === CardTypeRusNames.Dwarf_Card) {
         if (card1.suit === card2.suit) {
             const result: number = (card1.points ?? 1) - (card2.points ?? 1);
             if (result === 0) {
@@ -52,7 +52,7 @@ export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType)
  */
 export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: TavernCardType, cardId: number,
     tavern: TavernAllCardType): number => {
-    if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
+    if (compareCard !== null && compareCard.type === CardTypeRusNames.Dwarf_Card) {
         if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
         }
@@ -70,13 +70,26 @@ export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: 
         if (result === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока с id '${ctx.currentPlayer}'.`);
         }
-        temp.splice(cardId, 1);
-        temp.forEach((player: number[]): number[] =>
-            player.splice(Number(ctx.currentPlayer), 1));
+        const amount = 1,
+            removedFromTemp: number[][] = temp.splice(cardId, amount);
+        if (amount !== removedFromTemp.length) {
+            throw new Error(`Недостаточно карт в массиве temp: требуется - '${amount}', в наличии - '${removedFromTemp.length}'.`);
+        }
+        temp.forEach((player: number[]): number[] => {
+            const removedFromPlayer: number[] =
+                player.splice(Number(ctx.currentPlayer), amount);
+            if (amount !== removedFromPlayer.length) {
+                throw new Error(`Недостаточно карт в массиве player: требуется - '${amount}', в наличии - '${removedFromPlayer.length}'.`);
+            }
+            return removedFromPlayer;
+        });
+        if (amount !== removedFromTemp.length) {
+            throw new Error(`Недостаточно карт в массиве temp: требуется - '${amount}', в наличии - '${removedFromTemp.length}'.`);
+        }
         return result - Math.max(...temp.map((player: number[]): number =>
             Math.max(...player)));
     }
-    if (compareCard !== null && compareCard.type === RusCardTypeNames.Dwarf_Card) {
+    if (compareCard !== null && compareCard.type === CardTypeRusNames.Dwarf_Card) {
         return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
     }
     return 0;
@@ -90,21 +103,15 @@ export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: 
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
- * @param suitConfig Конфиг карт дворфов.
+ * @param suit Фракция дворфов.
  * @param data ????????????????????????????????????????????????????????????????????
  * @returns "Средняя" карта дворфа.
  */
-export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCardData): IDwarfCard => {
+export const GetAverageSuitCard = (suit: SuitNames, data: IPlayersNumberTierCardData): DwarfCard => {
     let totalPoints = 0;
-    const pointsValuesPlayers: CanBeUndefType<PointsValuesType> = suitConfig.pointsValues()[data.players];
-    if (pointsValuesPlayers === undefined) {
-        throw new Error(`Отсутствует массив значений карт для указанного числа игроков - '${data.players}'.`);
-    }
-    const points: CanBeUndefType<PointsType> = pointsValuesPlayers[data.tier];
-    if (points === undefined) {
-        throw new Error(`Отсутствует массив значений карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
-    }
-    const count: number = Array.isArray(points) ? points.length : points;
+    const pointsValuesPlayers: PointsValuesType = suitsConfig[suit].pointsValues()[data.players],
+        points: PointsType = pointsValuesPlayers[data.tier],
+        count: number = Array.isArray(points) ? points.length : points;
     for (let i = 0; i < count; i++) {
         if (Array.isArray(points)) {
             const pointsValue: CanBeUndefType<number> = points[i];
@@ -119,7 +126,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IPlayersNumberTierCa
     totalPoints /= count;
     // TODO Rework it to non-dwarf card?
     return CreateDwarfCard({
-        suit: suitConfig.suit,
+        suit: suitsConfig[suit].suit,
         points: totalPoints,
         name: `Average card`,
     });
@@ -158,14 +165,14 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContext
     let score = 0,
         suit: SuitNames;
     for (suit in suitsConfig) {
-        if (card !== null && card.type === RusCardTypeNames.Dwarf_Card && card.suit === suit) {
+        if (card !== null && card.type === CardTypeRusNames.Dwarf_Card && card.suit === suit) {
             score +=
                 StartSuitScoring(suitsConfig[suit].scoringRule, [player.cards[suit], card.points ?? 1]);
         } else {
             score += StartSuitScoring(suitsConfig[suit].scoringRule, [player.cards[suit]]);
         }
     }
-    if (card !== null && card.type === RusCardTypeNames.Royal_Offering_Card) {
+    if (card !== null && card.type === CardTypeRusNames.Royal_Offering_Card) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

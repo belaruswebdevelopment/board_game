@@ -753,7 +753,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
                     },
                     stack: [
                         {
-                            playerId: 1,
+                            playerId: `1`,
                             priority: 0,
                         },
                     ],
@@ -806,7 +806,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
                     },
                     stack: [
                         {
-                            playerId: 2,
+                            playerId: `2`,
                             priority: 0,
                         },
                     ],

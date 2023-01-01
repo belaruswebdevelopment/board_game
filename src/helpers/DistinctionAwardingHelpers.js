@@ -1,5 +1,5 @@
 import { CreateCoin } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
@@ -54,13 +54,13 @@ export const ExplorerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => 
     }
     if (G.tierToEnd !== 0) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCardSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCardSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCardSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCardSoloBotAndvari()]);
         }
         else {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickDistinctionCard()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCard()]);
         }
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
@@ -160,13 +160,13 @@ export const WarriorDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
     }
     if (G.tierToEnd !== 0) {
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinctionSoloBot()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.upgradeCoinWarriorDistinctionSoloBot()]);
         }
         else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
         }
         else {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.upgradeCoinWarriorDistinction()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.upgradeCoinWarriorDistinction()]);
         }
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия воинов возможность улучшить одну из своих монет на '+5':`);
     }

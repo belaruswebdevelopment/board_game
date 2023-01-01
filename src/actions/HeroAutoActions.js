@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -22,16 +22,16 @@ import { UpgradeCoinAction } from "./CoinActions";
 export const AddPickHeroAction = ({ G, ctx, myPlayerID, ...rest }, priority /* OneOrTwoType */) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (G.mode === GameModeNames.Solo && myPlayerID === `1`) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickHeroSoloBot(priority)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickHeroSoloBot(priority)]);
     }
     else if (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickHeroSoloBotAndvari(priority)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickHeroSoloBotAndvari(priority)]);
     }
     else {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickHero(priority)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickHero(priority)]);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
@@ -51,7 +51,7 @@ export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, myPlayerID, ...rest 
         || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `0`)) {
         const player = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
         }
         for (let i = 0; i < player.boardCoins.length; i++) {
             if (i > G.currentTavern) {
@@ -154,7 +154,7 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value) => 
             UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
             DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
         }
         else if (upgradingCoinsValue <= 0) {
@@ -188,7 +188,7 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value) => 
             UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [StackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
             DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
         }
         else if (upgradingCoinsValue <= 0) {

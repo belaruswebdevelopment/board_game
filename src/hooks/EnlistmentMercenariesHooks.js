@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -20,7 +20,7 @@ export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             let allMercenariesPlayed = true;
@@ -53,7 +53,7 @@ export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }) => {
 export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
         return EndTurnActions({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
@@ -95,12 +95,12 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }) => {
     StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length) {
         const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
         if (mercenariesCount) {
-            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.enlistmentMercenaries()]);
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.enlistmentMercenaries()]);
             DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         }
     }
@@ -118,15 +118,15 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }) => {
 export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     if (!player.stack.length) {
         let stack;
         if (ctx.playOrderPos === 0) {
-            stack = [StackData.startOrPassEnlistmentMercenaries()];
+            stack = [AllStackData.startOrPassEnlistmentMercenaries()];
         }
         else {
-            stack = [StackData.enlistmentMercenaries()];
+            stack = [AllStackData.enlistmentMercenaries()];
         }
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, stack);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });

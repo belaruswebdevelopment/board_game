@@ -30,11 +30,11 @@ export const BotsPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: MyFnC
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             playerID);
     }
     let handCoins: PublicPlayerCoinType[];

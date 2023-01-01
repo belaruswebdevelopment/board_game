@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, IStack, MyFnContextWithMyPlayerID, PickCardValidatorNamesKeyofTypeofType, ValidatorsConfigType } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, MyFnContextWithMyPlayerID, PickCardValidatorNamesKeyofTypeofType, PlayerID, Stack, ValidatorsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
@@ -11,11 +11,11 @@ import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, IStack, MyFnCont
  * </ol>
  *
  * @param context
- * @param stack Стэк действий.
+ * @param stack Стек действий.
  * @param card Карта.
  * @returns
  */
-export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, stack?: IStack[],
+export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, stack?: Stack[],
     card?: CardsHasStackType): void => {
     let isValid = false;
     if (stack !== undefined) {
@@ -44,26 +44,26 @@ export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         }
         if (isValid) {
             for (let i = 0; i < stack.length; i++) {
-                const stackI: CanBeUndefType<IStack> = stack[i];
+                const stackI: CanBeUndefType<Stack> = stack[i];
                 if (stackI === undefined) {
                     throw new Error(`В массиве стека новых действий отсутствует действие с id '${i}'.`);
                 }
                 stackI.priority = stackI.priority ?? 0;
-                const playerId: number = stackI.playerId ?? Number(ctx.currentPlayer),
-                    player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
+                const playerId: PlayerID = stackI.playerId ?? ctx.currentPlayer,
+                    player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerId)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         myPlayerID);
                 }
                 let stackIndex: number;
                 if (stackI.priority === 3) {
-                    stackIndex = player.stack.findIndex((stackP: IStack, index: number): boolean =>
+                    stackIndex = player.stack.findIndex((stackP: Stack, index: number): boolean =>
                         index !== 0 && stackP.priority === stackI.priority);
                     stackIndex = stackIndex === -1 ? player.stack.length : stackIndex;
                 } else {
                     if (stackI.priority !== 1) {
                         stackIndex =
-                            FindLastIndex(player.stack, (stackP: IStack, index: number): boolean => {
+                            FindLastIndex(player.stack, (stackP: Stack, index: number): boolean => {
                                 if (stackI.priority === undefined) {
                                     throw new Error(`В массиве стека новых действий отсутствует действие с названием 'priority'.`);
                                 }

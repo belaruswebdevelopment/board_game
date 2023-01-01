@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -27,10 +27,7 @@ import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastAc
  * @returns Фаза игры.
  */
 const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }) => {
-    const isLastRound = IsLastRound({ G, ctx, ...rest }), currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
-    if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined, G.secret.decks.length - G.tierToEnd - Number(isLastRound));
-    }
+    const isLastRound = IsLastRound({ G, ctx, ...rest }), currentDeck = G.secret.decks[(G.secret.decks.length - G.tierToEnd - Number(isLastRound))];
     if (currentDeck.length === 0) {
         if (G.expansions.Thingvellir.active) {
             return CheckEnlistmentMercenaries({ G, ctx, ...rest });
@@ -56,10 +53,10 @@ const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }) => {
 const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -83,7 +80,7 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }) => {
             if (actionsNum > handCoinsLength) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
             }
-            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.placeTradingCoinsUline()]);
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.placeTradingCoinsUline()]);
             DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         }
     }
@@ -102,7 +99,7 @@ export const CheckEndTavernsResolutionPhase = ({ G, ctx, ...rest }) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
             && CheckIfCurrentTavernEmpty({ G, ctx, ...rest })) {
@@ -176,10 +173,7 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
         StartTrading({ G, ctx, myPlayerID: `1`, ...rest }, true);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
-    const currentDeck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
-    if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined, G.secret.decks.length - G.tierToEnd);
-    }
+    const currentDeck = G.secret.decks[(G.secret.decks.length - G.tierToEnd)];
     if (G.tavernsNum - 1 === G.currentTavern && currentDeck.length === 0) {
         G.tierToEnd--;
     }
@@ -231,14 +225,14 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
 export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
     if (!player.stack.length) {
         if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
             && ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty({ G, ctx, events, ...rest }) && !G.tavernCardDiscarded2Players) {
-            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [StackData.discardTavernCard()]);
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.discardTavernCard()]);
             DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         }
         else {
@@ -266,15 +260,15 @@ export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }) => {
  */
 export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }) => {
     if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.pickCardSoloBot()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCardSoloBot()]);
     }
     else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.pickCardSoloBotAndvari()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCardSoloBotAndvari()]);
     }
     else {
         if (!(G.expansions.Idavoll.active
             && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Frigg))) {
-            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.pickCard()]);
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCard()]);
         }
     }
 };

@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -6,7 +6,7 @@ import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActio
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { ErrorNames, HeroBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, IStack, PlayerID } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PlayerID, Stack } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -22,7 +22,7 @@ export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }: FnContex
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
@@ -58,7 +58,7 @@ export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }: FnContex
 export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
@@ -105,14 +105,14 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }: FnConte
     StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     if (!player.stack.length) {
         const mercenariesCount: number = player.campCards.filter(IsMercenaryCampCard).length;
         if (mercenariesCount) {
             AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
-                [StackData.enlistmentMercenaries()]);
+                [AllStackData.enlistmentMercenaries()]);
             DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         }
     }
@@ -131,15 +131,15 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }: FnConte
 export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     if (!player.stack.length) {
-        let stack: IStack[];
+        let stack: Stack[];
         if (ctx.playOrderPos === 0) {
-            stack = [StackData.startOrPassEnlistmentMercenaries()];
+            stack = [AllStackData.startOrPassEnlistmentMercenaries()];
         } else {
-            stack = [StackData.enlistmentMercenaries()];
+            stack = [AllStackData.enlistmentMercenaries()];
         }
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, stack);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });

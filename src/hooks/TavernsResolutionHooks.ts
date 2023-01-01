@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -15,7 +15,7 @@ import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DeckCardType, FnContext, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, MythologicalCreatureDeckCardType, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IndexOf, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, MythologicalCreatureCardType, PublicPlayerCoinType, SecretAllDwarfDecks, SecretDwarfDeckType } from "../typescript/interfaces";
 import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastActions } from "./NextPhaseHooks";
 
 /**
@@ -30,12 +30,9 @@ import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastAc
  */
 const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {
     const isLastRound: boolean = IsLastRound({ G, ctx, ...rest }),
-        currentDeck: CanBeUndefType<DeckCardType[]> =
-            G.secret.decks[G.secret.decks.length - G.tierToEnd - Number(isLastRound)];
-    if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined,
-            G.secret.decks.length - G.tierToEnd - Number(isLastRound));
-    }
+        currentDeck: SecretDwarfDeckType =
+            G.secret.decks[(G.secret.decks.length - G.tierToEnd - Number(isLastRound)) as
+            IndexOf<SecretAllDwarfDecks>];
     if (currentDeck.length === 0) {
         if (G.expansions.Thingvellir.active) {
             return CheckEnlistmentMercenaries({ G, ctx, ...rest });
@@ -61,11 +58,11 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnCont
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     let handCoins: PublicPlayerCoinType[];
@@ -93,7 +90,7 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnCont
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
             }
             AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
-                [StackData.placeTradingCoinsUline()]);
+                [AllStackData.placeTradingCoinsUline()]);
             DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         }
     }
@@ -113,7 +110,7 @@ export const CheckEndTavernsResolutionPhase = ({ G, ctx, ...rest }: FnContext): 
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
@@ -191,11 +188,8 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }: FnContext): voi
         StartTrading({ G, ctx, myPlayerID: `1`, ...rest }, true);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
-    const currentDeck: CanBeUndefType<DeckCardType[]> = G.secret.decks[G.secret.decks.length - G.tierToEnd];
-    if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined,
-            G.secret.decks.length - G.tierToEnd);
-    }
+    const currentDeck: SecretDwarfDeckType =
+        G.secret.decks[(G.secret.decks.length - G.tierToEnd) as IndexOf<SecretAllDwarfDecks>];
     if (G.tavernsNum - 1 === G.currentTavern && currentDeck.length === 0) {
         G.tierToEnd--;
     }
@@ -252,7 +246,7 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }: FnContext): voi
 export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }: FnContext): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
@@ -261,7 +255,7 @@ export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }: FnContext):
             && ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty({ G, ctx, events, ...rest }) && !G.tavernCardDiscarded2Players) {
             AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
-                [StackData.discardTavernCard()]);
+                [AllStackData.discardTavernCard()]);
             DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
         } else {
             if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
@@ -291,15 +285,15 @@ export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }: FnContext):
 export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
     if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
-            [StackData.pickCardSoloBot()]);
+            [AllStackData.pickCardSoloBot()]);
     } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
-            [StackData.pickCardSoloBotAndvari()]);
+            [AllStackData.pickCardSoloBotAndvari()]);
     } else {
         if (!(G.expansions.Idavoll.active
             && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
                 GodNames.Frigg))) {
-            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.pickCard()]);
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCard()]);
         }
     }
 };
@@ -337,7 +331,7 @@ export const OnTavernsResolutionTurnEnd = ({ G, ctx, ...rest }: FnContext): void
         if (G.expansions.Idavoll.active) {
             if (G.mythologicalCreatureDeckForSkymir !== null && G.mythologicalCreatureDeckForSkymir.length === 3) {
                 for (let j = 0; j < G.mythologicalCreatureDeckForSkymir.length; j++) {
-                    const mythologyCreatureCard: CanBeUndefType<MythologicalCreatureDeckCardType> =
+                    const mythologyCreatureCard: CanBeUndefType<MythologicalCreatureCardType> =
                         G.mythologicalCreatureDeckForSkymir[j];
                     if (mythologyCreatureCard === undefined) {
                         throw new Error(`В массиве карт Мифических существ для гиганта Skymir отсутствует карта с id '${j}'.`);

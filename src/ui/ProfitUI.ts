@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../is_helpers/IsDwarfTypeHelpers";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GiantNames, GodNames, RusCardTypeNames, RusSuitNames, SoloGameAndvariStrategyNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DeckCardType, FnContext, IDwarfCard, IHeroCard, IPublicPlayer, IStack, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, MythologicalCreatureDeckCardType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StackCardType, StageNames, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GiantNames, GodNames, SoloGameAndvariStrategyNames, SuitNames, SuitRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
+import type { ActiveStageNames, BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DwarfCard, DwarfDeckCardType, FnContext, HeroCard, IPublicPlayer, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, Stack, StackCardType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 // TODO Add common ProfitFunctionType to all function here with common args and different return type!?
@@ -20,16 +20,16 @@ import { DrawButton, DrawCard } from "./ElementsUI";
  */
 export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnContext,
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
-    CanBeVoidType<MoveArgumentsType<IDwarfCard>> => {
-    let moveMainArgs: CanBeUndefType<MoveArgumentsType<IDwarfCard>>;
+    CanBeVoidType<MoveArgumentsType<DwarfCard>> => {
+    let moveMainArgs: CanBeUndefType<MoveArgumentsType<DwarfCard>>;
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     const card: CanBeUndefType<StackCardType> = stack.card;
@@ -37,18 +37,18 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
         throw new Error(`В стеке игрока отсутствует 'card'.`);
     }
     if (!IsDwarfCard(card)) {
-        throw new Error(`В стеке игрока 'card' должен быть с типом '${RusCardTypeNames.Dwarf_Card}'.`);
+        throw new Error(`В стеке игрока 'card' должен быть с типом '${CardTypeRusNames.Dwarf_Card}'.`);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawCard(data, boardCells, card, j, player, card.suit,
+                DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, player, card.suit,
                     CardMoveNames.ClickCardNotGiantAbilityMove, card);
             } else if (validatorName ===
                 ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
                 moveMainArgs = card;
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         } else if (G.publicPlayersOrder.length > 1) {
             const giantName: CanBeUndefType<GiantNames> = stack.giantName;
@@ -59,22 +59,22 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
                 player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
                     boolean => card.name === giantName);
             if (giant === undefined) {
-                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${RusCardTypeNames.Giant_Card}' с названием '${giantName}'.`);
+                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.Giant_Card}' с названием '${giantName}'.`);
             }
             if (data !== undefined && boardCells !== undefined) {
-                DrawCard(data, boardCells, giant, j, player, null,
+                DrawCard({ G, ctx, ...rest }, data, boardCells, giant, j, player, null,
                     CardMoveNames.ClickGiantAbilityNotCardMove, card);
             } else if (validatorName ===
                 ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickGiantAbilityNotCardMoveValidator) {
                 moveMainArgs = card;
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         }
     }
     if (validatorName !== null) {
         if (moveMainArgs === undefined) {
-            throw new Error(`Не задан параметр аргумента мува.`);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
         }
         return moveMainArgs;
     }
@@ -99,12 +99,12 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }: FnContext,
     let moveMainArgs: CanBeUndefType<MoveArgumentsType<CanBeNullType<GodNames[]>>>;
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     const godName: CanBeUndefType<GodNames> = stack.godName;
@@ -115,35 +115,35 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }: FnContext,
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
             boolean => card.name === godName);
     if (god === undefined) {
-        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${RusCardTypeNames.God_Card}' с названием '${godName}'.`);
+        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.God_Card}' с названием '${godName}'.`);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawCard(data, boardCells, god, j, player, null,
+                DrawCard({ G, ctx, ...rest }, data, boardCells, god, j, player, null,
                     CardMoveNames.ClickCardNotGiantAbilityMove, godName);
             } else if (validatorName ===
                 ActivateGodAbilityOrNotSubMoveValidatorNames.ActivateGodAbilityMoveValidator) {
                 moveMainArgs = [];
                 moveMainArgs.push(godName);
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         } else {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, ButtonNames.Start, player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.Start, player,
                     ButtonMoveNames.StartEnlistmentMercenariesMove, null);
             } else if (validatorName ===
                 ActivateGodAbilityOrNotSubMoveValidatorNames.NotActivateGodAbilityMoveValidator) {
                 moveMainArgs = null;
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         }
     }
     if (validatorName !== null) {
         if (moveMainArgs === undefined) {
-            throw new Error(`Не задан параметр аргумента мува.`);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
         }
         return moveMainArgs;
     }
@@ -171,7 +171,7 @@ export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }: FnContext,
             throw new Error(`Массив всех карт мифических существ для Skymir не может не быть заполнен картами.`);
         }
         for (let j = 0; j < G.mythologicalCreatureDeckForSkymir.length; j++) {
-            const mythologicalCreature: CanBeUndefType<MythologicalCreatureDeckCardType> =
+            const mythologicalCreature: CanBeUndefType<MythologicalCreatureCardType> =
                 G.mythologicalCreatureDeckForSkymir[j];
             if (mythologicalCreature === undefined) {
                 throw new Error(`В массиве карт мифических существ для Skymir отсутствует мифическое существо с id '${j}'.`);
@@ -180,16 +180,17 @@ export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }: FnContext,
                 === TavernsResolutionStageNames.GetMythologyCard) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         ctx.currentPlayer);
                 }
                 if (data !== undefined && boardCells !== undefined) {
-                    DrawCard(data, boardCells, mythologicalCreature, j, player, null,
+                    DrawCard({ G, ctx, ...rest }, data, boardCells, mythologicalCreature, j,
+                        player, null,
                         CardMoveNames.GetMythologyCardMove, j);
                 } else if (validatorName === TavernsResolutionMoveValidatorNames.GetMythologyCardMoveValidator) {
                     moveMainArgs.push(j);
                 } else {
-                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                 }
             }
         }
@@ -218,53 +219,53 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyNames[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     for (let j = 0; j < 4; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, ButtonNames.NoHeroEasyStrategy, player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.NoHeroEasyStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
             } else if (validatorName ===
                 ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroEasyStrategy);
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         } else if (j === 1) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, ButtonNames.NoHeroHardStrategy, player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.NoHeroHardStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.NoHeroHardStrategy);
             } else if (validatorName ===
                 ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.NoHeroHardStrategy);
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         } else if (j === 2) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, ButtonNames.WithHeroEasyStrategy, player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.WithHeroEasyStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             } else if (validatorName ===
                 ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroEasyStrategy);
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         } else if (j === 3) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, ButtonNames.WithHeroHardStrategy, player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.WithHeroHardStrategy, player,
                     ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
                     SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             } else if (validatorName ===
                 ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator) {
                 moveMainArgs.push(SoloGameAndvariStrategyNames.WithHeroHardStrategy);
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         }
     }
@@ -292,18 +293,18 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     for (let j = 0; j < 3; j++) {
         if (data !== undefined && boardCells !== undefined) {
-            DrawButton(data, boardCells, String(j + 1), player,
+            DrawButton({ G, ctx, ...rest }, data, boardCells, String(j + 1), player,
                 ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
         } else if (validatorName ===
             ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
             moveMainArgs.push(j + 1);
         } else {
-            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
         }
     }
     if (validatorName !== null) {
@@ -330,19 +331,19 @@ export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }: FnCo
     const moveMainArgs: MoveArgumentsType<SoloGameDifficultyLevelArgType[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < 6; j++) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, String(j + 1), player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, String(j + 1), player,
                     ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, j + 1);
             } else if (validatorName ===
                 ChooseDifficultySoloModeMoveValidatorNames.ChooseDifficultyLevelForSoloModeMoveValidator) {
                 moveMainArgs.push(j);
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         }
     }
@@ -370,12 +371,12 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
     const moveMainArgs: MoveArgumentsType<number[]> = [],
         player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    const stack: CanBeUndefType<IStack> = player.stack[0];
+    const stack: CanBeUndefType<Stack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     const values: CanBeUndefType<VidofnirVedrfolnirUpgradeValueType> = stack.valueArray;
@@ -388,13 +389,13 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
             throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' в параметре 'valueArray' отсутствует значение параметра  id '${j}'.`);
         }
         if (data !== undefined && boardCells !== undefined) {
-            DrawButton(data, boardCells, String(value), player,
+            DrawButton({ G, ctx, ...rest }, data, boardCells, String(value), player,
                 ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
         } else if (validatorName ===
             CommonMoveValidatorNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator) {
             moveMainArgs.push(value);
         } else {
-            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
         }
     }
     if (validatorName !== null) {
@@ -419,26 +420,25 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }: FnContext,
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<number[]>> => {
     if (G.explorerDistinctionCards === null) {
-        throw new Error(`В массиве карт для получения преимущества по фракции '${RusSuitNames.explorer}' не может не быть карт.`);
+        throw new Error(`В массиве карт для получения преимущества по фракции '${SuitRusNames.explorer}' не может не быть карт.`);
     }
     const moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
-        const card: CanBeUndefType<DeckCardType> = G.explorerDistinctionCards[j];
+        const card: CanBeUndefType<DwarfDeckCardType> = G.explorerDistinctionCards[j];
         if (card === undefined) {
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
         let suit: CanBeNullType<SuitNames> = null;
-        if (card.type === RusCardTypeNames.Dwarf_Card) {
+        if (card.type === CardTypeRusNames.Dwarf_Card) {
             suit = card.suit;
         }
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (data !== undefined && boardCells !== undefined) {
-            // TODO StageNames => TroopEvaluationStageNames
-            const stage: CanBeUndefType<StageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
+            const stage: CanBeUndefType<ActiveStageNames> = ctx.activePlayers?.[Number(ctx.currentPlayer)];
             let moveName: CardMoveNames;
             switch (stage) {
                 case TroopEvaluationStageNames.ClickCardToPickDistinction:
@@ -451,15 +451,16 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }: FnContext,
                     moveName = CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove;
                     break;
                 default:
-                    throw new Error(`Нет такого мува.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
             }
-            DrawCard(data, boardCells, card, j, player, suit, moveName, j);
+            DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, player, suit, moveName,
+                j);
         } else if (validatorName === TroopEvaluationMoveValidatorNames.ClickCardToPickDistinctionMoveValidator
             || TroopEvaluationMoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator
             || TroopEvaluationMoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator) {
             moveMainArgs.push(j);
         } else {
-            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
         }
     }
     if (validatorName !== null) {
@@ -489,7 +490,7 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
             throw new Error(`Уровень сложности для соло игры не может быть ранее выбран.`);
         }
         for (let j = 0; j < G.heroesForSoloGameDifficultyLevel.length; j++) {
-            const hero: CanBeUndefType<IHeroCard> = G.heroesForSoloGameDifficultyLevel[j];
+            const hero: CanBeUndefType<HeroCard> = G.heroesForSoloGameDifficultyLevel[j];
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев для выбора сложности соло игры отсутствует герой с id '${j}'.`);
             }
@@ -498,11 +499,11 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
                 === ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode) {
                 const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         ctx.currentPlayer);
                 }
                 if (data !== undefined && boardCells !== undefined) {
-                    DrawCard(data, boardCells, hero, j, player, null,
+                    DrawCard({ G, ctx, ...rest }, data, boardCells, hero, j, player, null,
                         CardMoveNames.ChooseHeroForDifficultySoloModeMove, j);
                 } else if (validatorName ===
                     ChooseDifficultySoloModeMoveValidatorNames.ChooseHeroForDifficultySoloModeMoveValidator) {
@@ -510,7 +511,7 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
                         moveMainArgs.push(j);
                     }
                 } else {
-                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                 }
             }
         }
@@ -539,29 +540,29 @@ export const StartOrPassEnlistmentMercenariesProfit = ({ G, ctx, ...rest }: FnCo
     let moveMainArgs: CanBeUndefType<MoveArgumentsType<null>>;
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, ButtonNames.Start, player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.Start, player,
                     ButtonMoveNames.StartEnlistmentMercenariesMove, null);
             } else if (validatorName ===
                 EnlistmentMercenariesMoveValidatorNames.StartEnlistmentMercenariesMoveValidator) {
                 moveMainArgs = null;
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         } else if (G.publicPlayersOrder.length > 1) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton(data, boardCells, ButtonNames.Pass, player,
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.Pass, player,
                     ButtonMoveNames.PassEnlistmentMercenariesMove, null);
             } else if (validatorName ===
                 EnlistmentMercenariesMoveValidatorNames.PassEnlistmentMercenariesMoveValidator) {
                 moveMainArgs = null;
             } else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         }
     }

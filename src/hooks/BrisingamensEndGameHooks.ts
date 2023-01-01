@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -43,7 +43,7 @@ export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }: FnContext)
         && ctx.currentPlayer === ctx.playOrder[0]) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (!CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
@@ -101,7 +101,7 @@ export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }: FnContext): 
     if (!(G.expansions.Idavoll.active
         && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Thor))) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
-            [StackData.brisingamensEndGameAction()]);
+            [AllStackData.brisingamensEndGameAction()]);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     }
 };

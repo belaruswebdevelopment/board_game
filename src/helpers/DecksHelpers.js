@@ -1,26 +1,25 @@
-import { ThrowMyError } from "../Error";
-import { ErrorNames } from "../typescript/enums";
 //TODO Rework it in one func with switch!?
-export const GetCardsFromCardDeck = ({ G, ctx, ...rest }, tier, start, amount) => {
-    const currentDeck = G.secret.decks[tier];
-    if (currentDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DeckWithTierCurrentIdIsUndefined, tier);
+export const GetCardsFromSecretDwarfDeck = ({ G }, tier, start, amount) => {
+    const currentDeck = G.secret.decks[tier], cards = currentDeck.splice(start, amount);
+    if (amount !== cards.length) {
+        throw new Error(`Недостаточно карт в массиве карт дворфов конкретной эпохи: требуется - '${amount}', в наличии - '${cards.length}'.`);
     }
-    const cards = currentDeck.splice(start, amount);
-    G.deckLength[tier] = currentDeck.length;
+    G.decksLength[tier] = currentDeck.length;
     return cards;
 };
-export const GetCampCardsFromCampCardDeck = ({ G, ctx, ...rest }, tier, start, amount) => {
-    const currentCampDeck = G.secret.campDecks[tier];
-    if (currentCampDeck === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CampDeckWithTierCurrentIdIsUndefined, tier);
+export const GetCampCardsFromSecretCampDeck = ({ G }, tier, start, amount) => {
+    const campDeck = G.secret.campDecks[tier], campCards = campDeck.splice(start, amount);
+    if (amount !== campCards.length) {
+        throw new Error(`Недостаточно карт в массиве карт лагеря конкретной эпохи: требуется - '${amount}', в наличии - '${campCards.length}'.`);
     }
-    const campCards = currentCampDeck.splice(start, amount);
-    G.campDeckLength[tier] = currentCampDeck.length;
+    G.campDecksLength[tier] = campDeck.length;
     return campCards;
 };
-export const GetMythologicalCreatureCardsFromMythologicalCreatureCardDeck = ({ G }, start, amount) => {
+export const GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck = ({ G }, start, amount) => {
     const currentCampDeck = G.secret.mythologicalCreatureDeck, mythologicalCreatureCards = currentCampDeck.splice(start, amount);
+    if (amount !== mythologicalCreatureCards.length) {
+        throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${amount}', в наличии - '${mythologicalCreatureCards.length}'.`);
+    }
     G.mythologicalCreatureDeckLength = currentCampDeck.length;
     return mythologicalCreatureCards;
 };

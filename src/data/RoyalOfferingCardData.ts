@@ -1,6 +1,6 @@
 import { RoyalOfferingNames } from "../typescript/enums";
-import type { IRoyalOfferingCardConfig, IRoyalOfferingCardValues, RoyalOfferingsConfigType } from "../typescript/interfaces";
-import { StackData } from "./StackData";
+import type { RoyalOfferingCardData, RoyalOfferingCardPlayersAmount, RoyalOfferingsConfig } from "../typescript/interfaces";
+import { AllStackData } from "./StackData";
 
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
@@ -9,15 +9,15 @@ import { StackData } from "./StackData";
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  */
-const upgradeCoinUpTo3: IRoyalOfferingCardConfig = {
+const upgradeCoinUpTo3: RoyalOfferingCardData = {
     name: RoyalOfferingNames.PlusThree,
     value: 3,
     stack: {
-        player: [StackData.upgradeCoin(3)],
-        soloBot: [StackData.upgradeCoinSoloBot(3)],
-        soloBotAndvari: [StackData.upgradeCoinSoloBotAndvari(3)],
+        player: [AllStackData.upgradeCoin(3)],
+        soloBot: [AllStackData.upgradeCoinSoloBot(3)],
+        soloBotAndvari: [AllStackData.upgradeCoinSoloBotAndvari(3)],
     },
-    amount: (): IRoyalOfferingCardValues => ({
+    amount: (): RoyalOfferingCardPlayersAmount => ({
         1: {
             0: 1,
             1: 0,
@@ -48,15 +48,15 @@ const upgradeCoinUpTo3: IRoyalOfferingCardConfig = {
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  */
-const upgradeCoinUpTo5: IRoyalOfferingCardConfig = {
+const upgradeCoinUpTo5: RoyalOfferingCardData = {
     name: RoyalOfferingNames.PlusFive,
     value: 5,
     stack: {
-        player: [StackData.upgradeCoin(5)],
-        soloBot: [StackData.upgradeCoinSoloBot(5)],
-        soloBotAndvari: [StackData.upgradeCoinSoloBotAndvari(5)],
+        player: [AllStackData.upgradeCoin(5)],
+        soloBot: [AllStackData.upgradeCoinSoloBot(5)],
+        soloBotAndvari: [AllStackData.upgradeCoinSoloBotAndvari(5)],
     },
-    amount: (): IRoyalOfferingCardValues => ({
+    amount: (): RoyalOfferingCardPlayersAmount => ({
         1: {
             0: 0,
             1: 2,
@@ -87,4 +87,4 @@ const upgradeCoinUpTo5: IRoyalOfferingCardConfig = {
  * <li>Происходит при создании всех карт улучшения монет в ходе инициализации игры.</li>
  * </ol>
  */
-export const actionCardsConfigArray: RoyalOfferingsConfigType = [upgradeCoinUpTo3, upgradeCoinUpTo5];
+export const actionCardsConfigArray: RoyalOfferingsConfig = [upgradeCoinUpTo3, upgradeCoinUpTo5];

@@ -1,10 +1,10 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { BuffNames, CampBuffNames, ErrorNames } from "../typescript/enums";
+import { CampBuffNames, CommonBuffNames, ErrorNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -21,12 +21,12 @@ export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): 
     if (G.publicPlayersOrder.length) {
         const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (!player.stack.length) {
             return CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
-                BuffNames.SuitIdForMjollnir);
+                CommonBuffNames.SuitIdForMjollnir);
         }
     }
 };
@@ -78,7 +78,7 @@ export const OnGetMjollnirProfitMove = ({ G, ctx, ...rest }: FnContext): void =>
  */
 export const OnGetMjollnirProfitTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
     AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
-        [StackData.getMjollnirProfit()]);
+        [AllStackData.getMjollnirProfit()]);
     DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
 };
 

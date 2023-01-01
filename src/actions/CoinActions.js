@@ -23,10 +23,10 @@ import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, 
 export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, value, upgradingCoinId, type) => {
     const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let handCoins, boardCoins;
     if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {

@@ -5,8 +5,8 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, ErrorNames, GameModeNames, PhaseNames, RusCardTypeNames, RusPhaseNames, RusStageNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
-import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
+import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
+import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
 /**
@@ -35,17 +35,16 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
             else {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
                 }
                 let suit = null;
-                if (campCard.type === RusCardTypeNames.Artefact_Player_Card) {
+                if (campCard.type === CardTypeRusNames.Artefact_Player_Card) {
                     suit = campCard.suit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
                     || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) ===
                         CommonStageNames.ClickCampCardHolda)) {
                     if (data !== undefined) {
-                        // TODO StageNames => CommonStageNames???
                         const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                         let moveName;
                         switch (stage) {
@@ -61,37 +60,37 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
                                     throw new Error(`Не может не быть доступного мува.`);
                                 }
                             default:
-                                throw new Error(`Нет такого мува.`);
+                                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
                         }
-                        DrawCard(data, boardCells, campCard, j, player, suit, moveName, j);
+                        DrawCard({ G, ctx, ...rest }, data, boardCells, campCard, j, player, suit, moveName, j);
                     }
                     else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCampCardMoveValidator
                         || validatorName === CommonMoveValidatorNames.ClickCampCardHoldaMoveValidator) {
                         moveMainArgs.push(j);
                     }
                     else {
-                        throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                     }
                 }
                 else {
                     if (data !== undefined) {
-                        DrawCard(data, boardCells, campCard, j, player, suit);
+                        DrawCard({ G, ctx, ...rest }, data, boardCells, campCard, j, player, suit);
                     }
                 }
             }
         }
     }
     if (data !== undefined) {
-        const tier = G.campDeckLength.length - G.tierToEnd + 1 > G.campDeckLength.length ?
-            1 : G.campDeckLength.length - G.tierToEnd;
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: Styles.CampBack(tier), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDeckLength[G.campDeckLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
-                                    (G.campDeckLength[0] + G.campDeckLength[1]) : ``), " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
+        const tier = G.campDecksLength.length - G.tierToEnd + 1 > G.campDecksLength.length ?
+            1 : G.campDecksLength.length - G.tierToEnd;
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: Styles.CampBack(tier), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDecksLength[G.campDecksLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDecksLength.length - G.tierToEnd === 0 ? `/` +
+                                    (G.campDecksLength[0] + G.campDecksLength[1]) : ``), " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
     else if (validatorName !== null) {
         return moveMainArgs;
     }
     else {
-        throw new Error(`Функция должна возвращать значение.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionMustHaveReturnValue);
     }
 };
 /**
@@ -106,8 +105,8 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
  */
 export const DrawCurrentPhaseStage = ({ ctx }) => {
     var _a, _b;
-    const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)], stageText = stage !== undefined ? RusStageNames[stage] : `none`;
-    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_b = RusPhaseNames[ctx.phase]) !== null && _b !== void 0 ? _b : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: stageText }), ")"] }));
+    const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)], stageText = stage !== undefined ? StageRusNames[stage] : `none`;
+    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_b = PhaseRusNames[ctx.phase]) !== null && _b !== void 0 ? _b : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: stageText }), ")"] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
@@ -132,8 +131,11 @@ export const DrawCurrentPlayerTurn = ({ ctx }) => (_jsxs("b", { children: [_jsxs
  * @param data Глобальные параметры.
  * @returns Поле преимуществ в конце эпохи.
  */
-export const DrawDistinctions = ({ G, ctx }, validatorName, data) => {
-    const boardCells = [], moveMainArgs = [];
+export const DrawDistinctions = ({ G, ctx, ...rest }, validatorName, data) => {
+    const boardCells = [], moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
+    }
     for (let i = 0; i < 1; i++) {
         let suit, currentDistinctionSuit;
         for (suit in G.distinctions) {
@@ -146,20 +148,18 @@ export const DrawDistinctions = ({ G, ctx }, validatorName, data) => {
             if (ctx.phase === PhaseNames.TroopEvaluation && ctx.activePlayers === null
                 && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                 if (data !== undefined) {
-                    // TODO Move to DrawDistinction?
-                    boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suit); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
+                    DrawDistinctionCard({ G, ctx, ...rest }, data, boardCells, player, suit, DistinctionCardMoveNames.ClickDistinctionCardMove, suit);
                 }
                 else if (validatorName === TroopEvaluationMoveValidatorNames.ClickDistinctionCardMoveValidator) {
                     moveMainArgs.push(suit);
                 }
                 else {
-                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                 }
             }
             else {
                 if (data !== undefined) {
-                    // TODO Move to DrawDistinction?
-                    boardCells.push(_jsx("td", { className: "bg-green-500", title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinction(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
+                    DrawDistinctionCard({ G, ctx, ...rest }, data, boardCells, null, suit);
                 }
             }
         }
@@ -171,7 +171,7 @@ export const DrawDistinctions = ({ G, ctx }, validatorName, data) => {
         return moveMainArgs;
     }
     else {
-        throw new Error(`Функция должна возвращать значение.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionMustHaveReturnValue);
     }
 };
 /**
@@ -188,34 +188,33 @@ export const DrawDistinctions = ({ G, ctx }, validatorName, data) => {
  */
 export const DrawDiscardedCards = ({ G, ctx, ...rest }, validatorName, data) => {
     var _a;
-    const boardCells = [], moveMainArgs = [];
+    const boardCells = [], moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
+    }
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card = G.discardCardsDeck[j];
         if (card === undefined) {
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (card.type === RusCardTypeNames.Dwarf_Card) {
+        if (card.type === CardTypeRusNames.Dwarf_Card) {
             suit = card.suit;
         }
         if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.PickDiscardCard) {
-            const player = G.publicPlayers[Number(ctx.currentPlayer)];
-            if (player === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
-            }
             if (data !== undefined) {
-                DrawCard(data, boardCells, card, j, player, suit, CardMoveNames.PickDiscardCardMove, j);
+                DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, player, suit, CardMoveNames.PickDiscardCardMove, j);
             }
             else if (validatorName === CommonMoveValidatorNames.PickDiscardCardMoveValidator) {
                 moveMainArgs.push(j);
             }
             else {
-                throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
             }
         }
         else {
             if (data !== undefined) {
-                DrawCard(data, boardCells, card, j, null, suit);
+                DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, null, suit);
             }
         }
     }
@@ -226,7 +225,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }, validatorName, data) => 
         return moveMainArgs;
     }
     else {
-        throw new Error(`Функция должна возвращать значение.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionMustHaveReturnValue);
     }
 };
 /**
@@ -256,10 +255,9 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
                 && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.ClickHeroCard) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined) {
-                    // TODO StageNames => CommonStageNames | SoloBotAndvariCommonStageNames
                     const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                     let moveName;
                     switch (stage) {
@@ -270,9 +268,9 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
                             moveName = CardMoveNames.SoloBotAndvariClickHeroCardMove;
                             break;
                         default:
-                            throw new Error(`Нет такого мува.`);
+                            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
                     }
-                    DrawCard(data, boardCells, hero, increment, player, suit, moveName, increment);
+                    DrawCard({ G, ctx, ...rest }, data, boardCells, hero, increment, player, suit, moveName, increment);
                 }
                 else if ((validatorName === CommonMoveValidatorNames.ClickHeroCardMoveValidator
                     || validatorName ===
@@ -280,12 +278,12 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
                     moveMainArgs.push(increment);
                 }
                 else {
-                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                 }
             }
             else {
                 if (data !== undefined) {
-                    DrawCard(data, boardCells, hero, increment, null, suit);
+                    DrawCard({ G, ctx, ...rest }, data, boardCells, hero, increment, null, suit);
                 }
             }
             if (increment + 1 === G.heroes.length) {
@@ -303,7 +301,7 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
         return moveMainArgs;
     }
     else {
-        throw new Error(`Функция должна возвращать значение.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionMustHaveReturnValue);
     }
 };
 /**
@@ -332,10 +330,10 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
                     SoloBotCommonStageNames.SoloBotClickHeroCard) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
                 }
                 if (data !== undefined) {
-                    DrawCard(data, boardCells, hero, j, player, null, CardMoveNames.SoloBotClickHeroCardMove, j);
+                    DrawCard({ G, ctx, ...rest }, data, boardCells, hero, j, player, null, CardMoveNames.SoloBotClickHeroCardMove, j);
                 }
                 else if (validatorName === SoloBotCommonMoveValidatorNames.SoloBotClickHeroCardMoveValidator) {
                     if (hero.active) {
@@ -343,12 +341,12 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
                     }
                 }
                 else {
-                    throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                 }
             }
             else {
                 if (data !== undefined) {
-                    DrawCard(data, boardCells, hero, j, null, null);
+                    DrawCard({ G, ctx, ...rest }, data, boardCells, hero, j, null, null);
                 }
             }
         }
@@ -360,7 +358,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
         return moveMainArgs;
     }
     else {
-        throw new Error(`Функция должна возвращать значение.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionMustHaveReturnValue);
     }
 };
 /**
@@ -370,12 +368,12 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param conext
+ * @param context
  * @param data Глобальные параметры.
  * @returns Поле рынка монет.
  */
-export const DrawMarketCoins = ({ G, ...rest }, data) => {
-    const boardRows = [], drawData = DrawBoard(G.marketCoinsUnique.length), countMarketCoins = CountMarketCoins({ G, ...rest });
+export const DrawMarketCoins = ({ G, ctx, ...rest }, data) => {
+    const boardRows = [], drawData = DrawBoard(G.marketCoinsUnique.length), countMarketCoins = CountMarketCoins({ G, ctx, ...rest });
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
         for (let j = 0; j < drawData.boardCols; j++) {
@@ -384,7 +382,7 @@ export const DrawMarketCoins = ({ G, ...rest }, data) => {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
             const tempCoinValue = marketCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-            DrawCoin(data, boardCells, `market`, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue]);
+            DrawCoin({ G, ctx, ...rest }, data, boardCells, DrawCoinTypeNames.Market, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue]);
             if (increment + 1 === G.marketCoinsUnique.length) {
                 break;
             }
@@ -407,7 +405,7 @@ export const DrawMarketCoins = ({ G, ...rest }, data) => {
 export const DrawProfit = ({ G, ctx, ...rest }, data) => {
     const boardCells = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     const option = G.drawProfit;
     let caption = ``, _exhaustiveCheck;
@@ -472,7 +470,7 @@ export const DrawProfit = ({ G, ctx, ...rest }, data) => {
  * @param data Глобальные параметры.
  * @returns Поле стратегий соло бота Андвари.
  */
-export const DrawStrategyForSoloBotAndvariUI = ({ G }, data) => {
+export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }, data) => {
     if (G.soloGameAndvariStrategyVariantLevel === null) {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
@@ -482,14 +480,14 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G }, data) => {
         if (suit === undefined) {
             throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
         }
-        DrawSuit(data, playerHeadersGeneral, suit);
+        DrawSuit({ G, ctx, ...rest }, data, playerHeadersGeneral, suit);
     }
     for (let i = G.soloGameAndvariStrategyVariantLevel; i < 5; i++) {
         const suit = G.strategyForSoloBotAndvari.reserve[i];
         if (suit === undefined) {
             throw new Error(`В объекте резервных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
         }
-        DrawSuit(data, playerHeadersReserve, suit);
+        DrawSuit({ G, ctx, ...rest }, data, playerHeadersReserve, suit);
     }
     // TODO Add different colors or dividers for different strategies and draw their names!
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsx("span", { children: "Bot strategy" })] }), _jsxs("tbody", { children: [_jsx("tr", { children: playerHeadersGeneral }, `Strategy general`), _jsx("tr", { children: playerHeadersReserve }, `Strategy reserve`)] })] }));
@@ -531,14 +529,13 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                     }
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
-                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, ctx.currentPlayer);
+                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
                     }
                     if (t === G.currentTavern && ctx.phase === PhaseNames.TavernsResolution
                         && ((ctx.activePlayers === null)
                             || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)])
                                 === TavernsResolutionStageNames.DiscardCard2Players))) {
                         if (data !== undefined) {
-                            // TODO StageNames => TavernsResolutionStageNames
                             const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
                             let moveName, _exhaustiveCheck;
                             switch (stage) {
@@ -560,7 +557,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                                                     moveName = CardMoveNames.SoloBotClickCardMove;
                                                 }
                                                 else {
-                                                    throw new Error(`Не может быть игроков больше 2-х в соло игре.`);
+                                                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                                                 }
                                                 break;
                                             case GameModeNames.SoloAndvari:
@@ -571,23 +568,23 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                                                     moveName = CardMoveNames.SoloBotAndvariClickCardMove;
                                                 }
                                                 else {
-                                                    throw new Error(`Не может быть игроков больше 2-х в соло игре Андвари.`);
+                                                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CanNotBeMoreThenTwoPlayersInSoloGameMode);
                                                 }
                                                 break;
                                             default:
                                                 _exhaustiveCheck = G.mode;
-                                                throw new Error(`Нет такого режима игры.`);
+                                                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchGameMode);
                                                 return _exhaustiveCheck;
                                         }
                                     }
                                     else {
-                                        throw new Error(`Нет такого мува '1'.`);
+                                        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
                                     }
                                     break;
                                 default:
-                                    throw new Error(`Нет такого мува '2'.`);
+                                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
                             }
-                            DrawCard(data, boardCells, tavernCard, j, player, suit, moveName, j);
+                            DrawCard({ G, ctx, ...rest }, data, boardCells, tavernCard, j, player, suit, moveName, j);
                         }
                         else if (validatorName === TavernsResolutionMoveValidatorNames.ClickCardMoveValidator
                             || validatorName === TavernsResolutionMoveValidatorNames.SoloBotClickCardMoveValidator
@@ -597,12 +594,12 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                             moveMainArgs.push(j);
                         }
                         else {
-                            throw new Error(`Не добавлен валидатор '${validatorName}'.`);
+                            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                         }
                     }
                     else {
                         if (data !== undefined) {
-                            DrawCard(data, boardCells, tavernCard, j, null, suit);
+                            DrawCard({ G, ctx, ...rest }, data, boardCells, tavernCard, j, null, suit);
                         }
                     }
                 }
@@ -619,7 +616,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
         return moveMainArgs;
     }
     else {
-        throw new Error(`Функция должна возвращать значение.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionMustHaveReturnValue);
     }
 };
 /**
@@ -634,9 +631,9 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
  */
 export const DrawTierCards = ({ G }) => {
     var _a;
-    return (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [G.deckLength.length - G.tierToEnd + 1 > G.deckLength.length ? G.deckLength.length :
-                        G.deckLength.length - G.tierToEnd + 1, "/", G.deckLength.length, "(", (_a = G.deckLength[G.deckLength.length - G.tierToEnd]) !== null && _a !== void 0 ? _a : 0, G.deckLength.length - G.tierToEnd === 0 ? `/`
-                        + (G.deckLength[0] + G.deckLength[1]) : ``, " cards)"] })] }));
+    return (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [G.decksLength.length - G.tierToEnd + 1 > G.decksLength.length ? G.decksLength.length :
+                        G.decksLength.length - G.tierToEnd + 1, "/", G.decksLength.length, "(", (_a = G.decksLength[G.decksLength.length - G.tierToEnd]) !== null && _a !== void 0 ? _a : 0, G.decksLength.length - G.tierToEnd === 0 ? `/`
+                        + (G.decksLength[0] + G.decksLength[1]) : ``, " cards)"] })] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем статусе игры.</h3>

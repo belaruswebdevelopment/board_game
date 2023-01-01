@@ -31,11 +31,11 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             playerID);
     }
     const publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[coinId];
@@ -169,7 +169,7 @@ export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
     }
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     player.selectedCoin = coinId;
@@ -196,11 +196,11 @@ export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             playerID);
     }
     let handCoin: CanBeUndefType<PublicPlayerCoinType>;
@@ -260,11 +260,11 @@ export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest 
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
         privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
         );
     }
     if (privatePlayer === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPrivatePlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             playerID);
     }
     let handCoin: CanBeUndefType<PublicPlayerCoinType>;

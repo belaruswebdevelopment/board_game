@@ -54,7 +54,7 @@ export const GetSuitValueWithMaxRanksValue = ({ G, ctx, myPlayerID, ...rest }: M
     SuitNames => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     const totalSuitsRanks: number[] = [];

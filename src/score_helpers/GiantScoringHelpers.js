@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { ErrorNames, GiantNames, RusCardTypeNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GiantNames } from "../typescript/enums";
 /**
  * <h3>Получение победных очков по Гиганту, не имеющим специфических вариантов подсчёта очков.</h3>
  * <p>Применения:</p>
@@ -39,7 +39,7 @@ export const GymirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     }
     const gymirCard = player.mythologicalCreatureCards.find((card) => card.name === GiantNames.Gymir);
     if (gymirCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${RusCardTypeNames.Giant_Card}' с названием '${GiantNames.Gymir}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Gymir}'.`);
     }
     const capturedGymirCard = gymirCard.capturedCard;
     if (capturedGymirCard === null) {
@@ -67,7 +67,7 @@ export const SurtScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     }
     const surtCard = player.mythologicalCreatureCards.find((card) => card.name === GiantNames.Surt);
     if (surtCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${RusCardTypeNames.Giant_Card}' с названием '${GiantNames.Surt}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Surt}'.`);
     }
     const capturedSurtCard = surtCard.capturedCard;
     if (capturedSurtCard === null) {

@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
@@ -96,7 +96,7 @@ export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }) => {
  */
 export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }) => {
     if (ctx.currentPlayer === `0`) {
-        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [StackData.getDifficultyLevelForSoloMode()]);
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDifficultyLevelForSoloMode()]);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     }
     else if (ctx.currentPlayer === `1`) {

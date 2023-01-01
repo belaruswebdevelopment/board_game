@@ -1,6 +1,6 @@
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ChangeIsOpenedCoinStatus } from "../Coin";
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
@@ -23,7 +23,7 @@ import { AddActionsToStack } from "./StackHelpers";
 export const ActivateTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     const boardCoinCurrentTavern: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
@@ -183,7 +183,7 @@ const Trading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tra
     if (!soloBotOnlyOneCoinTrading && (coinsMinValue === coinsMaxValue &&
         ((maxTradingCoin !== undefined && maxTradingCoin.isInitial) || minTradingCoin.isInitial))) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-            [StackData.pickConcreteCoinToUpgrade(coinsMaxValue, coinsMaxValue)]);
+            [AllStackData.pickConcreteCoinToUpgrade(coinsMaxValue, coinsMaxValue)]);
         DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
     } else {
         if (((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1`)

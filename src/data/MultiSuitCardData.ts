@@ -1,5 +1,5 @@
 import { GameNames, MultiSuitCardNames } from "../typescript/enums";
-import type { MultiCardsConfigType, MultiSuitCardDataType } from "../typescript/interfaces";
+import type { MultiSuitCardData, MultiSuitCardsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Данные о особой карте.</h3>
@@ -8,7 +8,7 @@ import type { MultiCardsConfigType, MultiSuitCardDataType } from "../typescript/
  * <li>Используется при обращении к данным особой карты.</li>
  * </ol>
  */
-const Gullinbursti: MultiSuitCardDataType = {
+const Gullinbursti: MultiSuitCardData = {
     name: MultiSuitCardNames.Gullinbursti,
     game: GameNames.Idavoll,
 };
@@ -20,7 +20,7 @@ const Gullinbursti: MultiSuitCardDataType = {
  * <li>Используется при обращении к данным особой карты.</li>
  * </ol>
  */
-const OlwinsDouble: MultiSuitCardDataType = {
+const OlwinsDouble: MultiSuitCardData = {
     name: MultiSuitCardNames.OlwinsDouble,
     game: GameNames.Thingvellir,
 };
@@ -33,7 +33,7 @@ const OlwinsDouble: MultiSuitCardDataType = {
  * <li>Происходит при создании всех особых карт при инициализации игры.</li>
  * </ol>
  */
-export const multiCardsConfig: MultiCardsConfigType = {
+export const multiCardsConfig: MultiSuitCardsConfig = {
     Gullinbursti,
     OlwinsDouble,
 };

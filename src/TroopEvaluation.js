@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { ThrowMyError } from "./Error";
-import { GetCardsFromCardDeck } from "./helpers/DecksHelpers";
+import { GetCardsFromSecretDwarfDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard } from "./helpers/DiscardCardHelpers";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
@@ -130,7 +130,7 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }, s
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = ({ G, ctx, ...rest }, suit, result) => {
     // TODO if (suit === SuitNames.explorer) here or in CheckAllSuitsDistinctions?
     if (suit === SuitNames.explorer && result === undefined) {
-        const discardedCard = GetCardsFromCardDeck({ G, ctx, ...rest }, 1, 0, 1)[0];
+        const discardedCard = GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, 1, 0, 1)[0];
         if (discardedCard === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);
         }

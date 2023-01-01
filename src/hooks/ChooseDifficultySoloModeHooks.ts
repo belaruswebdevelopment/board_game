@@ -1,4 +1,4 @@
-import { StackData } from "../data/StackData";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
@@ -6,7 +6,7 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, GameModeNames, HeroNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IHeroCard, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, HeroCard, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
@@ -104,7 +104,7 @@ export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }: FnContext): 
 export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
     if (ctx.currentPlayer === `0`) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
-            [StackData.getDifficultyLevelForSoloMode()]);
+            [AllStackData.getDifficultyLevelForSoloMode()]);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     } else if (ctx.currentPlayer === `1`) {
         const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
@@ -112,7 +112,7 @@ export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }: FnConte
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 1);
         }
-        soloBotPublicPlayer.heroes.forEach((hero: IHeroCard): void => {
+        soloBotPublicPlayer.heroes.forEach((hero: HeroCard): void => {
             AddBuffToPlayer({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, hero.buff);
             if (hero.name !== HeroNames.Thrud && hero.name !== HeroNames.Ylud) {
                 AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, hero.stack?.soloBot,

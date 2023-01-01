@@ -1,8 +1,8 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { CampBuffNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames, RusCardTypeNames } from "../typescript/enums";
-import type { CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, FnContext, IArtefactPlayerCampCard, ICoin, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import { CampBuffNames, CardTypeRusNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import type { ArtefactPlayerCampCard, CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, FnContext, ICoin, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
 import { RemoveCoinFromMarket } from "./DiscardCoinHelpers";
@@ -23,7 +23,7 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
     void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     if (ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null
@@ -34,12 +34,12 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime);
     }
-    if (card.type === RusCardTypeNames.Artefact_Player_Card) {
+    if (card.type === CardTypeRusNames.Artefact_Player_Card) {
         AddArtefactPlayerCardToPlayerCards({ G, ctx, myPlayerID, ...rest }, card);
         CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
     } else {
         AddCampCardToPlayerCampCards({ G, ctx, myPlayerID, ...rest }, card);
-        if (card.type === RusCardTypeNames.Artefact_Card) {
+        if (card.type === CardTypeRusNames.Artefact_Card) {
             AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, card.buff);
         }
     }
@@ -60,7 +60,7 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
     card: CampCreatureCommandZoneCardType): void => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     player.campCards.push(card);
@@ -79,10 +79,10 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
  * @returns Добавлен ли артефакт на планшет игрока.
  */
 const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    card: IArtefactPlayerCampCard): boolean => {
+    card: ArtefactPlayerCampCard): boolean => {
     const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined,
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);

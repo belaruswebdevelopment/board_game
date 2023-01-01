@@ -14,16 +14,12 @@ import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 export const BuildCoins = (coinConfig, options) => {
     const coins = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        // TODO Rework in tuple to remove config === undefined?
         const config = coinConfig[i];
         if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
         }
         const count = options.players !== undefined
             && !isInitialPlayerCoinsConfigNotMarket(config) ? config.count()[options.players] : 1;
-        if (count === undefined) {
-            throw new Error(`В конфиге монет для монеты с id '${i}' отсутствует количество нужных монет для количества игроков - '${options.players}'.`);
-        }
         if (options.players !== undefined && options.count !== undefined) {
             options.count.push({
                 value: config.value,

@@ -1,4 +1,4 @@
-import { ArtefactNames, CommonStageNames, DrawNames, GameModeNames, LogTypeNames, RusCardTypeNames, SuitNames } from "../../typescript/enums";
+import { ArtefactNames, CardTypeRusNames, CommonStageNames, DrawNames, GameModeNames, LogTypeNames, SuitNames } from "../../typescript/enums";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 describe(`Test AddCoinToPouchAction method`, () => {
     it(`should add first coin isOpened=false to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, () => {
@@ -720,7 +720,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypeNames.Dwarf_Card,
+                                type: CardTypeRusNames.Dwarf_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -728,7 +728,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     },
                     stack: [
                         {
-                            playerId: 0,
+                            playerId: `0`,
                         },
                     ],
                 },
@@ -749,7 +749,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
             discardCardsDeck: [
                 {
-                    type: RusCardTypeNames.Dwarf_Card,
+                    type: CardTypeRusNames.Dwarf_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -770,7 +770,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypeNames.Mercenary_Player_Card,
+                                type: CardTypeRusNames.Mercenary_Player_Card,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -778,7 +778,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     },
                     stack: [
                         {
-                            playerId: 0,
+                            playerId: `0`,
                         },
                     ],
                 },
@@ -799,7 +799,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
             discardCampCardsDeck: [
                 {
-                    type: RusCardTypeNames.Mercenary_Player_Card,
+                    type: CardTypeRusNames.Mercenary_Player_Card,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -820,7 +820,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypeNames.Dwarf_Card,
+                                type: CardTypeRusNames.Dwarf_Card,
                             },
                         ],
                     },
@@ -829,7 +829,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
         };
         expect(() => {
             DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypeNames.Hero_Card}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.Hero_Card}'.`);
     });
 });
 //# sourceMappingURL=CampActions.test.js.map

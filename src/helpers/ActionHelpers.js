@@ -17,7 +17,7 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
 export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const stack = player.stack[0];
     if (stack !== undefined) {
@@ -42,7 +42,7 @@ export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }) => {
  * </ol>
  *
  * @param context
- * @param stack Стек действий героя.
+ * @param stack Стек действий.
  * @returns
  */
 const StartOrEndActionStage = ({ G, ctx, myPlayerID, events, ...rest }, stack) => {

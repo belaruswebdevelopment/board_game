@@ -46,7 +46,7 @@ export const GetRanksValueMultiplier = ({ G, ctx, myPlayerID, ...rest }, suit, m
 export const GetSuitValueWithMaxRanksValue = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentPublicPlayerIsUndefined, myPlayerID);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const totalSuitsRanks = [];
     let suit, maxRanks = 0, suitWithMaxRanks;

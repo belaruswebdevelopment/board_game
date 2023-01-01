@@ -1,5 +1,5 @@
 import { CommonStageNames, DrawNames, GameModeNames, LogTypeNames } from "../../typescript/enums";
-import type { Ctx, IMyGameState, IPlayer, IPublicPlayer, IStack, MyFnContextWithMyPlayerID } from "../../typescript/interfaces";
+import type { Ctx, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, MyGameState, Stack } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
 describe(`Test AddPickHeroAction method`, (): void => {
@@ -8,11 +8,11 @@ describe(`Test AddPickHeroAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    stack: [] as IStack[],
+                    stack: [] as Stack[],
                 } as IPublicPlayer,
             },
             logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `logData`>,
+        } as Pick<MyGameState, `publicPlayers` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -36,7 +36,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
                     value: `Игрок 'Dan' должен выбрать нового героя.`,
                 },
             ],
-        } as Pick<IMyGameState, `publicPlayers` | `logData`>);
+        } as Pick<MyGameState, `publicPlayers` | `logData`>);
     });
 });
 
@@ -63,7 +63,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -89,7 +89,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
     });
     it(`should return all closed board coins to hand (multiplayer=true)`, (): void => {
         const G = {
@@ -124,7 +124,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -161,7 +161,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
     });
     it(`should return all isOpened=true board coins to hand (multiplayer=true)`, (): void => {
         const G = {
@@ -199,7 +199,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
+        } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
@@ -239,7 +239,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                 } as IPublicPlayer,
             },
             currentTavern: 0,
-        } as Pick<IMyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
+        } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
     });
 });
 

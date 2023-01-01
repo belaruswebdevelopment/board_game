@@ -1,5 +1,5 @@
 import { specialCardsConfig } from "./data/SpecialCardData";
-import { RusCardTypeNames } from "./typescript/enums";
+import { CardTypeRusNames } from "./typescript/enums";
 /**
  * <h3>Создание особых карт.</h3>
  * <p>Применения:</p>
@@ -37,7 +37,7 @@ export const BuildSpecialCards = () => {
  * @param points Очки.
  * @returns Карта дворфа.
  */
-const CreateSpecialCard = ({ type = RusCardTypeNames.Special_Card, name, suit, rank, points, }) => ({
+const CreateSpecialCard = ({ type = CardTypeRusNames.Special_Card, name, suit, rank, points, }) => ({
     type,
     name,
     suit,
