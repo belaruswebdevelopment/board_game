@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IActionFunctionWithoutParams, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -16,10 +16,10 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param context
  * @returns
  */
-export const AddPlusTwoValueToAllCoinsAction: IActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }:
+export const AddPlusTwoValueToAllCoinsAction: ActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

@@ -101,31 +101,32 @@ export const DiscardAllCurrentCards = ({ G, ...rest }, discardedCardsArray) => {
 export const DiscardCurrentCard = ({ G }, discardedCard) => {
     let _exhaustiveCheck;
     switch (discardedCard.type) {
-        case CardTypeRusNames.Mercenary_Card:
-        case CardTypeRusNames.Mercenary_Player_Card:
-        case CardTypeRusNames.Artefact_Card:
-        case CardTypeRusNames.Artefact_Player_Card:
-            // TODO Mercenary_Player_Card must be discarded as basic Mercenary_Card!?...
+        case CardTypeRusNames.MercenaryCard:
+        case CardTypeRusNames.MercenaryPlayerCard:
+        case CardTypeRusNames.ArtefactCard:
+        case CardTypeRusNames.ArtefactPlayerCard:
             G.discardCampCardsDeck.push(discardedCard);
             break;
-        case CardTypeRusNames.Dwarf_Card:
-        case CardTypeRusNames.Royal_Offering_Card:
+        case CardTypeRusNames.DwarfCard:
+        case CardTypeRusNames.DwarfPlayerCard:
+        case CardTypeRusNames.RoyalOfferingCard:
             G.discardCardsDeck.push(discardedCard);
             break;
-        case CardTypeRusNames.Giant_Card:
-        case CardTypeRusNames.God_Card:
-        case CardTypeRusNames.Valkyry_Card:
-        case CardTypeRusNames.Mythical_Animal_Card:
+        case CardTypeRusNames.GiantCard:
+        case CardTypeRusNames.GodCard:
+        case CardTypeRusNames.ValkyryCard:
+        case CardTypeRusNames.MythicalAnimalCard:
+        case CardTypeRusNames.MythicalAnimalPlayerCard:
             G.discardMythologicalCreaturesCards.push(discardedCard);
             break;
-        case CardTypeRusNames.Special_Card:
+        case CardTypeRusNames.SpecialPlayerCard:
             G.discardSpecialCards.push(discardedCard);
             break;
-        case CardTypeRusNames.Multi_Suit_Player_Card:
+        case CardTypeRusNames.MultiSuitPlayerCard:
             G.discardMultiCards.push(discardedCard);
             break;
-        case CardTypeRusNames.Hero_Player_Card:
-            throw new Error(`Сброшенная карта не может быть с типом '${CardTypeRusNames.Hero_Player_Card}'.`);
+        case CardTypeRusNames.HeroPlayerCard:
+            throw new Error(`Сброшенная карта не может быть с типом '${CardTypeRusNames.HeroPlayerCard}'.`);
         default:
             _exhaustiveCheck = discardedCard;
             throw new Error(`Сброшенная карта не может быть с недопустимым для сброса типом.`);

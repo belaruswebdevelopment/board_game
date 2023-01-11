@@ -6,7 +6,7 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CampBuffNames, ErrorNames, GodNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
@@ -20,7 +20,7 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "..
  */
 export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }: FnContext): void => {
     const brisingamensPlayerIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 CampBuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex === -1) {
@@ -41,7 +41,7 @@ export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }: FnContext): v
 export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length && ctx.playOrder.length === 1 && G.publicPlayersOrder[0] === ctx.playOrder[0]
         && ctx.currentPlayer === ctx.playOrder[0]) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
@@ -49,7 +49,7 @@ export const CheckEndBrisingamensEndGamePhase = ({ G, ctx, ...rest }: FnContext)
         if (!CheckPlayerHasBuff({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
             CampBuffNames.DiscardCardEndGame) && !player.stack.length) {
             const buffIndex: number =
-                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
+                Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number):
                     boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         CampBuffNames.GetMjollnirProfit));
             if (buffIndex !== -1) {
@@ -118,7 +118,7 @@ export const OnBrisingamensEndGameTurnBegin = ({ G, ctx, ...rest }: FnContext): 
  */
 export const StartGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {
     const buffIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 CampBuffNames.GetMjollnirProfit));
     if (buffIndex !== -1) {

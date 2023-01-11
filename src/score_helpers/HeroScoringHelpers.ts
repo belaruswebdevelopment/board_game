@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { IHeroScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { HeroScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -15,7 +15,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param value Значение.
  * @returns Количество очков по конкретному герою.
  */
-export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID, value?: number):
+export const BasicHeroScoring: HeroScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID, value?: number):
     number => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
@@ -33,7 +33,7 @@ export const BasicHeroScoring: IHeroScoringFunction = ({ G, ctx, ...rest }: MyFn
  * @param context
  * @returns Количество очков по конкретному герою.
  */
-export const AstridScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+export const AstridScoring: HeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
 
 /**
@@ -46,5 +46,5 @@ export const AstridScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...res
  * @param context
  * @returns Количество очков по конкретному герою.
  */
-export const IdunnScoring: IHeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+export const IdunnScoring: HeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 2);

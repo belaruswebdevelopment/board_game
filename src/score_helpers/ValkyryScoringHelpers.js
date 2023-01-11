@@ -13,7 +13,7 @@ export const BrynhildrScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 3, 6, 10, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -31,7 +31,7 @@ export const HildrScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 8, 16, 0], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -49,7 +49,7 @@ export const OlrunScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 3, 6, 10, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -67,7 +67,7 @@ export const SigrdrifaScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 0, 8, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -85,7 +85,7 @@ export const SvafaScoring = (strengthTokenNotch) => {
     const strengthTokenNotchPoints = [0, 4, 8, 16], strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
         strengthTokenNotchPoints.length - 1 : strengthTokenNotch, value = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };

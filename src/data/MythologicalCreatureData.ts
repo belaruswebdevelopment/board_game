@@ -194,7 +194,7 @@ const Thor: GodData = {
 const Durathor: MythicalAnimalData = {
     name: MythicalAnimalNames.Durathor,
     description: MythicalAnimalDescriptionNames.Durathor,
-    suit: SuitNames.hunter,
+    playerSuit: SuitNames.hunter,
     buff: {
         name: MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards,
     },
@@ -216,7 +216,7 @@ const Garm: MythicalAnimalData = {
     description: MythicalAnimalDescriptionNames.Garm,
     points: 9,
     rank: 2,
-    suit: SuitNames.explorer,
+    playerSuit: SuitNames.explorer,
     buff: {
         name: MythicalAnimalBuffNames.ExplorerDistinctionGetSixCards,
     },
@@ -235,7 +235,7 @@ const Garm: MythicalAnimalData = {
 const Hraesvelg: MythicalAnimalData = {
     name: MythicalAnimalNames.Hraesvelg,
     description: MythicalAnimalDescriptionNames.Hraesvelg,
-    suit: SuitNames.blacksmith,
+    playerSuit: SuitNames.blacksmith,
     stack: {
         player: [AllStackData.placeMultiSuitsCards(MultiSuitCardNames.Gullinbursti)],
     },
@@ -256,7 +256,7 @@ const Nidhogg: MythicalAnimalData = {
     name: MythicalAnimalNames.Nidhogg,
     description: MythicalAnimalDescriptionNames.Nidhogg,
     points: 5,
-    suit: SuitNames.warrior,
+    playerSuit: SuitNames.warrior,
     scoringRule: {
         name: MythicalAnimalScoringFunctionNames.NidhoggScoring,
         params: [0],
@@ -274,7 +274,7 @@ const Ratatosk: MythicalAnimalData = {
     name: MythicalAnimalNames.Ratatosk,
     description: MythicalAnimalDescriptionNames.Ratatosk,
     points: 2,
-    suit: SuitNames.miner,
+    playerSuit: SuitNames.miner,
     buff: {
         name: MythicalAnimalBuffNames.RatatoskFinalScoring,
     },

@@ -1,6 +1,6 @@
 import { AstridScoring, BasicHeroScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
 import { HeroScoringFunctionNames } from "../typescript/enums";
-import type { Action, IHeroScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsType } from "../typescript/interfaces";
+import type { Action, HeroScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по герою.</h3>
@@ -15,7 +15,7 @@ import type { Action, IHeroScoringFunction, MyFnContextWithMyPlayerID, ScoringAr
  */
 export const StartHeroScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     action: Action<HeroScoringFunctionNames, ScoringArgsType>): number => {
-    const actionDispatcher: IHeroScoringFunction = HeroScoringDispatcherSwitcher(action.name);
+    const actionDispatcher: HeroScoringFunction = HeroScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
         return actionDispatcher?.({ G, ctx, myPlayerID, ...rest });
     } else {
@@ -33,8 +33,8 @@ export const StartHeroScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWit
 * @param actionName Название действия.
 * @returns Действие.
 */
-const HeroScoringDispatcherSwitcher = (actionName: HeroScoringFunctionNames): IHeroScoringFunction => {
-    let action: IHeroScoringFunction,
+const HeroScoringDispatcherSwitcher = (actionName: HeroScoringFunctionNames): HeroScoringFunction => {
+    let action: HeroScoringFunction,
         _exhaustiveCheck: never;
     switch (actionName) {
         case HeroScoringFunctionNames.BasicHeroScoring:

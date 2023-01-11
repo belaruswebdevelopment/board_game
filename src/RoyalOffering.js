@@ -16,9 +16,9 @@ export const BuildRoyalOfferingCards = (data) => {
         const currentActionCardConfig = actionCardsConfigArray[i], amountPlayersValue = currentActionCardConfig.amount()[data.players], amountTierValue = amountPlayersValue[data.tier];
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateRoyalOfferingCard({
+                name: currentActionCardConfig.name,
                 value: currentActionCardConfig.value,
                 stack: currentActionCardConfig.stack,
-                name: currentActionCardConfig.name,
             }));
         }
     }
@@ -32,15 +32,15 @@ export const BuildRoyalOfferingCards = (data) => {
  * </ol>
  *
  * @param type Тип.
+ * @param name Название.
  * @param value Значение.
  * @param stack Стек действий.
- * @param name Название.
  * @returns Карта королевской награды.
  */
-const CreateRoyalOfferingCard = ({ type = CardTypeRusNames.Royal_Offering_Card, value, stack, name, }) => ({
+const CreateRoyalOfferingCard = ({ type = CardTypeRusNames.RoyalOfferingCard, name, value, stack, }) => ({
     type,
+    name,
     value,
     stack,
-    name,
 });
 //# sourceMappingURL=RoyalOffering.js.map

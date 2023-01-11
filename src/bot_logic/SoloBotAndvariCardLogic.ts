@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { CardTypeRusNames, ErrorNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, IPublicPlayer, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerCardType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>
@@ -16,16 +16,16 @@ import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, IPublicPlayer, M
  */
 const CheckSoloBotAndvariCanPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     CanBeUndefType<SuitNames> => {
-    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const playerCards: PlayerCardType[][] = Object.values(soloBotPublicPlayer.cards),
+    const playerCards: PlayerBoardCardType[][] = Object.values(soloBotPublicPlayer.cards),
         heroesLength: number = soloBotPublicPlayer.heroes.length -
             ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.NoHeroEasyStrategy
                 || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.NoHeroHardStrategy) ? 0 : 5),
-        playerCardsCount: number[] = playerCards.map((item: PlayerCardType[]): number =>
+        playerCardsCount: number[] = playerCards.map((item: PlayerBoardCardType[]): number =>
             item.reduce(TotalRank, 0)),
         minLength: number = Math.min(...playerCardsCount),
         minLengthCount: number =
@@ -79,10 +79,10 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
                 return ThrowMyError({ G, ctx, ...rest },
                     ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
-            if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+            if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
                 continue;
             }
-            if (tavernCard.suit === suit) {
+            if (tavernCard.playerSuit === suit) {
                 availableMoveArguments.push(moveArgument);
             }
         }
@@ -126,7 +126,7 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }: My
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard, moveArgument);
         }
@@ -163,12 +163,13 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID
     moveArguments: MoveArgumentsType<number[]>, suit: SuitNames): MoveArgumentsType<number[]> => {
     // TODO Move same code here and for reserve strategy to one helper function
     // TODO Check myPlayerID === `1`?
-    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[],
+    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
+        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[],
         strategyArguments: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument: CanBeUndefType<number> = moveArguments[i];
@@ -184,10 +185,10 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             continue;
         }
-        if (suit === tavernCard.suit) {
+        if (suit === tavernCard.playerSuit) {
             strategyArguments.push(moveArgument);
         }
     }
@@ -280,7 +281,8 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, myPlayerID, ...
 export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     // TODO Move code here and for solo bot royal to one helper function
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
+        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument: CanBeUndefType<number> = moveArguments[i];
         if (moveArgument === undefined) {
@@ -295,7 +297,7 @@ export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return moveArgument;
         }
     }

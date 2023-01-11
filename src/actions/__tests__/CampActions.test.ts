@@ -1,5 +1,5 @@
 import { ArtefactNames, CardTypeRusNames, CommonStageNames, DrawNames, GameModeNames, LogTypeNames, SuitNames } from "../../typescript/enums";
-import type { Ctx, DiscardCampCardType, DwarfDeckCardType, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, MyGameState, PlayerCardType, PublicPlayerCoinType, Stack } from "../../typescript/interfaces";
+import type { Ctx, DiscardCampCardType, DwarfDeckCardType, MyFnContextWithMyPlayerID, MyGameState, Player, PlayerBoardCardType, PublicPlayer, PublicPlayerCoinType, Stack } from "../../typescript/interfaces";
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 
 describe(`Test AddCoinToPouchAction method`, (): void => {
@@ -8,7 +8,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -42,7 +42,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -54,7 +54,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -88,7 +88,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -103,7 +103,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -137,7 +137,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -149,7 +149,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -183,7 +183,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -217,7 +217,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -244,7 +244,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -275,7 +275,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -306,7 +306,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -321,7 +321,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -355,7 +355,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -367,7 +367,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -401,7 +401,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -434,7 +434,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -467,7 +467,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -497,7 +497,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -530,7 +530,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -547,13 +547,13 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
                         nickname: `Dan`,
                         boardCoins: [] as PublicPlayerCoinType[],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
                 logData: [],
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -562,7 +562,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 } as Ctx;
             expect((): void => {
                 AddCoinToPouchAction({ G, ctx } as MyFnContextWithMyPlayerID, 0);
-            }).toThrowError(`В массиве монет игрока с id '0' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
+            }).toThrowError(`В массиве монет игрока с id '0' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}'.`);
         });
     it(`shouldn't add undefined coin to pouch (multiplayer=false) and must throw Error`,
         (): void => {
@@ -570,7 +570,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -582,7 +582,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             null,
                         ],
                         handCoins: [] as PublicPlayerCoinType[],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
                 logData: [],
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -607,7 +607,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             {},
                             null,
                         ],
-                    } as IPlayer,
+                    } as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -618,7 +618,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             {},
                             null,
                         ],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
                 logData: [],
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -635,7 +635,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -649,7 +649,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         handCoins: [
                             null,
                         ],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
                 logData: [],
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -676,7 +676,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         handCoins: [
                             null,
                         ],
-                    } as IPlayer,
+                    } as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -687,7 +687,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             {},
                             null,
                         ],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
                 logData: [],
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -704,7 +704,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -718,7 +718,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         handCoins: [
                             {},
                         ],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
                 logData: [],
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode` | `logData`>,
@@ -740,7 +740,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Dwarf_Card,
+                                type: CardTypeRusNames.DwarfPlayerCard,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -751,7 +751,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                             playerId: `0`,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             discardCardsDeck: [],
             logData: [],
@@ -762,16 +762,16 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardType[],
+                        warrior: [] as PlayerBoardCardType[],
                     },
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             discardCardsDeck: [
                 {
-                    type: CardTypeRusNames.Dwarf_Card,
+                    type: CardTypeRusNames.DwarfCard,
                     name: `Test`,
-                    suit: SuitNames.warrior,
+                    playerSuit: SuitNames.warrior,
                 },
             ] as DwarfDeckCardType[],
             logData: [
@@ -790,7 +790,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Mercenary_Player_Card,
+                                type: CardTypeRusNames.MercenaryPlayerCard,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -801,7 +801,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                             playerId: `0`,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             discardCampCardsDeck: [],
             logData: [],
@@ -812,14 +812,14 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     cards: {
-                        warrior: [] as PlayerCardType[],
+                        warrior: [] as PlayerBoardCardType[],
                     },
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             discardCampCardsDeck: [
                 {
-                    type: CardTypeRusNames.Mercenary_Player_Card,
+                    type: CardTypeRusNames.MercenaryPlayerCard,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -841,15 +841,15 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                         cards: {
                             warrior: [
                                 {
-                                    type: CardTypeRusNames.Dwarf_Card,
+                                    type: CardTypeRusNames.DwarfPlayerCard,
                                 },
                             ],
                         },
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers`>;
             expect((): void => {
                 DiscardSuitCardAction({ G, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-            }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.Hero_Card}'.`);
+            }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.HeroCard}'.`);
         });
 });

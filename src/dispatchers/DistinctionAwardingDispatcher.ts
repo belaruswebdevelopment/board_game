@@ -1,6 +1,6 @@
 import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDistinctionAwarding, MinerDistinctionAwarding, WarriorDistinctionAwarding } from "../helpers/DistinctionAwardingHelpers";
 import { DistinctionAwardingFunctionNames } from "../typescript/enums";
-import type { Action, IDistinctionAwardingFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { Action, DistinctionAwardingFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению преимущества по фракции дворфов.</h3>
@@ -15,7 +15,7 @@ import type { Action, IDistinctionAwardingFunction, MyFnContextWithMyPlayerID } 
  */
 export const StartDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     action: Action<DistinctionAwardingFunctionNames>): number => {
-    const actionDispatcher: IDistinctionAwardingFunction =
+    const actionDispatcher: DistinctionAwardingFunction =
         DistinctionAwardingDispatcherSwitcher(action.name);
     return actionDispatcher?.({ G, ctx, myPlayerID, ...rest });
 };
@@ -31,8 +31,8 @@ export const StartDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
 * @returns Действие.
 */
 const DistinctionAwardingDispatcherSwitcher = (actionName: DistinctionAwardingFunctionNames):
-    IDistinctionAwardingFunction => {
-    let action: IDistinctionAwardingFunction,
+    DistinctionAwardingFunction => {
+    let action: DistinctionAwardingFunction,
         _exhaustiveCheck: never;
     switch (actionName) {
         case DistinctionAwardingFunctionNames.BlacksmithDistinctionAwarding:

@@ -11,7 +11,7 @@ const Aegur = {
     name: HeroNames.Aegur,
     description: HeroDescriptionNames.Aegur,
     game: GameNames.Basic,
-    suit: SuitNames.blacksmith,
+    playerSuit: SuitNames.blacksmith,
     rank: 2,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -52,7 +52,7 @@ const Aral = {
     name: HeroNames.Aral,
     description: HeroDescriptionNames.Aral,
     game: GameNames.Basic,
-    suit: SuitNames.hunter,
+    playerSuit: SuitNames.hunter,
     rank: 2,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -85,7 +85,7 @@ const Bonfur = {
     name: HeroNames.Bonfur,
     description: HeroDescriptionNames.Bonfur,
     game: GameNames.Basic,
-    suit: SuitNames.blacksmith,
+    playerSuit: SuitNames.blacksmith,
     rank: 3,
     pickValidators: {
         discardCard: {
@@ -107,9 +107,9 @@ const Bonfur = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Crovax_The_Doppelganger = {
-    name: HeroNames.Crovax_The_Doppelganger,
-    description: HeroDescriptionNames.Crovax_The_Doppelganger,
+const CrovaxTheDoppelganger = {
+    name: HeroNames.CrovaxTheDoppelganger,
+    description: HeroDescriptionNames.CrovaxTheDoppelganger,
     game: GameNames.Thingvellir,
     points: 25,
     pickValidators: {
@@ -136,7 +136,7 @@ const Dagda = {
     name: HeroNames.Dagda,
     description: HeroDescriptionNames.Dagda,
     game: GameNames.Basic,
-    suit: SuitNames.hunter,
+    playerSuit: SuitNames.hunter,
     rank: 3,
     pickValidators: {
         discardCard: {
@@ -159,9 +159,9 @@ const Dagda = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Aesir = {
-    name: HeroNames.Dwerg_Aesir,
-    description: HeroDescriptionNames.Dwerg_Aesir,
+const DwergAesir = {
+    name: HeroNames.DwergAesir,
+    description: HeroDescriptionNames.DwergAesir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -175,9 +175,9 @@ const Dwerg_Aesir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Bergelmir = {
-    name: HeroNames.Dwerg_Bergelmir,
-    description: HeroDescriptionNames.Dwerg_Bergelmir,
+const DwergBergelmir = {
+    name: HeroNames.DwergBergelmir,
+    description: HeroDescriptionNames.DwergBergelmir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -191,9 +191,9 @@ const Dwerg_Bergelmir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Jungir = {
-    name: HeroNames.Dwerg_Jungir,
-    description: HeroDescriptionNames.Dwerg_Jungir,
+const DwergJungir = {
+    name: HeroNames.DwergJungir,
+    description: HeroDescriptionNames.DwergJungir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -207,9 +207,9 @@ const Dwerg_Jungir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Sigmir = {
-    name: HeroNames.Dwerg_Sigmir,
-    description: HeroDescriptionNames.Dwerg_Sigmir,
+const DwergSigmir = {
+    name: HeroNames.DwergSigmir,
+    description: HeroDescriptionNames.DwergSigmir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -223,9 +223,9 @@ const Dwerg_Sigmir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Ymir = {
-    name: HeroNames.Dwerg_Ymir,
-    description: HeroDescriptionNames.Dwerg_Ymir,
+const DwergYmir = {
+    name: HeroNames.DwergYmir,
+    description: HeroDescriptionNames.DwergYmir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -292,7 +292,7 @@ const Hourya = {
     name: HeroNames.Hourya,
     description: HeroDescriptionNames.Hourya,
     game: GameNames.Basic,
-    suit: SuitNames.explorer,
+    playerSuit: SuitNames.explorer,
     rank: 1,
     points: 20,
     pickValidators: {
@@ -319,7 +319,7 @@ const Idunn = {
     name: HeroNames.Idunn,
     description: HeroDescriptionNames.Idunn,
     game: GameNames.Basic,
-    suit: SuitNames.explorer,
+    playerSuit: SuitNames.explorer,
     rank: 1,
     points: 7,
     scoringRule: {
@@ -378,7 +378,7 @@ const Kraal = {
     name: HeroNames.Kraal,
     description: HeroDescriptionNames.Kraal,
     game: GameNames.Basic,
-    suit: SuitNames.warrior,
+    playerSuit: SuitNames.warrior,
     rank: 2,
     points: 7,
     scoringRule: {
@@ -397,7 +397,7 @@ const Lokdur = {
     name: HeroNames.Lokdur,
     description: HeroDescriptionNames.Lokdur,
     game: GameNames.Basic,
-    suit: SuitNames.miner,
+    playerSuit: SuitNames.miner,
     rank: 1,
     points: 3,
     scoringRule: {
@@ -453,7 +453,7 @@ const Tarah = {
     name: HeroNames.Tarah,
     description: HeroDescriptionNames.Tarah,
     game: GameNames.Basic,
-    suit: SuitNames.warrior,
+    playerSuit: SuitNames.warrior,
     rank: 1,
     points: 14,
     scoringRule: {
@@ -560,7 +560,7 @@ const Zoral = {
     name: HeroNames.Zoral,
     description: HeroDescriptionNames.Zoral,
     game: GameNames.Basic,
-    suit: SuitNames.miner,
+    playerSuit: SuitNames.miner,
     rank: 3,
     points: 1,
     scoringRule: {
@@ -587,18 +587,18 @@ export const heroesConfig = {
     Hourya,
     Idunn,
     Astrid,
-    Dwerg_Aesir,
-    Dwerg_Bergelmir,
-    Dwerg_Jungir,
-    Dwerg_Sigmir,
-    Dwerg_Ymir,
+    DwergAesir,
+    DwergBergelmir,
+    DwergJungir,
+    DwergSigmir,
+    DwergYmir,
     Grid,
     Skaa,
     Thrud,
     Uline,
     Ylud,
     Jarika,
-    Crovax_The_Doppelganger,
+    CrovaxTheDoppelganger,
     Andumia,
     Holda,
     Khrad,
@@ -613,11 +613,11 @@ export const heroesConfig = {
  * </ol>
  */
 export const soloGameHeroesForBotConfig = {
-    Dwerg_Aesir,
-    Dwerg_Bergelmir,
-    Dwerg_Jungir,
-    Dwerg_Sigmir,
-    Dwerg_Ymir,
+    DwergAesir,
+    DwergBergelmir,
+    DwergJungir,
+    DwergSigmir,
+    DwergYmir,
 };
 /**
  * <h3>Конфиг героев для выбора игроком в соло игре.</h3>
@@ -690,11 +690,11 @@ export const soloGameAndvariHardStrategyHeroesConfig = {
  */
 export const soloGameAndvariHeroesForPlayersConfig = {
     Astrid,
-    Dwerg_Aesir,
-    Dwerg_Bergelmir,
-    Dwerg_Jungir,
-    Dwerg_Sigmir,
-    Dwerg_Ymir,
+    DwergAesir,
+    DwergBergelmir,
+    DwergJungir,
+    DwergSigmir,
+    DwergYmir,
     Grid,
     Skaa,
     Thrud,

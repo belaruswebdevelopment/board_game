@@ -1,5 +1,5 @@
 import { LogTypeNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, FnContext, ILogData } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, FnContext, LogData } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -15,7 +15,7 @@ export const DrawLogData = ({ G }: FnContext): CanBeNullType<JSX.Element> => {
     if (G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = G.logData.length - 1; i >= 0; i--) {
-            const log: CanBeUndefType<ILogData> = G.logData[i];
+            const log: CanBeUndefType<LogData> = G.logData[i];
             if (log !== undefined) {
                 let className: string,
                     _exhaustiveCheck: never;

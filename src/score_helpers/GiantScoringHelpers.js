@@ -39,7 +39,7 @@ export const GymirScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     }
     const gymirCard = player.mythologicalCreatureCards.find((card) => card.name === GiantNames.Gymir);
     if (gymirCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Gymir}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.GiantCard}' с названием '${GiantNames.Gymir}'.`);
     }
     const capturedGymirCard = gymirCard.capturedCard;
     if (capturedGymirCard === null) {
@@ -67,7 +67,7 @@ export const SurtScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     }
     const surtCard = player.mythologicalCreatureCards.find((card) => card.name === GiantNames.Surt);
     if (surtCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Surt}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.GiantCard}' с названием '${GiantNames.Surt}'.`);
     }
     const capturedSurtCard = surtCard.capturedCard;
     if (capturedSurtCard === null) {

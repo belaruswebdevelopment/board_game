@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { CardTypeRusNames, SuitNames } from "./typescript/enums";
-import type { CanBeUndefType, CreateDwarfCardFromData, DwarfCard, IPlayersNumberTierCardData, PointsType, PointsValuesType } from "./typescript/interfaces";
+import type { CanBeUndefType, CreateDwarfCardFromData, CreateDwarfPlayerCardFromData, DwarfCard, DwarfPlayerCard, PlayersNumberTierCardData, PointsType, PointsValuesType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -12,7 +12,7 @@ import type { CanBeUndefType, CreateDwarfCardFromData, DwarfCard, IPlayersNumber
  * @param data Данные для создания карт.
  * @returns Все карты дворфов.
  */
-export const BuildDwarfCards = (data: IPlayersNumberTierCardData): DwarfCard[] => {
+export const BuildDwarfCards = (data: PlayersNumberTierCardData): DwarfCard[] => {
     const cards: DwarfCard[] = [];
     let suit: SuitNames;
     for (suit in suitsConfig) {
@@ -34,7 +34,7 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): DwarfCard[] =
                 currentPoints = cardPoints;
             }
             cards.push(CreateDwarfCard({
-                suit: suitsConfig[suit].suit,
+                playerSuit: suitsConfig[suit].suit,
                 points: currentPoints,
                 name: `(фракция: ${suitsConfig[suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
             }));
@@ -44,29 +44,57 @@ export const BuildDwarfCards = (data: IPlayersNumberTierCardData): DwarfCard[] =
 };
 
 /**
- * <h3>Создание карты.</h3>
+ * <h3>Создание карты дворфа.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт при инициализации игры.</li>
+ * <li>Происходит при создании всех карт дворфов при инициализации игры.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param name Название.
+ * @param playerSuit Название фракции дворфов.
+ * @param points Очки.
+ * @param rank Шевроны.
+ * @returns Карта дворфа.
+ */
+export const CreateDwarfCard = ({
+    type = CardTypeRusNames.DwarfCard,
+    name,
+    playerSuit,
+    points = null,
+    rank = 1,
+}: CreateDwarfCardFromData): DwarfCard => ({
+    type,
+    name,
+    playerSuit,
+    points,
+    rank,
+});
+
+/**
+ * <h3>Создание карты дворфа на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании конкретной карты дворфа на поле игрока.</li>
  * </ol>
  *
  * @param type Тип.
  * @param name Название.
  * @param suit Название фракции дворфов.
- * @param rank Шевроны.
  * @param points Очки.
- * @returns Карта дворфа.
+ * @param rank Шевроны.
+ * @returns Карта дворфа на поле игрока.
  */
-export const CreateDwarfCard = ({
-    type = CardTypeRusNames.Dwarf_Card,
+export const CreateDwarfPlayerCard = ({
+    type = CardTypeRusNames.DwarfPlayerCard,
     name,
     suit,
-    rank = 1,
     points = null,
-}: CreateDwarfCardFromData): DwarfCard => ({
+    rank = 1,
+}: CreateDwarfPlayerCardFromData): DwarfPlayerCard => ({
     type,
     name,
     suit,
-    rank,
     points,
+    rank,
 });

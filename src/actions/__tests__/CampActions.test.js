@@ -553,7 +553,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
         };
         expect(() => {
             AddCoinToPouchAction({ G, ctx }, 0);
-        }).toThrowError(`В массиве монет игрока с id '0' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
+        }).toThrowError(`В массиве монет игрока с id '0' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}'.`);
     });
     it(`shouldn't add undefined coin to pouch (multiplayer=false) and must throw Error`, () => {
         const G = {
@@ -720,7 +720,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Dwarf_Card,
+                                type: CardTypeRusNames.DwarfPlayerCard,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -749,9 +749,9 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
             discardCardsDeck: [
                 {
-                    type: CardTypeRusNames.Dwarf_Card,
+                    type: CardTypeRusNames.DwarfCard,
                     name: `Test`,
-                    suit: SuitNames.warrior,
+                    playerSuit: SuitNames.warrior,
                 },
             ],
             logData: [
@@ -770,7 +770,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Mercenary_Player_Card,
+                                type: CardTypeRusNames.MercenaryPlayerCard,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -799,7 +799,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
             discardCampCardsDeck: [
                 {
-                    type: CardTypeRusNames.Mercenary_Player_Card,
+                    type: CardTypeRusNames.MercenaryPlayerCard,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -820,7 +820,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Dwarf_Card,
+                                type: CardTypeRusNames.DwarfPlayerCard,
                             },
                         ],
                     },
@@ -829,7 +829,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
         };
         expect(() => {
             DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.Hero_Card}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.HeroCard}'.`);
     });
 });
 //# sourceMappingURL=CampActions.test.js.map

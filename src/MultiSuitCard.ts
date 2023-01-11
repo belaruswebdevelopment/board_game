@@ -35,21 +35,30 @@ export const BuildMultiSuitCards = (configOptions: GameNamesKeyofTypeofType[]): 
  *
  * @param type Тип.
  * @param name Название.
+ * @param playerSuit Название фракции дворфов.
+ * @param rank Шевроны.
+ * @param points Очки.
  * @returns Мультифракционная карта.
  */
 const CreateMultiSuitCard = ({
-    type = CardTypeRusNames.Multi_Suit_Card,
+    type = CardTypeRusNames.MultiSuitCard,
     name,
+    playerSuit = null,
+    rank = null,
+    points = null,
 }: CreateMultiSuitCardFromData): MultiSuitCard => ({
     type,
     name,
+    playerSuit,
+    rank,
+    points,
 });
 
 /**
  * <h3>Создание мультифракционной карты на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при размещении мультифракционной карты на поле игрока.</li>
+ * <li>Происходит при создании конкретной мультифракционной карты на поле игрока.</li>
  * </ol>
  *
  * @param type Тип.
@@ -60,7 +69,7 @@ const CreateMultiSuitCard = ({
  * @returns Мультифракционная карта на поле игрока.
  */
 export const CreateMultiSuitPlayerCard = ({
-    type = CardTypeRusNames.Multi_Suit_Player_Card,
+    type = CardTypeRusNames.MultiSuitPlayerCard,
     name,
     suit,
     rank = 1,

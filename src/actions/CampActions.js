@@ -1,19 +1,18 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { AllStackData } from "../data/StackData";
-import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
-import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
+import { AddAnyCardToPlayerActions } from "../helpers/CardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards, RemoveCardsFromCampAndAddIfNeeded } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CardTypeRusNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PhaseNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CardTypeRusNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты лагеря Vidofnir Vedrfolnir и наличии героя Улина.</li>
+ * <li>При выборе карты артефакта Vidofnir Vedrfolnir и наличии героя Улина.</li>
  * </ol>
  *
  * @param context
@@ -30,7 +29,7 @@ export const AddCoinToPouchAction = ({ G, ctx, myPlayerID, ...rest }, coinId) =>
     }
     const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
     if (tempId === -1) {
-        throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
+        throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}'.`);
     }
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
@@ -64,7 +63,7 @@ export const AddCoinToPouchAction = ({ G, ctx, myPlayerID, ...rest }, coinId) =>
  * <h3>Действия, связанные с выбором значения улучшения монеты при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты лагеря Vidofnir Vedrfolnir и наличии героя Улина.</li>
+ * <li>При выборе карты артефакта Vidofnir Vedrfolnir и наличии героя Улина.</li>
  * </ol>
  *
  * @param context
@@ -100,7 +99,7 @@ export const DiscardSuitCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) =
     }
     const discardedCard = RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID, ...rest }, SuitNames.warrior, cardId);
     DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${CardTypeRusNames.Artefact_Card}' '${ArtefactNames.Hofud}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${CardTypeRusNames.ArtefactCard}' '${ArtefactNames.Hofud}'.`);
     player.stack = [];
 };
 /**
@@ -116,23 +115,12 @@ export const DiscardSuitCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) =
  * @returns
  */
 export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) => {
-    var _a;
     const campCard = G.camp[cardId];
     if (campCard === null) {
         throw new Error(`Не существует кликнутая карта лагеря с id '${cardId}'.`);
     }
     RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, cardId, [null]);
-    AddCampCardToCards({ G, ctx, myPlayerID, ...rest }, campCard);
-    if (campCard.type === CardTypeRusNames.Artefact_Card) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_a = campCard.stack) === null || _a === void 0 ? void 0 : _a.player, campCard);
-        StartAutoAction({ G, ctx, myPlayerID, ...rest }, campCard.actions);
-    }
-    if (campCard.type === CardTypeRusNames.Mercenary_Card && ctx.phase === PhaseNames.EnlistmentMercenaries) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeEnlistmentMercenaries(campCard)]);
-    }
-    if (G.odroerirTheMythicCauldron) {
-        AddCoinOnOdroerirTheMythicCauldronCampCard({ G, ctx, ...rest });
-    }
+    AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, campCard);
 };
 /**
  * <h3>Действия, связанные с улучшением монеты способности артефакта Vidofnir Vedrfolnir.</h3>

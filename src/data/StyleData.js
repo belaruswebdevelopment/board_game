@@ -32,7 +32,7 @@ const tavernsPath = `url(/img/taverns/Taverns.png)`;
  * <li>Используется при отображении всех картинок в игре.</li>
  * </ol>
  */
-export const Styles = {
+export const ALlStyles = {
     Camp: () => ({
         background: `${campCardsPath}.png) no-repeat 0px 3px / 24px 18px`,
     }),
@@ -45,7 +45,7 @@ export const Styles = {
                 return {
                     background: `${campCardsPath}0.png) no-repeat 0px 0px / 128px 144px`,
                 };
-            case ArtefactNames.Fafnir_Baleygr:
+            case ArtefactNames.FafnirBaleygr:
                 return {
                     background: `${campCardsPath}0.png) no-repeat -32px 0px / 128px 144px`,
                 };
@@ -61,7 +61,7 @@ export const Styles = {
                 return {
                     background: `${campCardsPath}0.png) no-repeat 0px -48px / 128px 144px`,
                 };
-            case ArtefactNames.Vidofnir_Vedrfolnir:
+            case ArtefactNames.VidofnirVedrfolnir:
                 return {
                     background: `${campCardsPath}0.png) no-repeat -32px -48px / 128px 144px`,
                 };
@@ -113,7 +113,7 @@ export const Styles = {
                 return {
                     background: `${campCardsPath}1.png) no-repeat -32px -48px / 128px 144px`,
                 };
-            case ArtefactNames.Odroerir_The_Mythic_Cauldron:
+            case ArtefactNames.OdroerirTheMythicCauldron:
                 return {
                     background: `${promosPath} no-repeat -39px -4px / 76px 58px`,
                 };
@@ -356,23 +356,23 @@ export const Styles = {
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -96px -96px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Bergelmir:
+            case HeroNames.DwergBergelmir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat 0px 0px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Jungir:
+            case HeroNames.DwergJungir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -64px 0px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Aesir:
+            case HeroNames.DwergAesir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -64px -48px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Ymir:
+            case HeroNames.DwergYmir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -32px -96px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Sigmir:
+            case HeroNames.DwergSigmir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -64px -96px / 288px 144px`,
                 };
@@ -424,7 +424,7 @@ export const Styles = {
                 return {
                     background: `${heroesThingvellirPath}heroes.png) no-repeat -96px -50px / 128px 100px`,
                 };
-            case HeroNames.Crovax_The_Doppelganger:
+            case HeroNames.CrovaxTheDoppelganger:
                 return {
                     background: `${promosPath} no-repeat -4px -4px / 76px 58px`,
                 };

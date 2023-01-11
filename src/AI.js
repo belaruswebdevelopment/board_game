@@ -283,9 +283,9 @@ export const iterations = (G, ctx, playerID) => {
             }
             const deck0 = G.secret.decks[0];
             if (deck0.length > 18) {
-                if (tavernCard.type === CardTypeRusNames.Dwarf_Card) {
-                    if (CompareTavernCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
-                        && currentTavern.some((card) => CompareTavernCards(card, G.averageCards[tavernCard.suit]) > -1)) {
+                if (tavernCard.type === CardTypeRusNames.DwarfCard) {
+                    if (CompareTavernCards(tavernCard, G.averageCards[tavernCard.playerSuit]) === -1
+                        && currentTavern.some((card) => CompareTavernCards(card, G.averageCards[tavernCard.playerSuit]) > -1)) {
                         continue;
                     }
                 }
@@ -321,11 +321,10 @@ export const objectives = (G, ctx, playerID) => ({
         weight: -100.0,
     },
     // TODO Move same logic in one func?!
+    // TODO Add PlaceCoinsUline too!?
     /* isWeaker: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PlaceCoins) {
-                return false;
-            }
+            if (ctx.phase === Phases.PlaceCoins) {
             const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -352,15 +351,14 @@ export const objectives = (G, ctx, playerID) => ({
             if (totalScoreCurPlayer < top2 && top2 < top1) {
                 return totalScoreCurPlayer >= Math.floor(0.85 * top1);
             }
+        }
             return false;
         },
         weight: 0.01,
     }, */
     /* isSecond: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PlaceCoins) {
-                return false;
-            }
+            if (ctx.phase === Phases.PlaceCoins) {
             const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -387,15 +385,14 @@ export const objectives = (G, ctx, playerID) => ({
             if (totalScoreCurPlayer === top2 && top2 < top1) {
                 return totalScoreCurPlayer >= Math.floor(0.90 * top1);
             }
+        }
             return false;
         },
         weight: 0.1,
     }, */
     /* isEqual: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PlaceCoins) {
-                return false;
-            }
+            if (ctx.phase === Phases.PlaceCoins) {
             const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -422,39 +419,39 @@ export const objectives = (G, ctx, playerID) => ({
             if (totalScoreCurPlayer < top2 && top2 === top1) {
                 return totalScoreCurPlayer >= Math.floor(0.90 * top1);
             }
+        }
             return false;
         },
         weight: 0.1,
     }, */
     isFirst: {
         checker: (G, ctx) => {
-            if (ctx.phase !== PhaseNames.TavernsResolution) {
-                return false;
-            }
-            const tavern0 = G.taverns[0];
-            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
-                return false;
-            }
-            if (tavern0.some((card) => card === null)) {
-                return false;
-            }
-            const totalScore = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
-                const player = G.publicPlayers[i];
-                if (player === undefined) {
-                    return ThrowMyError({ G, ctx }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+            if (ctx.phase === PhaseNames.TavernsResolution) {
+                const tavern0 = G.taverns[0];
+                if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+                    return false;
                 }
-                totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) }));
-            }
-            const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
-            if (totalScoreCurPlayer === undefined) {
-                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
-            }
-            if (totalScoreCurPlayer === top1) {
-                if (top2 === undefined) {
-                    throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                if (tavern0.some((card) => card === null)) {
+                    return false;
                 }
-                return totalScoreCurPlayer >= Math.floor(1.05 * top2);
+                const totalScore = [];
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    const player = G.publicPlayers[i];
+                    if (player === undefined) {
+                        return ThrowMyError({ G, ctx }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    }
+                    totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) }));
+                }
+                const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
+                if (totalScoreCurPlayer === undefined) {
+                    throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
+                }
+                if (totalScoreCurPlayer === top1) {
+                    if (top2 === undefined) {
+                        throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                    }
+                    return totalScoreCurPlayer >= Math.floor(1.05 * top2);
+                }
             }
             return false;
         },
@@ -462,33 +459,32 @@ export const objectives = (G, ctx, playerID) => ({
     },
     isStronger: {
         checker: (G, ctx) => {
-            if (ctx.phase !== PhaseNames.TavernsResolution) {
-                return false;
-            }
-            const tavern0 = G.taverns[0];
-            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
-                return false;
-            }
-            if (tavern0.some((card) => card === null)) {
-                return false;
-            }
-            const totalScore = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
-                const player = G.publicPlayers[i];
-                if (player === undefined) {
-                    return ThrowMyError({ G, ctx }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+            if (ctx.phase === PhaseNames.TavernsResolution) {
+                const tavern0 = G.taverns[0];
+                if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+                    return false;
                 }
-                totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) }));
-            }
-            const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
-            if (totalScoreCurPlayer === undefined) {
-                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
-            }
-            if (totalScoreCurPlayer === top1) {
-                if (top2 === undefined) {
-                    throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                if (tavern0.some((card) => card === null)) {
+                    return false;
                 }
-                return totalScoreCurPlayer >= Math.floor(1.10 * top2);
+                const totalScore = [];
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    const player = G.publicPlayers[i];
+                    if (player === undefined) {
+                        return ThrowMyError({ G, ctx }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    }
+                    totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) }));
+                }
+                const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
+                if (totalScoreCurPlayer === undefined) {
+                    throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
+                }
+                if (totalScoreCurPlayer === top1) {
+                    if (top2 === undefined) {
+                        throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                    }
+                    return totalScoreCurPlayer >= Math.floor(1.10 * top2);
+                }
             }
             return false;
         },

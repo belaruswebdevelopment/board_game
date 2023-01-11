@@ -12,7 +12,7 @@ import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, GodNames, H
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты лагеря артефакта Jarnglofi.</li>
+ * <li>При выборе карты артефакта Jarnglofi.</li>
  * </ol>
  *
  * @param context
@@ -43,7 +43,7 @@ export const FinishOdroerirTheMythicCauldronAction = ({ G }) => {
  * <h3>Старт действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты лагеря артефакта Hofud.</li>
+ * <li>При выборе карты артефакта Hofud.</li>
  * </ol>
  *
  * @param context
@@ -82,7 +82,7 @@ export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest
  * <h3>Действия, связанные со стартом способности артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При старте способности карты лагеря артефакта Vidofnir Vedrfolnir.</li>
+ * <li>При старте способности карты артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
  * @param context
@@ -157,7 +157,7 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) =
             stack = [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([2, 3])];
         }
         else {
-            throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '${coinsValue}' монет(ы).`);
+            throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '${coinsValue}' монет(ы).`);
         }
         AddActionsToStack({ G, ctx, myPlayerID, ...rest }, stack);
     }

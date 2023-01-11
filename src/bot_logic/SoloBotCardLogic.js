@@ -92,13 +92,13 @@ export const CheckSoloBotMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest
             if (tavernCard === null) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
-            if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+            if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
                 continue;
             }
-            if (tavernCard.suit === suit) {
+            if (tavernCard.playerSuit === suit) {
                 availableMoveArguments.push(moveArgument);
             }
-            else if (tavernCard.suit === thrudSuit) {
+            else if (tavernCard.playerSuit === thrudSuit) {
                 availableThrudArguments.push(moveArgument);
             }
         }
@@ -149,7 +149,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = ({ G, ctx, myPlayerID, .
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard, moveArgument);
         }
         if (tavernCard.points === null) {
@@ -204,13 +204,14 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = ({ G, 
             if (tavernCard === null) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
-            if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+            if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
                 continue;
             }
-            const cardSuit = thrudSuit && minLengthCount === 1 && thrudSuit === tavernCard.suit ? thrudSuit : tavernCard.suit;
-            if (availableSuitArguments.includes(cardSuit) && cardSuit === tavernCard.suit) {
+            const cardSuit = thrudSuit && minLengthCount === 1 && thrudSuit === tavernCard.playerSuit
+                ? thrudSuit : tavernCard.playerSuit;
+            if (availableSuitArguments.includes(cardSuit) && cardSuit === tavernCard.playerSuit) {
                 leastPresentArguments.push(moveArgument);
-                if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
+                if (tavernCard.points === null || tavernCard.playerSuit === SuitNames.miner) {
                     isNoPoints = true;
                 }
             }
@@ -252,7 +253,7 @@ export const CheckSoloBotMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }, moveA
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return moveArgument;
         }
     }

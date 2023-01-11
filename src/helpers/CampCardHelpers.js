@@ -1,16 +1,63 @@
-import { suitsConfig } from "../data/SuitData";
+import { CreateArtefactPlayerCampCard, CreateMercenaryPlayerCampCard } from "../Camp";
+import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CampBuffNames, CardTypeRusNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
-import { AddCardToPlayer } from "./CardHelpers";
 import { RemoveCoinFromMarket } from "./DiscardCoinHelpers";
-import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
+import { AddActionsToStack } from "./StackHelpers";
+/**
+ * <h3>Действия, связанные с добавлением карты лагеря артефакта в массив карт на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карты лагеря артефакта, добавляющейся на поле игрока.</li>
+ * </ol>
+ *
+ * @param context
+ * @param card Карта.
+ * @returns Карта артефакт на поле игрока.
+ */
+export const AddArtefactToPlayerCards = (card) => {
+    if (card.playerSuit !== null && card.rank !== null) {
+        return CreateArtefactPlayerCampCard({
+            name: card.name,
+            path: card.path,
+            description: card.description,
+            suit: card.playerSuit,
+            points: card.points,
+            rank: card.rank,
+        });
+    }
+    throw new Error(`Карта '${card.type}' '${card.name}' должна иметь параметры 'playerSuit' и 'rank'.`);
+};
+/**
+ * <h3>Действия, связанные с добавлением карты наёмника в массив карт на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карты наёмника, добавляющейся на поле игрока.</li>
+ * </ol>
+ *
+ * @param context
+ * @param card Карта.
+ * @returns Карта наёмник на поле игрока.
+ */
+export const AddMercenaryToPlayerCards = (card) => {
+    if (card.playerSuit !== null && card.rank !== null) {
+        return CreateMercenaryPlayerCampCard({
+            name: card.name,
+            path: card.path,
+            suit: card.playerSuit,
+            points: card.points,
+            rank: card.rank,
+        });
+    }
+    throw new Error(`Карта '${card.type}' '${card.name}' должна иметь параметры 'playerSuit' и 'rank'.`);
+};
 /**
  * <h3>Действия, связанные с добавлением карт лагеря в массив карт игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карт лагеря, добавляющихся на планшет игрока.</li>
+ * <li>При выборе карт лагеря, добавляющихся на поле игрока.</li>
  * </ol>
  *
  * @param context
@@ -30,16 +77,21 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime);
     }
-    if (card.type === CardTypeRusNames.Artefact_Player_Card) {
-        AddArtefactPlayerCardToPlayerCards({ G, ctx, myPlayerID, ...rest }, card);
-        CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
-    }
-    else {
+    if (!(card.type === CardTypeRusNames.MercenaryCard && card.playerSuit === null)) {
         AddCampCardToPlayerCampCards({ G, ctx, myPlayerID, ...rest }, card);
-        if (card.type === CardTypeRusNames.Artefact_Card) {
-            AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, card.buff);
+        if (G.odroerirTheMythicCauldron) {
+            AddCoinOnOdroerirTheMythicCauldronCampCard({ G, ctx, ...rest });
         }
+        if (card.type === CardTypeRusNames.ArtefactCard) {
+            AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, card.buff);
+            return AddArtefactToPlayerCards(card);
+        }
+        if (card.type === CardTypeRusNames.MercenaryCard && ctx.phase === PhaseNames.EnlistmentMercenaries) {
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeEnlistmentMercenaries(card)]);
+        }
+        return AddMercenaryToPlayerCards(card);
     }
+    return card;
 };
 /**
  * <h3>Добавляет взятую из лагеря карту в массив карт лагеря игрока.</h3>
@@ -49,7 +101,7 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
  * </ol>
  *
  * @param context
- * @param card Карта лагеря.
+ * @param card Карта.
  * @returns
  */
 const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
@@ -59,26 +111,6 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }, card) => 
     }
     player.campCards.push(card);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}'.`);
-};
-/**
- * <h3>Добавляет карту лагеря в конкретную фракцию игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при добавлении карты лагеря в конкретную фракцию игрока.</li>
- * </ol>
- *
- * @param context
- * @param card Карта лагеря.
- * @returns Добавлен ли артефакт на планшет игрока.
- */
-const AddArtefactPlayerCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, card) => {
-    const player = G.publicPlayers[Number(myPlayerID)];
-    if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
-    }
-    AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Игрок '${player.nickname}' выбрал карту лагеря '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
-    return true;
 };
 /**
  * <h3>Действия, связанные с выкладкой монет на артефакт Odroerir The Mythic Cauldron.</h3>

@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, ICoin, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, Coin, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -21,7 +21,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * @returns
  */
 export const ActivateTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -54,8 +54,8 @@ export const ActivateTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
 export const StartTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, isSoloBotEndRound = false):
     void => {
     // TODO For solo mode check coins openings
-    const privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)],
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -64,7 +64,7 @@ export const StartTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyP
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const tradingCoins: ICoin[] = [];
+    const tradingCoins: Coin[] = [];
     for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
         if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
             || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
@@ -128,18 +128,18 @@ export const StartTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyP
  * @param soloBotOnlyOneCoinTrading У соло бота доступна только 1 монета для обмена с рынка.
  * @returns
  */
-const Trading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tradingCoins: ICoin[],
+const Trading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tradingCoins: Coin[],
     soloBotOnlyOneCoinTrading = false): void => {
     const length: number = tradingCoins.length;
     if (!soloBotOnlyOneCoinTrading && length !== 2) {
         throw new Error(`В массиве обменных монет игрока с id '${myPlayerID}' должно быть ровно '2' монеты, а не '${length}'.`);
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const coinsValues: number[] = tradingCoins.map((coin: ICoin): number => coin.value),
+    const coinsValues: number[] = tradingCoins.map((coin: Coin): number => coin.value),
         coinsMinValue: number = Math.min(...coinsValues),
         coinsMaxValue: number = Math.max(...coinsValues);
     let upgradingCoinId: number,
@@ -152,7 +152,7 @@ const Trading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tra
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока`} '${player.nickname}'.`);
     }
     for (let i = 0; i < tradingCoins.length; i++) {
-        const tradingCoin: CanBeUndefType<ICoin> = tradingCoins[i];
+        const tradingCoin: CanBeUndefType<Coin> = tradingCoins[i];
         if (tradingCoin === undefined) {
             throw new Error(`В массиве обменных монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' отсутствует монета с id '${i}'.`);
         }
@@ -171,11 +171,11 @@ const Trading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tra
     if (!soloBotOnlyOneCoinTrading && coinMaxIndex === -1) {
         throw new Error(`В массиве обменных монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' не найдена максимальная монета с значением '${coinsMaxValue}'.`);
     }
-    const minTradingCoin: CanBeUndefType<ICoin> = tradingCoins[coinMinIndex];
+    const minTradingCoin: CanBeUndefType<Coin> = tradingCoins[coinMinIndex];
     if (minTradingCoin === undefined) {
         throw new Error(`В массиве обменных монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' отсутствует минимальная монета с id '${coinMinIndex}'.`);
     }
-    const maxTradingCoin: CanBeUndefType<ICoin> = tradingCoins[coinMaxIndex];
+    const maxTradingCoin: CanBeUndefType<Coin> = tradingCoins[coinMaxIndex];
     if (!soloBotOnlyOneCoinTrading && maxTradingCoin === undefined) {
         throw new Error(`В массиве обменных монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' отсутствует максимальная монета с id '${coinMaxIndex}'.`);
     }

@@ -6,7 +6,7 @@ import { RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelper
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, HeroCard, IPublicPlayer, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, HeroCard, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -24,14 +24,14 @@ export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoi
             // TODO Check it!
             return true;
         }
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         if (!player.stack.length) {
             const yludIndex: number =
-                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
+                Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number):
                     boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         HeroBuffNames.EndTier));
             if (G.tierToEnd !== 0 && yludIndex === -1) {
@@ -39,13 +39,13 @@ export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoi
             }
             let nextPhase = true;
             if (yludIndex !== -1) {
-                const yludPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[yludIndex];
+                const yludPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[yludIndex];
                 if (yludPlayer === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         yludIndex);
                 }
                 const index: number = Object.values(yludPlayer.cards).flat()
-                    .findIndex((card: PlayerCardType): boolean => card.name === HeroNames.Ylud);
+                    .findIndex((card: PlayerBoardCardType): boolean => card.name === HeroNames.Ylud);
                 if (index === -1) {
                     nextPhase = false;
                 }
@@ -70,12 +70,12 @@ export const CheckEndPlaceYludPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoi
 export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
     G.publicPlayersOrder = [];
     const yludIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
     if (yludIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф '${HeroBuffNames.EndTier}'.`);
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[yludIndex];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[yludIndex];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             yludIndex);
@@ -86,18 +86,18 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
         throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}'.`);
     }
     if (G.tierToEnd === 0) {
-        const cards: PlayerCardType[] = Object.values(player.cards).flat(),
+        const cards: PlayerBoardCardType[] = Object.values(player.cards).flat(),
             index: number =
-                cards.findIndex((card: PlayerCardType): boolean => card.name === HeroNames.Ylud);
+                cards.findIndex((card: PlayerBoardCardType): boolean => card.name === HeroNames.Ylud);
         if (index !== -1) {
-            const yludCard: CanBeUndefType<PlayerCardType> = cards[index];
+            const yludCard: CanBeUndefType<PlayerBoardCardType> = cards[index];
             if (yludCard === undefined) {
                 throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}' с id '${index}'.`);
             }
             const suit: CanBeNullType<SuitNames> = yludCard.suit;
             if (suit !== null) {
                 const yludCardIndex: number =
-                    player.cards[suit].findIndex((card: PlayerCardType): boolean =>
+                    player.cards[suit].findIndex((card: PlayerBoardCardType): boolean =>
                         card.name === HeroNames.Ylud);
                 RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID: String(yludIndex), ...rest }, suit,
                     yludCardIndex);

@@ -1,6 +1,6 @@
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CampBuffNames, GameModeNames, HeroBuffNames, PhaseNames } from "../typescript/enums";
-import type { CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeVoidType, FnContext, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость начала фазы 'Ставки Улина' или фазы 'Посещение таверн'.</h3>
@@ -14,7 +14,7 @@ import type { CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/inte
  */
 export const StartBidUlineOrTavernsResolutionPhase = ({ G, ctx, ...rest }: FnContext): PhaseNames => {
     const ulinePlayerIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 HeroBuffNames.EveryTurn));
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== -1) {
@@ -40,14 +40,14 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVo
     } else {
         if (G.expansions.Thingvellir.active) {
             const brisingamensBuffIndex: number =
-                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
+                Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number):
                     boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         CampBuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return PhaseNames.BrisingamensEndGame;
             }
             const mjollnirBuffIndex: number =
-                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number):
+                Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number):
                     boolean => CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                         CampBuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
@@ -71,7 +71,7 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVo
 export const StartEndTierPhaseOrEndGameLastActions = ({ G, ctx, ...rest }: FnContext):
     CanBeVoidType<PhaseNames> => {
     const yludIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));
     if (yludIndex !== -1) {
         return PhaseNames.PlaceYlud;

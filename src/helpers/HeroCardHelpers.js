@@ -1,56 +1,46 @@
-import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { CardTypeRusNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
 import { AddBuffToPlayer } from "./BuffHelpers";
-import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
-import { CheckIfRecruitedCardHasNotLeastRankOfChosenClass, CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
+import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при добавлении героя на планшет игрока.</li>
+ * <li>Происходит при добавлении героя.</li>
  * </ol>
  *
  * @param context
  * @param hero Герой.
  * @returns
  */
-export const AddHeroCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
-    if (hero.suit !== null && hero.rank !== null) {
-        const player = G.publicPlayers[Number(myPlayerID)];
-        if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
-        }
-        const heroCard = CreateHeroPlayerCard({
-            suit: hero.suit,
+const CreateHeroPlayerCardIfAvailableFromHeroCardData = (hero) => {
+    if (hero.playerSuit !== null && hero.rank !== null) {
+        return CreateHeroPlayerCard({
+            suit: hero.playerSuit,
             rank: hero.rank,
             points: hero.points,
-            type: CardTypeRusNames.Hero_Player_Card,
+            type: CardTypeRusNames.HeroPlayerCard,
             name: hero.name,
             description: hero.description,
         });
-        player.cards[hero.suit].push(heroCard);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
-        if (heroCard.name !== HeroNames.Thrud) {
-            CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, heroCard);
-        }
     }
+    return hero;
 };
 /**
- * <h3>Добавляет героя в массив героев игрока или соло бота.</h3>
+ * <h3>Добавляет карту героя в массив карт героев игрока или соло бота.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при добавлении героя на планшет игрока.</li>
- * <li>Происходит при добавлении героя на планшет соло бота.</li>
+ * <li>Происходит при добавлении карты героя игрока.</li>
+ * <li>Происходит при добавлении карты героя соло бота.</li>
  * </ol>
  *
  * @param context
- * @param hero Герой.
+ * @param hero Карта героя.
  * @returns
  */
-export const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
+const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
@@ -67,27 +57,20 @@ export const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }, he
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 /**
- * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>
+ * <h3>Действия, связанные с добавлением карты героя в массив карт игрока.</li>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
+ * <li>При выборе карты героя, добавляющейся в массив карт игрока.</li>
  * </ol>
  *
  * @param context
  * @param hero Карта героя.
- * @returns
+ * @returns Карта героя | карта героя на пол игрока.
  */
 export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }, hero) => {
     AddHeroCardToPlayerHeroCards({ G, ctx, myPlayerID, ...rest }, hero);
-    if (G.expansions.Idavoll.active) {
-        if (`suit` in hero && hero.suit !== null) {
-            if (CheckIfRecruitedCardHasNotLeastRankOfChosenClass({ G, ctx, myPlayerID, ...rest }, hero.suit)) {
-                CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest }, ValkyryBuffNames.CountPickedCardClassRankAmount);
-            }
-        }
-    }
-    AddHeroCardToPlayerCards({ G, ctx, myPlayerID, ...rest }, hero);
     AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, hero.buff);
+    return CreateHeroPlayerCardIfAvailableFromHeroCardData(hero);
 };
 /**
  * <h3>Действия, связанные с добавлением героев в массив карт соло бота.</li>

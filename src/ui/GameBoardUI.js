@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { CountMarketCoins } from "../Coin";
-import { Styles } from "../data/StyleData";
+import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
@@ -29,7 +29,7 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
             const campCard = G.camp[j];
             if (campCard === null) {
                 if (data !== undefined) {
-                    boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
+                    boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: ALlStyles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
                 }
             }
             else {
@@ -38,8 +38,8 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
                 }
                 let suit = null;
-                if (campCard.type === CardTypeRusNames.Artefact_Player_Card) {
-                    suit = campCard.suit;
+                if (campCard.type === CardTypeRusNames.ArtefactCard) {
+                    suit = campCard.playerSuit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
                     || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) ===
@@ -83,7 +83,7 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
     if (data !== undefined) {
         const tier = G.campDecksLength.length - G.tierToEnd + 1 > G.campDecksLength.length ?
             1 : G.campDecksLength.length - G.tierToEnd;
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: Styles.CampBack(tier), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDecksLength[G.campDecksLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDecksLength.length - G.tierToEnd === 0 ? `/` +
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: ALlStyles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: ALlStyles.CampBack(tier), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDecksLength[G.campDecksLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDecksLength.length - G.tierToEnd === 0 ? `/` +
                                     (G.campDecksLength[0] + G.campDecksLength[1]) : ``), " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
     else if (validatorName !== null) {
@@ -165,7 +165,7 @@ export const DrawDistinctions = ({ G, ctx, ...rest }, validatorName, data) => {
         }
     }
     if (data !== undefined) {
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), _jsx("span", { children: "Distinctions" })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: ALlStyles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), _jsx("span", { children: "Distinctions" })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
     else if (validatorName !== null) {
         return moveMainArgs;
@@ -198,7 +198,10 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }, validatorName, data) => 
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (card.type === CardTypeRusNames.Dwarf_Card) {
+        if (card.type === CardTypeRusNames.DwarfCard) {
+            suit = card.playerSuit;
+        }
+        else if (card.type === CardTypeRusNames.DwarfPlayerCard) {
             suit = card.suit;
         }
         if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.PickDiscardCard) {
@@ -219,7 +222,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }, validatorName, data) => 
         }
     }
     if (data !== undefined) {
-        return (_jsxs("table", { children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.CardBack(0), className: "bg-top-card-back-icon" }), _jsx("span", { style: Styles.CardBack(1), className: "bg-top-card-back-icon" }), _jsxs("span", { children: ["Discard cards (", G.discardCardsDeck.length, " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
+        return (_jsxs("table", { children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: ALlStyles.CardBack(0), className: "bg-top-card-back-icon" }), _jsx("span", { style: ALlStyles.CardBack(1), className: "bg-top-card-back-icon" }), _jsxs("span", { children: ["Discard cards (", G.discardCardsDeck.length, " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
     else if (validatorName !== null) {
         return moveMainArgs;
@@ -250,7 +253,7 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
-            const suit = hero.suit;
+            const suit = hero.playerSuit;
             if (hero.active
                 && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === CommonStageNames.ClickHeroCard) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -295,7 +298,7 @@ export const DrawHeroes = ({ G, ctx, ...rest }, validatorName, data) => {
         }
     }
     if (data !== undefined) {
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Heroes (", G.heroes.length, " cards)"] })] }), _jsx("tbody", { children: boardRows })] }));
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: ALlStyles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Heroes (", G.heroes.length, " cards)"] })] }), _jsx("tbody", { children: boardRows })] }));
     }
     else if (validatorName !== null) {
         return moveMainArgs;
@@ -352,7 +355,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
         }
     }
     if (data !== undefined) {
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Bot heroes (", G.heroesForSoloBot.length, " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, `Heroes row 0`) })] }));
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: ALlStyles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Bot heroes (", G.heroesForSoloBot.length, " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, `Heroes row 0`) })] }));
     }
     else if (validatorName !== null) {
         return moveMainArgs;
@@ -389,7 +392,7 @@ export const DrawMarketCoins = ({ G, ctx, ...rest }, data) => {
         }
         boardRows.push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
     }
-    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: Styles.Exchange(), className: "bg-top-market-coin-icon" }), "Market coins (", G.marketCoins.length, " coins)"] }) }), _jsx("tbody", { children: boardRows })] }));
+    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: ALlStyles.Exchange(), className: "bg-top-market-coin-icon" }), "Market coins (", G.marketCoins.length, " coins)"] }) }), _jsx("tbody", { children: boardRows })] }));
 };
 /**
  * <h3>Отрисовка профита от карт и героев.</h3>
@@ -457,7 +460,7 @@ export const DrawProfit = ({ G, ctx, ...rest }, data) => {
             throw new Error(`Не существует обязательный параметр 'drawProfit'.`);
             return _exhaustiveCheck;
     }
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), _jsx("span", { children: caption })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: ALlStyles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), _jsx("span", { children: caption })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
 /**
  * <h3>Отрисовка стратегий соло бота Андвари.</h3>
@@ -490,7 +493,7 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }, data) => {
         DrawSuit({ G, ctx, ...rest }, data, playerHeadersReserve, suit);
     }
     // TODO Add different colors or dividers for different strategies and draw their names!
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsx("span", { children: "Bot strategy" })] }), _jsxs("tbody", { children: [_jsx("tr", { children: playerHeadersGeneral }, `Strategy general`), _jsx("tr", { children: playerHeadersReserve }, `Strategy reserve`)] })] }));
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: ALlStyles.HeroBack(), className: "bg-top-hero-icon" }), _jsx("span", { children: "Bot strategy" })] }), _jsxs("tbody", { children: [_jsx("tr", { children: playerHeadersGeneral }, `Strategy general`), _jsx("tr", { children: playerHeadersReserve }, `Strategy reserve`)] })] }));
 };
 /**
  * <h3>Отрисовка карт таверн.</h3>
@@ -519,13 +522,13 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                 }
                 if (tavernCard === undefined || tavernCard === null) {
                     if (data !== undefined) {
-                        boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Tavern(t), className: "bg-tavern-icon" }) }, `${currentTavernConfig.name} ${j}`));
+                        boardCells.push(_jsx("td", { children: _jsx("span", { style: ALlStyles.Tavern(t), className: "bg-tavern-icon" }) }, `${currentTavernConfig.name} ${j}`));
                     }
                 }
                 else {
                     let suit = null;
-                    if (`suit` in tavernCard) {
-                        suit = tavernCard.suit;
+                    if (`playerSuit` in tavernCard) {
+                        suit = tavernCard.playerSuit;
                     }
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
@@ -605,7 +608,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                 }
             }
             if (data !== undefined) {
-                tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Tavern(t), className: "bg-top-tavern-icon" }), _jsx("b", { children: currentTavernConfig.name })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }, `Tavern ${currentTavernConfig.name} board`));
+                tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: ALlStyles.Tavern(t), className: "bg-top-tavern-icon" }), _jsx("b", { children: currentTavernConfig.name })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }, `Tavern ${currentTavernConfig.name} board`));
             }
         }
     }

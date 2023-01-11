@@ -60,10 +60,10 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
             if (tavernCard === null) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
-            if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+            if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
                 continue;
             }
-            if (tavernCard.suit === suit) {
+            if (tavernCard.playerSuit === suit) {
                 availableMoveArguments.push(moveArgument);
             }
         }
@@ -102,7 +102,7 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }, mo
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard, moveArgument);
         }
         if (tavernCard.points === null) {
@@ -153,10 +153,10 @@ const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             continue;
         }
-        if (suit === tavernCard.suit) {
+        if (suit === tavernCard.playerSuit) {
             strategyArguments.push(moveArgument);
         }
     }
@@ -252,7 +252,7 @@ export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }
         if (tavernCard === null) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return moveArgument;
         }
     }

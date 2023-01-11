@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinType, FnContext, IBuildCoinsOptions, ICoin, INumberValues } from "./typescript/interfaces";
+import type { BuildCoinsOptions, CanBeUndefType, Coin, CoinConfigArraysType, CoinConfigType, CreateCoinType, FnContext, NumberValues } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -13,8 +13,8 @@ import type { CanBeUndefType, CoinConfigArraysType, CoinConfigType, CreateCoinTy
  * @param options Опции создания монет.
  * @returns Массив всех монет.
  */
-export const BuildCoins = (coinConfig: CoinConfigArraysType, options: IBuildCoinsOptions): ICoin[] => {
-    const coins: ICoin[] = [];
+export const BuildCoins = (coinConfig: CoinConfigArraysType, options: BuildCoinsOptions): Coin[] => {
+    const coins: Coin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
         const config: CanBeUndefType<CoinConfigType> = coinConfig[i];
         if (config === undefined) {
@@ -49,7 +49,7 @@ export const BuildCoins = (coinConfig: CoinConfigArraysType, options: IBuildCoin
  * @param status Статус, который показывает нужно ли открыть или закрыть монету.
  * @returns
  */
-export const ChangeIsOpenedCoinStatus = (coin: ICoin, status: boolean): void => {
+export const ChangeIsOpenedCoinStatus = (coin: Coin, status: boolean): void => {
     if (coin.isOpened === status) {
         throw new Error(`Монета уже ${status ? `открыта` : `закрыта`}.`);
     }
@@ -66,15 +66,15 @@ export const ChangeIsOpenedCoinStatus = (coin: ICoin, status: boolean): void => 
  * @param context
  * @returns Количество всех монет на рынке (с повторами).
  */
-export const CountMarketCoins = ({ G }: FnContext): INumberValues => {
-    const repeated: INumberValues = {};
+export const CountMarketCoins = ({ G }: FnContext): NumberValues => {
+    const repeated: NumberValues = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
-        const marketCoin: CanBeUndefType<ICoin> = G.marketCoinsUnique[i];
+        const marketCoin: CanBeUndefType<Coin> = G.marketCoinsUnique[i];
         if (marketCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
         }
         const temp: number = marketCoin.value;
-        repeated[temp] = G.marketCoins.filter((coin: ICoin): boolean => coin.value === temp).length;
+        repeated[temp] = G.marketCoins.filter((coin: Coin): boolean => coin.value === temp).length;
     }
     return repeated;
 };
@@ -98,7 +98,7 @@ export const CreateCoin = ({
     isOpened = false,
     isTriggerTrading = false,
     value,
-}: CreateCoinType): ICoin => ({
+}: CreateCoinType): Coin => ({
     isInitial,
     isOpened,
     isTriggerTrading,

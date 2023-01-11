@@ -15,10 +15,10 @@ export const BuildSpecialCards = () => {
     for (cardName in specialCardsConfig) {
         const card = specialCardsConfig[cardName];
         cards.push(CreateSpecialCard({
-            suit: card.suit,
-            rank: card.rank,
-            points: card.points,
             name: card.name,
+            playerSuit: card.playerSuit,
+            points: card.points,
+            rank: card.rank,
         }));
     }
     return cards;
@@ -32,16 +32,37 @@ export const BuildSpecialCards = () => {
  *
  * @param type Тип.
  * @param name Название.
- * @param suit Название фракции дворфов.
- * @param rank Шевроны.
+ * @param playerSuit Название фракции дворфов.
  * @param points Очки.
- * @returns Карта дворфа.
+ * @param rank Шевроны.
+ * @returns Особая карта.
  */
-const CreateSpecialCard = ({ type = CardTypeRusNames.Special_Card, name, suit, rank, points, }) => ({
+const CreateSpecialCard = ({ type = CardTypeRusNames.SpecialCard, name, playerSuit, points = null, rank = 1, }) => ({
+    type,
+    name,
+    playerSuit,
+    points,
+    rank,
+});
+/**
+ * <h3>Создание особой карты на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании конкретной особой карты на поле игрока.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param name Название.
+ * @param suit Название фракции дворфов.
+ * @param points Очки.
+ * @param rank Шевроны.
+ * @returns Особая карта на поле игрока.
+ */
+export const CreateSpecialCardPlayerCard = ({ type = CardTypeRusNames.SpecialPlayerCard, name, suit, points = null, rank = 1, }) => ({
     type,
     name,
     suit,
-    rank,
     points,
+    rank,
 });
 //# sourceMappingURL=SpecialCard.js.map

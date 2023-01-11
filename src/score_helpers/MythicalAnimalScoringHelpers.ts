@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { IMythicalAnimalScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { MyFnContextWithMyPlayerID, MythicalAnimalScoringFunction } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -14,7 +14,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param value Значение.
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = ({ G, ctx, ...rest }:
+export const BasicMythicalAnimalScoring: MythicalAnimalScoringFunction = ({ G, ctx, ...rest }:
     MyFnContextWithMyPlayerID, value?: number): number => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
@@ -32,7 +32,7 @@ export const BasicMythicalAnimalScoring: IMythicalAnimalScoringFunction = ({ G, 
  * @param context
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const GarmScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
+export const GarmScoring: MythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): number =>
     GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.explorer, 1);
 
@@ -46,6 +46,6 @@ export const GarmScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID
  * @param context
  * @returns Количество очков по конкретному мифическому животному.
  */
-export const NidhoggScoring: IMythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
+export const NidhoggScoring: MythicalAnimalScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): number =>
     GetRanksValueMultiplier({ G, ctx, myPlayerID, ...rest }, SuitNames.warrior, 2);

@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, HeroBuffNames, HeroNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { RemoveCardFromPlayerBoardSuitCards } from "./DiscardCardHelpers";
@@ -18,7 +18,7 @@ import { CheckPickHero } from "./HeroHelpers";
  * @returns Должна ли быть завершена фаза.
  */
 export const EndTurnActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): CanBeVoidType<true> => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -40,21 +40,21 @@ export const EndTurnActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithM
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }: FnContext): void => {
     const thrudPlayerIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 HeroBuffNames.MoveThrud));
     if (thrudPlayerIndex !== -1) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[thrudPlayerIndex];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 thrudPlayerIndex);
         }
-        const playerCards: PlayerCardType[] = Object.values(player.cards).flat(),
-            thrud: CanBeUndefType<PlayerCardType> =
-                playerCards.find((card: PlayerCardType): boolean => card.name === HeroNames.Thrud);
+        const playerCards: PlayerBoardCardType[] = Object.values(player.cards).flat(),
+            thrud: CanBeUndefType<PlayerBoardCardType> =
+                playerCards.find((card: PlayerBoardCardType): boolean => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudIndex: number =
-                player.cards[thrud.suit].findIndex((card: PlayerCardType): boolean =>
+                player.cards[thrud.suit].findIndex((card: PlayerBoardCardType): boolean =>
                     card.name === HeroNames.Thrud);
             if (thrudIndex === -1) {
                 throw new Error(`У игрока с id '${thrudPlayerIndex}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
@@ -77,7 +77,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }: FnCo
  * @returns
  */
 export const StartOrEndActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPlayer, Move, MyFnContext, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, Move, MyFnContext, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Rework Move to local interface!
 // TODO Add Bot place all coins for human player opened in solo game
@@ -27,8 +27,8 @@ export const BotsPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: MyFnC
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);

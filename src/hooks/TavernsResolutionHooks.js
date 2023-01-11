@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
-import { OpenCurrentTavernClosedCoinsOnPlayerBoard, ResolveBoardCoins } from "../helpers/CoinHelpers";
+import { OpenCurrentTavernClosedCoinsOnPlayerBoard, ResolveAllBoardCoins } from "../helpers/CoinHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
@@ -332,7 +332,7 @@ export const ResolveCurrentTavernOrders = ({ G, ctx, ...rest }) => {
     if (ulinePlayerIndex === -1) {
         OpenCurrentTavernClosedCoinsOnPlayerBoard({ G, ctx, ...rest });
     }
-    const { playersOrder, exchangeOrder } = ResolveBoardCoins({ G, ctx, ...rest });
+    const { playersOrder, exchangeOrder } = ResolveAllBoardCoins({ G, ctx, ...rest });
     [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
 };
 /**

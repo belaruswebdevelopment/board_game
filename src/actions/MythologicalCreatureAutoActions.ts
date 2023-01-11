@@ -1,4 +1,4 @@
-import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContextWithMyPlayerID, MythologicalCreatureCardsArrayType, MythologicalCreatureCardType } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, MythologicalCreatureCardsForGiantSkymirArray, MythologicalCreatureCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением карт Мифических существ для выбора Skymir.</h3>
@@ -10,7 +10,7 @@ import type { CanBeUndefType, IActionFunctionWithoutParams, MyFnContextWithMyPla
  * @param context
  * @returns
  */
-export const AddMythologyCreatureCardsSkymirAction: IActionFunctionWithoutParams = ({ G }: MyFnContextWithMyPlayerID):
+export const AddMythologyCreatureCardsSkymirAction: ActionFunctionWithoutParams = ({ G }: MyFnContextWithMyPlayerID):
     void => {
     const mythologyCreatureCardsSkymir: MythologicalCreatureCardType[] = [];
     for (let j = 0; j < 5; j++) {
@@ -24,5 +24,5 @@ export const AddMythologyCreatureCardsSkymirAction: IActionFunctionWithoutParams
         }
         mythologyCreatureCardsSkymir.push(mythologyCreatureCard);
     }
-    G.mythologicalCreatureDeckForSkymir = mythologyCreatureCardsSkymir as MythologicalCreatureCardsArrayType;
+    G.mythologicalCreatureDeckForSkymir = mythologyCreatureCardsSkymir as MythologicalCreatureCardsForGiantSkymirArray;
 };

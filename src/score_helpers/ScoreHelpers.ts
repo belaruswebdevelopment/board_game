@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, HeroNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
@@ -32,7 +32,7 @@ export const ArithmeticSum = (startValue: number, step: number, ranksCount: numb
  */
 export const GetRanksValueMultiplier = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, suit: SuitNames,
     multiplier: number): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -52,7 +52,7 @@ export const GetRanksValueMultiplier = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
  */
 export const GetSuitValueWithMaxRanksValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     SuitNames => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -87,7 +87,7 @@ export const GetSuitValueWithMaxRanksValue = ({ G, ctx, myPlayerID, ...rest }: M
  * @param currentValue Текущее значение очков.
  * @returns Суммарное количество очков фракции.
  */
-export const TotalPoints = (accumulator: number, currentValue: PlayerCardType): number => {
+export const TotalPoints = (accumulator: number, currentValue: PlayerBoardCardType): number => {
     if (currentValue.points !== null) {
         return accumulator + currentValue.points;
     }
@@ -105,7 +105,7 @@ export const TotalPoints = (accumulator: number, currentValue: PlayerCardType): 
  * @param currentValue Текущее значение шевронов.
  * @returns Суммарное количество шевронов фракции.
  */
-export const TotalRank = (accumulator: number, currentValue: PlayerCardType): number => {
+export const TotalRank = (accumulator: number, currentValue: PlayerBoardCardType): number => {
     if (currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }
@@ -123,7 +123,7 @@ export const TotalRank = (accumulator: number, currentValue: PlayerCardType): nu
  * @param currentValue Текущее значение шевронов.
  * @returns Суммарное количество шевронов фракции.
  */
-export const TotalRankWithoutThrud = (accumulator: number, currentValue: PlayerCardType): number => {
+export const TotalRankWithoutThrud = (accumulator: number, currentValue: PlayerBoardCardType): number => {
     if (currentValue.name !== HeroNames.Thrud && currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }

@@ -6,7 +6,7 @@ import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ErrorNames, LogTypeNames, SuitNames, ValkyryBuffNames } from "./typescript/enums";
-import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, IPublicPlayer, PlayerRanksAndMaxRanksForDistinctionsType } from "./typescript/interfaces";
+import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, PlayerRanksAndMaxRanksForDistinctionsType, PublicPlayer } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие единственного игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
@@ -34,7 +34,7 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitN
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount, max, suit);
         }
-        const playerDist: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerDistinctionIndex];
+        const playerDist: CanBeUndefType<PublicPlayer> = G.publicPlayers[playerDistinctionIndex];
         if (playerDist === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 playerDistinctionIndex);
@@ -68,7 +68,7 @@ export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }: FnContex
     playersRanks.forEach((value: number, index: number): void => {
         if (value === max) {
             maxPlayers.push(index);
-            const playerIndex: CanBeUndefType<IPublicPlayer> = G.publicPlayers[index];
+            const playerIndex: CanBeUndefType<PublicPlayer> = G.publicPlayers[index];
             if (playerIndex === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     index);
@@ -119,7 +119,7 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: F
     PlayerRanksAndMaxRanksForDistinctionsType => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerI: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
+        const playerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
         if (playerI === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 i);

@@ -1,4 +1,4 @@
-import type { CreatePriorityType, IPriority, NumPlayersType, PrioritiesConfigType, ZeroOrOneOrTwoOrThreeOrFour } from "./typescript/interfaces";
+import type { CreatePriorityType, NumPlayersType, PrioritiesConfigType, Priority, ZeroOrOneOrTwoOrThreeOrFour } from "./typescript/interfaces";
 
 /**
  * <h3>Создание кристаллов.</h3>
@@ -16,7 +16,7 @@ import type { CreatePriorityType, IPriority, NumPlayersType, PrioritiesConfigTyp
 export const CreatePriority = ({
     isExchangeable = true,
     value,
-}: CreatePriorityType): IPriority => ({
+}: CreatePriorityType): Priority => ({
     isExchangeable,
     value,
 });
@@ -32,9 +32,9 @@ export const CreatePriority = ({
  * @param solo Является ли режим игры соло игрой.
  * @returns Массив базовых кристаллов.
  */
-export const GeneratePrioritiesForPlayerNumbers = (numPlayers: NumPlayersType, solo: boolean): IPriority[] => {
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers: NumPlayersType, solo: boolean): Priority[] => {
     const priorityNum: ZeroOrOneOrTwoOrThreeOrFour = ((solo ? 1 : numPlayers) - 1) as ZeroOrOneOrTwoOrThreeOrFour;
-    return prioritiesConfig[priorityNum].map((priority: IPriority): IPriority => priority);
+    return prioritiesConfig[priorityNum].map((priority: Priority): Priority => priority);
 };
 
 // TODO Move to PriorityData?!
@@ -45,7 +45,7 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers: NumPlayersType, s
  * <li>Используется в конфиге кристаллов.</li>
  * </ol>
  */
-const priorities: IPriority[] = [
+const priorities: Priority[] = [
     CreatePriority({
         isExchangeable: false,
         value: -1,

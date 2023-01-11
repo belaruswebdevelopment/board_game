@@ -1,4 +1,4 @@
-import type { CoinConfigType, IMarketCoinConfig, InitialTradingCoinConfigType, NumberPlayersValues } from "../typescript/interfaces";
+import type { CoinConfigType, InitialTradingCoinConfigType, MarketCoinConfig, NumberPlayersValues } from "../typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
@@ -50,7 +50,7 @@ export const initialPlayerCoinsConfig: InitialTradingCoinConfigType[] = [
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
  */
-export const marketCoinsConfig: IMarketCoinConfig[] = [
+export const marketCoinsConfig: MarketCoinConfig[] = [
     {
         value: 5,
         count: (): NumberPlayersValues => ({

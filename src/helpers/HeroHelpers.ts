@@ -2,7 +2,7 @@ import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { CampBuffNames, CommonBuffNames, CommonStageNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
-import type { CanBeUndefType, HeroCard, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerCardType, Stack } from "../typescript/interfaces";
+import type { CanBeUndefType, HeroCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, Stack } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**
@@ -20,7 +20,7 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * @returns
  */
 export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -28,7 +28,7 @@ export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMy
     if (!CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CampBuffNames.NoHero)) {
         const playerHasNotCountHero: boolean =
             CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CommonBuffNames.HasOneNotCountHero),
-            playerCards: PlayerCardType[][] = Object.values(player.cards),
+            playerCards: PlayerBoardCardType[][] = Object.values(player.cards),
             heroesLength: number =
                 G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
                     ? player.heroes.filter((hero: HeroCard): boolean =>
@@ -37,7 +37,7 @@ export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMy
                         || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy)
                         && ctx.currentPlayer === `1` ? 5 : 0),
             isCanPickHero: boolean =
-                (Math.min(...playerCards.map((item: PlayerCardType[]): number =>
+                (Math.min(...playerCards.map((item: PlayerBoardCardType[]): number =>
                     item.reduce(TotalRank, 0))) -
                     ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
                         || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy) ?

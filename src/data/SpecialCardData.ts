@@ -10,9 +10,8 @@ import type { SpecialCardData, SpecialCardsConfig } from "../typescript/interfac
  */
 const ChiefBlacksmith: SpecialCardData = {
     name: SpecialCardNames.ChiefBlacksmith,
-    suit: SuitNames.blacksmith,
+    playerSuit: SuitNames.blacksmith,
     rank: 2,
-    points: null,
 };
 
 /**

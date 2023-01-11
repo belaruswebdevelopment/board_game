@@ -1,63 +1,51 @@
-import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { CardTypeRusNames, ErrorNames, GameModeNames, HeroNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
-import type { AllHeroCardType, CanBeUndefType, HeroCard, HeroPlayerCard, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
+import type { AllHeroCardType, CanBeUndefType, HeroCard, MyFnContextWithMyPlayerID, PublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer } from "./BuffHelpers";
-import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
-import { CheckIfRecruitedCardHasNotLeastRankOfChosenClass, CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
+import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при добавлении героя на планшет игрока.</li>
+ * <li>Происходит при добавлении героя.</li>
  * </ol>
  *
  * @param context
  * @param hero Герой.
  * @returns
  */
-export const AddHeroCardToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    hero: AllHeroCardType): void => {
-    if (hero.suit !== null && hero.rank !== null) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
-        if (player === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-                myPlayerID);
-        }
-        const heroCard: HeroPlayerCard = CreateHeroPlayerCard({
-            suit: hero.suit,
+const CreateHeroPlayerCardIfAvailableFromHeroCardData = (hero: HeroCard): AllHeroCardType => {
+    if (hero.playerSuit !== null && hero.rank !== null) {
+        return CreateHeroPlayerCard({
+            suit: hero.playerSuit,
             rank: hero.rank,
             points: hero.points,
-            type: CardTypeRusNames.Hero_Player_Card,
+            type: CardTypeRusNames.HeroPlayerCard,
             name: hero.name,
             description: hero.description,
         });
-        player.cards[hero.suit].push(heroCard);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Игрок '${player.nickname}' добавил героя '${hero.name}' во фракцию '${suitsConfig[hero.suit].suitName}'.`);
-        if (heroCard.name !== HeroNames.Thrud) {
-            CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, heroCard);
-        }
     }
+    return hero;
 };
 
 /**
- * <h3>Добавляет героя в массив героев игрока или соло бота.</h3>
+ * <h3>Добавляет карту героя в массив карт героев игрока или соло бота.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при добавлении героя на планшет игрока.</li>
- * <li>Происходит при добавлении героя на планшет соло бота.</li>
+ * <li>Происходит при добавлении карты героя игрока.</li>
+ * <li>Происходит при добавлении карты героя соло бота.</li>
  * </ol>
  *
  * @param context
- * @param hero Герой.
+ * @param hero Карта героя.
  * @returns
  */
-export const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     hero: HeroCard): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -69,36 +57,27 @@ export const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }: My
     player.heroes.push(hero);
     if (G.expansions.Idavoll.active) {
         // TODO Add Odin ability not trigger this!!!!!!
-        CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest },
-            ValkyryBuffNames.CountPickedHeroAmount);
+        CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest }, ValkyryBuffNames.CountPickedHeroAmount);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 
 /**
- * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>
+ * <h3>Действия, связанные с добавлением карты героя в массив карт игрока.</li>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
+ * <li>При выборе карты героя, добавляющейся в массив карт игрока.</li>
  * </ol>
  *
  * @param context
  * @param hero Карта героя.
- * @returns
+ * @returns Карта героя | карта героя на пол игрока.
  */
 export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, hero: HeroCard):
-    void => {
+    AllHeroCardType => {
     AddHeroCardToPlayerHeroCards({ G, ctx, myPlayerID, ...rest }, hero);
-    if (G.expansions.Idavoll.active) {
-        if (`suit` in hero && hero.suit !== null) {
-            if (CheckIfRecruitedCardHasNotLeastRankOfChosenClass({ G, ctx, myPlayerID, ...rest }, hero.suit)) {
-                CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest },
-                    ValkyryBuffNames.CountPickedCardClassRankAmount);
-            }
-        }
-    }
-    AddHeroCardToPlayerCards({ G, ctx, myPlayerID, ...rest }, hero);
     AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, hero.buff);
+    return CreateHeroPlayerCardIfAvailableFromHeroCardData(hero);
 };
 
 /**
@@ -114,8 +93,8 @@ export const AddHeroToPlayerCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContex
  */
 export const AddHeroForDifficultyToSoloBotCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     hero: HeroCard): void => {
-    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[1],
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

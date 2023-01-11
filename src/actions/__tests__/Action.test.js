@@ -10,7 +10,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Dwarf_Card,
+                                type: CardTypeRusNames.DwarfPlayerCard,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -41,9 +41,9 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCardsDeck: [
                 {
-                    type: CardTypeRusNames.Dwarf_Card,
+                    type: CardTypeRusNames.DwarfCard,
                     name: `Test`,
-                    suit: SuitNames.warrior,
+                    playerSuit: SuitNames.warrior,
                 },
             ],
             logData: [
@@ -66,7 +66,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Artefact_Player_Card,
+                                type: CardTypeRusNames.ArtefactPlayerCard,
                                 name: ArtefactNames.Vegvisir,
                                 description: ArtefactDescriptionNames.Vegvisir,
                             },
@@ -97,7 +97,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCampCardsDeck: [
                 {
-                    type: CardTypeRusNames.Artefact_Player_Card,
+                    type: CardTypeRusNames.ArtefactPlayerCard,
                     name: ArtefactNames.Vegvisir,
                     description: ArtefactDescriptionNames.Vegvisir,
                 },
@@ -122,7 +122,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Mercenary_Player_Card,
+                                type: CardTypeRusNames.MercenaryPlayerCard,
                                 name: `Test`,
                                 suit: SuitNames.warrior,
                             },
@@ -153,7 +153,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             },
             discardCampCardsDeck: [
                 {
-                    type: CardTypeRusNames.Mercenary_Player_Card,
+                    type: CardTypeRusNames.MercenaryPlayerCard,
                     name: `Test`,
                     suit: SuitNames.warrior,
                 },
@@ -177,7 +177,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Hero_Player_Card,
+                                type: CardTypeRusNames.HeroPlayerCard,
                             },
                         ],
                     },
@@ -188,7 +188,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
         };
         expect(() => {
             DiscardAnyCardFromPlayerBoardAction({ G, ctx }, SuitNames.warrior, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.Hero_Player_Card}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.HeroPlayerCard}'.`);
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, () => {
         const G = {
@@ -219,9 +219,9 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             taverns: [
                 [
                     {
-                        type: CardTypeRusNames.Dwarf_Card,
+                        type: CardTypeRusNames.DwarfCard,
                         name: `Test`,
-                        suit: SuitNames.warrior,
+                        playerSuit: SuitNames.warrior,
                     },
                 ],
                 [],
@@ -248,9 +248,9 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             ],
             discardCardsDeck: [
                 {
-                    type: CardTypeRusNames.Dwarf_Card,
+                    type: CardTypeRusNames.DwarfCard,
                     name: `Test`,
-                    suit: SuitNames.warrior,
+                    playerSuit: SuitNames.warrior,
                 },
             ],
             tavernCardDiscarded2Players: true,
@@ -394,7 +394,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
         };
         expect(() => {
             GetEnlistmentMercenariesAction({ G, ctx }, 0);
-        }).toThrowError(`Выбранная карта должна быть с типом '${CardTypeRusNames.Mercenary_Card}'.`);
+        }).toThrowError(`Выбранная карта должна быть с типом '${CardTypeRusNames.MercenaryCard}'.`);
     });
 });
 describe(`Test GetMjollnirProfitAction method`, () => {
@@ -488,7 +488,7 @@ describe(`Test PickDiscardCardAction method`, () => {
             discardCardsDeck: [
                 {
                     name: `Test`,
-                    suit: SuitNames.warrior,
+                    playerSuit: SuitNames.warrior,
                 },
             ],
             logData: [],
@@ -620,7 +620,7 @@ describe(`Test PickDiscardCardAction method`, () => {
             discardCardsDeck: [
                 {
                     name: `Test`,
-                    suit: SuitNames.warrior,
+                    playerSuit: SuitNames.warrior,
                 },
             ],
             logData: [],
@@ -674,7 +674,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     nickname: `Dan`,
                     heroes: [
                         {
-                            suit: SuitNames.hunter,
+                            playerSuit: SuitNames.hunter,
                             name: HeroNames.Thrud,
                         },
                     ],
@@ -698,7 +698,7 @@ describe(`Test PickDiscardCardAction method`, () => {
             },
             discardCardsDeck: [
                 {
-                    suit: SuitNames.hunter,
+                    playerSuit: SuitNames.hunter,
                     name: `Test`,
                 },
             ],
@@ -713,7 +713,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     nickname: `Dan`,
                     heroes: [
                         {
-                            suit: SuitNames.hunter,
+                            playerSuit: SuitNames.hunter,
                             name: HeroNames.Thrud,
                         },
                     ],
@@ -842,7 +842,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     cards: {
                         blacksmith: [
                             {
-                                type: CardTypeRusNames.Mercenary_Player_Card,
+                                type: CardTypeRusNames.MercenaryPlayerCard,
                                 suit: SuitNames.blacksmith,
                                 rank: 1,
                                 points: null,
@@ -958,7 +958,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.Mercenary_Player_Card,
+                                type: CardTypeRusNames.MercenaryPlayerCard,
                                 suit: SuitNames.warrior,
                                 rank: 1,
                                 points: 6,
@@ -1010,7 +1010,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
         };
         expect(() => {
             PlaceEnlistmentMercenariesAction({ G, ctx }, SuitNames.blacksmith);
-        }).toThrowError(`Выбранная карта должна быть с типом '${CardTypeRusNames.Mercenary_Card}'.`);
+        }).toThrowError(`Выбранная карта должна быть с типом '${CardTypeRusNames.MercenaryCard}'.`);
     });
     it(`shouldn't get mercenary card which not exists in player's camp cards to place and must throw Error`, () => {
         const G = {

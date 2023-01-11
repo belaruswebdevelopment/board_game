@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CampBuffNames, CommonBuffNames, ErrorNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
@@ -19,7 +19,7 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer } from "..
  */
 export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
@@ -43,7 +43,7 @@ export const CheckEndGetMjollnirProfitPhase = ({ G, ctx, ...rest }: FnContext): 
  */
 export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }: FnContext): void => {
     const mjollnirPlayerIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 CampBuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex === -1) {

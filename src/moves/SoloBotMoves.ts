@@ -1,9 +1,9 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ClickCardAction, PickCardToPickDistinctionAction } from "../actions/Actions";
 import { PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
+import { AddAnyCardToPlayerActions } from "../helpers/CardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
-import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot } from "../helpers/SoloBotHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
@@ -78,7 +78,7 @@ export const SoloBotClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: My
     if (G.heroesForSoloBot === null) {
         throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
     }
-    AddHeroCardToPlayerHeroCards({ G, ctx, myPlayerID: playerID, ...rest },
+    AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, ...rest },
         G.heroesForSoloBot[heroId as IndexOf<HeroesForSoloGameArrayType>]);
 };
 

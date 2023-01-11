@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CardNamesForStylesType, IBackground, IndexOf, IStyles, MythologicalCreatureNameType, TavernsConfigType, TierType } from "../typescript/interfaces";
+import type { Background, CanBeNullType, CardNamesForStylesType, IndexOf, MythologicalCreatureNameType, Styles, TavernsConfigType, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -41,20 +41,20 @@ const tavernsPath = `url(/img/taverns/Taverns.png)`;
  * <li>Используется при отображении всех картинок в игре.</li>
  * </ol>
  */
-export const Styles: IStyles = {
-    Camp: (): IBackground => ({
+export const ALlStyles: Styles = {
+    Camp: (): Background => ({
         background: `${campCardsPath}.png) no-repeat 0px 3px / 24px 18px`,
     }),
-    CampBack: (tier: TierType): IBackground => ({
+    CampBack: (tier: TierType): Background => ({
         background: `url(/img/cards/camp/CampBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    CampCard: (cardPath: string): IBackground => {
+    CampCard: (cardPath: string): Background => {
         switch (cardPath) {
             case ArtefactNames.Draupnir:
                 return {
                     background: `${campCardsPath}0.png) no-repeat 0px 0px / 128px 144px`,
                 };
-            case ArtefactNames.Fafnir_Baleygr:
+            case ArtefactNames.FafnirBaleygr:
                 return {
                     background: `${campCardsPath}0.png) no-repeat -32px 0px / 128px 144px`,
                 };
@@ -70,7 +70,7 @@ export const Styles: IStyles = {
                 return {
                     background: `${campCardsPath}0.png) no-repeat 0px -48px / 128px 144px`,
                 };
-            case ArtefactNames.Vidofnir_Vedrfolnir:
+            case ArtefactNames.VidofnirVedrfolnir:
                 return {
                     background: `${campCardsPath}0.png) no-repeat -32px -48px / 128px 144px`,
                 };
@@ -122,7 +122,7 @@ export const Styles: IStyles = {
                 return {
                     background: `${campCardsPath}1.png) no-repeat -32px -48px / 128px 144px`,
                 };
-            case ArtefactNames.Odroerir_The_Mythic_Cauldron:
+            case ArtefactNames.OdroerirTheMythicCauldron:
                 return {
                     background: `${promosPath} no-repeat -39px -4px / 76px 58px`,
                 };
@@ -150,10 +150,10 @@ export const Styles: IStyles = {
                 throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
         }
     },
-    CardBack: (tier: TierType): IBackground => ({
+    CardBack: (tier: TierType): Background => ({
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    Card: (suit: SuitNames, name: CardNamesForStylesType, points: CanBeNullType<number>): IBackground => {
+    Card: (suit: SuitNames, name: CardNamesForStylesType, points: CanBeNullType<number>): Background => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             // TODO Fix it to use _exhaustiveCheck!
             switch (name) {
@@ -280,16 +280,16 @@ export const Styles: IStyles = {
             }
         }
     },
-    Coin: (value: number, initial: boolean): IBackground => ({
+    Coin: (value: number, initial: boolean): Background => ({
         background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 40px 40px`,
     }),
-    CoinSmall: (value: number, initial: boolean): IBackground => ({
+    CoinSmall: (value: number, initial: boolean): Background => ({
         background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 32px 32px`,
     }),
-    CoinBack: (): IBackground => ({
+    CoinBack: (): Background => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinction: (distinction: SuitNames): IBackground => {
+    Distinction: (distinction: SuitNames): Background => {
         switch (distinction) {
             case SuitNames.blacksmith:
                 return {
@@ -315,13 +315,13 @@ export const Styles: IStyles = {
                 throw new Error(`Нет такого преимущества '${distinction}' конца эпохи.`);
         }
     },
-    DistinctionsBack: (): IBackground => ({
+    DistinctionsBack: (): Background => ({
         background: `url(/img/distinctions/DistinctionsBack.png) no-repeat 0px 0px / 12px 18px`,
     }),
-    Exchange: (): IBackground => ({
+    Exchange: (): Background => ({
         background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
     }),
-    Hero: (heroName: HeroNames): IBackground => {
+    Hero: (heroName: HeroNames): Background => {
         let _exhaustiveCheck: never;
         switch (heroName) {
             case HeroNames.Bonfur:
@@ -364,23 +364,23 @@ export const Styles: IStyles = {
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -96px -96px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Bergelmir:
+            case HeroNames.DwergBergelmir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat 0px 0px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Jungir:
+            case HeroNames.DwergJungir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -64px 0px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Aesir:
+            case HeroNames.DwergAesir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -64px -48px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Ymir:
+            case HeroNames.DwergYmir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -32px -96px / 288px 144px`,
                 };
-            case HeroNames.Dwerg_Sigmir:
+            case HeroNames.DwergSigmir:
                 return {
                     background: `${heroesBasicPath}heroes.png) no-repeat -64px -96px / 288px 144px`,
                 };
@@ -432,7 +432,7 @@ export const Styles: IStyles = {
                 return {
                     background: `${heroesThingvellirPath}heroes.png) no-repeat -96px -50px / 128px 100px`,
                 };
-            case HeroNames.Crovax_The_Doppelganger:
+            case HeroNames.CrovaxTheDoppelganger:
                 return {
                     background: `${promosPath} no-repeat -4px -4px / 76px 58px`,
                 };
@@ -442,10 +442,10 @@ export const Styles: IStyles = {
                 return _exhaustiveCheck;
         }
     },
-    HeroBack: (): IBackground => ({
+    HeroBack: (): Background => ({
         background: `url(/img/cards/heroes/HeroBack.png) no-repeat 6px 3px / 12px 18px`,
     }),
-    MythologicalCreature: (name: MythologicalCreatureNameType): IBackground => {
+    MythologicalCreature: (name: MythologicalCreatureNameType): Background => {
         // TODO Add  _exhaustiveCheck = heroName;
         switch (name) {
             // case GiantNames.Gymir:
@@ -537,13 +537,13 @@ export const Styles: IStyles = {
                 throw new Error(`Нет такой карты '${name}' среди карт мифических существ.`);
         }
     },
-    Priorities: (priority: number): IBackground => ({
+    Priorities: (priority: number): Background => ({
         background: `url(/img/priorities/Priority${priority}.png) no-repeat 0px 0px / 28px 38px`,
     }),
-    Priority: (): IBackground => ({
+    Priority: (): Background => ({
         background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
     }),
-    RoyalOffering: (name: RoyalOfferingNames): IBackground => {
+    RoyalOffering: (name: RoyalOfferingNames): Background => {
         let _exhaustiveCheck: never;
         switch (name) {
             case RoyalOfferingNames.PlusThree:
@@ -560,10 +560,10 @@ export const Styles: IStyles = {
                 return _exhaustiveCheck;
         }
     },
-    Suit: (suit: SuitNames): IBackground => ({
+    Suit: (suit: SuitNames): Background => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
-    Tavern: (tavernId: IndexOf<TavernsConfigType>): IBackground => {
+    Tavern: (tavernId: IndexOf<TavernsConfigType>): Background => {
         switch (tavernId) {
             case 0:
                 return {

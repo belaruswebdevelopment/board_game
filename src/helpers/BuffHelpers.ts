@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
-import type { AllBuffNames, BuffType, BuffValueType, CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerBuffs } from "../typescript/interfaces";
+import type { AllBuffNames, BuffType, BuffValueType, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBuffs, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -19,7 +19,7 @@ import type { AllBuffNames, BuffType, BuffValueType, CanBeUndefType, IPublicPlay
 export const AddBuffToPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, buff?: BuffType,
     value?: BuffValueType): void => {
     if (buff !== undefined) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 myPlayerID);
@@ -45,7 +45,7 @@ export const AddBuffToPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
  */
 export const ChangeBuffValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, buffName: AllBuffNames,
     value: SuitNames): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -74,7 +74,7 @@ export const ChangeBuffValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
  */
 export const CheckPlayerHasBuff = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, buffName: AllBuffNames):
     boolean => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -95,7 +95,7 @@ export const CheckPlayerHasBuff = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
 */
 export const DeleteBuffFromPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     buffName: AllBuffNames): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -126,7 +126,7 @@ export const DeleteBuffFromPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContex
  */
 export const GetBuffValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, buffName: AllBuffNames):
     BuffValueType => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

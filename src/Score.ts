@@ -4,7 +4,7 @@ import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsFromPlayerHandsToPlayerBoard }
 import { CurrentAllSuitsScoring, CurrentOrFinalAllArtefactScoring, CurrentOrFinalAllHeroesScoring, CurrentOrFinalAllMythologicalCreaturesScoring, CurrentPotentialMinerDistinctionsScoring, CurrentPotentialWarriorDistinctionsScoring, FinalAllBoardCoinsScoring, FinalAllSuitsScoring, FinalMinerDistinctionsScoring, FinalWarriorDistinctionsScoring } from "./helpers/ScoringHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "./typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, MyFnContextWithMyPlayerID, MyGameState } from "./typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, MyFnContextWithMyPlayerID, MyGameState, PublicPlayer } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -46,13 +46,13 @@ export const AllCurrentScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
  * @returns Финальный счёт указанного игрока.
  */
 const FinalScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}:`);
-    let totalScore = FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
+    let totalScore: number = FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalAllBoardCoinsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += FinalMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
@@ -78,7 +78,7 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID
  * @returns Финальные данные о победителях, если закончилась игра.
  */
 export const ScoreWinner = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<MyGameState> => {
-    Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
+    Object.values(G.publicPlayers).forEach((player: PublicPlayer, index: number): void => {
         if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
             || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
@@ -98,7 +98,7 @@ export const ScoreWinner = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<MyGam
         maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;
     let winners = 0;
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 i);

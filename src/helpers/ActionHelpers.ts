@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID, Stack } from "../typescript/interfaces";
+import type { CanBeUndefType, MyFnContextWithMyPlayerID, PublicPlayer, Stack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
@@ -17,7 +17,7 @@ import type { CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID, Stack } 
  * @returns
  */
 export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }: MyFnContextWithMyPlayerID): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

@@ -13,7 +13,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames, SuitNames } from "./typescript/enums";
-import type { AIBotData, AllSecretData, BuildHeroesArraysType, CampCardArrayType, CampDeckCardType, CampDecksLength, CanBeUndefType, Distinctions, DrawSizeType, DwarfCard, DwarfDeckCardType, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, ICoin, ILogData, IndexOf, IPlayers, IPlayersNumberTierCardData, IPriority, IPublicPlayers, IStrategyForSoloBotAndvari, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, NumPlayersType, PlayerID, RoyalOfferingCard, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { AIBotData, AllSecretData, BuildHeroesArray, CampCardArray, CampDecksLength, CanBeUndefType, Coin, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IndexOf, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, NumPlayersType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalOfferingCard, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, StrategyForSoloBotAndvari, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -57,14 +57,14 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
             },
         },
         totalScore: number[] = [],
-        logData: ILogData[] = [],
-        odroerirTheMythicCauldronCoins: ICoin[] = [],
+        logData: LogData[] = [],
+        odroerirTheMythicCauldronCoins: Coin[] = [],
         specialCardsDeck: SpecialCard[] = BuildSpecialCards(),
         configOptions: GameNamesKeyofTypeofType[] = [],
-        discardCardsDeck: DwarfDeckCardType[] = [],
+        discardCardsDeck: DiscardDeckCardType[] = [],
         explorerDistinctionCards = null,
         distinctions: SuitPropertyType<Distinctions> = {} as SuitPropertyType<Distinctions>,
-        strategyForSoloBotAndvari: IStrategyForSoloBotAndvari = {} as IStrategyForSoloBotAndvari,
+        strategyForSoloBotAndvari: StrategyForSoloBotAndvari = {} as StrategyForSoloBotAndvari,
         secret: AllSecretData = {
             campDecks: [[], []],
             decks: [[], []],
@@ -78,12 +78,12 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
     const winner: number[] = [],
         campPicked = false,
         mustDiscardTavernCardJarnglofi = null,
-        discardCampCardsDeck: CampDeckCardType[] = [],
-        discardMythologicalCreaturesCards: MythologicalCreatureCardType[] = [],
+        discardCampCardsDeck: DiscardCampCardType[] = [],
+        discardMythologicalCreaturesCards: DiscardMythologicalCreatureCardType[] = [],
         discardMultiCards: MultiSuitPlayerCard[] = [],
-        discardSpecialCards: SpecialCard[] = [],
+        discardSpecialCards: SpecialPlayerCard[] = [],
         campDecksLength: CampDecksLength = [0, 0],
-        camp: CampCardArrayType = Array(campNum).fill(null) as CampCardArrayType,
+        camp: CampCardArray = Array(campNum).fill(null) as CampCardArray,
         // TODO DecksLength
         decksLength: DwarfDecksLength = [0, 0],
         mythologicalCreatureDeckForSkymir = null;
@@ -97,7 +97,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
             campDecksLength[0] = secret.campDecks[0].length;
         }
         secret.decks[i] = [];
-        const data: IPlayersNumberTierCardData = {
+        const data: PlayersNumberTierCardData = {
             players: ctx.numPlayers,
             tier: i as TierType,
         },
@@ -115,7 +115,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         }
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari]:
-        BuildHeroesArraysType = BuildHeroes(configOptions, mode),
+        BuildHeroesArray = BuildHeroes(configOptions, mode),
         heroesForSoloGameForStrategyBotAndvari = null,
         multiCardsDeck: MultiSuitCard[] = BuildMultiSuitCards(configOptions),
         taverns: TavernsType = [[], [], []],
@@ -136,16 +136,16 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = Array(drawSize).fill(null);
     }
-    const players: IPlayers = {},
-        publicPlayers: IPublicPlayers = {},
+    const players: Players = {},
+        publicPlayers: PublicPlayers = {},
         publicPlayersOrder: PlayerID[] = [],
         exchangeOrder: number[] = [],
-        priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers as NumPlayersType,
+        priorities: Priority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers as NumPlayersType,
             mode === GameModeNames.Solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex: number =
             mode === GameModeNames.Solo ? 0 : Math.floor(Math.random() * priorities.length),
-            priority: CanBeUndefType<IPriority> = priorities.splice(randomPriorityIndex, 1)[0];
+            priority: CanBeUndefType<Priority> = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
@@ -155,8 +155,8 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
             BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority,
                 soloBot || mode === GameModeNames.Multiplayer);
     }
-    const marketCoinsUnique: ICoin[] = [],
-        marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
+    const marketCoinsUnique: Coin[] = [],
+        marketCoins: Coin[] = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
             players: ctx.numPlayers,
         }),

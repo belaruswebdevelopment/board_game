@@ -1,6 +1,6 @@
 import { BrynhildrScoring, HildrScoring, OlrunScoring, SigrdrifaScoring, SvafaScoring } from "../score_helpers/ValkyryScoringHelpers";
 import { ValkyryScoringFunctionNames } from "../typescript/enums";
-import type { Action, IValkyryScoringFunction, ScoringArgsType } from "../typescript/interfaces";
+import type { Action, ScoringArgsType, ValkyryScoringFunction } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по Валькирии.</h3>
@@ -14,7 +14,7 @@ import type { Action, IValkyryScoringFunction, ScoringArgsType } from "../typesc
  * @returns Количество победных очков по Валькирии.
  */
 export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>, params: ScoringArgsType): number => {
-    const actionDispatcher: IValkyryScoringFunction = ValkyryScoringDispatcherSwitcher(action.name);
+    const actionDispatcher: ValkyryScoringFunction = ValkyryScoringDispatcherSwitcher(action.name);
     if (params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
     }
@@ -31,8 +31,8 @@ export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>,
  * @param actionName Название действия.
  * @returns Действие.
  */
-const ValkyryScoringDispatcherSwitcher = (actionName: ValkyryScoringFunctionNames): IValkyryScoringFunction => {
-    let action: IValkyryScoringFunction,
+const ValkyryScoringDispatcherSwitcher = (actionName: ValkyryScoringFunctionNames): ValkyryScoringFunction => {
+    let action: ValkyryScoringFunction,
         _exhaustiveCheck: never;
     switch (actionName) {
         case ValkyryScoringFunctionNames.BrynhildrScoring:

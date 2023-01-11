@@ -97,13 +97,13 @@ export const DiscardCardIfCampCardPicked = ({ G, ctx, ...rest }) => {
  */
 export const RefillCamp = ({ G, ctx, ...rest }) => {
     AddRemainingCampCardsToDiscard({ G, ctx, ...rest });
-    const campDeck1 = G.secret.campDecks[1], index = campDeck1.findIndex((card) => card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
+    const campDeck1 = G.secret.campDecks[1], index = campDeck1.findIndex((card) => card.name === ArtefactNames.OdroerirTheMythicCauldron);
     if (index === -1) {
-        throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '2' эпохи.`);
+        throw new Error(`Отсутствует артефакт '${ArtefactNames.OdroerirTheMythicCauldron}' в колоде лагеря '2' эпохи.`);
     }
     const campCardTemp = campDeck1[0];
     if (campCardTemp === undefined) {
-        throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '1' эпохи.`);
+        throw new Error(`Отсутствует артефакт '${ArtefactNames.OdroerirTheMythicCauldron}' в колоде лагеря '1' эпохи.`);
     }
     const odroerirTheMythicCauldron = campDeck1[index];
     if (odroerirTheMythicCauldron === undefined) {

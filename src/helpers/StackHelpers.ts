@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
-import type { CanBeUndefType, CardsHasStackType, IPublicPlayer, MyFnContextWithMyPlayerID, PickCardValidatorNamesKeyofTypeofType, PlayerID, Stack, ValidatorsConfigType } from "../typescript/interfaces";
+import type { CanBeUndefType, CardsHasStackType, MyFnContextWithMyPlayerID, PickCardValidatorNamesKeyofTypeofType, PlayerID, PublicPlayer, Stack, ValidatorsConfigType } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стек действий конкретного игрока после текущего.</h3>
@@ -50,7 +50,7 @@ export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
                 }
                 stackI.priority = stackI.priority ?? 0;
                 const playerId: PlayerID = stackI.playerId ?? ctx.currentPlayer,
-                    player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerId)];
+                    player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerId)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         myPlayerID);

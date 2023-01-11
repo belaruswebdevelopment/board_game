@@ -31,12 +31,12 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }, valida
         throw new Error(`В стеке игрока отсутствует 'card'.`);
     }
     if (!IsDwarfCard(card)) {
-        throw new Error(`В стеке игрока 'card' должен быть с типом '${CardTypeRusNames.Dwarf_Card}'.`);
+        throw new Error(`В стеке игрока 'card' должен быть с типом '${CardTypeRusNames.DwarfCard}'.`);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, player, card.suit, CardMoveNames.ClickCardNotGiantAbilityMove, card);
+                DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, player, card.playerSuit, CardMoveNames.ClickCardNotGiantAbilityMove, card);
             }
             else if (validatorName ===
                 ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
@@ -53,7 +53,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }, valida
             }
             const giant = player.mythologicalCreatureCards.find((card) => card.name === giantName);
             if (giant === undefined) {
-                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.Giant_Card}' с названием '${giantName}'.`);
+                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.GiantCard}' с названием '${giantName}'.`);
             }
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard({ G, ctx, ...rest }, data, boardCells, giant, j, player, null, CardMoveNames.ClickGiantAbilityNotCardMove, card);
@@ -103,7 +103,7 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }, validatorName
     }
     const god = player.mythologicalCreatureCards.find((card) => card.name === godName);
     if (god === undefined) {
-        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.God_Card}' с названием '${godName}'.`);
+        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.GodCard}' с названием '${godName}'.`);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
@@ -399,8 +399,8 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }, validatorName, da
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
         let suit = null;
-        if (card.type === CardTypeRusNames.Dwarf_Card) {
-            suit = card.suit;
+        if (card.type === CardTypeRusNames.DwarfCard) {
+            suit = card.playerSuit;
         }
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {

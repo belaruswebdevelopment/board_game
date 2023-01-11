@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { Styles } from "../data/StyleData";
+import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
@@ -92,7 +92,7 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }, data, playerCells, play
     if (action !== null) {
         tdClasses += ` cursor-pointer`;
     }
-    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: Styles.Distinction(suit), title: suitsConfig[suit].distinction.description, className: "bg-suit-distinction" }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``} distinction ${suit} card`));
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: ALlStyles.Distinction(suit), title: suitsConfig[suit].distinction.description, className: "bg-suit-distinction" }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``} distinction ${suit} card`));
 };
 /**
  * <h3>Отрисовка карт.</h3>
@@ -204,9 +204,9 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
         tdClasses += ` cursor-pointer`;
     }
     switch (card.type) {
-        case CardTypeRusNames.Hero_Card:
-        case CardTypeRusNames.Hero_Player_Card:
-            styles = Styles.Hero(card.name);
+        case CardTypeRusNames.HeroCard:
+        case CardTypeRusNames.HeroPlayerCard:
+            styles = ALlStyles.Hero(card.name);
             if (player === null && `active` in card && !card.active) {
                 spanClasses += `bg-hero-inactive`;
             }
@@ -217,35 +217,44 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
                 tdClasses += ` bg-gray-600`;
             }
             break;
-        case CardTypeRusNames.Mercenary_Player_Card:
-        case CardTypeRusNames.Mercenary_Card:
-        case CardTypeRusNames.Artefact_Card:
-        case CardTypeRusNames.Artefact_Player_Card:
-            styles = Styles.CampCard(card.path);
+        case CardTypeRusNames.MercenaryPlayerCard:
+        case CardTypeRusNames.MercenaryCard:
+        case CardTypeRusNames.ArtefactCard:
+        case CardTypeRusNames.ArtefactPlayerCard:
+            styles = ALlStyles.CampCard(card.path);
             spanClasses += `bg-camp`;
             if (suit === null) {
                 tdClasses += ` bg-yellow-200`;
-                if (card.type === CardTypeRusNames.Artefact_Card
-                    && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
+                if (card.type === CardTypeRusNames.ArtefactCard
+                    && card.name === ArtefactNames.OdroerirTheMythicCauldron) {
                     value = String(GetOdroerirTheMythicCauldronCoinsValues({ G: data.G }));
                 }
             }
             break;
-        case CardTypeRusNames.Dwarf_Card:
-        case CardTypeRusNames.Special_Card:
-        case CardTypeRusNames.Multi_Suit_Player_Card:
+        case CardTypeRusNames.MultiSuitCard:
+        case CardTypeRusNames.DwarfCard:
+        case CardTypeRusNames.DwarfPlayerCard:
+        case CardTypeRusNames.SpecialPlayerCard:
+        case CardTypeRusNames.SpecialCard:
+        case CardTypeRusNames.MultiSuitPlayerCard:
             spanClasses += `bg-card`;
-            styles = Styles.Card(card.suit, card.name, card.points);
+            if (`suit` in card) {
+                styles = ALlStyles.Card(card.suit, card.name, card.points);
+            }
+            else if (`playerSuit` in card && card.playerSuit !== null) {
+                styles = ALlStyles.Card(card.playerSuit, card.name, card.points);
+            }
             break;
-        case CardTypeRusNames.Royal_Offering_Card:
+        case CardTypeRusNames.RoyalOfferingCard:
             spanClasses += `bg-royal-offering`;
-            styles = Styles.RoyalOffering(card.name);
+            styles = ALlStyles.RoyalOffering(card.name);
             value = String(card.value);
             break;
-        case CardTypeRusNames.Giant_Card:
-        case CardTypeRusNames.God_Card:
-        case CardTypeRusNames.Mythical_Animal_Card:
-        case CardTypeRusNames.Valkyry_Card:
+        case CardTypeRusNames.GiantCard:
+        case CardTypeRusNames.GodCard:
+        case CardTypeRusNames.MythicalAnimalCard:
+        case CardTypeRusNames.MythicalAnimalPlayerCard:
+        case CardTypeRusNames.ValkyryCard:
             if (`isActivated` in card && card.isActivated === true) {
                 // TODO Draw capturedCard for Giant if captured!
                 spanClasses += `bg-mythological-creature-inactive`;
@@ -254,7 +263,7 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
                 spanClasses += `bg-mythological-creature`;
             }
             // TODO Draw valkyry requirements!
-            styles = Styles.MythologicalCreature(card.name);
+            styles = ALlStyles.MythologicalCreature(card.name);
             break;
         default:
             _exhaustiveCheck = card;
@@ -332,7 +341,7 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }, data, playerCells, cardType, 
     // TODO Check colors of empty camp & others cards!
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} empty ${cardType} ${id}`));
 };
-// TODO Replace string to DrawCoinTypes
+// TODO Replace strings!?
 /**
  * <h3>Отрисовка монет.</h3>
  * <p>Применения:</p>
@@ -407,7 +416,7 @@ export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id,
         if (!IsCoin(coin)) {
             throw new Error(`Монета на рынке не может отсутствовать.`);
         }
-        styles = Styles.Coin(coin.value, false);
+        styles = ALlStyles.Coin(coin.value, false);
         spanClasses += `bg-market-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
             span = (_jsx("span", { className: coinClasses, children: additionalParam }));
@@ -416,8 +425,8 @@ export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id,
     else if (type === DrawCoinTypeNames.HiddenCoin) {
         spanClasses += `bg-coin`;
         if (IsCoin(coin) && coinClasses !== null && coinClasses !== undefined) {
-            styles = Styles.CoinBack();
-            span = (_jsx("span", { style: Styles.CoinSmall(coin.value, coin.isInitial), className: coinClasses }));
+            styles = ALlStyles.CoinBack();
+            span = (_jsx("span", { style: ALlStyles.CoinSmall(coin.value, coin.isInitial), className: coinClasses }));
         }
     }
     else {
@@ -427,25 +436,25 @@ export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id,
         }
         if (type === DrawCoinTypeNames.Coin) {
             if (coin === null) {
-                styles = Styles.CoinBack();
+                styles = ALlStyles.CoinBack();
             }
             else {
                 if (!IsCoin(coin)) {
                     throw new Error(`Монета с типом 'coin' не может быть закрыта.`);
                 }
                 if (IsCoin(coin) && coin.isInitial !== undefined) {
-                    styles = Styles.Coin(coin.value, coin.isInitial);
+                    styles = ALlStyles.Coin(coin.value, coin.isInitial);
                 }
             }
         }
         else {
-            styles = Styles.CoinBack();
+            styles = ALlStyles.CoinBack();
             if (type === DrawCoinTypeNames.BackSmallMarketCoin) {
-                span = (_jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }));
+                span = (_jsx("span", { style: ALlStyles.Exchange(), className: "bg-small-market-coin" }));
             }
             else if (type === DrawCoinTypeNames.BackTavernIcon) {
                 if (additionalParam !== null && additionalParam !== undefined) {
-                    span = (_jsx("span", { style: Styles.Tavern(additionalParam), className: "bg-tavern-icon" }));
+                    span = (_jsx("span", { style: ALlStyles.Tavern(additionalParam), className: "bg-tavern-icon" }));
                 }
             }
         }
@@ -487,6 +496,6 @@ export const DrawSuit = ({ G, ctx, ...rest }, data, playerHeaders, suit, player,
     if (action !== null) {
         className += ` cursor-pointer`;
     }
-    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}${className}`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suit(suit), className: "bg-suit-icon" }) }, `${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`));
+    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}${className}`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: ALlStyles.Suit(suit), className: "bg-suit-icon" }) }, `${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`));
 };
 //# sourceMappingURL=ElementsUI.js.map

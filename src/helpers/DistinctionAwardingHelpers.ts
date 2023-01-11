@@ -4,10 +4,9 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, ICoin, IDistinctionAwardingFunction, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, SpecialCard } from "../typescript/interfaces";
-import { AddCardToPlayer } from "./CardHelpers";
+import type { CanBeUndefType, Coin, DistinctionAwardingFunction, MyFnContextWithMyPlayerID, Player, PublicPlayer, SpecialCard } from "../typescript/interfaces";
+import { AddAnyCardToPlayerActions } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
-import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 
 /**
@@ -21,9 +20,9 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
+export const BlacksmithDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -34,10 +33,9 @@ export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = ({ G,
         if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
         }
-        AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
+        AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, card);
         G.distinctions[SuitNames.blacksmith] = undefined;
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${card.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.blacksmith}'.`);
-        CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
     }
     return 0;
 };
@@ -53,9 +51,9 @@ export const BlacksmithDistinctionAwarding: IDistinctionAwardingFunction = ({ G,
  * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+export const ExplorerDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -64,7 +62,8 @@ export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, c
         if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCardSoloBot()]);
         } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
-            AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCardSoloBotAndvari()]);
+            AddActionsToStack({ G, ctx, myPlayerID, ...rest },
+                [AllStackData.pickDistinctionCardSoloBotAndvari()]);
         } else {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCard()]);
         }
@@ -84,11 +83,12 @@ export const ExplorerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, c
  * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const HunterDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+export const HunterDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
+    MyFnContextWithMyPlayerID):
     number => {
     if (G.tierToEnd !== 0) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-            privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
+            privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 myPlayerID);
@@ -99,7 +99,7 @@ export const HunterDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx
         }
         const [type, tradingCoinIndex]: [CoinTypeNames, number] =
             DiscardTradingCoin({ G, ctx, myPlayerID, ...rest }),
-            coin: ICoin = CreateCoin({
+            coin: Coin = CreateCoin({
                 isOpened: true,
                 isTriggerTrading: true,
                 value: 3,
@@ -140,9 +140,9 @@ export const HunterDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx
  * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const MinerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
+export const MinerDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -170,9 +170,9 @@ export const MinerDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx,
  * @param context
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
-export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
+export const WarriorDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -195,7 +195,7 @@ export const WarriorDistinctionAwarding: IDistinctionAwardingFunction = ({ G, ct
 };
 
 export const GetMinerDistinctionsScore = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

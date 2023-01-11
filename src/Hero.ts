@@ -1,6 +1,6 @@
 import { heroesConfig, soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig, soloGameAndvariHeroesForPlayersConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
 import { CardTypeRusNames, GameModeNames } from "./typescript/enums";
-import type { BuildHeroesArraysType, CanBeNullType, CreateHeroCardFromData, CreateHeroPlayerCardFromData, GameNamesKeyofTypeofType, HeroCard, HeroCardData, HeroesForSoloGameArrayType, HeroesInitialForSoloGameForBotAndvariArrayType, HeroNamesKeyofTypeofType, HeroPlayerCard } from "./typescript/interfaces";
+import type { BuildHeroesArray, CanBeNullType, CreateHeroCardFromData, CreateHeroPlayerCardFromData, GameNamesKeyofTypeofType, HeroCard, HeroCardData, HeroesForSoloGameArrayType, HeroesInitialForSoloGameForBotAndvariArray, HeroNamesKeyofTypeofType, HeroPlayerCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -13,7 +13,7 @@ import type { BuildHeroesArraysType, CanBeNullType, CreateHeroCardFromData, Crea
  * @param mode Режим игры.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: GameModeNames): BuildHeroesArraysType => {
+export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: GameModeNames): BuildHeroesArray => {
     const heroes: HeroCard[] = [];
     let heroesForSoloBot: CanBeNullType<HeroCard[]> = [],
         heroesForSoloGameDifficultyLevel: CanBeNullType<HeroCard[]> = [],
@@ -27,9 +27,9 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
             const hero: HeroCard = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
-                suit: heroData.suit,
-                rank: heroData.rank,
+                playerSuit: heroData.playerSuit,
                 points: heroData.points,
+                rank: heroData.rank,
                 buff: heroData.buff,
                 pickValidators: heroData.pickValidators,
                 validators: heroData.validators,
@@ -72,37 +72,37 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
         heroesInitialForSoloGameForBotAndvari = null;
     }
     return [heroes, heroesForSoloBot as CanBeNullType<HeroesForSoloGameArrayType>, heroesForSoloGameDifficultyLevel,
-        heroesInitialForSoloGameForBotAndvari as CanBeNullType<HeroesInitialForSoloGameForBotAndvariArrayType>];
+        heroesInitialForSoloGameForBotAndvari as CanBeNullType<HeroesInitialForSoloGameForBotAndvariArray>];
 };
 
 /**
- * <h3>Создание героя.</h3>
+ * <h3>Создание карты героя.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех героев при инициализации игры.</li>
+ * <li>Происходит при создании всех карт героев при инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
  * @param name Название.
  * @param description Описание.
- * @param suit Название фракции дворфов.
- * @param rank Шевроны.
+ * @param playerSuit Название фракции дворфов.
  * @param points Очки.
+ * @param rank Шевроны.
  * @param active Взят ли герой.
  * @param buff Баф.
  * @param pickValidators Валидаторы выбора карты.
  * @param validators Валидаторы карты.
  * @param actions Действия.
  * @param stack Стек действий.
- * @returns Герой.
+ * @returns Карта героя.
  */
 const CreateHero = ({
-    type = CardTypeRusNames.Hero_Card,
+    type = CardTypeRusNames.HeroCard,
     name,
     description,
-    suit = null,
-    rank = null,
+    playerSuit = null,
     points = null,
+    rank = null,
     active = true,
     buff,
     pickValidators,
@@ -113,9 +113,9 @@ const CreateHero = ({
     type,
     name,
     description,
-    suit,
-    rank,
+    playerSuit,
     points,
+    rank,
     active,
     buff,
     pickValidators,
@@ -128,29 +128,29 @@ const CreateHero = ({
  * <h3>Создание карты героя на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при размещении карты героя на поле игрока.</li>
+ * <li>Происходит при создании конкретной карты героя на поле игрока.</li>
  * </ol>
  *
  * @param type Тип.
  * @param name Название.
  * @param description Описание.
  * @param suit Название фракции дворфов.
- * @param rank Шевроны.
  * @param points Очки.
+ * @param rank Шевроны.
  * @returns Карта героя на поле игрока.
  */
 export const CreateHeroPlayerCard = ({
-    type = CardTypeRusNames.Hero_Player_Card,
+    type = CardTypeRusNames.HeroPlayerCard,
     name,
     description,
     suit,
-    rank = 1,
     points = null,
+    rank = 1,
 }: CreateHeroPlayerCardFromData): HeroPlayerCard => ({
     type,
     name,
     description,
     suit,
-    rank,
     points,
+    rank,
 });

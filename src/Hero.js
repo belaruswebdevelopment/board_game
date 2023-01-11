@@ -22,9 +22,9 @@ export const BuildHeroes = (configOptions, mode) => {
             const hero = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
-                suit: heroData.suit,
-                rank: heroData.rank,
+                playerSuit: heroData.playerSuit,
                 points: heroData.points,
+                rank: heroData.rank,
                 buff: heroData.buff,
                 pickValidators: heroData.pickValidators,
                 validators: heroData.validators,
@@ -70,33 +70,33 @@ export const BuildHeroes = (configOptions, mode) => {
         heroesInitialForSoloGameForBotAndvari];
 };
 /**
- * <h3>Создание героя.</h3>
+ * <h3>Создание карты героя.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех героев при инициализации игры.</li>
+ * <li>Происходит при создании всех карт героев при инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
  * @param name Название.
  * @param description Описание.
- * @param suit Название фракции дворфов.
- * @param rank Шевроны.
+ * @param playerSuit Название фракции дворфов.
  * @param points Очки.
+ * @param rank Шевроны.
  * @param active Взят ли герой.
  * @param buff Баф.
  * @param pickValidators Валидаторы выбора карты.
  * @param validators Валидаторы карты.
  * @param actions Действия.
  * @param stack Стек действий.
- * @returns Герой.
+ * @returns Карта героя.
  */
-const CreateHero = ({ type = CardTypeRusNames.Hero_Card, name, description, suit = null, rank = null, points = null, active = true, buff, pickValidators, validators, actions, stack, }) => ({
+const CreateHero = ({ type = CardTypeRusNames.HeroCard, name, description, playerSuit = null, points = null, rank = null, active = true, buff, pickValidators, validators, actions, stack, }) => ({
     type,
     name,
     description,
-    suit,
-    rank,
+    playerSuit,
     points,
+    rank,
     active,
     buff,
     pickValidators,
@@ -108,23 +108,23 @@ const CreateHero = ({ type = CardTypeRusNames.Hero_Card, name, description, suit
  * <h3>Создание карты героя на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при размещении карты героя на поле игрока.</li>
+ * <li>Происходит при создании конкретной карты героя на поле игрока.</li>
  * </ol>
  *
  * @param type Тип.
  * @param name Название.
  * @param description Описание.
  * @param suit Название фракции дворфов.
- * @param rank Шевроны.
  * @param points Очки.
+ * @param rank Шевроны.
  * @returns Карта героя на поле игрока.
  */
-export const CreateHeroPlayerCard = ({ type = CardTypeRusNames.Hero_Player_Card, name, description, suit, rank = 1, points = null, }) => ({
+export const CreateHeroPlayerCard = ({ type = CardTypeRusNames.HeroPlayerCard, name, description, suit, points = null, rank = 1, }) => ({
     type,
     name,
     description,
     suit,
-    rank,
     points,
+    rank,
 });
 //# sourceMappingURL=Hero.js.map

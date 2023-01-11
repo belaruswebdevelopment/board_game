@@ -3,7 +3,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CreatePublicPlayerType, FnContext, ICoin, IPlayer, IPriority, IPublicPlayer, PlayerCardType, SuitPropertyType } from "./typescript/interfaces";
+import type { CanBeNullType, Coin, CreatePublicPlayerType, FnContext, Player, PlayerBoardCardType, Priority, PublicPlayer, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -14,7 +14,7 @@ import type { CanBeNullType, CreatePublicPlayerType, FnContext, ICoin, IPlayer, 
  *
  * @returns Приватные данные игрока.
  */
-export const BuildPlayer = (): IPlayer => CreatePlayer({
+export const BuildPlayer = (): Player => CreatePlayer({
     handCoins: BuildCoins(initialPlayerCoinsConfig, {
         isInitial: true,
     }),
@@ -33,15 +33,15 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @param isPrivate Должны ли монеты быть приватными.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname: string, priority: IPriority, isPrivate: boolean): IPublicPlayer => {
-    const cards: SuitPropertyType<PlayerCardType[]> = {} as SuitPropertyType<PlayerCardType[]>,
+export const BuildPublicPlayer = (nickname: string, priority: Priority, isPrivate: boolean): PublicPlayer => {
+    const cards: SuitPropertyType<PlayerBoardCardType[]> = {} as SuitPropertyType<PlayerBoardCardType[]>,
         giantTokenSuits: SuitPropertyType<CanBeNullType<boolean>> = {} as SuitPropertyType<CanBeNullType<boolean>>;
     let suit: SuitNames;
     for (suit in suitsConfig) {
         cards[suit] = [];
         giantTokenSuits[suit] = null;
     }
-    let handCoins: ICoin[] = [];
+    let handCoins: Coin[] = [];
     if (isPrivate) {
         handCoins = Array(initialPlayerCoinsConfig.length).fill({});
     } else {
@@ -104,7 +104,7 @@ export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }: FnContext): void => 
 const CreatePlayer = ({
     boardCoins,
     handCoins,
-}: IPlayer): IPlayer => ({
+}: Player): Player => ({
     boardCoins,
     handCoins,
 });
@@ -143,7 +143,7 @@ const CreatePublicPlayer = ({
     priority,
     buffs = [],
     selectedCoin = null,
-}: CreatePublicPlayerType): IPublicPlayer => ({
+}: CreatePublicPlayerType): PublicPlayer => ({
     nickname,
     cards,
     giantTokenSuits,

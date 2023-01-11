@@ -1,6 +1,6 @@
 import { specialCardsConfig } from "./data/SpecialCardData";
 import { CardTypeRusNames } from "./typescript/enums";
-import type { CreateSpecialCardFromData, SpecialCard, SpecialCardData, SpecialCardNamesKeyofTypeofType } from "./typescript/interfaces";
+import type { CreateSpecialCardFromData, CreateSpecialPlayerCardFromData, SpecialCard, SpecialCardData, SpecialCardNamesKeyofTypeofType, SpecialPlayerCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создание особых карт.</h3>
@@ -17,10 +17,10 @@ export const BuildSpecialCards = (): SpecialCard[] => {
     for (cardName in specialCardsConfig) {
         const card: SpecialCardData = specialCardsConfig[cardName];
         cards.push(CreateSpecialCard({
-            suit: card.suit,
-            rank: card.rank,
-            points: card.points,
             name: card.name,
+            playerSuit: card.playerSuit,
+            points: card.points,
+            rank: card.rank,
         }));
     }
     return cards;
@@ -35,21 +35,49 @@ export const BuildSpecialCards = (): SpecialCard[] => {
  *
  * @param type Тип.
  * @param name Название.
- * @param suit Название фракции дворфов.
- * @param rank Шевроны.
+ * @param playerSuit Название фракции дворфов.
  * @param points Очки.
- * @returns Карта дворфа.
+ * @param rank Шевроны.
+ * @returns Особая карта.
  */
 const CreateSpecialCard = ({
-    type = CardTypeRusNames.Special_Card,
+    type = CardTypeRusNames.SpecialCard,
     name,
-    suit,
-    rank,
-    points,
+    playerSuit,
+    points = null,
+    rank = 1,
 }: CreateSpecialCardFromData): SpecialCard => ({
     type,
     name,
-    suit,
-    rank,
+    playerSuit,
     points,
+    rank,
+});
+
+/**
+ * <h3>Создание особой карты на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании конкретной особой карты на поле игрока.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param name Название.
+ * @param suit Название фракции дворфов.
+ * @param points Очки.
+ * @param rank Шевроны.
+ * @returns Особая карта на поле игрока.
+ */
+export const CreateSpecialCardPlayerCard = ({
+    type = CardTypeRusNames.SpecialPlayerCard,
+    name,
+    suit,
+    points = null,
+    rank = 1,
+}: CreateSpecialPlayerCardFromData): SpecialPlayerCard => ({
+    type,
+    name,
+    suit,
+    points,
+    rank,
 });

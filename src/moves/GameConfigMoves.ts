@@ -5,7 +5,7 @@ import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeStageNames, ErrorNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, HeroCard, InvalidMoveType, IPublicPlayer, Move, MyFnContext, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, HeroCard, InvalidMoveType, Move, MyFnContext, PublicPlayer, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType } from "../typescript/interfaces";
 
 // TODO Move all playerID === `0` to validate!
 /**
@@ -97,7 +97,7 @@ export const ChooseHeroForDifficultySoloModeMove: Move = ({ G, ctx, playerID, ..
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);

@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
-import { OpenCurrentTavernClosedCoinsOnPlayerBoard, ResolveBoardCoins } from "../helpers/CoinHelpers";
+import { OpenCurrentTavernClosedCoinsOnPlayerBoard, ResolveAllBoardCoins } from "../helpers/CoinHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
@@ -15,7 +15,7 @@ import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IndexOf, IPlayer, IPublicPlayer, IResolveBoardCoins, ITavernInConfig, MythologicalCreatureCardType, PublicPlayerCoinType, SecretAllDwarfDecks, SecretDwarfDeckType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IndexOf, MythologicalCreatureCardType, Player, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins, SecretAllDwarfDecks, SecretDwarfDeckType, TavernInConfig } from "../typescript/interfaces";
 import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastActions } from "./NextPhaseHooks";
 
 /**
@@ -55,8 +55,8 @@ const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }: FnContext): CanBeVoidT
  * @returns
  */
 const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnContext): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -108,7 +108,7 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnCont
  */
 export const CheckEndTavernsResolutionPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
@@ -152,7 +152,7 @@ export const CheckEndTavernsResolutionTurn = ({ G, ctx, ...rest }: FnContext): C
 const CheckEnlistmentMercenaries = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {
     let count = false;
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 i);
@@ -180,7 +180,7 @@ const CheckEnlistmentMercenaries = ({ G, ctx, ...rest }: FnContext): CanBeVoidTy
  * @returns
  */
 export const EndTavernsResolutionActions = ({ G, ctx, ...rest }: FnContext): void => {
-    const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
+    const currentTavernConfig: TavernInConfig = tavernsConfig[G.currentTavern];
     if (!CheckIfCurrentTavernEmpty({ G, ctx, ...rest })) {
         throw new Error(`Таверна '${currentTavernConfig.name}' не может не быть пустой в конце фазы '${PhaseNames.TavernsResolution}'.`);
     }
@@ -195,14 +195,14 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }: FnContext): voi
     }
     if (G.tierToEnd === 0) {
         const yludIndex: number =
-            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+            Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
                 CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                     HeroBuffNames.EndTier));
         if (yludIndex !== -1) {
             let startThrud = true;
             if (G.expansions.Thingvellir.active) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
+                    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
                     if (player === undefined) {
                         return ThrowMyError({ G, ctx, ...rest },
                             ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
@@ -244,7 +244,7 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }: FnContext): voi
  * @returns
  */
 export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }: FnContext): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -356,13 +356,13 @@ export const OnTavernsResolutionTurnEnd = ({ G, ctx, ...rest }: FnContext): void
  */
 export const ResolveCurrentTavernOrders = ({ G, ctx, ...rest }: FnContext): void => {
     const ulinePlayerIndex: number =
-        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+        Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                 HeroBuffNames.EveryTurn));
     if (ulinePlayerIndex === -1) {
         OpenCurrentTavernClosedCoinsOnPlayerBoard({ G, ctx, ...rest });
     }
-    const { playersOrder, exchangeOrder }: IResolveBoardCoins = ResolveBoardCoins({ G, ctx, ...rest });
+    const { playersOrder, exchangeOrder }: ResolveBoardCoins = ResolveAllBoardCoins({ G, ctx, ...rest });
     [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
 };
 

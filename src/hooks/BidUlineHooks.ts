@@ -4,7 +4,7 @@ import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelper
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>
@@ -18,17 +18,17 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PublicPla
  */
 export const CheckEndBidUlinePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
         }
         const ulinePlayerIndex: number =
-            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+            Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
                 CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                     HeroBuffNames.EveryTurn));
         if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ulinePlayerIndex !== - 1) {
-            const ulinePlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[ulinePlayerIndex];
+            const ulinePlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     ulinePlayerIndex);

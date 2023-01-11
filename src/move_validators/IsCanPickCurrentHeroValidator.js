@@ -35,7 +35,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
                     if (card === undefined) {
                         throw new Error(`В массиве карт фракции '${suit}' отсутствует последняя карта с id '${last}'.`);
                     }
-                    if (card.type !== CardTypeRusNames.Hero_Player_Card) {
+                    if (card.type !== CardTypeRusNames.HeroPlayerCard) {
                         cardsToDiscard.push(card);
                     }
                 }
@@ -64,7 +64,7 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...re
     }
     const conditions = (_a = hero.pickValidators) === null || _a === void 0 ? void 0 : _a.conditions;
     if (conditions === undefined) {
-        throw new Error(`У карты ${CardTypeRusNames.Hero_Card} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.conditions}'.`);
+        throw new Error(`У карты ${CardTypeRusNames.HeroCard} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.conditions}'.`);
     }
     let isValidMove = false, condition;
     for (condition in conditions) {

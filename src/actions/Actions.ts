@@ -1,17 +1,15 @@
-import { CreateMercenaryPlayerCampCard } from "../Camp";
 import { AllStackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
-import { AddCardToPlayer, PickCardOrActionCardActions } from "../helpers/CardHelpers";
+import { AddAnyCardToPlayerActions, AddCardToPlayerBoardCards } from "../helpers/CardHelpers";
 import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards, RemoveCardFromTavern } from "../helpers/DiscardCardHelpers";
-import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
-import { ArtefactNames, CampBuffNames, CardTypeRusNames, CommonBuffNames, ErrorNames, LogTypeNames, PhaseNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { CampCardType, CampCreatureCommandZoneCardType, CanBeUndefType, DiscardDeckCardType, DwarfDeckCardType, IActionFunctionWithoutParams, IPublicPlayer, MercenaryCampCard, MercenaryPlayerCampCard, MyFnContextWithMyPlayerID, PlayerCardType, Stack, TavernCardWithExpansionType } from "../typescript/interfaces";
+import { ArtefactNames, CampBuffNames, CardTypeRusNames, CommonBuffNames, ErrorNames, LogTypeNames, SuitNames, SuitRusNames } from "../typescript/enums";
+import type { ActionFunctionWithoutParams, CampCardType, CampCreatureCommandZoneCardType, CanBeUndefType, DiscardDeckCardType, DwarfDeckCardType, MercenaryCampCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, Stack, TavernCardWithExpansionType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с выбором карты из таверны.</h3>
@@ -29,7 +27,7 @@ import type { CampCardType, CampCreatureCommandZoneCardType, CanBeUndefType, Dis
 export const ClickCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tavernCardId: number):
     void => {
     const tavernCard: TavernCardWithExpansionType = RemoveCardFromTavern({ G, ctx, ...rest }, tavernCardId);
-    PickCardOrActionCardActions({ G, ctx, myPlayerID, ...rest }, tavernCard);
+    AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, tavernCard);
 };
 
 /**
@@ -46,10 +44,10 @@ export const ClickCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
  */
 export const DiscardAnyCardFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     suit: SuitNames, cardId: number): void => {
-    const discardedCard: PlayerCardType =
+    const discardedCard: PlayerBoardCardType =
         RemoveCardFromPlayerBoardSuitCards({ G, ctx, myPlayerID, ...rest }, suit, cardId);
     DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за эффекта карты '${CardTypeRusNames.Artefact_Card}' '${ArtefactNames.Brisingamens}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за эффекта карты '${CardTypeRusNames.ArtefactCard}' '${ArtefactNames.Brisingamens}'.`);
     DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, CampBuffNames.DiscardCardEndGame);
 };
 
@@ -66,7 +64,7 @@ export const DiscardAnyCardFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...res
  */
 export const DiscardCardFromTavernAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     cardId: number): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -91,7 +89,7 @@ export const DiscardCardFromTavernAction = ({ G, ctx, myPlayerID, ...rest }: MyF
  */
 export const GetEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     cardId: number): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -100,8 +98,8 @@ export const GetEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }: 
     if (pickedCard === undefined) {
         throw new Error(`В массиве карт лагеря игрока с id '${myPlayerID}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
-    if (pickedCard.type !== CardTypeRusNames.Mercenary_Card) {
-        throw new Error(`Выбранная карта должна быть с типом '${CardTypeRusNames.Mercenary_Card}'.`);
+    if (pickedCard.type !== CardTypeRusNames.MercenaryCard) {
+        throw new Error(`Выбранная карта должна быть с типом '${CardTypeRusNames.MercenaryCard}'.`);
     }
     AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeEnlistmentMercenaries(pickedCard)]);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
@@ -120,7 +118,7 @@ export const GetEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }: 
  */
 export const GetMjollnirProfitAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, suit: SuitNames):
     void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -142,9 +140,9 @@ export const GetMjollnirProfitAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
  * @param context
  * @returns
  */
-export const PassEnlistmentMercenariesAction: IActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }):
+export const PassEnlistmentMercenariesAction: ActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }):
     void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -166,7 +164,7 @@ export const PassEnlistmentMercenariesAction: IActionFunctionWithoutParams = ({ 
  */
 export const PickDiscardCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, cardId: number):
     void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -176,7 +174,11 @@ export const PickDiscardCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
         throw new Error(`В массиве колоды сброса отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
-    PickCardOrActionCardActions({ G, ctx, myPlayerID, ...rest }, card);
+    if (card.type === CardTypeRusNames.DwarfPlayerCard) {
+        AddCardToPlayerBoardCards({ G, ctx, myPlayerID, ...rest }, card);
+    } else {
+        AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, card);
+    }
 };
 
 /**
@@ -203,8 +205,8 @@ export const PickCardToPickDistinctionAction = ({ G, ctx, myPlayerID, ...rest }:
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
     G.explorerDistinctionCards.splice(0);
-    PickCardOrActionCardActions({ G, ctx, myPlayerID, ...rest }, pickedCard);
-    if (pickedCard.type === CardTypeRusNames.Dwarf_Card) {
+    AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, pickedCard);
+    if (pickedCard.type === CardTypeRusNames.DwarfCard) {
         G.distinctions[SuitNames.explorer] = undefined;
     }
     G.explorerDistinctionCardId = cardId;
@@ -223,7 +225,7 @@ export const PickCardToPickDistinctionAction = ({ G, ctx, myPlayerID, ...rest }:
  */
 export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     suit: SuitNames): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -234,7 +236,7 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }
             myPlayerID);
     }
     if (!IsMercenaryCampCard(stack.card)) {
-        throw new Error(`Выбранная карта должна быть типа '${CardTypeRusNames.Mercenary_Card}'.`);
+        throw new Error(`Выбранная карта должна быть типа '${CardTypeRusNames.MercenaryCard}'.`);
     }
     const mercenaryCard: CanBeUndefType<MercenaryCampCard> = stack.card;
     if (mercenaryCard === undefined) {
@@ -244,24 +246,19 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }
     if (cardVariants === undefined) {
         throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }
-    const mercenaryPlayerCard: MercenaryPlayerCampCard = CreateMercenaryPlayerCampCard({
-        suit,
-        points: cardVariants.points,
-        name: mercenaryCard.name,
-        path: mercenaryCard.path,
-    }),
-        cardIndex: number = player.campCards.findIndex((card: CampCreatureCommandZoneCardType): boolean =>
-            card.name === mercenaryCard.name);
+    mercenaryCard.playerSuit = suit;
+    mercenaryCard.points = cardVariants.points;
+    mercenaryCard.rank = cardVariants.rank;
+    const cardIndex: number = player.campCards.findIndex((card: CampCreatureCommandZoneCardType): boolean =>
+        card.name === mercenaryCard.name);
     if (cardIndex === -1) {
         throw new Error(`У игрока с id '${myPlayerID}' в массиве карт лагеря отсутствует выбранная карта.`);
     }
-    AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, mercenaryPlayerCard);
+    AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, mercenaryCard);
     const amount = 1,
         removedMercenaryCards: CampCreatureCommandZoneCardType[] =
             player.campCards.splice(cardIndex, amount);
     if (removedMercenaryCards.length !== amount) {
         throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${amount}', в наличии - '${removedMercenaryCards.length}'.`);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал карту '${mercenaryPlayerCard.type}' '${mercenaryPlayerCard.name}' во фракцию '${suitsConfig[suit].suitName}'.`);
-    CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, mercenaryPlayerCard);
 };

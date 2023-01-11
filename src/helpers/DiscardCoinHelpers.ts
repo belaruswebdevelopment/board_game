@@ -1,4 +1,4 @@
-import type { CanBeUndefType, FnContext, ICoin, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, Coin, FnContext, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с убиранием монеты с рынка.</h3>
@@ -11,8 +11,8 @@ import type { CanBeUndefType, FnContext, ICoin, PublicPlayerCoinType } from "../
  * @param coinId Id убираемой монеты.
  * @returns Убираемая монета с рынка.
  */
-export const RemoveCoinFromMarket = ({ G }: FnContext, coinId: number): ICoin => {
-    const coin: CanBeUndefType<ICoin> = G.marketCoins.splice(coinId, 1)[0];
+export const RemoveCoinFromMarket = ({ G }: FnContext, coinId: number): Coin => {
+    const coin: CanBeUndefType<Coin> = G.marketCoins.splice(coinId, 1)[0];
     if (coin === undefined) {
         throw new Error(`Отсутствует минимальная монета на рынке с id '${coinId}'.`);
     }

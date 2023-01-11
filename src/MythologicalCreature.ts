@@ -1,6 +1,6 @@
 import { giantConfig, godConfig, mythicalAnimalConfig, mythologicalCreatureConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { CardTypeRusNames } from "./typescript/enums";
-import type { CreateGiantCardFromData, CreateGodCardFromData, CreateMythicalAnimalCardFromData, CreateValkyryCardFromData, GiantCard, GiantData, GiantNamesKeyofTypeofType, GodCard, GodData, GodNamesKeyofTypeofType, MythicalAnimalCard, MythicalAnimalData, MythicalAnimalNamesKeyofTypeofType, MythologicalCreatureCardType, MythologicalCreatureDecksType, NumPlayersType, ValkyryCard, ValkyryData, ValkyryNamesKeyofTypeofType } from "./typescript/interfaces";
+import type { CreateGiantCardFromData, CreateGodCardFromData, CreateMythicalAnimalCardFromData, CreateMythicalAnimalPlayerCardFromData, CreateValkyryCardFromData, GiantCard, GiantData, GiantNamesKeyofTypeofType, GodCard, GodData, GodNamesKeyofTypeofType, MythicalAnimalCard, MythicalAnimalData, MythicalAnimalNamesKeyofTypeofType, MythicalAnimalPlayerCard, MythologicalCreatureCardType, MythologicalCreatureDecks, NumPlayersType, ValkyryCard, ValkyryData, ValkyryNamesKeyofTypeofType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты Мифических существ.</h3>
@@ -41,7 +41,7 @@ export const BuildMythologicalCreatureCards = (): MythologicalCreatureCardType[]
             name: mythicalAnimalData.name,
             buff: mythicalAnimalData.buff,
             description: mythicalAnimalData.description,
-            suit: mythicalAnimalData.suit,
+            playerSuit: mythicalAnimalData.playerSuit,
             points: mythicalAnimalData.points,
             rank: mythicalAnimalData.rank,
             stack: mythicalAnimalData.stack,
@@ -54,6 +54,7 @@ export const BuildMythologicalCreatureCards = (): MythologicalCreatureCardType[]
             name: valkyryData.name,
             buff: valkyryData.buff,
             description: valkyryData.description,
+            stack: valkyryData.stack
         }));
     }
     return cards;
@@ -70,7 +71,7 @@ export const BuildMythologicalCreatureCards = (): MythologicalCreatureCardType[]
  * @returns Колода карт мифических существ для выбора игроками/Колода оставшихся карт мифических существ.
  */
 export const BuildMythologicalCreatureDecks = (mythologicalCreatureCardsDeck: MythologicalCreatureCardType[],
-    playersNum: NumPlayersType): MythologicalCreatureDecksType => {
+    playersNum: NumPlayersType): MythologicalCreatureDecks => {
     const amount: number = mythologicalCreatureConfig[playersNum],
         mythologicalCreatureDeck: MythologicalCreatureCardType[] =
             mythologicalCreatureCardsDeck.splice(0, mythologicalCreatureConfig[playersNum]);
@@ -81,10 +82,10 @@ export const BuildMythologicalCreatureDecks = (mythologicalCreatureCardsDeck: My
 };
 
 /**
- * <h3>Создание карты Гиганта.</h3>
+ * <h3>Создание карты гиганта.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт при инициализации игры.</li>
+ * <li>Происходит при создании всех карт гигантов при инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
@@ -95,10 +96,10 @@ export const BuildMythologicalCreatureDecks = (mythologicalCreatureCardsDeck: My
  * @param placedSuit Выбранная фракция.
  * @param capturedCard Захваченная карта.
  * @param isActivated Активирована ли способность.
- * @returns Карта Гиганта.
+ * @returns Карта гиганта.
  */
 const CreateGiantCard = ({
-    type = CardTypeRusNames.Giant_Card,
+    type = CardTypeRusNames.GiantCard,
     name,
     buff,
     description,
@@ -118,10 +119,10 @@ const CreateGiantCard = ({
 });
 
 /**
- * <h3>Создание карты Бога.</h3>
+ * <h3>Создание карты бога.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт при инициализации игры.</li>
+ * <li>Происходит при создании всех карт богов при инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
@@ -130,10 +131,10 @@ const CreateGiantCard = ({
  * @param description Описание.
  * @param points Очки.
  * @param isActivated Активирована ли способность.
- * @returns Карта Бога.
+ * @returns Карта бога.
  */
 const CreateGodCard = ({
-    type = CardTypeRusNames.God_Card,
+    type = CardTypeRusNames.GodCard,
     name,
     buff,
     description,
@@ -149,47 +150,78 @@ const CreateGodCard = ({
 });
 
 /**
- * <h3>Создание карты Мифического животного.</h3>
+ * <h3>Создание карты мифического животного.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт при инициализации игры.</li>
+ * <li>Происходит при создании всех карт мифических животных при инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
  * @param name Название.
  * @param buff Баф.
  * @param description Описание.
- * @param suit Название фракции дворфов.
- * @param rank Шевроны.
+ * @param playerSuit Название фракции дворфов.
  * @param points Очки.
+ * @param rank Шевроны.
  * @param stack Стек действий.
  * @returns Карта Мифического животного.
  */
 const CreateMythicalAnimalCard = ({
-    type = CardTypeRusNames.Mythical_Animal_Card,
+    type = CardTypeRusNames.MythicalAnimalCard,
     name,
     buff,
     description,
-    suit,
-    rank = 1,
+    playerSuit,
     points = null,
+    rank = 1,
     stack,
 }: CreateMythicalAnimalCardFromData): MythicalAnimalCard => ({
     type,
     name,
     buff,
     description,
-    suit,
-    rank,
+    playerSuit,
     points,
+    rank,
     stack,
 });
 
 /**
- * <h3>Создание карты Валькирии.</h3>
+ * <h3>Создание карты мифического животного на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт при инициализации игры.</li>
+ * <li>Происходит при создании конкретной карты мифического животного на поле игрока.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param name Название.
+ * @param description Описание.
+ * @param suit Название фракции дворфов.
+ * @param points Очки.
+ * @param rank Шевроны.
+ * @returns Карта мифического животного на поле игрока.
+ */
+export const CreateMythicalAnimalPlayerCard = ({
+    type = CardTypeRusNames.MythicalAnimalPlayerCard,
+    name,
+    description,
+    suit,
+    points = null,
+    rank = 1,
+}: CreateMythicalAnimalPlayerCardFromData): MythicalAnimalPlayerCard => ({
+    type,
+    name,
+    description,
+    suit,
+    points,
+    rank,
+});
+
+/**
+ * <h3>Создание карты валькирии.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех карт валькирий при инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
@@ -197,18 +229,21 @@ const CreateMythicalAnimalCard = ({
  * @param buff Баф.
  * @param description Описание.
  * @param strengthTokenNotch Метка токена силы.
- * @returns Карта Валькирии.
+ * @param stack Стек действий.
+ * @returns Карта валькирии.
  */
 const CreateValkyryCard = ({
-    type = CardTypeRusNames.Valkyry_Card,
+    type = CardTypeRusNames.ValkyryCard,
     name,
     buff,
     description,
     strengthTokenNotch = null,
+    stack,
 }: CreateValkyryCardFromData): ValkyryCard => ({
     type,
     name,
     buff,
     description,
     strengthTokenNotch,
+    stack,
 });

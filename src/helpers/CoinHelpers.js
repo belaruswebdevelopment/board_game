@@ -11,7 +11,7 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * <p>Применения:</p>
  * <ol>
  * <li>В конце 1-й эпохи, когда получается преимущество по фракции охотников (обмен '0' на '3').</li>
- * <li>Действия, связанные со сбросом обменной монеты по карте лагеря артефакта Jarnglofi.</li>
+ * <li>Действия, связанные со сбросом обменной монеты по карте артефакта Jarnglofi.</li>
  * </ol>
  *
  * @param context
@@ -189,7 +189,7 @@ export const OpenCurrentTavernClosedCoinsOnPlayerBoard = ({ G, ctx, ...rest }) =
  * @param context
  * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
-export const ResolveBoardCoins = ({ G, ctx, ...rest }) => {
+export const ResolveAllBoardCoins = ({ G, ctx, ...rest }) => {
     var _a;
     const playersOrderNumbers = [], coinValues = [], exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {

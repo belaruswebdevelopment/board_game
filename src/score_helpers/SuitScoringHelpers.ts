@@ -1,5 +1,5 @@
 import { HeroNames } from "../typescript/enums";
-import type { ISuitScoringFunction, PlayerCardType } from "../typescript/interfaces";
+import type { PlayerBoardCardType, SuitScoringFunction } from "../typescript/interfaces";
 import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -13,7 +13,7 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
  * @param potentialCardValue Потенциальное значение карты для ботов.
  * @returns Суммарное количество очков по фракции кузнецов.
  */
-export const BlacksmithScoring: ISuitScoringFunction = (cards: PlayerCardType[], potentialCardValue = 0): number =>
+export const BlacksmithScoring: SuitScoringFunction = (cards: PlayerBoardCardType[], potentialCardValue = 0): number =>
     ArithmeticSum(3, 1, (cards.reduce(TotalRank, 0) +
         potentialCardValue));
 
@@ -28,7 +28,7 @@ export const BlacksmithScoring: ISuitScoringFunction = (cards: PlayerCardType[],
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns Суммарное количество очков по фракции разведчиков.
 */
-export const ExplorerScoring: ISuitScoringFunction = (cards: PlayerCardType[], potentialCardValue = 0): number =>
+export const ExplorerScoring: SuitScoringFunction = (cards: PlayerBoardCardType[], potentialCardValue = 0): number =>
     cards.reduce(TotalPoints, 0) + potentialCardValue;
 
 /**
@@ -42,7 +42,7 @@ export const ExplorerScoring: ISuitScoringFunction = (cards: PlayerCardType[], p
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns Суммарное количество очков по фракции охотников.
 */
-export const HunterScoring: ISuitScoringFunction = (cards: PlayerCardType[], potentialCardValue = 0): number =>
+export const HunterScoring: SuitScoringFunction = (cards: PlayerBoardCardType[], potentialCardValue = 0): number =>
     (cards.reduce(TotalRank, 0) + potentialCardValue) ** 2;
 
 /**
@@ -57,12 +57,12 @@ export const HunterScoring: ISuitScoringFunction = (cards: PlayerCardType[], pot
 * @param additionalScoring Дополнительное значение специфической карты.
 * @returns Суммарное количество очков по фракции горняков.
 */
-export const MinerScoring: ISuitScoringFunction = (cards: PlayerCardType[], potentialCardValue = 0,
+export const MinerScoring: SuitScoringFunction = (cards: PlayerBoardCardType[], potentialCardValue = 0,
     additionalScoring = false): number => {
     let ratatoskValue = 0;
     if (additionalScoring) {
         let zeroRankValue = 0;
-        cards.forEach((card: PlayerCardType): void => {
+        cards.forEach((card: PlayerBoardCardType): void => {
             if (card.points === 0) {
                 zeroRankValue += 1;
             } else if (card.name === HeroNames.Zoral) {
@@ -86,5 +86,5 @@ export const MinerScoring: ISuitScoringFunction = (cards: PlayerCardType[], pote
 * @param potentialCardValue Потенциальное значение карты для ботов.
 * @returns Суммарное количество очков по фракции воинов.
 */
-export const WarriorScoring: ISuitScoringFunction = (cards: PlayerCardType[], potentialCardValue = 0): number =>
+export const WarriorScoring: SuitScoringFunction = (cards: PlayerBoardCardType[], potentialCardValue = 0): number =>
     cards.reduce(TotalPoints, 0) + potentialCardValue;

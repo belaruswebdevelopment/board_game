@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../is_helpers/IsDwarfTypeHelpers";
 import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GiantNames, GodNames, SoloGameAndvariStrategyNames, SuitNames, SuitRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
-import type { ActiveStageNames, BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DwarfCard, DwarfDeckCardType, FnContext, HeroCard, IPublicPlayer, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, Stack, StackCardType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { ActiveStageNames, BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DwarfCard, DwarfDeckCardType, FnContext, HeroCard, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, PublicPlayer, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, Stack, StackCardType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 // TODO Add common ProfitFunctionType to all function here with common args and different return type!?
@@ -22,7 +22,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<DwarfCard>> => {
     let moveMainArgs: CanBeUndefType<MoveArgumentsType<DwarfCard>>;
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -37,12 +37,12 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
         throw new Error(`В стеке игрока отсутствует 'card'.`);
     }
     if (!IsDwarfCard(card)) {
-        throw new Error(`В стеке игрока 'card' должен быть с типом '${CardTypeRusNames.Dwarf_Card}'.`);
+        throw new Error(`В стеке игрока 'card' должен быть с типом '${CardTypeRusNames.DwarfCard}'.`);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, player, card.suit,
+                DrawCard({ G, ctx, ...rest }, data, boardCells, card, j, player, card.playerSuit,
                     CardMoveNames.ClickCardNotGiantAbilityMove, card);
             } else if (validatorName ===
                 ActivateGiantAbilityOrPickCardSubMoveValidatorNames.ClickCardNotGiantAbilityMoveValidator) {
@@ -59,7 +59,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
                 player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
                     boolean => card.name === giantName);
             if (giant === undefined) {
-                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.Giant_Card}' с названием '${giantName}'.`);
+                throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.GiantCard}' с названием '${giantName}'.`);
             }
             if (data !== undefined && boardCells !== undefined) {
                 DrawCard({ G, ctx, ...rest }, data, boardCells, giant, j, player, null,
@@ -97,7 +97,7 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }: FnContext,
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<CanBeNullType<GodNames[]>>> => {
     let moveMainArgs: CanBeUndefType<MoveArgumentsType<CanBeNullType<GodNames[]>>>;
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -115,7 +115,7 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }: FnContext,
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
             boolean => card.name === godName);
     if (god === undefined) {
-        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.God_Card}' с названием '${godName}'.`);
+        throw new Error(`В массиве карт мифических существ игрока с id '${ctx.currentPlayer}' в командной зоне отсутствует карта '${CardTypeRusNames.GodCard}' с названием '${godName}'.`);
     }
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
@@ -178,7 +178,7 @@ export const ChooseGetMythologyCardProfit = ({ G, ctx, ...rest }: FnContext,
             }
             if (ctx.activePlayers?.[Number(ctx.currentPlayer)]
                 === TavernsResolutionStageNames.GetMythologyCard) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         ctx.currentPlayer);
@@ -217,7 +217,7 @@ export const ChooseStrategyForSoloModeAndvariProfit = ({ G, ctx, ...rest }: FnCo
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyNames[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyNames[]> = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -291,7 +291,7 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameAndvariStrategyVariantLevelType[]> = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -329,7 +329,7 @@ export const ChooseDifficultyLevelForSoloModeProfit = ({ G, ctx, ...rest }: FnCo
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<SoloGameDifficultyLevelArgType[]>> => {
     const moveMainArgs: MoveArgumentsType<SoloGameDifficultyLevelArgType[]> = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -369,7 +369,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<number[]>> => {
     const moveMainArgs: MoveArgumentsType<number[]> = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -429,10 +429,10 @@ export const ExplorerDistinctionProfit = ({ G, ctx, ...rest }: FnContext,
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
         let suit: CanBeNullType<SuitNames> = null;
-        if (card.type === CardTypeRusNames.Dwarf_Card) {
-            suit = card.suit;
+        if (card.type === CardTypeRusNames.DwarfCard) {
+            suit = card.playerSuit;
         }
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
@@ -497,7 +497,7 @@ export const PickHeroesForSoloModeProfit = ({ G, ctx, ...rest }: FnContext,
             if (hero.active && Number(ctx.currentPlayer) === 0
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)]
                 === ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         ctx.currentPlayer);
@@ -538,7 +538,7 @@ export const StartOrPassEnlistmentMercenariesProfit = ({ G, ctx, ...rest }: FnCo
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps, boardCells?: JSX.Element[]):
     CanBeVoidType<MoveArgumentsType<null>> => {
     let moveMainArgs: CanBeUndefType<MoveArgumentsType<null>>;
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);

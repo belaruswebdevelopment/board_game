@@ -12,8 +12,8 @@ export const GetCardsFromSecretDwarfDeck = ({ G }: FnContext, tier: TierType, st
     return cards;
 };
 
-export const GetCampCardsFromSecretCampDeck = ({ G }: FnContext, tier: TierType, start: number,
-    amount?: number): CampDeckCardType[] => {
+export const GetCampCardsFromSecretCampDeck = ({ G }: FnContext, tier: TierType, start: number, amount?: number):
+    CampDeckCardType[] => {
     const campDeck: SecretCampDeckType = G.secret.campDecks[tier satisfies IndexOf<SecretAllCampDecks>],
         campCards: CampDeckCardType[] = campDeck.splice(start, amount);
     if (amount !== campCards.length) {

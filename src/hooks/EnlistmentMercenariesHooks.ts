@@ -6,7 +6,7 @@ import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActio
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { ErrorNames, HeroBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PlayerID, Stack } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, PlayerID, PublicPlayer, Stack } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -20,7 +20,7 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, IPublicPlayer, PlayerID,
  */
 export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> => {
     if (G.publicPlayersOrder.length) {
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 ctx.currentPlayer);
@@ -28,7 +28,7 @@ export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }: FnContex
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
             let allMercenariesPlayed = true;
             for (let i = 0; i < ctx.numPlayers; i++) {
-                const playerI: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
+                const playerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
                 if (playerI === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         i);
@@ -56,7 +56,7 @@ export const CheckEndEnlistmentMercenariesPhase = ({ G, ctx, ...rest }: FnContex
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<boolean> => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -81,7 +81,7 @@ export const CheckEndEnlistmentMercenariesTurn = ({ G, ctx, ...rest }: FnContext
 export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }: FnContext): void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number =
-            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer, index: number): boolean =>
+            Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
                 CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest },
                     HeroBuffNames.EndTier));
         if (yludIndex === -1) {
@@ -103,7 +103,7 @@ export const EndEnlistmentMercenariesActions = ({ G, ctx, ...rest }: FnContext):
  */
 export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }: FnContext): void => {
     StartOrEndActions({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest });
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -129,7 +129,7 @@ export const OnEnlistmentMercenariesMove = ({ G, ctx, events, ...rest }: FnConte
  * @returns
  */
 export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -157,10 +157,10 @@ export const OnEnlistmentMercenariesTurnBegin = ({ G, ctx, events, ...rest }: Fn
 * @returns
 */
 export const PrepareMercenaryPhaseOrders = ({ G }: FnContext): void => {
-    const sortedPlayers: IPublicPlayer[] =
-        Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer => player),
+    const sortedPlayers: PublicPlayer[] =
+        Object.values(G.publicPlayers).map((player: PublicPlayer): PublicPlayer => player),
         playersIndexes: PlayerID[] = [];
-    sortedPlayers.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
+    sortedPlayers.sort((nextPlayer: PublicPlayer, currentPlayer: PublicPlayer): number => {
         if (nextPlayer.campCards.filter(IsMercenaryCampCard).length <
             currentPlayer.campCards.filter(IsMercenaryCampCard).length) {
             return 1;
@@ -175,10 +175,10 @@ export const PrepareMercenaryPhaseOrders = ({ G }: FnContext): void => {
         }
         return 0;
     });
-    sortedPlayers.forEach((playerSorted: IPublicPlayer): void => {
+    sortedPlayers.forEach((playerSorted: PublicPlayer): void => {
         if (playerSorted.campCards.filter(IsMercenaryCampCard).length) {
             playersIndexes.push(String(Object.values(G.publicPlayers)
-                .findIndex((player: IPublicPlayer): boolean => player.nickname === playerSorted.nickname)));
+                .findIndex((player: PublicPlayer): boolean => player.nickname === playerSorted.nickname)));
         }
     });
     G.publicPlayersOrder = playersIndexes;

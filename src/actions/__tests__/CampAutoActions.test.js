@@ -2991,7 +2991,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
         };
         expect(() => {
             StartVidofnirVedrfolnirAction({ G, ctx });
-        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
+        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '0' монет(ы).`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=true) and must throw Error`, () => {
         const G = {
@@ -3027,7 +3027,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
         };
         expect(() => {
             StartVidofnirVedrfolnirAction({ G, ctx });
-        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
+        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '0' монет(ы).`);
     });
 });
 //# sourceMappingURL=CampAutoActions.test.js.map

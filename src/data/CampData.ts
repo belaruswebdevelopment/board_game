@@ -54,9 +54,9 @@ const Draupnir: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Fafnir_Baleygr: ArtefactCampCardData = {
-    name: ArtefactNames.Fafnir_Baleygr,
-    description: ArtefactDescriptionNames.Fafnir_Baleygr,
+const FafnirBaleygr: ArtefactCampCardData = {
+    name: ArtefactNames.FafnirBaleygr,
+    description: ArtefactDescriptionNames.FafnirBaleygr,
     tier: 0,
     buff: {
         name: CampBuffNames.GoCamp,
@@ -193,9 +193,9 @@ const Mjollnir: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Odroerir_The_Mythic_Cauldron: ArtefactCampCardData = {
-    name: ArtefactNames.Odroerir_The_Mythic_Cauldron,
-    description: ArtefactDescriptionNames.Odroerir_The_Mythic_Cauldron,
+const OdroerirTheMythicCauldron: ArtefactCampCardData = {
+    name: ArtefactNames.OdroerirTheMythicCauldron,
+    description: ArtefactDescriptionNames.OdroerirTheMythicCauldron,
     tier: 1,
     actions: {
         name: AutoActionFunctionNames.FinishOdroerirTheMythicCauldronAction,
@@ -232,7 +232,7 @@ const Vegvisir: ArtefactCampCardData = {
     name: ArtefactNames.Vegvisir,
     description: ArtefactDescriptionNames.Vegvisir,
     tier: 0,
-    suit: SuitNames.explorer,
+    playerSuit: SuitNames.explorer,
     rank: 1,
     points: 13,
     scoringRule: {
@@ -248,9 +248,9 @@ const Vegvisir: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Vidofnir_Vedrfolnir: ArtefactCampCardData = {
-    name: ArtefactNames.Vidofnir_Vedrfolnir,
-    description: ArtefactDescriptionNames.Vidofnir_Vedrfolnir,
+const VidofnirVedrfolnir: ArtefactCampCardData = {
+    name: ArtefactNames.VidofnirVedrfolnir,
+    description: ArtefactDescriptionNames.VidofnirVedrfolnir,
     tier: 0,
     actions: {
         name: AutoActionFunctionNames.StartVidofnirVedrfolnirAction,
@@ -429,15 +429,15 @@ export const mercenariesConfig: MercenariesConfig = [
 export const artefactsConfig: ArtefactConfig = {
     Brisingamens,
     Draupnir,
-    Fafnir_Baleygr,
+    FafnirBaleygr,
     Gjallarhorn,
     Hofud,
     Hrafnsmerki,
     Jarnglofi,
     Megingjord,
     Mjollnir,
-    Odroerir_The_Mythic_Cauldron,
+    OdroerirTheMythicCauldron,
     Svalinn,
     Vegvisir,
-    Vidofnir_Vedrfolnir,
+    VidofnirVedrfolnir,
 };

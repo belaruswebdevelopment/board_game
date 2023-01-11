@@ -1,5 +1,5 @@
 import { ArtefactNames, CommonStageNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, SuitNames } from "../../typescript/enums";
-import type { CoinType, Ctx, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, MyGameState, PlayerBuffs, PlayerCardType, PublicPlayerCoinType, Stack } from "../../typescript/interfaces";
+import type { CoinType, Ctx, MyFnContextWithMyPlayerID, MyGameState, Player, PlayerBoardCardType, PlayerBuffs, PublicPlayer, PublicPlayerCoinType, Stack } from "../../typescript/interfaces";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {
@@ -7,7 +7,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -19,7 +19,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         },
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -30,7 +30,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -39,7 +39,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         null,
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -53,7 +53,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -65,7 +65,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         },
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -76,7 +76,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -85,7 +85,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         null,
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -106,7 +106,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -115,7 +115,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         {},
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -130,7 +130,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -139,7 +139,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         null,
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -160,7 +160,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -172,7 +172,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         },
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -187,7 +187,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -196,7 +196,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         null,
                     ],
                     buffs: [] as PlayerBuffs[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -210,7 +210,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -226,7 +226,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -237,7 +237,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -250,7 +250,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -264,7 +264,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -280,7 +280,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -291,7 +291,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -304,7 +304,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -325,7 +325,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -341,7 +341,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -356,7 +356,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -369,7 +369,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -390,7 +390,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -403,7 +403,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -418,7 +418,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -431,7 +431,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -445,7 +445,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -462,7 +462,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -473,7 +473,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -487,7 +487,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -509,7 +509,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         },
                     ],
                     boardCoins: [] as PublicPlayerCoinType[],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -523,7 +523,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -539,7 +539,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         null,
                     ],
                     boardCoins: [],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -553,7 +553,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -575,7 +575,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         },
                     ],
                     boardCoins: [] as PublicPlayerCoinType[],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -592,7 +592,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
@@ -608,7 +608,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         null,
                     ],
                     boardCoins: [],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -622,7 +622,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -638,13 +638,13 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             const G = {
                 mode: GameModeNames.Basic,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
                         boardCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as PlayerBuffs[],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
                 ctx = {
@@ -661,13 +661,13 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 players: {
                     0: {
                         boardCoins: [] as PublicPlayerCoinType[],
-                    } as IPlayer,
+                    } as Player,
                 },
                 publicPlayers: {
                     0: {
                         boardCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as PlayerBuffs[],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
                 ctx = {
@@ -682,7 +682,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             const G = {
                 mode: GameModeNames.Basic,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -693,7 +693,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                                 everyTurn: true,
                             },
                         ],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
                 ctx = {
@@ -710,7 +710,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     boardCoins: [],
                     handCoins: [],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -721,7 +721,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `mode`>,
             ctx = {
@@ -750,7 +750,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
     it(`should add active players with warriors cards to stage`, (): void => {
         const G = {
             publicPlayers: {
-                0: {} as IPublicPlayer,
+                0: {} as PublicPlayer,
                 1: {
                     cards: {
                         warrior: [
@@ -758,7 +758,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                         ],
                     },
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers`>,
             ctx = {
@@ -768,7 +768,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
         StartDiscardSuitCardAction({ G, ctx } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             publicPlayers: {
-                0: {} as IPublicPlayer,
+                0: {} as PublicPlayer,
                 1: {
                     cards: {
                         warrior: [
@@ -781,7 +781,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers`>);
         expect(ctx).toEqual({
@@ -792,13 +792,13 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
     it(`shouldn't add active player without warriors cards to stage`, (): void => {
         const G = {
             publicPlayers: {
-                0: {} as IPublicPlayer,
+                0: {} as PublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardType[],
+                        warrior: [] as PlayerBoardCardType[],
                     },
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
                 2: {
                     cards: {
                         warrior: [
@@ -806,7 +806,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                         ],
                     },
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers`>,
             ctx = {
@@ -816,13 +816,13 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
         StartDiscardSuitCardAction({ G, ctx } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             publicPlayers: {
-                0: {} as IPublicPlayer,
+                0: {} as PublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardType[],
+                        warrior: [] as PlayerBoardCardType[],
                     },
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
                 2: {
                     cards: {
                         warrior: [
@@ -835,7 +835,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers`>);
         expect(ctx).toEqual({
@@ -847,12 +847,12 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
     it(`shouldn't add all active players without warriors cards to stage and must throw Error`, (): void => {
         const G = {
             publicPlayers: {
-                0: {} as IPublicPlayer,
+                0: {} as PublicPlayer,
                 1: {
                     cards: {
-                        warrior: [] as PlayerCardType[],
+                        warrior: [] as PlayerBoardCardType[],
                     },
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers`>,
             ctx = {
@@ -871,7 +871,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -893,7 +893,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -904,7 +904,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -938,7 +938,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             ],
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -947,7 +947,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -969,7 +969,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -980,7 +980,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1014,7 +1014,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             ],
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1040,7 +1040,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1053,7 +1053,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1081,7 +1081,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1114,7 +1114,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             ],
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1140,7 +1140,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1161,7 +1161,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1189,7 +1189,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1222,7 +1222,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             ],
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1232,7 +1232,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -1254,7 +1254,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         handCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as PlayerBuffs[],
                         stack: [] as Stack[],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
                 ctx = {
@@ -1265,7 +1265,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as IPlayer,
+                    0: {} as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -1298,7 +1298,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 ],
                             },
                         ],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
         });
@@ -1325,7 +1325,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                    } as IPlayer,
+                    } as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -1338,7 +1338,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         ],
                         buffs: [] as PlayerBuffs[],
                         stack: [] as Stack[],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
                 ctx = {
@@ -1366,7 +1366,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                    } as IPlayer,
+                    } as Player,
                 },
                 publicPlayers: {
                     0: {
@@ -1398,7 +1398,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 ],
                             },
                         ],
-                    } as IPublicPlayer,
+                    } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
         });
@@ -1407,7 +1407,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1425,7 +1425,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1436,7 +1436,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1465,7 +1465,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             ],
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1487,7 +1487,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1500,7 +1500,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1524,7 +1524,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1552,7 +1552,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             ],
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1561,7 +1561,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1588,7 +1588,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1599,7 +1599,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1637,7 +1637,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1664,7 +1664,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1681,7 +1681,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1710,7 +1710,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1738,7 +1738,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1747,7 +1747,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1773,7 +1773,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1784,7 +1784,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1816,7 +1816,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1842,7 +1842,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 2,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1862,7 +1862,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1890,7 +1890,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 2,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -1916,7 +1916,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -1925,7 +1925,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1948,7 +1948,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -1959,7 +1959,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -1993,7 +1993,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2016,7 +2016,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2033,7 +2033,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2058,7 +2058,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2086,7 +2086,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2095,7 +2095,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2130,7 +2130,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2141,7 +2141,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2187,7 +2187,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2222,7 +2222,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2239,7 +2239,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2276,7 +2276,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2304,7 +2304,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2313,7 +2313,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2343,7 +2343,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2354,7 +2354,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2390,7 +2390,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2420,7 +2420,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2440,7 +2440,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2472,7 +2472,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2498,7 +2498,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             priority: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2507,7 +2507,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2533,7 +2533,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2544,7 +2544,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2577,7 +2577,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2601,7 +2601,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2624,7 +2624,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2650,7 +2650,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2680,7 +2680,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2706,7 +2706,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2727,7 +2727,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2755,7 +2755,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2787,7 +2787,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2796,7 +2796,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2818,7 +2818,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2829,7 +2829,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2858,7 +2858,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2880,7 +2880,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2897,7 +2897,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2921,7 +2921,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -2949,7 +2949,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
     });
@@ -2959,7 +2959,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -2977,7 +2977,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -2992,7 +2992,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -3009,7 +3009,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -3024,7 +3024,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -3038,7 +3038,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -3046,7 +3046,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             } as Ctx;
         expect((): void => {
             StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
+        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '0' монет(ы).`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=true) and must throw Error`, (): void => {
         const G = {
@@ -3062,7 +3062,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -3075,7 +3075,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     buffs: [] as PlayerBuffs[],
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
@@ -3083,6 +3083,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             } as Ctx;
         expect((): void => {
             StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}', а не '0' монет(ы).`);
+        }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '0' монет(ы).`);
     });
 });

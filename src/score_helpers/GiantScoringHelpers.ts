@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { CardTypeRusNames, ErrorNames, GiantNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DwarfCard, GiantCard, IGiantScoringFunction, IPublicPlayer, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DwarfCard, GiantCard, GiantScoringFunction, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Получение победных очков по Гиганту, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -14,9 +14,9 @@ import type { CanBeNullType, CanBeUndefType, DwarfCard, GiantCard, IGiantScoring
  * @param value Значение.
  * @returns Количество очков по конкретному гиганту.
  */
-export const BasicGiantScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+export const BasicGiantScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     value?: number): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -37,9 +37,9 @@ export const BasicGiantScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, .
  * @param context
  * @returns Количество очков по конкретному гиганту.
  */
-export const GymirScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+export const GymirScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -48,7 +48,7 @@ export const GymirScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...res
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType): boolean =>
             card.name === GiantNames.Gymir) as GiantCard;
     if (gymirCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Gymir}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.GiantCard}' с названием '${GiantNames.Gymir}'.`);
     }
     const capturedGymirCard: CanBeNullType<DwarfCard> = gymirCard.capturedCard;
     if (capturedGymirCard === null) {
@@ -70,9 +70,9 @@ export const GymirScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...res
  * @param context
  * @returns Количество очков по конкретному гиганту.
  */
-export const SurtScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+export const SurtScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -81,7 +81,7 @@ export const SurtScoring: IGiantScoringFunction = ({ G, ctx, myPlayerID, ...rest
         player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType): boolean =>
             card.name === GiantNames.Surt) as GiantCard;
     if (surtCard === undefined) {
-        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.Giant_Card}' с названием '${GiantNames.Surt}'.`);
+        throw new Error(`У игрока '${player.nickname}' не может отсутствовать карта с типом '${CardTypeRusNames.GiantCard}' с названием '${GiantNames.Surt}'.`);
     }
     const capturedSurtCard: CanBeNullType<DwarfCard> = surtCard.capturedCard;
     if (capturedSurtCard === null) {

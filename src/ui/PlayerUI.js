@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Styles } from "../data/StyleData";
+import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -126,11 +126,11 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
         if (data !== undefined) {
             for (let s = 0; s < 1 + Number(G.expansions.Thingvellir.active); s++) {
                 if (s === 0) {
-                    playerHeaders.push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }) }, `${player.nickname} hero icon`));
+                    playerHeaders.push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: ALlStyles.HeroBack(), className: "bg-hero-icon" }) }, `${player.nickname} hero icon`));
                     playerHeadersCount.push(_jsx("th", { className: "bg-gray-600 text-white", children: _jsx("b", { children: player.heroes.length }) }, `${player.nickname} hero count`));
                 }
                 else if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) {
-                    playerHeaders.push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `${player.nickname} camp icon`));
+                    playerHeaders.push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: ALlStyles.Camp(), className: "bg-camp-icon" }) }, `${player.nickname} camp icon`));
                     playerHeadersCount.push(_jsx("th", { className: "bg-yellow-200 text-white", children: _jsx("b", { children: player.campCards.length }) }, `${player.nickname} camp counts`));
                 }
             }
@@ -145,7 +145,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                     isDrawRow = true;
                     if (p !== Number(ctx.currentPlayer)
                         && stage === CommonStageNames.DiscardSuitCardFromPlayerBoard
-                        && suit === SuitNames.warrior && card.type !== CardTypeRusNames.Hero_Player_Card) {
+                        && suit === SuitNames.warrior && card.type !== CardTypeRusNames.HeroPlayerCard) {
                         if (data !== undefined) {
                             DrawCard({ G, ctx, ...rest }, data, playerCells, card, id, player, suit, CardMoveNames.DiscardSuitCardFromPlayerBoardMove, i);
                         }
@@ -166,7 +166,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                     }
                     else if (p === Number(ctx.currentPlayer) && last === i
                         && stage === CommonStageNames.DiscardTopCardFromSuit
-                        && card.type !== CardTypeRusNames.Hero_Player_Card) {
+                        && card.type !== CardTypeRusNames.HeroPlayerCard) {
                         // TODO Does it need more then 1 checking?
                         if (stack === undefined) {
                             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, p);
@@ -194,7 +194,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                         }
                     }
                     else if (p === Number(ctx.currentPlayer) && ctx.phase === PhaseNames.BrisingamensEndGame
-                        && card.type !== CardTypeRusNames.Hero_Player_Card) {
+                        && card.type !== CardTypeRusNames.HeroPlayerCard) {
                         if (data !== undefined) {
                             DrawCard({ G, ctx, ...rest }, data, playerCells, card, id, player, suit, CardMoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                         }
@@ -286,7 +286,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                                             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchGameMode);
                                             return _exhaustiveCheck;
                                     }
-                                    cardType = CardTypeRusNames.Hero_Player_Card;
+                                    cardType = CardTypeRusNames.HeroPlayerCard;
                                     break;
                                 case HeroNames.Ylud:
                                     switch (G.mode) {
@@ -321,18 +321,18 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                                             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchGameMode);
                                             return _exhaustiveCheck;
                                     }
-                                    cardType = CardTypeRusNames.Hero_Player_Card;
+                                    cardType = CardTypeRusNames.HeroPlayerCard;
                                     break;
                                 case MultiSuitCardNames.OlwinsDouble:
                                 case MultiSuitCardNames.Gullinbursti:
-                                    cardType = CardTypeRusNames.Multi_Suit_Player_Card;
+                                    cardType = CardTypeRusNames.MultiSuitPlayerCard;
                                     moveName = EmptyCardMoveNames.PlaceMultiSuitCardMove;
                                     break;
                                 default:
                                     if (((_f = ctx.activePlayers) === null || _f === void 0 ? void 0 : _f[Number(ctx.currentPlayer)]) ===
                                         EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries
                                         && Number(ctx.currentPlayer) === p) {
-                                        cardType = CardTypeRusNames.Mercenary_Player_Card;
+                                        cardType = CardTypeRusNames.MercenaryPlayerCard;
                                         moveName = EmptyCardMoveNames.PlaceEnlistmentMercenariesMove;
                                         break;
                                     }
@@ -344,12 +344,13 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                             DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, cardType, id, player, suit, moveName, suit);
                         }
                         else {
-                            DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.Player_Board_Card, id, player, suit);
+                            DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.PlayerBoardCard, id, player, suit);
                         }
                     }
                     else if (validatorName === CommonMoveValidatorNames.PlaceThrudHeroMoveValidator
                         || validatorName === SoloBotCommonMoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator
-                        || validatorName === SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator
+                        || validatorName ===
+                            SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator
                         || validatorName ===
                             PlaceYludMoveValidatorNames.PlaceYludHeroMoveValidator
                         || validatorName === PlaceYludMoveValidatorNames.SoloBotPlaceYludHeroMoveValidator
@@ -370,7 +371,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                 }
                 else {
                     if (data !== undefined) {
-                        DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.Player_Board_Card, id, player, suit);
+                        DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.PlayerBoardCard, id, player, suit);
                     }
                 }
                 j++;
@@ -380,7 +381,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                 const playerCards = Object.values(player.cards).flat(), hero = player.heroes[i];
                 // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                 // TODO How draw and count no counting Hero from Thrivaldi!?
-                if (hero !== undefined && !hero.suit && !((hero.name === HeroNames.Ylud
+                if (hero !== undefined && !hero.playerSuit && !((hero.name === HeroNames.Ylud
                     && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
                     && playerCards.findIndex((card) => card.name === HeroNames.Thrud) !== -1))) {
                     isDrawRow = true;
@@ -390,7 +391,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                 }
                 else {
                     if (data !== undefined) {
-                        DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.Command_Zone_Hero_Card, id, player, null);
+                        DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.CommandZoneHeroCard, id, player, null);
                     }
                 }
             }
@@ -400,7 +401,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                     const campCard = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
-                        if (campCard.type === CardTypeRusNames.Mercenary_Card
+                        if (campCard.type === CardTypeRusNames.MercenaryCard
                             && ctx.phase === PhaseNames.EnlistmentMercenaries
                             && ctx.activePlayers === null && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
@@ -425,7 +426,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                     }
                     else {
                         if (data !== undefined) {
-                            DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.Command_Zone_Camp_Card, id, player, null);
+                            DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.CommandZoneCampCard, id, player, null);
                         }
                     }
                 }
@@ -440,7 +441,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                     }
                     else {
                         if (data !== undefined) {
-                            DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.Command_Zone_Mythological_Creature_Card, id, player, null);
+                            DrawEmptyCard({ G, ctx, ...rest }, data, playerCells, CardTypeRusNames.CommandZoneMythologicalCreatureCard, id, player, null);
                         }
                     }
                 }
@@ -551,17 +552,17 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                 if (data !== undefined) {
                     if (i === 0) {
                         const currentTavernConfig = tavernsConfig[t];
-                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: Styles.Tavern(t), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
+                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Tavern(t), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
                     }
                     else {
                         if (t === G.tavernsNum - 1) {
-                            playerFooters.push(_jsx("th", { children: _jsx("span", { style: Styles.Priority(), className: "bg-priority-icon" }) }, `${player.nickname} priority icon`));
+                            playerFooters.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Priority(), className: "bg-priority-icon" }) }, `${player.nickname} priority icon`));
                             playerCells.push(_jsx("td", { className: "bg-gray-300", children: _jsx("span", { style: player.priority.value > 0 ?
-                                        Styles.Priorities(player.priority.value) : undefined, className: "bg-priority" }) }, `${player.nickname} priority gem`));
+                                        ALlStyles.Priorities(player.priority.value) : undefined, className: "bg-priority" }) }, `${player.nickname} priority gem`));
                         }
                         else {
                             if (data !== undefined) {
-                                playerFooters.push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }) }, `${player.nickname} exchange icon ${t}`));
+                                playerFooters.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Exchange(), className: "bg-small-market-coin" }) }, `${player.nickname} exchange icon ${t}`));
                             }
                         }
                     }

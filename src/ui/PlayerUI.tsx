@@ -1,4 +1,4 @@
-import { Styles } from "../data/StyleData";
+import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -8,7 +8,7 @@ import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
-import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HeroCard, IMoveCardsArguments, IMoveCoinsArguments, IndexOf, IPlayer, IPublicPlayer, ITavernInConfig, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, PlayerCardType, PublicPlayerCoinType, Stack, SuitPropertyType, TavernsConfigType, VariantType } from "../typescript/interfaces";
+import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HeroCard, IndexOf, MoveArgumentsType, MoveCardsArguments, MoveCoinsArguments, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, Player, PlayerBoardCardType, PublicPlayer, PublicPlayerCoinType, Stack, SuitPropertyType, TavernInConfig, TavernsConfigType, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -28,10 +28,10 @@ import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
  */
 export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, playerId: CanBeNullType<number> = null, data?: BoardProps):
-    JSX.Element[] | MoveArgumentsType<number[] | SuitNames[] | IMoveCardsArguments
+    JSX.Element[] | MoveArgumentsType<number[] | SuitNames[] | MoveCardsArguments
         | Partial<SuitPropertyType<number[]>>> => {
     const playersBoards: JSX.Element[] = [];
-    let moveMainArgs: CanBeUndefType<MoveArgumentsType<number[] | SuitNames[] | IMoveCardsArguments
+    let moveMainArgs: CanBeUndefType<MoveArgumentsType<number[] | SuitNames[] | MoveCardsArguments
         | Partial<SuitPropertyType<number[]>>>>;
     if (validatorName !== null) {
         switch (validatorName) {
@@ -68,7 +68,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
         const playerRows: JSX.Element[] = [],
             playerHeaders: JSX.Element[] = [],
             playerHeadersCount: JSX.Element[] = [],
-            player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p],
+            player: CanBeUndefType<PublicPlayer> = G.publicPlayers[p],
             stage: CanBeUndefType<ActiveStageNames> = ctx.activePlayers?.[p];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -138,7 +138,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                 if (s === 0) {
                     playerHeaders.push(
                         <th className="bg-gray-600" key={`${player.nickname} hero icon`}>
-                            <span style={Styles.HeroBack()} className="bg-hero-icon"></span>
+                            <span style={ALlStyles.HeroBack()} className="bg-hero-icon"></span>
                         </th>
                     );
                     playerHeadersCount.push(
@@ -150,7 +150,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                 } else if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) {
                     playerHeaders.push(
                         <th className="bg-yellow-200" key={`${player.nickname} camp icon`}>
-                            <span style={Styles.Camp()} className="bg-camp-icon"></span>
+                            <span style={ALlStyles.Camp()} className="bg-camp-icon"></span>
                         </th>
                     );
                     playerHeadersCount.push(
@@ -170,13 +170,13 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                 suit: SuitNames;
             for (suit in suitsConfig) {
                 id = i + j;
-                const card: CanBeUndefType<PlayerCardType> = player.cards[suit][i],
+                const card: CanBeUndefType<PlayerBoardCardType> = player.cards[suit][i],
                     last: number = player.cards[suit].length - 1;
                 if (card !== undefined) {
                     isDrawRow = true;
                     if (p !== Number(ctx.currentPlayer)
                         && stage === CommonStageNames.DiscardSuitCardFromPlayerBoard
-                        && suit === SuitNames.warrior && card.type !== CardTypeRusNames.Hero_Player_Card) {
+                        && suit === SuitNames.warrior && card.type !== CardTypeRusNames.HeroPlayerCard) {
                         if (data !== undefined) {
                             DrawCard({ G, ctx, ...rest }, data, playerCells, card, id, player, suit,
                                 CardMoveNames.DiscardSuitCardFromPlayerBoardMove, i);
@@ -194,7 +194,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                         }
                     } else if (p === Number(ctx.currentPlayer) && last === i
                         && stage === CommonStageNames.DiscardTopCardFromSuit
-                        && card.type !== CardTypeRusNames.Hero_Player_Card) {
+                        && card.type !== CardTypeRusNames.HeroPlayerCard) {
                         // TODO Does it need more then 1 checking?
                         if (stack === undefined) {
                             return ThrowMyError({ G, ctx, ...rest },
@@ -221,7 +221,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                             }
                         }
                     } else if (p === Number(ctx.currentPlayer) && ctx.phase === PhaseNames.BrisingamensEndGame
-                        && card.type !== CardTypeRusNames.Hero_Player_Card) {
+                        && card.type !== CardTypeRusNames.HeroPlayerCard) {
                         if (data !== undefined) {
                             DrawCard({ G, ctx, ...rest }, data, playerCells, card, id, player, suit,
                                 CardMoveNames.DiscardCardFromPlayerBoardMove, suit, i);
@@ -310,7 +310,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                                             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchGameMode);
                                             return _exhaustiveCheck;
                                     }
-                                    cardType = CardTypeRusNames.Hero_Player_Card;
+                                    cardType = CardTypeRusNames.HeroPlayerCard;
                                     break;
                                 case HeroNames.Ylud:
                                     switch (G.mode) {
@@ -343,18 +343,18 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                                             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchGameMode);
                                             return _exhaustiveCheck;
                                     }
-                                    cardType = CardTypeRusNames.Hero_Player_Card;
+                                    cardType = CardTypeRusNames.HeroPlayerCard;
                                     break;
                                 case MultiSuitCardNames.OlwinsDouble:
                                 case MultiSuitCardNames.Gullinbursti:
-                                    cardType = CardTypeRusNames.Multi_Suit_Player_Card;
+                                    cardType = CardTypeRusNames.MultiSuitPlayerCard;
                                     moveName = EmptyCardMoveNames.PlaceMultiSuitCardMove;
                                     break;
                                 default:
                                     if (ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
                                         EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries
                                         && Number(ctx.currentPlayer) === p) {
-                                        cardType = CardTypeRusNames.Mercenary_Player_Card;
+                                        cardType = CardTypeRusNames.MercenaryPlayerCard;
                                         moveName = EmptyCardMoveNames.PlaceEnlistmentMercenariesMove;
                                         break;
                                     } else {
@@ -366,11 +366,12 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                                 moveName, suit);
                         } else {
                             DrawEmptyCard({ G, ctx, ...rest }, data, playerCells,
-                                CardTypeRusNames.Player_Board_Card, id, player, suit);
+                                CardTypeRusNames.PlayerBoardCard, id, player, suit);
                         }
                     } else if (validatorName === CommonMoveValidatorNames.PlaceThrudHeroMoveValidator
                         || validatorName === SoloBotCommonMoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator
-                        || validatorName === SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator
+                        || validatorName ===
+                        SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator
                         || validatorName ===
                         PlaceYludMoveValidatorNames.PlaceYludHeroMoveValidator
                         || validatorName === PlaceYludMoveValidatorNames.SoloBotPlaceYludHeroMoveValidator
@@ -390,21 +391,21 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                 } else {
                     if (data !== undefined) {
                         DrawEmptyCard({ G, ctx, ...rest }, data, playerCells,
-                            CardTypeRusNames.Player_Board_Card, id, player, suit);
+                            CardTypeRusNames.PlayerBoardCard, id, player, suit);
                     }
                 }
                 j++;
             }
             for (let k = 0; k < 1; k++) {
                 id += k + 1;
-                const playerCards: PlayerCardType[] = Object.values(player.cards).flat(),
+                const playerCards: PlayerBoardCardType[] = Object.values(player.cards).flat(),
                     hero: CanBeUndefType<HeroCard> = player.heroes[i];
                 // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                 // TODO How draw and count no counting Hero from Thrivaldi!?
-                if (hero !== undefined && !hero.suit && !((hero.name === HeroNames.Ylud
-                    && playerCards.findIndex((card: PlayerCardType): boolean =>
+                if (hero !== undefined && !hero.playerSuit && !((hero.name === HeroNames.Ylud
+                    && playerCards.findIndex((card: PlayerBoardCardType): boolean =>
                         card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
-                            && playerCards.findIndex((card: PlayerCardType): boolean =>
+                            && playerCards.findIndex((card: PlayerBoardCardType): boolean =>
                                 card.name === HeroNames.Thrud) !== -1))) {
                     isDrawRow = true;
                     if (data !== undefined) {
@@ -413,7 +414,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                 } else {
                     if (data !== undefined) {
                         DrawEmptyCard({ G, ctx, ...rest }, data, playerCells,
-                            CardTypeRusNames.Command_Zone_Hero_Card, id, player, null);
+                            CardTypeRusNames.CommandZoneHeroCard, id, player, null);
                     }
                 }
             }
@@ -423,7 +424,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                     const campCard: CanBeUndefType<CampCardType> = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
-                        if (campCard.type === CardTypeRusNames.Mercenary_Card
+                        if (campCard.type === CardTypeRusNames.MercenaryCard
                             && ctx.phase === PhaseNames.EnlistmentMercenaries
                             && ctx.activePlayers === null && Number(ctx.currentPlayer) === p) {
                             if (data !== undefined) {
@@ -447,7 +448,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                     } else {
                         if (data !== undefined) {
                             DrawEmptyCard({ G, ctx, ...rest }, data, playerCells,
-                                CardTypeRusNames.Command_Zone_Camp_Card, id, player, null);
+                                CardTypeRusNames.CommandZoneCampCard, id, player, null);
                         }
                     }
                 }
@@ -464,7 +465,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                     } else {
                         if (data !== undefined) {
                             DrawEmptyCard({ G, ctx, ...rest }, data, playerCells,
-                                CardTypeRusNames.Command_Zone_Mythological_Creature_Card, id, player,
+                                CardTypeRusNames.CommandZoneMythologicalCreatureCard, id, player,
                                 null);
                         }
                     }
@@ -518,9 +519,9 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
  */
 export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps):
-    JSX.Element[] | MoveArgumentsType<number[] | IMoveCoinsArguments[]> => {
+    JSX.Element[] | MoveArgumentsType<number[] | MoveCoinsArguments[]> => {
     const playersBoardsCoins: JSX.Element[] = [],
-        moveMainArgs: MoveArgumentsType<number[] | IMoveCoinsArguments[]> = [];
+        moveMainArgs: MoveArgumentsType<number[] | MoveCoinsArguments[]> = [];
     let moveName: CanBeUndefType<CoinMoveNames>;
     for (let p = 0; p < ctx.numPlayers; p++) {
         const stage: CanBeUndefType<ActiveStageNames> = ctx.activePlayers?.[p];
@@ -572,8 +573,8 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                 }
                 break;
         }
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p],
-            privatePlayer: CanBeUndefType<IPlayer> = G.players[p];
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[p],
+            privatePlayer: CanBeUndefType<Player> = G.players[p];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 p);
@@ -586,11 +587,11 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
             for (let t = 0; t < G.tavernsNum; t++) {
                 if (data !== undefined) {
                     if (i === 0) {
-                        const currentTavernConfig: CanBeUndefType<ITavernInConfig> =
+                        const currentTavernConfig: CanBeUndefType<TavernInConfig> =
                             tavernsConfig[t as IndexOf<TavernsConfigType>];
                         playerHeaders.push(
                             <th key={`Tavern ${currentTavernConfig.name}`}>
-                                <span style={Styles.Tavern(t as IndexOf<TavernsConfigType>)}
+                                <span style={ALlStyles.Tavern(t as IndexOf<TavernsConfigType>)}
                                     className="bg-tavern-icon"></span>
                             </th>
                         );
@@ -598,14 +599,14 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                         if (t === G.tavernsNum - 1) {
                             playerFooters.push(
                                 <th key={`${player.nickname} priority icon`}>
-                                    <span style={Styles.Priority()} className="bg-priority-icon"></span>
+                                    <span style={ALlStyles.Priority()} className="bg-priority-icon"></span>
                                 </th>
                             );
                             playerCells.push(
                                 <td key={`${player.nickname} priority gem`}
                                     className="bg-gray-300">
                                     <span style={player.priority.value > 0 ?
-                                        Styles.Priorities(player.priority.value) : undefined}
+                                        ALlStyles.Priorities(player.priority.value) : undefined}
                                         className="bg-priority"></span>
                                 </td>
                             );
@@ -613,7 +614,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                             if (data !== undefined) {
                                 playerFooters.push(
                                     <th key={`${player.nickname} exchange icon ${t}`}>
-                                        <span style={Styles.Exchange()} className="bg-small-market-coin"></span>
+                                        <span style={ALlStyles.Exchange()} className="bg-small-market-coin"></span>
                                     </th>
                                 );
                             }
@@ -672,7 +673,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                                 || validatorName === CommonMoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator
                                 || validatorName ===
                                 CommonMoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) {
-                                (moveMainArgs as MoveArgumentsType<IMoveCoinsArguments[]>).push({
+                                (moveMainArgs as MoveArgumentsType<MoveCoinsArguments[]>).push({
                                     coinId: id,
                                     type: CoinTypeNames.Board,
                                 });
@@ -725,7 +726,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                                                 CommonMoveValidatorNames.ClickCoinToUpgradeMoveValidator
                                                 || validatorName ===
                                                 CommonMoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) {
-                                                (moveMainArgs as MoveArgumentsType<IMoveCoinsArguments[]>)
+                                                (moveMainArgs as MoveArgumentsType<MoveCoinsArguments[]>)
                                                     .push({
                                                         coinId: id,
                                                         type: CoinTypeNames.Board,
@@ -846,9 +847,9 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
  */
 export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }: FnContext,
     validatorName: CanBeNullType<MoveValidatorNamesTypes>, data?: BoardProps):
-    JSX.Element[] | MoveArgumentsType<number[][] | number[] | IMoveCoinsArguments[]> => {
+    JSX.Element[] | MoveArgumentsType<number[][] | number[] | MoveCoinsArguments[]> => {
     const playersHandsCoins: JSX.Element[] = [],
-        moveMainArgs: MoveArgumentsType<number[][] | number[] | IMoveCoinsArguments[]> = [];
+        moveMainArgs: MoveArgumentsType<number[][] | number[] | MoveCoinsArguments[]> = [];
     if (validatorName === BidsMoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator
         || validatorName === BidsMoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator) {
         moveMainArgs[0] = [];
@@ -903,8 +904,8 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }: FnContext,
                 }
                 break;
         }
-        const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p],
-            privatePlayer: CanBeUndefType<IPlayer> = G.players[p],
+        const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[p],
+            privatePlayer: CanBeUndefType<Player> = G.players[p],
             playerCells: JSX.Element[] = [];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -970,7 +971,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }: FnContext,
                             || validatorName ===
                             SoloBotCommonCoinUpgradeMoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator
                             || validatorName === CommonMoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) {
-                            (moveMainArgs as MoveArgumentsType<IMoveCoinsArguments[]>).push({
+                            (moveMainArgs as MoveArgumentsType<MoveCoinsArguments[]>).push({
                                 coinId: j,
                                 type: CoinTypeNames.Hand,
                             });

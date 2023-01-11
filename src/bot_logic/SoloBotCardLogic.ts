@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
 import { TotalRank, TotalRankWithoutThrud } from "../score_helpers/ScoreHelpers";
 import { CardTypeRusNames, ErrorNames, HeroBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, HeroCard, IPublicPlayer, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerCardType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, HeroCard, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты конкретной фракции из таверны соло ботом.</h3>
@@ -17,15 +17,15 @@ import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, HeroCard, IPubli
  */
 export const CheckSoloBotCanPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     CanBeUndefType<SuitNames> => {
-    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const playerCards: PlayerCardType[][] = Object.values(soloBotPublicPlayer.cards),
+    const playerCards: PlayerBoardCardType[][] = Object.values(soloBotPublicPlayer.cards),
         heroesLength: number = soloBotPublicPlayer.heroes.filter((hero: HeroCard): boolean =>
             hero.name.startsWith(`Dwerg`)).length,
-        playerCardsCount: number[] = playerCards.map((item: PlayerCardType[]): number =>
+        playerCardsCount: number[] = playerCards.map((item: PlayerBoardCardType[]): number =>
             item.reduce(TotalRank, 0)),
         minLength: number = Math.min(...playerCardsCount),
         minLengthCount: number =
@@ -58,13 +58,13 @@ export const CheckSoloBotCanPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
  */
 export const CheckSuitsLeastPresentOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     [SuitNames[], number] => {
-    const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const playerCards: PlayerCardType[][] = Object.values(soloBotPublicPlayer.cards),
-        playerCardsCount: number[] = playerCards.map((item: PlayerCardType[]): number =>
+    const playerCards: PlayerBoardCardType[][] = Object.values(soloBotPublicPlayer.cards),
+        playerCardsCount: number[] = playerCards.map((item: PlayerBoardCardType[]): number =>
             item.reduce(TotalRankWithoutThrud, 0)),
         minLength: number = Math.min(...playerCardsCount),
         minLengthCount: number = minLength === 0 ? 0 :
@@ -122,12 +122,12 @@ export const CheckSoloBotMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest
                 return ThrowMyError({ G, ctx, ...rest },
                     ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
-            if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+            if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
                 continue;
             }
-            if (tavernCard.suit === suit) {
+            if (tavernCard.playerSuit === suit) {
                 availableMoveArguments.push(moveArgument);
-            } else if (tavernCard.suit === thrudSuit) {
+            } else if (tavernCard.playerSuit === thrudSuit) {
                 availableThrudArguments.push(moveArgument);
             }
         }
@@ -165,7 +165,8 @@ export const CheckSoloBotMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest
  */
 export const CheckSoloBotMustTakeCardWithHighestValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): number => {
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
+        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
     let maxValue = 0,
         index = 0;
     for (let i = 0; i < moveArguments.length; i++) {
@@ -182,7 +183,7 @@ export const CheckSoloBotMustTakeCardWithHighestValue = ({ G, ctx, myPlayerID, .
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard, moveArgument);
         }
@@ -246,14 +247,14 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = ({ G, 
                 return ThrowMyError({ G, ctx, ...rest },
                     ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
             }
-            if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+            if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
                 continue;
             }
-            const cardSuit: SuitNames =
-                thrudSuit && minLengthCount === 1 && thrudSuit === tavernCard.suit ? thrudSuit : tavernCard.suit;
-            if (availableSuitArguments.includes(cardSuit) && cardSuit === tavernCard.suit) {
+            const cardSuit: SuitNames = thrudSuit && minLengthCount === 1 && thrudSuit === tavernCard.playerSuit
+                ? thrudSuit : tavernCard.playerSuit;
+            if (availableSuitArguments.includes(cardSuit) && cardSuit === tavernCard.playerSuit) {
                 leastPresentArguments.push(moveArgument);
-                if (tavernCard.points === null || tavernCard.suit === SuitNames.miner) {
+                if (tavernCard.points === null || tavernCard.playerSuit === SuitNames.miner) {
                     isNoPoints = true;
                 }
             }
@@ -299,7 +300,7 @@ export const CheckSoloBotMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }: MyFnC
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.CurrentTavernCardWithCurrentIdIsNull, moveArgument);
         }
-        if (tavernCard.type === CardTypeRusNames.Royal_Offering_Card) {
+        if (tavernCard.type === CardTypeRusNames.RoyalOfferingCard) {
             return moveArgument;
         }
     }

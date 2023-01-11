@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, FnContext, IPriority, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, Priority, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>
@@ -15,14 +15,14 @@ import type { CanBeUndefType, FnContext, IPriority, IPublicPlayer, MyFnContextWi
  */
 export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): boolean => {
     const tempPriorities: number[] =
-        Object.values(G.publicPlayers).map((player: IPublicPlayer): number => player.priority.value),
+        Object.values(G.publicPlayers).map((player: PublicPlayer): number => player.priority.value),
         minPriority: number = Math.min(...tempPriorities),
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const priority: IPriority = player.priority;
+    const priority: Priority = player.priority;
     return priority.value === minPriority;
 };
 
@@ -37,11 +37,11 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
  * @returns
  */
 export const ChangePlayersPriorities = ({ G, ctx, ...rest }: FnContext): void => {
-    const tempPriorities: CanBeUndefType<IPriority>[] = [];
+    const tempPriorities: CanBeUndefType<Priority>[] = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder: CanBeUndefType<number> = G.exchangeOrder[i];
         if (exchangeOrder !== undefined) {
-            const exchangePlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[exchangeOrder];
+            const exchangePlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[exchangeOrder];
             if (exchangePlayer === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     exchangeOrder);
@@ -52,8 +52,8 @@ export const ChangePlayersPriorities = ({ G, ctx, ...rest }: FnContext): void =>
     if (tempPriorities.length) {
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Обмен кристаллами между игроками:`);
         for (let i = 0; i < G.exchangeOrder.length; i++) {
-            const tempPriority: CanBeUndefType<IPriority> = tempPriorities[i],
-                player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
+            const tempPriority: CanBeUndefType<Priority> = tempPriorities[i],
+                player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
             if (player === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     i);

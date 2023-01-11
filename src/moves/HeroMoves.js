@@ -43,10 +43,10 @@ export const DiscardTopCardFromSuitMove = ({ G, ctx, playerID, ...rest }, suit, 
     DiscardCardsFromPlayerBoardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit, cardId);
 };
 /**
- * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
+ * <h3>Расположение героя или зависимых карт героя на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе героя Ольвин со способностью выкладки карт на планшет игрока.</li>
+ * <li>При выборе героя Ольвин со способностью выкладки карт на поле игрока.</li>
  * </ol>
  *
  * @param context
@@ -61,7 +61,7 @@ export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
     PlaceMultiSuitCardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 /**
- * <h3>Расположение героя на планшет игрока.</h3>
+ * <h3>Расположение героя на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При выборе героя Труд со способностью перемещения на планшете игрока.</li>
@@ -79,7 +79,7 @@ export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
     PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 /**
- * <h3>Расположение героя на планшет игрока.</h3>
+ * <h3>Расположение героя на поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При выборе героя Илуд со способностью размещения на планшете игрока в конце эпохи.</li>

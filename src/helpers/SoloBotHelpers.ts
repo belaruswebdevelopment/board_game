@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, IMoveCoinsArguments, IPlayer, IPublicPlayer, MoveArgumentsType, MyFnContextWithMyPlayerID, PublicPlayerCoinType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, MoveArgumentsType, MoveCoinsArguments, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет минимальную видимую монету соло бота.</h3>
@@ -44,15 +44,15 @@ export const CheckMinCoinIndexForSoloBotAndvari = (coins: PublicPlayerCoinType[]
  * @returns Значение минимальной видимой монеты соло бота.
  */
 export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    moveArguments: MoveArgumentsType<IMoveCoinsArguments[]>, type: CoinTypeNames): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    moveArguments: MoveArgumentsType<MoveCoinsArguments[]>, type: CoinTypeNames): number => {
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     let minValue = 0;
     for (let i = 0; i < moveArguments.length; i++) {
-        const currentMoveArgument: CanBeUndefType<IMoveCoinsArguments> = moveArguments[i];
+        const currentMoveArgument: CanBeUndefType<MoveCoinsArguments> = moveArguments[i];
         if (currentMoveArgument === undefined) {
             throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
         }
@@ -98,15 +98,15 @@ export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest
  * @returns Значение минимальной монеты соло бота Андвари.
  */
 export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    moveArguments: MoveArgumentsType<IMoveCoinsArguments[]>): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    moveArguments: MoveArgumentsType<MoveCoinsArguments[]>): number => {
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     let minValue = 0;
     for (let i = 0; i < moveArguments.length; i++) {
-        const currentMoveArgument: CanBeUndefType<IMoveCoinsArguments> = moveArguments[i];
+        const currentMoveArgument: CanBeUndefType<MoveCoinsArguments> = moveArguments[i];
         if (currentMoveArgument === undefined) {
             throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
         }
@@ -165,8 +165,8 @@ export const GetMinCoinVisibleIndex = (coins: PublicPlayerCoinType[], minValue: 
  */
 export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -206,8 +206,8 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...r
  */
 export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

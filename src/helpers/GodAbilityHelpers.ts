@@ -1,14 +1,14 @@
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, GodBuffNames, GodNames } from "../typescript/enums";
-import type { CanBeUndefType, IPublicPlayer, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { CanBeUndefType, MyFnContextWithMyPlayerID, PublicPlayer } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { IsLastRound } from "./RoundHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 
 export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     godName: GodNames): boolean => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

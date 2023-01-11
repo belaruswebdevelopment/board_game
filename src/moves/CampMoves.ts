@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
 import { ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, CommonStageNames, TavernsResolutionDefaultStageNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArrayType, CanBeVoidType, IndexOf, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArray, CanBeVoidType, IndexOf, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
@@ -59,7 +59,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove: Move = ({ G, ctx, 
  * @returns
  */
 export const ClickCampCardHoldaMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
-    cardId: IndexOf<CampCardArrayType>): CanBeVoidType<InvalidMoveType> => {
+    cardId: IndexOf<CampCardArray>): CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         CommonStageNames.ClickCampCardHolda, CardMoveNames.ClickCampCardHoldaMove, cardId);
     if (!isValidMove) {
@@ -79,7 +79,7 @@ export const ClickCampCardHoldaMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
-export const ClickCampCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: IndexOf<CampCardArrayType>):
+export const ClickCampCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: IndexOf<CampCardArray>):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionDefaultStageNames.ClickCampCard, CardMoveNames.ClickCampCardMove, cardId);

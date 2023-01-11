@@ -3,7 +3,7 @@ import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelp
 import { IsMercenaryPlayerCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CommonBuffNames, ErrorNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, IArtefactScoringFunction, IPublicPlayer, MyFnContextWithMyPlayerID, PlayerBuffs, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { ArtefactScoringFunction, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBuffs, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -18,10 +18,10 @@ import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
  * @param value Значение очков артефакта.
  * @returns Количество очков по конкретному артефакту.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, isFinal = false,
-    value?: number): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+export const BasicArtefactScoring: ArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    MyFnContextWithMyPlayerID, isFinal = false, value?: number): number => {
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -43,9 +43,9 @@ export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContex
  * @param isFinal Является ли финальным подсчётом очков.
  * @returns Количество очков по конкретному артефакту.
  */
-export const DraupnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+export const DraupnirScoring: ArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     isFinal = false): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -77,9 +77,9 @@ export const DraupnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, 
  * @param context
  * @returns Количество очков по конкретному артефакту.
  */
-export const HrafnsmerkiScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
+export const HrafnsmerkiScoring: ArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     let score = 0,
         suit: SuitNames;
     if (player === undefined) {
@@ -103,9 +103,9 @@ export const HrafnsmerkiScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerI
  * @param isFinal Является ли финальным подсчётом очков.
  * @returns Количество очков по конкретному артефакту.
  */
-export const MjollnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+export const MjollnirScoring: ArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     isFinal = false): number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -133,7 +133,7 @@ export const MjollnirScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, 
  * @param context
  * @returns Количество очков по конкретному артефакту.
  */
-export const OdroerirTheMythicCauldronScoring: IArtefactScoringFunction = ({ G, ...rest }: MyFnContextWithMyPlayerID):
+export const OdroerirTheMythicCauldronScoring: ArtefactScoringFunction = ({ G, ...rest }: MyFnContextWithMyPlayerID):
     number => GetOdroerirTheMythicCauldronCoinsValues({ G, ...rest });
 
 /**
@@ -146,9 +146,9 @@ export const OdroerirTheMythicCauldronScoring: IArtefactScoringFunction = ({ G, 
  * @param context
  * @returns Количество очков по конкретному артефакту.
  */
-export const SvalinnScoring: IArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+export const SvalinnScoring: ArtefactScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

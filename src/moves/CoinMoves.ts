@@ -6,8 +6,9 @@ import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/Distin
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, TavernsResolutionStageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, IPlayer, IPublicPlayer, Move, MyFnContext, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, Move, MyFnContext, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
+// Move all coinId to PlayerCoinId and MarketCoinId types?!
 // TODO Check moves with solo mode!
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
@@ -28,8 +29,8 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -167,7 +168,7 @@ export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -193,8 +194,8 @@ export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -257,8 +258,8 @@ export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(playerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
         );

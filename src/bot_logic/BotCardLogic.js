@@ -23,8 +23,8 @@ export const CompareTavernCards = (card1, card2) => {
         return 0;
     }
     // TODO If Mythological Creatures cards!?
-    if (card1.type === CardTypeRusNames.Dwarf_Card && card2.type === CardTypeRusNames.Dwarf_Card) {
-        if (card1.suit === card2.suit) {
+    if (card1.type === CardTypeRusNames.DwarfCard && card2.type === CardTypeRusNames.DwarfCard) {
+        if (card1.playerSuit === card2.playerSuit) {
             const result = ((_a = card1.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
             if (result === 0) {
                 return result;
@@ -49,9 +49,9 @@ export const CompareTavernCards = (card1, card2) => {
  * @returns Сравнительное значение.
  */
 export const EvaluateTavernCard = ({ G, ctx, ...rest }, compareCard, cardId, tavern) => {
-    if (compareCard !== null && compareCard.type === CardTypeRusNames.Dwarf_Card) {
+    if (compareCard !== null && compareCard.type === CardTypeRusNames.DwarfCard) {
         if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-            return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
+            return CompareTavernCards(compareCard, G.averageCards[compareCard.playerSuit]);
         }
     }
     // TODO If Mythological Creatures cards!?
@@ -80,8 +80,8 @@ export const EvaluateTavernCard = ({ G, ctx, ...rest }, compareCard, cardId, tav
         }
         return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
-    if (compareCard !== null && compareCard.type === CardTypeRusNames.Dwarf_Card) {
-        return CompareTavernCards(compareCard, G.averageCards[compareCard.suit]);
+    if (compareCard !== null && compareCard.type === CardTypeRusNames.DwarfCard) {
+        return CompareTavernCards(compareCard, G.averageCards[compareCard.playerSuit]);
     }
     return 0;
 };
@@ -115,7 +115,7 @@ export const GetAverageSuitCard = (suit, data) => {
     totalPoints /= count;
     // TODO Rework it to non-dwarf card?
     return CreateDwarfCard({
-        suit: suitsConfig[suit].suit,
+        playerSuit: suitsConfig[suit].suit,
         points: totalPoints,
         name: `Average card`,
     });
@@ -150,7 +150,7 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
     }
     let score = 0, suit;
     for (suit in suitsConfig) {
-        if (card !== null && card.type === CardTypeRusNames.Dwarf_Card && card.suit === suit) {
+        if (card !== null && card.type === CardTypeRusNames.DwarfCard && card.playerSuit === suit) {
             score +=
                 StartSuitScoring(suitsConfig[suit].scoringRule, [player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1]);
         }
@@ -158,7 +158,7 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
             score += StartSuitScoring(suitsConfig[suit].scoringRule, [player.cards[suit]]);
         }
     }
-    if (card !== null && card.type === CardTypeRusNames.Royal_Offering_Card) {
+    if (card !== null && card.type === CardTypeRusNames.RoyalOfferingCard) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

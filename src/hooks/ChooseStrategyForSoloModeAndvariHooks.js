@@ -1,6 +1,7 @@
 import { soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig } from "../data/HeroData";
 import { AllStackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { AddCardToPlayerBoardCards } from "../helpers/CardHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
@@ -100,20 +101,20 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ..
             throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
         }
         const heroesForSoloGameForStrategyBotAndvari = [];
-        let heroNameEasyStrategy, heroNameHardStrategy, _exhaustiveCheck;
+        let pickedCard, heroNameEasyStrategy, heroNameHardStrategy, _exhaustiveCheck;
         switch (G.soloGameAndvariStrategyLevel) {
             case SoloGameAndvariStrategyNames.NoHeroEasyStrategy:
                 for (heroNameEasyStrategy in soloGameAndvariEasyStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameEasyStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameEasyStrategy}'.`);
+                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameEasyStrategy}'.`);
                     }
                     heroesForSoloGameForStrategyBotAndvari.push(heroCard);
                 }
                 for (heroNameHardStrategy in soloGameAndvariHardStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameHardStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для выбора в соло режиме Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameHardStrategy}'.`);
+                        throw new Error(`В массиве героев для выбора в соло режиме Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameHardStrategy}'.`);
                     }
                     G.heroes.push(heroCard);
                 }
@@ -122,14 +123,14 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ..
                 for (heroNameHardStrategy in soloGameAndvariHardStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameHardStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameHardStrategy}'.`);
+                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameHardStrategy}'.`);
                     }
                     heroesForSoloGameForStrategyBotAndvari.push(heroCard);
                 }
                 for (heroNameEasyStrategy in soloGameAndvariEasyStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameEasyStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameEasyStrategy}'.`);
+                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameEasyStrategy}'.`);
                     }
                     G.heroes.push(heroCard);
                 }
@@ -138,32 +139,38 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ..
                 for (heroNameEasyStrategy in soloGameAndvariEasyStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameEasyStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameEasyStrategy}'.`);
+                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameEasyStrategy}'.`);
                     }
                     heroesForSoloGameForStrategyBotAndvari.push(heroCard);
                 }
                 for (heroNameHardStrategy in soloGameAndvariHardStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameHardStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameHardStrategy}'.`);
+                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameHardStrategy}'.`);
                     }
-                    AddHeroToPlayerCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, heroCard);
+                    pickedCard = AddHeroToPlayerCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, heroCard);
+                    if (`suit` in pickedCard) {
+                        AddCardToPlayerBoardCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, pickedCard);
+                    }
                 }
                 break;
             case SoloGameAndvariStrategyNames.WithHeroHardStrategy:
                 for (heroNameHardStrategy in soloGameAndvariHardStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameHardStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameHardStrategy}'.`);
+                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameHardStrategy}'.`);
                     }
                     heroesForSoloGameForStrategyBotAndvari.push(heroCard);
                 }
                 for (heroNameEasyStrategy in soloGameAndvariEasyStrategyHeroesConfig) {
                     const heroCard = G.heroesInitialForSoloGameForBotAndvari.find((hero) => hero.name === heroNameEasyStrategy);
                     if (heroCard === undefined) {
-                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.Hero_Card}' с названием '${heroNameEasyStrategy}'.`);
+                        throw new Error(`В массиве героев для соло бот Андвари отсутствует '${CardTypeRusNames.HeroCard}' с названием '${heroNameEasyStrategy}'.`);
                     }
-                    AddHeroToPlayerCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, heroCard);
+                    pickedCard = AddHeroToPlayerCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, heroCard);
+                    if (`suit` in pickedCard) {
+                        AddCardToPlayerBoardCards({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest }, pickedCard);
+                    }
                 }
                 break;
             case null:
@@ -222,7 +229,7 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ..
                 return _exhaustiveCheck;
         }
         for (let i = 0; i < G.heroesForSoloGameForStrategyBotAndvari.length; i++) {
-            const suit = G.heroesForSoloGameForStrategyBotAndvari[i].suit;
+            const suit = G.heroesForSoloGameForStrategyBotAndvari[i].playerSuit;
             if (suit === null) {
                 throw new Error(`В массиве героев для стратегий соло бота Андвари не должно быть героев без принадлежности к фракции дворфов с названием '${G.heroesForSoloGameForStrategyBotAndvari[i].name}'.`);
             }

@@ -1,5 +1,5 @@
 import { CommonStageNames, DrawNames, GameModeNames, LogTypeNames } from "../../typescript/enums";
-import type { Ctx, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, MyGameState, Stack } from "../../typescript/interfaces";
+import type { Ctx, MyFnContextWithMyPlayerID, MyGameState, Player, PublicPlayer, Stack } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
 describe(`Test AddPickHeroAction method`, (): void => {
@@ -9,7 +9,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
                 0: {
                     nickname: `Dan`,
                     stack: [] as Stack[],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `logData`>,
@@ -28,7 +28,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
                             priority: 1,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             logData: [
                 {
@@ -45,7 +45,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -60,7 +60,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             currentTavern: 0,
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
@@ -71,7 +71,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as IPlayer,
+                0: {} as Player,
             },
             publicPlayers: {
                 0: {
@@ -86,7 +86,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             currentTavern: 0,
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
@@ -108,7 +108,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -121,7 +121,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             currentTavern: 0,
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
@@ -145,7 +145,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -158,7 +158,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                     handCoins: [
                         {},
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             currentTavern: 0,
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);
@@ -180,7 +180,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -196,7 +196,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                     handCoins: [
                         null,
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             currentTavern: 0,
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>,
@@ -220,7 +220,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPlayer,
+                } as Player,
             },
             publicPlayers: {
                 0: {
@@ -236,7 +236,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 0,
                         },
                     ],
-                } as IPublicPlayer,
+                } as PublicPlayer,
             },
             currentTavern: 0,
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `players` | `mode`>);

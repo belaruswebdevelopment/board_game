@@ -4,7 +4,7 @@ import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GetValidator } from "./MoveValidator";
 import { AllCurrentScoring } from "./Score";
 import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
-import type { ActiveStageNames, AIAllObjectives, CanBeNullType, CanBeUndefType, Ctx, FnContext, GetValidatorStageNames, IMoves, IMoveValidator, IPublicPlayer, MoveArgsType, MoveNamesType, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, MyGameState, PlayerID, SecretDwarfDeckTier0, StageNames, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { ActiveStageNames, AIAllObjectives, CanBeNullType, CanBeUndefType, Ctx, FnContext, GetValidatorStageNames, MoveArgsType, MoveNamesType, Moves, MoveValidator, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, MyGameState, PlayerID, PublicPlayer, SecretDwarfDeckTier0, StageNames, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -18,9 +18,9 @@ import type { ActiveStageNames, AIAllObjectives, CanBeNullType, CanBeUndefType, 
  * @param playerID Id игрока.
  * @returns Массив возможных мувов у ботов.
  */
-export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): IMoves[] => {
-    const moves: IMoves[] = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(playerID)];
+export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): Moves[] => {
+    const moves: Moves[] = [],
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx } as FnContext, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -161,7 +161,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): IMoves[
                 activeStageOfCurrentPlayer = CommonStageNames.DiscardSuitCardFromPlayerBoard;
                 // TODO Bot can't do async turns...?
                 for (let p = 0; p < ctx.numPlayers; p++) {
-                    const playerP: CanBeUndefType<IPublicPlayer> = G.publicPlayers[p];
+                    const playerP: CanBeUndefType<PublicPlayer> = G.publicPlayers[p];
                     if (playerP === undefined) {
                         return ThrowMyError({ G, ctx } as FnContext,
                             ErrorNames.PublicPlayerWithCurrentIdIsUndefined, p);
@@ -194,7 +194,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): IMoves[
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator: IMoveValidator<MoveValidatorGetRangeType> =
+        const validator: MoveValidator<MoveValidatorGetRangeType> =
             GetValidator(phase, activeStageOfCurrentPlayer,
                 `${type ?? activeStageOfCurrentPlayer}Move` as MoveNamesType);
         if (validator !== null) {
@@ -287,10 +287,10 @@ export const iterations = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): numbe
             }
             const deck0: SecretDwarfDeckTier0 = G.secret.decks[0];
             if (deck0.length > 18) {
-                if (tavernCard.type === CardTypeRusNames.Dwarf_Card) {
-                    if (CompareTavernCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
+                if (tavernCard.type === CardTypeRusNames.DwarfCard) {
+                    if (CompareTavernCards(tavernCard, G.averageCards[tavernCard.playerSuit]) === -1
                         && currentTavern.some((card: TavernCardType): boolean =>
-                            CompareTavernCards(card, G.averageCards[tavernCard.suit]) > -1)) {
+                            CompareTavernCards(card, G.averageCards[tavernCard.playerSuit]) > -1)) {
                         continue;
                     }
                 }
@@ -327,11 +327,10 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
         weight: -100.0,
     },
     // TODO Move same logic in one func?!
+    // TODO Add PlaceCoinsUline too!?
     /* isWeaker: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PlaceCoins) {
-                return false;
-            }
+            if (ctx.phase === Phases.PlaceCoins) {
             const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -358,15 +357,14 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
             if (totalScoreCurPlayer < top2 && top2 < top1) {
                 return totalScoreCurPlayer >= Math.floor(0.85 * top1);
             }
+        }
             return false;
         },
         weight: 0.01,
     }, */
     /* isSecond: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PlaceCoins) {
-                return false;
-            }
+            if (ctx.phase === Phases.PlaceCoins) {
             const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -393,15 +391,14 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
             if (totalScoreCurPlayer === top2 && top2 < top1) {
                 return totalScoreCurPlayer >= Math.floor(0.90 * top1);
             }
+        }
             return false;
         },
         weight: 0.1,
     }, */
     /* isEqual: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== Phases.PlaceCoins) {
-                return false;
-            }
+            if (ctx.phase === Phases.PlaceCoins) {
             const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -428,43 +425,43 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
             if (totalScoreCurPlayer < top2 && top2 === top1) {
                 return totalScoreCurPlayer >= Math.floor(0.90 * top1);
             }
+        }
             return false;
         },
         weight: 0.1,
     }, */
     isFirst: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== PhaseNames.TavernsResolution) {
-                return false;
-            }
-            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
-            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
-                return false;
-            }
-            if (tavern0.some((card: CanBeNullType<TavernCardType>): boolean => card === null)) {
-                return false;
-            }
-            const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
-                if (player === undefined) {
-                    return ThrowMyError({ G, ctx } as FnContext,
-                        ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+            if (ctx.phase === PhaseNames.TavernsResolution) {
+                const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
+                if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+                    return false;
                 }
-                totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) } as
-                    MyFnContextWithMyPlayerID));
-            }
-            const [top1, top2]: number[] =
-                totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
-                totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
-            if (totalScoreCurPlayer === undefined) {
-                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
-            }
-            if (totalScoreCurPlayer === top1) {
-                if (top2 === undefined) {
-                    throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                if (tavern0.some((card: CanBeNullType<TavernCardType>): boolean => card === null)) {
+                    return false;
                 }
-                return totalScoreCurPlayer >= Math.floor(1.05 * top2);
+                const totalScore: number[] = [];
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
+                    if (player === undefined) {
+                        return ThrowMyError({ G, ctx } as FnContext,
+                            ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    }
+                    totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) } as
+                        MyFnContextWithMyPlayerID));
+                }
+                const [top1, top2]: number[] =
+                    totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
+                    totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
+                if (totalScoreCurPlayer === undefined) {
+                    throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
+                }
+                if (totalScoreCurPlayer === top1) {
+                    if (top2 === undefined) {
+                        throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                    }
+                    return totalScoreCurPlayer >= Math.floor(1.05 * top2);
+                }
             }
             return false;
         },
@@ -472,37 +469,36 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
     },
     isStronger: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== PhaseNames.TavernsResolution) {
-                return false;
-            }
-            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
-            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
-                return false;
-            }
-            if (tavern0.some((card: CanBeNullType<TavernCardType>): boolean => card === null)) {
-                return false;
-            }
-            const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[i];
-                if (player === undefined) {
-                    return ThrowMyError({ G, ctx } as FnContext, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-                        i);
+            if (ctx.phase === PhaseNames.TavernsResolution) {
+                const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
+                if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+                    return false;
                 }
-                totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) } as
-                    MyFnContextWithMyPlayerID));
-            }
-            const [top1, top2]: number[] =
-                totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
-                totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
-            if (totalScoreCurPlayer === undefined) {
-                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
-            }
-            if (totalScoreCurPlayer === top1) {
-                if (top2 === undefined) {
-                    throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                if (tavern0.some((card: CanBeNullType<TavernCardType>): boolean => card === null)) {
+                    return false;
                 }
-                return totalScoreCurPlayer >= Math.floor(1.10 * top2);
+                const totalScore: number[] = [];
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
+                    if (player === undefined) {
+                        return ThrowMyError({ G, ctx } as FnContext,
+                            ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
+                    }
+                    totalScore.push(AllCurrentScoring({ G, ctx, myPlayerID: String(i) } as
+                        MyFnContextWithMyPlayerID));
+                }
+                const [top1, top2]: number[] =
+                    totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
+                    totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
+                if (totalScoreCurPlayer === undefined) {
+                    throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
+                }
+                if (totalScoreCurPlayer === top1) {
+                    if (top2 === undefined) {
+                        throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
+                    }
+                    return totalScoreCurPlayer >= Math.floor(1.10 * top2);
+                }
             }
             return false;
         },

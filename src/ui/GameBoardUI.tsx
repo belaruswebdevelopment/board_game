@@ -1,11 +1,11 @@
 import { CountMarketCoins } from "../Coin";
-import { Styles } from "../data/StyleData";
+import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
-import type { ActiveStageNames, BoardProps, CampCardArrayType, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawProfitType, FnContext, HeroCard, HeroesForSoloGameArrayType, ICoin, IDrawBoardOptions, IndexOf, INumberValues, IPublicPlayer, ITavernInConfig, MoveArgumentsType, MoveValidatorNamesTypes, StageNameTextType, TavernAllCardType, TavernCardType, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { ActiveStageNames, BoardProps, CampCardArray, CampCardType, CanBeNullType, CanBeUndefType, Coin, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, HeroesForSoloGameArrayType, IndexOf, MoveArgumentsType, MoveValidatorNamesTypes, NumberValues, PublicPlayer, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -28,24 +28,24 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
-            const campCard: CampCardType = G.camp[j as IndexOf<CampCardArrayType>];
+            const campCard: CampCardType = G.camp[j as IndexOf<CampCardArray>];
             if (campCard === null) {
                 if (data !== undefined) {
                     boardCells.push(
                         <td className="bg-yellow-200" key={`Camp ${j} icon`}>
-                            <span style={Styles.Camp()} className="bg-camp-icon"></span>
+                            <span style={ALlStyles.Camp()} className="bg-camp-icon"></span>
                         </td>
                     );
                 }
             } else {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         ctx.currentPlayer);
                 }
                 let suit: CanBeNullType<SuitNames> = null;
-                if (campCard.type === CardTypeRusNames.Artefact_Player_Card) {
-                    suit = campCard.suit;
+                if (campCard.type === CardTypeRusNames.ArtefactCard) {
+                    suit = campCard.playerSuit;
                 }
                 if ((ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null)
                     || (ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
@@ -91,8 +91,8 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
         return (
             <table>
                 <caption>
-                    <span style={Styles.Camp()} className="bg-top-camp-icon"></span>
-                    <span><span style={Styles.CampBack(tier)}
+                    <span style={ALlStyles.Camp()} className="bg-top-camp-icon"></span>
+                    <span><span style={ALlStyles.CampBack(tier)}
                         className="bg-top-card-back-icon"></span>Camp
                         ({G.campDecksLength[G.campDecksLength.length - G.tierToEnd] ?? 0}
                         {(G.campDecksLength.length - G.tierToEnd === 0 ? `/` +
@@ -161,7 +161,7 @@ export const DrawDistinctions = ({ G, ctx, ...rest }: FnContext, validatorName: 
     data?: BoardProps): JSX.Element | MoveArgumentsType<SuitNames[]> => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<SuitNames[]> = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -197,7 +197,7 @@ export const DrawDistinctions = ({ G, ctx, ...rest }: FnContext, validatorName: 
         return (
             <table>
                 <caption>
-                    <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon"></span>
+                    <span style={ALlStyles.DistinctionsBack()} className="bg-top-distinctions-icon"></span>
                     <span>Distinctions</span>
                 </caption>
                 <tbody>
@@ -229,7 +229,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }: FnContext,
     JSX.Element | MoveArgumentsType<number[]> => {
     const boardCells: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -240,7 +240,9 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }: FnContext,
             throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit: CanBeNullType<SuitNames> = null;
-        if (card.type === CardTypeRusNames.Dwarf_Card) {
+        if (card.type === CardTypeRusNames.DwarfCard) {
+            suit = card.playerSuit;
+        } else if (card.type === CardTypeRusNames.DwarfPlayerCard) {
             suit = card.suit;
         }
         if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.PickDiscardCard) {
@@ -262,8 +264,8 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }: FnContext,
         return (
             <table>
                 <caption className="whitespace-nowrap">
-                    <span style={Styles.CardBack(0)} className="bg-top-card-back-icon"></span>
-                    <span style={Styles.CardBack(1)} className="bg-top-card-back-icon"></span>
+                    <span style={ALlStyles.CardBack(0)} className="bg-top-card-back-icon"></span>
+                    <span style={ALlStyles.CardBack(1)} className="bg-top-card-back-icon"></span>
                     <span>Discard cards ({G.discardCardsDeck.length} cards)</span>
                 </caption>
                 <tbody>
@@ -293,7 +295,7 @@ export const DrawDiscardedCards = ({ G, ctx, ...rest }: FnContext,
 export const DrawHeroes = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNullType<MoveValidatorNamesTypes>,
     data?: BoardProps): JSX.Element | MoveArgumentsType<number[]> => {
     const boardRows: JSX.Element[] = [],
-        drawData: IDrawBoardOptions = DrawBoard(G.heroes.length),
+        drawData: DrawBoardOptions = DrawBoard(G.heroes.length),
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
@@ -303,10 +305,10 @@ export const DrawHeroes = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeN
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
-            const suit: CanBeNullType<SuitNames> = hero.suit;
+            const suit: CanBeNullType<SuitNames> = hero.playerSuit;
             if (hero.active
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] === CommonStageNames.ClickHeroCard) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         ctx.currentPlayer);
@@ -354,7 +356,7 @@ export const DrawHeroes = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeN
         return (
             <table>
                 <caption>
-                    <span style={Styles.HeroBack()} className="bg-top-hero-icon"></span>
+                    <span style={ALlStyles.HeroBack()} className="bg-top-hero-icon"></span>
                     <span>Heroes ({G.heroes.length} cards)</span>
                 </caption>
                 <tbody>
@@ -395,7 +397,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
             if (hero.active && Number(ctx.currentPlayer) === 1
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
                 SoloBotCommonStageNames.SoloBotClickHeroCard) {
-                const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                         ctx.currentPlayer);
@@ -422,7 +424,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
         return (
             <table>
                 <caption>
-                    <span style={Styles.HeroBack()} className="bg-top-hero-icon"></span>
+                    <span style={ALlStyles.HeroBack()} className="bg-top-hero-icon"></span>
                     <span>Bot heroes ({G.heroesForSoloBot.length} cards)</span>
                 </caption>
                 <tbody>
@@ -450,13 +452,13 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
  */
 export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JSX.Element => {
     const boardRows: JSX.Element[] = [],
-        drawData: IDrawBoardOptions = DrawBoard(G.marketCoinsUnique.length),
-        countMarketCoins: INumberValues = CountMarketCoins({ G, ctx, ...rest });
+        drawData: DrawBoardOptions = DrawBoard(G.marketCoinsUnique.length),
+        countMarketCoins: NumberValues = CountMarketCoins({ G, ctx, ...rest });
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
-                marketCoin: CanBeUndefType<ICoin> = G.marketCoinsUnique[increment];
+                marketCoin: CanBeUndefType<Coin> = G.marketCoinsUnique[increment];
             if (marketCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
@@ -477,7 +479,7 @@ export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps
         <table>
             <caption>
                 <span className="block">
-                    <span style={Styles.Exchange()} className="bg-top-market-coin-icon"></span>
+                    <span style={ALlStyles.Exchange()} className="bg-top-market-coin-icon"></span>
                     Market coins ({G.marketCoins.length} coins)</span>
             </caption>
             <tbody>
@@ -500,7 +502,7 @@ export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps
  */
 export const DrawProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JSX.Element => {
     const boardCells: JSX.Element[] = [],
-        player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+        player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -563,7 +565,7 @@ export const DrawProfit = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JS
     return (
         <table>
             <caption>
-                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon"></span>
+                <span style={ALlStyles.DistinctionsBack()} className="bg-top-distinctions-icon"></span>
                 <span>{caption}</span>
             </caption>
             <tbody>
@@ -609,7 +611,7 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }: FnContext, 
     return (
         <table>
             <caption>
-                <span style={Styles.HeroBack()} className="bg-top-hero-icon"></span>
+                <span style={ALlStyles.HeroBack()} className="bg-top-hero-icon"></span>
                 <span>Bot strategy</span>
             </caption>
             <tbody>
@@ -639,7 +641,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let t = 0; t < G.tavernsNum; t++) {
-        const currentTavernConfig: ITavernInConfig = tavernsConfig[t as IndexOf<TavernsConfigType>];
+        const currentTavernConfig: TavernInConfig = tavernsConfig[t as IndexOf<TavernsConfigType>];
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
@@ -652,17 +654,17 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
                     if (data !== undefined) {
                         boardCells.push(
                             <td key={`${currentTavernConfig.name} ${j}`}>
-                                <span style={Styles.Tavern(t as IndexOf<TavernsConfigType>)}
+                                <span style={ALlStyles.Tavern(t as IndexOf<TavernsConfigType>)}
                                     className="bg-tavern-icon"></span>
                             </td>
                         );
                     }
                 } else {
                     let suit: CanBeNullType<SuitNames> = null;
-                    if (`suit` in tavernCard) {
-                        suit = tavernCard.suit;
+                    if (`playerSuit` in tavernCard) {
+                        suit = tavernCard.playerSuit;
                     }
-                    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
+                    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
                         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                             ctx.currentPlayer);
@@ -744,7 +746,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
                     <table className={`${gridClass} justify-self-center`}
                         key={`Tavern ${currentTavernConfig.name} board`}>
                         <caption className="whitespace-nowrap">
-                            <span style={Styles.Tavern(t as IndexOf<TavernsConfigType>)}
+                            <span style={ALlStyles.Tavern(t as IndexOf<TavernsConfigType>)}
                                 className="bg-top-tavern-icon"></span>
                             <b>{currentTavernConfig.name}</b>
                         </caption>
@@ -813,7 +815,7 @@ export const DrawWinner = ({ G, ctx }: FnContext): JSX.Element => {
             } else {
                 winner = "Winners: ";
                 G.winner.forEach((playerId: number, index: number): void => {
-                    const winnerPlayerI: CanBeUndefType<IPublicPlayer> = G.publicPlayers[playerId];
+                    const winnerPlayerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[playerId];
                     if (winnerPlayerI === undefined) {
                         throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
                     }

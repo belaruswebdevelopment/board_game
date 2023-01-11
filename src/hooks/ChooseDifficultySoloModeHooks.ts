@@ -6,7 +6,7 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, GameModeNames, HeroNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, HeroCard, IPublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, HeroCard, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
@@ -38,7 +38,7 @@ export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }: FnCon
             return true;
         }
     } else if (ctx.currentPlayer === `1`) {
-        const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 1);
@@ -107,7 +107,7 @@ export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }: FnConte
             [AllStackData.getDifficultyLevelForSoloMode()]);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     } else if (ctx.currentPlayer === `1`) {
-        const soloBotPublicPlayer: CanBeUndefType<IPublicPlayer> = G.publicPlayers[1];
+        const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 1);

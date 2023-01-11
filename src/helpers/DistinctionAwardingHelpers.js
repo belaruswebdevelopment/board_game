@@ -4,9 +4,8 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import { AddCardToPlayer } from "./CardHelpers";
+import { AddAnyCardToPlayerActions } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
-import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 /**
  * <h3>Получение преимущества по фракции кузнецов.</h3>
@@ -29,10 +28,9 @@ export const BlacksmithDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) =
         if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
         }
-        AddCardToPlayer({ G, ctx, myPlayerID, ...rest }, card);
+        AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, card);
         G.distinctions[SuitNames.blacksmith] = undefined;
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${card.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.blacksmith}'.`);
-        CheckAndMoveThrudAction({ G, ctx, myPlayerID, ...rest }, card);
     }
     return 0;
 };

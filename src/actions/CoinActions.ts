@@ -6,7 +6,7 @@ import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers"
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, ICoin, IPlayer, IPublicPlayer, MyFnContextWithMyPlayerID, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, Coin, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
@@ -24,8 +24,8 @@ import type { CanBeUndefType, CoinType, ICoin, IPlayer, IPublicPlayer, MyFnConte
  */
 export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, isTrading: boolean,
     value: number, upgradingCoinId: number, type: CoinTypeNames): void => {
-    const player: CanBeUndefType<IPublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<IPlayer> = G.players[Number(myPlayerID)];
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
+        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -43,7 +43,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    let upgradingCoin: CanBeUndefType<ICoin>,
+    let upgradingCoin: CanBeUndefType<Coin>,
         _exhaustiveCheck: never;
     const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[upgradingCoinId],
         boardCoin: CanBeUndefType<PublicPlayerCoinType> = boardCoins[upgradingCoinId];
@@ -86,7 +86,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         newValue: number = upgradingCoin.value + value + buffValue;
     let upgradedCoin: CoinType = null;
     if (G.marketCoins.length) {
-        const lastMarketCoin: CanBeUndefType<ICoin> = G.marketCoins[G.marketCoins.length - 1];
+        const lastMarketCoin: CanBeUndefType<Coin> = G.marketCoins[G.marketCoins.length - 1];
         if (lastMarketCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует последняя монета с id '${G.marketCoins.length - 1}'.`);
         }
@@ -95,7 +95,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
             RemoveCoinFromMarket({ G, ctx, ...rest }, G.marketCoins.length - 1);
         } else {
             for (let i = 0; i < G.marketCoins.length; i++) {
-                const marketCoin: CanBeUndefType<ICoin> = G.marketCoins[i];
+                const marketCoin: CanBeUndefType<Coin> = G.marketCoins[i];
                 if (marketCoin === undefined) {
                     throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
                 }
@@ -164,7 +164,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         let returningIndex = 0;
         for (let i = 0; i < G.marketCoins.length; i++) {
             returningIndex = i;
-            const marketCoinReturn: CanBeUndefType<ICoin> = G.marketCoins[i];
+            const marketCoinReturn: CanBeUndefType<Coin> = G.marketCoins[i];
             if (marketCoinReturn === undefined) {
                 throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
             }

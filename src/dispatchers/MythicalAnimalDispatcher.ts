@@ -1,6 +1,6 @@
 import { BasicMythicalAnimalScoring, GarmScoring, NidhoggScoring } from "../score_helpers/MythicalAnimalScoringHelpers";
 import { MythicalAnimalScoringFunctionNames } from "../typescript/enums";
-import type { Action, IMythicalAnimalScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsType } from "../typescript/interfaces";
+import type { Action, MyFnContextWithMyPlayerID, MythicalAnimalScoringFunction, ScoringArgsType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по мифическому животному.</h3>
@@ -15,7 +15,7 @@ import type { Action, IMythicalAnimalScoringFunction, MyFnContextWithMyPlayerID,
  */
 export const StartMythicalAnimalScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     action: Action<MythicalAnimalScoringFunctionNames, ScoringArgsType>): number => {
-    const actionDispatcher: IMythicalAnimalScoringFunction =
+    const actionDispatcher: MythicalAnimalScoringFunction =
         MythicalAnimalScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
@@ -34,8 +34,8 @@ export const StartMythicalAnimalScoring = ({ G, ctx, myPlayerID, ...rest }: MyFn
  * @returns Действие.
  */
 const MythicalAnimalScoringDispatcherSwitcher = (actionName: MythicalAnimalScoringFunctionNames):
-    IMythicalAnimalScoringFunction => {
-    let action: IMythicalAnimalScoringFunction,
+    MythicalAnimalScoringFunction => {
+    let action: MythicalAnimalScoringFunction,
         _exhaustiveCheck: never;
     switch (actionName) {
         case MythicalAnimalScoringFunctionNames.BasicMythicalAnimalScoring:

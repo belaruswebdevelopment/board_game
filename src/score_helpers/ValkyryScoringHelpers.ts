@@ -1,5 +1,5 @@
 import { CardTypeRusNames, ValkyryNames } from "../typescript/enums";
-import type { CanBeUndefType, IValkyryScoringFunction } from "../typescript/interfaces";
+import type { CanBeUndefType, StrengthTokenNotchPointsType, ValkyryScoringFunction } from "../typescript/interfaces";
 
 /**
  * <h3>Получение победных очков по мифическому существу Brynhildr.</h3>
@@ -11,13 +11,13 @@ import type { CanBeUndefType, IValkyryScoringFunction } from "../typescript/inte
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Brynhildr.
  */
-export const BrynhildrScoring: IValkyryScoringFunction = (strengthTokenNotch: number): number => {
-    const strengthTokenNotchPoints = [0, 3, 6, 10, 16],
-        strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
+export const BrynhildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+    const strengthTokenNotchPoints: StrengthTokenNotchPointsType = [0, 3, 6, 10, 16],
+        strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Brynhildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -32,13 +32,13 @@ export const BrynhildrScoring: IValkyryScoringFunction = (strengthTokenNotch: nu
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Hildr.
  */
-export const HildrScoring: IValkyryScoringFunction = (strengthTokenNotch: number): number => {
-    const strengthTokenNotchPoints = [0, 8, 16, 0],
-        strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
+export const HildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+    const strengthTokenNotchPoints: StrengthTokenNotchPointsType = [0, 8, 16, 0],
+        strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Hildr}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -53,13 +53,13 @@ export const HildrScoring: IValkyryScoringFunction = (strengthTokenNotch: number
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Olrun.
  */
-export const OlrunScoring: IValkyryScoringFunction = (strengthTokenNotch: number): number => {
-    const strengthTokenNotchPoints = [0, 3, 6, 10, 16],
-        strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
+export const OlrunScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+    const strengthTokenNotchPoints: StrengthTokenNotchPointsType = [0, 3, 6, 10, 16],
+        strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Olrun}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -74,13 +74,13 @@ export const OlrunScoring: IValkyryScoringFunction = (strengthTokenNotch: number
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Sigrdrifa.
  */
-export const SigrdrifaScoring: IValkyryScoringFunction = (strengthTokenNotch: number): number => {
-    const strengthTokenNotchPoints = [0, 0, 8, 16],
-        strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
+export const SigrdrifaScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+    const strengthTokenNotchPoints: StrengthTokenNotchPointsType = [0, 0, 8, 16],
+        strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Sigrdrifa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };
@@ -95,13 +95,13 @@ export const SigrdrifaScoring: IValkyryScoringFunction = (strengthTokenNotch: nu
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Svafa.
  */
-export const SvafaScoring: IValkyryScoringFunction = (strengthTokenNotch: number): number => {
-    const strengthTokenNotchPoints = [0, 4, 8, 16],
-        strengthTokenNotchFinalValue = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
+export const SvafaScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+    const strengthTokenNotchPoints: StrengthTokenNotchPointsType = [0, 4, 8, 16],
+        strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch,
         value: CanBeUndefType<number> = strengthTokenNotchPoints[strengthTokenNotchFinalValue];
     if (value === undefined) {
-        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.Valkyry_Card}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
+        throw new Error(`В массиве значений количества очков у карты типа '${CardTypeRusNames.ValkyryCard}' '${ValkyryNames.Svafa}' отсутствует отсутствует значение токена силы на отметке '${strengthTokenNotch}'.`);
     }
     return value;
 };

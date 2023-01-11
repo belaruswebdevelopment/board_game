@@ -1,7 +1,7 @@
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardArrayType, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, ITavernInConfig, SecretAllCampDecks, SecretCampDeckTier1, SecretCampDeckType, TierType } from "../typescript/interfaces";
+import type { CampCardArray, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, SecretAllCampDecks, SecretCampDeckTier1, SecretCampDeckType, TavernInConfig, TierType } from "../typescript/interfaces";
 import { GetCampCardsFromSecretCampDeck } from "./DecksHelpers";
 import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIfNeeded } from "./DiscardCardHelpers";
 
@@ -39,7 +39,7 @@ const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: number): void => 
 const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }: FnContext): void => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.campNum; i++) {
-        const campCard: CampCardType = G.camp[i as IndexOf<CampCardArrayType>];
+        const campCard: CampCardType = G.camp[i as IndexOf<CampCardArray>];
         if (campCard !== null) {
             const discardedCard: CampCardType =
                 RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, i, [null]);
@@ -70,7 +70,7 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }: FnContext): void =>
  * @returns
  */
 export const DiscardCardFromTavernJarnglofi = ({ G, ctx, ...rest }: FnContext): void => {
-    const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
+    const currentTavernConfig: TavernInConfig = tavernsConfig[G.currentTavern];
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
     DiscardCardFromTavern({ G, ctx, ...rest });
     G.mustDiscardTavernCardJarnglofi = false;
@@ -88,7 +88,7 @@ export const DiscardCardFromTavernJarnglofi = ({ G, ctx, ...rest }: FnContext): 
  */
 export const DiscardCardIfCampCardPicked = ({ G, ctx, ...rest }: FnContext): void => {
     if (G.campPicked) {
-        const currentTavernConfig: ITavernInConfig = tavernsConfig[G.currentTavern];
+        const currentTavernConfig: TavernInConfig = tavernsConfig[G.currentTavern];
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
         DiscardCardFromTavern({ G, ctx, ...rest });
         G.campPicked = false;
@@ -109,13 +109,13 @@ export const RefillCamp = ({ G, ctx, ...rest }: FnContext): void => {
     AddRemainingCampCardsToDiscard({ G, ctx, ...rest });
     const campDeck1: SecretCampDeckTier1 = G.secret.campDecks[1],
         index: number = campDeck1.findIndex((card: CampDeckCardType): boolean =>
-            card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
+            card.name === ArtefactNames.OdroerirTheMythicCauldron);
     if (index === -1) {
-        throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '2' эпохи.`);
+        throw new Error(`Отсутствует артефакт '${ArtefactNames.OdroerirTheMythicCauldron}' в колоде лагеря '2' эпохи.`);
     }
     const campCardTemp: CanBeUndefType<CampDeckCardType> = campDeck1[0];
     if (campCardTemp === undefined) {
-        throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '1' эпохи.`);
+        throw new Error(`Отсутствует артефакт '${ArtefactNames.OdroerirTheMythicCauldron}' в колоде лагеря '1' эпохи.`);
     }
     const odroerirTheMythicCauldron: CanBeUndefType<CampDeckCardType> = campDeck1[index];
     if (odroerirTheMythicCauldron === undefined) {
@@ -141,7 +141,7 @@ export const RefillCamp = ({ G, ctx, ...rest }: FnContext): void => {
  * @returns
  */
 export const RefillEmptyCampCards = ({ G, ctx, ...rest }: FnContext): void => {
-    const emptyCampCards: (CanBeNullType<number>)[] =
+    const emptyCampCards: CanBeNullType<number>[] =
         G.camp.map((card: CampCardType, index: number): CanBeNullType<number> => {
             if (card === null) {
                 return index;

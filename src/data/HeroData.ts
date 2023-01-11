@@ -13,7 +13,7 @@ const Aegur: HeroCardData = {
     name: HeroNames.Aegur,
     description: HeroDescriptionNames.Aegur,
     game: GameNames.Basic,
-    suit: SuitNames.blacksmith,
+    playerSuit: SuitNames.blacksmith,
     rank: 2,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -56,7 +56,7 @@ const Aral: HeroCardData = {
     name: HeroNames.Aral,
     description: HeroDescriptionNames.Aral,
     game: GameNames.Basic,
-    suit: SuitNames.hunter,
+    playerSuit: SuitNames.hunter,
     rank: 2,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -91,7 +91,7 @@ const Bonfur: HeroCardData = {
     name: HeroNames.Bonfur,
     description: HeroDescriptionNames.Bonfur,
     game: GameNames.Basic,
-    suit: SuitNames.blacksmith,
+    playerSuit: SuitNames.blacksmith,
     rank: 3,
     pickValidators: {
         discardCard: {
@@ -114,9 +114,9 @@ const Bonfur: HeroCardData = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Crovax_The_Doppelganger: HeroCardData = {
-    name: HeroNames.Crovax_The_Doppelganger,
-    description: HeroDescriptionNames.Crovax_The_Doppelganger,
+const CrovaxTheDoppelganger: HeroCardData = {
+    name: HeroNames.CrovaxTheDoppelganger,
+    description: HeroDescriptionNames.CrovaxTheDoppelganger,
     game: GameNames.Thingvellir,
     points: 25,
     pickValidators: {
@@ -144,7 +144,7 @@ const Dagda: HeroCardData = {
     name: HeroNames.Dagda,
     description: HeroDescriptionNames.Dagda,
     game: GameNames.Basic,
-    suit: SuitNames.hunter,
+    playerSuit: SuitNames.hunter,
     rank: 3,
     pickValidators: {
         discardCard: {
@@ -168,9 +168,9 @@ const Dagda: HeroCardData = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Aesir: HeroCardData = {
-    name: HeroNames.Dwerg_Aesir,
-    description: HeroDescriptionNames.Dwerg_Aesir,
+const DwergAesir: HeroCardData = {
+    name: HeroNames.DwergAesir,
+    description: HeroDescriptionNames.DwergAesir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -185,9 +185,9 @@ const Dwerg_Aesir: HeroCardData = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Bergelmir: HeroCardData = {
-    name: HeroNames.Dwerg_Bergelmir,
-    description: HeroDescriptionNames.Dwerg_Bergelmir,
+const DwergBergelmir: HeroCardData = {
+    name: HeroNames.DwergBergelmir,
+    description: HeroDescriptionNames.DwergBergelmir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -202,9 +202,9 @@ const Dwerg_Bergelmir: HeroCardData = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Jungir: HeroCardData = {
-    name: HeroNames.Dwerg_Jungir,
-    description: HeroDescriptionNames.Dwerg_Jungir,
+const DwergJungir: HeroCardData = {
+    name: HeroNames.DwergJungir,
+    description: HeroDescriptionNames.DwergJungir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -219,9 +219,9 @@ const Dwerg_Jungir: HeroCardData = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Sigmir: HeroCardData = {
-    name: HeroNames.Dwerg_Sigmir,
-    description: HeroDescriptionNames.Dwerg_Sigmir,
+const DwergSigmir: HeroCardData = {
+    name: HeroNames.DwergSigmir,
+    description: HeroDescriptionNames.DwergSigmir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -236,9 +236,9 @@ const Dwerg_Sigmir: HeroCardData = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  */
-const Dwerg_Ymir: HeroCardData = {
-    name: HeroNames.Dwerg_Ymir,
-    description: HeroDescriptionNames.Dwerg_Ymir,
+const DwergYmir: HeroCardData = {
+    name: HeroNames.DwergYmir,
+    description: HeroDescriptionNames.DwergYmir,
     game: GameNames.Basic,
     scoringRule: {
         name: HeroScoringFunctionNames.BasicHeroScoring,
@@ -308,7 +308,7 @@ const Hourya: HeroCardData = {
     name: HeroNames.Hourya,
     description: HeroDescriptionNames.Hourya,
     game: GameNames.Basic,
-    suit: SuitNames.explorer,
+    playerSuit: SuitNames.explorer,
     rank: 1,
     points: 20,
     pickValidators: {
@@ -336,7 +336,7 @@ const Idunn: HeroCardData = {
     name: HeroNames.Idunn,
     description: HeroDescriptionNames.Idunn,
     game: GameNames.Basic,
-    suit: SuitNames.explorer,
+    playerSuit: SuitNames.explorer,
     rank: 1,
     points: 7,
     scoringRule: {
@@ -398,7 +398,7 @@ const Kraal: HeroCardData = {
     name: HeroNames.Kraal,
     description: HeroDescriptionNames.Kraal,
     game: GameNames.Basic,
-    suit: SuitNames.warrior,
+    playerSuit: SuitNames.warrior,
     rank: 2,
     points: 7,
     scoringRule: {
@@ -418,7 +418,7 @@ const Lokdur: HeroCardData = {
     name: HeroNames.Lokdur,
     description: HeroDescriptionNames.Lokdur,
     game: GameNames.Basic,
-    suit: SuitNames.miner,
+    playerSuit: SuitNames.miner,
     rank: 1,
     points: 3,
     scoringRule: {
@@ -477,7 +477,7 @@ const Tarah: HeroCardData = {
     name: HeroNames.Tarah,
     description: HeroDescriptionNames.Tarah,
     game: GameNames.Basic,
-    suit: SuitNames.warrior,
+    playerSuit: SuitNames.warrior,
     rank: 1,
     points: 14,
     scoringRule: {
@@ -589,7 +589,7 @@ const Zoral: HeroCardData = {
     name: HeroNames.Zoral,
     description: HeroDescriptionNames.Zoral,
     game: GameNames.Basic,
-    suit: SuitNames.miner,
+    playerSuit: SuitNames.miner,
     rank: 3,
     points: 1,
     scoringRule: {
@@ -617,18 +617,18 @@ export const heroesConfig: HeroConfig = {
     Hourya,
     Idunn,
     Astrid,
-    Dwerg_Aesir,
-    Dwerg_Bergelmir,
-    Dwerg_Jungir,
-    Dwerg_Sigmir,
-    Dwerg_Ymir,
+    DwergAesir,
+    DwergBergelmir,
+    DwergJungir,
+    DwergSigmir,
+    DwergYmir,
     Grid,
     Skaa,
     Thrud,
     Uline,
     Ylud,
     Jarika,
-    Crovax_The_Doppelganger,
+    CrovaxTheDoppelganger,
     Andumia,
     Holda,
     Khrad,
@@ -644,11 +644,11 @@ export const heroesConfig: HeroConfig = {
  * </ol>
  */
 export const soloGameHeroesForBotConfig: SoloGameHeroesForBotConfigType = {
-    Dwerg_Aesir,
-    Dwerg_Bergelmir,
-    Dwerg_Jungir,
-    Dwerg_Sigmir,
-    Dwerg_Ymir,
+    DwergAesir,
+    DwergBergelmir,
+    DwergJungir,
+    DwergSigmir,
+    DwergYmir,
 };
 
 /**
@@ -726,11 +726,11 @@ export const soloGameAndvariHardStrategyHeroesConfig: SoloGameAndvariHardStrateg
  */
 export const soloGameAndvariHeroesForPlayersConfig: SoloGameAndvariHeroesForPlayersConfigType = {
     Astrid,
-    Dwerg_Aesir,
-    Dwerg_Bergelmir,
-    Dwerg_Jungir,
-    Dwerg_Sigmir,
-    Dwerg_Ymir,
+    DwergAesir,
+    DwergBergelmir,
+    DwergJungir,
+    DwergSigmir,
+    DwergYmir,
     Grid,
     Skaa,
     Thrud,

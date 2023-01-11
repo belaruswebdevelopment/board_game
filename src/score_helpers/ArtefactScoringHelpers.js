@@ -16,7 +16,6 @@ import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
  * @param value Значение очков артефакта.
  * @returns Количество очков по конкретному артефакту.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, isFinal = false, value) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
