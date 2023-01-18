@@ -1,4 +1,4 @@
-import { CreateCoin } from "../Coin";
+import { CreateSpecialTriggerTradingCoin } from "../Coin";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
@@ -84,9 +84,8 @@ export const HunterDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
         if (privatePlayer === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
         }
-        const [type, tradingCoinIndex] = DiscardTradingCoin({ G, ctx, myPlayerID, ...rest }), coin = CreateCoin({
+        const [type, tradingCoinIndex] = DiscardTradingCoin({ G, ctx, myPlayerID, ...rest }), coin = CreateSpecialTriggerTradingCoin({
             isOpened: true,
-            isTriggerTrading: true,
             value: 3,
         });
         let _exhaustiveCheck;

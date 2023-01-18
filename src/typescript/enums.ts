@@ -533,6 +533,16 @@ export const enum DistinctionDescriptionNames {
 // Distinction End
 
 /**
+ * <h3>Перечисление для типов монет на русском.</h3>
+ */
+export enum CoinRusNames {
+    InitialNotTriggerTrading = `Базовая`,
+    InitialTriggerTrading = `Базовая, активирующая обмен монет`,
+    Royal = `Королевская`,
+    SpecialTriggerTrading = `Особая, активирующая обмен монет`,
+}
+
+/**
  * <h3>Перечисление для названия режима игры.</h3>
  */
 export const enum GameModeNames {
@@ -571,6 +581,7 @@ export const enum AutoActionFunctionNames {
  * <h3>Перечисление для названия кнопок.</h3>
  */
 export const enum ButtonNames {
+    NotActivateGodAbility = `Не активировать способность карты бога`,
     NoHeroEasyStrategy = `Без стартовых героев (лёгкая стратегия)`,
     NoHeroHardStrategy = `Без стартовых героев (сложная стратегия)`,
     WithHeroEasyStrategy = `Со стартовыми героями (лёгкая стратегия)`,

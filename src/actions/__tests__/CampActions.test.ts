@@ -23,11 +23,9 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -65,7 +63,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -73,7 +70,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -93,7 +89,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
@@ -118,11 +114,9 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -160,7 +154,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -168,7 +161,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -188,7 +180,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
@@ -209,11 +201,9 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -263,7 +253,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -271,7 +260,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -286,7 +274,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -311,7 +298,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
@@ -332,7 +319,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -340,7 +326,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -378,12 +363,10 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -406,7 +389,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
@@ -422,7 +405,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -430,7 +412,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -444,7 +425,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -457,7 +437,6 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -485,12 +464,10 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -507,12 +484,10 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -535,7 +510,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode` | `logData`>);
@@ -777,7 +752,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
+                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -827,7 +802,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
+                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCampCardsDeck` | `logData`>);

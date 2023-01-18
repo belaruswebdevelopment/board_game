@@ -1,9 +1,9 @@
-import { BuildCoins } from "./Coin";
-import { initialPlayerCoinsConfig } from "./data/CoinData";
+import { BuildInitialCoins } from "./Coin";
+import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, Coin, CreatePublicPlayerType, FnContext, Player, PlayerBoardCardType, Priority, PublicPlayer, SuitPropertyType } from "./typescript/interfaces";
+import type { CanBeNullType, CreatePublicPlayerType, FnContext, Player, PlayerBoardCardType, Priority, PublicPlayer, PublicPlayerCoinType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -15,10 +15,8 @@ import type { CanBeNullType, Coin, CreatePublicPlayerType, FnContext, Player, Pl
  * @returns Приватные данные игрока.
  */
 export const BuildPlayer = (): Player => CreatePlayer({
-    handCoins: BuildCoins(initialPlayerCoinsConfig, {
-        isInitial: true,
-    }),
-    boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+    handCoins: BuildInitialCoins(),
+    boardCoins: Array(initialCoinsConfig.length).fill(null),
 });
 
 /**
@@ -41,20 +39,18 @@ export const BuildPublicPlayer = (nickname: string, priority: Priority, isPrivat
         cards[suit] = [];
         giantTokenSuits[suit] = null;
     }
-    let handCoins: Coin[] = [];
+    let handCoins: PublicPlayerCoinType[] = [];
     if (isPrivate) {
-        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
+        handCoins = Array(initialCoinsConfig.length).fill({});
     } else {
-        handCoins = BuildCoins(initialPlayerCoinsConfig, {
-            isInitial: true,
-        });
+        handCoins = BuildInitialCoins();
     }
     return CreatePublicPlayer({
         nickname,
         cards,
         giantTokenSuits,
         handCoins,
-        boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+        boardCoins: Array(initialCoinsConfig.length).fill(null),
         priority,
     });
 };

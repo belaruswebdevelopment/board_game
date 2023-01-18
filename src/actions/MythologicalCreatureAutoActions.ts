@@ -24,5 +24,8 @@ export const AddMythologyCreatureCardsSkymirAction: ActionFunctionWithoutParams 
         }
         mythologyCreatureCardsSkymir.push(mythologyCreatureCard);
     }
-    G.mythologicalCreatureDeckForSkymir = mythologyCreatureCardsSkymir as MythologicalCreatureCardsForGiantSkymirArray;
+    if (mythologyCreatureCardsSkymir.length === 6) {
+        G.mythologicalCreatureDeckForSkymir =
+            mythologyCreatureCardsSkymir as MythologicalCreatureCardsForGiantSkymirArray;
+    }
 };

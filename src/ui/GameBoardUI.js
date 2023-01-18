@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { CountMarketCoins } from "../Coin";
+import { CountRoyalCoins } from "../Coin";
 import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
@@ -376,23 +376,23 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
  * @returns Поле рынка монет.
  */
 export const DrawMarketCoins = ({ G, ctx, ...rest }, data) => {
-    const boardRows = [], drawData = DrawBoard(G.marketCoinsUnique.length), countMarketCoins = CountMarketCoins({ G, ctx, ...rest });
+    const boardRows = [], drawData = DrawBoard(G.royalCoinsUnique.length), countMarketCoins = CountRoyalCoins({ G, ctx, ...rest });
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
         for (let j = 0; j < drawData.boardCols; j++) {
-            const increment = i * drawData.boardCols + j, marketCoin = G.marketCoinsUnique[increment];
-            if (marketCoin === undefined) {
+            const increment = i * drawData.boardCols + j, royalCoin = G.royalCoinsUnique[increment];
+            if (royalCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
-            const tempCoinValue = marketCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-            DrawCoin({ G, ctx, ...rest }, data, boardCells, DrawCoinTypeNames.Market, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue]);
-            if (increment + 1 === G.marketCoinsUnique.length) {
+            const tempCoinValue = royalCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
+            DrawCoin({ G, ctx, ...rest }, data, boardCells, DrawCoinTypeNames.Market, royalCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue]);
+            if (increment + 1 === G.royalCoinsUnique.length) {
                 break;
             }
         }
         boardRows.push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
     }
-    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: ALlStyles.Exchange(), className: "bg-top-market-coin-icon" }), "Market coins (", G.marketCoins.length, " coins)"] }) }), _jsx("tbody", { children: boardRows })] }));
+    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: ALlStyles.Exchange(), className: "bg-top-market-coin-icon" }), "Market coins (", G.royalCoins.length, " coins)"] }) }), _jsx("tbody", { children: boardRows })] }));
 };
 /**
  * <h3>Отрисовка профита от карт и героев.</h3>

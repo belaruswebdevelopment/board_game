@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
@@ -651,7 +651,8 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
                             }
                         } else if (Number(ctx.currentPlayer) === p && IsCoin(publicBoardCoin)
-                            && !publicBoardCoin.isTriggerTrading && ((stage === CommonStageNames.ClickCoinToUpgrade
+                            && !IsTriggerTradingCoin(publicBoardCoin)
+                            && ((stage === CommonStageNames.ClickCoinToUpgrade
                                 || stage === SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade
                                 || stage === SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade)
                                 || (stage === CommonStageNames.PickConcreteCoinToUpgrade
@@ -712,7 +713,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                                         }
                                     } else {
                                         if (Number(ctx.currentPlayer) === p && IsCoin(privateBoardCoin)
-                                            && !privateBoardCoin.isTriggerTrading
+                                            && !!IsTriggerTradingCoin(privateBoardCoin)
                                             && ((stage === CommonStageNames.ClickCoinToUpgrade)
                                                 || (stage === CommonStageNames.PickConcreteCoinToUpgrade
                                                     && player.stack[0]?.coinValue ===

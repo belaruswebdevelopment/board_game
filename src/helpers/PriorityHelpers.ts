@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, Priority, PublicPlayer } from "../typescript/interfaces";
+import type { AllPriorityValueType, CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, Priority, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>
@@ -14,9 +14,10 @@ import type { CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, Priority, Pu
  * @returns Имеет ли игрок наименьший кристалл.
  */
 export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): boolean => {
-    const tempPriorities: number[] =
-        Object.values(G.publicPlayers).map((player: PublicPlayer): number => player.priority.value),
-        minPriority: number = Math.min(...tempPriorities),
+    const tempPriorities: AllPriorityValueType[] =
+        Object.values(G.publicPlayers).map((player: PublicPlayer): AllPriorityValueType =>
+            player.priority.value),
+        minPriority: AllPriorityValueType = Math.min(...tempPriorities) as AllPriorityValueType,
         player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,

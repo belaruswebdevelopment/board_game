@@ -123,7 +123,7 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }, card) => 
  * @returns
  */
 export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G, ctx, ...rest }) => {
-    const minCoinValue = G.marketCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value, minCoinIndex = G.marketCoins.findIndex((coin) => coin.value === minCoinValue);
+    const minCoinValue = G.royalCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value, minCoinIndex = G.royalCoins.findIndex((coin) => coin.value === minCoinValue);
     if (minCoinIndex === -1) {
         throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
     }

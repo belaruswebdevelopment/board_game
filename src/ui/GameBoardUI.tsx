@@ -1,11 +1,11 @@
-import { CountMarketCoins } from "../Coin";
+import { CountRoyalCoins } from "../Coin";
 import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
-import type { ActiveStageNames, BoardProps, CampCardArray, CampCardType, CanBeNullType, CanBeUndefType, Coin, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, HeroesForSoloGameArrayType, IndexOf, MoveArgumentsType, MoveValidatorNamesTypes, NumberValues, PublicPlayer, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardArray, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, HeroesForSoloGameArrayType, IndexOf, MoveArgumentsType, MoveValidatorNamesTypes, NumberValues, PublicPlayer, RoyalCoin, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -452,22 +452,22 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
  */
 export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JSX.Element => {
     const boardRows: JSX.Element[] = [],
-        drawData: DrawBoardOptions = DrawBoard(G.marketCoinsUnique.length),
-        countMarketCoins: NumberValues = CountMarketCoins({ G, ctx, ...rest });
+        drawData: DrawBoardOptions = DrawBoard(G.royalCoinsUnique.length),
+        countMarketCoins: NumberValues = CountRoyalCoins({ G, ctx, ...rest });
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
-                marketCoin: CanBeUndefType<Coin> = G.marketCoinsUnique[increment];
-            if (marketCoin === undefined) {
+                royalCoin: CanBeUndefType<RoyalCoin> = G.royalCoinsUnique[increment];
+            if (royalCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
-            const tempCoinValue: number = marketCoin.value,
+            const tempCoinValue: AllCoinsValueType = royalCoin.value,
                 coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
             DrawCoin({ G, ctx, ...rest }, data, boardCells, DrawCoinTypeNames.Market,
-                marketCoin, increment, null, coinClassName,
+                royalCoin, increment, null, coinClassName,
                 countMarketCoins[tempCoinValue]);
-            if (increment + 1 === G.marketCoinsUnique.length) {
+            if (increment + 1 === G.royalCoinsUnique.length) {
                 break;
             }
         }
@@ -480,7 +480,7 @@ export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps
             <caption>
                 <span className="block">
                     <span style={ALlStyles.Exchange()} className="bg-top-market-coin-icon"></span>
-                    Market coins ({G.marketCoins.length} coins)</span>
+                    Market coins ({G.royalCoins.length} coins)</span>
             </caption>
             <tbody>
                 {boardRows}

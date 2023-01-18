@@ -7,7 +7,7 @@ import { Transport, type TransportOpts } from "boardgame.io/dist/types/src/clien
 import { Flow } from "boardgame.io/dist/types/src/core/flow";
 // eslint-disable-next-line import/no-unresolved
 import { ProcessGameConfig } from "boardgame.io/dist/types/src/core/game";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ActivateGodAbilityOrNotSubStageNames, ArtefactDescriptionNames, ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CoinMoveNames, CoinTypeNames, CommonBuffNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DistinctionCardMoveNames, DistinctionDescriptionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GiantBuffNames, GiantDescriptionNames, GiantNames, GiantScoringFunctionNames, GodBuffNames, GodDescriptionNames, GodNames, HeroBuffNames, HeroDescriptionNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalDescriptionNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RoyalOfferingNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageRusNames, SuitBGColorNames, SuitDescriptionNames, SuitMoveNames, SuitNames, SuitRusNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryDescriptionNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ActivateGodAbilityOrNotSubStageNames, ArtefactDescriptionNames, ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CoinMoveNames, CoinRusNames, CoinTypeNames, CommonBuffNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DistinctionCardMoveNames, DistinctionDescriptionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GiantBuffNames, GiantDescriptionNames, GiantNames, GiantScoringFunctionNames, GodBuffNames, GodDescriptionNames, GodNames, HeroBuffNames, HeroDescriptionNames, HeroNames, HeroScoringFunctionNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalDescriptionNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RoyalOfferingNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageRusNames, SuitBGColorNames, SuitDescriptionNames, SuitMoveNames, SuitNames, SuitRusNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryDescriptionNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 
 // Secret Data Start
 /**
@@ -233,7 +233,7 @@ export interface RoyalOfferingCardData extends Omit<RoyalOfferingCard, `type`> {
 export interface RoyalOfferingCard extends Required<StackCardInfo> {
     readonly name: RoyalOfferingNames;
     readonly type: CardTypeRusNames.RoyalOfferingCard;
-    readonly value: RoyalOfferingCardValueType;
+    readonly upgradeValue: RoyalOfferingCardValueType;
 }
 
 /**
@@ -957,7 +957,7 @@ export type PlayerRanksAndMaxRanksForDistinctionsType = [number[], number];
  */
 export interface StackData {
     readonly activateGiantAbilityOrPickCard: (giantName: GiantNames, card: DwarfCard) => Stack;
-    readonly activateGodAbilityOrNot: (godName: GodNames) => Stack;
+    readonly activateGodAbilityOrNot: (godName: GodNames, card?: DwarfDeckCardType) => Stack;
     readonly addCoinToPouch: () => Stack;
     readonly brisingamensEndGameAction: () => Stack;
     readonly chooseSuitOlrun: () => Stack;
@@ -980,8 +980,7 @@ export interface StackData {
     readonly pickCard: () => Stack;
     readonly pickCardSoloBot: () => Stack;
     readonly pickCardSoloBotAndvari: () => Stack;
-    // TODO Add types for coinValue & value
-    readonly pickConcreteCoinToUpgrade: (coinValue: number, value: number) => Stack;
+    readonly pickConcreteCoinToUpgrade: (coinValue: UpgradableCoinValueType, value: UpgradableCoinValueType) => Stack;
     readonly pickDiscardCardAndumia: () => Stack;
     readonly pickDiscardCardBrisingamens: (priority?: 3) => Stack;
     readonly pickDistinctionCard: () => Stack;
@@ -1003,10 +1002,10 @@ export interface StackData {
     readonly startChooseCoinValueForVidofnirVedrfolnirUpgrade: (valueArray: VidofnirVedrfolnirUpgradeValueType,
         coinId?: number, priority?: 3) => Stack;
     readonly startOrPassEnlistmentMercenaries: () => Stack;
-    readonly upgradeCoin: (value: number) => Stack;
-    readonly upgradeCoinSoloBot: (value: number) => Stack;
-    readonly upgradeCoinSoloBotAndvari: (value: number) => Stack;
-    readonly upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number, priority?: 3) => Stack;
+    readonly upgradeCoin: (value: BasicUpgradeCoinValueType) => Stack;
+    readonly upgradeCoinSoloBot: (value: BasicUpgradeCoinValueType) => Stack;
+    readonly upgradeCoinSoloBotAndvari: (value: BasicUpgradeCoinValueType) => Stack;
+    readonly upgradeCoinVidofnirVedrfolnir: (value: UpgradableCoinValueType, coinId?: number, priority?: 3) => Stack;
     readonly upgradeCoinWarriorDistinction: () => Stack;
     readonly upgradeCoinWarriorDistinctionSoloBot: () => Stack;
     readonly upgradeCoinWarriorDistinctionSoloBotAndvari: () => Stack;
@@ -1024,7 +1023,7 @@ export interface Stack {
     readonly coinValue?: number;
     readonly suit?: SuitNames;
     readonly pickedSuit?: SuitNames;
-    readonly value?: number;
+    readonly value?: UpgradableCoinValueType;
     readonly valueArray?: VidofnirVedrfolnirUpgradeValueType;
     readonly configName?: ConfigNames;
     readonly drawName?: DrawNames;
@@ -1036,13 +1035,13 @@ export interface Stack {
 /**
  * Объединение данных карт, которые могут передаваться в значения в стеке.
  */
-export type StackCardType = MercenaryCampCard | DwarfCard;
+export type StackCardType = MercenaryCampCard | DwarfDeckCardType;
 
 // TODO Rework to + Enlistment mercenaries names - string
 /**
  * <h3>Объединение данных названий, которые могут передаваться в значения в стеке.</h3>
  */
-type StackNamesType = HeroNames | MultiSuitCardNames | string;
+export type StackNamesType = HeroNames | MultiSuitCardNames | string;
 
 /**
  * <h3>Объединение данных всех карт со стеком.</h3>
@@ -1054,6 +1053,36 @@ export type CardsHasStackType = HeroCard | ArtefactCampCard | RoyalOfferingCard 
  */
 export type CardsHasStackValidatorsType = HeroCard | ArtefactCampCard;
 // Stack End
+
+// Priority Start
+/**
+ * <h3>Кристалл.</h3>
+ */
+export interface Priority {
+    readonly isExchangeable: boolean;
+    readonly value: AllPriorityValueType;
+}
+
+/**
+ * <h3>Создание кристалла.</h3>
+ */
+export type CreatePriorityFromData = PartialByType<Priority, `isExchangeable`>;
+
+/**
+ * <h3>Типы данных для конфига всех кристаллов.</h3>
+ */
+export type PrioritiesConfig = readonly [Priority[], Priority[], Priority[], Priority[], Priority[]];
+
+type BasicPriorityValueType = 1 | 2 | 3 | 4 | 5;
+
+type NonExchangeablePriorityValueType = 6;
+
+type SoloBotPlayerPriorityValueType = -1 | 0;
+
+type HumanPlayerPriorityValueType = BasicPriorityValueType | NonExchangeablePriorityValueType;
+
+export type AllPriorityValueType = SoloBotPlayerPriorityValueType | HumanPlayerPriorityValueType;
+// Priority End
 
 /**
  * <h3>Интерфейс для данных эпохи карты.</h3>
@@ -1089,27 +1118,95 @@ export interface PlayersNumberTierCardData extends TierInfo {
 /**
  * <h3>Интерфейс опций для создания монет.</h3>
  */
-export interface BuildCoinsOptions {
-    readonly isInitial?: boolean,
-    readonly players?: NumPlayersType;
-    readonly count?: Partial<Coin>[];
+export interface BuildRoyalCoinsOptions {
+    readonly players: NumPlayersType;
+    readonly count: Partial<RoyalCoin>[];
 }
 
-/**
- * <h3>Интерфейс для монеты.</h3>
- */
-export interface Coin {
-    readonly isInitial: boolean;
+interface CommonCoinData {
     isOpened: boolean;
-    readonly isTriggerTrading: boolean;
-    // TODO Move to InitialCoinValueType/MarketCoinValueType in all places?
-    readonly value: number;
+}
+
+export interface RoyalCoin extends CommonCoinData {
+    readonly type: CoinRusNames.Royal;
+    readonly value: RoyalCoinValueType;
+}
+
+export interface InitialNotTriggerTradingCoin extends CommonCoinData {
+    readonly type: CoinRusNames.InitialNotTriggerTrading;
+    readonly value: InitialNotTriggerTradingCoinValueType;
+}
+
+export interface InitialTriggerTradingCoin extends CommonCoinData {
+    readonly type: CoinRusNames.InitialTriggerTrading;
+    readonly value: InitialTriggerTradingCoinValueType;
+}
+
+export interface SpecialTriggerTradingCoin extends CommonCoinData {
+    readonly type: CoinRusNames.SpecialTriggerTrading;
+    readonly value: SpecialTriggerTradingCoinValueType;
 }
 
 /**
- * <h3>Интерфейс для конфига монет рынка.</h3>
+ * <h3>Тип для создания монеты.</h3>
  */
-export interface MarketCoinConfig extends Pick<Coin, `value`> {
+export type CreateInitialNotTradingCoinFromData = PartialByType<Omit<InitialNotTriggerTradingCoin, `isOpened`>
+    & ReadonlyByType<InitialNotTriggerTradingCoin, `isOpened`>, `type` | `isOpened`>;
+
+/**
+ * <h3>Создания базовой монеты, активирующей обмен монет.</h3>
+ */
+export type CreateInitialTradingCoinFromData = PartialByType<Omit<InitialTriggerTradingCoin, `isOpened`>
+    & ReadonlyByType<InitialTriggerTradingCoin, `isOpened`>, `type` | `isOpened`>;
+
+/**
+ * <h3>Создание королевской монеты.</h3>
+ */
+export type CreateRoyalCoinFromData = PartialByType<Omit<RoyalCoin, `isOpened`> & ReadonlyByType<RoyalCoin, `isOpened`>,
+    `type` | `isOpened`>;
+
+/**
+ * <h3>Создание королевской монеты.</h3>
+ */
+export type CreateSpecialTriggerTradingCoinFromData = PartialByType<Omit<SpecialTriggerTradingCoin, `isOpened`>
+    & ReadonlyByType<SpecialTriggerTradingCoin, `isOpened`>, `type` | `isOpened`>;
+
+/**
+* <h3>Тип для конфига базовых монет.</h3>
+*/
+export type InitialTradingCoinConfigType =
+    Pick<InitialTriggerTradingCoin, `value`> | Pick<InitialNotTriggerTradingCoin, `value`>;
+
+export type InitialCoinType = InitialTriggerTradingCoin | InitialNotTriggerTradingCoin;
+
+export type TriggerTradingCoinType = InitialTriggerTradingCoin | SpecialTriggerTradingCoin;
+
+export type UpgradableCoinType = InitialNotTriggerTradingCoin | RoyalCoin;
+
+export type AllCoinsType = TriggerTradingCoinType | UpgradableCoinType;
+
+export type AllCoinsValueType = InitialCoinValueType | RoyalCoinValueType;
+
+export type UpgradableCoinValueType = Exclude<AllCoinsValueType, `0`>;
+
+type SpecialTriggerTradingCoinValueType = 3;
+
+export type InitialTriggerTradingCoinValueType = 0;
+
+export type InitialNotTriggerTradingCoinValueType = 2 | 3 | 4 | 5;
+
+export type InitialCoinValueType = InitialTriggerTradingCoinValueType | InitialNotTriggerTradingCoinValueType;
+
+export type RoyalCoinValueType =
+    5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25;
+
+export type BasicUpgradeCoinValueType = RoyalOfferingCardValueType | 7;
+
+/**
+ * <h3>Конфиг создания королевских монет.</h3>
+ */
+export interface RoyalCoinConfig {
+    value: RoyalCoinValueType;
     readonly count: () => NumberPlayersValues;
 }
 
@@ -1198,7 +1295,7 @@ interface Expansion {
 export interface LogData {
     readonly type: LogTypeNames;
     // TODO Move to Log enums
-    readonly value: string;
+    readonly text: string;
 }
 
 /**
@@ -1210,7 +1307,7 @@ export interface MyGameState {
     soloGameAndvariStrategyVariantLevel: CanBeNullType<SoloGameAndvariStrategyVariantLevelType>;
     soloGameAndvariStrategyLevel: CanBeNullType<SoloGameAndvariStrategyNames>;
     odroerirTheMythicCauldron: boolean;
-    readonly odroerirTheMythicCauldronCoins: Coin[];
+    readonly odroerirTheMythicCauldronCoins: RoyalCoin[];
     readonly averageCards: SuitPropertyType<DwarfCard>;
     readonly botData: AIBotData;
     readonly decksLength: DwarfDecksLength;
@@ -1247,14 +1344,14 @@ export interface MyGameState {
     strategyForSoloBotAndvari: StrategyForSoloBotAndvari;
     readonly log: boolean;
     readonly logData: LogData[];
-    readonly marketCoins: Coin[];
-    readonly marketCoinsUnique: Coin[];
+    readonly royalCoins: RoyalCoin[];
+    readonly royalCoinsUnique: RoyalCoin[];
     // TODO Move number => type
     round: number;
     readonly suitsNum: 5;
     tavernCardDiscarded2Players: boolean;
     readonly taverns: TavernsType;
-    readonly tavernsNum: 3;
+    readonly tavernsNum: TavernsConfigType[`length`];
     tierToEnd: TierToEndType;
     readonly totalScore: number[];
     readonly players: Players;
@@ -1294,7 +1391,7 @@ export interface ResolveBoardCoins {
  */
 export interface Condition {
     readonly suit: SuitNames;
-    readonly value: number;
+    readonly count: number;
 }
 
 /**
@@ -1523,7 +1620,7 @@ export interface MoveValidator<GetRangeType extends MoveValidatorGetRangeType> {
  */
 export interface MoveValidators {
     readonly ActivateGodAbilityMoveValidator: MoveValidator<MoveArgumentsType<GodNames[]>>;
-    readonly NotActivateGodAbilityMoveValidator: MoveValidator<MoveArgumentsType<null>>;
+    readonly NotActivateGodAbilityMoveValidator: MoveValidator<MoveArgumentsType<GodNames[]>>;
     readonly ChooseCoinValueForHrungnirUpgradeMoveValidator: MoveValidator<MoveArgumentsType<MoveCoinsArguments[]>>;
     readonly ClickCardNotGiantAbilityMoveValidator: MoveValidator<MoveArgumentsType<DwarfCard>>;
     readonly ClickGiantAbilityNotCardMoveValidator: MoveValidator<MoveArgumentsType<DwarfCard>>;
@@ -1607,10 +1704,9 @@ type NumberArrayValuesType = {
 /**
  * <h3>Интерфейс для числовых индексов и числовых значений.</h3>
  */
-export interface NumberValues {
-    // index === coin.value(s) type => index in coinValues!
-    [index: number]: number;
-}
+export type NumberValues = {
+    [value in AllCoinsValueType]?: number;
+};
 
 /**
  * <h3>Интерфейс для индексов эпох и числовых значений.</h3>
@@ -1674,15 +1770,6 @@ export interface PublicPlayers {
 }
 
 /**
- * <h3>Интерфейс для кристалла.</h3>
- */
-export interface Priority {
-    readonly isExchangeable: boolean;
-    // TODO value => PriorityValues!
-    readonly value: number;
-}
-
-/**
  * <h3>Интерфейс для отрисовки бэкграунда в стилях.</h3>
  */
 export interface Background {
@@ -1698,9 +1785,7 @@ export interface Styles {
     readonly CampCard: (cardPath: string) => Background;
     readonly CardBack: (tier: TierType) => Background;
     readonly Card: (suit: SuitNames, name: CardNamesForStylesType, points: CanBeNullType<number>) => Background;
-    // TODO Coin values to type!
-    readonly Coin: (value: number, initial: boolean) => Background;
-    readonly CoinSmall: (value: number, initial: boolean) => Background;
+    readonly Coin: (value: AllCoinsValueType, isInitial: boolean) => Background;
     readonly CoinBack: () => Background;
     readonly Distinction: (distinction: SuitNames) => Background;
     readonly DistinctionsBack: () => Background;
@@ -1742,11 +1827,6 @@ export type NumPlayersType = 2 | ThreeOrFourOrFiveType;
  * <h3>Типы данных для количества всех игроков.</h3>
  */
 export type NumPlayersWithBotType = 5 | OneOrTwoOrThreeOrFour;
-
-/**
- * <h3>Типы данных для конфига всех кристаллов.</h3>
- */
-export type PrioritiesConfigType = readonly [Priority[], Priority[], Priority[], Priority[], Priority[]];
 
 /**
  * <h3>Типы данных для всех таверн.</h3>
@@ -1914,17 +1994,17 @@ export type PointsValuesType = NumberTierValues | NumberArrayValuesType;
 /**
  * <h3>Типы данных для конфигов монет.</h3>
  */
-export type CoinConfigType = MarketCoinConfig | InitialTradingCoinConfigType;
+export type CoinConfigType = RoyalCoinConfig | InitialTradingCoinConfigType;
 
 /**
  * <h3>Типы данных для массивов конфигов монет.</h3>
  */
-export type CoinConfigArraysType = MarketCoinConfig[] | InitialTradingCoinConfigType[];
+export type CoinConfigArraysType = RoyalCoinConfig[] | InitialTradingCoinConfigType[];
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
  */
-export type CoinType = CanBeNullType<Coin>;
+export type CoinType = CanBeNullType<AllCoinsType>;
 
 /**
  * <h3>Типы данных для отрисовки профита.</h3>
@@ -2095,7 +2175,7 @@ export type ArgsType = (CanBeNullType<CoinTypeNames | DwarfCard | SuitNames | Go
 /**
  * <h3>Типы данных для аргументов автоматических действий.</h3>
  */
-export type AutoActionArgsType = [number | OneOrTwoType];
+export type AutoActionArgsType = [OneOrTwoType | UpgradableCoinValueType];
 
 /**
  * <h3>Типы данных для аргументов функций подсчёта очков.</h3>
@@ -2128,22 +2208,6 @@ export type MoveArgsType = [SoloGameAndvariStrategyNames] | number[][] | [SuitNa
  */
 export type AllDiscardCardType = DwarfCard | PlayerBoardCardType | RoyalOfferingCard | ArtefactCampCard
     | MercenaryCampCard | MythologicalCreatureCardType;
-
-/**
- * <h3>Тип для создания монеты.</h3>
- */
-export type CreateCoinType = PartialByType<Omit<Coin, `isOpened`> & ReadonlyByType<Coin, `isOpened`>,
-    `isInitial` | `isOpened` | `isTriggerTrading`>;
-
-/**
-* <h3>Тип для конфига базовых монет.</h3>
-*/
-export type InitialTradingCoinConfigType = Pick<Coin, `isTriggerTrading` | `value`>;
-
-/**
- * <h3>Тип для создания кристалла.</h3>
- */
-export type CreatePriorityType = PartialByType<Priority, `isExchangeable`>;
 
 /**
  * <h3>Тип для варианта карты героя.</h3>

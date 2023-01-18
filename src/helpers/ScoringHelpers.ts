@@ -289,7 +289,7 @@ export const FinalWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }:
     }
     let totalScore = 0;
     const warriorDistinctions: number[] =
-        CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior);
+        CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior, true);
     if (warriorDistinctions.length && warriorDistinctions.includes(Number(myPlayerID))) {
         totalScore += StartDistinctionAwarding({ G, ctx, myPlayerID: myPlayerID, ...rest },
             suitsConfig[SuitNames.warrior].distinction.awarding);

@@ -11,7 +11,7 @@ import { AllStackData } from "./StackData";
  */
 const upgradeCoinUpTo3: RoyalOfferingCardData = {
     name: RoyalOfferingNames.PlusThree,
-    value: 3,
+    upgradeValue: 3,
     stack: {
         player: [AllStackData.upgradeCoin(3)],
         soloBot: [AllStackData.upgradeCoinSoloBot(3)],
@@ -50,7 +50,7 @@ const upgradeCoinUpTo3: RoyalOfferingCardData = {
  */
 const upgradeCoinUpTo5: RoyalOfferingCardData = {
     name: RoyalOfferingNames.PlusFive,
-    value: 5,
+    upgradeValue: 5,
     stack: {
         player: [AllStackData.upgradeCoin(5)],
         soloBot: [AllStackData.upgradeCoinSoloBot(5)],

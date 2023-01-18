@@ -14,5 +14,5 @@ import type { FnContext } from "./typescript/interfaces";
  * @returns
  */
 export const AddDataToLog = ({ G }: FnContext, type: LogTypeNames, value: string): void => {
-    G.logData.push({ type, value });
+    G.logData.push({ type, text: value });
 };

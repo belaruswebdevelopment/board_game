@@ -10,7 +10,7 @@
  * @returns Убираемая монета с рынка.
  */
 export const RemoveCoinFromMarket = ({ G }, coinId) => {
-    const coin = G.marketCoins.splice(coinId, 1)[0];
+    const coin = G.royalCoins.splice(coinId, 1)[0];
     if (coin === undefined) {
         throw new Error(`Отсутствует минимальная монета на рынке с id '${coinId}'.`);
     }

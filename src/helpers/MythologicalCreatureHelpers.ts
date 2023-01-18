@@ -1,6 +1,7 @@
 import { ThrowMyError } from "../Error";
+import { IsValkyryCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { CardTypeRusNames, CommonBuffNames, ErrorNames, SuitNames, ValkyryBuffNames, ValkyryNames } from "../typescript/enums";
-import type { BuffValueType, CanBeUndefType, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer, ValkyryCard } from "../typescript/interfaces";
+import type { BuffValueType, CanBeUndefType, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 
 /**
@@ -72,11 +73,14 @@ export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
             default:
                 throw new Error(`Нет такого бафа '${buffName}' у мифических существ типа '${CardTypeRusNames.ValkyryCard}}'.`);
         }
-        const valkyryCard: CanBeUndefType<ValkyryCard> =
+        const valkyryCard: CanBeUndefType<MythologicalCreatureCommandZoneCardType> =
             player.mythologicalCreatureCards.find((card: MythologicalCreatureCommandZoneCardType):
-                boolean => card.name === valkyryName) as CanBeUndefType<ValkyryCard>;
+                boolean => card.name === valkyryName);
         if (valkyryCard === undefined) {
             throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' не удалось найти карту типа '${CardTypeRusNames.ValkyryCard}' с названием '${valkyryName}'.`);
+        }
+        if (!IsValkyryCard(valkyryCard)) {
+            throw new Error(`У игрока '${player.nickname}' не может присутствовать карта с типом '${valkyryCard.type}' с названием '${valkyryName}'.`);
         }
         if (valkyryCard.strengthTokenNotch === null) {
             throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' у карты типа '${CardTypeRusNames.ValkyryCard}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);

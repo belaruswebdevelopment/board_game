@@ -1,9 +1,9 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, Coin, CoinType, FnContext, MyFnContextWithMyPlayerID, NumberValues, Player, PlayerID, Priority, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins } from "../typescript/interfaces";
+import type { AllCoinsType, AllCoinsValueType, CanBeUndefType, CoinType, FnContext, MyFnContextWithMyPlayerID, NumberValues, Player, PlayerID, Priority, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { RemoveCoinFromPlayer } from "./DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -38,14 +38,14 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
         handCoins = player.handCoins;
     }
     let tradingCoinIndex: number = player.boardCoins.findIndex((coin: PublicPlayerCoinType): boolean =>
-        Boolean(coin?.isTriggerTrading)),
+        IsTriggerTradingCoin(coin)),
         type: CoinTypeNames = CoinTypeNames.Board;
     if (tradingCoinIndex === -1 && G.mode === GameModeNames.Multiplayer) {
         tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin: CoinType, index: number): boolean => {
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на столе не может быть закрыта монета с id '${index}'.`);
             }
-            return Boolean(coin?.isTriggerTrading);
+            return IsTriggerTradingCoin(coin);
         });
     }
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && tradingCoinIndex === -1
@@ -54,7 +54,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${index}'.`);
             }
-            return Boolean(coin?.isTriggerTrading);
+            return IsTriggerTradingCoin(coin);
         });
         if (tradingCoinIndex === -1) {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
@@ -93,7 +93,7 @@ export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    return Math.max(...player.boardCoins.filter(IsCoin).map((coin: Coin,
+    return Math.max(...player.boardCoins.filter(IsCoin).map((coin: AllCoinsType,
         index: number): number => {
         if (!coin.isOpened) {
             throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
@@ -206,7 +206,7 @@ export const OpenCurrentTavernClosedCoinsOnPlayerBoard = ({ G, ctx, ...rest }: F
  */
 export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoardCoins => {
     const playersOrderNumbers: number[] = [],
-        coinValues: number[] = [],
+        coinValues: AllCoinsValueType[] = [],
         exchangeOrder: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
@@ -270,14 +270,14 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
     }
     const counts: NumberValues = {};
     for (let i = 0; i < coinValues.length; i++) {
-        const coinValue: CanBeUndefType<number> = coinValues[i];
+        const coinValue: CanBeUndefType<AllCoinsValueType> = coinValues[i];
         if (coinValue !== undefined) {
-            const value: number = counts[coinValue] ?? 0;
+            const value: AllCoinsValueType = (counts[coinValue] ?? 0) as AllCoinsValueType;
             counts[coinValue] = 1 + value;
         }
     }
     for (const prop in counts) {
-        const value: CanBeUndefType<number> = counts[prop];
+        const value: CanBeUndefType<number> = counts[prop as unknown as AllCoinsValueType];
         if (value === undefined) {
             throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
         }

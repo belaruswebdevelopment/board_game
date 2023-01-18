@@ -12,6 +12,6 @@ import { LogTypeNames } from "./typescript/enums";
  * @returns
  */
 export const AddDataToLog = ({ G }, type, value) => {
-    G.logData.push({ type, value });
+    G.logData.push({ type, text: value });
 };
 //# sourceMappingURL=Logging.js.map

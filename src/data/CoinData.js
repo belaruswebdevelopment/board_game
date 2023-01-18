@@ -1,41 +1,25 @@
 /**
- * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param config Конфиг.
- * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
- */
-export const isInitialPlayerCoinsConfigNotMarket = (config) => config.isTriggerTrading !== undefined;
-/**
  * <h3>Конфиг базовых монет игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
  */
-export const initialPlayerCoinsConfig = [
+export const initialCoinsConfig = [
     {
         value: 0,
-        isTriggerTrading: true,
     },
     {
         value: 2,
-        isTriggerTrading: false,
     },
     {
         value: 3,
-        isTriggerTrading: false,
     },
     {
         value: 4,
-        isTriggerTrading: false,
     },
     {
         value: 5,
-        isTriggerTrading: false,
     },
 ];
 /**
@@ -45,7 +29,7 @@ export const initialPlayerCoinsConfig = [
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
  */
-export const marketCoinsConfig = [
+export const royalCoinsConfig = [
     {
         value: 5,
         count: () => ({

@@ -53,11 +53,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
+                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
+                    text: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -110,11 +110,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту '${ArtefactNames.Brisingamens}' в колоду сброса карт лагеря.`,
+                    text: `Игрок 'Dan' отправил карту '${ArtefactNames.Brisingamens}' в колоду сброса карт лагеря.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
+                    text: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCampCardsDeck` | `logData`>);
@@ -168,11 +168,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
+                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
+                    text: `Игрок 'Dan' потерял баф '${CampBuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCampCardsDeck` | `logData`>);
@@ -269,15 +269,15 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил в колоду сброса карту из таверны:`,
+                    text: `Игрок 'Dan' отправил в колоду сброса карту из таверны:`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
+                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Карта 'Test' из таверны ${TavernNames.LaughingGoblin} убрана в сброс.`,
+                    text: `Карта 'Test' из таверны ${TavernNames.LaughingGoblin} убрана в сброс.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData` | `taverns` | `currentTavern`>);
@@ -375,7 +375,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' во время фазы 'enlistmentMercenaries' выбрал наёмника 'Test'.`,
+                    text: `Игрок 'Dan' во время фазы 'enlistmentMercenaries' выбрал наёмника 'Test'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `logData`>);
@@ -449,15 +449,15 @@ describe(`Test GetMjollnirProfitAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' получил баф '${CommonBuffNames.SuitIdForMjollnir}'.`,
+                    text: `Игрок 'Dan' получил баф '${CommonBuffNames.SuitIdForMjollnir}'.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' потерял баф '${CampBuffNames.GetMjollnirProfit}'.`,
+                    text: `Игрок 'Dan' потерял баф '${CampBuffNames.GetMjollnirProfit}'.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' выбрал фракцию '${suitsConfig[SuitNames.hunter].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`,
+                    text: `Игрок 'Dan' выбрал фракцию '${suitsConfig[SuitNames.hunter].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `logData`>);
@@ -488,7 +488,7 @@ describe(`Test PassEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' пасанул во время фазы '${PhaseNames.EnlistmentMercenaries}'.`,
+                    text: `Игрок 'Dan' пасанул во время фазы '${PhaseNames.EnlistmentMercenaries}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `logData`>);
@@ -540,11 +540,11 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                    text: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
                     type: LogTypeNames.Public,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,
+                    text: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -571,7 +571,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                         ],
                     },
                     name: RoyalOfferingNames.PlusFive,
-                    value: 5,
+                    upgradeValue: 5,
 
                 } as RoyalOfferingCard,
             ],
@@ -609,22 +609,22 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                         ],
                     },
                     name: RoyalOfferingNames.PlusFive,
-                    value: 5,
+                    upgradeValue: 5,
 
                 } as RoyalOfferingCard,
             ],
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                    text: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
                     type: LogTypeNames.Public,
-                    value: `Игрок 'Dan' выбрал карту 'Test'.`,
+                    text: `Игрок 'Dan' выбрал карту 'Test'.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: "Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.",
+                    text: "Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.",
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -686,11 +686,11 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                    text: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
                     type: LogTypeNames.Public,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,
+                    text: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -801,11 +801,11 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                    text: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
                 {
                     type: LogTypeNames.Public,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.hunter].suitName}'.`,
+                    text: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.hunter].suitName}'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -890,11 +890,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Public,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.blacksmith].suitName}'.`,
+                    text: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.blacksmith].suitName}'.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
+                    text: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `logData`>);
@@ -1024,11 +1024,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Public,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,
+                    text: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,
                 },
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
+                    text: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `logData`>);

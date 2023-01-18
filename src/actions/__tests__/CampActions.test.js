@@ -21,11 +21,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -62,7 +60,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -70,7 +67,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -90,7 +86,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
         });
@@ -115,11 +111,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -156,7 +150,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -164,7 +157,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -184,7 +176,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
         });
@@ -205,11 +197,9 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -258,7 +248,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -266,7 +255,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -281,7 +269,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -306,7 +293,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
                 },
             ],
         });
@@ -327,7 +314,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -335,7 +321,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -372,12 +357,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -400,7 +383,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
         });
@@ -416,7 +399,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -424,7 +406,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -438,7 +419,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -451,7 +431,6 @@ describe(`Test AddCoinToPouchAction method`, () => {
                     handCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -478,12 +457,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -500,12 +477,10 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -528,7 +503,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
+                    text: `Игрок 'Dan' положил монету ценностью '3' в свой кошель.`,
                 },
             ],
         });
@@ -757,7 +732,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
+                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
             ],
         });
@@ -807,7 +782,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
+                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
                 },
             ],
         });

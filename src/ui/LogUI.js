@@ -32,7 +32,7 @@ export const DrawLogData = ({ G }) => {
                         throw new Error(`Попытка отобразить недопустимый тип логов.`);
                         return _exhaustiveCheck;
                 }
-                loggingData.push(_jsx("li", { className: className, children: log.value }, `Log ${i}`));
+                loggingData.push(_jsx("li", { className: className, children: log.text }, `Log ${i}`));
             }
         }
         return (_jsxs("div", { className: "log ml-3 w-1/4 border overflow-y-auto", children: [_jsx("h3", { children: "Log data:" }), _jsx("ul", { className: "list-none p-0 ml-5", children: loggingData })] }));

@@ -4,10 +4,10 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, AutoActionFunction, CanBeUndefType, Coin, MyFnContextWithMyPlayerID, OneOrTwoType, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, AllCoinsType, AutoActionFunction, CanBeUndefType, MyFnContextWithMyPlayerID, OneOrTwoType, Player, PublicPlayer, PublicPlayerCoinType, UpgradableCoinType, UpgradableCoinValueType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -22,8 +22,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @returns
  */
 export const AddPickHeroAction: AutoActionFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    priority: number /* OneOrTwoType */):
-    void => {
+    priority: number /* OneOrTwoType */): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -88,7 +87,7 @@ export const GetClosedCoinIntoPlayerHandAction: ActionFunctionWithoutParams = ({
  * @returns
  */
 export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    value: number): void => {
+    value: number/* UpgradableCoinValueType */): void => {
     // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
     const currentPlayer: number = G.mode === GameModeNames.Solo ? 1 : Number(myPlayerID),
         player: CanBeUndefType<PublicPlayer> = G.publicPlayers[currentPlayer],
@@ -110,12 +109,12 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
         } else {
             handCoins = player.handCoins;
         }
-        const allCoins: Coin[] = [],
-            allHandCoins: Coin[] = handCoins.filter(IsCoin);
+        const allCoins: AllCoinsType[] = [],
+            allHandCoins: AllCoinsType[] = handCoins.filter(IsCoin);
         for (let i = 0; i < player.boardCoins.length; i++) {
             const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[i];
             if (boardCoin === null) {
-                const handCoin: CanBeUndefType<Coin> = allHandCoins.splice(0, 1)[0];
+                const handCoin: CanBeUndefType<AllCoinsType> = allHandCoins.splice(0, 1)[0];
                 if (handCoin === undefined) {
                     throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке отсутствует монета с id '${i}'.`);
                 }
@@ -130,18 +129,20 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
                 allCoins.push(boardCoin);
             }
         }
-        const minCoinValue: number = Math.min(...allCoins.filter((coin: Coin): boolean =>
-            !coin.isTriggerTrading).map((coin: Coin): number => coin.value)),
-            upgradingCoinsArray: Coin[] =
-                allCoins.filter((coin: Coin): boolean => coin.value === minCoinValue),
+        const minCoinValue: UpgradableCoinValueType =
+            Math.min(...allCoins.filter((coin: AllCoinsType): boolean =>
+                !IsTriggerTradingCoin(coin)).map((coin: AllCoinsType): number =>
+                    coin.value)) as UpgradableCoinValueType,
+            upgradingCoinsArray: UpgradableCoinType[] =
+                allCoins.filter((coin: AllCoinsType): boolean => coin.value === minCoinValue) as UpgradableCoinType[],
             upgradingCoinsValue: number = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
-                upgradingCoinsArray.some((coin: Coin): boolean => coin.isInitial === true);
+                upgradingCoinsArray.some((coin: UpgradableCoinType): boolean => IsInitialCoin(coin));
         }
         if (upgradingCoinsValue === 1 || ((upgradingCoinsValue > 1) && !isInitialInUpgradingCoinsValue)) {
-            const upgradingCoinId: number = allCoins.findIndex((coin: Coin): boolean =>
+            const upgradingCoinId: number = allCoins.findIndex((coin: AllCoinsType): boolean =>
                 coin.value === minCoinValue),
                 boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[upgradingCoinId];
             if (boardCoin === undefined) {
@@ -172,30 +173,31 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
                 }
                 type = CoinTypeNames.Board;
             }
-            UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, upgradingCoinId, type);
+            UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false,
+                value as UpgradableCoinValueType, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-                [AllStackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
+                [AllStackData.pickConcreteCoinToUpgrade(minCoinValue,
+                    value as UpgradableCoinValueType)]);
             DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
         } else if (upgradingCoinsValue <= 0) {
             throw new Error(`Количество возможных монет для обмена не может быть меньше либо равно нулю.`);
         }
     } else {
-        const minCoinValue: number =
+        const minCoinValue: UpgradableCoinValueType =
             Math.min(...(player.boardCoins.filter((coin: PublicPlayerCoinType): boolean =>
-                IsCoin(coin) && !coin.isTriggerTrading) as Coin[])
-                .map((coin: Coin): number => coin.value));
+                IsCoin(coin) && !IsTriggerTradingCoin(coin)) as UpgradableCoinType[])
+                .map((coin: UpgradableCoinType): number => coin.value)) as UpgradableCoinValueType;
         if (G.mode === GameModeNames.Solo && minCoinValue !== 2) {
             throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
         }
         const upgradingCoinsArray = player.boardCoins.filter((coin: PublicPlayerCoinType): boolean =>
-            coin?.value === minCoinValue) as Coin[],
+            coin?.value === minCoinValue) as UpgradableCoinType[],
             upgradingCoinsValue: number = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
-                upgradingCoinsArray.some((coin: PublicPlayerCoinType): boolean =>
-                    coin?.isInitial === true);
+                upgradingCoinsArray.some((coin: UpgradableCoinType): boolean => IsInitialCoin(coin));
         }
         if (upgradingCoinsValue === 1 || ((upgradingCoinsValue > 1) && !isInitialInUpgradingCoinsValue)) {
             const upgradingCoinId: number =
@@ -212,10 +214,12 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
             type = CoinTypeNames.Board;
-            UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, value, upgradingCoinId, type);
+            UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false,
+                value as UpgradableCoinValueType, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-                [AllStackData.pickConcreteCoinToUpgrade(minCoinValue, value)]);
+                [AllStackData.pickConcreteCoinToUpgrade(minCoinValue,
+                    value as UpgradableCoinValueType)]);
             DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });
         } else if (upgradingCoinsValue <= 0) {
             throw new Error(`Количество возможных монет для обмена не может быть меньше либо равно нулю.`);

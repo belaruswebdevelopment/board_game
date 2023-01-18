@@ -533,6 +533,16 @@ export var DistinctionDescriptionNames;
 })(DistinctionDescriptionNames || (DistinctionDescriptionNames = {}));
 // Distinction End
 /**
+ * <h3>Перечисление для типов монет на русском.</h3>
+ */
+export var CoinRusNames;
+(function (CoinRusNames) {
+    CoinRusNames["InitialNotTriggerTrading"] = "\u0411\u0430\u0437\u043E\u0432\u0430\u044F";
+    CoinRusNames["InitialTriggerTrading"] = "\u0411\u0430\u0437\u043E\u0432\u0430\u044F, \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u0443\u044E\u0449\u0430\u044F \u043E\u0431\u043C\u0435\u043D \u043C\u043E\u043D\u0435\u0442";
+    CoinRusNames["Royal"] = "\u041A\u043E\u0440\u043E\u043B\u0435\u0432\u0441\u043A\u0430\u044F";
+    CoinRusNames["SpecialTriggerTrading"] = "\u041E\u0441\u043E\u0431\u0430\u044F, \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u0443\u044E\u0449\u0430\u044F \u043E\u0431\u043C\u0435\u043D \u043C\u043E\u043D\u0435\u0442";
+})(CoinRusNames || (CoinRusNames = {}));
+/**
  * <h3>Перечисление для названия режима игры.</h3>
  */
 export var GameModeNames;
@@ -572,6 +582,7 @@ export var AutoActionFunctionNames;
  */
 export var ButtonNames;
 (function (ButtonNames) {
+    ButtonNames["NotActivateGodAbility"] = "\u041D\u0435 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C \u043A\u0430\u0440\u0442\u044B \u0431\u043E\u0433\u0430";
     ButtonNames["NoHeroEasyStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
     ButtonNames["NoHeroHardStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
     ButtonNames["WithHeroEasyStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";

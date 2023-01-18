@@ -283,9 +283,6 @@ export const ALlStyles: Styles = {
     Coin: (value: number, initial: boolean): Background => ({
         background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 40px 40px`,
     }),
-    CoinSmall: (value: number, initial: boolean): Background => ({
-        background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 32px 32px`,
-    }),
     CoinBack: (): Background => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),

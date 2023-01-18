@@ -1,5 +1,5 @@
-import { BuildCoins } from "./Coin";
-import { initialPlayerCoinsConfig } from "./data/CoinData";
+import { BuildInitialCoins } from "./Coin";
+import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescript/enums";
@@ -13,10 +13,8 @@ import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescrip
  * @returns Приватные данные игрока.
  */
 export const BuildPlayer = () => CreatePlayer({
-    handCoins: BuildCoins(initialPlayerCoinsConfig, {
-        isInitial: true,
-    }),
-    boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+    handCoins: BuildInitialCoins(),
+    boardCoins: Array(initialCoinsConfig.length).fill(null),
 });
 /**
  * <h3>Создаёт всех игроков (публичные данные).</h3>
@@ -39,19 +37,17 @@ export const BuildPublicPlayer = (nickname, priority, isPrivate) => {
     }
     let handCoins = [];
     if (isPrivate) {
-        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
+        handCoins = Array(initialCoinsConfig.length).fill({});
     }
     else {
-        handCoins = BuildCoins(initialPlayerCoinsConfig, {
-            isInitial: true,
-        });
+        handCoins = BuildInitialCoins();
     }
     return CreatePublicPlayer({
         nickname,
         cards,
         giantTokenSuits,
         handCoins,
-        boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+        boardCoins: Array(initialCoinsConfig.length).fill(null),
         priority,
     });
 };

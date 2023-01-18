@@ -3,8 +3,8 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, SuitMoveNames, SuitNames } from "../typescript/enums";
+import { IsCoin, IsInitialCoin, IsRoyalCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, SuitMoveNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -248,7 +248,7 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
         case CardTypeRusNames.RoyalOfferingCard:
             spanClasses += `bg-royal-offering`;
             styles = ALlStyles.RoyalOffering(card.name);
-            value = String(card.value);
+            value = String(card.upgradeValue);
             break;
         case CardTypeRusNames.GiantCard:
         case CardTypeRusNames.GodCard:
@@ -416,6 +416,9 @@ export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id,
         if (!IsCoin(coin)) {
             throw new Error(`Монета на рынке не может отсутствовать.`);
         }
+        if (!IsRoyalCoin(coin)) {
+            throw new Error(`Монета на рынке не может не быть с типом '${CoinRusNames.Royal}'.`);
+        }
         styles = ALlStyles.Coin(coin.value, false);
         spanClasses += `bg-market-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
@@ -426,7 +429,11 @@ export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id,
         spanClasses += `bg-coin`;
         if (IsCoin(coin) && coinClasses !== null && coinClasses !== undefined) {
             styles = ALlStyles.CoinBack();
-            span = (_jsx("span", { style: ALlStyles.CoinSmall(coin.value, coin.isInitial), className: coinClasses }));
+            let isInitial = false;
+            if (IsInitialCoin(coin)) {
+                isInitial = true;
+            }
+            span = (_jsx("span", { style: ALlStyles.Coin(coin.value, isInitial), className: coinClasses }));
         }
     }
     else {
@@ -442,8 +449,8 @@ export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id,
                 if (!IsCoin(coin)) {
                     throw new Error(`Монета с типом 'coin' не может быть закрыта.`);
                 }
-                if (IsCoin(coin) && coin.isInitial !== undefined) {
-                    styles = ALlStyles.Coin(coin.value, coin.isInitial);
+                if (IsInitialCoin(coin)) {
+                    styles = ALlStyles.Coin(coin.value, true);
                 }
             }
         }

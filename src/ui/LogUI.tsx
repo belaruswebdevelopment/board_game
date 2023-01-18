@@ -36,7 +36,7 @@ export const DrawLogData = ({ G }: FnContext): CanBeNullType<JSX.Element> => {
                 }
                 loggingData.push(
                     <li key={`Log ${i}`} className={className}>
-                        {log.value}
+                        {log.text}
                     </li>
                 );
             }

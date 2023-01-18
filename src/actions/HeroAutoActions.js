@@ -4,7 +4,7 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
 import { UpgradeCoinAction } from "./CoinActions";
@@ -76,7 +76,7 @@ export const GetClosedCoinIntoPlayerHandAction = ({ G, ctx, myPlayerID, ...rest 
  * @param value Значение обмена монеты.
  * @returns
  */
-export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value) => {
+export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value /* UpgradableCoinValueType */) => {
     // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
     const currentPlayer = G.mode === GameModeNames.Solo ? 1 : Number(myPlayerID), player = G.publicPlayers[currentPlayer], privatePlayer = G.players[currentPlayer];
     if (player === undefined) {
@@ -115,11 +115,11 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value) => 
                 allCoins.push(boardCoin);
             }
         }
-        const minCoinValue = Math.min(...allCoins.filter((coin) => !coin.isTriggerTrading).map((coin) => coin.value)), upgradingCoinsArray = allCoins.filter((coin) => coin.value === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
+        const minCoinValue = Math.min(...allCoins.filter((coin) => !IsTriggerTradingCoin(coin)).map((coin) => coin.value)), upgradingCoinsArray = allCoins.filter((coin) => coin.value === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
-                upgradingCoinsArray.some((coin) => coin.isInitial === true);
+                upgradingCoinsArray.some((coin) => IsInitialCoin(coin));
         }
         if (upgradingCoinsValue === 1 || ((upgradingCoinsValue > 1) && !isInitialInUpgradingCoinsValue)) {
             const upgradingCoinId = allCoins.findIndex((coin) => coin.value === minCoinValue), boardCoin = player.boardCoins[upgradingCoinId];
@@ -162,7 +162,7 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value) => 
         }
     }
     else {
-        const minCoinValue = Math.min(...player.boardCoins.filter((coin) => IsCoin(coin) && !coin.isTriggerTrading)
+        const minCoinValue = Math.min(...player.boardCoins.filter((coin) => IsCoin(coin) && !IsTriggerTradingCoin(coin))
             .map((coin) => coin.value));
         if (G.mode === GameModeNames.Solo && minCoinValue !== 2) {
             throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
@@ -171,7 +171,7 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value) => 
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
-                upgradingCoinsArray.some((coin) => (coin === null || coin === void 0 ? void 0 : coin.isInitial) === true);
+                upgradingCoinsArray.some((coin) => IsInitialCoin(coin));
         }
         if (upgradingCoinsValue === 1 || ((upgradingCoinsValue > 1) && !isInitialInUpgradingCoinsValue)) {
             const upgradingCoinId = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), boardCoin = player.boardCoins[upgradingCoinId];

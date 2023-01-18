@@ -7,7 +7,7 @@ import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
 import { IsMercenaryCampCard } from "./is_helpers/IsCampTypeHelpers";
-import { IsCoin } from "./is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsTriggerTradingCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GodNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
@@ -56,7 +56,7 @@ export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }, coinData)
             if (!IsCoin(handCoin)) {
                 throw new Error(`Монета с id '${coinData.coinId}' в руке текущего игрока с id '${myPlayerID}' не может быть закрытой для него.`);
             }
-            if (!handCoin.isTriggerTrading) {
+            if (!IsTriggerTradingCoin(handCoin)) {
                 return true;
             }
             break;
@@ -70,7 +70,7 @@ export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }, coinData)
             if (!IsCoin(boardCoin)) {
                 throw new Error(`Монета с id '${coinData.coinId}' на столе текущего игрока с id '${myPlayerID}' не может быть закрытой для него.`);
             }
-            if (!boardCoin.isTriggerTrading) {
+            if (!IsTriggerTradingCoin(boardCoin)) {
                 return true;
             }
             break;
@@ -219,8 +219,13 @@ export const moveValidators = {
     },
     NotActivateGodAbilityMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ActivateGodAbilityOrNotProfit({ G, ctx, ...rest }, ActivateGodAbilityOrNotSubMoveValidatorNames.NotActivateGodAbilityMoveValidator),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        getValue: ({ G }, currentMoveArguments) => currentMoveArguments,
+        getValue: ({ G, ctx, ...rest }, currentMoveArguments) => {
+            const moveArgument = currentMoveArguments[Math.floor(Math.random() * currentMoveArguments.length)];
+            if (moveArgument === undefined) {
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentMoveArgumentIsUndefined);
+            }
+            return moveArgument;
+        },
         moveName: ButtonMoveNames.NotActivateGodAbilityMove,
         validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
     },
@@ -588,7 +593,7 @@ export const moveValidators = {
                     if (IsCoin(handCoin) && handCoin.isOpened) {
                         throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
                     }
-                    return Boolean(handCoin === null || handCoin === void 0 ? void 0 : handCoin.isTriggerTrading);
+                    return IsTriggerTradingCoin(handCoin);
                 });
                 // TODO How tradingProfit can be < 0?
                 if (tradingProfit < 0) {

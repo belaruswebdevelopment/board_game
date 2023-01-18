@@ -1,5 +1,5 @@
 import { ThrowMyError } from "../Error";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
 import type { CanBeUndefType, CoinType, MoveArgumentsType, MoveCoinsArguments, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
 
@@ -79,7 +79,7 @@ export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest
         if (!IsCoin(coin)) {
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть закрытой для него монета с id '${currentMoveArgument.coinId}'.`);
         }
-        if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !coin.isInitial)) {
+        if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !IsInitialCoin(coin))) {
             minValue = coin.value;
         }
     }
@@ -120,7 +120,7 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, 
         if (!IsCoin(coin)) {
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' $на столе не может быть закрытой для него монета с id '${currentMoveArgument.coinId}'.`);
         }
-        if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !coin.isInitial)) {
+        if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !IsInitialCoin(coin))) {
             minValue = coin.value;
         }
     }
@@ -144,7 +144,7 @@ export const GetMinCoinVisibleIndex = (coins: PublicPlayerCoinType[], minValue: 
     coins.forEach((coin: PublicPlayerCoinType, index: number): void => {
         if (IsCoin(coin)) {
             if ((coinId === -1 && coin.value === minValue)
-                || (coinId !== -1 && coin.value === minValue && !coin.isInitial)) {
+                || (coinId !== -1 && coin.value === minValue && !IsInitialCoin(coin))) {
                 coinId = index;
             }
         }
@@ -222,7 +222,7 @@ export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = ({ G, 
                 if (coin === null) {
                     throw new Error(`В массиве монет соло бота Андвари с id '1' в руке не может не быть монеты с id '${index}'.`);
                 }
-                return Boolean(coin.isTriggerTrading);
+                return IsTriggerTradingCoin(coin);
             });
     if (isTradingCoinIndex === -1) {
         throw new Error(`В массиве монет соло бота Андвари с id '1' в руке отсутствует обменная монета.`);

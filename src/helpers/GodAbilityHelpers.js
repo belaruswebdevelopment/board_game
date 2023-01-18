@@ -38,7 +38,7 @@ export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }, godNa
             break;
         default:
             _exhaustiveCheck = godName;
-            throw new Error(`Нет такой карты '${godName}' среди карт Богов.`);
+            throw new Error(`Нет такой карты '${godName}' среди карт богов.`);
             return _exhaustiveCheck;
     }
     if (isStart) {

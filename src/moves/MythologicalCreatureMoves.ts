@@ -10,8 +10,8 @@ import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonBuffNames, ErrorNames, GiantBuffNames, GodNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DwarfCard, InvalidMoveType, Move, MyFnContext, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, PublicPlayer, Stack } from "../typescript/interfaces";
+import { ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonBuffNames, ErrorNames, GiantBuffNames, GodBuffNames, GodNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, DwarfCard, InvalidMoveType, Move, MyFnContext, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, PublicPlayer, Stack, StackCardType } from "../typescript/interfaces";
 
 export const ActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, godName: GodNames):
     CanBeVoidType<InvalidMoveType> => {
@@ -26,23 +26,81 @@ export const ActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-
+    let buffName: GodBuffNames,
+        _exhaustiveCheck: never;
+    switch (godName) {
+        case GodNames.Freyja:
+            buffName = GodBuffNames.PlayerHasActiveGodFreyja;
+            break;
+        case GodNames.Frigg:
+            buffName = GodBuffNames.PlayerHasActiveGodFrigg;
+            break;
+        case GodNames.Loki:
+            buffName = GodBuffNames.PlayerHasActiveGodLoki;
+            break;
+        case GodNames.Odin:
+            buffName = GodBuffNames.PlayerHasActiveGodOdin;
+            break;
+        case GodNames.Thor:
+            buffName = GodBuffNames.PlayerHasActiveGodThor;
+            break;
+        default:
+            _exhaustiveCheck = godName;
+            throw new Error(`Нет такой карты '${godName}' среди карт богов.`);
+            return _exhaustiveCheck;
+    }
+    DeleteBuffFromPlayer({ G, ctx, myPlayerID: playerID, ...rest }, buffName);
 };
 
-export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, param: null):
+export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...rest }: MyFnContext, godName: GodNames):
     CanBeVoidType<InvalidMoveType> => {
-    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
+    const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, events, ...rest },
         TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot,
-        ButtonMoveNames.NotActivateGodAbilityMove, param);
+        ButtonMoveNames.NotActivateGodAbilityMove, godName);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)];
     if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-
+    const stack: CanBeUndefType<Stack> = player.stack[0];
+    if (stack === undefined) {
+        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
+            playerID);
+    }
+    const stackCard: CanBeUndefType<StackCardType> = stack.card;
+    if (stackCard !== undefined && stackCard.type === CardTypeRusNames.MercenaryCard) {
+        throw new Error(`В стеке не может быть карта типа '${CardTypeRusNames.MercenaryCard}'.`);
+    }
+    let _exhaustiveCheck: never;
+    switch (godName) {
+        case GodNames.Freyja:
+        case GodNames.Loki:
+            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
+                [AllStackData.pickCard()]);
+            break;
+        case GodNames.Frigg:
+            if (stackCard === undefined) {
+                throw new Error(`В стеке не может быть карты.`);
+            }
+            AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, events, ...rest }, stackCard);
+            break;
+        case GodNames.Odin:
+            events.endTurn();
+            break;
+        case GodNames.Thor:
+            if (CheckPlayerHasBuff({ G, ctx, myPlayerID: playerID, events, ...rest },
+                GodBuffNames.PlayerHasActiveGodThor)) {
+                // TODO Add stack.heroName => AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.STACK_DISCARD_HERO!]);
+            }
+            break;
+        default:
+            _exhaustiveCheck = godName;
+            throw new Error(`Нет такой карты '${godName}' среди карт богов.`);
+            return _exhaustiveCheck;
+    }
 };
 
 /**
@@ -123,7 +181,6 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
     if (!IsGiantCard(giant)) {
         throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне не может быть карта с типом '${giant.type}' вместо типа '${CardTypeRusNames.GiantCard}' с названием '${stack.giantName}'.`);
     }
-    giant.isActivated = true;
     let buffName: GiantBuffNames,
         _exhaustiveCheck: never;
     switch (card.playerSuit) {
@@ -215,7 +272,6 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
         throw new Error(`В массиве карт мифических существ игрока с id '${playerID}' в командной зоне не может быть карта с типом '${giant.type}' вместо типа '${CardTypeRusNames.GiantCard}' с названием '${stack.giantName}'.`);
     }
     giant.capturedCard = card;
-    giant.isActivated = true;
     let buffName: GiantBuffNames,
         _exhaustiveCheck: never;
     switch (card.playerSuit) {

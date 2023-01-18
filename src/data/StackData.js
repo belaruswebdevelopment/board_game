@@ -14,11 +14,12 @@ export const AllStackData = {
         giantName,
         card,
     }),
-    activateGodAbilityOrNot: (godName) => ({
+    activateGodAbilityOrNot: (godName, card) => ({
         configName: ConfigNames.ActivateGodAbilityOrNot,
         stageName: TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot,
         drawName: DrawNames.ActivateGodAbilityOrNot,
         godName,
+        card,
     }),
     addCoinToPouch: () => ({
         stageName: CommonStageNames.AddCoinToPouch,

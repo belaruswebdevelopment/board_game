@@ -159,7 +159,7 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
         }
     }
     if (card !== null && card.type === CardTypeRusNames.RoyalOfferingCard) {
-        score += card.value;
+        score += card.upgradeValue;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];

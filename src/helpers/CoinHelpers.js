@@ -1,6 +1,6 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
@@ -32,13 +32,13 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
     else {
         handCoins = player.handCoins;
     }
-    let tradingCoinIndex = player.boardCoins.findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading)), type = CoinTypeNames.Board;
+    let tradingCoinIndex = player.boardCoins.findIndex((coin) => IsTriggerTradingCoin(coin)), type = CoinTypeNames.Board;
     if (tradingCoinIndex === -1 && G.mode === GameModeNames.Multiplayer) {
         tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin, index) => {
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на столе не может быть закрыта монета с id '${index}'.`);
             }
-            return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading);
+            return IsTriggerTradingCoin(coin);
         });
     }
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && tradingCoinIndex === -1
@@ -47,7 +47,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${index}'.`);
             }
-            return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading);
+            return IsTriggerTradingCoin(coin);
         });
         if (tradingCoinIndex === -1) {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
@@ -252,7 +252,7 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }) => {
     for (let i = 0; i < coinValues.length; i++) {
         const coinValue = coinValues[i];
         if (coinValue !== undefined) {
-            const value = (_a = counts[coinValue]) !== null && _a !== void 0 ? _a : 0;
+            const value = ((_a = counts[coinValue]) !== null && _a !== void 0 ? _a : 0);
             counts[coinValue] = 1 + value;
         }
     }

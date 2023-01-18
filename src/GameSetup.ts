@@ -1,8 +1,8 @@
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
-import { BuildCoins } from "./Coin";
-import { initialPlayerCoinsConfig, marketCoinsConfig } from "./data/CoinData";
+import { BuildRoyalCoins } from "./Coin";
+import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
@@ -13,7 +13,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames, SuitNames } from "./typescript/enums";
-import type { AIBotData, AllSecretData, BuildHeroesArray, CampCardArray, CampDecksLength, CanBeUndefType, Coin, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IndexOf, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, NumPlayersType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalOfferingCard, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, StrategyForSoloBotAndvari, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { AIBotData, AllSecretData, BuildHeroesArray, CampCardArray, CampDecksLength, CanBeUndefType, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IndexOf, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalCoin, RoyalOfferingCard, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, StrategyForSoloBotAndvari, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -58,7 +58,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         },
         totalScore: number[] = [],
         logData: LogData[] = [],
-        odroerirTheMythicCauldronCoins: Coin[] = [],
+        odroerirTheMythicCauldronCoins: RoyalCoin[] = [],
         specialCardsDeck: SpecialCard[] = BuildSpecialCards(),
         configOptions: GameNamesKeyofTypeofType[] = [],
         discardCardsDeck: DiscardDeckCardType[] = [],
@@ -140,8 +140,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         publicPlayers: PublicPlayers = {},
         publicPlayersOrder: PlayerID[] = [],
         exchangeOrder: number[] = [],
-        priorities: Priority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers as NumPlayersType,
-            mode === GameModeNames.Solo);
+        priorities: Priority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, mode === GameModeNames.Solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex: number =
             mode === GameModeNames.Solo ? 0 : Math.floor(Math.random() * priorities.length),
@@ -155,9 +154,9 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
             BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority,
                 soloBot || mode === GameModeNames.Multiplayer);
     }
-    const marketCoinsUnique: Coin[] = [],
-        marketCoins: Coin[] = BuildCoins(marketCoinsConfig, {
-            count: marketCoinsUnique,
+    const royalCoinsUnique: RoyalCoin[] = [],
+        royalCoins: RoyalCoin[] = BuildRoyalCoins({
+            count: royalCoinsUnique,
             players: ctx.numPlayers,
         }),
         averageCards: SuitPropertyType<DwarfCard> = {} as SuitPropertyType<DwarfCard>;
@@ -167,7 +166,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
             tier: 0,
         });
     }
-    const initHandCoinsId: number[] = Array(initialPlayerCoinsConfig.length).fill(undefined)
+    const initHandCoinsId: number[] = Array(initialCoinsConfig.length).fill(undefined)
         .map((item: undefined, index: number): number => index),
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
@@ -228,8 +227,8 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         strategyForSoloBotAndvari,
         log,
         logData,
-        marketCoins,
-        marketCoinsUnique,
+        royalCoins,
+        royalCoinsUnique,
         round,
         suitsNum,
         taverns,

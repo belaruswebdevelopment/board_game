@@ -13,7 +13,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isOpened: true,
-                            isTriggerTrading: true,
                         },
                     ],
                     buffs: [],
@@ -41,7 +40,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -58,7 +57,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: true,
                         },
                     ],
                     buffs: [],
@@ -86,7 +84,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -98,7 +96,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     boardCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -139,7 +136,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -151,7 +148,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     boardCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -162,7 +158,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     nickname: `Dan`,
                     boardCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -195,7 +190,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -212,7 +207,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isOpened: true,
-                            isTriggerTrading: true,
                         },
                     ],
                     buffs: [
@@ -248,7 +242,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -265,7 +259,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isOpened: false,
-                            isTriggerTrading: true,
                         },
                     ],
                     buffs: [
@@ -301,7 +294,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -313,7 +306,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     boardCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -324,7 +316,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     nickname: `Dan`,
                     boardCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -365,7 +356,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -377,7 +368,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     boardCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -426,7 +416,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -443,7 +433,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [],
                     handCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -481,7 +470,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -493,7 +482,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -546,7 +534,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -558,7 +546,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -570,7 +557,6 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     nickname: `Dan`,
                     handCoins: [
                         {
-                            isTriggerTrading: true,
                             value: 0,
                         },
                     ],
@@ -614,7 +600,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
                 },
             ],
         });
@@ -854,12 +840,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -886,12 +870,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -929,12 +911,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -961,12 +941,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1002,12 +980,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1042,12 +1018,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1061,12 +1035,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1101,12 +1073,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1120,12 +1090,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1149,12 +1117,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1168,12 +1134,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1210,12 +1174,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: true,
                             value: 0,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1242,12 +1204,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: true,
                             value: 0,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1282,12 +1242,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: false,
-                            isTriggerTrading: true,
                             value: 0,
                         },
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1322,12 +1280,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: true,
                             value: 0,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1341,12 +1297,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: true,
                             value: 0,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1383,7 +1337,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1411,7 +1364,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1447,7 +1399,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1483,7 +1434,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1498,7 +1448,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1537,11 +1486,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1574,11 +1521,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1618,11 +1563,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1663,11 +1606,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1718,13 +1659,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1754,13 +1693,11 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1788,7 +1725,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1798,7 +1734,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                     ],
@@ -1812,7 +1747,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                     ],
@@ -1835,7 +1769,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1845,7 +1778,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                     ],
@@ -1859,7 +1791,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                     ],
@@ -1897,7 +1828,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1930,7 +1860,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -1963,7 +1892,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2004,7 +1932,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2065,19 +1992,15 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2110,19 +2033,15 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2155,19 +2074,15 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2208,19 +2123,15 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2277,18 +2188,15 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2317,18 +2225,15 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
                     ],
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2356,11 +2261,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2369,7 +2272,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -2383,7 +2285,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -2407,11 +2308,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                 0: {
                     handCoins: [
                         {
-                            isTriggerTrading: false,
                             value: 0,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 4,
                         },
                     ],
@@ -2420,7 +2319,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -2434,7 +2332,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         null,
@@ -2470,12 +2367,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2506,12 +2401,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2545,11 +2438,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2562,11 +2453,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2593,11 +2482,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2610,11 +2497,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2648,12 +2533,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2667,7 +2550,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {},
@@ -2696,12 +2578,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2715,12 +2595,10 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 2,
                         },
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2757,7 +2635,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2789,7 +2666,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2825,7 +2701,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: false,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2865,7 +2740,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2880,7 +2754,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         {
                             isOpened: true,
-                            isTriggerTrading: false,
                             value: 3,
                         },
                     ],
@@ -2950,7 +2823,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {
                             value: 3,
-                            isTriggerTrading: false,
                         },
                     ],
                     handCoins: [],

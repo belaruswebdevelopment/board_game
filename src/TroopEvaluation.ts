@@ -59,11 +59,13 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitN
  *
  * @param context
  * @param suit Название фракции дворфов.
+ * @param isFinal Является ли финальным подсчётом очков.
  * @returns Индексы игроков с преимуществом по количеству шевронов конкретной фракции.
  */
-export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }: FnContext, suit: SuitNames): number[] => {
+export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }: FnContext, suit: SuitNames, isFinal = false):
+    number[] => {
     const [playersRanks, max]: PlayerRanksAndMaxRanksForDistinctionsType =
-        CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit),
+        CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal),
         maxPlayers: number[] = [];
     playersRanks.forEach((value: number, index: number): void => {
         if (value === max) {
@@ -73,10 +75,12 @@ export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }: FnContex
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     index);
             }
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerIndex.nickname}'.`);
+            if (isFinal) {
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerIndex.nickname}'.`);
+            }
         }
     });
-    if (!maxPlayers.length) {
+    if (isFinal && !maxPlayers.length) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.SuitDistinctionMustBePresent,
             suitsConfig[suit].suitName);
     }
@@ -113,10 +117,11 @@ export const CheckAllSuitsDistinctions = ({ G, ctx, ...rest }: FnContext): void 
  *
  * @param context
  * @param suit Название фракции дворфов.
+ * @param isFinal Является ли финальным подсчётом очков.
  * @returns [Количество шевронов каждого игрока конкретной фракции, Максимальное количество шевронов конкретной фракции].
  */
-const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames):
-    PlayerRanksAndMaxRanksForDistinctionsType => {
+const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames,
+    isFinal = false): PlayerRanksAndMaxRanksForDistinctionsType => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
@@ -127,7 +132,7 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: F
         playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
     }
     const max: number = Math.max(...playersRanks);
-    if (max === 0) {
+    if (isFinal && max === 0) {
         return ThrowMyError({ G, ctx, ...rest },
             ErrorNames.PlayersCurrentSuitCardsMustHaveCardsForDistinction,
             suitsConfig[suit].suitName);

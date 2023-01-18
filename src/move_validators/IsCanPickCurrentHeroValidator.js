@@ -78,7 +78,7 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...re
                     }
                     ranks = player.cards[conditions[condition][key]].reduce(TotalRank, 0);
                 }
-                else if (key === `value`) {
+                else if (key === `count`) {
                     isValidMove = ranks >= conditions[condition][key];
                 }
             }

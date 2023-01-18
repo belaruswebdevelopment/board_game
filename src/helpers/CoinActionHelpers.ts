@@ -3,7 +3,7 @@ import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, Stack } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, Stack, UpgradableCoinValueType } from "../typescript/interfaces";
 import { AddActionsToStack } from "./StackHelpers";
 
 /**
@@ -30,7 +30,7 @@ export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const value: CanBeUndefType<number> = stack.value;
+    const value: CanBeUndefType<UpgradableCoinValueType> = stack.value;
     if (value === undefined) {
         throw new Error(`У игрока с id '${myPlayerID}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }
@@ -71,5 +71,6 @@ export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
         UpgradeCoinAction({ G, ctx, myPlayerID, ...rest }, false, 2, j,
             CoinTypeNames.Board);
     }
-    AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
+    AddActionsToStack({ G, ctx, myPlayerID, ...rest },
+        [AllStackData.startAddPlusTwoValueToAllCoinsUline(coinId)]);
 };

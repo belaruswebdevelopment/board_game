@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
 /**
@@ -146,7 +146,7 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) =
                     ChangeIsOpenedCoinStatus(boardCoin, true);
                 }
             }
-            if (IsCoin(boardCoin) && !boardCoin.isTriggerTrading) {
+            if (IsCoin(boardCoin) && !IsTriggerTradingCoin(boardCoin)) {
                 coinsValue++;
             }
         }

@@ -88,8 +88,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }, valida
  * @returns Поле для выбора активировать или нет способности Бога.
  */
 export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }, validatorName, data, boardCells) => {
-    let moveMainArgs;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = [];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
@@ -108,11 +107,10 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }, validatorName
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
             if (data !== undefined && boardCells !== undefined) {
-                DrawCard({ G, ctx, ...rest }, data, boardCells, god, j, player, null, CardMoveNames.ClickCardNotGiantAbilityMove, godName);
+                DrawCard({ G, ctx, ...rest }, data, boardCells, god, j, player, null, CardMoveNames.ActivateGodAbilityMove, godName);
             }
             else if (validatorName ===
                 ActivateGodAbilityOrNotSubMoveValidatorNames.ActivateGodAbilityMoveValidator) {
-                moveMainArgs = [];
                 moveMainArgs.push(godName);
             }
             else {
@@ -121,11 +119,11 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }, validatorName
         }
         else {
             if (data !== undefined && boardCells !== undefined) {
-                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.Start, player, ButtonMoveNames.StartEnlistmentMercenariesMove, null);
+                DrawButton({ G, ctx, ...rest }, data, boardCells, ButtonNames.NotActivateGodAbility, player, ButtonMoveNames.NotActivateGodAbilityMove, godName);
             }
             else if (validatorName ===
                 ActivateGodAbilityOrNotSubMoveValidatorNames.NotActivateGodAbilityMoveValidator) {
-                moveMainArgs = null;
+                moveMainArgs.push(godName);
             }
             else {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);

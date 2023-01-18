@@ -299,7 +299,7 @@ const Hourya = {
         conditions: {
             suitCountMin: {
                 suit: SuitNames.explorer,
-                value: 5,
+                count: 5,
             },
         },
     },

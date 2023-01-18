@@ -239,7 +239,7 @@ export const FinalWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest })
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let totalScore = 0;
-    const warriorDistinctions = CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior);
+    const warriorDistinctions = CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior, true);
     if (warriorDistinctions.length && warriorDistinctions.includes(Number(myPlayerID))) {
         totalScore += StartDistinctionAwarding({ G, ctx, myPlayerID: myPlayerID, ...rest }, suitsConfig[SuitNames.warrior].distinction.awarding);
         if (totalScore) {

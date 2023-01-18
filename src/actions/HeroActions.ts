@@ -8,7 +8,7 @@ import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, HeroCard, MultiSuitCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, Stack, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import type { CanBeUndefType, HeroCard, MultiSuitCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, Stack, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>
@@ -116,7 +116,7 @@ export const PlaceMultiSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
             points: 0,
         },
     },
-        name: CanBeUndefType<MultiSuitCardNames> = stack.name as CanBeUndefType<MultiSuitCardNames>;
+        name: CanBeUndefType<StackNamesType> = stack.name;
     if (name === undefined) {
         throw new Error(`У конфига действия игрока с id '${myPlayerID}' отсутствует обязательный параметр вариантов выкладки карты с типом '${CardTypeRusNames.MultiSuitCard}' '${name}'.`);
     }

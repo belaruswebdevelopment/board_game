@@ -1,17 +1,4 @@
-import type { CoinConfigType, InitialTradingCoinConfigType, MarketCoinConfig, NumberPlayersValues } from "../typescript/interfaces";
-
-/**
- * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param config Конфиг.
- * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
- */
-export const isInitialPlayerCoinsConfigNotMarket = (config: CoinConfigType): config is InitialTradingCoinConfigType =>
-    (config as InitialTradingCoinConfigType).isTriggerTrading !== undefined;
+import type { InitialTradingCoinConfigType, NumberPlayersValues, RoyalCoinConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
@@ -20,26 +7,21 @@ export const isInitialPlayerCoinsConfigNotMarket = (config: CoinConfigType): con
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
  */
-export const initialPlayerCoinsConfig: InitialTradingCoinConfigType[] = [
+export const initialCoinsConfig: InitialTradingCoinConfigType[] = [
     {
         value: 0,
-        isTriggerTrading: true,
     },
     {
         value: 2,
-        isTriggerTrading: false,
     },
     {
         value: 3,
-        isTriggerTrading: false,
     },
     {
         value: 4,
-        isTriggerTrading: false,
     },
     {
         value: 5,
-        isTriggerTrading: false,
     },
 ];
 
@@ -50,7 +32,7 @@ export const initialPlayerCoinsConfig: InitialTradingCoinConfigType[] = [
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
  */
-export const marketCoinsConfig: MarketCoinConfig[] = [
+export const royalCoinsConfig: RoyalCoinConfig[] = [
     {
         value: 5,
         count: (): NumberPlayersValues => ({

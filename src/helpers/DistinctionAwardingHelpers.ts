@@ -1,10 +1,10 @@
-import { CreateCoin } from "../Coin";
+import { CreateSpecialTriggerTradingCoin } from "../Coin";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, Coin, DistinctionAwardingFunction, MyFnContextWithMyPlayerID, Player, PublicPlayer, SpecialCard } from "../typescript/interfaces";
+import type { CanBeUndefType, DistinctionAwardingFunction, MyFnContextWithMyPlayerID, Player, PublicPlayer, SpecialCard, SpecialTriggerTradingCoin } from "../typescript/interfaces";
 import { AddAnyCardToPlayerActions } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -99,9 +99,8 @@ export const HunterDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx,
         }
         const [type, tradingCoinIndex]: [CoinTypeNames, number] =
             DiscardTradingCoin({ G, ctx, myPlayerID, ...rest }),
-            coin: Coin = CreateCoin({
+            coin: SpecialTriggerTradingCoin = CreateSpecialTriggerTradingCoin({
                 isOpened: true,
-                isTriggerTrading: true,
                 value: 3,
             });
         let _exhaustiveCheck: never;

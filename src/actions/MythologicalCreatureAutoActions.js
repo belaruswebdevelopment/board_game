@@ -20,6 +20,9 @@ export const AddMythologyCreatureCardsSkymirAction = ({ G }) => {
         }
         mythologyCreatureCardsSkymir.push(mythologyCreatureCard);
     }
-    G.mythologicalCreatureDeckForSkymir = mythologyCreatureCardsSkymir;
+    if (mythologyCreatureCardsSkymir.length === 6) {
+        G.mythologicalCreatureDeckForSkymir =
+            mythologyCreatureCardsSkymir;
+    }
 };
 //# sourceMappingURL=MythologicalCreatureAutoActions.js.map

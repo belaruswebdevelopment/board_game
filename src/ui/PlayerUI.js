@@ -4,7 +4,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
@@ -596,13 +596,14 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                             }
                         }
                         else if (Number(ctx.currentPlayer) === p && IsCoin(publicBoardCoin)
-                            && !publicBoardCoin.isTriggerTrading && ((stage === CommonStageNames.ClickCoinToUpgrade
-                            || stage === SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade
-                            || stage === SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade)
-                            || (stage === CommonStageNames.PickConcreteCoinToUpgrade
-                                && ((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.coinValue) === publicBoardCoin.value)
-                            || (stage === CommonStageNames.UpgradeCoinVidofnirVedrfolnir
-                                && ((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.coinId) !== id && id >= G.tavernsNum))) {
+                            && !IsTriggerTradingCoin(publicBoardCoin)
+                            && ((stage === CommonStageNames.ClickCoinToUpgrade
+                                || stage === SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade
+                                || stage === SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade)
+                                || (stage === CommonStageNames.PickConcreteCoinToUpgrade
+                                    && ((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.coinValue) === publicBoardCoin.value)
+                                || (stage === CommonStageNames.UpgradeCoinVidofnirVedrfolnir
+                                    && ((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.coinId) !== id && id >= G.tavernsNum))) {
                             if (data !== undefined) {
                                 if (G.mode === GameModeNames.Multiplayer && !publicBoardCoin.isOpened) {
                                     throw new Error(`В массиве монет игрока на столе не может быть закрыта ранее открытая монета с id '${id}'.`);
@@ -657,7 +658,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                     }
                                     else {
                                         if (Number(ctx.currentPlayer) === p && IsCoin(privateBoardCoin)
-                                            && !privateBoardCoin.isTriggerTrading
+                                            && !!IsTriggerTradingCoin(privateBoardCoin)
                                             && ((stage === CommonStageNames.ClickCoinToUpgrade)
                                                 || (stage === CommonStageNames.PickConcreteCoinToUpgrade
                                                     && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.coinValue) ===

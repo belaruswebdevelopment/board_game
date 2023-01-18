@@ -1,4 +1,4 @@
-import type { CreatePriorityType, NumPlayersType, PrioritiesConfigType, Priority, ZeroOrOneOrTwoOrThreeOrFour } from "./typescript/interfaces";
+import type { CreatePriorityFromData, NumPlayersType, PrioritiesConfig, Priority, ZeroOrOneOrTwoOrThreeOrFour } from "./typescript/interfaces";
 
 /**
  * <h3>Создание кристаллов.</h3>
@@ -16,7 +16,7 @@ import type { CreatePriorityType, NumPlayersType, PrioritiesConfigType, Priority
 export const CreatePriority = ({
     isExchangeable = true,
     value,
-}: CreatePriorityType): Priority => ({
+}: CreatePriorityFromData): Priority => ({
     isExchangeable,
     value,
 });
@@ -78,7 +78,7 @@ const priorities: Priority[] = [
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
  */
-const prioritiesConfig: PrioritiesConfigType = [
+const prioritiesConfig: PrioritiesConfig = [
     priorities.slice(0, 2),
     priorities.slice(-2),
     priorities.slice(-3),

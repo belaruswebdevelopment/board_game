@@ -11,7 +11,7 @@ import { IsLastRound } from "../helpers/RoundHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
+import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
@@ -78,7 +78,7 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnCont
     if (boardCoin !== null && (!IsCoin(boardCoin) || !boardCoin.isOpened)) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета на месте текущей таверны с id '${G.currentTavern}'.`);
     }
-    if (boardCoin?.isTriggerTrading) {
+    if (IsTriggerTradingCoin(boardCoin)) {
         const tradingCoinPlacesLength: number =
             player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
                 index >= G.tavernsNum && coin === null).length;
@@ -290,11 +290,7 @@ export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }: FnContext): vo
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
             [AllStackData.pickCardSoloBotAndvari()]);
     } else {
-        if (!(G.expansions.Idavoll.active
-            && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
-                GodNames.Frigg))) {
-            AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCard()]);
-        }
+        AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCard()]);
     }
 };
 

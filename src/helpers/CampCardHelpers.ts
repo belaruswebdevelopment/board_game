@@ -3,7 +3,7 @@ import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CampBuffNames, CardTypeRusNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { AllCampCardType, ArtefactCampCard, ArtefactPlayerCampCard, CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, Coin, FnContext, MercenaryCampCard, MercenaryPlayerCampCard, MyFnContextWithMyPlayerID, PublicPlayer } from "../typescript/interfaces";
+import type { AllCampCardType, ArtefactCampCard, ArtefactPlayerCampCard, CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, FnContext, MercenaryCampCard, MercenaryPlayerCampCard, MyFnContextWithMyPlayerID, PublicPlayer, RoyalCoin } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { RemoveCoinFromMarket } from "./DiscardCoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -133,14 +133,14 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
  * @returns
  */
 export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G, ctx, ...rest }: FnContext): void => {
-    const minCoinValue: number = G.marketCoins.reduceRight((prev: Coin, curr: Coin): Coin =>
+    const minCoinValue: number = G.royalCoins.reduceRight((prev: RoyalCoin, curr: RoyalCoin): RoyalCoin =>
         prev.value < curr.value ? prev : curr).value,
         minCoinIndex: number =
-            G.marketCoins.findIndex((coin: Coin): boolean => coin.value === minCoinValue);
+            G.royalCoins.findIndex((coin: RoyalCoin): boolean => coin.value === minCoinValue);
     if (minCoinIndex === -1) {
         throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
     }
-    const coin: CanBeUndefType<Coin> = RemoveCoinFromMarket({ G, ctx, ...rest }, minCoinIndex);
+    const coin: RoyalCoin = RemoveCoinFromMarket({ G, ctx, ...rest }, minCoinIndex);
     G.odroerirTheMythicCauldronCoins.push(coin);
 };
 
@@ -156,5 +156,5 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G, ctx, ...rest }: 
  * @returns Значение всех монет на артефакте Odroerir The Mythic Cauldron.
  */
 export const GetOdroerirTheMythicCauldronCoinsValues = ({ G }: MyFnContextWithMyPlayerID): number =>
-    G.odroerirTheMythicCauldronCoins.reduce((prev: number, curr: Coin): number =>
+    G.odroerirTheMythicCauldronCoins.reduce((prev: number, curr: RoyalCoin): number =>
         prev + curr.value, 0);

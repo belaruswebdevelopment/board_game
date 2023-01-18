@@ -169,6 +169,7 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }: MyFnC
                                 AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [AllStackData.activateGiantAbilityOrPickCard(GiantNames.Thrivaldi,
                                         pickedCard)]);
+                                startGiant = true;
                             }
                             break;
                         case SuitNames.explorer:
@@ -177,6 +178,7 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }: MyFnC
                                 AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [AllStackData.activateGiantAbilityOrPickCard(GiantNames.Gymir,
                                         pickedCard)]);
+                                startGiant = true;
                             }
                             break;
                         case SuitNames.hunter:
@@ -185,6 +187,7 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }: MyFnC
                                 AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [AllStackData.activateGiantAbilityOrPickCard(GiantNames.Skymir,
                                         pickedCard)]);
+                                startGiant = true;
                             }
                             break;
                         case SuitNames.miner:
@@ -193,6 +196,7 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }: MyFnC
                                 AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [AllStackData.activateGiantAbilityOrPickCard(GiantNames.Hrungnir,
                                         pickedCard)]);
+                                startGiant = true;
                             }
                             break;
                         case SuitNames.warrior:
@@ -201,6 +205,7 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }: MyFnC
                                 AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                                     [AllStackData.activateGiantAbilityOrPickCard(GiantNames.Surt,
                                         pickedCard)]);
+                                startGiant = true;
                             }
                             break;
                         default:
@@ -208,22 +213,37 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }: MyFnC
                             throw new Error(`Карта имеющая принадлежность к фракции должна быть добавлена на стол игрока.`);
                             return _exhaustiveCheck;
                     }
-                    // TODO Check if i have Giant and not captured dwarf activate Capturing Or Dwarf Picking
-                    startGiant = true;
                 }
             }
+            // TODO Check if i have Giant and not captured dwarf activate Capturing Or Dwarf Picking
             if (!startGiant) {
-                finalPickedCard = AddDwarfToPlayerCards(pickedCard);
+                if (G.expansions.Idavoll.active
+                    && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
+                        GodNames.Frigg)) {
+                    AddActionsToStack({ G, ctx, myPlayerID, ...rest },
+                        [AllStackData.activateGodAbilityOrNot(GodNames.Frigg, pickedCard)]);
+                    return;
+                } else {
+                    finalPickedCard = AddDwarfToPlayerCards(pickedCard);
+                }
             }
             break;
         case CardTypeRusNames.MythicalAnimalCard:
             finalPickedCard = AddMythicalAnimalToPlayerCards(pickedCard);
             break;
         case CardTypeRusNames.RoyalOfferingCard:
-            // TODO Move all Log from pickedCard to bottom of the func and to playerCards!
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}'.`);
-            DiscardCurrentCard({ G, ctx, ...rest }, pickedCard);
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${pickedCard.type}' '${pickedCard.name}' убрана в сброс после применения её эффекта.`);
+            if (G.expansions.Idavoll.active && ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null
+                && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
+                    GodNames.Frigg)) {
+                AddActionsToStack({ G, ctx, myPlayerID, ...rest },
+                    [AllStackData.activateGodAbilityOrNot(GodNames.Frigg, pickedCard)]);
+                return;
+            } else {
+                // TODO Move all Log from pickedCard to bottom of the func and to playerCards!
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}'.`);
+                DiscardCurrentCard({ G, ctx, ...rest }, pickedCard);
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${pickedCard.type}' '${pickedCard.name}' убрана в сброс после применения её эффекта.`);
+            }
             break;
         case CardTypeRusNames.GodCard:
         case CardTypeRusNames.GiantCard:

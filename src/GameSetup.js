@@ -1,8 +1,8 @@
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
-import { BuildCoins } from "./Coin";
-import { initialPlayerCoinsConfig, marketCoinsConfig } from "./data/CoinData";
+import { BuildRoyalCoins } from "./Coin";
+import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
@@ -103,8 +103,8 @@ export const SetupGame = ({ ctx, random }) => {
         publicPlayers[i] =
             BuildPublicPlayer(soloBot ? `SoloBot` : `Dan${i}`, priority, soloBot || mode === GameModeNames.Multiplayer);
     }
-    const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
-        count: marketCoinsUnique,
+    const royalCoinsUnique = [], royalCoins = BuildRoyalCoins({
+        count: royalCoinsUnique,
         players: ctx.numPlayers,
     }), averageCards = {};
     for (suit in suitsConfig) {
@@ -113,7 +113,7 @@ export const SetupGame = ({ ctx, random }) => {
             tier: 0,
         });
     }
-    const initHandCoinsId = Array(initialPlayerCoinsConfig.length).fill(undefined)
+    const initHandCoinsId = Array(initialCoinsConfig.length).fill(undefined)
         .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
     for (let i = 0; i < initCoinsOrder.length; i++) {
@@ -173,8 +173,8 @@ export const SetupGame = ({ ctx, random }) => {
         strategyForSoloBotAndvari,
         log,
         logData,
-        marketCoins,
-        marketCoinsUnique,
+        royalCoins,
+        royalCoinsUnique,
         round,
         suitsNum,
         taverns,
