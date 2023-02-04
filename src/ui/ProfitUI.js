@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../is_helpers/IsDwarfTypeHelpers";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GiantNames, GodNames, SoloGameAndvariStrategyNames, SuitNames, SuitRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, SoloGameAndvariStrategyNames, SuitRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
 // TODO Add common ProfitFunctionType to all function here with common args and different return type!?
 /**
@@ -280,7 +280,7 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
         }
         else if (validatorName ===
             ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
-            moveMainArgs.push(j + 1);
+            moveMainArgs.push(j);
         }
         else {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);

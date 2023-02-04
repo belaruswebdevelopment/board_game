@@ -1,4 +1,5 @@
 import { actionCardsConfigArray } from "./data/RoyalOfferingCardData";
+import { AssertRoyalOfferingsConfigIndex } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты королевских наград.</h3>
@@ -13,6 +14,7 @@ import { CardTypeRusNames } from "./typescript/enums";
 export const BuildRoyalOfferingCards = (data) => {
     const cards = [];
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
+        AssertRoyalOfferingsConfigIndex(i);
         const currentActionCardConfig = actionCardsConfigArray[i], amountPlayersValue = currentActionCardConfig.amount()[data.players], amountTierValue = amountPlayersValue[data.tier];
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateRoyalOfferingCard({

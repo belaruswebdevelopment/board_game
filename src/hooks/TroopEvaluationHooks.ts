@@ -5,9 +5,10 @@ import { RefillCamp } from "../helpers/CampHelpers";
 import { GetCardsFromSecretDwarfDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, Distinctions, DwarfDeckCardType, ExplorerDistinctionCards, FnContext, PlayerID, PublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Distinctions, DwarfDeckCardType, FnContext, PlayerID, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -137,7 +138,8 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void
             }
             explorerDistinctionCards.push(card);
         }
-        G.explorerDistinctionCards = explorerDistinctionCards as ExplorerDistinctionCards;
+        AssertExplorerDistinctionCards(explorerDistinctionCards);
+        G.explorerDistinctionCards = explorerDistinctionCards;
     }
 };
 

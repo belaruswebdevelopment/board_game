@@ -6,12 +6,13 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
+import { AssertPlayerCoinId } from "./is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "./is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GodNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, DwarfCard, EnlistmentMercenariesAllStageNames, HeroCard, KeyofType, MoveArgumentsType, MoveBy, MoveCardIdType, MoveCardsArguments, MoveCoinsArguments, MoveNamesType, MoveSuitCardCurrentId, MoveValidator, MoveValidatorGetRangeStringArrayType, MoveValidatorGetRangeType, MoveValidators, MyFnContextWithMyPlayerID, PickHeroCardValidatorNamesKeyofTypeofType, PickValidatorsConfig, Player, PlayerBoardCardType, PublicPlayer, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardWithExpansionType, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType, ZeroOrOneType } from "./typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, DwarfCard, EnlistmentMercenariesAllStageNames, HeroCard, KeyofType, MoveArgumentsType, MoveBy, MoveCardIdType, MoveCardsArguments, MoveCoinsArguments, MoveNamesType, MoveSuitCardCurrentId, MoveValidator, MoveValidatorGetRangeStringArrayType, MoveValidatorGetRangeType, MoveValidators, MyFnContextWithMyPlayerID, PickHeroCardValidatorNamesKeyofTypeofType, PickValidatorsConfig, PlayerBoardCardType, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerBoardCoins, PublicPlayerCoinsType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardWithExpansionType, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType, ZeroOrOneType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ui/ProfitUI";
@@ -31,7 +32,7 @@ import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, Ch
 export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     coinData: MoveCoinsArguments): boolean => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -40,8 +41,8 @@ export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let handCoins: PublicPlayerCoinType[],
-        boardCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType,
+        boardCoins: PlayerBoardCoinsType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
@@ -49,14 +50,11 @@ export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
         handCoins = player.handCoins;
         boardCoins = player.boardCoins;
     }
-    const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[coinData.coinId],
-        boardCoin: CanBeUndefType<PublicPlayerCoinType> = boardCoins[coinData.coinId];
+    const handCoin: PublicPlayerCoinType = handCoins[coinData.coinId],
+        boardCoin: PublicPlayerCoinType = boardCoins[coinData.coinId];
     let _exhaustiveCheck: never;
     switch (coinData.type) {
         case CoinTypeNames.Hand:
-            if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${coinData.coinId}'.`);
-            }
             if (handCoin === null) {
                 throw new Error(`Выбранная для улучшения монета игрока с id '${myPlayerID}' в руке с id '${coinData.coinId}' не может отсутствовать там.`);
             }
@@ -68,9 +66,6 @@ export const CoinUpgradeValidation = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
             }
             break;
         case CoinTypeNames.Board:
-            if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует монета с id '${coinData.coinId}'.`);
-            }
             if (boardCoin === null) {
                 throw new Error(`Выбранная для улучшения монета игрока с id '${myPlayerID}' на столе с id '${coinData.coinId}' не может отсутствовать там.`);
             }
@@ -114,7 +109,8 @@ export const IsValidMove = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPl
                     number[]);
         } else if (typeof id === `string`) {
             isValid =
-                ValidateByArrayValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }) as MoveValidatorGetRangeStringArrayType);
+                ValidateByArrayValues(id, validator.getRange({ G, ctx, myPlayerID, ...rest }) as
+                    MoveValidatorGetRangeStringArrayType);
         } else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
             if (`coinId` in id) {
                 isValid = ValidateByObjectCoinIdTypeIsInitialValues(id,
@@ -627,7 +623,7 @@ export const moveValidators: MoveValidators = {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     myPlayerID);
             }
-            const mercenariesCount = player.campCards.filter(IsMercenaryCampCard).length;
+            const mercenariesCount: number = player.campCards.filter(IsMercenaryCampCard).length;
             return myPlayerID === ctx.currentPlayer && ctx.playOrderPos === 0
                 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && mercenariesCount > 0;
         },
@@ -689,10 +685,12 @@ export const moveValidators: MoveValidators = {
                 resultsForCoins = resultsForCoins.map((num: number, index: number): number =>
                     index === 0 ? num - 20 : num);
             }
+            // TODO Is it number or PlayerCoinIdType!?
             const minResultForCoins: number = Math.min(...resultsForCoins),
                 maxResultForCoins: number = Math.max(...resultsForCoins),
                 tradingProfit: ZeroOrOneType = G.secret.decks[1].length > 9 ? 1 : 0;
-            let [positionForMinCoin, positionForMaxCoin]: number[] = [-1, -1];
+            // TODO Is it number or PlayerCoinIdType!?
+            let [positionForMinCoin, positionForMaxCoin]: [number, number] = [-1, -1];
             if (minResultForCoins <= 0) {
                 positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
             }
@@ -701,7 +699,7 @@ export const moveValidators: MoveValidators = {
             }
             // TODO Check it bot can't play in multiplayer now...
             const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-                privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+                privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
             if (player === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     myPlayerID);
@@ -710,22 +708,21 @@ export const moveValidators: MoveValidators = {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
                     myPlayerID);
             }
-            let handCoins: PublicPlayerCoinType[];
+            let handCoins: PlayerHandCoinsType;
             if (G.mode === GameModeNames.Multiplayer) {
                 handCoins = privatePlayer.handCoins;
             } else {
                 handCoins = player.handCoins;
             }
             for (let i = 0; i < currentMoveArguments.length; i++) {
+                // TODO Is it PlayerCoinIdType[]!?
                 const allCoinsOrderI: CanBeUndefType<number[]> = currentMoveArguments[i];
                 if (allCoinsOrderI === undefined) {
                     throw new Error(`В массиве выкладки монет отсутствует выкладка '${i}'.`);
                 }
                 const hasTrading: boolean = allCoinsOrderI.some((coinId: number): boolean => {
-                    const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[coinId];
-                    if (handCoin === undefined) {
-                        throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${coinId}'.`);
-                    }
+                    AssertPlayerCoinId(coinId);
+                    const handCoin: PublicPlayerCoinType = handCoins[coinId];
                     if (handCoin !== null && !IsCoin(handCoin)) {
                         throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${coinId}'.`);
                     }
@@ -754,25 +751,16 @@ export const moveValidators: MoveValidators = {
                     if (!hasTrading && isEveryCoinsInHands) {
                         continue;
                     }
-                    if (positionForMaxCoin === undefined) {
-                        throw new Error(`Отсутствуют значения выкладки для максимальной монеты.`);
-                    }
-                    if (positionForMinCoin === undefined) {
-                        throw new Error(`Отсутствуют значения выкладки для минимальной монеты.`);
-                    }
                     const hasPositionForMaxCoin: boolean = positionForMaxCoin !== -1,
                         hasPositionForMinCoin: boolean = positionForMinCoin !== -1,
+                        // TODO AssertPlayerCoinId(hasPositionForMaxCoin) & AssertPlayerCoinId(hasPositionForMinCoin)!?
                         coinsOrderPositionForMaxCoin: CanBeUndefType<number> = allCoinsOrderI[positionForMaxCoin],
                         coinsOrderPositionForMinCoin: CanBeUndefType<number> = allCoinsOrderI[positionForMinCoin];
                     if (coinsOrderPositionForMaxCoin !== undefined && coinsOrderPositionForMinCoin !== undefined) {
-                        const maxCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[coinsOrderPositionForMaxCoin],
-                            minCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[coinsOrderPositionForMinCoin];
-                        if (maxCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
-                        }
-                        if (minCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
-                        }
+                        AssertPlayerCoinId(coinsOrderPositionForMaxCoin);
+                        AssertPlayerCoinId(coinsOrderPositionForMinCoin);
+                        const maxCoin: PublicPlayerCoinType = handCoins[coinsOrderPositionForMaxCoin],
+                            minCoin: PublicPlayerCoinType = handCoins[coinsOrderPositionForMinCoin];
                         if (maxCoin === null) {
                             throw new Error(`В массиве выкладки монет игрока с id '${myPlayerID}' не может не быть максимальной монеты с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
@@ -795,10 +783,8 @@ export const moveValidators: MoveValidators = {
                             isMinCoinsOnPosition = false;
                         if (hasPositionForMaxCoin) {
                             isTopCoinsOnPosition = allCoinsOrderI.filter((coinIndex: number): boolean => {
-                                const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[coinIndex];
-                                if (handCoin === undefined) {
-                                    throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${coinIndex}'.`);
-                                }
+                                AssertPlayerCoinId(coinIndex);
+                                const handCoin: PublicPlayerCoinType = handCoins[coinIndex];
                                 if (handCoin !== null && !IsCoin(handCoin)) {
                                     throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
                                 }
@@ -989,7 +975,7 @@ export const moveValidators: MoveValidators = {
                     myPlayerID);
             }
             let type: CoinTypeNames,
-                coins: PublicPlayerCoinType[];
+                coins: PublicPlayerCoinsType;
             if (ctx.phase === PhaseNames.ChooseDifficultySoloMode) {
                 type = CoinTypeNames.Hand;
                 coins = player.handCoins;
@@ -1003,11 +989,9 @@ export const moveValidators: MoveValidators = {
             if (minValue === 0) {
                 throw new Error(`В массиве монет соло бота с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть минимальная монета для улучшения с значением '${minValue}'.`);
             }
-            const coinId: number = CheckMinCoinVisibleIndexForSoloBot(coins, minValue);
-            if (coinId === -1) {
-                throw new Error(`В массиве монет соло бота с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не найдена минимальная монета с значением '${minValue}'.`);
-            }
-            const moveArgument: CanBeUndefType<MoveCoinsArguments> = currentMoveArguments[coinId];
+            const coinId: PlayerCoinIdType =
+                CheckMinCoinVisibleIndexForSoloBot({ G, ctx, myPlayerID, ...rest }, coins, minValue),
+                moveArgument: CanBeUndefType<MoveCoinsArguments> = currentMoveArguments[coinId];
             if (moveArgument === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentMoveArgumentIsUndefined);
             }
@@ -1190,9 +1174,16 @@ export const moveValidators: MoveValidators = {
             currentMoveArguments: MoveArgumentsType<SuitNames[]>): SuitNames => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
             // TODO Move same logic for Ylud placement in one func!
+            if (G.strategyForSoloBotAndvari === null) {
+                throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+            }
             const strategySuitIndex: number =
-                currentMoveArguments.findIndex((suit: SuitNames): boolean =>
-                    suit === G.strategyForSoloBotAndvari.general[0]);
+                currentMoveArguments.findIndex((suit: SuitNames): boolean => {
+                    if (G.strategyForSoloBotAndvari === null) {
+                        throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+                    }
+                    return suit === G.strategyForSoloBotAndvari.general[0];
+                });
             if (strategySuitIndex === -1) {
                 throw new Error(`В массиве возможных аргументов мува для соло бота отсутствует нужное значение главной стратегии фракции '${G.strategyForSoloBotAndvari.general[0]}'.`);
             }
@@ -1213,9 +1204,16 @@ export const moveValidators: MoveValidators = {
         getValue: ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
             currentMoveArguments: MoveArgumentsType<SuitNames[]>): SuitNames => {
             // TODO Move same logic for Thrud placement in one func!
+            if (G.strategyForSoloBotAndvari === null) {
+                throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+            }
             const strategySuitIndex: number =
-                currentMoveArguments.findIndex((suit: SuitNames): boolean =>
-                    suit === G.strategyForSoloBotAndvari.general[0]);
+                currentMoveArguments.findIndex((suit: SuitNames): boolean => {
+                    if (G.strategyForSoloBotAndvari === null) {
+                        throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+                    }
+                    return suit === G.strategyForSoloBotAndvari.general[0];
+                });
             if (strategySuitIndex === -1) {
                 throw new Error(`В массиве возможных аргументов мува для соло бота отсутствует нужное значение главной стратегии фракции '${G.strategyForSoloBotAndvari.general[0]}'.`);
             }
@@ -1240,17 +1238,15 @@ export const moveValidators: MoveValidators = {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     myPlayerID);
             }
-            const coins: PublicPlayerCoinType[] = player.boardCoins,
+            const coins: PublicPlayerBoardCoins = player.boardCoins,
                 minValue: number = CheckMinCoinVisibleValueForSoloBotAndvari({ G, ctx, myPlayerID, ...rest },
                     currentMoveArguments);
             if (minValue === 0) {
                 throw new Error(`В массиве монет соло бота Андвари с id '${myPlayerID}' не может быть минимальная монета для улучшения с значением '${minValue}'.`);
             }
-            const coinId: number = CheckMinCoinIndexForSoloBotAndvari(coins, minValue);
-            if (coinId === -1) {
-                throw new Error(`В массиве монет соло бота Андвари с id '${myPlayerID}' не найдена минимальная монета с значением '${minValue}'.`);
-            }
-            const moveArgument: CanBeUndefType<MoveCoinsArguments> = currentMoveArguments[coinId];
+            const coinId: PlayerCoinIdType =
+                CheckMinCoinIndexForSoloBotAndvari({ G, ctx, myPlayerID, ...rest }, coins, minValue),
+                moveArgument: CanBeUndefType<MoveCoinsArguments> = currentMoveArguments[coinId];
             if (moveArgument === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentMoveArgumentIsUndefined);
             }

@@ -1,7 +1,8 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
-import { ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, CommonStageNames, TavernsResolutionDefaultStageNames } from "../typescript/enums";
+import { AddCoinToPouchAction, ChooseCoinValueForVidofnirVedrfolnirUpgradeAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { AssertBasicVidofnirVedrfolnirUpgradeValue, AssertCampIndex, AssertPlayerCoinId, AssertPlayerPouchCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { ButtonMoveNames, CardMoveNames, CoinMoveNames, CommonStageNames, TavernsResolutionDefaultStageNames } from "../typescript/enums";
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -14,6 +15,7 @@ import { ButtonMoveNames, CardMoveNames, CoinMoveNames, CoinTypeNames, CommonSta
  * @returns
  */
 export const AddCoinToPouchMove = ({ G, ctx, playerID, ...rest }, coinId) => {
+    AssertPlayerCoinId(coinId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.AddCoinToPouch, CoinMoveNames.AddCoinToPouchMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -32,6 +34,7 @@ export const AddCoinToPouchMove = ({ G, ctx, playerID, ...rest }, coinId) => {
  * @returns
  */
 export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, playerID, ...rest }, value) => {
+    AssertBasicVidofnirVedrfolnirUpgradeValue(value);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade, ButtonMoveNames.ChooseCoinValueForVidofnirVedrfolnirUpgradeMove, value);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -46,15 +49,16 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, player
  * </ol>
  *
  * @param context
- * @param cardId Id выбираемой карты из лагеря.
+ * @param campCardId Id выбираемой карты из лагеря.
  * @returns
  */
-export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.ClickCampCardHolda, CardMoveNames.ClickCampCardHoldaMove, cardId);
+export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, campCardId) => {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.ClickCampCardHolda, CardMoveNames.ClickCampCardHoldaMove, campCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
+    AssertCampIndex(campCardId);
+    PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, campCardId);
 };
 /**
  * <h3>Выбор карты из лагеря.</h3>
@@ -64,15 +68,16 @@ export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, cardId) =>
  * </ol>
  *
  * @param context
- * @param cardId Id выбираемой карты из лагеря.
+ * @param campCardId Id выбираемой карты из лагеря.
  * @returns
  */
-export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCampCard, CardMoveNames.ClickCampCardMove, cardId);
+export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, campCardId) => {
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCampCard, CardMoveNames.ClickCampCardMove, campCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
+    AssertCampIndex(campCardId);
+    PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, campCardId);
 };
 /**
  * <h3>Сбрасывает карту конкретной фракции в колоду сброса по выбору игрока при действии артефакта Hofud.</h3>
@@ -94,6 +99,7 @@ export const DiscardSuitCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }
     }
     DiscardSuitCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -107,6 +113,7 @@ export const DiscardSuitCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
+    AssertPlayerPouchCoinId(coinId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.UpgradeCoinVidofnirVedrfolnir, CoinMoveNames.UpgradeCoinVidofnirVedrfolnirMove, {
         coinId,
         type,

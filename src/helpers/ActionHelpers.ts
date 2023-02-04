@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, MyFnContextWithMyPlayerID, PublicPlayer, Stack } from "../typescript/interfaces";
+import type { CanBeUndefType, MyFnContextWithMyPlayerID, PlayerStack, PublicPlayer, Stack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
@@ -22,7 +22,7 @@ export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }: MyFnC
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack !== undefined) {
         AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' должен получить преимущества от действия '${stack.drawName}'.`);
         StartOrEndActionStage({ G, ctx, myPlayerID, events, ...rest }, stack);

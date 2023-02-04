@@ -3,10 +3,11 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCoinFromMarket } from "../helpers/DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType, RoyalCoin, UpgradableCoinType, UpgradableCoinValueType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinCanBeUpgradedByValueType, CoinType, MyFnContextWithMyPlayerID, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, RoyalCoin, UpgradableCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
@@ -23,9 +24,9 @@ import type { CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, Player, Publi
  * @returns
  */
 export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, isTrading: boolean,
-    value: UpgradableCoinValueType, upgradingCoinId: number, type: CoinTypeNames): void => {
+    value: CoinCanBeUpgradedByValueType, upgradingCoinId: PlayerCoinIdType, type: CoinTypeNames): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -34,8 +35,8 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let handCoins: PublicPlayerCoinType[],
-        boardCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType,
+        boardCoins: PlayerBoardCoinsType;
     if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
@@ -45,13 +46,10 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
     }
     let upgradingCoin: UpgradableCoinType,
         _exhaustiveCheck: never;
-    const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[upgradingCoinId],
-        boardCoin: CanBeUndefType<PublicPlayerCoinType> = boardCoins[upgradingCoinId];
+    const handCoin: PublicPlayerCoinType = handCoins[upgradingCoinId],
+        boardCoin: PublicPlayerCoinType = boardCoins[upgradingCoinId];
     switch (type) {
         case CoinTypeNames.Hand:
-            if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке нет монеты с id '${upgradingCoinId}'.`);
-            }
             if (handCoin === null) {
                 throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
             }
@@ -64,9 +62,6 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
             upgradingCoin = handCoin;
             break;
         case CoinTypeNames.Board:
-            if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе нет монеты с id '${upgradingCoinId}'.`);
-            }
             if (boardCoin === null) {
                 throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе не может не быть монеты с id '${upgradingCoinId}'.`);
             }
@@ -142,6 +137,10 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
             && type === CoinTypeNames.Board && isTrading)) {
         if (isTrading) {
             const handCoinId: number = player.handCoins.indexOf(null);
+            if (handCoinId === -1) {
+                throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может не быть пустого места для возврата улучшенной монеты.`);
+            }
+            AssertPlayerCoinId(handCoinId);
             if (G.mode === GameModeNames.Multiplayer) {
                 boardCoins[upgradingCoinId] = null;
                 player.handCoins[handCoinId] = upgradedCoin;

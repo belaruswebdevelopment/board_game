@@ -5,7 +5,7 @@ import { DiscardCurrentCard } from "./helpers/DiscardCardHelpers";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { ErrorNames, LogTypeNames, SuitNames, ValkyryBuffNames } from "./typescript/enums";
+import { ErrorNames, LogTypeNames, SuitNames, SuitRusNames, ValkyryBuffNames } from "./typescript/enums";
 /**
  * <h3>Высчитывает наличие единственного игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
  * <p>Применения:</p>
@@ -139,7 +139,7 @@ const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = ({ G, ctx, ...rest }
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);
         }
         DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: '${discardedCard.name}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Из-за отсутствия преимущества по фракции '${SuitRusNames.explorer}' сброшена карта: '${discardedCard.name}'.`);
     }
 };
 //# sourceMappingURL=TroopEvaluation.js.map

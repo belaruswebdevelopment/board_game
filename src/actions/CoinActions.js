@@ -3,6 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCoinFromMarket } from "../helpers/DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
@@ -41,9 +42,6 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
     const handCoin = handCoins[upgradingCoinId], boardCoin = boardCoins[upgradingCoinId];
     switch (type) {
         case CoinTypeNames.Hand:
-            if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке нет монеты с id '${upgradingCoinId}'.`);
-            }
             if (handCoin === null) {
                 throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
             }
@@ -56,9 +54,6 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
             upgradingCoin = handCoin;
             break;
         case CoinTypeNames.Board:
-            if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе нет монеты с id '${upgradingCoinId}'.`);
-            }
             if (boardCoin === null) {
                 throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе не может не быть монеты с id '${upgradingCoinId}'.`);
             }
@@ -133,6 +128,10 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
         && type === CoinTypeNames.Board && isTrading)) {
         if (isTrading) {
             const handCoinId = player.handCoins.indexOf(null);
+            if (handCoinId === -1) {
+                throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может не быть пустого места для возврата улучшенной монеты.`);
+            }
+            AssertPlayerCoinId(handCoinId);
             if (G.mode === GameModeNames.Multiplayer) {
                 boardCoins[upgradingCoinId] = null;
                 player.handCoins[handCoinId] = upgradedCoin;

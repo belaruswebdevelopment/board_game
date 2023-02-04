@@ -1,5 +1,5 @@
-import { ArtefactNames, CommonStageNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, SuitNames } from "../../typescript/enums";
-import type { CoinType, Ctx, MyFnContextWithMyPlayerID, MyGameState, Player, PlayerBoardCardType, PlayerBuffs, PublicPlayer, PublicPlayerCoinType, Stack } from "../../typescript/interfaces";
+import { ArtefactNames, CoinRusNames, CommonStageNames, ConfigNames, DrawNames, GameModeNames, HeroBuffNames, LogTypeNames, SuitNames } from "../../typescript/enums";
+import type { CoinType, Ctx, ExpansionsType, MyFnContextWithMyPlayerID, MyGameState, PlayerBoardCardType, PlayerBuffs, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {
@@ -7,16 +7,17 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: true,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -25,18 +26,18 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -52,16 +53,17 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: false,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -70,18 +72,18 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -100,17 +102,18 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {},
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -119,22 +122,22 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
                         null,
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -153,10 +156,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -165,7 +169,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         {
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -174,22 +178,22 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
                         null,
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
                 } as PublicPlayer,
             },
@@ -205,16 +209,17 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: true,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -227,18 +232,18 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -258,16 +263,17 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: false,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -280,18 +286,18 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -314,10 +320,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -326,7 +333,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         {
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -339,22 +346,22 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
                         null,
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -377,17 +384,18 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     boardCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {},
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -400,22 +408,22 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     boardCoins: [
                         null,
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     boardCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -435,7 +443,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -443,9 +451,10 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [] as PublicPlayerCoinType[],
                     handCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -458,11 +467,11 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -470,7 +479,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     boardCoins: [] as PublicPlayerCoinType[],
                     handCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -493,18 +502,19 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     handCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
-                    ],
-                    boardCoins: [] as PublicPlayerCoinType[],
-                } as Player,
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     handCoins: [
                         {},
-                    ],
+                    ] as PublicPlayerCoinType[],
                     boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
@@ -518,23 +528,23 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     handCoins: [
                         null,
-                    ],
-                    boardCoins: [],
-                } as Player,
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     handCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
@@ -558,11 +568,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     handCoins: [
                         {
+                            type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
-                    ],
-                    boardCoins: [] as PublicPlayerCoinType[],
-                } as Player,
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -571,7 +582,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                         {
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
@@ -585,23 +596,23 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
                     handCoins: [
                         null,
-                    ],
-                    boardCoins: [],
-                } as Player,
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
                     handCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     boardCoins: [] as PublicPlayerCoinType[],
                     buffs: [
                         {
@@ -624,7 +635,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             const G = {
                 mode: GameModeNames.Basic,
                 players: {
-                    0: {} as Player,
+                    0: {} as PrivatePlayer,
                 },
                 publicPlayers: {
                     0: {
@@ -637,7 +648,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     currentPlayer: `0`,
                 } as Ctx;
             expect((): void => {
-                DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+                DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
             }).toThrowError(`У игрока с id '0' на столе не может отсутствовать обменная монета.`);
         });
     it(`shouldn't discard trading coin if player hasn't trading coin and must throw Error (multiplayer=true)`,
@@ -646,8 +657,8 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 mode: GameModeNames.Multiplayer,
                 players: {
                     0: {
-                        boardCoins: [] as PublicPlayerCoinType[],
-                    } as Player,
+                        boardCoins: [] as CoinType[],
+                    } as PrivatePlayer,
                 },
                 publicPlayers: {
                     0: {
@@ -660,7 +671,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     currentPlayer: `0`,
                 } as Ctx;
             expect((): void => {
-                DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+                DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
             }).toThrowError(`У игрока с id '0' на столе не может отсутствовать обменная монета.`);
         });
     it(`shouldn't discard trading coin if player has Uline but player hasn't trading coin and must throw Error (multiplayer=false)`,
@@ -668,7 +679,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             const G = {
                 mode: GameModeNames.Basic,
                 players: {
-                    0: {} as Player,
+                    0: {} as PrivatePlayer,
                 },
                 publicPlayers: {
                     0: {
@@ -686,7 +697,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                     currentPlayer: `0`,
                 } as Ctx;
             expect((): void => {
-                DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+                DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
             }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
         });
     it(`shouldn't discard trading coin if player has Uline but player hasn't trading coin and must throw Error (multiplayer=true)`, (): void => {
@@ -694,9 +705,9 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
-                    boardCoins: [],
-                    handCoins: [],
-                } as Player,
+                    boardCoins: [] as CoinType[],
+                    handCoins: [] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -714,7 +725,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            DiscardTradingCoinAction({ G, ctx } as MyFnContextWithMyPlayerID);
+            DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
     });
 });
@@ -743,10 +754,15 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                             {},
                         ],
                     },
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
-        } as Pick<MyGameState, `publicPlayers`>,
+            expansions: {
+                Idavoll: {
+                    active: false,
+                },
+            } as ExpansionsType,
+        } as Pick<MyGameState, `publicPlayers` | `expansions`>,
             ctx = {
                 currentPlayer: `0`,
                 numPlayers: 2,
@@ -769,7 +785,12 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     ],
                 } as PublicPlayer,
             },
-        } as Pick<MyGameState, `publicPlayers`>);
+            expansions: {
+                Idavoll: {
+                    active: false,
+                },
+            } as ExpansionsType,
+        } as Pick<MyGameState, `publicPlayers` | `expansions`>);
         expect(ctx).toEqual({
             currentPlayer: `0`,
             numPlayers: 2,
@@ -783,7 +804,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     cards: {
                         warrior: [] as PlayerBoardCardType[],
                     },
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
                 2: {
                     cards: {
@@ -791,10 +812,15 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                             {},
                         ],
                     },
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
-        } as Pick<MyGameState, `publicPlayers`>,
+            expansions: {
+                Idavoll: {
+                    active: false,
+                },
+            } as ExpansionsType,
+        } as Pick<MyGameState, `publicPlayers` | `expansions`>,
             ctx = {
                 currentPlayer: `0`,
                 numPlayers: 3,
@@ -807,7 +833,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     cards: {
                         warrior: [] as PlayerBoardCardType[],
                     },
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
                 2: {
                     cards: {
@@ -823,7 +849,12 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     ],
                 } as PublicPlayer,
             },
-        } as Pick<MyGameState, `publicPlayers`>);
+            expansions: {
+                Idavoll: {
+                    active: false,
+                },
+            } as ExpansionsType,
+        } as Pick<MyGameState, `publicPlayers` | `expansions`>);
         expect(ctx).toEqual({
             currentPlayer: `0`,
             numPlayers: 3,
@@ -851,13 +882,14 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
     });
 });
 
+// TODO Can't be discarded coin but can be 1 trading coin on the pouch for Uline an no Uline.
 describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
     it(`should start VidofnirVedrfolnir action for 2 coins isOpened=true value=3 (multiplayer=false)`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -876,19 +908,19 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -929,7 +961,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -948,19 +980,19 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1016,7 +1048,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1028,14 +1060,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {},
                     ],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1055,7 +1087,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1110,7 +1142,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1128,14 +1160,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1155,7 +1187,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1196,7 +1228,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as Player,
+                    0: {} as PrivatePlayer,
                 },
                 publicPlayers: {
                     0: {
@@ -1205,6 +1237,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
+                                type: CoinRusNames.InitialTriggerTrading,
                                 isOpened: true,
                                 value: 0,
                             },
@@ -1215,19 +1248,19 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         ],
                         handCoins: [] as PublicPlayerCoinType[],
                         buffs: [] as PlayerBuffs[],
-                        stack: [] as Stack[],
+                        stack: [] as PlayerStack[],
                     } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
                 ctx = {
                     currentPlayer: `0`,
                 } as Ctx;
-            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+            StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
             expect(G).toEqual({
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
-                    0: {} as Player,
+                    0: {} as PrivatePlayer,
                 },
                 publicPlayers: {
                     0: {
@@ -1236,6 +1269,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
+                                type: CoinRusNames.InitialTriggerTrading,
                                 isOpened: true,
                                 value: 0,
                             },
@@ -1275,6 +1309,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
+                                type: CoinRusNames.InitialTriggerTrading,
                                 isOpened: false,
                                 value: 0,
                             },
@@ -1283,7 +1318,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                    } as Player,
+                    } as PrivatePlayer,
                 },
                 publicPlayers: {
                     0: {
@@ -1295,14 +1330,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                         ],
                         buffs: [] as PlayerBuffs[],
-                        stack: [] as Stack[],
+                        stack: [] as PlayerStack[],
                     } as PublicPlayer,
                 },
             } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
                 ctx = {
                     currentPlayer: `0`,
                 } as Ctx;
-            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+            StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
             expect(G).toEqual({
                 mode: GameModeNames.Multiplayer,
                 tavernsNum: 3,
@@ -1314,6 +1349,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
+                                type: CoinRusNames.InitialTriggerTrading,
                                 isOpened: true,
                                 value: 0,
                             },
@@ -1322,7 +1358,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                                 value: 3,
                             },
                         ],
-                    } as Player,
+                    } as PrivatePlayer,
                 },
                 publicPlayers: {
                     0: {
@@ -1331,6 +1367,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
+                                type: CoinRusNames.InitialTriggerTrading,
                                 isOpened: true,
                                 value: 0,
                             },
@@ -1361,7 +1398,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1377,19 +1414,19 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1438,7 +1475,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1450,14 +1487,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {},
                     ],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1474,7 +1511,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1510,7 +1547,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1528,25 +1565,25 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 3,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1564,7 +1601,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 3,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -1606,8 +1643,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 3,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1623,14 +1660,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -1650,8 +1687,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 3,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1688,7 +1725,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1705,25 +1742,25 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 3,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1740,7 +1777,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 3,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -1767,7 +1804,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 3,
                         },
-                    ],
+                    ] as CoinType[],
                     boardCoins: [
                         {},
                         {},
@@ -1777,7 +1814,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 2,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1795,101 +1832,34 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
                 0: {
-                    handCoins: [
-                        {
-                            value: 3,
-                        },
-                    ],
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {
-                            value: 2,
-                        },
-                    ],
-                } as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {
-                            value: 2,
-                        },
-                    ],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
-                    stack: [
-                        {
-                            stageName: CommonStageNames.AddCoinToPouch,
-                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            priority: 0,
-                        },
-                    ],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
-    });
-    it(`should start AddCoinToPouch action for 1 coins (0 coin on the pouch because trading coin was discarded and just 1 coin in player's hands) if player has Uline (multiplayer=false)`, (): void => {
-        const G = {
-            mode: GameModeNames.Basic,
-            tavernsNum: 3,
-            players: {
-                0: {} as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        null,
-                    ],
                     handCoins: [
                         {
                             value: 3,
                         },
                     ] as CoinType[],
-                    buffs: [
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        null,
                         {
-                            everyTurn: true,
+                            value: 2,
                         },
                     ],
-                    stack: [] as Stack[],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
-            ctx = {
-                currentPlayer: `0`,
-            } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
-            mode: GameModeNames.Basic,
-            tavernsNum: 3,
-            players: {
-                0: {} as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -1898,11 +1868,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {},
                         {},
                         null,
-                        null,
-                    ],
-                    handCoins: [
                         {
-                            value: 3,
+                            value: 2,
                         },
                     ],
                     buffs: [
@@ -1911,102 +1878,6 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                     ],
                     stack: [
-                        {
-                            stageName: CommonStageNames.AddCoinToPouch,
-                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            priority: 0,
-                        },
-                        {
-                            stageName: CommonStageNames.AddCoinToPouch,
-                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            priority: 0,
-                        },
-                    ],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
-    });
-    it(`should start AddCoinToPouch action for 1 coins (0 coin on the pouch because trading coin was discarded and just 1 coin in player's hands) if player has Uline (multiplayer=true)`, (): void => {
-        const G = {
-            mode: GameModeNames.Multiplayer,
-            tavernsNum: 3,
-            players: {
-                0: {
-                    handCoins: [
-                        {
-                            value: 3,
-                        },
-                    ],
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        null,
-                    ],
-                } as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        null,
-                    ],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
-                    stack: [] as Stack[],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
-            ctx = {
-                currentPlayer: `0`,
-            } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
-            mode: GameModeNames.Multiplayer,
-            tavernsNum: 3,
-            players: {
-                0: {
-                    handCoins: [
-                        {
-                            value: 3,
-                        },
-                    ],
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        null,
-                    ],
-                } as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        null,
-                    ],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
-                    stack: [
-                        {
-                            stageName: CommonStageNames.AddCoinToPouch,
-                            drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
-                            priority: 0,
-                        },
                         {
                             stageName: CommonStageNames.AddCoinToPouch,
                             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
@@ -2022,7 +1893,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2046,25 +1917,25 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2088,7 +1959,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -2129,7 +2000,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as CoinType[],
                     boardCoins: [
                         {},
                         null,
@@ -2137,7 +2008,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2153,14 +2024,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2179,7 +2050,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as CoinType[],
                     boardCoins: [
                         {},
                         null,
@@ -2187,7 +2058,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                         null,
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2224,7 +2095,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2244,25 +2115,25 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2282,7 +2153,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     buffs: [
                         {
                             everyTurn: true,
@@ -2312,7 +2183,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as CoinType[],
                     boardCoins: [
                         {},
                         null,
@@ -2322,7 +2193,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                         null,
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2340,14 +2211,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2360,7 +2231,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         {
                             value: 4,
                         },
-                    ],
+                    ] as CoinType[],
                     boardCoins: [
                         {},
                         null,
@@ -2370,7 +2241,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         },
                         null,
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2404,7 +2275,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2427,19 +2298,19 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2465,9 +2336,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
-                            value: 3,
-                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
+                            configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            priority: 0,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            valueArray: [
+                                2,
+                                3,
+                            ],
                         },
                     ],
                 } as PublicPlayer,
@@ -2492,7 +2368,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2512,14 +2388,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2537,7 +2413,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2560,9 +2436,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
-                            value: 3,
-                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
+                            configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            priority: 0,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            valueArray: [
+                                2,
+                                3,
+                            ],
                         },
                     ],
                 } as PublicPlayer,
@@ -2589,7 +2470,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2608,14 +2489,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -2635,7 +2516,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             value: 3,
                         },
                     ],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2660,166 +2541,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     stack: [
                         {
                             coinId: undefined,
-                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
-                            value: 3,
-                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
-                        },
-                    ],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
-    });
-    it(`should start VidofnirVedrfolnir action for 1 coins (1 is discarded coin=null), value=5 if player has Uline (multiplayer=false)`, (): void => {
-        const G = {
-            mode: GameModeNames.Basic,
-            tavernsNum: 3,
-            players: {
-                0: {} as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {
-                            isOpened: true,
-                            value: 3,
-                        },
-                    ],
-                    handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
-                    stack: [] as Stack[],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
-            ctx = {
-                currentPlayer: `0`,
-            } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
-            mode: GameModeNames.Basic,
-            tavernsNum: 3,
-            players: {
-                0: {} as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {
-                            isOpened: true,
-                            value: 3,
-                        },
-                    ],
-                    handCoins: [] as PublicPlayerCoinType[],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
-                    stack: [
-                        {
-                            coinId: undefined,
-                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
-                            value: 5,
-                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
-                        },
-                    ],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `players` | `tavernsNum` | `mode`>);
-    });
-    it(`should start VidofnirVedrfolnir action for 1 coins (1 is discarded coin=null), value=5 if player has Uline (multiplayer=true)`, (): void => {
-        const G = {
-            mode: GameModeNames.Multiplayer,
-            tavernsNum: 3,
-            players: {
-                0: {
-                    handCoins: [] as PublicPlayerCoinType[],
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {
-                            isOpened: false,
-                            value: 3,
-                        },
-                    ],
-                } as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {},
-                    ],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
-                    stack: [] as Stack[],
-                } as PublicPlayer,
-            },
-        } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
-            ctx = {
-                currentPlayer: `0`,
-            } as Ctx;
-        StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
-            mode: GameModeNames.Multiplayer,
-            tavernsNum: 3,
-            players: {
-                0: {
-                    handCoins: [] as PublicPlayerCoinType[],
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {
-                            isOpened: true,
-                            value: 3,
-                        },
-                    ],
-                } as Player,
-            },
-            publicPlayers: {
-                0: {
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                        {
-                            isOpened: true,
-                            value: 3,
-                        },
-                    ],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
-                    stack: [
-                        {
-                            coinId: undefined,
-                            stageName: CommonStageNames.UpgradeCoinVidofnirVedrfolnir,
-                            value: 5,
-                            drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
+                            configName: ConfigNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            drawName: DrawNames.StartChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            priority: 0,
+                            stageName: CommonStageNames.ChooseCoinValueForVidofnirVedrfolnirUpgrade,
+                            valueArray: [
+                                2,
+                                3,
+                            ],
                         },
                     ],
                 } as PublicPlayer,
@@ -2832,7 +2561,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2849,7 +2578,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
@@ -2857,7 +2586,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+            StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         }).toThrowError(`При наличии бафа '${HeroBuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
     });
     it(`shouldn't have closed coins on the pouch (if multiplayer=false) and must throw Error`, (): void => {
@@ -2865,7 +2594,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2880,7 +2609,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
@@ -2888,7 +2617,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+            StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         }).toThrowError(`В массиве монет игрока с id '0' на поле не должна быть закрыта монета в кошеле с id '3'.`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=false) and must throw Error`, (): void => {
@@ -2896,7 +2625,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2909,7 +2638,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
@@ -2917,7 +2646,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+            StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '0' монет(ы).`);
     });
     it(`shouldn't have 0 coins on the pouch if player hasn't Uline (if multiplayer=true) and must throw Error`, (): void => {
@@ -2934,7 +2663,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                     ],
                     handCoins: [] as PublicPlayerCoinType[],
-                } as Player,
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -2946,7 +2675,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                         null,
                     ],
                     buffs: [] as PlayerBuffs[],
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers` | `tavernsNum` | `players` | `mode`>,
@@ -2954,7 +2683,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         expect((): void => {
-            StartVidofnirVedrfolnirAction({ G, ctx } as MyFnContextWithMyPlayerID);
+            StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         }).toThrowError(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '0' монет(ы).`);
     });
 });

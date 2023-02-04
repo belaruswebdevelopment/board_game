@@ -1,4 +1,5 @@
 import { AllStackData } from "../data/StackData";
+import { suitsConfig } from "../data/SuitData";
 import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
@@ -65,6 +66,7 @@ export const AddCardToPlayerBoardCards = ({ G, ctx, myPlayerID, ...rest }, card)
         case CardTypeRusNames.MultiSuitPlayerCard:
         case CardTypeRusNames.ArtefactPlayerCard:
             player.cards[card.suit].push(card);
+            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${card.type}' '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
             break;
         default:
             _exhaustiveCheck = card;
@@ -191,12 +193,8 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }, picke
             }
             // TODO Check if i have Giant and not captured dwarf activate Capturing Or Dwarf Picking
             if (!startGiant) {
-                if (G.expansions.Idavoll.active
-                    && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Frigg)) {
-                    AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.activateGodAbilityOrNot(GodNames.Frigg, pickedCard)]);
-                    return;
-                }
-                else {
+                if (!(G.expansions.Idavoll.active
+                    && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Frigg))) {
                     finalPickedCard = AddDwarfToPlayerCards(pickedCard);
                 }
             }
@@ -205,12 +203,9 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }, picke
             finalPickedCard = AddMythicalAnimalToPlayerCards(pickedCard);
             break;
         case CardTypeRusNames.RoyalOfferingCard:
-            if (G.expansions.Idavoll.active && ctx.phase === PhaseNames.TavernsResolution && ctx.activePlayers === null
-                && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Frigg)) {
-                AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.activateGodAbilityOrNot(GodNames.Frigg, pickedCard)]);
-                return;
-            }
-            else {
+            if (!(G.expansions.Idavoll.active && ctx.phase === PhaseNames.TavernsResolution
+                && ctx.activePlayers === null
+                && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Frigg))) {
                 // TODO Move all Log from pickedCard to bottom of the func and to playerCards!
                 AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Игрок '${player.nickname}' выбрал карту '${pickedCard.type}' '${pickedCard.name}'.`);
                 DiscardCurrentCard({ G, ctx, ...rest }, pickedCard);

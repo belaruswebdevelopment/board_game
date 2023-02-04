@@ -2,9 +2,10 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
+import { AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsRoyalCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, SuitMoveNames, SuitNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, Background, BoardProps, ButtonNameType, CanBeNullType, FnContext, IndexOf, MoveFunctionType, MyFnContextWithMyPlayerID, PublicPlayer, PublicPlayerCoinType, TavernsConfigType } from "../typescript/interfaces";
+import type { AllCardType, ArgsType, Background, BoardProps, ButtonNameType, CanBeNullType, FnContext, MoveFunctionType, MyFnContextWithMyPlayerID, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -140,7 +141,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
         tdClasses = ``,
         spanClasses = ``,
         description = ``,
-        value = ``,
+        value: CanBeNullType<number> = null,
         action: MoveFunctionType;
     if (`description` in card) {
         description += card.description;
@@ -254,8 +255,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
                 tdClasses += ` bg-yellow-200`;
                 if (card.type === CardTypeRusNames.ArtefactCard
                     && card.name === ArtefactNames.OdroerirTheMythicCauldron) {
-                    value = String(GetOdroerirTheMythicCauldronCoinsValues({ G: data.G } as
-                        MyFnContextWithMyPlayerID));
+                    value = GetOdroerirTheMythicCauldronCoinsValues({ G: data.G } as MyFnContextWithMyPlayerID);
                 }
             }
             break;
@@ -275,7 +275,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
         case CardTypeRusNames.RoyalOfferingCard:
             spanClasses += `bg-royal-offering`;
             styles = ALlStyles.RoyalOffering(card.name);
-            value = String(card.upgradeValue);
+            value = card.upgradeValue;
             break;
         case CardTypeRusNames.GiantCard:
         case CardTypeRusNames.GodCard:
@@ -297,7 +297,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
             return _exhaustiveCheck;
     }
     if (`points` in card) {
-        value = card.points !== null ? String(card.points) : ``;
+        value = card.points;
     }
     //TODO Draw Power token on Gods if needed and Strength token on valkyries! And Loki token!
     playerCells.push(
@@ -407,7 +407,7 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, 
  */
 export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
     type: DrawCoinTypeNames, coin: PublicPlayerCoinType, id: number, player: CanBeNullType<PublicPlayer>,
-    coinClasses?: CanBeNullType<string>, additionalParam?: CanBeNullType<number>, moveName?: CoinMoveNames,
+    coinClasses?: CanBeNullType<string>, additionalParam?: CanBeNullType<number> /* IndexOf<TavernsType> */, moveName?: CoinMoveNames,
     ...args: ArgsType): void => {
     let styles: Background = { background: `` },
         span: CanBeNullType<JSX.Element | number> = null,
@@ -509,7 +509,8 @@ export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
                 span = (<span style={ALlStyles.Exchange()} className="bg-small-market-coin"></span>);
             } else if (type === DrawCoinTypeNames.BackTavernIcon) {
                 if (additionalParam !== null && additionalParam !== undefined) {
-                    span = (<span style={ALlStyles.Tavern(additionalParam as IndexOf<TavernsConfigType>)}
+                    AssertTavernIndex(additionalParam);
+                    span = (<span style={ALlStyles.Tavern(additionalParam)}
                         className="bg-tavern-icon"></span>);
                 }
             }

@@ -6,7 +6,7 @@ import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, CoinType, FnContext, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, CoinType, FnContext, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -28,7 +28,7 @@ export const CheckEndBidsPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType
                         || (G.mode === GameModeNames.Multiplayer
                             && !CheckPlayerHasBuff({ G, ctx, myPlayerID: String(playerIndex), ...rest },
                                 HeroBuffNames.EveryTurn))) {
-                        const privatePlayer: CanBeUndefType<Player> = G.players[playerIndex];
+                        const privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[playerIndex];
                         if (privatePlayer === undefined) {
                             return ThrowMyError({ G, ctx, ...rest },
                                 ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, playerIndex);
@@ -65,7 +65,7 @@ export const CheckEndBidsPhase = ({ G, ctx, ...rest }: FnContext): CanBeVoidType
  */
 export const CheckEndBidsTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<true> => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(ctx.currentPlayer)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -74,7 +74,7 @@ export const CheckEndBidsTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    let handCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType;
     if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
         || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
         || G.mode === GameModeNames.Multiplayer) {

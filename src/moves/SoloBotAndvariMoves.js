@@ -1,11 +1,12 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { IsValidMove } from "../MoveValidator";
 import { ClickCardAction, PickCardToPickDistinctionAction } from "../actions/Actions";
 import { AddHeroToPlayerCardsAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot, PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari } from "../helpers/SoloBotHelpers";
-import { IsValidMove } from "../MoveValidator";
-import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotAndvariCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { AssertPlayerCoinId, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
+import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotAndvariCommonStageNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 // TODO Move all playerID === `1` to validate!
 /**
  * <h3>Выбор карты из таверны соло ботом Андвари.</h3>
@@ -15,16 +16,17 @@ import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames,
  * </ol>
  *
  * @param context
- * @param cardId Id карты.
+ * @param tavernCardId Id карты.
  * @returns
  */
-export const SoloBotAndvariClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
+export const SoloBotAndvariClickCardMove = ({ G, ctx, playerID, ...rest }, tavernCardId) => {
     const isValidMove = playerID === `1` &&
-        IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotClickCard, CardMoveNames.SoloBotAndvariClickCardMove, cardId);
+        IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotClickCard, CardMoveNames.SoloBotAndvariClickCardMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
+    AssertTavernCardId(tavernCardId);
+    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом Андвари.</h3>
@@ -88,6 +90,7 @@ export const SoloBotAndvariPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, c
         PlaceAllCoinsInCurrentOrderForSoloBot({ G, ctx, myPlayerID: playerID, ...rest });
     }
 };
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на планшет соло бота Андвари.</h3>
  * <p>Применения:</p>
@@ -107,6 +110,7 @@ export const SoloBotAndvariPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, 
     }
     PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на планшет соло бота Андвари.</h3>
  * <p>Применения:</p>
@@ -126,6 +130,7 @@ export const SoloBotAndvariPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, s
     }
     PlaceYludAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор монеты для улучшения соло ботом Андвари.</h3>
  * <p>Применения:</p>
@@ -139,6 +144,7 @@ export const SoloBotAndvariPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, s
  * @returns
  */
 export const SoloBotAndvariClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
+    AssertPlayerCoinId(coinId);
     const isValidMove = playerID === `1`
         && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade, CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove, {
             coinId,

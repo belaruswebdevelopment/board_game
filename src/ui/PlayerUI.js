@@ -3,6 +3,7 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { AssertPlayerCoinId, AssertTavernConfigIndex, AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
@@ -67,6 +68,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
         }
         const stack = player.stack[0];
         let suitTop;
+        // TODO Draw player has distinction card after troop evaluation!
         // TODO Draw Giant Capture token on suit if needed!
         for (suitTop in suitsConfig) {
             if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer))
@@ -551,7 +553,9 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
             for (let t = 0; t < G.tavernsNum; t++) {
                 if (data !== undefined) {
                     if (i === 0) {
+                        AssertTavernConfigIndex(t);
                         const currentTavernConfig = tavernsConfig[t];
+                        AssertTavernIndex(t);
                         playerHeaders.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Tavern(t), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
                     }
                     else {
@@ -568,10 +572,9 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                     }
                 }
                 if (i === 0 || (i === 1 && t !== G.tavernsNum - 1)) {
-                    const id = t + G.tavernsNum * i, publicBoardCoin = player.boardCoins[id], privateBoardCoin = privatePlayer === null || privatePlayer === void 0 ? void 0 : privatePlayer.boardCoins[id];
-                    if (publicBoardCoin === undefined) {
-                        throw new Error(`В массиве монет игрока на столе отсутствует монета с id '${id}'.`);
-                    }
+                    const id = (t + G.tavernsNum * i);
+                    AssertPlayerCoinId(id);
+                    const publicBoardCoin = player.boardCoins[id], privateBoardCoin = privatePlayer === null || privatePlayer === void 0 ? void 0 : privatePlayer.boardCoins[id];
                     if (publicBoardCoin !== null) {
                         if (ctx.phase === PhaseNames.Bids && Number(ctx.currentPlayer) === p
                             && ((G.mode === GameModeNames.Multiplayer && privateBoardCoin !== undefined)
@@ -837,10 +840,8 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
         }
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < 5; j++) {
+                AssertPlayerCoinId(j);
                 const publicHandCoin = player.handCoins[j], privateHandCoin = privatePlayer === null || privatePlayer === void 0 ? void 0 : privatePlayer.handCoins[j];
-                if (publicHandCoin === undefined) {
-                    throw new Error(`В массиве монет игрока в руке отсутствует монета с id '${j}'.`);
-                }
                 if ((G.mode === GameModeNames.Multiplayer && privateHandCoin !== undefined
                     && IsCoin(privateHandCoin))
                     || (((G.mode === GameModeNames.Basic && Number(ctx.currentPlayer) === p)

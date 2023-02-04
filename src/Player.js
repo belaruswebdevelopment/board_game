@@ -2,7 +2,8 @@ import { BuildInitialCoins } from "./Coin";
 import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescript/enums";
+import { AssertBoardCoins, AssertHandCoins, AssertPrivateBoardCoins } from "./is_helpers/AssertionTypeHelpers";
+import { GameModeNames, HeroBuffNames, PhaseNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
  * <p>Применения:</p>
@@ -12,10 +13,14 @@ import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescrip
  *
  * @returns Приватные данные игрока.
  */
-export const BuildPlayer = () => CreatePlayer({
-    handCoins: BuildInitialCoins(),
-    boardCoins: Array(initialCoinsConfig.length).fill(null),
-});
+export const BuildPlayer = () => {
+    const boardCoins = Array(initialCoinsConfig.length).fill(null);
+    AssertPrivateBoardCoins(boardCoins);
+    return CreatePlayer({
+        handCoins: BuildInitialCoins(),
+        boardCoins,
+    });
+};
 /**
  * <h3>Создаёт всех игроков (публичные данные).</h3>
  * <p>Применения:</p>
@@ -42,12 +47,15 @@ export const BuildPublicPlayer = (nickname, priority, isPrivate) => {
     else {
         handCoins = BuildInitialCoins();
     }
+    AssertHandCoins(handCoins);
+    const boardCoins = Array(initialCoinsConfig.length).fill(null);
+    AssertBoardCoins(boardCoins);
     return CreatePublicPlayer({
         nickname,
         cards,
         giantTokenSuits,
         handCoins,
-        boardCoins: Array(initialCoinsConfig.length).fill(null),
+        boardCoins,
         priority,
     });
 };

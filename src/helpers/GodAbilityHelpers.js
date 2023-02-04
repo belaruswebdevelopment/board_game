@@ -4,7 +4,7 @@ import { ErrorNames, GodBuffNames, GodNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { IsLastRound } from "./RoundHelpers";
 import { AddActionsToStack } from "./StackHelpers";
-export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }, godName) => {
+export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }, godName, pickedCard) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
@@ -42,7 +42,7 @@ export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }, godNa
             return _exhaustiveCheck;
     }
     if (isStart) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.activateGodAbilityOrNot(godName)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.activateGodAbilityOrNot(godName, pickedCard)]);
     }
     return isStart;
 };

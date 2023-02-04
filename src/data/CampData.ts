@@ -1,5 +1,5 @@
 import { ArtefactDescriptionNames, ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, CampBuffNames, SuitNames } from "../typescript/enums";
-import type { ArtefactCampCardData, ArtefactConfig, MercenariesConfig } from "../typescript/interfaces";
+import type { ArtefactCardData, ArtefactConfig, MercenariesConfig } from "../typescript/interfaces";
 import { AllStackData } from "./StackData";
 
 /**
@@ -9,7 +9,7 @@ import { AllStackData } from "./StackData";
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Brisingamens: ArtefactCampCardData = {
+const Brisingamens: ArtefactCardData = {
     name: ArtefactNames.Brisingamens,
     description: ArtefactDescriptionNames.Brisingamens,
     tier: 1,
@@ -38,7 +38,7 @@ const Brisingamens: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Draupnir: ArtefactCampCardData = {
+const Draupnir: ArtefactCardData = {
     name: ArtefactNames.Draupnir,
     description: ArtefactDescriptionNames.Draupnir,
     tier: 0,
@@ -54,7 +54,7 @@ const Draupnir: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const FafnirBaleygr: ArtefactCampCardData = {
+const FafnirBaleygr: ArtefactCardData = {
     name: ArtefactNames.FafnirBaleygr,
     description: ArtefactDescriptionNames.FafnirBaleygr,
     tier: 0,
@@ -74,7 +74,7 @@ const FafnirBaleygr: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Gjallarhorn: ArtefactCampCardData = {
+const Gjallarhorn: ArtefactCardData = {
     name: ArtefactNames.Gjallarhorn,
     description: ArtefactDescriptionNames.Gjallarhorn,
     tier: 1,
@@ -95,7 +95,7 @@ const Gjallarhorn: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Hofud: ArtefactCampCardData = {
+const Hofud: ArtefactCardData = {
     name: ArtefactNames.Hofud,
     description: ArtefactDescriptionNames.Hofud,
     tier: 1,
@@ -118,7 +118,7 @@ const Hofud: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Hrafnsmerki: ArtefactCampCardData = {
+const Hrafnsmerki: ArtefactCardData = {
     name: ArtefactNames.Hrafnsmerki,
     description: ArtefactDescriptionNames.Hrafnsmerki,
     tier: 1,
@@ -134,7 +134,7 @@ const Hrafnsmerki: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Jarnglofi: ArtefactCampCardData = {
+const Jarnglofi: ArtefactCardData = {
     name: ArtefactNames.Jarnglofi,
     description: ArtefactDescriptionNames.Jarnglofi,
     tier: 1,
@@ -154,7 +154,7 @@ const Jarnglofi: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Megingjord: ArtefactCampCardData = {
+const Megingjord: ArtefactCardData = {
     name: ArtefactNames.Megingjord,
     description: ArtefactDescriptionNames.Megingjord,
     tier: 0,
@@ -174,7 +174,7 @@ const Megingjord: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Mjollnir: ArtefactCampCardData = {
+const Mjollnir: ArtefactCardData = {
     name: ArtefactNames.Mjollnir,
     description: ArtefactDescriptionNames.Mjollnir,
     tier: 1,
@@ -193,7 +193,7 @@ const Mjollnir: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const OdroerirTheMythicCauldron: ArtefactCampCardData = {
+const OdroerirTheMythicCauldron: ArtefactCardData = {
     name: ArtefactNames.OdroerirTheMythicCauldron,
     description: ArtefactDescriptionNames.OdroerirTheMythicCauldron,
     tier: 1,
@@ -212,7 +212,7 @@ const OdroerirTheMythicCauldron: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Svalinn: ArtefactCampCardData = {
+const Svalinn: ArtefactCardData = {
     name: ArtefactNames.Svalinn,
     description: ArtefactDescriptionNames.Svalinn,
     tier: 0,
@@ -228,7 +228,7 @@ const Svalinn: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const Vegvisir: ArtefactCampCardData = {
+const Vegvisir: ArtefactCardData = {
     name: ArtefactNames.Vegvisir,
     description: ArtefactDescriptionNames.Vegvisir,
     tier: 0,
@@ -248,7 +248,7 @@ const Vegvisir: ArtefactCampCardData = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-const VidofnirVedrfolnir: ArtefactCampCardData = {
+const VidofnirVedrfolnir: ArtefactCardData = {
     name: ArtefactNames.VidofnirVedrfolnir,
     description: ArtefactDescriptionNames.VidofnirVedrfolnir,
     tier: 0,

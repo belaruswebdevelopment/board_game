@@ -2,9 +2,10 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, Player, PlayersNumberTierCardData, PointsType, PointsValuesType, PublicPlayer, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -36,6 +37,7 @@ export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType)
     return 0;
 };
 
+// TODO cardId => tavernCardId(Type)
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -147,7 +149,7 @@ export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardD
 const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: TavernCardType):
     number => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -156,7 +158,7 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContext
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let handCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
@@ -176,10 +178,8 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContext
         score += card.upgradeValue;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[i];
-        if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует монета с id '${i}'.`);
-        }
+        AssertPlayerCoinId(i);
+        const boardCoin: PublicPlayerCoinType = player.boardCoins[i];
         // TODO Check it it can be error in !multiplayer, but bot can't play in multiplayer now...
         if (boardCoin !== null && !IsCoin(boardCoin)) {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе не может быть закрыта монета с id '${i}'.`);
@@ -187,10 +187,7 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContext
         if (IsCoin(boardCoin)) {
             score += boardCoin.value;
         }
-        const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[i];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${i}'.`);
-        }
+        const handCoin: PublicPlayerCoinType = handCoins[i];
         if (handCoin !== null && !IsCoin(handCoin)) {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${i}'.`);
         }

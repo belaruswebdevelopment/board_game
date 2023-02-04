@@ -1,7 +1,8 @@
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
+import { AssertMercenariesConfigIndex } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames, SuitNames } from "./typescript/enums";
-import type { ArtefactCampCard, ArtefactCampCardData, ArtefactNamesKeyofTypeofType, ArtefactPlayerCampCard, BasicSuitableNullableCardInfo, CampDeckCardType, CanBeUndefType, CreateArtefactCampCardFromData, CreateArtefactPlayerCampCardFromData, CreateMercenaryCampCardFromData, CreateMercenaryPlayerCampCardFromData, IndexOf, KeyofType, MercenariesConfig, MercenariesConfigType, MercenaryCampCard, MercenaryData, MercenaryPlayerCampCard, MercenaryType, TierType } from "./typescript/interfaces";
+import type { ArtefactCard, ArtefactCardData, ArtefactNamesKeyofTypeofType, ArtefactPlayerCard, BasicSuitableNullableCardInfo, CampDeckCardType, CanBeUndefType, CreateArtefactCardFromData, CreateArtefactPlayerCardFromData, CreateMercenaryCardFromData, CreateMercenaryPlayerCardFromData, IndexOf, KeyofType, MercenariesConfig, MercenariesConfigType, MercenaryCard, MercenaryData, MercenaryPlayerCard, MercenaryType, TierType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря конкретной эпохи из конфига.</h3>
@@ -17,9 +18,9 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
     const campCards: CampDeckCardType[] = [];
     let artefactName: ArtefactNamesKeyofTypeofType;
     for (artefactName in artefactsConfig) {
-        const artefactData: ArtefactCampCardData = artefactsConfig[artefactName];
+        const artefactData: ArtefactCardData = artefactsConfig[artefactName];
         if (artefactData.tier === tier) {
-            campCards.push(CreateArtefactCampCard({
+            campCards.push(CreateArtefactCard({
                 path: artefactData.name,
                 name: artefactData.name,
                 description: artefactData.description,
@@ -36,7 +37,8 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
     const mercenariesConfigTier: MercenariesConfigType =
         mercenariesConfig[tier satisfies IndexOf<MercenariesConfig>];
     for (let i = 0; i < mercenariesConfigTier.length; i++) {
-        const mercenaryData: MercenaryData = mercenariesConfigTier[i as IndexOf<MercenariesConfigType>];
+        AssertMercenariesConfigIndex(i);
+        const mercenaryData: MercenaryData = mercenariesConfigTier[i];
         let name = ``,
             path = ``,
             campMercenarySuit: SuitNames;
@@ -58,7 +60,7 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
                 }
             }
         }
-        campCards.push(CreateMercenaryCampCard({
+        campCards.push(CreateMercenaryCard({
             path: path.trim(),
             name: name.trim(),
             variants: mercenaryData,
@@ -87,7 +89,7 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
  * @param rank Шевроны.
  * @returns Карта артефакта.
  */
-const CreateArtefactCampCard = ({
+const CreateArtefactCard = ({
     type = CardTypeRusNames.ArtefactCard,
     name,
     path,
@@ -99,7 +101,7 @@ const CreateArtefactCampCard = ({
     playerSuit = null,
     points = null,
     rank = 1,
-}: CreateArtefactCampCardFromData): ArtefactCampCard => ({
+}: CreateArtefactCardFromData): ArtefactCard => ({
     type,
     name,
     path,
@@ -129,7 +131,7 @@ const CreateArtefactCampCard = ({
  * @param rank Шевроны.
  * @returns Карта артефакта на поле игрока.
  */
-export const CreateArtefactPlayerCampCard = ({
+export const CreateArtefactPlayerCard = ({
     type = CardTypeRusNames.ArtefactPlayerCard,
     name,
     path,
@@ -137,7 +139,7 @@ export const CreateArtefactPlayerCampCard = ({
     suit,
     points = null,
     rank = 1,
-}: CreateArtefactPlayerCampCardFromData): ArtefactPlayerCampCard => ({
+}: CreateArtefactPlayerCardFromData): ArtefactPlayerCard => ({
     type,
     name,
     path,
@@ -163,7 +165,7 @@ export const CreateArtefactPlayerCampCard = ({
  * @param rank Шевроны.
  * @returns Карта наёмника.
  */
-const CreateMercenaryCampCard = ({
+const CreateMercenaryCard = ({
     type = CardTypeRusNames.MercenaryCard,
     name,
     path,
@@ -171,7 +173,7 @@ const CreateMercenaryCampCard = ({
     playerSuit = null,
     points = null,
     rank = null,
-}: CreateMercenaryCampCardFromData): MercenaryCampCard => ({
+}: CreateMercenaryCardFromData): MercenaryCard => ({
     type,
     name,
     path,
@@ -196,14 +198,14 @@ const CreateMercenaryCampCard = ({
  * @param rank Шевроны.
  * @returns Карта наёмника на поле игрока.
  */
-export const CreateMercenaryPlayerCampCard = ({
+export const CreateMercenaryPlayerCard = ({
     type = CardTypeRusNames.MercenaryPlayerCard,
     name,
     path,
     suit,
     points = null,
     rank = 1,
-}: CreateMercenaryPlayerCampCardFromData): MercenaryPlayerCampCard => ({
+}: CreateMercenaryPlayerCardFromData): MercenaryPlayerCard => ({
     type,
     name,
     path,

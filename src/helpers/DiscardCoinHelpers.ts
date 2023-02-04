@@ -1,5 +1,6 @@
-import type { CanBeUndefType, FnContext, PublicPlayerCoinType, RoyalCoin } from "../typescript/interfaces";
+import type { CanBeUndefType, FnContext, PlayerCoinIdType, PublicPlayerCoinsType, PublicPlayerCoinType, RoyalCoin } from "../typescript/interfaces";
 
+// TODO Think about MarketCoinIdType
 /**
  * <h3>Действия, связанные с убиранием монеты с рынка.</h3>
  * <p>Применения:</p>
@@ -30,7 +31,7 @@ export const RemoveCoinFromMarket = ({ G }: FnContext, coinId: number): RoyalCoi
  * @param coinId Id убираемой монеты.
  * @returns Убираемая монета у игрока.
  */
-export const RemoveCoinFromPlayer = (coins: PublicPlayerCoinType[], coinId: number): void => {
+export const RemoveCoinFromPlayer = (coins: PublicPlayerCoinsType, coinId: PlayerCoinIdType): void => {
     const amount = 1,
         removedCoin: PublicPlayerCoinType[] = coins.splice(coinId, 1, null);
     if (amount !== removedCoin.length) {

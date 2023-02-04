@@ -6,6 +6,7 @@ import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
+import { AssertCamp, AssertSecretAllCampDecksIndex, AssertSecretAllDwarfDecksIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
 import { BuildMultiSuitCards } from "./MultiSuitCard";
 import { BuildMythologicalCreatureCards, BuildMythologicalCreatureDecks } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
@@ -13,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames, SuitNames } from "./typescript/enums";
-import type { AIBotData, AllSecretData, BuildHeroesArray, CampCardArray, CampDecksLength, CanBeUndefType, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, IndexOf, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalCoin, RoyalOfferingCard, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, StrategyForSoloBotAndvari, SuitPropertyType, TavernsType, TierType } from "./typescript/interfaces";
+import type { AIBotData, AllSecretData, BuildHeroesArray, CampDecksLength, CanBeUndefType, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalCoin, RoyalOfferingCard, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, SuitPropertyType, TavernsType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -63,8 +64,8 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         configOptions: GameNamesKeyofTypeofType[] = [],
         discardCardsDeck: DiscardDeckCardType[] = [],
         explorerDistinctionCards = null,
+        strategyForSoloBotAndvari = null,
         distinctions: SuitPropertyType<Distinctions> = {} as SuitPropertyType<Distinctions>,
-        strategyForSoloBotAndvari: StrategyForSoloBotAndvari = {} as StrategyForSoloBotAndvari,
         secret: AllSecretData = {
             campDecks: [[], []],
             decks: [[], []],
@@ -83,14 +84,16 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         discardMultiCards: MultiSuitPlayerCard[] = [],
         discardSpecialCards: SpecialPlayerCard[] = [],
         campDecksLength: CampDecksLength = [0, 0],
-        camp: CampCardArray = Array(campNum).fill(null) as CampCardArray,
-        // TODO DecksLength
+        camp: null[] = Array(campNum).fill(null),
         decksLength: DwarfDecksLength = [0, 0],
         mythologicalCreatureDeckForSkymir = null;
+    AssertCamp(camp);
     for (let i = 0; i < tierToEnd; i++) {
+        AssertTierIndex(i);
         if (expansions.Thingvellir.active) {
-            secret.campDecks[i] = BuildCampCards(i as TierType);
-            let campDeck: SecretCampDeckType = secret.campDecks[i as IndexOf<SecretAllCampDecks>];
+            secret.campDecks[i] = BuildCampCards(i);
+            AssertSecretAllCampDecksIndex(i);
+            let campDeck: SecretCampDeckType = secret.campDecks[i];
             campDeck = random.Shuffle(campDeck);
             secret.campDecks[i] = campDeck;
             campDecksLength[i] = campDeck.length;
@@ -99,11 +102,12 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         secret.decks[i] = [];
         const data: PlayersNumberTierCardData = {
             players: ctx.numPlayers,
-            tier: i as TierType,
+            tier: i,
         },
             dwarfDeck: DwarfCard[] = BuildDwarfCards(data),
             royalOfferingDeck: RoyalOfferingCard[] = BuildRoyalOfferingCards(data);
-        let deck: SecretDwarfDeckType = secret.decks[i as IndexOf<SecretAllDwarfDecks>];
+        AssertSecretAllDwarfDecksIndex(i);
+        let deck: SecretDwarfDeckType = secret.decks[i];
         deck = deck.concat(dwarfDeck, royalOfferingDeck);
         decksLength[i] = deck.length;
         secret.decks[i] = random.Shuffle(deck);

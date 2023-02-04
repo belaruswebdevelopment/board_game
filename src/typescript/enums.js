@@ -881,8 +881,8 @@ export var CardTypeRusNames;
 (function (CardTypeRusNames) {
     CardTypeRusNames["ArtefactCard"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
     CardTypeRusNames["ArtefactPlayerCard"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
-    CardTypeRusNames["DwarfCard"] = "\u0414\u0432\u043E\u0440\u0444 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
-    CardTypeRusNames["DwarfPlayerCard"] = "\u0414\u0432\u043E\u0440\u0444";
+    CardTypeRusNames["DwarfCard"] = "\u0414\u0432\u043E\u0440\u0444";
+    CardTypeRusNames["DwarfPlayerCard"] = "\u0414\u0432\u043E\u0440\u0444 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
     CardTypeRusNames["GiantCard"] = "\u0413\u0438\u0433\u0430\u043D\u0442";
     CardTypeRusNames["GodCard"] = "\u0411\u043E\u0433";
     CardTypeRusNames["HeroCard"] = "\u0413\u0435\u0440\u043E\u0439";

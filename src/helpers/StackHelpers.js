@@ -1,4 +1,5 @@
 import { ThrowMyError } from "../Error";
+import { AssertPlayerStack } from "../is_helpers/AssertionTypeHelpers";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ErrorNames, PickCardValidatorNames } from "../typescript/enums";
 /**
@@ -67,7 +68,7 @@ export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }, stack, card) 
                                     throw new Error(`В массиве стека новых действий отсутствует действие с названием 'priority'.`);
                                 }
                                 if (stackP.priority === undefined) {
-                                    throw new Error(`В массиве стека действий отсутствует действие с названием 'priority'.`);
+                                    stackP.priority = 0;
                                 }
                                 return index !== 0 && stackP.priority <= stackI.priority;
                             });
@@ -77,6 +78,7 @@ export const AddActionsToStack = ({ G, ctx, myPlayerID, ...rest }, stack, card) 
                         stackIndex = 0;
                     }
                 }
+                AssertPlayerStack(stackI);
                 player.stack.splice(stackIndex, 0, stackI);
             }
         }

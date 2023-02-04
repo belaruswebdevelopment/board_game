@@ -84,8 +84,7 @@ export const StartOrEndActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
     }
     if (ctx.activePlayers === null || ctx.activePlayers?.[Number(myPlayerID)] !== undefined) {
         player.stack.shift();
-        if ((player.stack[0]?.priority === undefined)
-            || (player.stack[0]?.priority !== undefined && player.stack[0]?.priority > 1)) {
+        if (player.stack[0]?.priority !== 1) {
             CheckPickHero({ G, ctx, myPlayerID, ...rest });
         }
         DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });

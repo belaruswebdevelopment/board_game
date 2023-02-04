@@ -1,5 +1,5 @@
 import { CommonStageNames, DrawNames, GameModeNames, LogTypeNames } from "../../typescript/enums";
-import type { Ctx, MyFnContextWithMyPlayerID, MyGameState, Player, PublicPlayer, Stack } from "../../typescript/interfaces";
+import type { CoinType, Ctx, MyFnContextWithMyPlayerID, MyGameState, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../../typescript/interfaces";
 import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
 
 describe(`Test AddPickHeroAction method`, (): void => {
@@ -8,7 +8,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    stack: [] as Stack[],
+                    stack: [] as PlayerStack[],
                 } as PublicPlayer,
             },
             logData: [],
@@ -16,7 +16,7 @@ describe(`Test AddPickHeroAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        AddPickHeroAction({ G, ctx } as MyFnContextWithMyPlayerID, 1);
+        AddPickHeroAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 1);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -45,7 +45,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
         const G = {
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -56,10 +56,10 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                         {
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     handCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                 } as PublicPlayer,
             },
             currentTavern: 0,
@@ -67,11 +67,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
-                0: {} as Player,
+                0: {} as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -80,12 +80,12 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 2,
                         },
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     handCoins: [
                         {
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                 } as PublicPlayer,
             },
             currentTavern: 0,
@@ -104,11 +104,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             isOpened: false,
                             value: 0,
                         },
-                    ],
+                    ] as CoinType[],
                     handCoins: [
                         null,
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -117,10 +117,10 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 2,
                         },
                         {},
-                    ],
+                    ] as PublicPlayerCoinType[],
                     handCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                 } as PublicPlayer,
             },
             currentTavern: 0,
@@ -128,7 +128,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -138,14 +138,14 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 2,
                         },
                         null,
-                    ],
+                    ] as CoinType[],
                     handCoins: [
                         {
                             isOpened: false,
                             value: 0,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -154,10 +154,10 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 2,
                         },
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     handCoins: [
                         {},
-                    ],
+                    ] as PublicPlayerCoinType[],
                 } as PublicPlayer,
             },
             currentTavern: 0,
@@ -176,11 +176,11 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             isOpened: true,
                             value: 0,
                         },
-                    ],
+                    ] as CoinType[],
                     handCoins: [
                         null,
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -192,10 +192,10 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             isOpened: true,
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                     handCoins: [
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                 } as PublicPlayer,
             },
             currentTavern: 0,
@@ -203,7 +203,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
             ctx = {
                 currentPlayer: `0`,
             } as Ctx;
-        GetClosedCoinIntoPlayerHandAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -213,14 +213,14 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 2,
                         },
                         null,
-                    ],
+                    ] as CoinType[],
                     handCoins: [
                         {
                             isOpened: true,
                             value: 0,
                         },
-                    ],
-                } as Player,
+                    ] as CoinType[],
+                } as PrivatePlayer,
             },
             publicPlayers: {
                 0: {
@@ -229,13 +229,13 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
                             value: 2,
                         },
                         null,
-                    ],
+                    ] as PublicPlayerCoinType[],
                     handCoins: [
                         {
                             isOpened: true,
                             value: 0,
                         },
-                    ],
+                    ] as PublicPlayerCoinType[],
                 } as PublicPlayer,
             },
             currentTavern: 0,
@@ -243,4 +243,4 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
     });
 });
 
-// TODO Add tests for UpgradeMinCoinAction
+// TODO Add tests for UpgradeMinCoinAction & all others!

@@ -1,5 +1,5 @@
 import { ThrowMyError } from "../Error";
-import { CardTypeRusNames, ErrorNames, SuitNames, SuitRusNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, SuitRusNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с убиранием фракционной карты со стола игрока.</h3>
  * <p>Применения:</p>

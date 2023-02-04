@@ -152,6 +152,7 @@ const Loki: GodData = {
     },
 };
 
+// TODO Odin swap only neutral heroes!!!
 /**
  * <h3>Данные об Боге.</h3>
  * <p>Применения:</p>

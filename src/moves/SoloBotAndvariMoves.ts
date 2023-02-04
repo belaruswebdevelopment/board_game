@@ -1,10 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { IsValidMove } from "../MoveValidator";
 import { ClickCardAction, PickCardToPickDistinctionAction } from "../actions/Actions";
 import { AddHeroToPlayerCardsAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot, PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari } from "../helpers/SoloBotHelpers";
-import { IsValidMove } from "../MoveValidator";
+import { AssertPlayerCoinId, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotAndvariCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
@@ -17,19 +18,20 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  * </ol>
  *
  * @param context
- * @param cardId Id карты.
+ * @param tavernCardId Id карты.
  * @returns
  */
-export const SoloBotAndvariClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
+export const SoloBotAndvariClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, tavernCardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = playerID === `1` &&
         IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
             TavernsResolutionDefaultStageNames.SoloBotClickCard,
-            CardMoveNames.SoloBotAndvariClickCardMove, cardId);
+            CardMoveNames.SoloBotAndvariClickCardMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
+    AssertTavernCardId(tavernCardId);
+    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 
 /**
@@ -105,6 +107,7 @@ export const SoloBotAndvariPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...res
     }
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на планшет соло бота Андвари.</h3>
  * <p>Применения:</p>
@@ -128,6 +131,7 @@ export const SoloBotAndvariPlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...re
     PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на планшет соло бота Андвари.</h3>
  * <p>Применения:</p>
@@ -151,6 +155,7 @@ export const SoloBotAndvariPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...res
     PlaceYludAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор монеты для улучшения соло ботом Андвари.</h3>
  * <p>Применения:</p>
@@ -163,8 +168,9 @@ export const SoloBotAndvariPlaceYludHeroMove: Move = ({ G, ctx, playerID, ...res
  * @param type Тип монеты.
  * @returns
  */
-export const SoloBotAndvariClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
-    type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
+export const SoloBotAndvariClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
+    coinId: number, type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = playerID === `1`
         && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
             SoloBotAndvariCommonStageNames.SoloBotAndvariClickCoinToUpgrade,

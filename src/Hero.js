@@ -1,4 +1,5 @@
 import { heroesConfig, soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig, soloGameAndvariHeroesForPlayersConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
+import { AssertHeroesForSoloBot, AssertHeroesInitialForSoloGameForBotAndvari } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames, GameModeNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -66,8 +67,13 @@ export const BuildHeroes = (configOptions, mode) => {
     if (!(heroesInitialForSoloGameForBotAndvari === null || heroesInitialForSoloGameForBotAndvari === void 0 ? void 0 : heroesInitialForSoloGameForBotAndvari.length)) {
         heroesInitialForSoloGameForBotAndvari = null;
     }
-    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel,
-        heroesInitialForSoloGameForBotAndvari];
+    if (heroesForSoloBot !== null) {
+        AssertHeroesForSoloBot(heroesForSoloBot);
+    }
+    if (heroesInitialForSoloGameForBotAndvari !== null) {
+        AssertHeroesInitialForSoloGameForBotAndvari(heroesInitialForSoloGameForBotAndvari);
+    }
+    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari];
 };
 /**
  * <h3>Создание карты героя.</h3>

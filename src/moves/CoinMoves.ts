@@ -3,10 +3,11 @@ import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, TavernsResolutionStageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, Move, MyFnContext, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, Move, MyFnContext, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // Move all coinId to PlayerCoinId and MarketCoinId types?!
 // TODO Check moves with solo mode!
@@ -24,13 +25,14 @@ import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, Move, MyFnContext,
 export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
     // TODO Add Place coins async
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         BidsDefaultStageNames.ClickBoardCoin, CoinMoveNames.ClickBoardCoinMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(playerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -39,18 +41,12 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[coinId];
-    if (publicBoardCoin === undefined) {
-        throw new Error(`В массиве монет игрока с id '${playerID}' на поле отсутствует нужная монета с id '${coinId}'.`);
-    }
-    let handCoins: PublicPlayerCoinType[],
+    const publicBoardCoin: PublicPlayerCoinType = player.boardCoins[coinId];
+    let handCoins: PlayerHandCoinsType,
         privateBoardCoin: CanBeUndefType<PublicPlayerCoinType>;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
         privateBoardCoin = privatePlayer.boardCoins[coinId];
-        if (privateBoardCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${playerID}' на столе отсутствует монета с id '${coinId}'.`);
-        }
     } else {
         handCoins = player.handCoins;
     }
@@ -58,6 +54,7 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
         && privateBoardCoin !== undefined && IsCoin(privateBoardCoin))
         || (G.mode === GameModeNames.Basic && IsCoin(publicBoardCoin))) {
         const tempId: number = handCoins.indexOf(null);
+        AssertPlayerCoinId(tempId);
         if (IsCoin(publicBoardCoin)) {
             handCoins[tempId] = publicBoardCoin;
         } else {
@@ -71,11 +68,8 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
         }
         player.boardCoins[coinId] = null;
     } else if (player.selectedCoin !== null) {
-        const tempSelectedId: number = player.selectedCoin,
-            handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[tempSelectedId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует нужная монета с id '${tempSelectedId}'.`);
-        }
+        const tempSelectedId: PlayerCoinIdType = player.selectedCoin,
+            handCoin: PublicPlayerCoinType = handCoins[tempSelectedId];
         if (handCoin === null) {
             throw new Error(`В массиве монет приватного игрока с id '${playerID}' в руке не может отсутствовать монета с id '${coinId}'.`);
         }
@@ -99,6 +93,7 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
     }
 };
 
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор монеты для улучшения.</h3>
  * <p>Применения:</p>
@@ -113,6 +108,7 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
  */
 export const ClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
     type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         CommonStageNames.ClickCoinToUpgrade, CoinMoveNames.ClickCoinToUpgradeMove, {
         coinId,
@@ -125,6 +121,7 @@ export const ClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
     UpgradeCoinActions({ G, ctx, myPlayerID: playerID, ...rest }, coinId, type);
 };
 
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор конкретной монеты для улучшения.</h3>
  * <p>Применения:</p>
@@ -137,8 +134,9 @@ export const ClickCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  * @param type Тип монеты.
  * @returns
  */
-export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number,
-    type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
+export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
+    coinId: number, type: CoinTypeNames): CanBeVoidType<InvalidMoveType> => {
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         CommonStageNames.PickConcreteCoinToUpgrade, CoinMoveNames.PickConcreteCoinToUpgradeMove, {
         coinId,
@@ -163,6 +161,7 @@ export const PickConcreteCoinToUpgradeMove: Move = ({ G, ctx, playerID, ...rest 
  */
 export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         BidsDefaultStageNames.ClickHandCoin, CoinMoveNames.ClickHandCoinMove, coinId);
     if (!isValidMove) {
@@ -189,13 +188,14 @@ export const ClickHandCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
  */
 export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         BidUlineDefaultStageNames.ClickHandCoinUline, CoinMoveNames.ClickHandCoinUlineMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(playerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -204,12 +204,9 @@ export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    let handCoin: CanBeUndefType<PublicPlayerCoinType>;
+    let handCoin: PublicPlayerCoinType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoin = privatePlayer.handCoins[coinId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${playerID}' в руке отсутствует монета с id '${coinId}'.`);
-        }
         if (handCoin === null) {
             throw new Error(`В массиве монет приватного игрока с id '${playerID}' в руке не может отсутствовать монета с id '${coinId}'.`);
         }
@@ -222,9 +219,6 @@ export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
         privatePlayer.boardCoins[G.currentTavern + 1] = handCoin;
     } else {
         handCoin = player.handCoins[coinId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${coinId}'.`);
-        }
         if (handCoin !== null && !IsCoin(handCoin)) {
             throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${coinId}'.`);
         }
@@ -250,8 +244,9 @@ export const ClickHandCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, coinId: number):
-    CanBeVoidType<InvalidMoveType> => {
+export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
+    coinId: number): CanBeVoidType<InvalidMoveType> => {
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionStageNames.ClickHandTradingCoinUline,
         CoinMoveNames.ClickHandTradingCoinUlineMove, coinId);
@@ -259,7 +254,7 @@ export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest 
         return INVALID_MOVE;
     }
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(playerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(playerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(playerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
         );
@@ -268,17 +263,11 @@ export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest 
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    let handCoin: CanBeUndefType<PublicPlayerCoinType>;
+    let handCoin: PublicPlayerCoinType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoin = privatePlayer.handCoins[coinId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${playerID}' в руке отсутствует монета с id '${coinId}'.`);
-        }
     } else {
         handCoin = player.handCoins[coinId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${coinId}'.`);
-        }
         if (handCoin !== null && !IsCoin(handCoin)) {
             throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта монета с id '${coinId}'.`);
         }
@@ -286,10 +275,7 @@ export const ClickHandTradingCoinUlineMove: Move = ({ G, ctx, playerID, ...rest 
     if (IsCoin(handCoin) && !handCoin.isOpened) {
         ChangeIsOpenedCoinStatus(handCoin, true);
     }
-    const firstTradingBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.tavernsNum];
-    if (firstTradingBoardCoin === undefined) {
-        throw new Error(`В массиве монет игрока с id '${playerID}' на поле отсутствует нужная монета с id '${G.tavernsNum}'.`);
-    }
+    const firstTradingBoardCoin: PublicPlayerCoinType = player.boardCoins[G.tavernsNum];
     if (firstTradingBoardCoin === null) {
         if (G.mode === GameModeNames.Multiplayer) {
             if (handCoin === null) {

@@ -3,8 +3,9 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
+import { AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsRoyalCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, SuitMoveNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, SuitMoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -113,7 +114,7 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }, data, playerCells, play
  * @returns
  */
 export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, player, suit, moveName, ...args) => {
-    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, value = ``, action;
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, value = null, action;
     if (`description` in card) {
         description += card.description;
     }
@@ -227,7 +228,7 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
                 tdClasses += ` bg-yellow-200`;
                 if (card.type === CardTypeRusNames.ArtefactCard
                     && card.name === ArtefactNames.OdroerirTheMythicCauldron) {
-                    value = String(GetOdroerirTheMythicCauldronCoinsValues({ G: data.G }));
+                    value = GetOdroerirTheMythicCauldronCoinsValues({ G: data.G });
                 }
             }
             break;
@@ -248,7 +249,7 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
         case CardTypeRusNames.RoyalOfferingCard:
             spanClasses += `bg-royal-offering`;
             styles = ALlStyles.RoyalOffering(card.name);
-            value = String(card.upgradeValue);
+            value = card.upgradeValue;
             break;
         case CardTypeRusNames.GiantCard:
         case CardTypeRusNames.GodCard:
@@ -271,7 +272,7 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
             return _exhaustiveCheck;
     }
     if (`points` in card) {
-        value = card.points !== null ? String(card.points) : ``;
+        value = card.points;
     }
     //TODO Draw Power token on Gods if needed and Strength token on valkyries! And Loki token!
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
@@ -362,7 +363,7 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }, data, playerCells, cardType, 
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id, player, coinClasses, additionalParam, moveName, ...args) => {
+export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */, moveName, ...args) => {
     let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action, _exhaustiveCheck;
     switch (moveName) {
         case CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove:
@@ -461,6 +462,7 @@ export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id,
             }
             else if (type === DrawCoinTypeNames.BackTavernIcon) {
                 if (additionalParam !== null && additionalParam !== undefined) {
+                    AssertTavernIndex(additionalParam);
                     span = (_jsx("span", { style: ALlStyles.Tavern(additionalParam), className: "bg-tavern-icon" }));
                 }
             }

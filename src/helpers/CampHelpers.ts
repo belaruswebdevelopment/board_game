@@ -1,7 +1,8 @@
+import { AssertCampIndex, AssertSecretAllCampDecksIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardArray, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, SecretAllCampDecks, SecretCampDeckTier1, SecretCampDeckType, TavernInConfig, TierType } from "../typescript/interfaces";
+import type { CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, SecretCampDeckTier1, SecretCampDeckType, TavernInConfig } from "../typescript/interfaces";
 import { GetCampCardsFromSecretCampDeck } from "./DecksHelpers";
 import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIfNeeded } from "./DiscardCardHelpers";
 
@@ -18,8 +19,10 @@ import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIf
 * @returns
 */
 const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: number): void => {
-    const newCampCard: CanBeUndefType<CampDeckCardType> = GetCampCardsFromSecretCampDeck({ G, ctx, ...rest },
-        (G.secret.campDecks.length - G.tierToEnd) as TierType, 0, 1)[0];
+    const tier: number = G.secret.campDecks.length - G.tierToEnd;
+    AssertTierIndex(tier);
+    const newCampCard: CanBeUndefType<CampDeckCardType> =
+        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, tier, 0, 1)[0];
     if (newCampCard === undefined) {
         throw new Error(`Отсутствует карта лагеря в колоде карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
     }
@@ -39,7 +42,8 @@ const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: number): void => 
 const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }: FnContext): void => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.campNum; i++) {
-        const campCard: CampCardType = G.camp[i as IndexOf<CampCardArray>];
+        AssertCampIndex(i);
+        const campCard: CampCardType = G.camp[i];
         if (campCard !== null) {
             const discardedCard: CampCardType =
                 RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, i, [null]);
@@ -48,13 +52,14 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }: FnContext): void =>
             }
         }
     }
+    const currentTier: number = G.secret.campDecks.length - G.tierToEnd - 1;
+    AssertSecretAllCampDecksIndex(currentTier);
     // TODO DiscardCardType!?
-    const discardedCardsArray: CampDeckCardType[] =
-        G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd - 1) as IndexOf<SecretAllCampDecks>];
+    const discardedCardsArray: CampDeckCardType[] = G.secret.campDecks[currentTier];
     if (discardedCardsArray.length) {
         DiscardAllCurrentCards({ G, ctx, ...rest }, discardedCardsArray);
-        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest },
-            (G.secret.campDecks.length - G.tierToEnd - 1) as TierType, 0);
+        AssertTierIndex(currentTier);
+        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, currentTier, 0);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
 };
@@ -149,8 +154,9 @@ export const RefillEmptyCampCards = ({ G, ctx, ...rest }: FnContext): void => {
             return null;
         }),
         isEmptyCampCards: boolean = emptyCampCards.length === 0,
-        campDeck: SecretCampDeckType =
-            G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd) as IndexOf<SecretAllCampDecks>];
+        currentTier: number = G.secret.campDecks.length - G.tierToEnd;
+    AssertSecretAllCampDecksIndex(currentTier);
+    const campDeck: SecretCampDeckType = G.secret.campDecks[currentTier];
     let isEmptyCurrentTierCampDeck: boolean = campDeck.length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex: CanBeNullType<number>): void => {

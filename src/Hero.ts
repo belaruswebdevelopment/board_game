@@ -1,6 +1,7 @@
 import { heroesConfig, soloGameAndvariEasyStrategyHeroesConfig, soloGameAndvariHardStrategyHeroesConfig, soloGameAndvariHeroesForPlayersConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
+import { AssertHeroesForSoloBot, AssertHeroesInitialForSoloGameForBotAndvari } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames, GameModeNames } from "./typescript/enums";
-import type { BuildHeroesArray, CanBeNullType, CreateHeroCardFromData, CreateHeroPlayerCardFromData, GameNamesKeyofTypeofType, HeroCard, HeroCardData, HeroesForSoloGameArrayType, HeroesInitialForSoloGameForBotAndvariArray, HeroNamesKeyofTypeofType, HeroPlayerCard } from "./typescript/interfaces";
+import type { BuildHeroesArray, CanBeNullType, CreateHeroCardFromData, CreateHeroPlayerCardFromData, GameNamesKeyofTypeofType, HeroCard, HeroCardData, HeroNamesKeyofTypeofType, HeroPlayerCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -71,8 +72,13 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
     if (!heroesInitialForSoloGameForBotAndvari?.length) {
         heroesInitialForSoloGameForBotAndvari = null;
     }
-    return [heroes, heroesForSoloBot as CanBeNullType<HeroesForSoloGameArrayType>, heroesForSoloGameDifficultyLevel,
-        heroesInitialForSoloGameForBotAndvari as CanBeNullType<HeroesInitialForSoloGameForBotAndvariArray>];
+    if (heroesForSoloBot !== null) {
+        AssertHeroesForSoloBot(heroesForSoloBot);
+    }
+    if (heroesInitialForSoloGameForBotAndvari !== null) {
+        AssertHeroesInitialForSoloGameForBotAndvari(heroesInitialForSoloGameForBotAndvari);
+    }
+    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari];
 };
 
 /**

@@ -1,9 +1,10 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
+import { AssertAllCoinsValue, AssertPlayerCoinId, AssertPrivateHandCoins } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
-import type { AllCoinsType, AllCoinsValueType, CanBeUndefType, CoinType, FnContext, MyFnContextWithMyPlayerID, NumberValues, Player, PlayerID, Priority, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins } from "../typescript/interfaces";
+import type { AllCoinsType, AllCoinsValueType, CanBeUndefType, CoinType, FnContext, MyFnContextWithMyPlayerID, NumberValues, PlayerCoinIdType, PlayerHandCoinsType, PlayerID, Priority, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { RemoveCoinFromPlayer } from "./DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -20,9 +21,9 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
  * @returns Тип и индекс сбрасываемой обменной монеты.
  */
 export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    [CoinTypeNames, number] => {
+    [CoinTypeNames, PlayerCoinIdType] => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -31,7 +32,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let handCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
@@ -60,6 +61,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует обменная монета при наличии бафа '${HeroBuffNames.EveryTurn}'.`);
         }
         type = CoinTypeNames.Hand;
+        AssertPlayerCoinId(tradingCoinIndex);
         RemoveCoinFromPlayer(handCoins, tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
             RemoveCoinFromPlayer(player.handCoins, tradingCoinIndex);
@@ -68,6 +70,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
         if (tradingCoinIndex === -1) {
             throw new Error(`У игрока с id '${myPlayerID}' на столе не может отсутствовать обменная монета.`);
         }
+        AssertPlayerCoinId(tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
             RemoveCoinFromPlayer(privatePlayer.boardCoins, tradingCoinIndex);
         }
@@ -87,19 +90,22 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
  * @param context
  * @returns Максимальная монета игрока.
  */
-export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
+export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): AllCoinsValueType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    return Math.max(...player.boardCoins.filter(IsCoin).map((coin: AllCoinsType,
-        index: number): number => {
-        if (!coin.isOpened) {
-            throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
-        }
-        return coin.value;
-    }));
+    const coinMaxValue: number =
+        Math.max(...player.boardCoins.filter(IsCoin).map((coin: AllCoinsType,
+            index: number): number => {
+            if (!coin.isOpened) {
+                throw new Error(`В массиве монет игрока '${player.nickname}' на поле не может быть ранее не открыта монета с id '${index}'.`);
+            }
+            return coin.value;
+        }));
+    AssertAllCoinsValue(coinMaxValue);
+    return coinMaxValue;
 };
 
 /**
@@ -114,7 +120,7 @@ export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
  */
 export const OpenClosedCoinsOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -124,10 +130,8 @@ export const OpenClosedCoinsOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: My
             myPlayerID);
     }
     for (let j = 0; j < player.boardCoins.length; j++) {
-        const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[j];
-        if (privateBoardCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-        }
+        AssertPlayerCoinId(j);
+        const privateBoardCoin: CoinType = privatePlayer.boardCoins[j];
         if (G.mode === GameModeNames.Multiplayer) {
             if (IsCoin(privateBoardCoin)) {
                 if (!privateBoardCoin.isOpened) {
@@ -136,10 +140,7 @@ export const OpenClosedCoinsOnPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: My
                 player.boardCoins[j] = privateBoardCoin;
             }
         }
-        const publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[j];
-        if (publicBoardCoin === undefined) {
-            throw new Error(`В массиве монет публичного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-        }
+        const publicBoardCoin: PublicPlayerCoinType = player.boardCoins[j];
         if (publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
             throw new Error(`В массиве монет публичного игрока с id '${myPlayerID}' на поле не может быть закрыта монета с id '${j}'.`);
         }
@@ -166,24 +167,18 @@ export const OpenCurrentTavernClosedCoinsOnPlayerBoard = ({ G, ctx, ...rest }: F
     Object.values(G.publicPlayers).forEach((player: PublicPlayer, index: number): void => {
         if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && index === 1)
             || (G.mode === GameModeNames.SoloAndvari && index === 1)) {
-            const privatePlayer: CanBeUndefType<Player> = G.players[index];
+            const privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[index];
             if (privatePlayer === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
                     index);
             }
-            const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[G.currentTavern];
-            if (privateBoardCoin === undefined) {
-                throw new Error(`В массиве монет приватного игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-            }
+            const privateBoardCoin: CoinType = privatePlayer.boardCoins[G.currentTavern];
             if (privateBoardCoin !== null && !privateBoardCoin.isOpened) {
                 ChangeIsOpenedCoinStatus(privateBoardCoin, true);
             }
             player.boardCoins[G.currentTavern] = privateBoardCoin;
         } else {
-            const publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
-            if (publicBoardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-            }
+            const publicBoardCoin: PublicPlayerCoinType = player.boardCoins[G.currentTavern];
             if (publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
                 throw new Error(`В массиве монет игрока с id '${index}' в руке не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
             }
@@ -214,69 +209,63 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 i);
         }
-        const coin: CanBeUndefType<PublicPlayerCoinType> = playerI.boardCoins[G.currentTavern];
-        if (coin !== undefined) {
-            exchangeOrder.push(i);
-            if (IsCoin(coin)) {
-                coinValues[i] = coin.value;
-                playersOrderNumbers.push(i);
+        const coin: PublicPlayerCoinType = playerI.boardCoins[G.currentTavern];
+        exchangeOrder.push(i);
+        if (IsCoin(coin)) {
+            coinValues[i] = coin.value;
+            playersOrderNumbers.push(i);
+        }
+        for (let j: number = playersOrderNumbers.length - 1; j > 0; j--) {
+            const playersOrderNumberCur: CanBeUndefType<number> = playersOrderNumbers[j],
+                playersOrderNumberPrev: CanBeUndefType<number> = playersOrderNumbers[j - 1];
+            if (playersOrderNumberCur === undefined) {
+                throw new Error(`В массиве порядка хода игроков отсутствует текущий с id '${j}'.`);
             }
-            for (let j: number = playersOrderNumbers.length - 1; j > 0; j--) {
-                const playersOrderNumberCur: CanBeUndefType<number> = playersOrderNumbers[j],
-                    playersOrderNumberPrev: CanBeUndefType<number> = playersOrderNumbers[j - 1];
-                if (playersOrderNumberCur === undefined) {
-                    throw new Error(`В массиве порядка хода игроков отсутствует текущий с id '${j}'.`);
-                }
-                if (playersOrderNumberPrev === undefined) {
-                    throw new Error(`В массиве порядка хода игроков отсутствует предыдущий с id '${j - 1}'.`);
-                }
-                const playerCur: CanBeUndefType<PublicPlayer> = G.publicPlayers[playersOrderNumberCur],
-                    playerPrev: CanBeUndefType<PublicPlayer> = G.publicPlayers[playersOrderNumberPrev];
-                if (playerCur === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-                        playersOrderNumberCur);
-                }
-                if (playerPrev === undefined) {
-                    return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-                        playersOrderNumberPrev);
-                }
-                const coin: CanBeUndefType<PublicPlayerCoinType> = playerCur.boardCoins[G.currentTavern],
-                    prevCoin: CanBeUndefType<PublicPlayerCoinType> = playerPrev.boardCoins[G.currentTavern];
-                if (coin === undefined) {
-                    throw new Error(`В массиве монет текущего игрока с id '${playersOrderNumberCur}' на столе отсутствует монета в позиции текущей таверны с id '${G.currentTavern}'.`);
-                }
-                if (prevCoin === undefined) {
-                    throw new Error(`В массиве монет предыдущего игрока с id '${playersOrderNumberPrev}' на столе отсутствует монета в позиции текущей таверны с id '${G.currentTavern}'.`);
-                }
-                if (IsCoin(coin) && IsCoin(prevCoin)) {
-                    if (coin.value > prevCoin.value) {
+            if (playersOrderNumberPrev === undefined) {
+                throw new Error(`В массиве порядка хода игроков отсутствует предыдущий с id '${j - 1}'.`);
+            }
+            const playerCur: CanBeUndefType<PublicPlayer> = G.publicPlayers[playersOrderNumberCur],
+                playerPrev: CanBeUndefType<PublicPlayer> = G.publicPlayers[playersOrderNumberPrev];
+            if (playerCur === undefined) {
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    playersOrderNumberCur);
+            }
+            if (playerPrev === undefined) {
+                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                    playersOrderNumberPrev);
+            }
+            const coin: PublicPlayerCoinType = playerCur.boardCoins[G.currentTavern],
+                prevCoin: PublicPlayerCoinType = playerPrev.boardCoins[G.currentTavern];
+            if (IsCoin(coin) && IsCoin(prevCoin)) {
+                if (coin.value > prevCoin.value) {
+                    [playersOrderNumbers[j], playersOrderNumbers[j - 1]] =
+                        [playersOrderNumberPrev, playersOrderNumberCur];
+                } else if (coin.value === prevCoin.value) {
+                    const priority: Priority = playerCur.priority,
+                        prevPriority: Priority = playerPrev.priority;
+                    if (priority.value > prevPriority.value) {
                         [playersOrderNumbers[j], playersOrderNumbers[j - 1]] =
                             [playersOrderNumberPrev, playersOrderNumberCur];
-                    } else if (coin.value === prevCoin.value) {
-                        const priority: Priority = playerCur.priority,
-                            prevPriority: Priority = playerPrev.priority;
-                        if (priority.value > prevPriority.value) {
-                            [playersOrderNumbers[j], playersOrderNumbers[j - 1]] =
-                                [playersOrderNumberPrev, playersOrderNumberCur];
-                        }
-                    } else {
-                        break;
                     }
+                } else {
+                    break;
                 }
             }
-        } else {
-            throw new Error(`В массиве монет игрока с id '${i}' на столе отсутствует монета в позиции с id '${G.currentTavern}'.`);
         }
+
     }
     const counts: NumberValues = {};
     for (let i = 0; i < coinValues.length; i++) {
         const coinValue: CanBeUndefType<AllCoinsValueType> = coinValues[i];
         if (coinValue !== undefined) {
-            const value: AllCoinsValueType = (counts[coinValue] ?? 0) as AllCoinsValueType;
+            const value: number = counts[coinValue] ?? 0;
+            AssertAllCoinsValue(value);
             counts[coinValue] = 1 + value;
         }
     }
     for (const prop in counts) {
+        // TODO Check & fix it...
+        AssertAllCoinsValue(Number(prop));
         const value: CanBeUndefType<number> = counts[prop as unknown as AllCoinsValueType];
         if (value === undefined) {
             throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
@@ -286,10 +275,7 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
         }
         const tiePlayers: PublicPlayer[] =
             Object.values(G.publicPlayers).filter((player: PublicPlayer, index: number): boolean => {
-                const boardCoinCurrentTavern: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
-                if (boardCoinCurrentTavern === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${index}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-                }
+                const boardCoinCurrentTavern: PublicPlayerCoinType = player.boardCoins[G.currentTavern];
                 if (boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern)) {
                     throw new Error(`В массиве монет игрока с id '${index}' не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
                 }
@@ -359,7 +345,7 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
 export const ReturnCoinsFromPlayerHandsToPlayerBoard = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -368,23 +354,22 @@ export const ReturnCoinsFromPlayerHandsToPlayerBoard = ({ G, ctx, myPlayerID, ..
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let handCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
     }
     for (let i = 0; i < handCoins.length; i++) {
-        const handCoin: CanBeUndefType<PublicPlayerCoinType> = handCoins[i];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${i}'.`);
-        }
+        AssertPlayerCoinId(i);
+        const handCoin: PublicPlayerCoinType = handCoins[i];
         if (handCoin !== null && !IsCoin(handCoin)) {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(handCoin)) {
             const tempCoinId: number = player.boardCoins.indexOf(null);
             if (tempCoinId !== -1) {
+                AssertPlayerCoinId(tempCoinId);
                 if (!handCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(handCoin, true);
                 }
@@ -413,7 +398,7 @@ export const ReturnCoinsFromPlayerHandsToPlayerBoard = ({ G, ctx, myPlayerID, ..
 export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }: FnContext): void => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i],
-            privatePlayer: CanBeUndefType<Player> = G.players[i];
+            privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[i];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 i);
@@ -426,10 +411,8 @@ export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }: FnContext): void =
             && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest },
                 HeroBuffNames.EveryTurn)) {
             for (let j = 0; j < player.handCoins.length; j++) {
-                const handCoin: CanBeUndefType<PublicPlayerCoinType> = player.handCoins[j];
-                if (handCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${i}' в руке отсутствует монета с id '${j}'.`);
-                }
+                AssertPlayerCoinId(j);
+                const handCoin: PublicPlayerCoinType = player.handCoins[j];
                 if (IsCoin(handCoin) && handCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(handCoin, false);
                 }
@@ -442,8 +425,9 @@ export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }: FnContext): void =
             }
         }
         for (let j = 0; j < player.boardCoins.length; j++) {
-            const isCoinReturned: boolean =
-                ReturnCoinToPlayerHands({ G, ctx, myPlayerID: String(i), ...rest }, j, true);
+            AssertPlayerCoinId(j);
+            const isCoinReturned: boolean = ReturnCoinToPlayerHands({ G, ctx, myPlayerID: String(i), ...rest },
+                j, true);
             if (!isCoinReturned) {
                 break;
             }
@@ -465,10 +449,10 @@ export const ReturnCoinsToPlayerHands = ({ G, ctx, ...rest }: FnContext): void =
  * @param close Нужно ли закрыть монету.
  * @returns Вернулась ли монета в руку.
  */
-export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number,
-    close: boolean): boolean => {
+export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    coinId: PlayerCoinIdType, close: boolean): boolean => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -477,7 +461,7 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let handCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType;
     if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
         || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
         handCoins = privatePlayer.handCoins;
@@ -488,10 +472,8 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
     if (tempCoinId === -1) {
         return false;
     }
-    const coin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[coinId];
-    if (coin === undefined) {
-        throw new Error(`В массиве монет игрока с id '${myPlayerID}' на поле отсутствует нужная монета с id '${coinId}'.`);
-    }
+    AssertPlayerCoinId(tempCoinId);
+    const coin: PublicPlayerCoinType = player.boardCoins[coinId];
     if (IsCoin(coin)) {
         if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
             || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
@@ -506,10 +488,7 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
     } else {
         if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
             || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
-            const privateBoardCoin: CanBeUndefType<PublicPlayerCoinType> = privatePlayer.boardCoins[coinId];
-            if (privateBoardCoin === undefined) {
-                throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${coinId}'.`);
-            }
+            const privateBoardCoin: PublicPlayerCoinType = privatePlayer.boardCoins[coinId];
             if (IsCoin(privateBoardCoin)) {
                 if (close && privateBoardCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(privateBoardCoin, false);
@@ -542,12 +521,14 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
  * @returns
  */
 const MixUpCoins = ({ G, ctx, myPlayerID, random, ...rest }: MyFnContextWithMyPlayerID): void => {
-    const privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+    const privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (privatePlayer === undefined) {
         return ThrowMyError({ G, ctx, random, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    privatePlayer.handCoins = random.Shuffle(privatePlayer.handCoins);
+    const handCoins: CoinType[] = random.Shuffle(privatePlayer.handCoins);
+    AssertPrivateHandCoins(handCoins);
+    privatePlayer.handCoins = handCoins;
 };
 
 /**

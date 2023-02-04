@@ -4,8 +4,9 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
+import { AssertCampIndex, AssertHeroesForSoloGameIndex, AssertTavernConfigIndex, AssertTavernIndex, AssertTierIndex, AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
+import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -26,6 +27,7 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
     const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
+            AssertCampIndex(j);
             const campCard = G.camp[j];
             if (campCard === null) {
                 if (data !== undefined) {
@@ -81,8 +83,10 @@ export const DrawCamp = ({ G, ctx, ...rest }, validatorName, data) => {
         }
     }
     if (data !== undefined) {
+        const currentTier = G.campDecksLength.length - G.tierToEnd;
+        AssertTierIndex(currentTier);
         const tier = G.campDecksLength.length - G.tierToEnd + 1 > G.campDecksLength.length ?
-            1 : G.campDecksLength.length - G.tierToEnd;
+            1 : currentTier;
         return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: ALlStyles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: ALlStyles.CampBack(tier), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDecksLength[G.campDecksLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDecksLength.length - G.tierToEnd === 0 ? `/` +
                                     (G.campDecksLength[0] + G.campDecksLength[1]) : ``), " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
@@ -327,6 +331,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }, validatorName, data)
     const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
+            AssertHeroesForSoloGameIndex(j);
             const hero = G.heroesForSoloBot[j];
             if (hero.active && Number(ctx.currentPlayer) === 1
                 && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) ===
@@ -478,10 +483,17 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }, data) => {
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
     const playerHeadersGeneral = [], playerHeadersReserve = [];
+    if (G.strategyForSoloBotAndvari === null) {
+        throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+    }
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
+        AssertZeroOrOneOrTwo(i);
         const suit = G.strategyForSoloBotAndvari.general[i];
         if (suit === undefined) {
             throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        if (suit === null) {
+            throw new Error(`В объекте общих стратегий соло бота Андвари не задана фракция с id '${i}'.`);
         }
         DrawSuit({ G, ctx, ...rest }, data, playerHeadersGeneral, suit);
     }
@@ -489,6 +501,9 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }, data) => {
         const suit = G.strategyForSoloBotAndvari.reserve[i];
         if (suit === undefined) {
             throw new Error(`В объекте резервных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        if (suit === null) {
+            throw new Error(`В объекте резервных стратегий соло бота Андвари не задана фракция с id '${i}'.`);
         }
         DrawSuit({ G, ctx, ...rest }, data, playerHeadersReserve, suit);
     }
@@ -512,10 +527,12 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
     var _a, _b;
     const tavernsBoards = [], moveMainArgs = [];
     for (let t = 0; t < G.tavernsNum; t++) {
+        AssertTavernConfigIndex(t);
         const currentTavernConfig = tavernsConfig[t];
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
             for (let j = 0; j < G.drawSize; j++) {
+                AssertTavernIndex(t);
                 const tavern = G.taverns[t], tavernCard = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);

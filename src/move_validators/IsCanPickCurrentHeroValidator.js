@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { CardTypeRusNames, ErrorNames, PickHeroCardValidatorNames, SuitNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, PickHeroCardValidatorNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
  * <p>Применения:</p>

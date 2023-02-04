@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { ErrorNames, LogTypeNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, LogTypeNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>

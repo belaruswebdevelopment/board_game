@@ -1,4 +1,4 @@
-import type { CreatePriorityFromData, NumPlayersType, PrioritiesConfig, Priority, ZeroOrOneOrTwoOrThreeOrFour } from "./typescript/interfaces";
+import type { CreatePriorityFromData, NumPlayersType, PrioritiesConfig, Priority, ZeroOrOneOrTwoOrThreeOrFourType } from "./typescript/interfaces";
 
 /**
  * <h3>Создание кристаллов.</h3>
@@ -33,7 +33,7 @@ export const CreatePriority = ({
  * @returns Массив базовых кристаллов.
  */
 export const GeneratePrioritiesForPlayerNumbers = (numPlayers: NumPlayersType, solo: boolean): Priority[] => {
-    const priorityNum: ZeroOrOneOrTwoOrThreeOrFour = ((solo ? 1 : numPlayers) - 1) as ZeroOrOneOrTwoOrThreeOrFour;
+    const priorityNum: ZeroOrOneOrTwoOrThreeOrFourType = ((solo ? 1 : numPlayers) - 1) as ZeroOrOneOrTwoOrThreeOrFourType;
     return prioritiesConfig[priorityNum].map((priority: Priority): Priority => priority);
 };
 

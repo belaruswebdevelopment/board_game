@@ -1,9 +1,10 @@
 import { ThrowMyError } from "./Error";
 import { GetCardsFromSecretDwarfDeck, GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard, RemoveCardFromTavern } from "./helpers/DiscardCardHelpers";
+import { AssertTavernCardId, AssertTavernConfigIndex, AssertTavernIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
-import type { FnContext, IndexOf, TavernAllCardType, TavernCardType, TavernCardWithExpansionType, TavernInConfig, TavernsConfigType, TavernsType, TierType } from "./typescript/interfaces";
+import type { FnContext, TavernAllCardType, TavernCardIdType, TavernCardType, TavernCardWithExpansionType, TavernInConfig, TavernsConfigType } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет не осталось ли карт в текущей таверне.</h1>
@@ -56,12 +57,13 @@ export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }: FnCon
  */
 export const DiscardCardFromTavern = ({ G, ctx, ...rest }: FnContext): void => {
     const currentTavern: TavernAllCardType = G.taverns[G.currentTavern],
-        cardIndex: number = currentTavern.findIndex((card: TavernCardType): boolean => card !== null);
-    if (cardIndex === -1) {
+        tavernCardId: number = currentTavern.findIndex((card: TavernCardType): boolean => card !== null);
+    if (tavernCardId === -1) {
         return ThrowMyError({ G, ctx, ...rest },
             ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern, G.currentTavern);
     }
-    DiscardConcreteCardFromTavern({ G, ctx, ...rest }, cardIndex);
+    AssertTavernCardId(tavernCardId);
+    DiscardConcreteCardFromTavern({ G, ctx, ...rest }, tavernCardId);
 };
 
 /**
@@ -76,7 +78,7 @@ export const DiscardCardFromTavern = ({ G, ctx, ...rest }: FnContext): void => {
  * @param tavernCardId Индекс сбрасываемой карты в таверне.
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardId: number): void => {
+export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardId: TavernCardIdType): void => {
     const discardedCard: TavernCardWithExpansionType = RemoveCardFromTavern({ G, ctx, ...rest }, tavernCardId);
     DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
     const currentTavernConfig: TavernInConfig = tavernsConfig[G.currentTavern];
@@ -100,20 +102,23 @@ export const RefillTaverns = ({ G, ctx, ...rest }: FnContext): void => {
             refillDeck = GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck({ G, ctx, ...rest }, 0,
                 G.drawSize);
         } else {
-            refillDeck = GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, 0,
-                (G.secret.decks.length - G.tierToEnd) as TierType, G.drawSize);
+            const tier: number = G.secret.decks.length - G.tierToEnd;
+            AssertTierIndex(tier);
+            refillDeck = GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, tier, 0, G.drawSize);
         }
         if (refillDeck.length !== G.drawSize) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.TavernCanNotBeRefilledBecauseNotEnoughCards,
                 t);
         }
-        const tavern: TavernCardType[] = G.taverns[t as IndexOf<TavernsType>],
+        AssertTavernIndex(t);
+        const tavern: TavernCardType[] = G.taverns[t],
             removedCardsFromTavern: TavernCardType[] =
                 tavern.splice(0, tavern.length, ...refillDeck);
         if (tavern.length !== removedCardsFromTavern.length) {
             throw new Error(`Недостаточно карт в массиве карт таверны с id '${t}': требуется - '${tavern.length}', в наличии - '${removedCardsFromTavern.length}'.`);
         }
-        const tavernConfig: TavernInConfig = tavernsConfig[t as IndexOf<TavernsConfigType>];
+        AssertTavernConfigIndex(t);
+        const tavernConfig: TavernInConfig = tavernsConfig[t];
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна ${tavernConfig.name} заполнена новыми картами.`);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Все таверны заполнены новыми картами.`);

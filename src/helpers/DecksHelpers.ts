@@ -1,9 +1,9 @@
-import type { CampDeckCardType, DwarfDeckCardType, FnContext, IndexOf, MythologicalCreatureCardType, SecretAllCampDecks, SecretAllDwarfDecks, SecretCampDeckType, SecretDwarfDeckType, SecretMythologicalCreatureDeck, TierType } from "../typescript/interfaces";
+import type { CampDeckCardType, DwarfDeckCardType, FnContext, MythologicalCreatureCardType, SecretCampDeckType, SecretDwarfDeckType, SecretMythologicalCreatureDeck, TierType } from "../typescript/interfaces";
 
 //TODO Rework it in one func with switch!?
 export const GetCardsFromSecretDwarfDeck = ({ G }: FnContext, tier: TierType, start: number, amount?: number):
     DwarfDeckCardType[] => {
-    const currentDeck: SecretDwarfDeckType = G.secret.decks[tier satisfies IndexOf<SecretAllDwarfDecks>],
+    const currentDeck: SecretDwarfDeckType = G.secret.decks[tier],
         cards: DwarfDeckCardType[] = currentDeck.splice(start, amount);
     if (amount !== cards.length) {
         throw new Error(`Недостаточно карт в массиве карт дворфов конкретной эпохи: требуется - '${amount}', в наличии - '${cards.length}'.`);
@@ -14,7 +14,7 @@ export const GetCardsFromSecretDwarfDeck = ({ G }: FnContext, tier: TierType, st
 
 export const GetCampCardsFromSecretCampDeck = ({ G }: FnContext, tier: TierType, start: number, amount?: number):
     CampDeckCardType[] => {
-    const campDeck: SecretCampDeckType = G.secret.campDecks[tier satisfies IndexOf<SecretAllCampDecks>],
+    const campDeck: SecretCampDeckType = G.secret.campDecks[tier],
         campCards: CampDeckCardType[] = campDeck.splice(start, amount);
     if (amount !== campCards.length) {
         throw new Error(`Недостаточно карт в массиве карт лагеря конкретной эпохи: требуется - '${amount}', в наличии - '${campCards.length}'.`);

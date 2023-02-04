@@ -1,6 +1,7 @@
 import { initialCoinsConfig, royalCoinsConfig } from "./data/CoinData";
+import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins } from "./is_helpers/AssertionTypeHelpers";
 import { CoinRusNames } from "./typescript/enums";
-import type { AllCoinsType, BuildRoyalCoinsOptions, CanBeUndefType, CoinConfigType, CreateInitialNotTradingCoinFromData, CreateInitialTradingCoinFromData, CreateRoyalCoinFromData, CreateSpecialTriggerTradingCoinFromData, FnContext, InitialCoinType, InitialNotTriggerTradingCoin, InitialTradingCoinConfigType, InitialTriggerTradingCoin, NumberValues, RoyalCoin, RoyalCoinValueType, SpecialTriggerTradingCoin } from "./typescript/interfaces";
+import type { AllCoinsType, AllInitialCoins, BuildRoyalCoinsOptions, CanBeUndefType, CoinConfigType, CreateInitialNotTradingCoinFromData, CreateInitialTradingCoinFromData, CreateRoyalCoinFromData, CreateSpecialTriggerTradingCoinFromData, FnContext, InitialCoinType, InitialNotTriggerTradingCoin, InitialTradingCoinConfigType, InitialTriggerTradingCoin, NumberValues, RoyalCoin, RoyalCoinValueType, SpecialTriggerTradingCoin } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех базовых монет игрока.</h3>
@@ -11,26 +12,25 @@ import type { AllCoinsType, BuildRoyalCoinsOptions, CanBeUndefType, CoinConfigTy
  *
  * @returns Массив всех базовых монет.
  */
-export const BuildInitialCoins = (): InitialCoinType[] => {
-    const coins: InitialCoinType[] = [];
+export const BuildInitialCoins = (): AllInitialCoins => {
+    const initialCoins: InitialCoinType[] = [];
     for (let i = 0; i < initialCoinsConfig.length; i++) {
-        const config: CanBeUndefType<InitialTradingCoinConfigType> = initialCoinsConfig[i];
-        if (config === undefined) {
-            throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
-        }
+        AssertAllInitialTradingCoinConfigIndex(i);
+        const config: InitialTradingCoinConfigType = initialCoinsConfig[i];
         for (let c = 0; c < 1; c++) {
             if (config.value === 0) {
-                coins.push(CreateInitialTradingCoin({
+                initialCoins.push(CreateInitialTradingCoin({
                     value: config.value,
                 }));
             } else {
-                coins.push(CreateInitialNotTradingCoin({
+                initialCoins.push(CreateInitialNotTradingCoin({
                     value: config.value,
                 }));
             }
         }
     }
-    return coins;
+    AssertInitialCoins(initialCoins);
+    return initialCoins;
 };
 
 /**
@@ -46,11 +46,9 @@ export const BuildInitialCoins = (): InitialCoinType[] => {
 export const BuildRoyalCoins = (options: BuildRoyalCoinsOptions): RoyalCoin[] => {
     const coins: RoyalCoin[] = [];
     for (let i = 0; i < royalCoinsConfig.length; i++) {
-        const config: CanBeUndefType<CoinConfigType> = royalCoinsConfig[i];
-        if (config === undefined) {
-            throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
-        }
-        const count: number = config.count()[options.players];
+        AssertAllRoyalCoinConfigIndex(i);
+        const config: CoinConfigType = royalCoinsConfig[i],
+            count: number = config.count()[options.players];
         if (options.players !== undefined && options.count !== undefined) {
             options.count.push({
                 value: config.value,

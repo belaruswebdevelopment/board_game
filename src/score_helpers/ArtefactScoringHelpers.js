@@ -2,7 +2,7 @@ import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsMercenaryPlayerCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { CommonBuffNames, ErrorNames, SuitNames } from "../typescript/enums";
+import { CommonBuffNames, ErrorNames } from "../typescript/enums";
 import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
 /**
  * <h3>Получение победных очков по артефактам, не имеющим специфических вариантов подсчёта очков.</h3>

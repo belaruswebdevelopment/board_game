@@ -1,12 +1,13 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { IsValidMove } from "../MoveValidator";
 import { ClickCardAction, PickCardToPickDistinctionAction } from "../actions/Actions";
 import { PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { AddAnyCardToPlayerActions } from "../helpers/CardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot } from "../helpers/SoloBotHelpers";
-import { IsValidMove } from "../MoveValidator";
-import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+import { AssertHeroesForSoloGameIndex, AssertPlayerCoinId, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
+import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonStageNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 // TODO Move all playerID === `1` to validate!
 // TODO Add all solo bot moves!
 /**
@@ -17,16 +18,16 @@ import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames,
  * </ol>
  *
  * @param context
- * @param cardId Id карты.
+ * @param tavernCardId Id карты.
  * @returns
  */
-export const SoloBotClickCardMove = ({ G, ctx, playerID, ...rest }, cardId) => {
-    const isValidMove = playerID === `1`
-        && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard, CardMoveNames.SoloBotClickCardMove, cardId);
+export const SoloBotClickCardMove = ({ G, ctx, playerID, ...rest }, tavernCardId) => {
+    const isValidMove = playerID === `1` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard, CardMoveNames.SoloBotClickCardMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
+    AssertTavernCardId(tavernCardId);
+    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков соло ботом.</h3>
@@ -67,6 +68,7 @@ export const SoloBotClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) 
     if (G.heroesForSoloBot === null) {
         throw new Error(`В массиве карт героев для соло бота не может не быть героев.`);
     }
+    AssertHeroesForSoloGameIndex(heroId);
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, ...rest }, G.heroesForSoloBot[heroId]);
 };
 /**
@@ -88,6 +90,7 @@ export const SoloBotPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrd
     }
     PlaceAllCoinsInCurrentOrderForSoloBot({ G, ctx, myPlayerID: playerID, ...rest });
 };
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на планшет соло бота.</h3>
  * <p>Применения:</p>
@@ -107,6 +110,7 @@ export const SoloBotPlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) =
     }
     PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на планшет соло бота.</h3>
  * <p>Применения:</p>
@@ -126,6 +130,7 @@ export const SoloBotPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) =>
     }
     PlaceYludAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
+// TODO type: CoinTypeNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор монеты для улучшения соло ботом.</h3>
  * <p>Применения:</p>
@@ -139,6 +144,7 @@ export const SoloBotPlaceYludHeroMove = ({ G, ctx, playerID, ...rest }, suit) =>
  * @returns
  */
 export const SoloBotClickCoinToUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId, type) => {
+    AssertPlayerCoinId(coinId);
     const isValidMove = playerID === `1`
         && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade, CoinMoveNames.SoloBotClickCoinToUpgradeMove, {
             coinId,

@@ -1,10 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { IsValidMove } from "../MoveValidator";
 import { ClickCardAction, DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickCardToPickDistinctionAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { AllStackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { IsValidMove } from "../MoveValidator";
+import { AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, CommonStageNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, SuitMoveNames, SuitNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
@@ -16,17 +17,18 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  * </ol>
  *
  * @param context
- * @param cardId Id карты.
+ * @param tavernCardId Id карты.
  * @returns
  */
-export const ClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
+export const ClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, tavernCardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
-        TavernsResolutionDefaultStageNames.ClickCard, CardMoveNames.ClickCardMove, cardId);
+        TavernsResolutionDefaultStageNames.ClickCard, CardMoveNames.ClickCardMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
+    AssertTavernCardId(tavernCardId);
+    ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 
 /**
@@ -51,6 +53,7 @@ export const ClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest
     PickCardToPickDistinctionAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
  * <p>Применения:</p>
@@ -74,6 +77,7 @@ export const ClickDistinctionCardMove: Move = ({ G, ctx, playerID, ...rest }: My
     StartDistinctionAwarding({ G, ctx, myPlayerID: playerID, ...rest }, suitsConfig[suit].distinction.awarding);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Убирает карту в колоду сброса в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
  * <p>Применения:</p>
@@ -108,18 +112,19 @@ export const DiscardCardFromPlayerBoardMove: Move = ({ G, ctx, playerID, ...rest
  * </ol>
  *
  * @param context
- * @param cardId Id сбрасываемой карты.
+ * @param tavernCardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardCard2PlayersMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
+export const DiscardCard2PlayersMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, tavernCardId: number):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove,
-        cardId);
+        tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardCardFromTavernAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
+    AssertTavernCardId(tavernCardId);
+    DiscardCardFromTavernAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 
 /**
@@ -144,6 +149,7 @@ export const GetEnlistmentMercenariesMove: Move = ({ G, ctx, playerID, ...rest }
     GetEnlistmentMercenariesAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
  * <p>Применения:</p>
@@ -210,6 +216,7 @@ export const PickDiscardCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCon
     PickDiscardCardAction({ G, ctx, myPlayerID: playerID, ...rest }, cardId);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор фракции куда будет завербован наёмник.</h3>
  * <p>Применения:</p>

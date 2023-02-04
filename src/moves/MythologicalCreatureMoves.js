@@ -1,16 +1,18 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { ThrowMyError } from "../Error";
+import { IsValidMove } from "../MoveValidator";
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { AddPlusTwoValueToAllCoinsAction } from "../actions/MythologicalCreatureActions";
 import { AllStackData } from "../data/StackData";
-import { ThrowMyError } from "../Error";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddAnyCardToPlayerActions } from "../helpers/CardHelpers";
 import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
-import { IsValidMove } from "../MoveValidator";
 import { ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonBuffNames, ErrorNames, GiantBuffNames, GodBuffNames, GodNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
+// TODO godName: GodNames => string and asserts it value if no other strings can be valid in moves!?
 export const ActivateGodAbilityMove = ({ G, ctx, playerID, ...rest }, godName) => {
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot, CardMoveNames.ActivateGodAbilityMove, godName);
     if (!isValidMove) {
@@ -44,6 +46,7 @@ export const ActivateGodAbilityMove = ({ G, ctx, playerID, ...rest }, godName) =
     }
     DeleteBuffFromPlayer({ G, ctx, myPlayerID: playerID, ...rest }, buffName);
 };
+// TODO godName: GodNames => string and asserts it value if no other strings can be valid in moves!?
 export const NotActivateGodAbilityMove = ({ G, ctx, playerID, events, ...rest }, godName) => {
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, events, ...rest }, TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot, ButtonMoveNames.NotActivateGodAbilityMove, godName);
     if (!isValidMove) {
@@ -99,6 +102,7 @@ export const NotActivateGodAbilityMove = ({ G, ctx, playerID, events, ...rest },
  * @returns
  */
 export const ChooseCoinValueForHrungnirUpgradeMove = ({ G, ctx, playerID, ...rest }, coinId) => {
+    AssertPlayerCoinId(coinId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionStageNames.ChooseCoinValueForHrungnirUpgrade, CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -117,9 +121,12 @@ export const ChooseCoinValueForHrungnirUpgradeMove = ({ G, ctx, playerID, ...res
     }
     UpgradeCoinAction({ G, ctx, myPlayerID: playerID, ...rest }, false, 2, coinId, CoinTypeNames.Hand);
     if (nextCoinId < 4) {
-        UpgradeNextCoinsHrungnir({ G, ctx, myPlayerID: playerID, ...rest }, nextCoinId++);
+        nextCoinId++;
+        AssertPlayerCoinId(nextCoinId);
+        UpgradeNextCoinsHrungnir({ G, ctx, myPlayerID: playerID, ...rest }, nextCoinId);
     }
 };
+// TODO card: DwarfCard => ?? and asserts it value if no other cards can be valid in moves!?
 /**
  * <h3>Выбор карты дворфа, а не активации способности конкретного Гиганта.</h3>
  * <p>Применения:</p>
@@ -201,6 +208,7 @@ export const ClickCardNotGiantAbilityMove = ({ G, ctx, playerID, ...rest }, card
     DeleteBuffFromPlayer({ G, ctx, myPlayerID: playerID, ...rest }, buffName);
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, ...rest }, card);
 };
+// TODO card: DwarfCard => ?? and asserts it value if no other cards can be valid in moves!?
 /**
  * <h3>Выбор активации способности конкретного Гиганта.</h3>
  * <p>Применения:</p>
@@ -288,6 +296,7 @@ export const ClickGiantAbilityNotCardMove = ({ G, ctx, playerID, ...rest }, card
     }
     DeleteBuffFromPlayer({ G, ctx, myPlayerID: playerID, ...rest }, buffName);
 };
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор фракции карты Olrun.</h3>
  * <p>Применения:</p>

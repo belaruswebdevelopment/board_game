@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { Background, CanBeNullType, CardNamesForStylesType, IndexOf, MythologicalCreatureNameType, Styles, TavernsConfigType, TierType } from "../typescript/interfaces";
+import type { Background, CanBeNullType, CardNamesForStylesType, IndexOf, MythologicalCreatureNameType, Styles, TavernsType, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -560,7 +560,7 @@ export const ALlStyles: Styles = {
     Suit: (suit: SuitNames): Background => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
-    Tavern: (tavernId: IndexOf<TavernsConfigType>): Background => {
+    Tavern: (tavernId: IndexOf<TavernsType>): Background => {
         switch (tavernId) {
             case 0:
                 return {

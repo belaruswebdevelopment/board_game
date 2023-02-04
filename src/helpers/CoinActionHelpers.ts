@@ -2,8 +2,9 @@ import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, Stack, UpgradableCoinValueType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, PlayerCoinIdType, PlayerStack, PrivatePlayer, PublicPlayer, UpgradableCoinValueType } from "../typescript/interfaces";
 import { AddActionsToStack } from "./StackHelpers";
 
 /**
@@ -18,14 +19,14 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param type Тип обменной монеты.
  * @returns Значение на которое улучшается монета.
  */
-export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number,
+export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: PlayerCoinIdType,
     type: CoinTypeNames): number => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -38,10 +39,10 @@ export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
     return value;
 };
 
-export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: number):
-    void => {
+export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    coinId: PlayerCoinIdType): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -51,11 +52,9 @@ export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
             myPlayerID);
     }
     for (let j = coinId; j < 5; j++) {
+        AssertPlayerCoinId(j);
         // TODO Check for Local and Multiplayer games!
-        const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[j];
-        if (privateBoardCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-        }
+        const privateBoardCoin: CoinType = privatePlayer.boardCoins[j];
         // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
         if (G.mode === GameModeNames.Multiplayer) {
             // TODO Check if player has coins in hands to continue upgrade!?

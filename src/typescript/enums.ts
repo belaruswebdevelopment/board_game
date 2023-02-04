@@ -881,8 +881,8 @@ export enum PhaseRusNames {
 export const enum CardTypeRusNames {
     ArtefactCard = `Артефакт`,
     ArtefactPlayerCard = `Артефакт на поле игрока`,
-    DwarfCard = `Дворф на поле игрока`,
-    DwarfPlayerCard = `Дворф`,
+    DwarfCard = `Дворф`,
+    DwarfPlayerCard = `Дворф на поле игрока`,
     GiantCard = `Гигант`,
     GodCard = `Бог`,
     HeroCard = `Герой`,

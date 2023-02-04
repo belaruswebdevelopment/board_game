@@ -20,7 +20,7 @@ import type { CanBeUndefType, CanBeVoidType, FnContext, MyFnContextWithMyPlayerI
  * @returns Текущий счёт указанного игрока.
  */
 export const AllCurrentScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
-    let totalScore = CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
+    let totalScore: number = CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
     // TODO Add score for all board and hand coins!!!
     totalScore += CurrentPotentialWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += CurrentPotentialMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });

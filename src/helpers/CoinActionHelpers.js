@@ -2,6 +2,7 @@ import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
 import { AddActionsToStack } from "./StackHelpers";
 /**
@@ -41,11 +42,9 @@ export const UpgradeNextCoinsHrungnir = ({ G, ctx, myPlayerID, ...rest }, coinId
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     for (let j = coinId; j < 5; j++) {
+        AssertPlayerCoinId(j);
         // TODO Check for Local and Multiplayer games!
         const privateBoardCoin = privatePlayer.boardCoins[j];
-        if (privateBoardCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-        }
         // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
         if (G.mode === GameModeNames.Multiplayer) {
             // TODO Check if player has coins in hands to continue upgrade!?

@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { IsValkyryCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
-import { CardTypeRusNames, CommonBuffNames, ErrorNames, SuitNames, ValkyryBuffNames, ValkyryNames } from "../typescript/enums";
+import { CardTypeRusNames, CommonBuffNames, ErrorNames, ValkyryBuffNames, ValkyryNames } from "../typescript/enums";
 import { CheckPlayerHasBuff, GetBuffValue } from "./BuffHelpers";
 /**
  * <h3>Проверяет выполнение условия свойства валькирии Olrun.</h3>

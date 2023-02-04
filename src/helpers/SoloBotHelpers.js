@@ -1,4 +1,5 @@
 import { ThrowMyError } from "../Error";
+import { AssertPlayerCoinId, AssertPlayerTavernCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
 /**
@@ -8,11 +9,12 @@ import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
  * <li>Происходит при необходимости обмена минимальной видимой монеты соло ботом.</li>
  * </ol>
  *
+ * @param context
  * @param coins Все видимые монеты соло бота.
  * @param minValue Минимальное видимое значение монеты соло бота.
  * @returns Id минимальной видимой монеты соло бота.
  */
-export const CheckMinCoinVisibleIndexForSoloBot = (coins, minValue) => GetMinCoinVisibleIndex(coins, minValue);
+export const CheckMinCoinVisibleIndexForSoloBot = ({ G, ctx, myPlayerID, ...rest }, coins, minValue) => GetMinCoinVisibleIndex({ G, ctx, myPlayerID, ...rest }, coins, minValue);
 /**
  * <h3>Определяет минимальную монету соло бота Андвари.</h3>
  * <p>Применения:</p>
@@ -20,11 +22,12 @@ export const CheckMinCoinVisibleIndexForSoloBot = (coins, minValue) => GetMinCoi
  * <li>Происходит при необходимости обмена минимальной монеты соло ботом Андвари.</li>
  * </ol>
  *
+ * @param context
  * @param coins Все монеты соло бота Андвари.
  * @param minValue Минимальное значение монеты соло бота Андвари.
  * @returns Id минимальной монеты соло бота Андвари.
  */
-export const CheckMinCoinIndexForSoloBotAndvari = (coins, minValue) => GetMinCoinVisibleIndex(coins, minValue);
+export const CheckMinCoinIndexForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }, coins, minValue) => GetMinCoinVisibleIndex({ G, ctx, myPlayerID, ...rest }, coins, minValue);
 /**
  * <h3>Определяет значение минимальной видимой монеты соло бота.</h3>
  * <p>Применения:</p>
@@ -60,9 +63,6 @@ export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest
                 _exhaustiveCheck = type;
                 throw new Error(`Не существует такого типа монеты.`);
                 return _exhaustiveCheck;
-        }
-        if (coin === undefined) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} отсутствует монета с id '${currentMoveArgument.coinId}'.`);
         }
         if (coin === null) {
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может не быть монеты с id '${currentMoveArgument.coinId}'.`);
@@ -106,7 +106,7 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, 
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' на столе не может не быть монеты с id '${currentMoveArgument.coinId}'.`);
         }
         if (!IsCoin(coin)) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' $на столе не может быть закрытой для него монета с id '${currentMoveArgument.coinId}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' на столе не может быть закрытой для него монета с id '${currentMoveArgument.coinId}'.`);
         }
         if (minValue === 0 || coin.value < minValue || (coin.value === minValue && !IsInitialCoin(coin))) {
             minValue = coin.value;
@@ -122,20 +122,25 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, 
  * <li>Происходит при необходимости обмена минимальной видимой монеты соло ботом Андвари.</li>
  * </ol>
  *
+ * @param context
  * @param coins Все видимые монеты соло ботов.
  * @param minValue Минимальное видимое значение монеты соло ботов.
  * @returns Id минимальной видимой монеты соло ботов.
  */
-export const GetMinCoinVisibleIndex = (coins, minValue) => {
-    let coinId = -1;
+export const GetMinCoinVisibleIndex = ({ G, ctx, myPlayerID }, coins, minValue) => {
+    let coinId;
     coins.forEach((coin, index) => {
+        AssertPlayerCoinId(index);
         if (IsCoin(coin)) {
-            if ((coinId === -1 && coin.value === minValue)
-                || (coinId !== -1 && coin.value === minValue && !IsInitialCoin(coin))) {
+            if ((coinId === undefined && coin.value === minValue)
+                || (coinId !== undefined && coin.value === minValue && !IsInitialCoin(coin))) {
                 coinId = index;
             }
         }
     });
+    if (coinId === undefined) {
+        throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' на столе не может не быть монеты с минимальным значением '${minValue}'.`);
+    }
     return coinId;
 };
 /**
@@ -159,10 +164,8 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...r
     }
     const handCoins = privatePlayer.handCoins;
     for (let i = 0; i < handCoins.length; i++) {
+        AssertPlayerCoinId(i);
         const handCoin = handCoins[i];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет соло бота с id '${myPlayerID}' в руке отсутствует монета с id '${i}'.`);
-        }
         if (handCoin === null) {
             throw new Error(`В массиве монет соло бота с id '${myPlayerID}' в руке не может не быть монеты с id '${i}'.`);
         }
@@ -203,22 +206,16 @@ export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = ({ G, 
         throw new Error(`В массиве монет соло бота Андвари с id '1' в руке отсутствует обменная монета.`);
     }
     else if (isTradingCoinIndex > 2) {
-        const tradingCoin = handCoins[isTradingCoinIndex];
-        if (tradingCoin === undefined) {
-            throw new Error(`В массиве монет соло бота Андвари с id '1' в руке отсутствует обменная монета с id '${isTradingCoinIndex}'.`);
-        }
-        const newTradingCoinPositionIndex = Math.floor(Math.random() * 3), tempCoin = handCoins[newTradingCoinPositionIndex];
-        if (tempCoin === undefined) {
-            throw new Error(`В массиве монет соло бота Андвари с id '1' в руке отсутствует монета с id '${newTradingCoinPositionIndex}'.`);
-        }
+        AssertPlayerCoinId(isTradingCoinIndex);
+        const tradingCoin = handCoins[isTradingCoinIndex], newTradingCoinPositionIndex = Math.floor(Math.random() * 3);
+        AssertPlayerTavernCoinId(newTradingCoinPositionIndex);
+        const tempCoin = handCoins[newTradingCoinPositionIndex];
         handCoins[isTradingCoinIndex] = tempCoin;
         handCoins[newTradingCoinPositionIndex] = tradingCoin;
     }
     for (let i = 0; i < handCoins.length; i++) {
+        AssertPlayerCoinId(i);
         const handCoin = handCoins[i];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет соло бота с id '${myPlayerID}' в руке отсутствует монета с id '${i}'.`);
-        }
         if (handCoin === null) {
             throw new Error(`В массиве монет соло бота с id '${myPlayerID}' в руке не может не быть монеты с id '${i}'.`);
         }

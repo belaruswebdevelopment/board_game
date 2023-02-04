@@ -112,8 +112,7 @@ export const CheckSoloBotMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest
             if (moveArgument === undefined) {
                 throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
             }
-            const tavernCard: CanBeUndefType<CanBeNullType<DwarfDeckCardType>> =
-                currentTavern[moveArgument] as CanBeUndefType<CanBeNullType<DwarfDeckCardType>>;
+            const tavernCard: CanBeUndefType<CanBeNullType<DwarfDeckCardType>> = currentTavern[moveArgument];
             if (tavernCard === undefined) {
                 return ThrowMyError({ G, ctx, ...rest },
                     ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined, moveArgument);

@@ -1,4 +1,5 @@
 import { ThrowMyError } from "../Error";
+import { AssertAllPriorityValue } from "../is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
 /**
@@ -13,6 +14,7 @@ import { ErrorNames, LogTypeNames } from "../typescript/enums";
  */
 export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }) => {
     const tempPriorities = Object.values(G.publicPlayers).map((player) => player.priority.value), minPriority = Math.min(...tempPriorities), player = G.publicPlayers[Number(myPlayerID)];
+    AssertAllPriorityValue(minPriority);
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }

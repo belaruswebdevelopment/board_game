@@ -2,8 +2,9 @@ import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, CanBeUndefType, CoinType, MyFnContextWithMyPlayerID, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -19,7 +20,7 @@ import { UpgradeCoinAction } from "./CoinActions";
 export const AddPlusTwoValueToAllCoinsAction: ActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -29,15 +30,10 @@ export const AddPlusTwoValueToAllCoinsAction: ActionFunctionWithoutParams = ({ G
             myPlayerID);
     }
     for (let j = 0; j < 5; j++) {
+        AssertPlayerCoinId(j);
         // TODO Check for Local and Multiplayer games!
-        const privateBoardCoin: CanBeUndefType<CoinType> = privatePlayer.boardCoins[j];
-        if (privateBoardCoin === undefined) {
-            throw new Error(`В массиве монет приватного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-        }
-        let publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[j];
-        if (publicBoardCoin === undefined) {
-            throw new Error(`В массиве монет публичного игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-        }
+        const privateBoardCoin: CoinType = privatePlayer.boardCoins[j];
+        let publicBoardCoin: PublicPlayerCoinType = player.boardCoins[j];
         // TODO Check `if (G.mode === GameModeNames.Multiplayer) {`
         if (G.mode === GameModeNames.Multiplayer) {
             if (privateBoardCoin !== null) {

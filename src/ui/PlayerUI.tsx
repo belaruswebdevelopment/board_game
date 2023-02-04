@@ -2,13 +2,14 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { AssertPlayerCoinId, AssertTavernConfigIndex, AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
-import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HeroCard, IndexOf, MoveArgumentsType, MoveCardsArguments, MoveCoinsArguments, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, Player, PlayerBoardCardType, PublicPlayer, PublicPlayerCoinType, Stack, SuitPropertyType, TavernInConfig, TavernsConfigType, VariantType } from "../typescript/interfaces";
+import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HeroCard, MoveArgumentsType, MoveCardsArguments, MoveCoinsArguments, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, PlayerBoardCardType, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, SuitPropertyType, TavernInConfig, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -74,8 +75,9 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 p);
         }
-        const stack: CanBeUndefType<Stack> = player.stack[0];
+        const stack: CanBeUndefType<PlayerStack> = player.stack[0];
         let suitTop: SuitNames;
+        // TODO Draw player has distinction card after troop evaluation!
         // TODO Draw Giant Capture token on suit if needed!
         for (suitTop in suitsConfig) {
             if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer))
@@ -574,7 +576,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                 break;
         }
         const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[p],
-            privatePlayer: CanBeUndefType<Player> = G.players[p];
+            privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[p];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 p);
@@ -587,11 +589,12 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
             for (let t = 0; t < G.tavernsNum; t++) {
                 if (data !== undefined) {
                     if (i === 0) {
-                        const currentTavernConfig: CanBeUndefType<TavernInConfig> =
-                            tavernsConfig[t as IndexOf<TavernsConfigType>];
+                        AssertTavernConfigIndex(t);
+                        const currentTavernConfig: CanBeUndefType<TavernInConfig> = tavernsConfig[t];
+                        AssertTavernIndex(t);
                         playerHeaders.push(
                             <th key={`Tavern ${currentTavernConfig.name}`}>
-                                <span style={ALlStyles.Tavern(t as IndexOf<TavernsConfigType>)}
+                                <span style={ALlStyles.Tavern(t)}
                                     className="bg-tavern-icon"></span>
                             </th>
                         );
@@ -622,12 +625,10 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                     }
                 }
                 if (i === 0 || (i === 1 && t !== G.tavernsNum - 1)) {
-                    const id: number = t + G.tavernsNum * i,
-                        publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[id],
+                    const id: number = (t + G.tavernsNum * i);
+                    AssertPlayerCoinId(id);
+                    const publicBoardCoin: PublicPlayerCoinType = player.boardCoins[id],
                         privateBoardCoin: CanBeUndefType<PublicPlayerCoinType> = privatePlayer?.boardCoins[id];
-                    if (publicBoardCoin === undefined) {
-                        throw new Error(`В массиве монет игрока на столе отсутствует монета с id '${id}'.`);
-                    }
                     if (publicBoardCoin !== null) {
                         if (ctx.phase === PhaseNames.Bids && Number(ctx.currentPlayer) === p
                             && ((G.mode === GameModeNames.Multiplayer && privateBoardCoin !== undefined)
@@ -906,7 +907,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }: FnContext,
                 break;
         }
         const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[p],
-            privatePlayer: CanBeUndefType<Player> = G.players[p],
+            privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[p],
             playerCells: JSX.Element[] = [];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -914,11 +915,9 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }: FnContext,
         }
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < 5; j++) {
-                const publicHandCoin: CanBeUndefType<PublicPlayerCoinType> = player.handCoins[j],
+                AssertPlayerCoinId(j);
+                const publicHandCoin: PublicPlayerCoinType = player.handCoins[j],
                     privateHandCoin: CanBeUndefType<CoinType> = privatePlayer?.handCoins[j];
-                if (publicHandCoin === undefined) {
-                    throw new Error(`В массиве монет игрока в руке отсутствует монета с id '${j}'.`);
-                }
                 if ((G.mode === GameModeNames.Multiplayer && privateHandCoin !== undefined
                     && IsCoin(privateHandCoin))
                     || (((G.mode === GameModeNames.Basic && Number(ctx.currentPlayer) === p)

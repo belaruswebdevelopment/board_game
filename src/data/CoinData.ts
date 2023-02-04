@@ -1,4 +1,4 @@
-import type { InitialTradingCoinConfigType, NumberPlayersValues, RoyalCoinConfig } from "../typescript/interfaces";
+import type { AllInitialTradingCoinConfig, AllRoyalCoinConfig, NumberPlayersValues } from "../typescript/interfaces";
 
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
@@ -7,7 +7,7 @@ import type { InitialTradingCoinConfigType, NumberPlayersValues, RoyalCoinConfig
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
  */
-export const initialCoinsConfig: InitialTradingCoinConfigType[] = [
+export const initialCoinsConfig: AllInitialTradingCoinConfig = [
     {
         value: 0,
     },
@@ -32,7 +32,7 @@ export const initialCoinsConfig: InitialTradingCoinConfigType[] = [
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
  */
-export const royalCoinsConfig: RoyalCoinConfig[] = [
+export const royalCoinsConfig: AllRoyalCoinConfig = [
     {
         value: 5,
         count: (): NumberPlayersValues => ({

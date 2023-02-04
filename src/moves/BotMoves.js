@@ -1,8 +1,9 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames } from "../typescript/enums";
 // TODO Rework Move to local interface!
 // TODO Add Bot place all coins for human player opened in solo game
@@ -49,10 +50,8 @@ export const BotsPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrder)
                 return IsCoin(coin);
             });
         if (coinId !== -1) {
+            AssertPlayerCoinId(coinId);
             const handCoin = handCoins[coinId];
-            if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${playerID}' в руке отсутствует монета с id '${coinId}'.`);
-            }
             if (handCoin !== null && !IsCoin(handCoin)) {
                 throw new Error(`В массиве монет игрока с id '${playerID}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
             }

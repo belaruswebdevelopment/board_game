@@ -3,9 +3,10 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
+import { AssertCampIndex, AssertHeroesForSoloGameIndex, AssertTavernConfigIndex, AssertTavernIndex, AssertTierIndex, AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
-import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardArray, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, HeroesForSoloGameArrayType, IndexOf, MoveArgumentsType, MoveValidatorNamesTypes, NumberValues, PublicPlayer, RoyalCoin, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TavernsConfigType, TierType, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MoveArgumentsType, MoveValidatorNamesTypes, NumberValues, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -28,7 +29,8 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
-            const campCard: CampCardType = G.camp[j as IndexOf<CampCardArray>];
+            AssertCampIndex(j);
+            const campCard: CampCardType = G.camp[j];
             if (campCard === null) {
                 if (data !== undefined) {
                     boardCells.push(
@@ -86,8 +88,10 @@ export const DrawCamp = ({ G, ctx, ...rest }: FnContext, validatorName: CanBeNul
         }
     }
     if (data !== undefined) {
+        const currentTier: number = G.campDecksLength.length - G.tierToEnd;
+        AssertTierIndex(currentTier);
         const tier: TierType = G.campDecksLength.length - G.tierToEnd + 1 > G.campDecksLength.length ?
-            1 : G.campDecksLength.length - G.tierToEnd as TierType;
+            1 : currentTier;
         return (
             <table>
                 <caption>
@@ -393,7 +397,8 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
-            const hero: HeroCard = G.heroesForSoloBot[j as IndexOf<HeroesForSoloGameArrayType>];
+            AssertHeroesForSoloGameIndex(j);
+            const hero: HeroCard = G.heroesForSoloBot[j];
             if (hero.active && Number(ctx.currentPlayer) === 1
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
                 SoloBotCommonStageNames.SoloBotClickHeroCard) {
@@ -592,18 +597,27 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }: FnContext, 
     }
     const playerHeadersGeneral: JSX.Element[] = [],
         playerHeadersReserve: JSX.Element[] = [];
+    if (G.strategyForSoloBotAndvari === null) {
+        throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+    }
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
-        const suit: CanBeUndefType<SuitNames> =
-            G.strategyForSoloBotAndvari.general[i as ZeroOrOneOrTwoType];
+        AssertZeroOrOneOrTwo(i);
+        const suit: CanBeUndefType<CanBeNullType<SuitNames>> = G.strategyForSoloBotAndvari.general[i];
         if (suit === undefined) {
             throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
         }
+        if (suit === null) {
+            throw new Error(`В объекте общих стратегий соло бота Андвари не задана фракция с id '${i}'.`);
+        }
         DrawSuit({ G, ctx, ...rest }, data, playerHeadersGeneral, suit);
     }
-    for (let i = G.soloGameAndvariStrategyVariantLevel; i < 5; i++) {
-        const suit: CanBeUndefType<SuitNames> = G.strategyForSoloBotAndvari.reserve[i];
+    for (let i: SoloGameAndvariStrategyVariantLevelType = G.soloGameAndvariStrategyVariantLevel; i < 5; i++) {
+        const suit: CanBeUndefType<CanBeNullType<SuitNames>> = G.strategyForSoloBotAndvari.reserve[i];
         if (suit === undefined) {
             throw new Error(`В объекте резервных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        if (suit === null) {
+            throw new Error(`В объекте резервных стратегий соло бота Андвари не задана фракция с id '${i}'.`);
         }
         DrawSuit({ G, ctx, ...rest }, data, playerHeadersReserve, suit);
     }
@@ -641,11 +655,13 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let t = 0; t < G.tavernsNum; t++) {
-        const currentTavernConfig: TavernInConfig = tavernsConfig[t as IndexOf<TavernsConfigType>];
+        AssertTavernConfigIndex(t);
+        const currentTavernConfig: TavernInConfig = tavernsConfig[t];
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
-                const tavern: TavernAllCardType = G.taverns[t as IndexOf<TavernsConfigType>],
+                AssertTavernIndex(t);
+                const tavern: TavernAllCardType = G.taverns[t],
                     tavernCard: CanBeUndefType<TavernCardType> = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
@@ -654,7 +670,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
                     if (data !== undefined) {
                         boardCells.push(
                             <td key={`${currentTavernConfig.name} ${j}`}>
-                                <span style={ALlStyles.Tavern(t as IndexOf<TavernsConfigType>)}
+                                <span style={ALlStyles.Tavern(t)}
                                     className="bg-tavern-icon"></span>
                             </td>
                         );
@@ -746,7 +762,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
                     <table className={`${gridClass} justify-self-center`}
                         key={`Tavern ${currentTavernConfig.name} board`}>
                         <caption className="whitespace-nowrap">
-                            <span style={ALlStyles.Tavern(t as IndexOf<TavernsConfigType>)}
+                            <span style={ALlStyles.Tavern(t)}
                                 className="bg-top-tavern-icon"></span>
                             <b>{currentTavernConfig.name}</b>
                         </caption>

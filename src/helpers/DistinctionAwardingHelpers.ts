@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, DistinctionAwardingFunction, MyFnContextWithMyPlayerID, Player, PublicPlayer, SpecialCard, SpecialTriggerTradingCoin } from "../typescript/interfaces";
+import type { CanBeUndefType, DistinctionAwardingFunction, MyFnContextWithMyPlayerID, PlayerCoinIdType, PrivatePlayer, PublicPlayer, SpecialCard, SpecialTriggerTradingCoin } from "../typescript/interfaces";
 import { AddAnyCardToPlayerActions } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -88,7 +88,7 @@ export const HunterDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx,
     number => {
     if (G.tierToEnd !== 0) {
         const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-            privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+            privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                 myPlayerID);
@@ -97,7 +97,7 @@ export const HunterDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx,
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
                 myPlayerID);
         }
-        const [type, tradingCoinIndex]: [CoinTypeNames, number] =
+        const [type, tradingCoinIndex]: [CoinTypeNames, PlayerCoinIdType] =
             DiscardTradingCoin({ G, ctx, myPlayerID, ...rest }),
             coin: SpecialTriggerTradingCoin = CreateSpecialTriggerTradingCoin({
                 isOpened: true,

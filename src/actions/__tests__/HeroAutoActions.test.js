@@ -13,7 +13,7 @@ describe(`Test AddPickHeroAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        AddPickHeroAction({ G, ctx }, 1);
+        AddPickHeroAction({ G, ctx, myPlayerID: `0` }, 1);
         expect(G).toEqual({
             publicPlayers: {
                 0: {
@@ -62,7 +62,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        GetClosedCoinIntoPlayerHandAction({ G, ctx });
+        GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` });
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             players: {
@@ -122,7 +122,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        GetClosedCoinIntoPlayerHandAction({ G, ctx });
+        GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -196,7 +196,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        GetClosedCoinIntoPlayerHandAction({ G, ctx });
+        GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` });
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             players: {
@@ -235,5 +235,5 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
         });
     });
 });
-// TODO Add tests for UpgradeMinCoinAction
+// TODO Add tests for UpgradeMinCoinAction & all others!
 //# sourceMappingURL=HeroAutoActions.test.js.map

@@ -1,11 +1,12 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
+import { IsValidMove } from "../MoveValidator";
+import { AllStackData } from "../data/StackData";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { IsValidMove } from "../MoveValidator";
-import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeStageNames, ErrorNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
+import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeStageNames, ErrorNames } from "../typescript/enums";
 // TODO Move all playerID === `0` to validate!
+// TODO level: SoloGameAndvariStrategyNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
  * <p>Применения:</p>
@@ -24,6 +25,7 @@ export const ChooseStrategyForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest
     }
     G.soloGameAndvariStrategyLevel = level;
 };
+// TODO level: SoloGameAndvariStrategyVariantLevelType => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор варианта уровня сложности в режиме соло игры.</h3>
  * <p>Применения:</p>
@@ -43,6 +45,7 @@ export const ChooseStrategyVariantForSoloModeAndvariMove = ({ G, ctx, playerID, 
     G.soloGameAndvariStrategyVariantLevel = level;
     AddActionsToStack({ G, ctx, myPlayerID: playerID, ...rest }, [AllStackData.chooseStrategyLevelForSoloModeAndvari()]);
 };
+// TODO level: SoloGameDifficultyLevelArgType => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
  * <p>Применения:</p>

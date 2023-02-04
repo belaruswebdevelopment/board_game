@@ -1,18 +1,20 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { ThrowMyError } from "../Error";
+import { IsValidMove } from "../MoveValidator";
 import { UpgradeCoinAction } from "../actions/CoinActions";
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { AddPlusTwoValueToAllCoinsAction } from "../actions/MythologicalCreatureActions";
 import { AllStackData } from "../data/StackData";
-import { ThrowMyError } from "../Error";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddAnyCardToPlayerActions } from "../helpers/CardHelpers";
 import { UpgradeNextCoinsHrungnir } from "../helpers/CoinActionHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
-import { IsValidMove } from "../MoveValidator";
 import { ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonBuffNames, ErrorNames, GiantBuffNames, GodBuffNames, GodNames, SuitMoveNames, SuitNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, DwarfCard, InvalidMoveType, Move, MyFnContext, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, PublicPlayer, Stack, StackCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, DwarfCard, InvalidMoveType, Move, MyFnContext, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, PlayerCoinIdType, PlayerStack, PublicPlayer, StackCardType } from "../typescript/interfaces";
 
+// TODO godName: GodNames => string and asserts it value if no other strings can be valid in moves!?
 export const ActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, godName: GodNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
@@ -52,6 +54,7 @@ export const ActivateGodAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
     DeleteBuffFromPlayer({ G, ctx, myPlayerID: playerID, ...rest }, buffName);
 };
 
+// TODO godName: GodNames => string and asserts it value if no other strings can be valid in moves!?
 export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...rest }: MyFnContext, godName: GodNames):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, events, ...rest },
@@ -65,10 +68,10 @@ export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...r
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
-        return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
-            playerID);
+        return ThrowMyError({ G, ctx, events, ...rest },
+            ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, playerID);
     }
     const stackCard: CanBeUndefType<StackCardType> = stack.card;
     if (stackCard !== undefined && stackCard.type === CardTypeRusNames.MercenaryCard) {
@@ -116,6 +119,7 @@ export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...r
  */
 export const ChooseCoinValueForHrungnirUpgradeMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     coinId: number): CanBeVoidType<InvalidMoveType> => {
+    AssertPlayerCoinId(coinId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionStageNames.ChooseCoinValueForHrungnirUpgrade,
         CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove, coinId);
@@ -127,22 +131,25 @@ export const ChooseCoinValueForHrungnirUpgradeMove: Move = ({ G, ctx, playerID, 
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    let nextCoinId: CanBeUndefType<number> = stack.coinId;
+    let nextCoinId: CanBeUndefType<PlayerCoinIdType> = stack.coinId;
     if (nextCoinId === undefined) {
         throw new Error(`В стеке отсутствует 'coinId'.`);
     }
     UpgradeCoinAction({ G, ctx, myPlayerID: playerID, ...rest }, false, 2, coinId,
         CoinTypeNames.Hand);
     if (nextCoinId < 4) {
-        UpgradeNextCoinsHrungnir({ G, ctx, myPlayerID: playerID, ...rest }, nextCoinId++);
+        nextCoinId++;
+        AssertPlayerCoinId(nextCoinId);
+        UpgradeNextCoinsHrungnir({ G, ctx, myPlayerID: playerID, ...rest }, nextCoinId);
     }
 };
 
+// TODO card: DwarfCard => ?? and asserts it value if no other cards can be valid in moves!?
 /**
  * <h3>Выбор карты дворфа, а не активации способности конкретного Гиганта.</h3>
  * <p>Применения:</p>
@@ -167,7 +174,7 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -233,6 +240,7 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, ...rest }, card);
 };
 
+// TODO card: DwarfCard => ?? and asserts it value if no other cards can be valid in moves!?
 /**
  * <h3>Выбор активации способности конкретного Гиганта.</h3>
  * <p>Применения:</p>
@@ -257,7 +265,7 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             playerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             playerID);
@@ -330,6 +338,7 @@ export const ClickGiantAbilityNotCardMove: Move = ({ G, ctx, playerID, ...rest }
     DeleteBuffFromPlayer({ G, ctx, myPlayerID: playerID, ...rest }, buffName);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор фракции карты Olrun.</h3>
  * <p>Применения:</p>

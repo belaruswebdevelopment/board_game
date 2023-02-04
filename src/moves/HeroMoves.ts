@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
+import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
@@ -25,6 +25,7 @@ export const ClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnConte
     AddHeroToPlayerCardsAction({ G, ctx, myPlayerID: playerID, ...rest }, heroId);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>
  * <p>Применения:</p>
@@ -50,6 +51,7 @@ export const DiscardTopCardFromSuitMove: Move = ({ G, ctx, playerID, ...rest }: 
     DiscardCardsFromPlayerBoardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit, cardId);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя или зависимых карт героя на поле игрока.</h3>
  * <p>Применения:</p>
@@ -71,6 +73,7 @@ export const PlaceMultiSuitCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
     PlaceMultiSuitCardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на поле игрока.</h3>
  * <p>Применения:</p>
@@ -92,6 +95,7 @@ export const PlaceThrudHeroMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
     PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
 
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на поле игрока.</h3>
  * <p>Применения:</p>

@@ -1,4 +1,5 @@
 import { initialCoinsConfig, royalCoinsConfig } from "./data/CoinData";
+import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins } from "./is_helpers/AssertionTypeHelpers";
 import { CoinRusNames } from "./typescript/enums";
 /**
  * <h3>Создание всех базовых монет игрока.</h3>
@@ -10,26 +11,25 @@ import { CoinRusNames } from "./typescript/enums";
  * @returns Массив всех базовых монет.
  */
 export const BuildInitialCoins = () => {
-    const coins = [];
+    const initialCoins = [];
     for (let i = 0; i < initialCoinsConfig.length; i++) {
+        AssertAllInitialTradingCoinConfigIndex(i);
         const config = initialCoinsConfig[i];
-        if (config === undefined) {
-            throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
-        }
         for (let c = 0; c < 1; c++) {
             if (config.value === 0) {
-                coins.push(CreateInitialTradingCoin({
+                initialCoins.push(CreateInitialTradingCoin({
                     value: config.value,
                 }));
             }
             else {
-                coins.push(CreateInitialNotTradingCoin({
+                initialCoins.push(CreateInitialNotTradingCoin({
                     value: config.value,
                 }));
             }
         }
     }
-    return coins;
+    AssertInitialCoins(initialCoins);
+    return initialCoins;
 };
 /**
  * <h3>Создание всех королевских монет рынка.</h3>
@@ -44,11 +44,8 @@ export const BuildInitialCoins = () => {
 export const BuildRoyalCoins = (options) => {
     const coins = [];
     for (let i = 0; i < royalCoinsConfig.length; i++) {
-        const config = royalCoinsConfig[i];
-        if (config === undefined) {
-            throw new Error(`В массиве конфига монет отсутствует монета с id '${i}'.`);
-        }
-        const count = config.count()[options.players];
+        AssertAllRoyalCoinConfigIndex(i);
+        const config = royalCoinsConfig[i], count = config.count()[options.players];
         if (options.players !== undefined && options.count !== undefined) {
             options.count.push({
                 value: config.value,

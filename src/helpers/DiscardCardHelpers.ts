@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { CardTypeRusNames, ErrorNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { AllDiscardCardType, CampCardType, CampDeckCardType, CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernAllCardType, TavernCardType, TavernCardWithExpansionType } from "../typescript/interfaces";
+import type { AllDiscardCardType, CampCardType, CampDeckCardType, CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernAllCardType, TavernCardIdType, TavernCardType, TavernCardWithExpansionType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с убиранием фракционной карты со стола игрока.</h3>
@@ -41,7 +41,7 @@ export const RemoveCardFromPlayerBoardSuitCards = ({ G, ctx, myPlayerID, ...rest
  * @param tavernCardId Id убираемой из таверны карты.
  * @returns Убранная из таверны карта.
  */
-export const RemoveCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardId: number):
+export const RemoveCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardId: TavernCardIdType):
     TavernCardWithExpansionType => {
     const currentTavern: TavernAllCardType = G.taverns[G.currentTavern],
         removedTavernCard: CanBeUndefType<TavernCardType> = currentTavern[tavernCardId];

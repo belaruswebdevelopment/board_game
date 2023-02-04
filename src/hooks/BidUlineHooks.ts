@@ -1,9 +1,10 @@
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
-import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, FnContext, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -34,12 +35,11 @@ export const CheckEndBidUlinePhase = ({ G, ctx, ...rest }: FnContext): CanBeVoid
                     ulinePlayerIndex);
             }
             if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-                const boardCoin: CanBeUndefType<PublicPlayerCoinType> = ulinePlayer.boardCoins[G.currentTavern + 1];
-                if (boardCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${G.currentTavern + 1}' для выкладки при наличии героя '${HeroNames.Uline}'.`);
-                }
+                const coinId: number = G.currentTavern + 1;
+                AssertPlayerCoinId(coinId);
+                const boardCoin: PublicPlayerCoinType = ulinePlayer.boardCoins[coinId];
                 if (boardCoin !== null && !IsCoin(boardCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрыта монета с id '${G.currentTavern + 1}'.`);
+                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрыта монета с id '${coinId}'.`);
                 }
                 return IsCoin(boardCoin);
             }

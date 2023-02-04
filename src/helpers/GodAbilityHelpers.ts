@@ -1,13 +1,13 @@
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, GodBuffNames, GodNames } from "../typescript/enums";
-import type { CanBeUndefType, MyFnContextWithMyPlayerID, PublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, DwarfDeckCardType, MyFnContextWithMyPlayerID, PublicPlayer } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { IsLastRound } from "./RoundHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 
 export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    godName: GodNames): boolean => {
+    godName: GodNames, pickedCard?: DwarfDeckCardType): boolean => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -53,7 +53,8 @@ export const CheckIsStartUseGodAbility = ({ G, ctx, myPlayerID, ...rest }: MyFnC
             return _exhaustiveCheck;
     }
     if (isStart) {
-        AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.activateGodAbilityOrNot(godName)]);
+        AddActionsToStack({ G, ctx, myPlayerID, ...rest },
+            [AllStackData.activateGodAbilityOrNot(godName, pickedCard)]);
     }
     return isStart;
 };

@@ -1,4 +1,5 @@
 import { ThrowMyError } from "../Error";
+import { AssertAllPriorityValue } from "../is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ErrorNames, LogTypeNames } from "../typescript/enums";
 import type { AllPriorityValueType, CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, Priority, PublicPlayer } from "../typescript/interfaces";
@@ -17,8 +18,9 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
     const tempPriorities: AllPriorityValueType[] =
         Object.values(G.publicPlayers).map((player: PublicPlayer): AllPriorityValueType =>
             player.priority.value),
-        minPriority: AllPriorityValueType = Math.min(...tempPriorities) as AllPriorityValueType,
+        minPriority: number = Math.min(...tempPriorities),
         player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    AssertAllPriorityValue(minPriority);
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);

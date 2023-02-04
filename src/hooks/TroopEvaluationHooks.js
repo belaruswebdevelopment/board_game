@@ -5,6 +5,7 @@ import { RefillCamp } from "../helpers/CampHelpers";
 import { GetCardsFromSecretDwarfDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
 /**
@@ -123,6 +124,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
             }
             explorerDistinctionCards.push(card);
         }
+        AssertExplorerDistinctionCards(explorerDistinctionCards);
         G.explorerDistinctionCards = explorerDistinctionCards;
     }
 };

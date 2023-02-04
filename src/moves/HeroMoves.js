@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { IsValidMove } from "../MoveValidator";
-import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
+import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
+import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, PlaceYludDefaultStageNames } from "../typescript/enums";
 /**
  * <h3>Выбор героя.</h3>
  * <p>Применения:</p>
@@ -20,6 +20,7 @@ export const ClickHeroCardMove = ({ G, ctx, playerID, ...rest }, heroId) => {
     }
     AddHeroToPlayerCardsAction({ G, ctx, myPlayerID: playerID, ...rest }, heroId);
 };
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>
  * <p>Применения:</p>
@@ -42,6 +43,7 @@ export const DiscardTopCardFromSuitMove = ({ G, ctx, playerID, ...rest }, suit, 
     }
     DiscardCardsFromPlayerBoardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit, cardId);
 };
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя или зависимых карт героя на поле игрока.</h3>
  * <p>Применения:</p>
@@ -60,6 +62,7 @@ export const PlaceMultiSuitCardMove = ({ G, ctx, playerID, ...rest }, suit) => {
     }
     PlaceMultiSuitCardAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на поле игрока.</h3>
  * <p>Применения:</p>
@@ -78,6 +81,7 @@ export const PlaceThrudHeroMove = ({ G, ctx, playerID, ...rest }, suit) => {
     }
     PlaceThrudAction({ G, ctx, myPlayerID: playerID, ...rest }, suit);
 };
+// TODO suit: SuitNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Расположение героя на поле игрока.</h3>
  * <p>Применения:</p>

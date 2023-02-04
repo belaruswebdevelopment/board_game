@@ -63,15 +63,14 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const StartOrEndActions = ({ G, ctx, myPlayerID, ...rest }) => {
-    var _a, _b, _c, _d;
+    var _a, _b;
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(myPlayerID)]) !== undefined) {
         player.stack.shift();
-        if ((((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.priority) === undefined)
-            || (((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.priority) !== undefined && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.priority) > 1)) {
+        if (((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.priority) !== 1) {
             CheckPickHero({ G, ctx, myPlayerID, ...rest });
         }
         DrawCurrentProfit({ G, ctx, myPlayerID, ...rest });

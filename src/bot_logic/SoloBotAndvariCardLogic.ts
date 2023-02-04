@@ -1,8 +1,9 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
+import { AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { CardTypeRusNames, ErrorNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, ZeroOrOneOrTwoType } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>
@@ -69,8 +70,7 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
             if (moveArgument === undefined) {
                 throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
             }
-            const tavernCard: CanBeUndefType<CanBeNullType<DwarfDeckCardType>> =
-                currentTavern[moveArgument] as CanBeUndefType<CanBeNullType<DwarfDeckCardType>>;
+            const tavernCard: CanBeUndefType<CanBeNullType<DwarfDeckCardType>> = currentTavern[moveArgument];
             if (tavernCard === undefined) {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined,
                     moveArgument);
@@ -109,7 +109,8 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
  */
 const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): number => {
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] = G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
+        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
     let maxValue = 0,
         index = 0;
     for (let i = 0; i < moveArguments.length; i++) {
@@ -213,10 +214,16 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myP
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
-        const suit: CanBeUndefType<SuitNames> =
-            G.strategyForSoloBotAndvari.general[i as ZeroOrOneOrTwoType];
+        AssertZeroOrOneOrTwo(i);
+        if (G.strategyForSoloBotAndvari === null) {
+            throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+        }
+        const suit: CanBeUndefType<CanBeNullType<SuitNames>> = G.strategyForSoloBotAndvari.general[i];
         if (suit === undefined) {
-            throw new Error(`В массиве главных стратегий отсутствует фракция с id '${i}'.`);
+            throw new Error(`В объекте главных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        if (suit === null) {
+            throw new Error(`В объекте главных стратегий соло бота Андвари не задана фракция с id '${i}'.`);
         }
         const strategyArguments: MoveArgumentsType<number[]> =
             CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);
@@ -247,9 +254,15 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, myPlayerID, ...
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
     for (let i = G.soloGameAndvariStrategyVariantLevel; i < 5; i++) {
-        const suit: CanBeUndefType<SuitNames> = G.strategyForSoloBotAndvari.reserve[i];
+        if (G.strategyForSoloBotAndvari === null) {
+            throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+        }
+        const suit: CanBeUndefType<CanBeNullType<SuitNames>> = G.strategyForSoloBotAndvari.reserve[i];
         if (suit === undefined) {
-            throw new Error(`В массиве резервных стратегий отсутствует фракция с id '${i}'.`);
+            throw new Error(`В объекте резервных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        if (suit === null) {
+            throw new Error(`В объекте резервных стратегий соло бота Андвари не задана фракция с id '${i}'.`);
         }
         const strategyArguments: MoveArgumentsType<number[]> =
             CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);

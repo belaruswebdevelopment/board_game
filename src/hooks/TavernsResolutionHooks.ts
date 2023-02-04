@@ -10,12 +10,13 @@ import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { IsLastRound } from "../helpers/RoundHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
+import { AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IndexOf, MythologicalCreatureCardType, Player, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins, SecretAllDwarfDecks, SecretDwarfDeckType, TavernInConfig } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, FnContext, IndexOf, MythologicalCreatureCardType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins, SecretAllDwarfDecks, SecretDwarfDeckType, TavernInConfig } from "../typescript/interfaces";
 import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastActions } from "./NextPhaseHooks";
 
 /**
@@ -56,7 +57,7 @@ const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }: FnContext): CanBeVoidT
  */
 const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnContext): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(ctx.currentPlayer)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -65,16 +66,13 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnCont
         return ThrowMyError({ G, ctx, events, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    let handCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
     }
-    const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[G.currentTavern];
-    if (boardCoin === undefined) {
-        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета на месте текущей таверны с id '${G.currentTavern}'.`);
-    }
+    const boardCoin: PublicPlayerCoinType = player.boardCoins[G.currentTavern];
     if (boardCoin !== null && (!IsCoin(boardCoin) || !boardCoin.isOpened)) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета на месте текущей таверны с id '${G.currentTavern}'.`);
     }
@@ -188,8 +186,9 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }: FnContext): voi
         StartTrading({ G, ctx, myPlayerID: `1`, ...rest }, true);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
-    const currentDeck: SecretDwarfDeckType =
-        G.secret.decks[(G.secret.decks.length - G.tierToEnd) as IndexOf<SecretAllDwarfDecks>];
+    const currentTier: number = G.secret.decks.length - G.tierToEnd;
+    AssertSecretAllDwarfDecksIndex(currentTier);
+    const currentDeck: SecretDwarfDeckType = G.secret.decks[currentTier];
     if (G.tavernsNum - 1 === G.currentTavern && currentDeck.length === 0) {
         G.tierToEnd--;
     }

@@ -5,10 +5,11 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, Player, PublicPlayer, PublicPlayerCoinType, Stack, StageArg } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, Stack, StageArg } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
@@ -103,7 +104,7 @@ export const StartDiscardSuitCardAction: ActionFunctionWithoutParams = ({ G, ctx
 export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
-        privatePlayer: CanBeUndefType<Player> = G.players[Number(myPlayerID)];
+        privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -112,12 +113,13 @@ export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, 
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let handCoins: PublicPlayerCoinType[];
+    let handCoins: PlayerHandCoinsType;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
     }
+    let isStart = true;
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
         const noCoinsOnPouchNumber: number =
             player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
@@ -127,23 +129,20 @@ export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, 
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
                 AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.addCoinToPouch()]);
             }
-        } else {
+            isStart = false;
+        } else if (noCoinsOnPouchNumber !== 0 && handCoinsNumber < noCoinsOnPouchNumber) {
             throw new Error(`При наличии бафа '${HeroBuffNames.EveryTurn}' всегда должно быть столько действий добавления монет в кошель, сколько ячеек для монет в кошеле пустые.`);
         }
-    } else {
+    }
+    if (isStart) {
         let coinsValue = 0,
             stack: Stack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
-            let boardCoin: CanBeUndefType<PublicPlayerCoinType>;
+            AssertPlayerCoinId(j);
+            let boardCoin: PublicPlayerCoinType;
             if (G.mode === GameModeNames.Multiplayer) {
                 boardCoin = privatePlayer.boardCoins[j];
-                if (boardCoin === undefined) {
-                    throw new Error(`В массиве приватных монет игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-                }
-                const publicBoardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[j];
-                if (publicBoardCoin === undefined) {
-                    throw new Error(`В массиве публичных монет игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-                }
+                const publicBoardCoin: PublicPlayerCoinType = player.boardCoins[j];
                 if (IsCoin(boardCoin) && publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
                     if (!boardCoin.isOpened) {
                         ChangeIsOpenedCoinStatus(boardCoin, true);
@@ -152,9 +151,6 @@ export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, 
                 }
             } else {
                 boardCoin = player.boardCoins[j];
-                if (boardCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${myPlayerID}' на поле отсутствует монета с id '${j}'.`);
-                }
                 if (boardCoin !== null && !IsCoin(boardCoin)) {
                     throw new Error(`В массиве монет игрока с id '${myPlayerID}' на поле не должна быть закрыта монета в кошеле с id '${j}'.`);
                 }

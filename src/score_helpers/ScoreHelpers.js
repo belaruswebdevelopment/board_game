@@ -1,6 +1,6 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
-import { ErrorNames, HeroNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, HeroNames } from "../typescript/enums";
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
  * <p>Применения:</p>

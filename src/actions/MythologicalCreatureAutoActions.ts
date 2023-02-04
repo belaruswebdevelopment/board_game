@@ -1,4 +1,5 @@
-import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, MythologicalCreatureCardsForGiantSkymirArray, MythologicalCreatureCardType } from "../typescript/interfaces";
+import { AssertMythologicalCreatureCardsForGiantSkymir } from "../is_helpers/AssertionTypeHelpers";
+import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, MythologicalCreatureCardType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением карт Мифических существ для выбора Skymir.</h3>
@@ -24,8 +25,6 @@ export const AddMythologyCreatureCardsSkymirAction: ActionFunctionWithoutParams 
         }
         mythologyCreatureCardsSkymir.push(mythologyCreatureCard);
     }
-    if (mythologyCreatureCardsSkymir.length === 6) {
-        G.mythologicalCreatureDeckForSkymir =
-            mythologyCreatureCardsSkymir as MythologicalCreatureCardsForGiantSkymirArray;
-    }
+    AssertMythologicalCreatureCardsForGiantSkymir(mythologyCreatureCardsSkymir);
+    G.mythologicalCreatureDeckForSkymir = mythologyCreatureCardsSkymir;
 };

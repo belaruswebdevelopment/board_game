@@ -1,6 +1,7 @@
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
-import { CardTypeRusNames, SuitNames } from "./typescript/enums";
+import { AssertMercenariesConfigIndex } from "./is_helpers/AssertionTypeHelpers";
+import { CardTypeRusNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты лагеря конкретной эпохи из конфига.</h3>
  * <p>Применения:</p>
@@ -17,7 +18,7 @@ export const BuildCampCards = (tier) => {
     for (artefactName in artefactsConfig) {
         const artefactData = artefactsConfig[artefactName];
         if (artefactData.tier === tier) {
-            campCards.push(CreateArtefactCampCard({
+            campCards.push(CreateArtefactCard({
                 path: artefactData.name,
                 name: artefactData.name,
                 description: artefactData.description,
@@ -33,6 +34,7 @@ export const BuildCampCards = (tier) => {
     }
     const mercenariesConfigTier = mercenariesConfig[tier];
     for (let i = 0; i < mercenariesConfigTier.length; i++) {
+        AssertMercenariesConfigIndex(i);
         const mercenaryData = mercenariesConfigTier[i];
         let name = ``, path = ``, campMercenarySuit;
         for (campMercenarySuit in mercenaryData) {
@@ -53,7 +55,7 @@ export const BuildCampCards = (tier) => {
                 }
             }
         }
-        campCards.push(CreateMercenaryCampCard({
+        campCards.push(CreateMercenaryCard({
             path: path.trim(),
             name: name.trim(),
             variants: mercenaryData,
@@ -81,7 +83,7 @@ export const BuildCampCards = (tier) => {
  * @param rank Шевроны.
  * @returns Карта артефакта.
  */
-const CreateArtefactCampCard = ({ type = CardTypeRusNames.ArtefactCard, name, path, description, buff, validators, actions, stack, playerSuit = null, points = null, rank = 1, }) => ({
+const CreateArtefactCard = ({ type = CardTypeRusNames.ArtefactCard, name, path, description, buff, validators, actions, stack, playerSuit = null, points = null, rank = 1, }) => ({
     type,
     name,
     path,
@@ -110,7 +112,7 @@ const CreateArtefactCampCard = ({ type = CardTypeRusNames.ArtefactCard, name, pa
  * @param rank Шевроны.
  * @returns Карта артефакта на поле игрока.
  */
-export const CreateArtefactPlayerCampCard = ({ type = CardTypeRusNames.ArtefactPlayerCard, name, path, description, suit, points = null, rank = 1, }) => ({
+export const CreateArtefactPlayerCard = ({ type = CardTypeRusNames.ArtefactPlayerCard, name, path, description, suit, points = null, rank = 1, }) => ({
     type,
     name,
     path,
@@ -135,7 +137,7 @@ export const CreateArtefactPlayerCampCard = ({ type = CardTypeRusNames.ArtefactP
  * @param rank Шевроны.
  * @returns Карта наёмника.
  */
-const CreateMercenaryCampCard = ({ type = CardTypeRusNames.MercenaryCard, name, path, variants, playerSuit = null, points = null, rank = null, }) => ({
+const CreateMercenaryCard = ({ type = CardTypeRusNames.MercenaryCard, name, path, variants, playerSuit = null, points = null, rank = null, }) => ({
     type,
     name,
     path,
@@ -159,7 +161,7 @@ const CreateMercenaryCampCard = ({ type = CardTypeRusNames.MercenaryCard, name, 
  * @param rank Шевроны.
  * @returns Карта наёмника на поле игрока.
  */
-export const CreateMercenaryPlayerCampCard = ({ type = CardTypeRusNames.MercenaryPlayerCard, name, path, suit, points = null, rank = 1, }) => ({
+export const CreateMercenaryPlayerCard = ({ type = CardTypeRusNames.MercenaryPlayerCard, name, path, suit, points = null, rank = 1, }) => ({
     type,
     name,
     path,

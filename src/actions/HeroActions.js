@@ -49,9 +49,10 @@ export const DiscardCardsFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...rest 
     DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${CardTypeRusNames.HeroCard}' '${(_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.name}'.`);
     if (((_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.name) === HeroNames.Dagda && ((_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.pickedSuit) === undefined) {
-        if (!G.expansions.Idavoll.active || (G.expansions.Idavoll.active
-            && (!CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards))
-            || (CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Thor)))) {
+        // TODO Check this logic!
+        if (!(G.expansions.Idavoll.active
+            && ((CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards))
+                || (CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, GodNames.Thor))))) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.discardCardFromBoardDagda(suit)]);
         }
     }

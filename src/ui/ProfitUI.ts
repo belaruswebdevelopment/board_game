@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { IsDwarfCard } from "../is_helpers/IsDwarfTypeHelpers";
 import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ButtonMoveNames, ButtonNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CommonMoveValidatorNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GiantNames, GodNames, SoloGameAndvariStrategyNames, SuitNames, SuitRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames } from "../typescript/enums";
-import type { ActiveStageNames, BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DwarfCard, DwarfDeckCardType, FnContext, HeroCard, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, PublicPlayer, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, Stack, StackCardType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
+import type { ActiveStageNames, BasicVidofnirVedrfolnirUpgradeValueType, BoardProps, CanBeNullType, CanBeUndefType, CanBeVoidType, DwarfCard, DwarfDeckCardType, FnContext, HeroCard, MoveArgumentsType, MoveValidatorNamesTypes, MythologicalCreatureCardType, MythologicalCreatureCommandZoneCardType, PlayerStack, PublicPlayer, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StackCardType, VidofnirVedrfolnirUpgradeValueType } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
 // TODO Add common ProfitFunctionType to all function here with common args and different return type!?
@@ -27,7 +27,7 @@ export const ActivateGiantAbilityOrPickCardProfit = ({ G, ctx, ...rest }: FnCont
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -102,7 +102,7 @@ export const ActivateGodAbilityOrNotProfit = ({ G, ctx, ...rest }: FnContext,
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
@@ -301,7 +301,7 @@ export const ChooseStrategyVariantForSoloModeAndvariProfit = ({ G, ctx, ...rest 
                 ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, j + 1);
         } else if (validatorName ===
             ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyVariantForSoloModeAndvariMoveValidator) {
-            moveMainArgs.push(j + 1);
+            moveMainArgs.push(j);
         } else {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoAddedValidator);
         }
@@ -373,7 +373,7 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit = ({ G, ctx, ...r
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             ctx.currentPlayer);

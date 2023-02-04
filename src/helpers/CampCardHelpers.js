@@ -1,4 +1,4 @@
-import { CreateArtefactPlayerCampCard, CreateMercenaryPlayerCampCard } from "../Camp";
+import { CreateArtefactPlayerCard, CreateMercenaryPlayerCard } from "../Camp";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
@@ -19,7 +19,7 @@ import { AddActionsToStack } from "./StackHelpers";
  */
 export const AddArtefactToPlayerCards = (card) => {
     if (card.playerSuit !== null && card.rank !== null) {
-        return CreateArtefactPlayerCampCard({
+        return CreateArtefactPlayerCard({
             name: card.name,
             path: card.path,
             description: card.description,
@@ -43,7 +43,7 @@ export const AddArtefactToPlayerCards = (card) => {
  */
 export const AddMercenaryToPlayerCards = (card) => {
     if (card.playerSuit !== null && card.rank !== null) {
-        return CreateMercenaryPlayerCampCard({
+        return CreateMercenaryPlayerCard({
             name: card.name,
             path: card.path,
             suit: card.playerSuit,

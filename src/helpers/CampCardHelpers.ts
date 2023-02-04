@@ -1,9 +1,9 @@
-import { CreateArtefactPlayerCampCard, CreateMercenaryPlayerCampCard } from "../Camp";
+import { CreateArtefactPlayerCard, CreateMercenaryPlayerCard } from "../Camp";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CampBuffNames, CardTypeRusNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { AllCampCardType, ArtefactCampCard, ArtefactPlayerCampCard, CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, FnContext, MercenaryCampCard, MercenaryPlayerCampCard, MyFnContextWithMyPlayerID, PublicPlayer, RoyalCoin } from "../typescript/interfaces";
+import type { AllCampCardType, ArtefactCard, ArtefactPlayerCard, CampCreatureCommandZoneCardType, CampDeckCardType, CanBeUndefType, FnContext, MercenaryCard, MercenaryPlayerCard, MyFnContextWithMyPlayerID, PublicPlayer, RoyalCoin } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { RemoveCoinFromMarket } from "./DiscardCoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -19,9 +19,9 @@ import { AddActionsToStack } from "./StackHelpers";
  * @param card Карта.
  * @returns Карта артефакт на поле игрока.
  */
-export const AddArtefactToPlayerCards = (card: ArtefactCampCard): ArtefactPlayerCampCard => {
+export const AddArtefactToPlayerCards = (card: ArtefactCard): ArtefactPlayerCard => {
     if (card.playerSuit !== null && card.rank !== null) {
-        return CreateArtefactPlayerCampCard({
+        return CreateArtefactPlayerCard({
             name: card.name,
             path: card.path,
             description: card.description,
@@ -44,9 +44,9 @@ export const AddArtefactToPlayerCards = (card: ArtefactCampCard): ArtefactPlayer
  * @param card Карта.
  * @returns Карта наёмник на поле игрока.
  */
-export const AddMercenaryToPlayerCards = (card: MercenaryCampCard): MercenaryPlayerCampCard => {
+export const AddMercenaryToPlayerCards = (card: MercenaryCard): MercenaryPlayerCard => {
     if (card.playerSuit !== null && card.rank !== null) {
-        return CreateMercenaryPlayerCampCard({
+        return CreateMercenaryPlayerCard({
             name: card.name,
             path: card.path,
             suit: card.playerSuit,

@@ -21,11 +21,11 @@ export const ThrowMyError = ({ G, ctx }: FnContext, error: ErrorNames, ...errorA
         case ErrorNames.CurrentMoveArgumentIsUndefined:
             throw new Error(`Отсутствует необходимый аргумент мува.`);
         case ErrorNames.CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard:
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта '${CardTypeRusNames.RoyalOfferingCard}' с id  '${errorArgs[0]}'`);
+            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может быть карта '${CardTypeRusNames.RoyalOfferingCard}' с id  '${errorArgs[0]}'.`);
         case ErrorNames.CurrentTavernCardWithCurrentIdIsNull:
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${errorArgs[0]}'`);
+            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${errorArgs[0]}'.`);
         case ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined:
-            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${errorArgs[0]}'`);
+            throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${errorArgs[0]}'.`);
         case ErrorNames.CurrentSuitDistinctionPlayerIndexIsUndefined:
             throw new Error(`Отсутствует игрок с максимальным количеством шевронов в фракции '${errorArgs[0]}'.`);
         case ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern:

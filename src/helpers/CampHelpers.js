@@ -1,3 +1,4 @@
+import { AssertCampIndex, AssertSecretAllCampDecksIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
@@ -16,7 +17,9 @@ import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIf
 * @returns
 */
 const AddCardToCamp = ({ G, ctx, ...rest }, cardId) => {
-    const newCampCard = GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, (G.secret.campDecks.length - G.tierToEnd), 0, 1)[0];
+    const tier = G.secret.campDecks.length - G.tierToEnd;
+    AssertTierIndex(tier);
+    const newCampCard = GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, tier, 0, 1)[0];
     if (newCampCard === undefined) {
         throw new Error(`Отсутствует карта лагеря в колоде карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
     }
@@ -35,6 +38,7 @@ const AddCardToCamp = ({ G, ctx, ...rest }, cardId) => {
 const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }) => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.campNum; i++) {
+        AssertCampIndex(i);
         const campCard = G.camp[i];
         if (campCard !== null) {
             const discardedCard = RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, i, [null]);
@@ -43,11 +47,14 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }) => {
             }
         }
     }
+    const currentTier = G.secret.campDecks.length - G.tierToEnd - 1;
+    AssertSecretAllCampDecksIndex(currentTier);
     // TODO DiscardCardType!?
-    const discardedCardsArray = G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd - 1)];
+    const discardedCardsArray = G.secret.campDecks[currentTier];
     if (discardedCardsArray.length) {
         DiscardAllCurrentCards({ G, ctx, ...rest }, discardedCardsArray);
-        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, (G.secret.campDecks.length - G.tierToEnd - 1), 0);
+        AssertTierIndex(currentTier);
+        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, currentTier, 0);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
 };
@@ -133,7 +140,9 @@ export const RefillEmptyCampCards = ({ G, ctx, ...rest }) => {
             return index;
         }
         return null;
-    }), isEmptyCampCards = emptyCampCards.length === 0, campDeck = G.secret.campDecks[(G.secret.campDecks.length - G.tierToEnd)];
+    }), isEmptyCampCards = emptyCampCards.length === 0, currentTier = G.secret.campDecks.length - G.tierToEnd;
+    AssertSecretAllCampDecksIndex(currentTier);
+    const campDeck = G.secret.campDecks[currentTier];
     let isEmptyCurrentTierCampDeck = campDeck.length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex) => {

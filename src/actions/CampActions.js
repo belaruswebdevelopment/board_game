@@ -5,9 +5,10 @@ import { AddAnyCardToPlayerActions } from "../helpers/CardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards, RemoveCardsFromCampAndAddIfNeeded } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerCoinId, AssertPlayerPouchCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CardTypeRusNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -31,6 +32,7 @@ export const AddCoinToPouchAction = ({ G, ctx, myPlayerID, ...rest }, coinId) =>
     if (tempId === -1) {
         throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}'.`);
     }
+    AssertPlayerCoinId(tempId);
     let handCoins;
     if (G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
@@ -39,9 +41,6 @@ export const AddCoinToPouchAction = ({ G, ctx, myPlayerID, ...rest }, coinId) =>
         handCoins = player.handCoins;
     }
     const handCoin = handCoins[coinId];
-    if (handCoin === undefined) {
-        throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует выбранная монета с id '${coinId}': это должно проверяться в MoveValidator.`);
-    }
     if (handCoin === null) {
         throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может не быть монеты с id '${coinId}'.`);
     }
@@ -79,6 +78,9 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeAction = ({ G, ctx, myPl
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
+    if (stack.coinId !== undefined) {
+        AssertPlayerPouchCoinId(stack.coinId);
+    }
     AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.upgradeCoinVidofnirVedrfolnir(value, stack.coinId, stack.priority === 0 ? undefined : 3)]);
 };
 /**
@@ -111,15 +113,15 @@ export const DiscardSuitCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) =
  * </ol>
  *
  * @param context
- * @param cardId Id выбранной карты.
+ * @param campCardId Id выбранной карты.
  * @returns
  */
-export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) => {
-    const campCard = G.camp[cardId];
+export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }, campCardId) => {
+    const campCard = G.camp[campCardId];
     if (campCard === null) {
-        throw new Error(`Не существует кликнутая карта лагеря с id '${cardId}'.`);
+        throw new Error(`Не существует кликнутая карта лагеря с id '${campCardId}'.`);
     }
-    RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, cardId, [null]);
+    RemoveCardsFromCampAndAddIfNeeded({ G, ctx, ...rest }, campCardId, [null]);
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, campCard);
 };
 /**

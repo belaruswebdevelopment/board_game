@@ -14,7 +14,7 @@ import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from
  * </ol>
  */
 export class GameBoard extends React.Component<BoardProps> {
-    render() {
+    override render() {
         const gridClasses = `col-span-4 justify-self-center`,
             gridColClasses = `h-full flex flex-col justify-evenly`,
             classes = `col-span-3 text-center underline border`,

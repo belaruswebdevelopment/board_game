@@ -52,16 +52,16 @@ export const DiscardAnyCardFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...res
  * </ol>
  *
  * @param context
- * @param cardId Id карты.
+ * @param tavernCardId Id карты.
  * @returns
  */
-export const DiscardCardFromTavernAction = ({ G, ctx, myPlayerID, ...rest }, cardId) => {
+export const DiscardCardFromTavernAction = ({ G, ctx, myPlayerID, ...rest }, tavernCardId) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' должен сбросить в колоду сброса карту из текущей таверны:`);
-    DiscardConcreteCardFromTavern({ G, ctx, ...rest }, cardId);
+    DiscardConcreteCardFromTavern({ G, ctx, ...rest }, tavernCardId);
     if (ctx.numPlayers === 2) {
         G.tavernCardDiscarded2Players = true;
     }
@@ -152,7 +152,7 @@ export const PickDiscardCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) =
     if (card === undefined) {
         throw new Error(`В массиве колоды сброса отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${card.type}' '${card.name}' из колоды сброса.`);
     if (card.type === CardTypeRusNames.DwarfPlayerCard) {
         AddCardToPlayerBoardCards({ G, ctx, myPlayerID, ...rest }, card);
     }
@@ -209,7 +209,7 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (!IsMercenaryCampCard(stack.card)) {
-        throw new Error(`Выбранная карта должна быть типа '${CardTypeRusNames.MercenaryCard}'.`);
+        throw new Error(`Выбранная карта должна быть с типом '${CardTypeRusNames.MercenaryCard}'.`);
     }
     const mercenaryCard = stack.card;
     if (mercenaryCard === undefined) {

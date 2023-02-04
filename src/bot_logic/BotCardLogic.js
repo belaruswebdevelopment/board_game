@@ -2,8 +2,9 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { CardTypeRusNames, ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames } from "../typescript/enums";
 // Check all types in this file!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -34,6 +35,7 @@ export const CompareTavernCards = (card1, card2) => {
     }
     return 0;
 };
+// TODO cardId => tavernCardId(Type)
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -162,10 +164,8 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
         score += card.upgradeValue;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
+        AssertPlayerCoinId(i);
         const boardCoin = player.boardCoins[i];
-        if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует монета с id '${i}'.`);
-        }
         // TODO Check it it can be error in !multiplayer, but bot can't play in multiplayer now...
         if (boardCoin !== null && !IsCoin(boardCoin)) {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе не может быть закрыта монета с id '${i}'.`);
@@ -174,9 +174,6 @@ const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
             score += boardCoin.value;
         }
         const handCoin = handCoins[i];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке отсутствует монета с id '${i}'.`);
-        }
         if (handCoin !== null && !IsCoin(handCoin)) {
             throw new Error(`В массиве монет игрока с id '${myPlayerID}' в руке не может быть закрыта монета с id '${i}'.`);
         }

@@ -1,6 +1,7 @@
 import { ThrowMyError } from "./Error";
 import { GetCardsFromSecretDwarfDeck, GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard, RemoveCardFromTavern } from "./helpers/DiscardCardHelpers";
+import { AssertTavernCardId, AssertTavernConfigIndex, AssertTavernIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
 /**
@@ -51,11 +52,12 @@ export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }) => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = ({ G, ctx, ...rest }) => {
-    const currentTavern = G.taverns[G.currentTavern], cardIndex = currentTavern.findIndex((card) => card !== null);
-    if (cardIndex === -1) {
+    const currentTavern = G.taverns[G.currentTavern], tavernCardId = currentTavern.findIndex((card) => card !== null);
+    if (tavernCardId === -1) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern, G.currentTavern);
     }
-    DiscardConcreteCardFromTavern({ G, ctx, ...rest }, cardIndex);
+    AssertTavernCardId(tavernCardId);
+    DiscardConcreteCardFromTavern({ G, ctx, ...rest }, tavernCardId);
 };
 /**
  * <h3>Сбрасывает конкретную карту из таверны в стопку сброса.</h3>
@@ -92,15 +94,19 @@ export const RefillTaverns = ({ G, ctx, ...rest }) => {
             refillDeck = GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck({ G, ctx, ...rest }, 0, G.drawSize);
         }
         else {
-            refillDeck = GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, 0, (G.secret.decks.length - G.tierToEnd), G.drawSize);
+            const tier = G.secret.decks.length - G.tierToEnd;
+            AssertTierIndex(tier);
+            refillDeck = GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, tier, 0, G.drawSize);
         }
         if (refillDeck.length !== G.drawSize) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.TavernCanNotBeRefilledBecauseNotEnoughCards, t);
         }
+        AssertTavernIndex(t);
         const tavern = G.taverns[t], removedCardsFromTavern = tavern.splice(0, tavern.length, ...refillDeck);
         if (tavern.length !== removedCardsFromTavern.length) {
             throw new Error(`Недостаточно карт в массиве карт таверны с id '${t}': требуется - '${tavern.length}', в наличии - '${removedCardsFromTavern.length}'.`);
         }
+        AssertTavernConfigIndex(t);
         const tavernConfig = tavernsConfig[t];
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна ${tavernConfig.name} заполнена новыми картами.`);
     }

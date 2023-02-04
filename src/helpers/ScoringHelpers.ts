@@ -10,6 +10,7 @@ import { StartMythicalAnimalScoring } from "../dispatchers/MythicalAnimalDispatc
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { StartValkyryScoring } from "../dispatchers/ValkyryScoringDispatcherHelpers";
 import { ThrowMyError } from "../Error";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsMythicalAnimalPlayerCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { AddDataToLog } from "../Logging";
@@ -249,10 +250,8 @@ export const FinalAllBoardCoinsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnC
     }
     let totalScore = 0;
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const boardCoin: CanBeUndefType<PublicPlayerCoinType> = player.boardCoins[i];
-        if (boardCoin === undefined) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`} с id '${myPlayerID}' на столе отсутствует монета с id '${i}'.`);
-        }
+        AssertPlayerCoinId(i);
+        const boardCoin: PublicPlayerCoinType = player.boardCoins[i];
         if (boardCoin !== null && !IsCoin(boardCoin)) {
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`} с id '${myPlayerID}' на столе не может не быть монеты с id '${i}'.`);
         }

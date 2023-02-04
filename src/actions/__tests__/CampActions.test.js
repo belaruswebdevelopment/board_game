@@ -44,7 +44,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        AddCoinToPouchAction({ G, ctx }, 0);
+        AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -134,7 +134,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        AddCoinToPouchAction({ G, ctx }, 0);
+        AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -236,7 +236,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        AddCoinToPouchAction({ G, ctx }, 0);
+        AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -341,7 +341,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        AddCoinToPouchAction({ G, ctx }, 0);
+        AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
@@ -423,15 +423,15 @@ describe(`Test AddCoinToPouchAction method`, () => {
                         },
                         null,
                     ],
-                    buffs: [
-                        {
-                            everyTurn: true,
-                        },
-                    ],
                     handCoins: [
                         {
                             isOpened: false,
                             value: 3,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
                         },
                     ],
                     stack: [
@@ -446,7 +446,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
         }, ctx = {
             currentPlayer: `0`,
         };
-        AddCoinToPouchAction({ G, ctx }, 0);
+        AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         expect(G).toEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
@@ -527,69 +527,8 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction({ G, ctx }, 0);
+            AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}'.`);
-    });
-    it(`shouldn't add undefined coin to pouch (multiplayer=false) and must throw Error`, () => {
-        const G = {
-            mode: GameModeNames.Basic,
-            tavernsNum: 3,
-            players: {
-                0: {},
-            },
-            publicPlayers: {
-                0: {
-                    nickname: `Dan`,
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                    ],
-                    handCoins: [],
-                },
-            },
-            logData: [],
-        }, ctx = {
-            currentPlayer: `0`,
-        };
-        expect(() => {
-            AddCoinToPouchAction({ G, ctx }, 0);
-        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует выбранная монета с id '0': это должно проверяться в MoveValidator.`);
-    });
-    it(`shouldn't add undefined coin to pouch (multiplayer=true) and must throw Error`, () => {
-        const G = {
-            mode: GameModeNames.Multiplayer,
-            tavernsNum: 3,
-            players: {
-                0: {
-                    handCoins: [],
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                    ],
-                },
-            },
-            publicPlayers: {
-                0: {
-                    nickname: `Dan`,
-                    boardCoins: [
-                        {},
-                        {},
-                        {},
-                        null,
-                    ],
-                },
-            },
-            logData: [],
-        }, ctx = {
-            currentPlayer: `0`,
-        };
-        expect(() => {
-            AddCoinToPouchAction({ G, ctx }, 0);
-        }).toThrowError(`В массиве монет игрока с id '0' в руке отсутствует выбранная монета с id '0': это должно проверяться в MoveValidator.`);
     });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`, () => {
         const G = {
@@ -617,7 +556,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction({ G, ctx }, 0);
+            AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' в руке не может не быть монеты с id '0'.`);
     });
     it(`shouldn't add null coin to pouch (multiplayer=true) and must throw Error`, () => {
@@ -653,7 +592,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction({ G, ctx }, 0);
+            AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         }).toThrowError(`В массиве монет игрока с id '0' в руке не может не быть монеты с id '0'.`);
     });
     it(`shouldn't add null coin to pouch (multiplayer=false) and must throw Error`, () => {
@@ -682,7 +621,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         expect(() => {
-            AddCoinToPouchAction({ G, ctx }, 0);
+            AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
         }).toThrowError(`Монета с id '0' в руке текущего игрока с id '0' не может быть закрытой для него.`);
     });
 });
@@ -724,15 +663,15 @@ describe(`Test DiscardSuitCardAction method`, () => {
             },
             discardCardsDeck: [
                 {
-                    type: CardTypeRusNames.DwarfCard,
+                    type: CardTypeRusNames.DwarfPlayerCard,
                     name: `Test`,
-                    playerSuit: SuitNames.warrior,
+                    suit: SuitNames.warrior,
                 },
             ],
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
+                    text: `Карта '${CardTypeRusNames.DwarfPlayerCard}' 'Test' убрана в сброс из-за выбора карты '${CardTypeRusNames.ArtefactCard}' '${ArtefactNames.Hofud}'.`,
                 },
             ],
         });
@@ -782,12 +721,11 @@ describe(`Test DiscardSuitCardAction method`, () => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    text: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
+                    text: `Карта '${CardTypeRusNames.MercenaryPlayerCard}' 'Test' убрана в сброс из-за выбора карты '${CardTypeRusNames.ArtefactCard}' '${ArtefactNames.Hofud}'.`,
                 },
             ],
         });
     });
-    // Unreal Errors to reproduce
     it(`shouldn't discard warrior hero card to discard and must throw Error`, () => {
         const G = {
             publicPlayers: {
@@ -795,7 +733,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: CardTypeRusNames.DwarfPlayerCard,
+                                type: CardTypeRusNames.HeroPlayerCard,
                             },
                         ],
                     },
@@ -804,7 +742,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
         };
         expect(() => {
             DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
-        }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.HeroCard}'.`);
+        }).toThrowError(`Сброшенная карта не может быть с типом '${CardTypeRusNames.HeroPlayerCard}'.`);
     });
 });
 //# sourceMappingURL=CampActions.test.js.map

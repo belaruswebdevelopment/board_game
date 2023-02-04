@@ -1,7 +1,8 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
+import { AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { CardTypeRusNames, ErrorNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>
  * <p>Применения:</p>
@@ -178,9 +179,16 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myP
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
+        AssertZeroOrOneOrTwo(i);
+        if (G.strategyForSoloBotAndvari === null) {
+            throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+        }
         const suit = G.strategyForSoloBotAndvari.general[i];
         if (suit === undefined) {
-            throw new Error(`В массиве главных стратегий отсутствует фракция с id '${i}'.`);
+            throw new Error(`В объекте главных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        if (suit === null) {
+            throw new Error(`В объекте главных стратегий соло бота Андвари не задана фракция с id '${i}'.`);
         }
         const strategyArguments = CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);
         if (strategyArguments.length === 1) {
@@ -208,9 +216,15 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, myPlayerID, ...
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
     for (let i = G.soloGameAndvariStrategyVariantLevel; i < 5; i++) {
+        if (G.strategyForSoloBotAndvari === null) {
+            throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
+        }
         const suit = G.strategyForSoloBotAndvari.reserve[i];
         if (suit === undefined) {
-            throw new Error(`В массиве резервных стратегий отсутствует фракция с id '${i}'.`);
+            throw new Error(`В объекте резервных стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
+        }
+        if (suit === null) {
+            throw new Error(`В объекте резервных стратегий соло бота Андвари не задана фракция с id '${i}'.`);
         }
         const strategyArguments = CheckSoloBotAndvariMustTakeCardFromCurrentStrategy({ G, ctx, myPlayerID, ...rest }, moveArguments, suit);
         if (strategyArguments.length === 1) {

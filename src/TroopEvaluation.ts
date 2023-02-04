@@ -5,7 +5,7 @@ import { DiscardCurrentCard } from "./helpers/DiscardCardHelpers";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { ErrorNames, LogTypeNames, SuitNames, ValkyryBuffNames } from "./typescript/enums";
+import { ErrorNames, LogTypeNames, SuitNames, SuitRusNames, ValkyryBuffNames } from "./typescript/enums";
 import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, PlayerRanksAndMaxRanksForDistinctionsType, PublicPlayer } from "./typescript/interfaces";
 
 /**
@@ -163,6 +163,6 @@ const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = ({ G, ctx, ...rest }
                 ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction);
         }
         DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: '${discardedCard.name}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Из-за отсутствия преимущества по фракции '${SuitRusNames.explorer}' сброшена карта: '${discardedCard.name}'.`);
     }
 };

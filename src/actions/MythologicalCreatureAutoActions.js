@@ -1,3 +1,4 @@
+import { AssertMythologicalCreatureCardsForGiantSkymir } from "../is_helpers/AssertionTypeHelpers";
 /**
  * <h3>Действия, связанные с добавлением карт Мифических существ для выбора Skymir.</h3>
  * <p>Применения:</p>
@@ -20,9 +21,7 @@ export const AddMythologyCreatureCardsSkymirAction = ({ G }) => {
         }
         mythologyCreatureCardsSkymir.push(mythologyCreatureCard);
     }
-    if (mythologyCreatureCardsSkymir.length === 6) {
-        G.mythologicalCreatureDeckForSkymir =
-            mythologyCreatureCardsSkymir;
-    }
+    AssertMythologicalCreatureCardsForGiantSkymir(mythologyCreatureCardsSkymir);
+    G.mythologicalCreatureDeckForSkymir = mythologyCreatureCardsSkymir;
 };
 //# sourceMappingURL=MythologicalCreatureAutoActions.js.map

@@ -10,6 +10,7 @@ import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { IsLastRound } from "../helpers/RoundHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
+import { AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
@@ -66,9 +67,6 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }) => {
         handCoins = player.handCoins;
     }
     const boardCoin = player.boardCoins[G.currentTavern];
-    if (boardCoin === undefined) {
-        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета на месте текущей таверны с id '${G.currentTavern}'.`);
-    }
     if (boardCoin !== null && (!IsCoin(boardCoin) || !boardCoin.isOpened)) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета на месте текущей таверны с id '${G.currentTavern}'.`);
     }
@@ -173,7 +171,9 @@ export const EndTavernsResolutionActions = ({ G, ctx, ...rest }) => {
         StartTrading({ G, ctx, myPlayerID: `1`, ...rest }, true);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна '${currentTavernConfig.name}' пустая.`);
-    const currentDeck = G.secret.decks[(G.secret.decks.length - G.tierToEnd)];
+    const currentTier = G.secret.decks.length - G.tierToEnd;
+    AssertSecretAllDwarfDecksIndex(currentTier);
+    const currentDeck = G.secret.decks[currentTier];
     if (G.tavernsNum - 1 === G.currentTavern && currentDeck.length === 0) {
         G.tierToEnd--;
     }

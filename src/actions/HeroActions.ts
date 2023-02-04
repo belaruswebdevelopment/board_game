@@ -8,7 +8,7 @@ import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, HeroCard, MultiSuitCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, Stack, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import type { CanBeUndefType, HeroCard, MultiSuitCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>
@@ -55,11 +55,12 @@ export const DiscardCardsFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...rest 
     DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' убрана в сброс из-за выбора карты '${CardTypeRusNames.HeroCard}' '${player.stack[0]?.name}'.`);
     if (player.stack[0]?.name === HeroNames.Dagda && player.stack[0]?.pickedSuit === undefined) {
-        if (!G.expansions.Idavoll.active || (G.expansions.Idavoll.active
-            && (!CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
+        // TODO Check this logic!
+        if (!(G.expansions.Idavoll.active
+            && ((CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest },
                 MythicalAnimalBuffNames.DagdaDiscardOnlyOneCards))
-            || (CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
-                GodNames.Thor)))) {
+                || (CheckIsStartUseGodAbility({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
+                    GodNames.Thor))))) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                 [AllStackData.discardCardFromBoardDagda(suit)]);
         }
@@ -84,7 +85,7 @@ export const PlaceMultiSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
@@ -156,7 +157,7 @@ export const PlaceThrudAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWit
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         throw new Error(`В массиве стека действий ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `текущего игрока`} с id '${myPlayerID}' отсутствует '0' действие.`);
     }
@@ -188,7 +189,7 @@ export const PlaceYludAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const stack: CanBeUndefType<Stack> = player.stack[0];
+    const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
