@@ -20,7 +20,6 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
         throw new Error(`Не существует карта героя с id '${id}'.`);
     }
     const validators = hero.pickValidators, cardsToDiscard = [];
-    let isValidMove = false;
     if ((validators === null || validators === void 0 ? void 0 : validators.discardCard) !== undefined) {
         let suit;
         for (suit in suitsConfig) {
@@ -41,9 +40,9 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
                 }
             }
         }
-        isValidMove = cardsToDiscard.length >= ((_a = validators.discardCard.number) !== null && _a !== void 0 ? _a : 1);
+        return cardsToDiscard.length >= ((_a = validators.discardCard.amount) !== null && _a !== void 0 ? _a : 1);
     }
-    return isValidMove;
+    return false;
 };
 /**
  * <h3>Действия, связанные с выбором героев по определённым условиям.</h3>
@@ -66,10 +65,10 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...re
     if (conditions === undefined) {
         throw new Error(`У карты ${CardTypeRusNames.HeroCard} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.conditions}'.`);
     }
-    let isValidMove = false, condition;
+    let condition;
     for (condition in conditions) {
         if (condition === `suitCountMin`) {
-            let ranks = 0, key;
+            let ranks = 0, conditionRanks = null, key;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
                     const player = G.publicPlayers[Number(myPlayerID)];
@@ -79,11 +78,15 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...re
                     ranks = player.cards[conditions[condition][key]].reduce(TotalRank, 0);
                 }
                 else if (key === `count`) {
-                    isValidMove = ranks >= conditions[condition][key];
+                    conditionRanks = conditions[condition][key];
                 }
             }
+            if (conditionRanks === null) {
+                throw new Error(`Отсутствует обязательный параметр значения 'count'.`);
+            }
+            return ranks >= conditionRanks;
         }
     }
-    return isValidMove;
+    return false;
 };
 //# sourceMappingURL=IsCanPickCurrentHeroValidator.js.map

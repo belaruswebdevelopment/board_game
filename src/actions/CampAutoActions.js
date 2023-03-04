@@ -106,7 +106,11 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) =
     }
     let isStart = true;
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
-        const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter(IsCoin).length;
+        const noCoinsOnPouchNumber = 
+        // TODO Add type for noCoinsOnPouchNumber
+        player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, 
+        // TODO Can add type for handCoinsNumber!?
+        handCoinsNumber = handCoins.filter(IsCoin).length;
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
                 AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.addCoinToPouch()]);

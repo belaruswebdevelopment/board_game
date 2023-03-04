@@ -1,3 +1,11 @@
+// Start Lobby
+export enum LobbyPhases {
+    ENTER = "enter",
+    PLAY = "play",
+    LIST = "list"
+}
+//End Lobby
+
 // Suit Start
 /**
  * <h3>Перечисление для названия фракции дворфов.</h3>

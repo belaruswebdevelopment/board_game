@@ -141,9 +141,7 @@ export const ALlStyles = {
                 throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
         }
     },
-    CardBack: (tier) => ({
-        background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
-    }),
+    // TODO Add type to number 0-12!
     Card: (suit, name, points) => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             // TODO Fix it to use _exhaustiveCheck!
@@ -272,6 +270,9 @@ export const ALlStyles = {
             }
         }
     },
+    CardBack: (tier) => ({
+        background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
+    }),
     Coin: (value, initial) => ({
         background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 40px 40px`,
     }),

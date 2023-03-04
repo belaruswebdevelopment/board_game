@@ -5,7 +5,7 @@ import { AddHeroToPlayerCardsAction, PlaceThrudAction, PlaceYludAction } from ".
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot, PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari } from "../helpers/SoloBotHelpers";
-import { AssertPlayerCoinId, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertExplorerDistinctionCardIdType, AssertPlayerCoinId, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotAndvariCommonStageNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 // TODO Move all playerID === `1` to validate!
 /**
@@ -20,12 +20,12 @@ import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames,
  * @returns
  */
 export const SoloBotAndvariClickCardMove = ({ G, ctx, playerID, ...rest }, tavernCardId) => {
+    AssertTavernCardId(tavernCardId);
     const isValidMove = playerID === `1` &&
         IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.SoloBotClickCard, CardMoveNames.SoloBotAndvariClickCardMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertTavernCardId(tavernCardId);
     ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 /**
@@ -40,6 +40,7 @@ export const SoloBotAndvariClickCardMove = ({ G, ctx, playerID, ...rest }, taver
  * @returns
  */
 export const SoloBotAndvariClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, cardId) => {
+    AssertExplorerDistinctionCardIdType(cardId);
     const isValidMove = playerID === `1`
         && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationStageNames.SoloBotAndvariClickCardToPickDistinction, CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove, cardId);
     if (!isValidMove) {

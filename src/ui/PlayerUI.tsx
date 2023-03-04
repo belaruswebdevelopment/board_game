@@ -2,14 +2,14 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { AssertPlayerCoinId, AssertTavernConfigIndex, AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertPlayerCoinId, AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
-import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HeroCard, MoveArgumentsType, MoveCardsArguments, MoveCoinsArguments, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, PlayerBoardCardType, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, SuitPropertyType, TavernInConfig, VariantType } from "../typescript/interfaces";
+import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HeroCard, MercenaryRankType, MoveArgumentsType, MoveCardsArguments, MoveCoinsArguments, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, PlayerBoardCardType, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -259,7 +259,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                         return ThrowMyError({ G, ctx, ...rest },
                             ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, p);
                     }
-                    let cardVariants: CanBeUndefType<VariantType>;
+                    let cardVariants: CanBeUndefType<VariantType<MercenaryRankType>>;
                     if (ctx.phase === PhaseNames.EnlistmentMercenaries && IsMercenaryCampCard(stack.card)
                         && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
                         EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries) {
@@ -589,11 +589,9 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
             for (let t = 0; t < G.tavernsNum; t++) {
                 if (data !== undefined) {
                     if (i === 0) {
-                        AssertTavernConfigIndex(t);
-                        const currentTavernConfig: CanBeUndefType<TavernInConfig> = tavernsConfig[t];
                         AssertTavernIndex(t);
                         playerHeaders.push(
-                            <th key={`Tavern ${currentTavernConfig.name}`}>
+                            <th key={`Tavern ${tavernsConfig[G.currentTavern].name}`}>
                                 <span style={ALlStyles.Tavern(t)}
                                     className="bg-tavern-icon"></span>
                             </th>
@@ -717,8 +715,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                                             && !!IsTriggerTradingCoin(privateBoardCoin)
                                             && ((stage === CommonStageNames.ClickCoinToUpgrade)
                                                 || (stage === CommonStageNames.PickConcreteCoinToUpgrade
-                                                    && player.stack[0]?.coinValue ===
-                                                    privateBoardCoin.value))) {
+                                                    && player.stack[0]?.coinValue === privateBoardCoin.value))) {
                                             if (data !== undefined) {
                                                 DrawCoin({ G, ctx, ...rest }, data, playerCells,
                                                     DrawCoinTypeNames.HiddenCoin, privateBoardCoin, id,

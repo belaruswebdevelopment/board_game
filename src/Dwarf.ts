@@ -1,6 +1,7 @@
 import { suitsConfig } from "./data/SuitData";
+import { AssertAllDwarfPlayersAmount } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames, SuitNames } from "./typescript/enums";
-import type { CanBeUndefType, CreateDwarfCardFromData, CreateDwarfPlayerCardFromData, DwarfCard, DwarfPlayerCard, PlayersNumberTierCardData, PointsType, PointsValuesType } from "./typescript/interfaces";
+import type { CanBeUndefType, CreateDwarfCardFromData, CreateDwarfPlayerCardFromData, DwarfCard, DwarfPlayerCard, NumberArrayValuesType, PlayersNumberTierCardData, PointsType, PointsValuesType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -24,10 +25,11 @@ export const BuildDwarfCards = (data: PlayersNumberTierCardData): DwarfCard[] =>
         } else {
             count = points;
         }
+        AssertAllDwarfPlayersAmount(count);
         for (let j = 0; j < count; j++) {
-            let currentPoints: CanBeUndefType<number>;
+            let currentPoints: CanBeUndefType<NumberArrayValuesType>;
             if (Array.isArray(points)) {
-                const cardPoints: CanBeUndefType<number> = points[j];
+                const cardPoints: CanBeUndefType<NumberArrayValuesType> = points[j];
                 if (cardPoints === undefined) {
                     throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                 }

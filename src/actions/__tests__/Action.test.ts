@@ -33,7 +33,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             } as Ctx;
         DiscardAnyCardFromPlayerBoardAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID,
             SuitNames.warrior, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -91,7 +91,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             } as Ctx;
         DiscardAnyCardFromPlayerBoardAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID,
             SuitNames.warrior, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -150,7 +150,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             } as Ctx;
         DiscardAnyCardFromPlayerBoardAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID,
             SuitNames.warrior, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -250,7 +250,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardCardFromTavernAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -311,7 +311,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardCardFromTavernAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -414,7 +414,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
         GetEnlistmentMercenariesAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -505,7 +505,7 @@ describe(`Test GetMjollnirProfitAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         GetMjollnirProfitAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, SuitNames.hunter);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -549,7 +549,7 @@ describe(`Test PassEnlistmentMercenariesAction method`, (): void => {
                 phase: PhaseNames.EnlistmentMercenaries,
             } as Ctx;
         PassEnlistmentMercenariesAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -596,7 +596,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         PickDiscardCardAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -663,7 +663,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         PickDiscardCardAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -736,7 +736,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         PickDiscardCardAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -839,7 +839,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         PickDiscardCardAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -978,7 +978,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             } as Ctx;
         PlaceEnlistmentMercenariesAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID,
             SuitNames.blacksmith);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -1160,7 +1160,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             } as Ctx;
         PlaceEnlistmentMercenariesAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID,
             SuitNames.warrior);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,

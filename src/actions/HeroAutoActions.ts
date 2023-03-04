@@ -65,8 +65,8 @@ export const GetClosedCoinIntoPlayerHandAction: ActionFunctionWithoutParams = ({
         for (let i = 0; i < player.boardCoins.length; i++) {
             AssertPlayerCoinId(i);
             if (i > G.currentTavern) {
-                const isCoinReturned: boolean = ReturnCoinToPlayerHands({ G, ctx, myPlayerID, ...rest }, i,
-                    false);
+                const isCoinReturned: boolean =
+                    ReturnCoinToPlayerHands({ G, ctx, myPlayerID, ...rest }, i, false);
                 if (!isCoinReturned) {
                     break;
                 }
@@ -131,11 +131,11 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
             }
         }
         const minCoinValue: number = Math.min(...allCoins.filter((coin: AllCoinsType): boolean =>
-            !IsTriggerTradingCoin(coin)).map((coin: AllCoinsType): number =>
-                coin.value));
+            !IsTriggerTradingCoin(coin)).map((coin: AllCoinsType): number => coin.value));
         AssertUpgradableCoinValue(minCoinValue);
         const upgradingCoinsArray: UpgradableCoinType[] = allCoins.filter((coin: AllCoinsType): boolean =>
             coin.value === minCoinValue) as UpgradableCoinType[],
+            // TODO Can add type!?
             upgradingCoinsValue: number = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
@@ -190,9 +190,11 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
         if (G.mode === GameModeNames.Solo && minCoinValue !== 2) {
             throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
         }
+        // TODO Can i refactor `as`?
         const upgradingCoinsArray: UpgradableCoinType[] =
             player.boardCoins.filter((coin: PublicPlayerCoinType): boolean =>
                 coin?.value === minCoinValue) as UpgradableCoinType[],
+            // TODO Can add type!?
             upgradingCoinsValue: number = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {

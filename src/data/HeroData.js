@@ -141,7 +141,7 @@ const Dagda = {
     pickValidators: {
         discardCard: {
             suit: SuitNames.hunter,
-            number: 2,
+            amount: 2,
         },
     },
     stack: {

@@ -2,12 +2,14 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllDwarfPlayersAmount, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import type { CanBeUndefType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, NumberArrayValuesType, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
 
+// Check all number types here!
 // Check all types in this file!
+// TODO Add type for -1 | 0 | 1!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -20,7 +22,7 @@ import type { CanBeUndefType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, P
  * @param card2 Вторая карта.
  * @returns Сравнительное значение.
  */
-export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType): number => {
+export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType): -1 | 0 | 1 => {
     if (card1 === null || card2 === null) {
         return 0;
     }
@@ -114,9 +116,10 @@ export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardD
     const pointsValuesPlayers: PointsValuesType = suitsConfig[suit].pointsValues()[data.players],
         points: PointsType = pointsValuesPlayers[data.tier],
         count: number = Array.isArray(points) ? points.length : points;
+    AssertAllDwarfPlayersAmount(count);
     for (let i = 0; i < count; i++) {
         if (Array.isArray(points)) {
-            const pointsValue: CanBeUndefType<number> = points[i];
+            const pointsValue: CanBeUndefType<NumberArrayValuesType> = points[i];
             if (pointsValue === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}' в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
             }
@@ -129,6 +132,7 @@ export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardD
     // TODO Rework it to non-dwarf card?
     return CreateDwarfCard({
         playerSuit: suitsConfig[suit].suit,
+        // TODO Can i add type!?
         points: totalPoints,
         name: `Average card`,
     });

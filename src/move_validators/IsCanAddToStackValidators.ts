@@ -14,13 +14,12 @@ import type { CanBeUndefType, CardsHasStackValidatorsType, MyFnContextWithMyPlay
 export const IsCanPickPickCampCardToStack = ({ G }: MyFnContextWithMyPlayerID, card: CardsHasStackValidatorsType):
     boolean => {
     const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;
-    let isValidMove = false;
     if (validators?.pickCampCardToStack !== undefined) {
         if (G.camp.length > 0) {
-            isValidMove = true;
+            return true;
         }
     }
-    return isValidMove;
+    return false;
 };
 
 /**
@@ -38,11 +37,10 @@ export const IsCanPickPickCampCardToStack = ({ G }: MyFnContextWithMyPlayerID, c
 export const IsCanPickPickDiscardCardToStack = ({ G }: MyFnContextWithMyPlayerID, card: CardsHasStackValidatorsType):
     boolean => {
     const validators: CanBeUndefType<ValidatorsConfigType> = card.validators;
-    let isValidMove = false;
     if (validators?.pickDiscardCardToStack !== undefined) {
         if (G.discardCardsDeck.length > 0) {
-            isValidMove = true;
+            return true;
         }
     }
-    return isValidMove;
+    return false;
 };

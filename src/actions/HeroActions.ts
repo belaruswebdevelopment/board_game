@@ -8,7 +8,7 @@ import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, HeroCard, MultiSuitCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import type { CanBeUndefType, HeroCard, HeroRankType, MultiSuitCard, MultiSuitRankType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>
@@ -90,7 +90,7 @@ export const PlaceMultiSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const playerVariants: SuitPropertyType<VariantType> = {
+    const playerVariants: SuitPropertyType<VariantType<MultiSuitRankType>> = {
         blacksmith: {
             suit: SuitNames.blacksmith,
             rank: 1,
@@ -194,7 +194,7 @@ export const PlaceYludAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const playerVariants: SuitPropertyType<VariantType> = {
+    const playerVariants: SuitPropertyType<VariantType<HeroRankType>> = {
         blacksmith: {
             suit: SuitNames.blacksmith,
             rank: 1,

@@ -11,13 +11,12 @@
  */
 export const IsCanPickPickCampCardToStack = ({ G }, card) => {
     const validators = card.validators;
-    let isValidMove = false;
     if ((validators === null || validators === void 0 ? void 0 : validators.pickCampCardToStack) !== undefined) {
         if (G.camp.length > 0) {
-            isValidMove = true;
+            return true;
         }
     }
-    return isValidMove;
+    return false;
 };
 /**
  * <h3>Действия, связанные с возможностью взятия карт из колоды сброса.</h3>
@@ -33,12 +32,11 @@ export const IsCanPickPickCampCardToStack = ({ G }, card) => {
  */
 export const IsCanPickPickDiscardCardToStack = ({ G }, card) => {
     const validators = card.validators;
-    let isValidMove = false;
     if ((validators === null || validators === void 0 ? void 0 : validators.pickDiscardCardToStack) !== undefined) {
         if (G.discardCardsDeck.length > 0) {
-            isValidMove = true;
+            return true;
         }
     }
-    return isValidMove;
+    return false;
 };
 //# sourceMappingURL=IsCanAddToStackValidators.js.map

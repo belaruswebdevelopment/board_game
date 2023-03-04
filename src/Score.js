@@ -18,8 +18,12 @@ import { ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "./typesc
  * @returns Текущий счёт указанного игрока.
  */
 export const AllCurrentScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
+    }
     let totalScore = CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
-    // TODO Add score for all board and hand coins!!!
+    totalScore += player.currentCoinsScore;
     totalScore += CurrentPotentialWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     totalScore += CurrentPotentialMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
     // TODO Think about heros in players hands which can be deleted in end game scoring both suit and heroes!?

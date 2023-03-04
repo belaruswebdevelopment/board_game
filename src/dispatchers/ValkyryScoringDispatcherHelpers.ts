@@ -2,6 +2,7 @@ import { BrynhildrScoring, HildrScoring, OlrunScoring, SigrdrifaScoring, SvafaSc
 import { ValkyryScoringFunctionNames } from "../typescript/enums";
 import type { Action, ScoringArgsType, ValkyryScoringFunction } from "../typescript/interfaces";
 
+// TODO Can add type to number here!
 /**
  * <h3>Начинает действие по получению победных очков по Валькирии.</h3>
  * <p>Применения:</p>

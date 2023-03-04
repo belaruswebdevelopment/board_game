@@ -1,4 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
+import { AssertAllDwarfPlayersAmount } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -22,6 +23,7 @@ export const BuildDwarfCards = (data) => {
         else {
             count = points;
         }
+        AssertAllDwarfPlayersAmount(count);
         for (let j = 0; j < count; j++) {
             let currentPoints;
             if (Array.isArray(points)) {

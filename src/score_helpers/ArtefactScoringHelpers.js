@@ -16,13 +16,11 @@ import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
  * @param value Значение очков артефакта.
  * @returns Количество очков по конкретному артефакту.
  */
-export const BasicArtefactScoring = ({ G, ctx, myPlayerID, ...rest }, isFinal = false, value) => {
-    const player = G.publicPlayers[Number(myPlayerID)];
-    if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
-    }
+export const BasicArtefactScoring = ({ G, ctx, ...rest }, 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+isFinal = false, value) => {
     if (value === undefined) {
-        throw new Error(`Function param 'value' is undefined.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }
     return value;
 };

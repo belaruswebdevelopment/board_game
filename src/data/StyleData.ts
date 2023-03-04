@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { Background, CanBeNullType, CardNamesForStylesType, IndexOf, MythologicalCreatureNameType, Styles, TavernsType, TierType } from "../typescript/interfaces";
+import type { AllCoinsValueType, AllPriorityValueType, Background, CanBeNullType, CardNamesForStylesType, IndexOf, MythologicalCreatureNameType, Styles, TavernsType, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -150,9 +150,7 @@ export const ALlStyles: Styles = {
                 throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
         }
     },
-    CardBack: (tier: TierType): Background => ({
-        background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
-    }),
+    // TODO Add type to number 0-12!
     Card: (suit: SuitNames, name: CardNamesForStylesType, points: CanBeNullType<number>): Background => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             // TODO Fix it to use _exhaustiveCheck!
@@ -280,7 +278,10 @@ export const ALlStyles: Styles = {
             }
         }
     },
-    Coin: (value: number, initial: boolean): Background => ({
+    CardBack: (tier: TierType): Background => ({
+        background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
+    }),
+    Coin: (value: AllCoinsValueType, initial: boolean): Background => ({
         background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 40px 40px`,
     }),
     CoinBack: (): Background => ({
@@ -534,7 +535,7 @@ export const ALlStyles: Styles = {
                 throw new Error(`Нет такой карты '${name}' среди карт мифических существ.`);
         }
     },
-    Priorities: (priority: number): Background => ({
+    Priorities: (priority: AllPriorityValueType): Background => ({
         background: `url(/img/priorities/Priority${priority}.png) no-repeat 0px 0px / 28px 38px`,
     }),
     Priority: (): Background => ({

@@ -177,11 +177,11 @@ export const PickCardToPickDistinctionAction = ({ G, ctx, myPlayerID, ...rest },
     if (G.explorerDistinctionCards === null) {
         throw new Error(`В массиве карт для получения преимущества по фракции '${SuitRusNames.explorer}' не может не быть карт.`);
     }
-    const pickedCard = G.explorerDistinctionCards.splice(cardId, 1)[0];
+    const pickedCard = G.explorerDistinctionCards[cardId];
     if (pickedCard === undefined) {
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
-    G.explorerDistinctionCards.splice(0);
+    G.explorerDistinctionCards = null;
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, pickedCard);
     if (pickedCard.type === CardTypeRusNames.DwarfCard) {
         G.distinctions[SuitNames.explorer] = undefined;

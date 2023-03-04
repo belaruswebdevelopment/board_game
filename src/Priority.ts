@@ -1,4 +1,5 @@
-import type { CreatePriorityFromData, NumPlayersType, PrioritiesConfig, Priority, ZeroOrOneOrTwoOrThreeOrFourType } from "./typescript/interfaces";
+import { AssertPrioritiesAmount } from "./is_helpers/AssertionTypeHelpers";
+import type { CreatePriorityFromData, NumPlayersType, PrioritiesConfig, Priority } from "./typescript/interfaces";
 
 /**
  * <h3>Создание кристаллов.</h3>
@@ -33,7 +34,8 @@ export const CreatePriority = ({
  * @returns Массив базовых кристаллов.
  */
 export const GeneratePrioritiesForPlayerNumbers = (numPlayers: NumPlayersType, solo: boolean): Priority[] => {
-    const priorityNum: ZeroOrOneOrTwoOrThreeOrFourType = ((solo ? 1 : numPlayers) - 1) as ZeroOrOneOrTwoOrThreeOrFourType;
+    const priorityNum: number = (solo ? 1 : numPlayers) - 1;
+    AssertPrioritiesAmount(priorityNum);
     return prioritiesConfig[priorityNum].map((priority: Priority): Priority => priority);
 };
 

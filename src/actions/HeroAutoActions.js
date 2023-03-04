@@ -118,7 +118,9 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value /* U
         }
         const minCoinValue = Math.min(...allCoins.filter((coin) => !IsTriggerTradingCoin(coin)).map((coin) => coin.value));
         AssertUpgradableCoinValue(minCoinValue);
-        const upgradingCoinsArray = allCoins.filter((coin) => coin.value === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
+        const upgradingCoinsArray = allCoins.filter((coin) => coin.value === minCoinValue), 
+        // TODO Can add type!?
+        upgradingCoinsValue = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
@@ -171,7 +173,10 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value /* U
         if (G.mode === GameModeNames.Solo && minCoinValue !== 2) {
             throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
         }
-        const upgradingCoinsArray = player.boardCoins.filter((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), upgradingCoinsValue = upgradingCoinsArray.length;
+        // TODO Can i refactor `as`?
+        const upgradingCoinsArray = player.boardCoins.filter((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), 
+        // TODO Can add type!?
+        upgradingCoinsValue = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =

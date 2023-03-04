@@ -1,10 +1,10 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertPlayerCoinId, AssertPrivateHandCoins } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertAllPriorityValue, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
-import type { AllCoinsType, AllCoinsValueType, CanBeUndefType, CoinType, FnContext, MyFnContextWithMyPlayerID, NumberValues, PlayerCoinIdType, PlayerHandCoinsType, PlayerID, Priority, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins } from "../typescript/interfaces";
+import type { AllCoinsType, AllCoinsValueType, CanBeUndefType, CoinNumberValues, CoinType, FnContext, MyFnContextWithMyPlayerID, PlayerCoinIdType, PlayerCoinNumberValuesType, PlayerHandCoinsType, PlayerID, Priority, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { RemoveCoinFromPlayer } from "./DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -62,9 +62,9 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
         }
         type = CoinTypeNames.Hand;
         AssertPlayerCoinId(tradingCoinIndex);
-        RemoveCoinFromPlayer(handCoins, tradingCoinIndex);
+        RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, handCoins, tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            RemoveCoinFromPlayer(player.handCoins, tradingCoinIndex);
+            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, player.handCoins, tradingCoinIndex);
         }
     } else {
         if (tradingCoinIndex === -1) {
@@ -72,9 +72,10 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
         }
         AssertPlayerCoinId(tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            RemoveCoinFromPlayer(privatePlayer.boardCoins, tradingCoinIndex);
+            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, privatePlayer.boardCoins,
+                tradingCoinIndex);
         }
-        RemoveCoinFromPlayer(player.boardCoins, tradingCoinIndex);
+        RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, player.boardCoins, tradingCoinIndex);
     }
     return [type, tradingCoinIndex];
 };
@@ -254,19 +255,20 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
         }
 
     }
-    const counts: NumberValues = {};
+    const counts: CoinNumberValues<PlayerCoinNumberValuesType> = {};
     for (let i = 0; i < coinValues.length; i++) {
         const coinValue: CanBeUndefType<AllCoinsValueType> = coinValues[i];
         if (coinValue !== undefined) {
-            const value: number = counts[coinValue] ?? 0;
-            AssertAllCoinsValue(value);
-            counts[coinValue] = 1 + value;
+            const value: 0 | PlayerCoinNumberValuesType = counts[coinValue] ?? 0,
+                newValue: number = 1 + value;
+            AssertPlayerCoinNumberValues(newValue);
+            counts[coinValue] = newValue;
         }
     }
     for (const prop in counts) {
-        // TODO Check & fix it...
-        AssertAllCoinsValue(Number(prop));
-        const value: CanBeUndefType<number> = counts[prop as unknown as AllCoinsValueType];
+        const coinsValue = Number(prop);
+        AssertAllCoinsValue(coinsValue);
+        const value: CanBeUndefType<PlayerCoinNumberValuesType> = counts[coinsValue];
         if (value === undefined) {
             throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
         }
@@ -282,13 +284,16 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
                 return boardCoinCurrentTavern?.value === Number(prop) && player.priority.isExchangeable;
             });
         while (tiePlayers.length > 1) {
+            // TODO Add types for all `number`!?
             const tiePlayersPriorities: number[] =
                 tiePlayers.map((player: PublicPlayer): number => player.priority.value),
                 maxPriority: number = Math.max(...tiePlayersPriorities),
-                minPriority: number = Math.min(...tiePlayersPriorities),
-                maxIndex: number =
-                    Object.values(G.publicPlayers).findIndex((player: PublicPlayer): boolean =>
-                        player.priority.value === maxPriority),
+                minPriority: number = Math.min(...tiePlayersPriorities);
+            AssertAllPriorityValue(maxPriority);
+            AssertAllPriorityValue(minPriority);
+            const maxIndex: number =
+                Object.values(G.publicPlayers).findIndex((player: PublicPlayer): boolean =>
+                    player.priority.value === maxPriority),
                 minIndex: number =
                     Object.values(G.publicPlayers).findIndex((player: PublicPlayer): boolean =>
                         player.priority.value === minPriority),

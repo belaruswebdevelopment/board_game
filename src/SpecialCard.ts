@@ -45,7 +45,7 @@ const CreateSpecialCard = ({
     name,
     playerSuit,
     points = null,
-    rank = 1,
+    rank = 2,
 }: CreateSpecialCardFromData): SpecialCard => ({
     type,
     name,
@@ -73,7 +73,7 @@ export const CreateSpecialCardPlayerCard = ({
     name,
     suit,
     points = null,
-    rank = 1,
+    rank = 2,
 }: CreateSpecialPlayerCardFromData): SpecialPlayerCard => ({
     type,
     name,

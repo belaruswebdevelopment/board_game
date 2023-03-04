@@ -1,7 +1,7 @@
 import { actionCardsConfigArray } from "./data/RoyalOfferingCardData";
 import { AssertRoyalOfferingsConfigIndex } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames } from "./typescript/enums";
-import type { CreateRoyalOfferingCardFromData, NumberTierValues, PlayersNumberTierCardData, RoyalOfferingCard, RoyalOfferingCardData } from "./typescript/interfaces";
+import type { CreateRoyalOfferingCardFromData, NumberTierValues, PlayersNumberTierCardData, RoyalOfferingCard, RoyalOfferingCardData, RoyalOfferingCardPlayersAmountType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты королевских наград.</h3>
@@ -18,8 +18,9 @@ export const BuildRoyalOfferingCards = (data: PlayersNumberTierCardData): RoyalO
     for (let i = 0; i < actionCardsConfigArray.length; i++) {
         AssertRoyalOfferingsConfigIndex(i);
         const currentActionCardConfig: RoyalOfferingCardData = actionCardsConfigArray[i],
-            amountPlayersValue: NumberTierValues = currentActionCardConfig.amount()[data.players],
-            amountTierValue: number = amountPlayersValue[data.tier];
+            amountPlayersValue: NumberTierValues<RoyalOfferingCardPlayersAmountType> =
+                currentActionCardConfig.amount()[data.players],
+            amountTierValue: RoyalOfferingCardPlayersAmountType = amountPlayersValue[data.tier];
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateRoyalOfferingCard({
                 name: currentActionCardConfig.name,

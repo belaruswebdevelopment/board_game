@@ -48,7 +48,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -139,7 +139,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -242,7 +242,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -348,7 +348,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -454,7 +454,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -667,7 +667,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
         DiscardSuitCardAction({ G, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -717,7 +717,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `discardCampCardsDeck` | `logData`>;
         DiscardSuitCardAction({ G, myPlayerID: `0` } as MyFnContextWithMyPlayerID, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,

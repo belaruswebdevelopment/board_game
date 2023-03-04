@@ -1,6 +1,6 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
-import { AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
+import { AssertGeneralStrategyForSoloBotAndvariId } from "../is_helpers/AssertionTypeHelpers";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { CardTypeRusNames, ErrorNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 /**
@@ -179,7 +179,7 @@ export const CheckSoloBotAndvariMustTakeCardFromGeneralStrategy = ({ G, ctx, myP
         throw new Error(`Не задан вариант уровня сложности для стратегий соло бота Андвари в соло игре.`);
     }
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
-        AssertZeroOrOneOrTwo(i);
+        AssertGeneralStrategyForSoloBotAndvariId(i);
         if (G.strategyForSoloBotAndvari === null) {
             throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
         }

@@ -1,10 +1,9 @@
 import { BuildInitialCoins } from "./Coin";
 import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { AssertBoardCoins, AssertHandCoins, AssertPrivateBoardCoins } from "./is_helpers/AssertionTypeHelpers";
-import { GameModeNames, HeroBuffNames, PhaseNames, SuitNames } from "./typescript/enums";
-import type { CanBeNullType, CreatePublicPlayerType, FnContext, PlayerBoardCardType, Priority, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, SuitPropertyType } from "./typescript/interfaces";
+import { SuitNames } from "./typescript/enums";
+import type { CanBeNullType, CreatePublicPlayerFromData, PlayerBoardCardType, Priority, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, SuitPropertyType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -18,7 +17,7 @@ import type { CanBeNullType, CreatePublicPlayerType, FnContext, PlayerBoardCardT
 export const BuildPlayer = (): PrivatePlayer => {
     const boardCoins: null[] = Array(initialCoinsConfig.length).fill(null);
     AssertPrivateBoardCoins(boardCoins);
-    return CreatePlayer({
+    return CreatePrivatePlayer({
         handCoins: BuildInitialCoins(),
         boardCoins,
     });
@@ -54,44 +53,13 @@ export const BuildPublicPlayer = (nickname: string, priority: Priority, isPrivat
     const boardCoins: null[] = Array(initialCoinsConfig.length).fill(null);
     AssertBoardCoins(boardCoins);
     return CreatePublicPlayer({
-        nickname,
+        boardCoins,
         cards,
         giantTokenSuits,
         handCoins,
-        boardCoins,
+        nickname,
         priority,
     });
-};
-
-/**
-* <h3>Проверяет базовый порядок хода игроков.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>Происходит при необходимости выставления монет на игровое поле.</li>
-* <li>Происходит при необходимости выставления монет на игровое поле при наличии героя Улина.</li>
-* </ol>
-*
-* @param context
-* @returns
-*/
-export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }: FnContext): void => {
-    G.publicPlayersOrder = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        if (ctx.phase !== PhaseNames.BidUline) {
-            if (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari
-                || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                    && !CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest },
-                        HeroBuffNames.EveryTurn))) {
-                G.publicPlayersOrder.push(String(i));
-            }
-        } else {
-            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest },
-                    HeroBuffNames.EveryTurn)) {
-                G.publicPlayersOrder.push(String(i));
-            }
-        }
-    }
 };
 
 /**
@@ -105,7 +73,7 @@ export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }: FnContext): void => 
  * @param handCoins Массив монет в руке.
  * @returns Приватные данные игрока.
  */
-const CreatePlayer = ({
+export const CreatePrivatePlayer = ({
     boardCoins,
     handCoins,
 }: PrivatePlayer): PrivatePlayer => ({
@@ -134,30 +102,32 @@ const CreatePlayer = ({
  * @param selectedCoin Выбранная монета.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({
-    nickname,
-    cards,
-    giantTokenSuits,
-    heroes = [],
-    campCards = [],
-    mythologicalCreatureCards = [],
-    handCoins,
+export const CreatePublicPlayer = ({
     boardCoins,
-    stack = [],
-    priority,
     buffs = [],
-    selectedCoin = null,
-}: CreatePublicPlayerType): PublicPlayer => ({
-    nickname,
+    campCards = [],
     cards,
+    currentCoinsScore = 14,
     giantTokenSuits,
-    campCards,
-    mythologicalCreatureCards,
-    heroes,
     handCoins,
-    boardCoins,
-    stack,
+    heroes = [],
+    mythologicalCreatureCards = [],
+    nickname,
     priority,
+    selectedCoin = null,
+    stack = [],
+}: CreatePublicPlayerFromData): PublicPlayer => ({
+    boardCoins,
     buffs,
+    campCards,
+    cards,
+    currentCoinsScore,
+    giantTokenSuits,
+    handCoins,
+    heroes,
+    mythologicalCreatureCards,
+    nickname,
+    priority,
     selectedCoin,
+    stack,
 });

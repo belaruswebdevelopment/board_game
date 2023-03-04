@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { CardTypeRusNames, ErrorNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { AllDiscardCardType, CampCardType, CampDeckCardType, CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernAllCardType, TavernCardIdType, TavernCardType, TavernCardWithExpansionType } from "../typescript/interfaces";
+import type { AllDiscardCardType, CampCardArray, CampCardType, CampDeckCardType, CanBeUndefType, FnContext, IndexOf, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernAllCardType, TavernCardIdPossibleType, TavernCardType, TavernCardWithExpansionType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с убиранием фракционной карты со стола игрока.</h3>
@@ -21,7 +21,8 @@ export const RemoveCardFromPlayerBoardSuitCards = ({ G, ctx, myPlayerID, ...rest
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const removedCard: CanBeUndefType<PlayerBoardCardType> = player.cards[suit].splice(cardId, 1)[0];
+    const removedCard: CanBeUndefType<PlayerBoardCardType> =
+        player.cards[suit].splice(cardId, 1)[0];
     if (removedCard === undefined) {
         throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует выбранная карта во фракции '${SuitRusNames[suit]}' с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
@@ -41,7 +42,7 @@ export const RemoveCardFromPlayerBoardSuitCards = ({ G, ctx, myPlayerID, ...rest
  * @param tavernCardId Id убираемой из таверны карты.
  * @returns Убранная из таверны карта.
  */
-export const RemoveCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardId: TavernCardIdType):
+export const RemoveCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardId: TavernCardIdPossibleType):
     TavernCardWithExpansionType => {
     const currentTavern: TavernAllCardType = G.taverns[G.currentTavern],
         removedTavernCard: CanBeUndefType<TavernCardType> = currentTavern[tavernCardId];
@@ -69,7 +70,7 @@ export const RemoveCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardI
  * @param addToCampArray Массив добавляемых в лагерь элементов.
  * @returns Убранная карта из лагеря.
  */
-export const RemoveCardsFromCampAndAddIfNeeded = ({ G }: FnContext, campCardId: number,
+export const RemoveCardsFromCampAndAddIfNeeded = ({ G }: FnContext, campCardId: IndexOf<CampCardArray>,
     addToCampArray: CampCardType[]): CampCardType => {
     const removedCampCard: CanBeUndefType<CampCardType> =
         G.camp.splice(campCardId, 1, ...addToCampArray)[0];

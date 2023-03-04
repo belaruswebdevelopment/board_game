@@ -1,4 +1,6 @@
-import type { CanBeUndefType, FnContext, PlayerCoinIdType, PublicPlayerCoinsType, PublicPlayerCoinType, RoyalCoin } from "../typescript/interfaces";
+import { ThrowMyError } from "../Error";
+import { ErrorNames } from "../typescript/enums";
+import type { CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, PlayerCoinIdType, PublicPlayer, PublicPlayerCoinsType, PublicPlayerCoinType, RoyalCoin } from "../typescript/interfaces";
 
 // TODO Think about MarketCoinIdType
 /**
@@ -27,14 +29,29 @@ export const RemoveCoinFromMarket = ({ G }: FnContext, coinId: number): RoyalCoi
  * <li>При действиях, убирающих монеты у игрока.</li>
  * </ol>
  *
+ * @param context
  * @param coins Массив монет игрока, откуда убирается монета.
  * @param coinId Id убираемой монеты.
  * @returns Убираемая монета у игрока.
  */
-export const RemoveCoinFromPlayer = (coins: PublicPlayerCoinsType, coinId: PlayerCoinIdType): void => {
-    const amount = 1,
-        removedCoin: PublicPlayerCoinType[] = coins.splice(coinId, 1, null);
-    if (amount !== removedCoin.length) {
-        throw new Error(`Недостаточно монет в массиве монет игрока: требуется - '${amount}', в наличии - '${removedCoin.length}'.`);
+export const RemoveCoinFromPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    coins: PublicPlayerCoinsType, coinId: PlayerCoinIdType): void => {
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+            myPlayerID);
     }
+    const amount = 1,
+        removedCoinsArray: PublicPlayerCoinType[] = coins.splice(coinId, 1, null);
+    if (amount !== removedCoinsArray.length) {
+        throw new Error(`Недостаточно монет в массиве монет игрока: требуется - '${amount}', в наличии - '${removedCoinsArray.length}'.`);
+    }
+    const removedCoin: CanBeUndefType<PublicPlayerCoinType> = removedCoinsArray[0];
+    if (removedCoin === undefined) {
+        throw new Error(`Не может отсутствовать сброшенная монета.`);
+    }
+    if (removedCoin === null) {
+        throw new Error(`Не может не быть монеты для сброса.`);
+    }
+    player.currentCoinsScore -= removedCoin.value;
 };

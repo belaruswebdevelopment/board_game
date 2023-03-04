@@ -1,6 +1,6 @@
 import { giantConfig, godConfig, mythicalAnimalConfig, mythologicalCreatureConfig, valkyryConfig } from "./data/MythologicalCreatureData";
 import { CardTypeRusNames } from "./typescript/enums";
-import type { CreateGiantCardFromData, CreateGodCardFromData, CreateMythicalAnimalCardFromData, CreateMythicalAnimalPlayerCardFromData, CreateValkyryCardFromData, GiantCard, GiantData, GiantNamesKeyofTypeofType, GodCard, GodData, GodNamesKeyofTypeofType, MythicalAnimalCard, MythicalAnimalData, MythicalAnimalNamesKeyofTypeofType, MythicalAnimalPlayerCard, MythologicalCreatureCardType, MythologicalCreatureDecks, NumPlayersType, ValkyryCard, ValkyryData, ValkyryNamesKeyofTypeofType } from "./typescript/interfaces";
+import type { CreateGiantCardFromData, CreateGodCardFromData, CreateMythicalAnimalCardFromData, CreateMythicalAnimalPlayerCardFromData, CreateValkyryCardFromData, GiantCard, GiantData, GiantNamesKeyofTypeofType, GodCard, GodData, GodNamesKeyofTypeofType, MythicalAnimalCard, MythicalAnimalData, MythicalAnimalNamesKeyofTypeofType, MythicalAnimalPlayerCard, MythologicalCreatureCardType, MythologicalCreatureDecks, MythologicalCreaturePlayersAmountType, NumPlayersType, ValkyryCard, ValkyryData, ValkyryNamesKeyofTypeofType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты Мифических существ.</h3>
@@ -72,7 +72,7 @@ export const BuildMythologicalCreatureCards = (): MythologicalCreatureCardType[]
  */
 export const BuildMythologicalCreatureDecks = (mythologicalCreatureCardsDeck: MythologicalCreatureCardType[],
     playersNum: NumPlayersType): MythologicalCreatureDecks => {
-    const amount: number = mythologicalCreatureConfig[playersNum],
+    const amount: MythologicalCreaturePlayersAmountType = mythologicalCreatureConfig[playersNum],
         mythologicalCreatureDeck: MythologicalCreatureCardType[] =
             mythologicalCreatureCardsDeck.splice(0, mythologicalCreatureConfig[playersNum]);
     if (amount !== mythologicalCreatureDeck.length) {

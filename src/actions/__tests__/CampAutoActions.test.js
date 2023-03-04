@@ -24,7 +24,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {},
@@ -69,7 +69,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {},
@@ -118,7 +118,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -173,7 +173,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -226,7 +226,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {},
@@ -279,7 +279,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {},
@@ -338,7 +338,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -399,7 +399,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -457,7 +457,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {},
@@ -517,7 +517,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -584,7 +584,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             currentPlayer: `0`,
         };
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -715,7 +715,7 @@ describe(`Test FinishOdroerirTheMythicCauldronAction method`, () => {
             odroerirTheMythicCauldron: true,
         }, ctx = {};
         FinishOdroerirTheMythicCauldronAction({ G, ctx });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             odroerirTheMythicCauldron: false,
         });
     });
@@ -744,7 +744,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
             numPlayers: 2,
         };
         StartDiscardSuitCardAction({ G, ctx });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {},
                 1: {
@@ -767,7 +767,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
                 },
             },
         });
-        expect(ctx).toEqual({
+        expect(ctx).toStrictEqual({
             currentPlayer: `0`,
             numPlayers: 2,
         });
@@ -801,7 +801,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
             numPlayers: 3,
         };
         StartDiscardSuitCardAction({ G, ctx });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {},
                 1: {
@@ -830,7 +830,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
                 },
             },
         });
-        expect(ctx).toEqual({
+        expect(ctx).toStrictEqual({
             currentPlayer: `0`,
             numPlayers: 3,
         });
@@ -888,7 +888,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -959,7 +959,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1038,7 +1038,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1137,7 +1137,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1223,7 +1223,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1303,7 +1303,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1386,7 +1386,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1458,7 +1458,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1541,7 +1541,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1629,7 +1629,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1716,7 +1716,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1799,7 +1799,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1889,7 +1889,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1989,7 +1989,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -2085,7 +2085,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -2174,7 +2174,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -2260,7 +2260,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -2349,7 +2349,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -2449,7 +2449,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             currentPlayer: `0`,
         };
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {

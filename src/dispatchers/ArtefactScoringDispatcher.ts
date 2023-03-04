@@ -1,6 +1,6 @@
 import { BasicArtefactScoring, DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, OdroerirTheMythicCauldronScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
 import { ArtefactScoringFunctionNames } from "../typescript/enums";
-import type { Action, ArtefactScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsType } from "../typescript/interfaces";
+import type { Action, ArtefactScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsCanBeUndefType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по артефакту.</h3>
@@ -15,7 +15,7 @@ import type { Action, ArtefactScoringFunction, MyFnContextWithMyPlayerID, Scorin
  * @returns Количество победных очков по артефакту.
  */
 export const StartArtefactScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    action: Action<ArtefactScoringFunctionNames, ScoringArgsType>, isFinal = false): number => {
+    action: Action<ArtefactScoringFunctionNames, ScoringArgsCanBeUndefType>, isFinal = false): number => {
     const actionDispatcher: ArtefactScoringFunction = ArtefactScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
         return actionDispatcher?.({ G, ctx, myPlayerID, ...rest }, isFinal);

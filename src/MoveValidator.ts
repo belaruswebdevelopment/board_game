@@ -12,7 +12,7 @@ import { IsCoin, IsTriggerTradingCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GodNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
-import type { CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, DwarfCard, EnlistmentMercenariesAllStageNames, HeroCard, KeyofType, MoveArgumentsType, MoveBy, MoveCardIdType, MoveCardsArguments, MoveCoinsArguments, MoveNamesType, MoveSuitCardCurrentId, MoveValidator, MoveValidatorGetRangeStringArrayType, MoveValidatorGetRangeType, MoveValidators, MyFnContextWithMyPlayerID, PickHeroCardValidatorNamesKeyofTypeofType, PickValidatorsConfig, PlayerBoardCardType, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerBoardCoins, PublicPlayerCoinsType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardWithExpansionType, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType, ZeroOrOneType } from "./typescript/interfaces";
+import type { AllCoinsValueType, CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, DwarfCard, EnlistmentMercenariesAllStageNames, HeroCard, KeyofType, MoveArgumentsType, MoveBy, MoveCardIdType, MoveCardsArguments, MoveCoinsArguments, MoveNamesType, MoveSuitCardCurrentId, MoveValidator, MoveValidatorGetRangeStringArrayType, MoveValidatorGetRangeType, MoveValidators, MyFnContextWithMyPlayerID, PickHeroCardValidatorNamesKeyofTypeofType, PickValidatorsConfig, PlayerBoardCardType, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerBoardCoins, PublicPlayerCoinsType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardWithExpansionType, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType, ZeroOrOneType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ui/ProfitUI";
@@ -202,6 +202,7 @@ export const GetValidator = (phase: PhaseNames, stage: StageNames, type: MoveNam
     return validator;
 };
 
+// TODO Return type number can be other TYPE!
 // TODO MOVE ALL SAME VALIDATING LOGIC FROM GET RANGE/GET VALUE TO VALIDATE! And not same in another functions too to reduce logic here!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -862,10 +863,7 @@ export const moveValidators: MoveValidators = {
                 moveArgument =
                     SoloBotMustTakeRandomCard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
+            return moveArgument;
         },
         moveName: CardMoveNames.SoloBotClickCardMove,
         validate: ({ ctx, myPlayerID }: MyFnContextWithMyPlayerID): boolean => myPlayerID === ctx.currentPlayer,
@@ -984,7 +982,7 @@ export const moveValidators: MoveValidators = {
                 type = CoinTypeNames.Board;
                 coins = player.boardCoins;
             }
-            const minValue: number = CheckMinCoinVisibleValueForSoloBot({ G, ctx, myPlayerID, ...rest },
+            const minValue: AllCoinsValueType = CheckMinCoinVisibleValueForSoloBot({ G, ctx, myPlayerID, ...rest },
                 currentMoveArguments, type);
             if (minValue === 0) {
                 throw new Error(`В массиве монет соло бота с id '${myPlayerID}' ${type === CoinTypeNames.Board ? `в руке` : `на столе`} не может быть минимальная монета для улучшения с значением '${minValue}'.`);
@@ -1116,10 +1114,7 @@ export const moveValidators: MoveValidators = {
                 moveArgument = SoloBotMustTakeCardFromReserveStrategy({ G, ctx, myPlayerID, ...rest },
                     currentMoveArguments);
             }
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
+            return moveArgument;
         },
         moveName: CardMoveNames.SoloBotAndvariClickCardMove,
         validate: ({ ctx, myPlayerID }: MyFnContextWithMyPlayerID): boolean => myPlayerID === ctx.currentPlayer,
@@ -1239,7 +1234,7 @@ export const moveValidators: MoveValidators = {
                     myPlayerID);
             }
             const coins: PublicPlayerBoardCoins = player.boardCoins,
-                minValue: number = CheckMinCoinVisibleValueForSoloBotAndvari({ G, ctx, myPlayerID, ...rest },
+                minValue: AllCoinsValueType = CheckMinCoinVisibleValueForSoloBotAndvari({ G, ctx, myPlayerID, ...rest },
                     currentMoveArguments);
             if (minValue === 0) {
                 throw new Error(`В массиве монет соло бота Андвари с id '${myPlayerID}' не может быть минимальная монета для улучшения с значением '${minValue}'.`);
@@ -2007,7 +2002,7 @@ const ValidateObjectEqualValues = (value: DwarfCard, values: DwarfCard): boolean
         return false;
     }
     for (let i = 0; i < props1.length; i += 1) {
-        const prop = props1[i];
+        const prop: CanBeUndefType<KeyofType<DwarfCard>> = props1[i];
         if (prop === undefined) {
             throw new Error(`Не существует такого 'prop'.`);
         }

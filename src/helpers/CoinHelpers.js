@@ -1,6 +1,6 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertPlayerCoinId, AssertPrivateHandCoins } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertAllPriorityValue, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
@@ -55,9 +55,9 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
         }
         type = CoinTypeNames.Hand;
         AssertPlayerCoinId(tradingCoinIndex);
-        RemoveCoinFromPlayer(handCoins, tradingCoinIndex);
+        RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, handCoins, tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            RemoveCoinFromPlayer(player.handCoins, tradingCoinIndex);
+            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, player.handCoins, tradingCoinIndex);
         }
     }
     else {
@@ -66,9 +66,9 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
         }
         AssertPlayerCoinId(tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            RemoveCoinFromPlayer(privatePlayer.boardCoins, tradingCoinIndex);
+            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, privatePlayer.boardCoins, tradingCoinIndex);
         }
-        RemoveCoinFromPlayer(player.boardCoins, tradingCoinIndex);
+        RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, player.boardCoins, tradingCoinIndex);
     }
     return [type, tradingCoinIndex];
 };
@@ -235,15 +235,15 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }) => {
     for (let i = 0; i < coinValues.length; i++) {
         const coinValue = coinValues[i];
         if (coinValue !== undefined) {
-            const value = (_a = counts[coinValue]) !== null && _a !== void 0 ? _a : 0;
-            AssertAllCoinsValue(value);
-            counts[coinValue] = 1 + value;
+            const value = (_a = counts[coinValue]) !== null && _a !== void 0 ? _a : 0, newValue = 1 + value;
+            AssertPlayerCoinNumberValues(newValue);
+            counts[coinValue] = newValue;
         }
     }
     for (const prop in counts) {
-        // TODO Check & fix it...
-        AssertAllCoinsValue(Number(prop));
-        const value = counts[prop];
+        const coinsValue = Number(prop);
+        AssertAllCoinsValue(coinsValue);
+        const value = counts[coinsValue];
         if (value === undefined) {
             throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
         }
@@ -258,7 +258,11 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }) => {
             return (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.value) === Number(prop) && player.priority.isExchangeable;
         });
         while (tiePlayers.length > 1) {
-            const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities), maxIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === maxPriority), minIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === minPriority), amount = 1, removedTiePlayersWithMaxPriority = tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), amount), removedTiePlayersWithMinPriority = tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), amount);
+            // TODO Add types for all `number`!?
+            const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities);
+            AssertAllPriorityValue(maxPriority);
+            AssertAllPriorityValue(minPriority);
+            const maxIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === maxPriority), minIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === minPriority), amount = 1, removedTiePlayersWithMaxPriority = tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), amount), removedTiePlayersWithMinPriority = tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), amount);
             if (amount !== removedTiePlayersWithMaxPriority.length) {
                 throw new Error(`Недостаточно игроков в массиве игроков с максимальным приоритетом: требуется - '${amount}', в наличии - '${removedTiePlayersWithMaxPriority.length}'.`);
             }

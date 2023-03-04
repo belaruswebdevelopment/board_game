@@ -69,8 +69,7 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const DiscardCardFromTavernJarnglofi = ({ G, ctx, ...rest }) => {
-    const currentTavernConfig = tavernsConfig[G.currentTavern];
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
     DiscardCardFromTavern({ G, ctx, ...rest });
     G.mustDiscardTavernCardJarnglofi = false;
 };
@@ -86,8 +85,7 @@ export const DiscardCardFromTavernJarnglofi = ({ G, ctx, ...rest }) => {
  */
 export const DiscardCardIfCampCardPicked = ({ G, ctx, ...rest }) => {
     if (G.campPicked) {
-        const currentTavernConfig = tavernsConfig[G.currentTavern];
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
         DiscardCardFromTavern({ G, ctx, ...rest });
         G.campPicked = false;
     }
@@ -119,6 +117,7 @@ export const RefillCamp = ({ G, ctx, ...rest }) => {
     campDeck1[0] = odroerirTheMythicCauldron;
     campDeck1[index] = campCardTemp;
     for (let i = 0; i < G.campNum; i++) {
+        AssertCampIndex(i);
         AddCardToCamp({ G, ctx, ...rest }, i);
     }
     G.odroerirTheMythicCauldron = true;
@@ -149,6 +148,7 @@ export const RefillEmptyCampCards = ({ G, ctx, ...rest }) => {
             // TODO Is it dynamically change campDeck.length after AddCardToCamp!?
             isEmptyCurrentTierCampDeck = campDeck.length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
+                AssertCampIndex(cardIndex);
                 AddCardToCamp({ G, ctx, ...rest }, cardIndex);
             }
         });

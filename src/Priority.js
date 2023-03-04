@@ -1,3 +1,4 @@
+import { AssertPrioritiesAmount } from "./is_helpers/AssertionTypeHelpers";
 /**
  * <h3>Создание кристаллов.</h3>
  * <p>Применения:</p>
@@ -27,7 +28,8 @@ export const CreatePriority = ({ isExchangeable = true, value, }) => ({
  * @returns Массив базовых кристаллов.
  */
 export const GeneratePrioritiesForPlayerNumbers = (numPlayers, solo) => {
-    const priorityNum = ((solo ? 1 : numPlayers) - 1);
+    const priorityNum = (solo ? 1 : numPlayers) - 1;
+    AssertPrioritiesAmount(priorityNum);
     return prioritiesConfig[priorityNum].map((priority) => priority);
 };
 // TODO Move to PriorityData?!

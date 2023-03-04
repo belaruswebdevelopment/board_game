@@ -71,7 +71,10 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
             return _exhaustiveCheck;
     }
     // TODO Split into different functions!?
-    const buffValue = CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.UpgradeCoin) ? 2 : 0, newValue = upgradingCoin.value + value + buffValue;
+    // TODO Move 0 | 2 in type!?
+    const buffValue = CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.UpgradeCoin) ? 2 : 0, 
+    // TODO Add type for newValue = by 51 max (25 coin+24 second coin + 2 max buf value)!
+    newValue = upgradingCoin.value + value + buffValue;
     let upgradedCoin = null;
     if (G.royalCoins.length) {
         const lastRoyalCoin = G.royalCoins[G.royalCoins.length - 1];
@@ -95,6 +98,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
                     upgradedCoin = royalCoin;
                     RemoveCoinFromMarket({ G, ctx, ...rest }, i);
                     if (G.expansions.Idavoll.active) {
+                        // TODO Can add type for min/max betterment!?
                         const betterment = royalCoin.value - newValue;
                         if (betterment > 0) {
                             for (let j = 0; j < betterment; j++) {
@@ -170,5 +174,6 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
         G.royalCoins.splice(returningIndex, 0, upgradingCoin);
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
     }
+    player.currentCoinsScore += upgradedCoin.value - upgradingCoin.value;
 };
 //# sourceMappingURL=CoinActions.js.map

@@ -3,8 +3,8 @@ import { ThrowMyError } from "../Error";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, GameModeNames, HeroNames, PhaseNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>

@@ -146,6 +146,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         exchangeOrder: number[] = [],
         priorities: Priority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, mode === GameModeNames.Solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
+        // TODO Move Generate & Randomize Priority in one place or different functions!?
         const randomPriorityIndex: number =
             mode === GameModeNames.Solo ? 0 : Math.floor(Math.random() * priorities.length),
             priority: CanBeUndefType<Priority> = priorities.splice(randomPriorityIndex, 1)[0];

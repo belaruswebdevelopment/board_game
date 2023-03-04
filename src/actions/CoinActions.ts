@@ -79,8 +79,10 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
             return _exhaustiveCheck;
     }
     // TODO Split into different functions!?
-    const buffValue: number =
+    // TODO Move 0 | 2 in type!?
+    const buffValue: 0 | 2 =
         CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.UpgradeCoin) ? 2 : 0,
+        // TODO Add type for newValue = by 51 max (25 coin+24 second coin + 2 max buf value)!
         newValue: number = upgradingCoin.value + value + buffValue;
     let upgradedCoin: CoinType = null;
     if (G.royalCoins.length) {
@@ -103,6 +105,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
                     upgradedCoin = royalCoin;
                     RemoveCoinFromMarket({ G, ctx, ...rest }, i);
                     if (G.expansions.Idavoll.active) {
+                        // TODO Can add type for min/max betterment!?
                         const betterment: number = royalCoin.value - newValue;
                         if (betterment > 0) {
                             for (let j = 0; j < betterment; j++) {
@@ -177,4 +180,5 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         G.royalCoins.splice(returningIndex, 0, upgradingCoin);
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
     }
+    player.currentCoinsScore += upgradedCoin.value - upgradingCoin.value;
 };

@@ -97,6 +97,7 @@ export const SetupGame = ({ ctx, random }) => {
     }
     const players = {}, publicPlayers = {}, publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, mode === GameModeNames.Solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
+        // TODO Move Generate & Randomize Priority in one place or different functions!?
         const randomPriorityIndex = mode === GameModeNames.Solo ? 0 : Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);

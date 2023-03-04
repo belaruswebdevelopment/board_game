@@ -73,8 +73,7 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }) => {
     if (IsTriggerTradingCoin(boardCoin)) {
         const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
         if (tradingCoinPlacesLength > 0) {
-            const handCoinsLength = handCoins.filter(IsCoin).length;
-            const actionsNum = G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
+            const handCoinsLength = handCoins.filter(IsCoin).length, actionsNum = G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
             if (actionsNum > handCoinsLength) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
             }

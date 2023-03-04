@@ -37,7 +37,7 @@ export const BuildSpecialCards = () => {
  * @param rank Шевроны.
  * @returns Особая карта.
  */
-const CreateSpecialCard = ({ type = CardTypeRusNames.SpecialCard, name, playerSuit, points = null, rank = 1, }) => ({
+const CreateSpecialCard = ({ type = CardTypeRusNames.SpecialCard, name, playerSuit, points = null, rank = 2, }) => ({
     type,
     name,
     playerSuit,
@@ -58,7 +58,7 @@ const CreateSpecialCard = ({ type = CardTypeRusNames.SpecialCard, name, playerSu
  * @param rank Шевроны.
  * @returns Особая карта на поле игрока.
  */
-export const CreateSpecialCardPlayerCard = ({ type = CardTypeRusNames.SpecialPlayerCard, name, suit, points = null, rank = 1, }) => ({
+export const CreateSpecialCardPlayerCard = ({ type = CardTypeRusNames.SpecialPlayerCard, name, suit, points = null, rank = 2, }) => ({
     type,
     name,
     suit,

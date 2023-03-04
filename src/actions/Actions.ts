@@ -9,7 +9,7 @@ import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
 import { ArtefactNames, CampBuffNames, CardTypeRusNames, CommonBuffNames, ErrorNames, LogTypeNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, CampCardType, CampCreatureCommandZoneCardType, CanBeUndefType, DiscardDeckCardType, DwarfDeckCardType, MercenaryCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, TavernCardIdType, TavernCardWithExpansionType } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, CampCardType, CampCreatureCommandZoneCardType, CanBeUndefType, DiscardDeckCardType, DwarfDeckCardType, ExplorerDistinctionCardIdType, MercenaryCard, MercenaryRankType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, TavernCardIdPossibleType, TavernCardWithExpansionType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с выбором карты из таверны.</h3>
@@ -25,7 +25,7 @@ import type { ActionFunctionWithoutParams, CampCardType, CampCreatureCommandZone
  * @returns
  */
 export const ClickCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    tavernCardId: TavernCardIdType): void => {
+    tavernCardId: TavernCardIdPossibleType): void => {
     const tavernCard: TavernCardWithExpansionType = RemoveCardFromTavern({ G, ctx, ...rest }, tavernCardId);
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, tavernCard);
 };
@@ -63,7 +63,7 @@ export const DiscardAnyCardFromPlayerBoardAction = ({ G, ctx, myPlayerID, ...res
  * @returns
  */
 export const DiscardCardFromTavernAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    tavernCardId: TavernCardIdType): void => {
+    tavernCardId: TavernCardIdPossibleType): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -196,16 +196,15 @@ export const PickDiscardCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
  * @returns
  */
 export const PickCardToPickDistinctionAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    cardId: number): void => {
+    cardId: ExplorerDistinctionCardIdType): void => {
     if (G.explorerDistinctionCards === null) {
         throw new Error(`В массиве карт для получения преимущества по фракции '${SuitRusNames.explorer}' не может не быть карт.`);
     }
-    const pickedCard: CanBeUndefType<DwarfDeckCardType> =
-        G.explorerDistinctionCards.splice(cardId, 1)[0];
+    const pickedCard: CanBeUndefType<DwarfDeckCardType> = G.explorerDistinctionCards[cardId];
     if (pickedCard === undefined) {
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
-    G.explorerDistinctionCards.splice(0);
+    G.explorerDistinctionCards = null;
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, pickedCard);
     if (pickedCard.type === CardTypeRusNames.DwarfCard) {
         G.distinctions[SuitNames.explorer] = undefined;
@@ -243,7 +242,7 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }
     if (mercenaryCard === undefined) {
         throw new Error(`В стеке отсутствует 'card'.`);
     }
-    const cardVariants = mercenaryCard.variants[suit];
+    const cardVariants: CanBeUndefType<VariantType<MercenaryRankType>> = mercenaryCard.variants[suit];
     if (cardVariants === undefined) {
         throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }

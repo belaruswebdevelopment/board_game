@@ -99,6 +99,7 @@ export const OnTroopEvaluationMove = ({ G, ctx, ...rest }) => {
 export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
     AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+        // TODO Move to type!?
         let length;
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             length = 1;

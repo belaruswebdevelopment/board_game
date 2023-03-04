@@ -3,10 +3,10 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { AssertCampIndex, AssertHeroesForSoloGameIndex, AssertTavernConfigIndex, AssertTavernIndex, AssertTierIndex, AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertHeroesForSoloGameIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
-import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MoveArgumentsType, MoveValidatorNamesTypes, NumberValues, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
+import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinNumberValues, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MarketCoinNumberValuesType, MoveArgumentsType, MoveValidatorNamesTypes, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -458,7 +458,7 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
 export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps): JSX.Element => {
     const boardRows: JSX.Element[] = [],
         drawData: DrawBoardOptions = DrawBoard(G.royalCoinsUnique.length),
-        countMarketCoins: NumberValues = CountRoyalCoins({ G, ctx, ...rest });
+        countMarketCoins: CoinNumberValues<MarketCoinNumberValuesType> = CountRoyalCoins({ G, ctx, ...rest });
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
@@ -468,7 +468,8 @@ export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
             const tempCoinValue: AllCoinsValueType = royalCoin.value,
-                coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
+                coinClassName: `text-red-500` | `text-blue-500` =
+                    countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
             DrawCoin({ G, ctx, ...rest }, data, boardCells, DrawCoinTypeNames.Market,
                 royalCoin, increment, null, coinClassName,
                 countMarketCoins[tempCoinValue]);
@@ -601,7 +602,7 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }: FnContext, 
         throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
     }
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
-        AssertZeroOrOneOrTwo(i);
+        AssertGeneralStrategyForSoloBotAndvariId(i);
         const suit: CanBeUndefType<CanBeNullType<SuitNames>> = G.strategyForSoloBotAndvari.general[i];
         if (suit === undefined) {
             throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
@@ -655,12 +656,11 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let t = 0; t < G.tavernsNum; t++) {
-        AssertTavernConfigIndex(t);
+        AssertTavernIndex(t);
         const currentTavernConfig: TavernInConfig = tavernsConfig[t];
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
-                AssertTavernIndex(t);
                 const tavern: TavernAllCardType = G.taverns[t],
                     tavernCard: CanBeUndefType<TavernCardType> = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {

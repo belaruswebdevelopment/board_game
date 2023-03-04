@@ -189,6 +189,7 @@ export const GetValidator = (phase, stage, type) => {
     }
     return validator;
 };
+// TODO Return type number can be other TYPE!
 // TODO MOVE ALL SAME VALIDATING LOGIC FROM GET RANGE/GET VALUE TO VALIDATE! And not same in another functions too to reduce logic here!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -707,10 +708,7 @@ export const moveValidators = {
                 moveArgument =
                     SoloBotMustTakeRandomCard({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
+            return moveArgument;
         },
         moveName: CardMoveNames.SoloBotClickCardMove,
         validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,
@@ -891,10 +889,7 @@ export const moveValidators = {
             if (moveArgument === undefined) {
                 moveArgument = SoloBotMustTakeCardFromReserveStrategy({ G, ctx, myPlayerID, ...rest }, currentMoveArguments);
             }
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
+            return moveArgument;
         },
         moveName: CardMoveNames.SoloBotAndvariClickCardMove,
         validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer,

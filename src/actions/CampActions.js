@@ -5,7 +5,7 @@ import { AddAnyCardToPlayerActions } from "../helpers/CardHelpers";
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards, RemoveCardsFromCampAndAddIfNeeded } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertPlayerCoinId, AssertPlayerPouchCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertBasicVidofnirVedrfolnirUpgradeValue, AssertPlayerCoinId, AssertPlayerPouchCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, SuitNames } from "../typescript/enums";
@@ -146,6 +146,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...res
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     const value = UpgradeCoinActions({ G, ctx, myPlayerID, ...rest }, coinId, type);
+    AssertBasicVidofnirVedrfolnirUpgradeValue(value);
     if (value !== 5 && stack.priority === 0) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([value === 2 ? 3 : 2], coinId, 3)]);
     }

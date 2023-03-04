@@ -68,8 +68,7 @@ export const StartEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVo
 * @param context
 * @returns Фаза игры.
 */
-export const StartEndTierPhaseOrEndGameLastActions = ({ G, ctx, ...rest }: FnContext):
-    CanBeVoidType<PhaseNames> => {
+export const StartEndTierPhaseOrEndGameLastActions = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {
     const yludIndex: number =
         Object.values(G.publicPlayers).findIndex((player: PublicPlayer, index: number): boolean =>
             CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EndTier));

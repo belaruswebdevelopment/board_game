@@ -1,3 +1,11 @@
+// Start Lobby
+export var LobbyPhases;
+(function (LobbyPhases) {
+    LobbyPhases["ENTER"] = "enter";
+    LobbyPhases["PLAY"] = "play";
+    LobbyPhases["LIST"] = "list";
+})(LobbyPhases || (LobbyPhases = {}));
+//End Lobby
 // Suit Start
 /**
  * <h3>Перечисление для названия фракции дворфов.</h3>

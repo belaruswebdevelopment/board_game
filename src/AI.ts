@@ -6,6 +6,7 @@ import { AllCurrentScoring } from "./Score";
 import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
 import type { ActiveStageNames, AIAllObjectives, CanBeNullType, CanBeUndefType, Ctx, FnContext, GetValidatorStageNames, MoveArgsType, MoveNamesType, Moves, MoveValidator, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, MyGameState, PlayerID, PublicPlayer, SecretDwarfDeckTier0, StageNames, TavernCardType, ValidMoveIdParamType } from "./typescript/interfaces";
 
+// TODO Check all number type here!
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>

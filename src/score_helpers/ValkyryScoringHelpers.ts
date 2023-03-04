@@ -1,6 +1,8 @@
-import { AssertOneOrTwoOrThreeOrFour, AssertZeroOrOneOrTwoOrThree } from "../is_helpers/AssertionTypeHelpers";
+import { AssertStrengthTokenNotchLongMax, AssertStrengthTokenNotchShortMax } from "../is_helpers/AssertionTypeHelpers";
 import type { StrengthTokenFiveNotchPointsType, StrengthTokenFourNotchPointsType, ValkyryScoringFunction } from "../typescript/interfaces";
 
+// TODO Add strengthTokenNotch type and do it can't be more then max strengthTokenNotch value!
+// TODO Add all types here as 0 | 3 | 6 | 10 | 16 ...?
 /**
  * <h3>Получение победных очков по мифическому существу Brynhildr.</h3>
  * <p>Применения:</p>
@@ -15,7 +17,7 @@ export const BrynhildrScoring: ValkyryScoringFunction = (strengthTokenNotch: num
     const strengthTokenNotchPoints: StrengthTokenFiveNotchPointsType = [0, 3, 6, 10, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
-    AssertOneOrTwoOrThreeOrFour(strengthTokenNotchFinalValue);
+    AssertStrengthTokenNotchLongMax(strengthTokenNotchFinalValue);
     return strengthTokenNotchPoints[strengthTokenNotchFinalValue];
 };
 
@@ -33,7 +35,7 @@ export const HildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number)
     const strengthTokenNotchPoints: StrengthTokenFourNotchPointsType = [0, 8, 16, 0],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
-    AssertZeroOrOneOrTwoOrThree(strengthTokenNotchFinalValue);
+    AssertStrengthTokenNotchShortMax(strengthTokenNotchFinalValue);
     return strengthTokenNotchPoints[strengthTokenNotchFinalValue];
 };
 
@@ -51,7 +53,7 @@ export const OlrunScoring: ValkyryScoringFunction = (strengthTokenNotch: number)
     const strengthTokenNotchPoints: StrengthTokenFiveNotchPointsType = [0, 3, 6, 10, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
-    AssertOneOrTwoOrThreeOrFour(strengthTokenNotchFinalValue);
+    AssertStrengthTokenNotchLongMax(strengthTokenNotchFinalValue);
     return strengthTokenNotchPoints[strengthTokenNotchFinalValue];
 };
 
@@ -69,7 +71,7 @@ export const SigrdrifaScoring: ValkyryScoringFunction = (strengthTokenNotch: num
     const strengthTokenNotchPoints: StrengthTokenFourNotchPointsType = [0, 0, 8, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
-    AssertZeroOrOneOrTwoOrThree(strengthTokenNotchFinalValue);
+    AssertStrengthTokenNotchShortMax(strengthTokenNotchFinalValue);
     return strengthTokenNotchPoints[strengthTokenNotchFinalValue];
 };
 
@@ -87,6 +89,6 @@ export const SvafaScoring: ValkyryScoringFunction = (strengthTokenNotch: number)
     const strengthTokenNotchPoints: StrengthTokenFourNotchPointsType = [0, 4, 8, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
-    AssertZeroOrOneOrTwoOrThree(strengthTokenNotchFinalValue);
+    AssertStrengthTokenNotchShortMax(strengthTokenNotchFinalValue);
     return strengthTokenNotchPoints[strengthTokenNotchFinalValue];
 };

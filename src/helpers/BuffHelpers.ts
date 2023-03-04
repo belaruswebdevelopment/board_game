@@ -16,8 +16,8 @@ import type { AllBuffNames, BuffType, BuffValueType, CanBeUndefType, MyFnContext
  * @param value Значение бафа.
  * @returns
  */
-export const AddBuffToPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, buff?: BuffType,
-    value?: BuffValueType): void => {
+export const AddBuffToPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    buff: CanBeUndefType<BuffType>, value?: BuffValueType): void => {
     if (buff !== undefined) {
         const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {

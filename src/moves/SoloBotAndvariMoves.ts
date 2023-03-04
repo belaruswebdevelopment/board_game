@@ -5,7 +5,7 @@ import { AddHeroToPlayerCardsAction, PlaceThrudAction, PlaceYludAction } from ".
 import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/DistinctionAwardingHelpers";
 import { PlaceAllCoinsInCurrentOrderForSoloBot, PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari } from "../helpers/SoloBotHelpers";
-import { AssertPlayerCoinId, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertExplorerDistinctionCardIdType, AssertPlayerCoinId, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import { AutoBotsMoveNames, BidsDefaultStageNames, CardMoveNames, CoinMoveNames, CoinTypeNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SoloBotAndvariCommonStageNames, SuitNames, TavernsResolutionDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
@@ -23,6 +23,7 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  */
 export const SoloBotAndvariClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, tavernCardId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertTavernCardId(tavernCardId);
     const isValidMove: boolean = playerID === `1` &&
         IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
             TavernsResolutionDefaultStageNames.SoloBotClickCard,
@@ -30,7 +31,6 @@ export const SoloBotAndvariClickCardMove: Move = ({ G, ctx, playerID, ...rest }:
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertTavernCardId(tavernCardId);
     ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 
@@ -47,6 +47,7 @@ export const SoloBotAndvariClickCardMove: Move = ({ G, ctx, playerID, ...rest }:
  */
 export const SoloBotAndvariClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext,
     cardId: number): CanBeVoidType<InvalidMoveType> => {
+    AssertExplorerDistinctionCardIdType(cardId);
     const isValidMove: boolean = playerID === `1`
         && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
             TroopEvaluationStageNames.SoloBotAndvariClickCardToPickDistinction,

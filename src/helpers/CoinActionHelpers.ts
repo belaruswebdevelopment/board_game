@@ -20,7 +20,7 @@ import { AddActionsToStack } from "./StackHelpers";
  * @returns Значение на которое улучшается монета.
  */
 export const UpgradeCoinActions = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, coinId: PlayerCoinIdType,
-    type: CoinTypeNames): number => {
+    type: CoinTypeNames): UpgradableCoinValueType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,

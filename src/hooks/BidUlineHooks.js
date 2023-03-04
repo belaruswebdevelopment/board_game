@@ -1,9 +1,9 @@
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { OpenCurrentTavernClosedCoinsOnPlayerBoard } from "../helpers/CoinHelpers";
+import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { CheckPlayersBasicOrder } from "../Player";
 import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки Улина'.</h3>

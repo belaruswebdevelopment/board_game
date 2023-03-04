@@ -1,6 +1,6 @@
 import { BasicGiantScoring, GymirScoring, SurtScoring } from "../score_helpers/GiantScoringHelpers";
 import { GiantScoringFunctionNames } from "../typescript/enums";
-import type { Action, GiantScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsType } from "../typescript/interfaces";
+import type { Action, GiantScoringFunction, MyFnContextWithMyPlayerID, ScoringArgsCanBeUndefType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по Гиганту.</h3>
@@ -14,7 +14,7 @@ import type { Action, GiantScoringFunction, MyFnContextWithMyPlayerID, ScoringAr
  * @returns Количество победных очков по Гиганту.
  */
 export const StartGiantScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    action: Action<GiantScoringFunctionNames, ScoringArgsType>): number => {
+    action: Action<GiantScoringFunctionNames, ScoringArgsCanBeUndefType>): number => {
     const actionDispatcher: GiantScoringFunction = GiantScoringDispatcherSwitcher(action.name);
     if (action.params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);

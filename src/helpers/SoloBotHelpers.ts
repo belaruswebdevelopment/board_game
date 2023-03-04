@@ -2,7 +2,7 @@ import { ThrowMyError } from "../Error";
 import { AssertPlayerCoinId, AssertPlayerTavernCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CoinTypeNames, ErrorNames, GameModeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinType, MoveArgumentsType, MoveCoinsArguments, MyFnContextWithMyPlayerID, PlayerCoinIdType, PrivatePlayer, PrivatePlayerHandCoins, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { AllCoinsValueType, CanBeUndefType, CoinType, MoveArgumentsType, MoveCoinsArguments, MyFnContextWithMyPlayerID, PlayerCoinIdType, PrivatePlayer, PrivatePlayerHandCoins, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет минимальную видимую монету соло бота.</h3>
@@ -17,7 +17,7 @@ import type { CanBeUndefType, CoinType, MoveArgumentsType, MoveCoinsArguments, M
  * @returns Id минимальной видимой монеты соло бота.
  */
 export const CheckMinCoinVisibleIndexForSoloBot = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    coins: PublicPlayerCoinType[], minValue: number): PlayerCoinIdType =>
+    coins: PublicPlayerCoinType[], minValue: AllCoinsValueType): PlayerCoinIdType =>
     GetMinCoinVisibleIndex({ G, ctx, myPlayerID, ...rest }, coins, minValue);
 
 /**
@@ -33,7 +33,7 @@ export const CheckMinCoinVisibleIndexForSoloBot = ({ G, ctx, myPlayerID, ...rest
  * @returns Id минимальной монеты соло бота Андвари.
  */
 export const CheckMinCoinIndexForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    coins: PublicPlayerCoinType[], minValue: number): PlayerCoinIdType =>
+    coins: PublicPlayerCoinType[], minValue: AllCoinsValueType): PlayerCoinIdType =>
     GetMinCoinVisibleIndex({ G, ctx, myPlayerID, ...rest }, coins, minValue);
 
 /**
@@ -49,13 +49,13 @@ export const CheckMinCoinIndexForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest
  * @returns Значение минимальной видимой монеты соло бота.
  */
 export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    moveArguments: MoveArgumentsType<MoveCoinsArguments[]>, type: CoinTypeNames): number => {
+    moveArguments: MoveArgumentsType<MoveCoinsArguments[]>, type: CoinTypeNames): AllCoinsValueType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let minValue = 0;
+    let minValue: AllCoinsValueType = 0;
     for (let i = 0; i < moveArguments.length; i++) {
         const currentMoveArgument: CanBeUndefType<MoveCoinsArguments> = moveArguments[i];
         if (currentMoveArgument === undefined) {
@@ -100,13 +100,13 @@ export const CheckMinCoinVisibleValueForSoloBot = ({ G, ctx, myPlayerID, ...rest
  * @returns Значение минимальной монеты соло бота Андвари.
  */
 export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    moveArguments: MoveArgumentsType<MoveCoinsArguments[]>): number => {
+    moveArguments: MoveArgumentsType<MoveCoinsArguments[]>): AllCoinsValueType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let minValue = 0;
+    let minValue: AllCoinsValueType = 0;
     for (let i = 0; i < moveArguments.length; i++) {
         const currentMoveArgument: CanBeUndefType<MoveCoinsArguments> = moveArguments[i];
         if (currentMoveArgument === undefined) {
@@ -143,7 +143,7 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, 
  * @returns Id минимальной видимой монеты соло ботов.
  */
 export const GetMinCoinVisibleIndex = ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID,
-    coins: PublicPlayerCoinType[], minValue: number): PlayerCoinIdType => {
+    coins: PublicPlayerCoinType[], minValue: AllCoinsValueType): PlayerCoinIdType => {
     let coinId: CanBeUndefType<PlayerCoinIdType>;
     coins.forEach((coin: PublicPlayerCoinType, index: number): void => {
         AssertPlayerCoinId(index);

@@ -63,12 +63,12 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove: Move = ({ G, ctx, 
  */
 export const ClickCampCardHoldaMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, campCardId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertCampIndex(campCardId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         CommonStageNames.ClickCampCardHolda, CardMoveNames.ClickCampCardHoldaMove, campCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertCampIndex(campCardId);
     PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, campCardId);
 };
 
@@ -85,12 +85,12 @@ export const ClickCampCardHoldaMove: Move = ({ G, ctx, playerID, ...rest }: MyFn
  */
 export const ClickCampCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, campCardId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertCampIndex(campCardId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionDefaultStageNames.ClickCampCard, CardMoveNames.ClickCampCardMove, campCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertCampIndex(campCardId);
     PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, campCardId);
 };
 

@@ -3,7 +3,7 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { AssertPlayerCoinId, AssertTavernConfigIndex, AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertPlayerCoinId, AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
@@ -553,10 +553,8 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
             for (let t = 0; t < G.tavernsNum; t++) {
                 if (data !== undefined) {
                     if (i === 0) {
-                        AssertTavernConfigIndex(t);
-                        const currentTavernConfig = tavernsConfig[t];
                         AssertTavernIndex(t);
-                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Tavern(t), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
+                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Tavern(t), className: "bg-tavern-icon" }) }, `Tavern ${tavernsConfig[G.currentTavern].name}`));
                     }
                     else {
                         if (t === G.tavernsNum - 1) {
@@ -664,8 +662,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                             && !!IsTriggerTradingCoin(privateBoardCoin)
                                             && ((stage === CommonStageNames.ClickCoinToUpgrade)
                                                 || (stage === CommonStageNames.PickConcreteCoinToUpgrade
-                                                    && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.coinValue) ===
-                                                        privateBoardCoin.value))) {
+                                                    && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.coinValue) === privateBoardCoin.value))) {
                                             if (data !== undefined) {
                                                 DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, privateBoardCoin, id, player, `bg-small-coin`, null, moveName, id, CoinTypeNames.Board);
                                             }

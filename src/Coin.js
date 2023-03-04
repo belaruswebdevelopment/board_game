@@ -1,5 +1,5 @@
 import { initialCoinsConfig, royalCoinsConfig } from "./data/CoinData";
-import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins } from "./is_helpers/AssertionTypeHelpers";
+import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins, AssertMarketCoinNumberValues } from "./is_helpers/AssertionTypeHelpers";
 import { CoinRusNames } from "./typescript/enums";
 /**
  * <h3>Создание всех базовых монет игрока.</h3>
@@ -46,11 +46,9 @@ export const BuildRoyalCoins = (options) => {
     for (let i = 0; i < royalCoinsConfig.length; i++) {
         AssertAllRoyalCoinConfigIndex(i);
         const config = royalCoinsConfig[i], count = config.count()[options.players];
-        if (options.players !== undefined && options.count !== undefined) {
-            options.count.push({
-                value: config.value,
-            });
-        }
+        options.count.push({
+            value: config.value,
+        });
         for (let j = 0; j < count; j++) {
             coins.push(CreateRoyalCoin({
                 value: config.value,
@@ -93,8 +91,9 @@ export const CountRoyalCoins = ({ G }) => {
         if (royalCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
         }
-        const temp = royalCoin.value;
-        repeated[temp] = G.royalCoins.filter((coin) => coin.value === temp).length;
+        const temp = royalCoin.value, royalCoinsCount = G.royalCoins.filter((coin) => coin.value === temp).length;
+        AssertMarketCoinNumberValues(royalCoinsCount);
+        repeated[temp] = royalCoinsCount;
     }
     return repeated;
 };

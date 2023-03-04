@@ -53,11 +53,11 @@ export const ChooseCoinValueForVidofnirVedrfolnirUpgradeMove = ({ G, ctx, player
  * @returns
  */
 export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, campCardId) => {
+    AssertCampIndex(campCardId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, CommonStageNames.ClickCampCardHolda, CardMoveNames.ClickCampCardHoldaMove, campCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertCampIndex(campCardId);
     PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, campCardId);
 };
 /**
@@ -72,11 +72,11 @@ export const ClickCampCardHoldaMove = ({ G, ctx, playerID, ...rest }, campCardId
  * @returns
  */
 export const ClickCampCardMove = ({ G, ctx, playerID, ...rest }, campCardId) => {
+    AssertCampIndex(campCardId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCampCard, CardMoveNames.ClickCampCardMove, campCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertCampIndex(campCardId);
     PickCampCardAction({ G, ctx, myPlayerID: playerID, ...rest }, campCardId);
 };
 /**

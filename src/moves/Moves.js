@@ -5,8 +5,9 @@ import { AllStackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertExplorerDistinctionCardIdType, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, CommonStageNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, SuitMoveNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
+// TODO In all moves types must be number/string/union and checked in assertions!
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -19,11 +20,11 @@ import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, C
  * @returns
  */
 export const ClickCardMove = ({ G, ctx, playerID, ...rest }, tavernCardId) => {
+    AssertTavernCardId(tavernCardId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionDefaultStageNames.ClickCard, CardMoveNames.ClickCardMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertTavernCardId(tavernCardId);
     ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 /**
@@ -38,6 +39,7 @@ export const ClickCardMove = ({ G, ctx, playerID, ...rest }, tavernCardId) => {
  * @returns
  */
 export const ClickCardToPickDistinctionMove = ({ G, ctx, playerID, ...rest }, cardId) => {
+    AssertExplorerDistinctionCardIdType(cardId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TroopEvaluationStageNames.ClickCardToPickDistinction, CardMoveNames.ClickCardToPickDistinctionMove, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -98,11 +100,11 @@ export const DiscardCardFromPlayerBoardMove = ({ G, ctx, playerID, ...rest }, su
  * @returns
  */
 export const DiscardCard2PlayersMove = ({ G, ctx, playerID, ...rest }, tavernCardId) => {
+    AssertTavernCardId(tavernCardId);
     const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertTavernCardId(tavernCardId);
     DiscardCardFromTavernAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 /**

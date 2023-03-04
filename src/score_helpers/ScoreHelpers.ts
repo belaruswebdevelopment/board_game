@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { ErrorNames, HeroNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, RanksValueMultiplierType } from "../typescript/interfaces";
 
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
@@ -15,7 +15,7 @@ import type { CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBoardCardType, Pu
  * @param ranksCount Суммарное количество шевронов.
  * @returns Суммарное количество очков фракции.
  */
-export const ArithmeticSum = (startValue: number, step: number, ranksCount: number): number =>
+export const ArithmeticSum = (startValue: 3, step: 1, ranksCount: number): number =>
     (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
 
 /**
@@ -31,7 +31,7 @@ export const ArithmeticSum = (startValue: number, step: number, ranksCount: numb
  * @returns Суммарное количество очков за множитель.
  */
 export const GetRanksValueMultiplier = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, suit: SuitNames,
-    multiplier: number): number => {
+    multiplier: RanksValueMultiplierType): number => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,

@@ -141,6 +141,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
         tdClasses = ``,
         spanClasses = ``,
         description = ``,
+        // TODO Add type!?
         value: CanBeNullType<number> = null,
         action: MoveFunctionType;
     if (`description` in card) {

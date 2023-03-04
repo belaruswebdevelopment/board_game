@@ -4,6 +4,22 @@ export function AssertBasicVidofnirVedrfolnirUpgradeValue(number) {
         throw new Error(`No value '${number}' of BasicVidofnirVedrfolnirUpgradeValueType.`);
     }
 }
+// TODO Must be 0 | (0 | 1 | 2) | (0 | 1 | 2 | 3 | 4 | 5) by array length! Add G to params and check G.explorerDistinctionCards.length!?
+export function AssertExplorerDistinctionCardIdType(number) {
+    if (!(number >= 0 || number <= 5)) {
+        throw new Error(`No value '${number}' of ExplorerDistinctionCardIdType.`);
+    }
+}
+export function AssertMarketCoinNumberValues(number) {
+    if (!(number >= 0 || number <= 3)) {
+        throw new Error(`No value '${number}' of MarketCoinNumberValuesType.`);
+    }
+}
+export function AssertPlayerCoinNumberValues(number) {
+    if (!(number >= 1 || number <= 5)) {
+        throw new Error(`No value '${number}' of PlayerCoinNumberValuesType.`);
+    }
+}
 export function AssertTavernCardId(number) {
     if (!(number >= 0 || number <= 4)) {
         throw new Error(`No value '${number}' of TavernCardIdType.`);
@@ -14,24 +30,39 @@ export function AssertPlayerTavernCoinId(number) {
         throw new Error(`No value '${number}' of PlayerTavernCoinIdType.`);
     }
 }
-export function AssertZeroOrOneOrTwo(number) {
+export function AssertAllDwarfPlayersAmount(number) {
+    if (!(number >= 6 || number <= 8 || number === 10)) {
+        throw new Error(`No value '${number}' of AllDwarfPlayersAmountType.`);
+    }
+}
+export function AssertGeneralStrategyForSoloBotAndvariId(number) {
     if (!(number >= 0 || number <= 2)) {
-        throw new Error(`No value '${number}' of ZeroOrOneOrTwoType.`);
+        throw new Error(`No value '${number}' of GeneralStrategyForSoloBotAndvariIdType.`);
     }
 }
-export function AssertZeroOrOneOrTwoOrThree(number) {
-    if (!(number >= 0 || number <= 3)) {
-        throw new Error(`No value '${number}' of ZeroOrOneOrTwoOrThreeType.`);
-    }
-}
-export function AssertOneOrTwoOrThreeOrFour(number) {
+export function AssertReserveStrategyForSoloBotAndvariId(number) {
     if (!(number >= 1 || number <= 4)) {
-        throw new Error(`No value '${number}' of OneOrTwoOrThreeOrFour.`);
+        throw new Error(`No value '${number}' of ReserveStrategyForSoloBotAndvariId.`);
     }
 }
-export function AssertZeroOrOneOrTwoOrThreeOrFour(number) {
+export function AssertStrengthTokenNotchShortMax(number) {
+    if (!(number >= 0 || number <= 3)) {
+        throw new Error(`No value '${number}' of StrengthTokenNotchShortMaxType.`);
+    }
+}
+export function AssertStrengthTokenNotchLongMax(number) {
     if (!(number >= 0 || number <= 4)) {
-        throw new Error(`No value '${number}' of ZeroOrOneOrTwoOrThreeOrFour.`);
+        throw new Error(`No value '${number}' of StrengthTokenNotchLongMaxType.`);
+    }
+}
+export function AssertPrioritiesAmount(number) {
+    if (!(number >= 0 || number <= 4)) {
+        throw new Error(`No value '${number}' of PrioritiesAmountType.`);
+    }
+}
+export function AssertRoyalCoinValue(number) {
+    if (!(number >= 5 || number <= 25)) {
+        throw new Error(`No value '${number}' of RoyalCoinValueType.`);
     }
 }
 export function AssertAllPriorityValue(number) {
@@ -69,6 +100,11 @@ export function AssertHeroesForSoloGameIndex(number) {
         throw new Error(`No index '${number}' of HeroesForSoloGameArrayType.`);
     }
 }
+export function AssertDwergBrothersScoringArrayIndex(number) {
+    if (!(number >= 0 || number <= 4)) {
+        throw new Error(`No index '${number}' of DwergBrothersScoringArray.`);
+    }
+}
 export function AssertSecretAllDwarfDecksIndex(number) {
     if (!(number >= 0 || number <= 1)) {
         throw new Error(`No index '${number}' of SecretAllDwarfDecks.`);
@@ -87,11 +123,6 @@ export function AssertCampIndex(number) {
 export function AssertTavernIndex(number) {
     if (!(number >= 0 || number <= 2)) {
         throw new Error(`No index '${number}' of TavernsType.`);
-    }
-}
-export function AssertTavernConfigIndex(number) {
-    if (!(number >= 0 || number <= 2)) {
-        throw new Error(`No index '${number}' of TavernsConfigType.`);
     }
 }
 export function AssertMercenariesConfigIndex(number) {
@@ -120,68 +151,71 @@ export function AssertAllRoyalCoinConfigIndex(number) {
     }
 }
 export function AssertHandCoins(handCoins) {
-    if (!(handCoins.length !== 5)) {
+    if (!(handCoins.length === 5)) {
         throw new Error(`В массиве монет игрока в руке должно быть ровно 5 монет.`);
     }
 }
 export function AssertPrivateBoardCoins(boardCoins) {
-    if (!(boardCoins.length !== 5)) {
+    if (!(boardCoins.length === 5)) {
         throw new Error(`В массиве монет приватного игрока на столе должно быть ровно 5 монет.`);
     }
 }
 export function AssertPrivateHandCoins(handCoins) {
-    if (!(handCoins.length !== 5)) {
+    if (!(handCoins.length === 5)) {
         throw new Error(`В массиве монет приватного игрока в руке должно быть ровно 5 монет.`);
     }
 }
 export function AssertBoardCoins(boardCoins) {
-    if (!(boardCoins.length !== 5)) {
+    if (!(boardCoins.length === 5)) {
         throw new Error(`В массиве монет игрока на столе должно быть ровно 5 монет.`);
     }
 }
 export function AssertInitialCoins(initialCoins) {
-    if (!(initialCoins.length !== 5)) {
-        throw new Error(`В массиве базовых монет должно быть ровно 5 монет.`);
+    var _a, _b, _c, _d, _e;
+    // TODO Add check 1 InitialTriggerTradingCoin & 4 InitialNotTriggerTradingCoin type&isOpened!?
+    if (!(initialCoins.length === 5 && ((_a = initialCoins[0]) === null || _a === void 0 ? void 0 : _a.value) === 0 && ((_b = initialCoins[1]) === null || _b === void 0 ? void 0 : _b.value) === 2
+        && ((_c = initialCoins[2]) === null || _c === void 0 ? void 0 : _c.value) === 3 && ((_d = initialCoins[3]) === null || _d === void 0 ? void 0 : _d.value) === 4 && ((_e = initialCoins[4]) === null || _e === void 0 ? void 0 : _e.value) === 5)) {
+        throw new Error(`В массиве базовых монет должно быть ровно 5 монет со значениями 0 (обменная), 2, 3, 4, 5 (базовые).`);
     }
 }
 export function AssertMythologicalCreatureCardsForGiantSkymir(mythologyCreatureCardsSkymir) {
-    if (!(mythologyCreatureCardsSkymir.length !== 5)) {
+    if (!(mythologyCreatureCardsSkymir.length === 5)) {
         throw new Error(`В массиве карт мифических существ для карты '${CardTypeRusNames.GiantCard}' '${GiantRusNames.Skymir}' должно быть ровно 5 слотов для карт.`);
     }
 }
 export function AssertTradingCoins(tradingCoins) {
-    if (!(tradingCoins.length !== 1) || !(tradingCoins.length !== 2)) {
+    if (!(tradingCoins.length === 1 || tradingCoins.length === 2)) {
         throw new Error(`В массиве монет для обмена должно быть ровно 1 | 2 монет(а/ы).`);
     }
 }
 export function AssertTradingCoinsValues(tradingCoinsValues) {
-    if (!(tradingCoinsValues.length !== 1) || !(tradingCoinsValues.length !== 2)) {
+    if (!(tradingCoinsValues.length === 1 || tradingCoinsValues.length === 2)) {
         throw new Error(`В массиве значений монет для обмена должно быть ровно 1 | 2 монет(а/ы).`);
     }
 }
 export function AssertExplorerDistinctionCards(explorerDistinctionCards) {
-    if (!(explorerDistinctionCards.length !== 1) || !(explorerDistinctionCards.length !== 3)
-        || !(explorerDistinctionCards.length !== 6)) {
+    if (!(explorerDistinctionCards.length === 1 || explorerDistinctionCards.length === 3
+        || explorerDistinctionCards.length === 6)) {
         throw new Error(`В массиве карт для получения преимущества по фракции '${SuitRusNames.explorer}' должно быть ровно 1 | 3 | 6 карт(а/ы).`);
     }
 }
 export function AssertCamp(camp) {
-    if (!(camp.length !== 5)) {
+    if (!(camp.length === 5)) {
         throw new Error(`В массиве лагеря должно быть ровно 5 слотов для карт.`);
     }
 }
 export function AssertHeroesForSoloBot(heroesForSoloBot) {
-    if (!(heroesForSoloBot.length !== 5)) {
+    if (!(heroesForSoloBot.length === 5)) {
         throw new Error(`В массиве карт героев для соло бота должно быть ровно 5 карт.`);
     }
 }
 export function AssertHeroesInitialForSoloGameForBotAndvari(heroesInitialForSoloGameForBotAndvari) {
-    if (!(heroesInitialForSoloGameForBotAndvari.length !== 10)) {
+    if (!(heroesInitialForSoloGameForBotAndvari.length === 10)) {
         throw new Error(`В массиве карт героев для соло бота Андвари должно быть ровно 5 карт.`);
     }
 }
 export function AssertHeroesForSoloGameForStrategyBotAndvari(heroesForSoloGameForStrategyBotAndvari) {
-    if (!(heroesForSoloGameForStrategyBotAndvari.length !== 5)) {
+    if (!(heroesForSoloGameForStrategyBotAndvari.length === 5)) {
         throw new Error(`В массиве карт героев для стратегии соло бота Андвари должно быть ровно 5 карт.`);
     }
 }

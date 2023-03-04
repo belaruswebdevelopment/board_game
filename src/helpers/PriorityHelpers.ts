@@ -25,8 +25,7 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const priority: Priority = player.priority;
-    return priority.value === minPriority;
+    return player.priority.value === minPriority;
 };
 
 /**

@@ -1,7 +1,7 @@
 import { ThrowMyError } from "./Error";
 import { GetCardsFromSecretDwarfDeck, GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard, RemoveCardFromTavern } from "./helpers/DiscardCardHelpers";
-import { AssertTavernCardId, AssertTavernConfigIndex, AssertTavernIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
+import { AssertTavernCardId, AssertTavernIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
 /**
@@ -35,8 +35,7 @@ export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }) => {
     if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer) && ctx.numPlayers !== 2) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.OnlyInSoloOrTwoPlayersGame);
     }
-    const currentTavernConfig = tavernsConfig[G.currentTavern];
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при игре ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) ? `в соло режиме` : `на двух игроков в игре`}.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс при игре ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) ? `в соло режиме` : `на двух игроков в игре`}.`);
     DiscardCardFromTavern({ G, ctx, ...rest });
 };
 /**
@@ -52,7 +51,7 @@ export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }) => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = ({ G, ctx, ...rest }) => {
-    const currentTavern = G.taverns[G.currentTavern], tavernCardId = currentTavern.findIndex((card) => card !== null);
+    const tavernCardId = G.taverns[G.currentTavern].findIndex((card) => card !== null);
     if (tavernCardId === -1) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern, G.currentTavern);
     }
@@ -74,8 +73,7 @@ export const DiscardCardFromTavern = ({ G, ctx, ...rest }) => {
 export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }, tavernCardId) => {
     const discardedCard = RemoveCardFromTavern({ G, ctx, ...rest }, tavernCardId);
     DiscardCurrentCard({ G, ctx, ...rest }, discardedCard);
-    const currentTavernConfig = tavernsConfig[G.currentTavern];
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Карта '${discardedCard.type}' '${discardedCard.name}' из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
 };
 /**
  * <h3>Автоматически заполняет все таверны картами текущей эпохи.</h3>
@@ -106,9 +104,7 @@ export const RefillTaverns = ({ G, ctx, ...rest }) => {
         if (tavern.length !== removedCardsFromTavern.length) {
             throw new Error(`Недостаточно карт в массиве карт таверны с id '${t}': требуется - '${tavern.length}', в наличии - '${removedCardsFromTavern.length}'.`);
         }
-        AssertTavernConfigIndex(t);
-        const tavernConfig = tavernsConfig[t];
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна ${tavernConfig.name} заполнена новыми картами.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Таверна ${tavernsConfig[t].name} заполнена новыми картами.`);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Все таверны заполнены новыми картами.`);
 };

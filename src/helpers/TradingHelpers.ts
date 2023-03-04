@@ -120,7 +120,8 @@ export const StartTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyP
  */
 const Trading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tradingCoins: TradingCoinsType,
     soloBotOnlyOneCoinTrading = false): void => {
-    const length: number = tradingCoins.length;
+    // TODO Move to type!?
+    const length: 1 | 2 = tradingCoins.length;
     if (!soloBotOnlyOneCoinTrading && length !== 2) {
         throw new Error(`В массиве обменных монет игрока с id '${myPlayerID}' должно быть ровно '2' монеты, а не '${length}'.`);
     }

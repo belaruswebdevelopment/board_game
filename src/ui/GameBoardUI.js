@@ -4,7 +4,7 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { AssertCampIndex, AssertHeroesForSoloGameIndex, AssertTavernConfigIndex, AssertTavernIndex, AssertTierIndex, AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertHeroesForSoloGameIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
@@ -487,7 +487,7 @@ export const DrawStrategyForSoloBotAndvariUI = ({ G, ctx, ...rest }, data) => {
         throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
     }
     for (let i = 0; i < G.soloGameAndvariStrategyVariantLevel; i++) {
-        AssertZeroOrOneOrTwo(i);
+        AssertGeneralStrategyForSoloBotAndvariId(i);
         const suit = G.strategyForSoloBotAndvari.general[i];
         if (suit === undefined) {
             throw new Error(`В объекте общих стратегий соло бота Андвари отсутствует фракция с id '${i}'.`);
@@ -527,12 +527,11 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
     var _a, _b;
     const tavernsBoards = [], moveMainArgs = [];
     for (let t = 0; t < G.tavernsNum; t++) {
-        AssertTavernConfigIndex(t);
+        AssertTavernIndex(t);
         const currentTavernConfig = tavernsConfig[t];
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
             for (let j = 0; j < G.drawSize; j++) {
-                AssertTavernIndex(t);
                 const tavern = G.taverns[t], tavernCard = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);

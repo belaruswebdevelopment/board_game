@@ -114,7 +114,9 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }, data, playerCells, play
  * @returns
  */
 export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, player, suit, moveName, ...args) => {
-    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, value = null, action;
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, 
+    // TODO Add type!?
+    value = null, action;
     if (`description` in card) {
         description += card.description;
     }

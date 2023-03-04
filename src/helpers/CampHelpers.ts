@@ -2,7 +2,7 @@ import { AssertCampIndex, AssertSecretAllCampDecksIndex, AssertTierIndex } from 
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, SecretCampDeckTier1, SecretCampDeckType, TavernInConfig } from "../typescript/interfaces";
+import type { CampCardArray, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, SecretCampDeckTier1, SecretCampDeckType } from "../typescript/interfaces";
 import { GetCampCardsFromSecretCampDeck } from "./DecksHelpers";
 import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIfNeeded } from "./DiscardCardHelpers";
 
@@ -18,7 +18,7 @@ import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIf
 * @param cardId Индекс карты.
 * @returns
 */
-const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: number): void => {
+const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: IndexOf<CampCardArray>): void => {
     const tier: number = G.secret.campDecks.length - G.tierToEnd;
     AssertTierIndex(tier);
     const newCampCard: CanBeUndefType<CampDeckCardType> =
@@ -75,8 +75,7 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }: FnContext): void =>
  * @returns
  */
 export const DiscardCardFromTavernJarnglofi = ({ G, ctx, ...rest }: FnContext): void => {
-    const currentTavernConfig: TavernInConfig = tavernsConfig[G.currentTavern];
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс при выборе артефакта '${ArtefactNames.Jarnglofi}'.`);
     DiscardCardFromTavern({ G, ctx, ...rest });
     G.mustDiscardTavernCardJarnglofi = false;
 };
@@ -93,8 +92,7 @@ export const DiscardCardFromTavernJarnglofi = ({ G, ctx, ...rest }: FnContext): 
  */
 export const DiscardCardIfCampCardPicked = ({ G, ctx, ...rest }: FnContext): void => {
     if (G.campPicked) {
-        const currentTavernConfig: TavernInConfig = tavernsConfig[G.currentTavern];
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${currentTavernConfig.name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Лишняя карта из текущей таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс при после выбора карты лагеря в конце выбора карт из таверны.`);
         DiscardCardFromTavern({ G, ctx, ...rest });
         G.campPicked = false;
     }
@@ -129,6 +127,7 @@ export const RefillCamp = ({ G, ctx, ...rest }: FnContext): void => {
     campDeck1[0] = odroerirTheMythicCauldron;
     campDeck1[index] = campCardTemp;
     for (let i = 0; i < G.campNum; i++) {
+        AssertCampIndex(i);
         AddCardToCamp({ G, ctx, ...rest }, i);
     }
     G.odroerirTheMythicCauldron = true;
@@ -163,6 +162,7 @@ export const RefillEmptyCampCards = ({ G, ctx, ...rest }: FnContext): void => {
             // TODO Is it dynamically change campDeck.length after AddCardToCamp!?
             isEmptyCurrentTierCampDeck = campDeck.length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
+                AssertCampIndex(cardIndex);
                 AddCardToCamp({ G, ctx, ...rest }, cardIndex);
             }
         });

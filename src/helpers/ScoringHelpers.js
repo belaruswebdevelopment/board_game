@@ -10,7 +10,7 @@ import { StartMythicalAnimalScoring } from "../dispatchers/MythicalAnimalDispatc
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { StartValkyryScoring } from "../dispatchers/ValkyryScoringDispatcherHelpers";
 import { ThrowMyError } from "../Error";
-import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertDwergBrothersScoringArrayIndex, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsMythicalAnimalPlayerCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { AddDataToLog } from "../Logging";
@@ -40,7 +40,7 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }, 
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    let totalScore = 0, heroesScore = 0, dwerg_brothers = 0;
+    let totalScore = 0, heroesScore = 0, dwergBrothersNum = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
         const hero = player.heroes[i];
@@ -51,7 +51,7 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }, 
         if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
             || G.mode === GameModeNames.SoloAndvari) || G.mode === GameModeNames.Solo && myPlayerID === `1`)
             && hero.name.startsWith(`Dwerg`)) {
-            dwerg_brothers +=
+            dwergBrothersNum +=
                 StartHeroScoring({ G, ctx, myPlayerID: myPlayerID, ...rest }, heroData.scoringRule);
         }
         else {
@@ -62,16 +62,14 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }, 
             }
         }
     }
+    AssertDwergBrothersScoringArrayIndex(dwergBrothersNum);
     if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
         || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo && myPlayerID === `1`))
-        && dwerg_brothers) {
-        const dwerg_brother_value = dwerg_brothers_scoring[dwerg_brothers];
-        if (dwerg_brother_value === undefined) {
-            throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
-        }
+        && dwergBrothersNum) {
+        const dwerg_brother_value = dwerg_brothers_scoring[dwergBrothersNum];
         heroesScore += dwerg_brother_value;
         if (isFinal) {
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) ${G.mode === GameModeNames.Solo ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwerg_brothers]}';`);
+            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за героев братьев Двергов (${dwergBrothersNum} шт.) ${G.mode === GameModeNames.Solo ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwergBrothersNum]}';`);
         }
     }
     totalScore += heroesScore;
@@ -221,6 +219,7 @@ export const FinalAllBoardCoinsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все монеты ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
     return totalScore;
 };
+// TODO Return 0 | 3!
 export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
@@ -230,6 +229,7 @@ export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) =
     if (totalScore) {
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
     }
+    // TODO Check assertion AllCoinsValueType => 0 | 3 not AllCoinsValueType!
     return totalScore;
 };
 export const FinalWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -245,6 +245,7 @@ export const FinalWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest })
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
         }
     }
+    AssertAllCoinsValue(totalScore);
     return totalScore;
 };
 const GetCurrentSuitTotalScore = ({ G, ctx, myPlayerID, ...rest }, suit) => {

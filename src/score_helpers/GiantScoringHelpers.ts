@@ -2,7 +2,7 @@ import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GiantNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DwarfCard, GiantScoringFunction, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer } from "../typescript/interfaces";
+import type { AllCoinsValueType, CanBeNullType, CanBeUndefType, DwarfCard, GiantScoringFunction, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Получение победных очков по Гиганту, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -15,15 +15,10 @@ import type { CanBeNullType, CanBeUndefType, DwarfCard, GiantScoringFunction, My
  * @param value Значение.
  * @returns Количество очков по конкретному гиганту.
  */
-export const BasicGiantScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+export const BasicGiantScoring: GiantScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     value?: number): number => {
-    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
-    if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-            myPlayerID);
-    }
     if (value === undefined) {
-        throw new Error(`Function param 'value' is undefined.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }
     return value;
 };
@@ -75,7 +70,7 @@ export const GymirScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest
  * @returns Количество очков по конкретному гиганту.
  */
 export const SurtScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    number => {
+    AllCoinsValueType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,

@@ -2,8 +2,8 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
+import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
 /**

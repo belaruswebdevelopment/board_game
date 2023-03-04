@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { CardTypeRusNames, ErrorNames, PickHeroCardValidatorNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, Condition, Conditions, HeroCard, KeyofType, MyFnContextWithMyPlayerID, PickValidatorsConfig, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, Condition, Conditions, HeroCard, KeyofType, MyFnContextWithMyPlayerID, PickValidatorsConfig, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -23,7 +23,6 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
     }
     const validators: CanBeUndefType<PickValidatorsConfig> = hero.pickValidators,
         cardsToDiscard: PlayerBoardCardType[] = [];
-    let isValidMove = false;
     if (validators?.discardCard !== undefined) {
         let suit: SuitNames;
         for (suit in suitsConfig) {
@@ -45,9 +44,9 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = ({ G, ctx, 
                 }
             }
         }
-        isValidMove = cardsToDiscard.length >= (validators.discardCard.number ?? 1);
+        return cardsToDiscard.length >= (validators.discardCard.amount ?? 1);
     }
-    return isValidMove;
+    return false;
 };
 
 /**
@@ -71,11 +70,11 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...re
     if (conditions === undefined) {
         throw new Error(`У карты ${CardTypeRusNames.HeroCard} с id '${id}' отсутствует у валидатора свойство '${PickHeroCardValidatorNames.conditions}'.`);
     }
-    let isValidMove = false,
-        condition: KeyofType<Conditions>;
+    let condition: KeyofType<Conditions>;
     for (condition in conditions) {
         if (condition === `suitCountMin`) {
             let ranks = 0,
+                conditionRanks: CanBeNullType<number> = null,
                 key: KeyofType<Condition>;
             for (key in conditions[condition]) {
                 if (key === `suit`) {
@@ -86,10 +85,14 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...re
                     }
                     ranks = player.cards[conditions[condition][key]].reduce(TotalRank, 0);
                 } else if (key === `count`) {
-                    isValidMove = ranks >= conditions[condition][key];
+                    conditionRanks = conditions[condition][key];
                 }
             }
+            if (conditionRanks === null) {
+                throw new Error(`Отсутствует обязательный параметр значения 'count'.`);
+            }
+            return ranks >= conditionRanks;
         }
     }
-    return isValidMove;
+    return false;
 };

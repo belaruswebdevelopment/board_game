@@ -1,9 +1,7 @@
 import { BuildInitialCoins } from "./Coin";
 import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { AssertBoardCoins, AssertHandCoins, AssertPrivateBoardCoins } from "./is_helpers/AssertionTypeHelpers";
-import { GameModeNames, HeroBuffNames, PhaseNames } from "./typescript/enums";
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
  * <p>Применения:</p>
@@ -16,7 +14,7 @@ import { GameModeNames, HeroBuffNames, PhaseNames } from "./typescript/enums";
 export const BuildPlayer = () => {
     const boardCoins = Array(initialCoinsConfig.length).fill(null);
     AssertPrivateBoardCoins(boardCoins);
-    return CreatePlayer({
+    return CreatePrivatePlayer({
         handCoins: BuildInitialCoins(),
         boardCoins,
     });
@@ -51,42 +49,13 @@ export const BuildPublicPlayer = (nickname, priority, isPrivate) => {
     const boardCoins = Array(initialCoinsConfig.length).fill(null);
     AssertBoardCoins(boardCoins);
     return CreatePublicPlayer({
-        nickname,
+        boardCoins,
         cards,
         giantTokenSuits,
         handCoins,
-        boardCoins,
+        nickname,
         priority,
     });
-};
-/**
-* <h3>Проверяет базовый порядок хода игроков.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>Происходит при необходимости выставления монет на игровое поле.</li>
-* <li>Происходит при необходимости выставления монет на игровое поле при наличии героя Улина.</li>
-* </ol>
-*
-* @param context
-* @returns
-*/
-export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }) => {
-    G.publicPlayersOrder = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        if (ctx.phase !== PhaseNames.BidUline) {
-            if (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari
-                || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                    && !CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest }, HeroBuffNames.EveryTurn))) {
-                G.publicPlayersOrder.push(String(i));
-            }
-        }
-        else {
-            if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-                && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest }, HeroBuffNames.EveryTurn)) {
-                G.publicPlayersOrder.push(String(i));
-            }
-        }
-    }
 };
 /**
  * <h3>Создание приватных данных игрока.</h3>
@@ -99,7 +68,7 @@ export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }) => {
  * @param handCoins Массив монет в руке.
  * @returns Приватные данные игрока.
  */
-const CreatePlayer = ({ boardCoins, handCoins, }) => ({
+export const CreatePrivatePlayer = ({ boardCoins, handCoins, }) => ({
     boardCoins,
     handCoins,
 });
@@ -124,18 +93,19 @@ const CreatePlayer = ({ boardCoins, handCoins, }) => ({
  * @param selectedCoin Выбранная монета.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ nickname, cards, giantTokenSuits, heroes = [], campCards = [], mythologicalCreatureCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, }) => ({
-    nickname,
-    cards,
-    giantTokenSuits,
-    campCards,
-    mythologicalCreatureCards,
-    heroes,
-    handCoins,
+export const CreatePublicPlayer = ({ boardCoins, buffs = [], campCards = [], cards, currentCoinsScore = 14, giantTokenSuits, handCoins, heroes = [], mythologicalCreatureCards = [], nickname, priority, selectedCoin = null, stack = [], }) => ({
     boardCoins,
-    stack,
-    priority,
     buffs,
+    campCards,
+    cards,
+    currentCoinsScore,
+    giantTokenSuits,
+    handCoins,
+    heroes,
+    mythologicalCreatureCards,
+    nickname,
+    priority,
     selectedCoin,
+    stack,
 });
 //# sourceMappingURL=Player.js.map

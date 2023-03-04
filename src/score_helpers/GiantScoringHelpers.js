@@ -13,13 +13,9 @@ import { CardTypeRusNames, ErrorNames, GiantNames } from "../typescript/enums";
  * @param value Значение.
  * @returns Количество очков по конкретному гиганту.
  */
-export const BasicGiantScoring = ({ G, ctx, myPlayerID, ...rest }, value) => {
-    const player = G.publicPlayers[Number(myPlayerID)];
-    if (player === undefined) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
-    }
+export const BasicGiantScoring = ({ G, ctx, ...rest }, value) => {
     if (value === undefined) {
-        throw new Error(`Function param 'value' is undefined.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }
     return value;
 };

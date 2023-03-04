@@ -5,10 +5,11 @@ import { AllStackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { StartDistinctionAwarding } from "../dispatchers/DistinctionAwardingDispatcher";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertExplorerDistinctionCardIdType, AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import { BrisingamensEndGameDefaultStageNames, ButtonMoveNames, CardMoveNames, CommonStageNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesStageNames, GetMjollnirProfitDefaultStageNames, SuitMoveNames, SuitNames, TavernsResolutionDefaultStageNames, TavernsResolutionStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationStageNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
+// TODO In all moves types must be number/string/union and checked in assertions!
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -22,12 +23,12 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  */
 export const ClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, tavernCardId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertTavernCardId(tavernCardId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionDefaultStageNames.ClickCard, CardMoveNames.ClickCardMove, tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertTavernCardId(tavernCardId);
     ClickCardAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 
@@ -44,6 +45,7 @@ export const ClickCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, 
  */
 export const ClickCardToPickDistinctionMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, cardId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertExplorerDistinctionCardIdType(cardId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TroopEvaluationStageNames.ClickCardToPickDistinction, CardMoveNames.ClickCardToPickDistinctionMove,
         cardId);
@@ -117,13 +119,13 @@ export const DiscardCardFromPlayerBoardMove: Move = ({ G, ctx, playerID, ...rest
  */
 export const DiscardCard2PlayersMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, tavernCardId: number):
     CanBeVoidType<InvalidMoveType> => {
+    AssertTavernCardId(tavernCardId);
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionStageNames.DiscardCard2Players, CardMoveNames.DiscardCard2PlayersMove,
         tavernCardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AssertTavernCardId(tavernCardId);
     DiscardCardFromTavernAction({ G, ctx, myPlayerID: playerID, ...rest }, tavernCardId);
 };
 

@@ -4,9 +4,9 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddCardToPlayerBoardCards } from "../helpers/CardHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
+import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertHeroesForSoloGameForStrategyBotAndvari, AssertHeroesForSoloGameForStrategyBotAndvariIndex, AssertOneOrTwoOrThreeOrFour, AssertZeroOrOneOrTwo } from "../is_helpers/AssertionTypeHelpers";
-import { CheckPlayersBasicOrder } from "../Player";
+import { AssertGeneralStrategyForSoloBotAndvariId, AssertHeroesForSoloGameForStrategyBotAndvari, AssertHeroesForSoloGameForStrategyBotAndvariIndex, AssertReserveStrategyForSoloBotAndvariId } from "../is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloModeAndvari'.</h3>
@@ -238,11 +238,11 @@ export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ..
                 throw new Error(`В объекте стратегий для соло бота Андвари не может не быть фракций.`);
             }
             if (i < G.soloGameAndvariStrategyVariantLevel) {
-                AssertZeroOrOneOrTwo(i);
+                AssertGeneralStrategyForSoloBotAndvariId(i);
                 G.strategyForSoloBotAndvari.general[i] = suit;
             }
             else {
-                AssertOneOrTwoOrThreeOrFour(i);
+                AssertReserveStrategyForSoloBotAndvariId(i);
                 G.strategyForSoloBotAndvari.reserve[i] = suit;
             }
         }

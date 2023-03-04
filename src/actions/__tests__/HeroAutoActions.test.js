@@ -14,7 +14,7 @@ describe(`Test AddPickHeroAction method`, () => {
             currentPlayer: `0`,
         };
         AddPickHeroAction({ G, ctx, myPlayerID: `0` }, 1);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -63,7 +63,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
             currentPlayer: `0`,
         };
         GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {},
@@ -123,7 +123,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
             currentPlayer: `0`,
         };
         GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -197,7 +197,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
             currentPlayer: `0`,
         };
         GetClosedCoinIntoPlayerHandAction({ G, ctx, myPlayerID: `0` });
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {

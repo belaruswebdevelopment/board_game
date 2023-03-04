@@ -18,7 +18,7 @@ import { ErrorNames, LogTypeNames, SuitNames, SuitRusNames, ValkyryBuffNames } f
  * @returns Индекс единственного игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
 const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
-    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit), maxPlayers = playersRanks.filter((count) => count === max);
+    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit), maxPlayers = playersRanks.filter((count) => count === max), suitName = suitsConfig[suit].suitName;
     if (maxPlayers.length === 1) {
         const maxPlayerIndex = maxPlayers[0];
         if (maxPlayerIndex === undefined) {
@@ -35,10 +35,10 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
         if (G.expansions.Idavoll.active) {
             CheckValkyryRequirement({ G, ctx, myPlayerID: String(playerDistinctionIndex), ...rest }, ValkyryBuffNames.CountDistinctionAmount);
         }
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerDist.nickname}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitName}' получил игрок: '${playerDist.nickname}'.`);
         return String(playerDistinctionIndex);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' никто не получил.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitName}' никто не получил.`);
     return undefined;
 };
 /**
@@ -54,7 +54,7 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
  * @returns Индексы игроков с преимуществом по количеству шевронов конкретной фракции.
  */
 export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }, suit, isFinal = false) => {
-    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal), maxPlayers = [];
+    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal), maxPlayers = [], suitName = suitsConfig[suit].suitName;
     playersRanks.forEach((value, index) => {
         if (value === max) {
             maxPlayers.push(index);
@@ -63,12 +63,12 @@ export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }, suit, is
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, index);
             }
             if (isFinal) {
-                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitsConfig[suit].suitName}' получил игрок: '${playerIndex.nickname}'.`);
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Преимущество по фракции '${suitName}' получил игрок: '${playerIndex.nickname}'.`);
             }
         }
     });
     if (isFinal && !maxPlayers.length) {
-        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.SuitDistinctionMustBePresent, suitsConfig[suit].suitName);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.SuitDistinctionMustBePresent, suitName);
     }
     return maxPlayers;
 };

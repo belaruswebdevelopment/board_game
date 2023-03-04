@@ -1,3 +1,5 @@
+import { ThrowMyError } from "../Error";
+import { ErrorNames } from "../typescript/enums";
 // TODO Think about MarketCoinIdType
 /**
  * <h3>Действия, связанные с убиранием монеты с рынка.</h3>
@@ -24,14 +26,27 @@ export const RemoveCoinFromMarket = ({ G }, coinId) => {
  * <li>При действиях, убирающих монеты у игрока.</li>
  * </ol>
  *
+ * @param context
  * @param coins Массив монет игрока, откуда убирается монета.
  * @param coinId Id убираемой монеты.
  * @returns Убираемая монета у игрока.
  */
-export const RemoveCoinFromPlayer = (coins, coinId) => {
-    const amount = 1, removedCoin = coins.splice(coinId, 1, null);
-    if (amount !== removedCoin.length) {
-        throw new Error(`Недостаточно монет в массиве монет игрока: требуется - '${amount}', в наличии - '${removedCoin.length}'.`);
+export const RemoveCoinFromPlayer = ({ G, ctx, myPlayerID, ...rest }, coins, coinId) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
+    const amount = 1, removedCoinsArray = coins.splice(coinId, 1, null);
+    if (amount !== removedCoinsArray.length) {
+        throw new Error(`Недостаточно монет в массиве монет игрока: требуется - '${amount}', в наличии - '${removedCoinsArray.length}'.`);
+    }
+    const removedCoin = removedCoinsArray[0];
+    if (removedCoin === undefined) {
+        throw new Error(`Не может отсутствовать сброшенная монета.`);
+    }
+    if (removedCoin === null) {
+        throw new Error(`Не может не быть монеты для сброса.`);
+    }
+    player.currentCoinsScore -= removedCoin.value;
 };
 //# sourceMappingURL=DiscardCoinHelpers.js.map

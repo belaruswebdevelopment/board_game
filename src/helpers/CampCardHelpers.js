@@ -1,6 +1,7 @@
 import { CreateArtefactPlayerCard, CreateMercenaryPlayerCard } from "../Camp";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
+import { AssertRoyalCoinValue } from "../is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CampBuffNames, CardTypeRusNames, ErrorNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
@@ -123,7 +124,9 @@ const AddCampCardToPlayerCampCards = ({ G, ctx, myPlayerID, ...rest }, card) => 
  * @returns
  */
 export const AddCoinOnOdroerirTheMythicCauldronCampCard = ({ G, ctx, ...rest }) => {
-    const minCoinValue = G.royalCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value, minCoinIndex = G.royalCoins.findIndex((coin) => coin.value === minCoinValue);
+    const minCoinValue = G.royalCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value;
+    AssertRoyalCoinValue(minCoinValue);
+    const minCoinIndex = G.royalCoins.findIndex((coin) => coin.value === minCoinValue);
     if (minCoinIndex === -1) {
         throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
     }

@@ -45,7 +45,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -135,7 +135,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -237,7 +237,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -342,7 +342,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -447,7 +447,7 @@ describe(`Test AddCoinToPouchAction method`, () => {
             currentPlayer: `0`,
         };
         AddCoinToPouchAction({ G, ctx, myPlayerID: `0` }, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -651,7 +651,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             logData: [],
         };
         DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
@@ -701,7 +701,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             logData: [],
         };
         DiscardSuitCardAction({ G, myPlayerID: `0` }, 0);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {
                     nickname: `Dan`,

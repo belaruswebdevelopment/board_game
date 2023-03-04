@@ -122,8 +122,10 @@ export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, 
     let isStart = true;
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
         const noCoinsOnPouchNumber: number =
+            // TODO Add type for noCoinsOnPouchNumber
             player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
                 index >= G.tavernsNum && coin === null).length,
+            // TODO Can add type for handCoinsNumber!?
             handCoinsNumber: number = handCoins.filter(IsCoin).length;
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {

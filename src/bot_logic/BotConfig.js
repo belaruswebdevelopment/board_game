@@ -1,4 +1,5 @@
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
+// TODO Check all number types here!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>

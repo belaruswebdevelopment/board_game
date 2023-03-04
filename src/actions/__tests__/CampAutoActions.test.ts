@@ -27,7 +27,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {} as PrivatePlayer,
@@ -73,7 +73,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {} as PrivatePlayer,
@@ -123,7 +123,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -179,7 +179,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -233,7 +233,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {} as PrivatePlayer,
@@ -287,7 +287,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {} as PrivatePlayer,
@@ -347,7 +347,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -409,7 +409,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -468,7 +468,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             players: {
                 0: {} as PrivatePlayer,
@@ -529,7 +529,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -597,7 +597,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             players: {
                 0: {
@@ -737,7 +737,7 @@ describe(`Test FinishOdroerirTheMythicCauldronAction method`, (): void => {
         } as Pick<MyGameState, `odroerirTheMythicCauldron`>,
             ctx: Ctx = {} as Ctx;
         FinishOdroerirTheMythicCauldronAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             odroerirTheMythicCauldron: false,
         } as Pick<MyGameState, `odroerirTheMythicCauldron`>);
     });
@@ -768,7 +768,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 numPlayers: 2,
             } as Ctx;
         StartDiscardSuitCardAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {} as PublicPlayer,
                 1: {
@@ -791,7 +791,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 },
             } as ExpansionsType,
         } as Pick<MyGameState, `publicPlayers` | `expansions`>);
-        expect(ctx).toEqual({
+        expect(ctx).toStrictEqual({
             currentPlayer: `0`,
             numPlayers: 2,
         } as Ctx);
@@ -826,7 +826,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 numPlayers: 3,
             } as Ctx;
         StartDiscardSuitCardAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             publicPlayers: {
                 0: {} as PublicPlayer,
                 1: {
@@ -855,7 +855,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                 },
             } as ExpansionsType,
         } as Pick<MyGameState, `publicPlayers` | `expansions`>);
-        expect(ctx).toEqual({
+        expect(ctx).toStrictEqual({
             currentPlayer: `0`,
             numPlayers: 3,
         } as Ctx);
@@ -916,7 +916,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -988,7 +988,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1068,7 +1068,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1168,7 +1168,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1256,7 +1256,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     currentPlayer: `0`,
                 } as Ctx;
             StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-            expect(G).toEqual({
+            expect(G).toStrictEqual({
                 mode: GameModeNames.Basic,
                 tavernsNum: 3,
                 players: {
@@ -1338,7 +1338,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                     currentPlayer: `0`,
                 } as Ctx;
             StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-            expect(G).toEqual({
+            expect(G).toStrictEqual({
                 mode: GameModeNames.Multiplayer,
                 tavernsNum: 3,
                 players: {
@@ -1422,7 +1422,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1495,7 +1495,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1579,7 +1579,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1668,7 +1668,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1756,7 +1756,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -1840,7 +1840,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -1931,7 +1931,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -2032,7 +2032,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -2129,7 +2129,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -2219,7 +2219,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -2306,7 +2306,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Basic,
             tavernsNum: 3,
             players: {
@@ -2396,7 +2396,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {
@@ -2497,7 +2497,7 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                 currentPlayer: `0`,
             } as Ctx;
         StartVidofnirVedrfolnirAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
-        expect(G).toEqual({
+        expect(G).toStrictEqual({
             mode: GameModeNames.Multiplayer,
             tavernsNum: 3,
             players: {

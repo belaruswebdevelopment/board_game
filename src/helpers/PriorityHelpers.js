@@ -18,8 +18,7 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }) => {
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    const priority = player.priority;
-    return priority.value === minPriority;
+    return player.priority.value === minPriority;
 };
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>
