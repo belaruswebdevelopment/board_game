@@ -33,25 +33,25 @@ export const BuildSpecialCards = (): SpecialCard[] => {
  * <li>Происходит при создании всех особых карт при инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
  * @param name Название.
  * @param playerSuit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
+ * @param type Тип.
  * @returns Особая карта.
  */
 const CreateSpecialCard = ({
-    type = CardTypeRusNames.SpecialCard,
     name,
     playerSuit,
     points = null,
     rank = 2,
+    type = CardTypeRusNames.SpecialCard,
 }: CreateSpecialCardFromData): SpecialCard => ({
-    type,
     name,
     playerSuit,
     points,
     rank,
+    type,
 });
 
 /**
@@ -61,23 +61,23 @@ const CreateSpecialCard = ({
  * <li>Происходит при создании конкретной особой карты на поле игрока.</li>
  * </ol>
  *
- * @param type Тип.
  * @param name Название.
- * @param suit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
+ * @param suit Название фракции дворфов.
+ * @param type Тип.
  * @returns Особая карта на поле игрока.
  */
 export const CreateSpecialCardPlayerCard = ({
-    type = CardTypeRusNames.SpecialPlayerCard,
     name,
-    suit,
     points = null,
     rank = 2,
-}: CreateSpecialPlayerCardFromData): SpecialPlayerCard => ({
-    type,
-    name,
     suit,
+    type = CardTypeRusNames.SpecialPlayerCard,
+}: CreateSpecialPlayerCardFromData): SpecialPlayerCard => ({
+    name,
     points,
     rank,
+    suit,
+    type,
 });

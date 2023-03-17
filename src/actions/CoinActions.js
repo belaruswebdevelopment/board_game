@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCoinFromMarket } from "../helpers/DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
-import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCoinUpgradePossibleMaxValue, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
@@ -71,10 +71,8 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
             return _exhaustiveCheck;
     }
     // TODO Split into different functions!?
-    // TODO Move 0 | 2 in type!?
-    const buffValue = CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.UpgradeCoin) ? 2 : 0, 
-    // TODO Add type for newValue = by 51 max (25 coin+24 second coin + 2 max buf value)!
-    newValue = upgradingCoin.value + value + buffValue;
+    const buffValue = CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.UpgradeCoin) ? 2 : 0, newValue = upgradingCoin.value + value + buffValue;
+    AssertCoinUpgradePossibleMaxValue(newValue);
     let upgradedCoin = null;
     if (G.royalCoins.length) {
         const lastRoyalCoin = G.royalCoins[G.royalCoins.length - 1];
@@ -173,6 +171,9 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
         }
         G.royalCoins.splice(returningIndex, 0, upgradingCoin);
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
+    }
+    if (player.currentMaxCoinValue === upgradingCoin.value && upgradedCoin.value > player.currentMaxCoinValue) {
+        player.currentMaxCoinValue = upgradedCoin.value;
     }
     player.currentCoinsScore += upgradedCoin.value - upgradingCoin.value;
 };

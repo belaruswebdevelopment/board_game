@@ -20,12 +20,12 @@ import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 const CreateHeroPlayerCardIfAvailableFromHeroCardData = (hero: HeroCard): AllHeroCardType => {
     if (hero.playerSuit !== null && hero.rank !== null) {
         return CreateHeroPlayerCard({
-            suit: hero.playerSuit,
-            rank: hero.rank,
-            points: hero.points,
-            type: CardTypeRusNames.HeroPlayerCard,
-            name: hero.name,
             description: hero.description,
+            name: hero.name,
+            points: hero.points,
+            rank: hero.rank,
+            suit: hero.playerSuit,
+            type: CardTypeRusNames.HeroPlayerCard,
         });
     }
     return hero;

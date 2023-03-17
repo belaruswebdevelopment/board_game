@@ -1,23 +1,21 @@
-import { jsx as _jsx } from "react/jsx-runtime";
-// import type { Game } from "boardgame.io";
-// import { Client } from "boardgame.io/react";
-// import { BoardGame } from "./Game";
-// import { GameBoard } from "./GameBoard";
-// /**
-//  * <h3>Игровой клиент.</h3>
-//  * <p>Применения:</p>
-//  * <ol>
-//  * <li>Используется при создании игры.</li>
-//  * </ol>
-//  */
-// const App = Client({
-//     // debug: false,
-//     game: BoardGame as Game,
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     board: GameBoard as React.ComponentType<any>,
-//     numPlayers: 5,
-// });
-// export default App;
+import { Client } from "boardgame.io/react";
+import { BoardGame } from "./Game";
+import { GameBoard } from "./GameBoard";
+/**
+ * <h3>Игровой клиент.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при создании игры.</li>
+ * </ol>
+ */
+const App = Client({
+    // debug: false,
+    game: BoardGame,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    board: GameBoard,
+    numPlayers: 5,
+});
+export default App;
 /*import React from "react";
 import {Client} from "boardgame.io/react";
 import {Local} from "boardgame.io/multiplayer";
@@ -125,12 +123,18 @@ render(<App/>, document.getElementById("root"));
 
 export default App;
 */
-import React from "react";
+/* import React from "react";
 import LobbyClient from "./LobbyClient";
+
 class App extends React.Component {
-    render() {
-        return (_jsx("div", { children: _jsx(LobbyClient, {}) }));
+    override render() {
+        return (
+            <div>
+                <LobbyClient />
+            </div>
+        );
     }
 }
-export default App;
+
+export default App; */
 //# sourceMappingURL=App.js.map

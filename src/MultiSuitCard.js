@@ -30,19 +30,19 @@ export const BuildMultiSuitCards = (configOptions) => {
  * <li>Происходит при создании всех мультифракционных карт при инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
  * @param name Название.
  * @param playerSuit Название фракции дворфов.
- * @param rank Шевроны.
  * @param points Очки.
+ * @param rank Шевроны.
+ * @param type Тип.
  * @returns Мультифракционная карта.
  */
-const CreateMultiSuitCard = ({ type = CardTypeRusNames.MultiSuitCard, name, playerSuit = null, rank = null, points = null, }) => ({
-    type,
+const CreateMultiSuitCard = ({ name, playerSuit = null, points = null, rank = null, type = CardTypeRusNames.MultiSuitCard, }) => ({
     name,
     playerSuit,
-    rank,
     points,
+    rank,
+    type,
 });
 /**
  * <h3>Создание мультифракционной карты на поле игрока.</h3>
@@ -51,18 +51,18 @@ const CreateMultiSuitCard = ({ type = CardTypeRusNames.MultiSuitCard, name, play
  * <li>Происходит при создании конкретной мультифракционной карты на поле игрока.</li>
  * </ol>
  *
- * @param type Тип.
  * @param name Название.
- * @param suit Название фракции дворфов.
- * @param rank Шевроны.
  * @param points Очки.
+ * @param rank Шевроны.
+ * @param suit Название фракции дворфов.
+ * @param type Тип.
  * @returns Мультифракционная карта на поле игрока.
  */
-export const CreateMultiSuitPlayerCard = ({ type = CardTypeRusNames.MultiSuitPlayerCard, name, suit, rank = 1, points = null, }) => ({
-    type,
+export const CreateMultiSuitPlayerCard = ({ name, points = null, rank = 1, suit, type = CardTypeRusNames.MultiSuitPlayerCard, }) => ({
     name,
-    suit,
-    rank,
     points,
+    rank,
+    suit,
+    type,
 });
 //# sourceMappingURL=MultiSuitCard.js.map

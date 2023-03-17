@@ -12,7 +12,7 @@ import { tavernsConfig } from "../Tavern";
 import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 // TODO Check Solo Bot & multiplayer actions!
-// TODO Move strings coins names to enum!
+// TODO Move strings coins class names to enum!
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
  * <p>Применения:</p>
@@ -554,7 +554,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                 if (data !== undefined) {
                     if (i === 0) {
                         AssertTavernIndex(t);
-                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Tavern(t), className: "bg-tavern-icon" }) }, `Tavern ${tavernsConfig[G.currentTavern].name}`));
+                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: ALlStyles.Tavern(t), className: "bg-tavern-icon" }) }, `${player.nickname} tavern ${tavernsConfig[t].name} coin`));
                     }
                     else {
                         if (t === G.tavernsNum - 1) {
@@ -715,8 +715,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                     DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.BackTavernIcon, publicBoardCoin, id, player, null, id, moveName, id);
                                 }
                                 else {
-                                    DrawCoinTypeNames.BackTavernIcon, publicBoardCoin, id, player,
-                                        DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.BackSmallMarketCoin, publicBoardCoin, id, player, null, null, moveName, id);
+                                    DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.BackSmallMarketCoin, publicBoardCoin, id, player, null, null, moveName, id);
                                 }
                             }
                             else if (validatorName === BidsMoveValidatorNames.ClickBoardCoinMoveValidator) {

@@ -1,3 +1,4 @@
+import { AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 // TODO Check all number types here!
 /**
@@ -12,16 +13,21 @@ import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
  * @returns Результат эвристики.
  */
 export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }) => {
-    const taverns = G.taverns, temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0)), result = Array(taverns.length).fill(0).map((value, index) => {
-        const num = temp[index];
+    const taverns = G.taverns, 
+    // TODO -100 | 0 === number in current only 1 heuristic
+    tavernsHeuristicArray = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0)), result = Array(taverns.length).fill(0).map((value, index) => {
+        const num = tavernsHeuristicArray[index];
         if (num === undefined) {
             throw new Error(`Отсутствует значение с id '${index}'.`);
         }
         return value + num;
-    }), tempNumbers = taverns.map((tavern) => tavern.map((card, index, arr) => EvaluateTavernCard({ G, ctx, ...rest }, card, index, arr))), tempChars = tempNumbers.map((element) => GetCharacteristics(element)) /*,
+    }), tempNumbers = taverns.map((tavern) => tavern.map((card, index, tavern) => {
+        AssertTavernCardId(index);
+        return EvaluateTavernCard({ G, ctx, ...rest }, card, index, tavern);
+    })), tempChars = tempNumbers.map((element) => GetCharacteristics(element)) /*,
 averageCards: ICard[] = G.averageCards*/;
     let maxIndex = 0, minIndex = tempChars.length - 1;
-    for (let i = 1; i < temp.length; i++) {
+    for (let i = 1; i < tavernsHeuristicArray.length; i++) {
         const maxCard = tempChars[maxIndex], tempCard1 = tempChars[i];
         if (maxCard === undefined) {
             throw new Error(`Отсутствует значение максимальной карты с id '${maxIndex}'.`);

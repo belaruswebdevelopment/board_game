@@ -2,34 +2,32 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { AssertAllDwarfPlayersAmount, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, NumberArrayValuesType, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardType, TavernCardType } from "../typescript/interfaces";
+import type { AllDwarfPlayersAmountType, CanBeUndefType, CompareTavernCardsType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, NumberValuesArrayType, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardType, TavernCardIdPossibleType, TavernCardType } from "../typescript/interfaces";
 
 // Check all number types here!
 // Check all types in this file!
-// TODO Add type for -1 | 0 | 1!
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Сравнивает значения очков основной карт из таверны с остальными картами.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При вычислении сравнения значений карт для ботов.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
- * @param card1 Первая карта.
- * @param card2 Вторая карта.
+ * @param compareCard Основная сравниваемая карта.
+ * @param card2 Остальная карта в таверне для сравнения.
  * @returns Сравнительное значение.
  */
-export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType): -1 | 0 | 1 => {
-    if (card1 === null || card2 === null) {
+export const CompareTavernCards = (compareCard: TavernCardType, card2: TavernCardType): CompareTavernCardsType => {
+    if (compareCard === null || card2 === null) {
         return 0;
     }
     // TODO If Mythological Creatures cards!?
-    if (card1.type === CardTypeRusNames.DwarfCard && card2.type === CardTypeRusNames.DwarfCard) {
-        if (card1.playerSuit === card2.playerSuit) {
-            const result: number = (card1.points ?? 1) - (card2.points ?? 1);
+    if (compareCard.type === CardTypeRusNames.DwarfCard && card2.type === CardTypeRusNames.DwarfCard) {
+        if (compareCard.playerSuit === card2.playerSuit) {
+            const result: number = (compareCard.points ?? 1) - (card2.points ?? 1);
             if (result === 0) {
                 return result;
             }
@@ -39,7 +37,6 @@ export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType)
     return 0;
 };
 
-// TODO cardId => tavernCardId(Type)
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -54,8 +51,8 @@ export const CompareTavernCards = (card1: TavernCardType, card2: TavernCardType)
  * @param tavern Таверна.
  * @returns Сравнительное значение.
  */
-export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: TavernCardType, cardId: number,
-    tavern: TavernAllCardType): number => {
+export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: TavernCardType,
+    cardId: TavernCardIdPossibleType, tavern: TavernAllCardType): number => {
     if (compareCard !== null && compareCard.type === CardTypeRusNames.DwarfCard) {
         if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareTavernCards(compareCard, G.averageCards[compareCard.playerSuit]);
@@ -100,26 +97,24 @@ export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: 
 };
 
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Определяет "среднюю карту" в конкретной фракции, определяющую сколько в среднем очков она приносит.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При инициализации игры для каждой фракции.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
  * @param suit Фракция дворфов.
- * @param data ????????????????????????????????????????????????????????????????????
+ * @param data Данные о количестве игроков и эпохах.
  * @returns "Средняя" карта дворфа.
  */
 export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardData): DwarfCard => {
     let totalPoints = 0;
     const pointsValuesPlayers: PointsValuesType = suitsConfig[suit].pointsValues()[data.players],
         points: PointsType = pointsValuesPlayers[data.tier],
-        count: number = Array.isArray(points) ? points.length : points;
-    AssertAllDwarfPlayersAmount(count);
+        count: AllDwarfPlayersAmountType = Array.isArray(points) ? points.length : points;
     for (let i = 0; i < count; i++) {
         if (Array.isArray(points)) {
-            const pointsValue: CanBeUndefType<NumberArrayValuesType> = points[i];
+            const pointsValue: CanBeUndefType<NumberValuesArrayType> = points[i];
             if (pointsValue === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}' в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
             }
@@ -131,27 +126,27 @@ export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardD
     totalPoints /= count;
     // TODO Rework it to non-dwarf card?
     return CreateDwarfCard({
+        name: `Average card`,
         playerSuit: suitsConfig[suit].suit,
         // TODO Can i add type!?
         points: totalPoints,
-        name: `Average card`,
     });
 };
 
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Определяет сколько очков принесёт выбор конкретной карты из таверны.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При необходимости выбора ботом карты из таверны.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
  * @param context
  * @param card Карта.
- * @returns Потенциальное значение.
+ * @returns Потенциальное значение очков после выбора конкретной карты.
  */
 const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, card: TavernCardType):
     number => {
+    // TODO How it play with Idavoll!?
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
         privatePlayer: CanBeUndefType<PrivatePlayer> = G.players[Number(myPlayerID)];
     if (player === undefined) {

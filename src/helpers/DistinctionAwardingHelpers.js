@@ -24,13 +24,13 @@ export const BlacksmithDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) =
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (G.tierToEnd !== 0) {
-        const card = G.specialCardsDeck.find((card) => card.name === SpecialCardNames.ChiefBlacksmith);
-        if (card === undefined) {
+        const specialCard = G.specialCardsDeck.find((card) => card.name === SpecialCardNames.ChiefBlacksmith);
+        if (specialCard === undefined) {
             throw new Error(`В игре отсутствует обязательная карта '${SpecialCardNames.ChiefBlacksmith}'.`);
         }
-        AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, card);
+        AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, specialCard);
         G.distinctions[SuitNames.blacksmith] = undefined;
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${card.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.blacksmith}'.`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' получил по знаку отличия кузнецов карту '${specialCard.type}' '${SpecialCardNames.ChiefBlacksmith}' во фракцию '${SuitNames.blacksmith}'.`);
     }
     return 0;
 };
@@ -131,8 +131,8 @@ export const MinerDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }) => {
     if (G.tierToEnd !== 0) {
         const currentPriorityValue = player.priority.value;
         player.priority = CreatePriority({
-            value: 6,
             isExchangeable: false,
+            value: 6,
         });
         G.distinctions[SuitNames.miner] = undefined;
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' обменял по знаку отличия горняков свой кристалл '${currentPriorityValue}' на особый кристалл '6'.`);

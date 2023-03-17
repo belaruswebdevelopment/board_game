@@ -69,15 +69,17 @@ export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest
             }
         }
     }
-    // TODO Can 1 player pick all warriors cards!?
-    if (!results) {
-        throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
+    if (results) {
+        events === null || events === void 0 ? void 0 : events.setActivePlayers({
+            value,
+            minMoves: 1,
+            maxMoves: 1,
+        });
     }
-    events === null || events === void 0 ? void 0 : events.setActivePlayers({
-        value,
-        minMoves: 1,
-        maxMoves: 1,
-    });
+    else {
+        // TODO Check it work ok if 1 player who pick Hofud has all warriors cards or all others warrior cards in discard!
+        AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Нет игроков с картами во фракции '${SuitNames.warrior}'.`);
+    }
 };
 /**
  * <h3>Действия, связанные со стартом способности артефакта Vidofnir Vedrfolnir.</h3>

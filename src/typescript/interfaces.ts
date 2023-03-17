@@ -15,9 +15,7 @@ import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGiantAbili
 // eslint-disable-next-line import/no-unresolved
 import { Client } from "boardgame.io/dist/types/packages/react";
 
-// TODO Rework all 1 | 2... in propertyNamed types!
 // TODO Check all number/string types here!
-// TODO Rethink all Partial / PartialBy / ?: => CanBeUndef!
 // Secret Data Start
 /**
  * <h3>Все скрытые от всех игроков данные в `G`.</h3>
@@ -286,6 +284,27 @@ type RoyalOfferingCardValueType = 3 | 5;
 // RoyalOfferingCard End
 
 // Hero Cards Start
+export type AllHeroesForPlayerOrSoloBotAddToPlayerBoardPossibleCardIdType = AllHeroesPossibleCardIdType
+    | AllHeroesForPlayerSoloModePossibleCardIdType | AllHeroesForSoloBotAndvariPossibleCardIdType;
+
+export type AllHeroesPossibleCardIdType =
+    AllBasicHeroesPossibleCardIdType | AllAddThingvellirHeroesToBasicPossibleCardIdType;
+
+export type AllBasicHeroesPossibleCardIdType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17
+    | 18 | 19 | 20 | 21 | 22;
+
+export type AllAddThingvellirHeroesToBasicPossibleCardIdType = 23 | 24 | 25 | 26 | 27 | 28;
+
+export type AllHeroesForPlayerSoloModePossibleCardIdType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+
+export type AllHeroesForPlayerSoloModeAndvariPossibleCardIdType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+
+export type AllHeroesForDifficultySoloModePossibleCardIdType = 1 | 2 | 3 | 4 | 5;
+
+export type AllHeroesForSoloBotPossibleCardIdType = 1 | 2 | 3 | 4 | 5;
+
+export type AllHeroesForSoloBotAndvariPossibleCardIdType = 1 | 2 | 3 | 4 | 5;
+
 /**
  * Объединение данных всех типов карт героев.
  */
@@ -1109,6 +1128,8 @@ export type ExplorerDistinctionCards = readonly [DwarfDeckCardType] | readonly [
     DwarfDeckCardType] | readonly [DwarfDeckCardType, DwarfDeckCardType, DwarfDeckCardType, DwarfDeckCardType,
         DwarfDeckCardType, DwarfDeckCardType];
 
+export type ExplorerDistinctionCardsLength = 1 | 3 | 6;
+
 export type ExplorerDistinctionCardIdType = 0 | 1 | 2 | 3 | 4 | 5;
 
 /**
@@ -1186,7 +1207,6 @@ export interface Stack {
     readonly godName?: GodNames;
     readonly card?: CanBeUndefType<StackCardType>;
     readonly coinId?: CanBeUndefType<PlayerCoinIdType>;
-    // TODO Add Type!
     readonly coinValue?: UpgradableCoinValueType;
     readonly configName?: ConfigNames;
     readonly drawName?: DrawNames;
@@ -1263,7 +1283,7 @@ export type AllPriorityValueType = SoloBotPlayerPriorityValueType | HumanPlayerP
  * <h3>Интерфейс опций для создания монет.</h3>
  */
 export interface BuildRoyalCoinsOptions {
-    readonly count: Pick<RoyalCoin, `value`>[];
+    readonly count: RoyalCoin[];
     readonly players: NumPlayersType;
 }
 
@@ -1354,7 +1374,15 @@ export type RoyalCoinValueType =
 
 export type TradingCoinsValueType = [UpgradableCoinValueType] | [UpgradableCoinValueType, UpgradableCoinValueType];
 
+export type TradingCoinsArrayLength = 1 | 2;
+
 export type BasicUpgradeCoinValueType = RoyalOfferingCardValueType | 7;
+
+export type CoinUpgradeBuffValue = 0 | 2;
+
+export type CoinUpgradePossibleMaxValue = 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20
+    | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42
+    | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51;
 
 export type TradingCoinsType = [UpgradableCoinType] | [UpgradableCoinType, UpgradableCoinType];
 
@@ -1437,6 +1465,8 @@ export type CurrentPlayerCoinsScoreType = 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 
     | 74 | 75 | 76 | 77 | 78 | 79 | 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 89 | 90 | 91 | 92 | 93 | 94 | 95
     | 96 | 97;
 
+type CurrentPlayerMaxCoinValueType = RoyalCoinValueType;
+
 /**
  * <h3>Интерфейс для публичных данных игрока.</h3>
  */
@@ -1446,6 +1476,7 @@ export interface PublicPlayer {
     readonly campCards: CampCreatureCommandZoneCardType[];
     readonly cards: SuitPropertyType<PlayerBoardCardType[]>;
     currentCoinsScore: CurrentPlayerCoinsScoreType;
+    currentMaxCoinValue: CurrentPlayerMaxCoinValueType;
     readonly giantTokenSuits: SuitPropertyType<CanBeNullType<boolean>>;
     readonly handCoins: PublicPlayerHandCoins;
     readonly heroes: HeroCard[];
@@ -1461,8 +1492,9 @@ export interface PublicPlayer {
  */
 export type CreatePublicPlayerFromData =
     PartialByType<Omit<PublicPlayer, `pickedCard` | `priority` | `selectedCoin` | `stack`>
-        & ReadonlyByType<PublicPlayer, `priority` | `selectedCoin` | `stack`>, `currentCoinsScore` | `heroes`
-        | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs` | `selectedCoin`>;
+        & ReadonlyByType<PublicPlayer, `priority` | `selectedCoin` | `stack`>, `currentCoinsScore`
+        | `currentMaxCoinValue` | `heroes` | `campCards` | `mythologicalCreatureCards` | `stack` | `buffs`
+        | `selectedCoin`>;
 // PublicPlayer End
 
 // PrivatePlayer Start
@@ -1534,6 +1566,8 @@ export interface SuitScoringFunction {
     (...params: SuitScoringArgsType): number;
 }
 
+export type MinerDistinctionsScoringType = 0 | 3;
+
 /**
  * <h3>Интерфейс для функций подсчёта очков по артефактам.</h3>
  */
@@ -1563,13 +1597,14 @@ export interface GiantScoringFunction {
     ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsCanBeUndefType): number;
 }
 
-// TODO Add number type here and inside functions as 0 | 3 | 6 | 10 | 16 ...?
 /**
  * <h3>Интерфейс для функций подсчёта очков по валькириям.</h3>
  */
 export interface ValkyryScoringFunction {
-    (...params: ScoringArgsType): number;
+    (...params: ScoringArgsType): ValkyryScoringType;
 }
+
+export type ValkyryScoringType = 0 | 3 | 4 | 6 | 8 | 10 | 16;
 
 /**
  * <h3>Интерфейс для функций получения преимущества по фракциям дворфов.</h3>
@@ -1718,7 +1753,7 @@ export interface MyGameState {
     explorerDistinctionCardId: CanBeNullType<ExplorerDistinctionCardIdType>,
     explorerDistinctionCards: CanBeNullType<ExplorerDistinctionCards>;
     readonly heroes: HeroCard[];
-    readonly heroesForSoloBot: CanBeNullType<HeroesForSoloGameArrayType>;
+    readonly heroesForSoloBot: CanBeNullType<HeroCard[]>;
     heroesForSoloGameDifficultyLevel: CanBeNullType<HeroCard[]>;
     heroesForSoloGameForStrategyBotAndvari: CanBeNullType<HeroesForSoloGameForStrategyBotAndvariArray>;
     heroesInitialForSoloGameForBotAndvari: CanBeNullType<HeroesInitialForSoloGameForBotAndvariArray>;
@@ -2062,13 +2097,25 @@ export interface PickValidatorsConfig {
     readonly discardCard?: DiscardCard;
 }
 
-export type NumberArrayValuesType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+type NumberValuesForMinerArrayType = 0 | 1 | 2;
+
+export type NumberValuesArrayType = NumberValuesForMinerArrayType | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+type AllNumberValuesArraysType = [NumberValuesForMinerArrayType, NumberValuesForMinerArrayType,
+    NumberValuesForMinerArrayType, NumberValuesForMinerArrayType, NumberValuesForMinerArrayType,
+    NumberValuesForMinerArrayType] | [NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType,
+    NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType]
+    | [NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType,
+    NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType]
+    | [NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType,
+    NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType,
+    NumberValuesArrayType];
 
 /**
  * <h3>Интерфейс для числовых индексов и массивов числовых значений.</h3>
  */
 type NumberArrayValues = {
-    readonly [index in TierType]: NumberArrayValuesType[];
+    readonly [index in TierType]: AllNumberValuesArraysType;
 };
 
 type AllCoinNumberValuesType = MarketCoinNumberValuesType | PlayerCoinNumberValuesType;
@@ -2214,7 +2261,9 @@ export type DiscardCampCardType = CampDeckCardType | MercenaryPlayerCard | Artef
 /**
  * <h3>Типы данных для очков у карт.</h3>
  */
-export type PointsType = DwarfPlayersAmountType | NumberArrayValuesType[];
+export type PointsType = DwarfPlayersAmountType | AllNumberValuesArraysType;
+
+export type CompareTavernCardsType = -1 | 0 | 1;
 
 /**
  * <h3>Типы данных для эпох.</h3>
@@ -2279,13 +2328,12 @@ export type TavernAllCardType = CanBeNullType<DwarfDeckCardType>[] | CanBeNullTy
 /**
  * <h3>Типы данных для карт, которые должны быть в таверне.</h3>
  */
-export type TavernCardWithExpansionType = DwarfDeckCardType | MythologicalCreatureCardType;
+export type TavernCardWithExpansionType = TavernCardWithoutExpansionType | MythologicalCreatureCardType;
 
-// TODO Delete it!?
 /**
  * <h3>Типы данных для карт, которые должны быть в таверне.</h3>
  */
-export type TavernCardWithoutExpansionType = DwarfDeckCardType;
+type TavernCardWithoutExpansionType = DwarfDeckCardType;
 
 /**
  * <h3>Типы данных для номера текущей таверны.</h3>
@@ -2325,7 +2373,7 @@ export type AllPickedCardType =
 
 export type RanksValueMultiplierType = 1 | 2;
 
-export type AllDwarfPlayersAmountType = 6 | 7 | 8 | 10;
+export type AllDwarfPlayersAmountType = 6 | 7 | 8 | 9 | 10;
 
 export type DwarfPlayersAmountType = 6 | 8 | 10;
 
@@ -2420,8 +2468,8 @@ export type ExpansionsType = {
 /**
  * <h3>Типы данных для всех карт сброса.</h3>
  */
-export type AllDiscardCardType = DwarfCard | PlayerBoardCardType | RoyalOfferingCard | ArtefactCard
-    | MercenaryCard | MythologicalCreatureCardType;
+export type AllDiscardCardType =
+    DwarfCard | PlayerBoardCardType | RoyalOfferingCard | ArtefactCard | MercenaryCard | MythologicalCreatureCardType;
 
 /**
  * <h3>Тип для варианта карты героя.</h3>
@@ -2444,17 +2492,15 @@ export type StageNameTextType = StageRusNames | `none`;
  */
 export type CardNamesForStylesType = SpecialCardNames | MultiSuitCardNames | string;
 
-// TODO Can i add type!?
 /**
  * <h3>Тип для подсчёта очков по положению токена силы валькирии при 4 значениях.</h3>
  */
-export type StrengthTokenFourNotchPointsType = readonly [number, number, number, number];
+export type StrengthTokenFourNotchPointsType = readonly [0, 0 | 4 | 8, 8 | 16, 0 | 16];
 
-// TODO Can i add type!?
 /**
  * <h3>Тип для подсчёта очков по положению токена силы валькирии при 5 значениях.</h3>
  */
-export type StrengthTokenFiveNotchPointsType = readonly [number, number, number, number, number];
+export type StrengthTokenFiveNotchPointsType = readonly [0, 3, 6, 10, 16];
 
 // My Utilities Start
 /**

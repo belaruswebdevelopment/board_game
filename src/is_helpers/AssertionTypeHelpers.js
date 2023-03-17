@@ -1,7 +1,52 @@
 import { CardTypeRusNames, GiantRusNames, SuitRusNames } from "../typescript/enums";
+export function AssertMinerDistinctionsScoring(number) {
+    if (!(number === 0 || number === 3)) {
+        throw new Error(`No value '${number}' of MinerDistinctionsScoringType.`);
+    }
+}
 export function AssertBasicVidofnirVedrfolnirUpgradeValue(number) {
     if (!(number === 2 || number === 3 || number === 5)) {
         throw new Error(`No value '${number}' of BasicVidofnirVedrfolnirUpgradeValueType.`);
+    }
+}
+export function AssertCoinUpgradePossibleMaxValue(number) {
+    if (!(number >= 5 || number <= 51)) {
+        throw new Error(`No value '${number}' of CoinUpgradePossibleMaxValue.`);
+    }
+}
+export function AssertAllHeroesPossibleCardId(heroId) {
+    if (!(heroId >= 1 || heroId <= 28)) {
+        throw new Error(`No value '${heroId}' of AllHeroesPossibleCardIdType.`);
+    }
+}
+export function AssertAllBasicHeroesPossibleCardId(heroId) {
+    if (!(heroId >= 1 || heroId <= 22)) {
+        throw new Error(`No value '${heroId}' of AllBasicHeroesPossibleCardIdType.`);
+    }
+}
+export function AssertAllHeroesForPlayerSoloModePossibleCardId(heroId) {
+    if (!(heroId >= 1 || heroId <= 10)) {
+        throw new Error(`No value '${heroId}' of AllHeroesForPlayerSoloModePossibleCardIdType.`);
+    }
+}
+export function AssertAllHeroesForPlayerSoloModeAndvariPossibleCardId(heroId) {
+    if (!(heroId >= 1 || heroId <= 11)) {
+        throw new Error(`No value '${heroId}' of AllHeroesForPlayerSoloModeAndvariPossibleCardIdType.`);
+    }
+}
+export function AssertAllHeroesForSoloBotPossibleCardId(heroId) {
+    if (!(heroId >= 1 || heroId <= 5)) {
+        throw new Error(`No value '${heroId}' of AllHeroesForSoloBotPossibleCardIdType.`);
+    }
+}
+export function AssertAllHeroesForSoloBotAndvariPossibleCardId(heroId) {
+    if (!(heroId >= 1 || heroId <= 5)) {
+        throw new Error(`No value '${heroId}' of AllHeroesForSoloBotAndvariPossibleCardIdType.`);
+    }
+}
+export function AssertAllHeroesForDifficultySoloModePossibleCardId(heroId) {
+    if (!(heroId >= 1 || heroId <= 6)) {
+        throw new Error(`No value '${heroId}' of AllHeroesForDifficultySoloModePossibleCardIdType.`);
     }
 }
 // TODO Must be 0 | (0 | 1 | 2) | (0 | 1 | 2 | 3 | 4 | 5) by array length! Add G to params and check G.explorerDistinctionCards.length!?
@@ -28,11 +73,6 @@ export function AssertTavernCardId(number) {
 export function AssertPlayerTavernCoinId(number) {
     if (!(number >= 0 || number <= 2)) {
         throw new Error(`No value '${number}' of PlayerTavernCoinIdType.`);
-    }
-}
-export function AssertAllDwarfPlayersAmount(number) {
-    if (!(number >= 6 || number <= 8 || number === 10)) {
-        throw new Error(`No value '${number}' of AllDwarfPlayersAmountType.`);
     }
 }
 export function AssertGeneralStrategyForSoloBotAndvariId(number) {
@@ -93,11 +133,6 @@ export function AssertPlayerPouchCoinId(number) {
 export function AssertHeroesForSoloGameForStrategyBotAndvariIndex(number) {
     if (!(number >= 0 || number <= 4)) {
         throw new Error(`No index '${number}' of HeroesForSoloGameForStrategyBotAndvariArray.`);
-    }
-}
-export function AssertHeroesForSoloGameIndex(number) {
-    if (!(number >= 0 || number <= 4)) {
-        throw new Error(`No index '${number}' of HeroesForSoloGameArrayType.`);
     }
 }
 export function AssertDwergBrothersScoringArrayIndex(number) {

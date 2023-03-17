@@ -86,7 +86,6 @@ function createMatchButtons(LobbyProps, Match, numPlayers) {
                         LobbyProps.handleLeaveMatch(Match.gameName, Match.matchID);
                     }, children: "Leave" })] }));
     }
-    // TODO add spectate button
     return _jsx("div", { children: "Match In Progress..." });
 }
 export default LobbyClient;

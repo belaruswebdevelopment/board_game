@@ -3,7 +3,7 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertHeroesForSoloGameIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinNumberValues, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MarketCoinNumberValuesType, MoveArgumentsType, MoveValidatorNamesTypes, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
@@ -397,8 +397,11 @@ export const DrawHeroesForSoloBotUI = ({ G, ctx, ...rest }: FnContext,
         moveMainArgs: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
-            AssertHeroesForSoloGameIndex(j);
-            const hero: HeroCard = G.heroesForSoloBot[j];
+            AssertAllHeroesForSoloBotPossibleCardId(j);
+            const hero: CanBeUndefType<HeroCard> = G.heroesForSoloBot[j];
+            if (hero === undefined) {
+                throw new Error(`Не существует кликнутая карта героя для соло бота с id '${j}'.`);
+            }
             if (hero.active && Number(ctx.currentPlayer) === 1
                 && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
                 SoloBotCommonStageNames.SoloBotClickHeroCard) {

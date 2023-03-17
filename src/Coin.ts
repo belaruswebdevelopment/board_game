@@ -48,14 +48,13 @@ export const BuildRoyalCoins = (options: BuildRoyalCoinsOptions): RoyalCoin[] =>
     for (let i = 0; i < royalCoinsConfig.length; i++) {
         AssertAllRoyalCoinConfigIndex(i);
         const config: CoinConfigType = royalCoinsConfig[i],
-            count: MarketCoinsAmountType = config.count()[options.players];
-        options.count.push({
-            value: config.value,
-        });
-        for (let j = 0; j < count; j++) {
-            coins.push(CreateRoyalCoin({
+            count: MarketCoinsAmountType = config.count()[options.players],
+            royalCoin: RoyalCoin = CreateRoyalCoin({
                 value: config.value,
-            }));
+            });
+        options.count.push(royalCoin);
+        for (let j = 0; j < count; j++) {
+            coins.push(royalCoin);
         }
     }
     return coins;
@@ -111,18 +110,18 @@ export const CountRoyalCoins = ({ G }: FnContext): CoinNumberValues<MarketCoinNu
  * <li>Происходит при создании всех базовых монет при инициализации игры.</li>
  * </ol>
  *.
- * @param type Тип.
  * @param isOpened Является ли монета открытой.
+ * @param type Тип.
  * @param value Значение.
  * @returns Базовая монета.
  */
-export const CreateInitialNotTradingCoin = ({
-    type = CoinRusNames.InitialNotTriggerTrading,
+const CreateInitialNotTradingCoin = ({
     isOpened = false,
+    type = CoinRusNames.InitialNotTriggerTrading,
     value,
 }: CreateInitialNotTradingCoinFromData): InitialNotTriggerTradingCoin => ({
-    type,
     isOpened,
+    type,
     value,
 });
 
@@ -133,18 +132,18 @@ export const CreateInitialNotTradingCoin = ({
  * <li>Происходит при создании всех базовых монет,активирующих обмен монет, при инициализации игры.</li>
  * </ol>
  *.
- * @param type Тип.
  * @param isOpened Является ли монета открытой.
+ * @param type Тип.
  * @param value Значение.
  * @returns Базовая монета, активирующая обмен монет.
  */
-export const CreateInitialTradingCoin = ({
-    type = CoinRusNames.InitialTriggerTrading,
+const CreateInitialTradingCoin = ({
     isOpened = false,
+    type = CoinRusNames.InitialTriggerTrading,
     value,
 }: CreateInitialTradingCoinFromData): InitialTriggerTradingCoin => ({
-    type,
     isOpened,
+    type,
     value,
 });
 
@@ -155,18 +154,18 @@ export const CreateInitialTradingCoin = ({
  * <li>Происходит при создании всех королевских монет при инициализации игры.</li>
  * </ol>
  *.
- * @param type Тип.
  * @param isOpened Является ли монета открытой.
+ * @param type Тип.
  * @param value Значение.
  * @returns Королевская монета.
  */
-export const CreateRoyalCoin = ({
-    type = CoinRusNames.Royal,
+const CreateRoyalCoin = ({
     isOpened = false,
+    type = CoinRusNames.Royal,
     value,
 }: CreateRoyalCoinFromData): RoyalCoin => ({
-    type,
     isOpened,
+    type,
     value,
 });
 
@@ -177,17 +176,17 @@ export const CreateRoyalCoin = ({
  * <li>Происходит при создании особых монет,активирующих обмен монет.</li>
  * </ol>
  *.
- * @param type Тип.
  * @param isOpened Является ли монета открытой.
+ * @param type Тип.
  * @param value Значение.
  * @returns Особая монета, активирующая обмен монет.
  */
 export const CreateSpecialTriggerTradingCoin = ({
-    type = CoinRusNames.SpecialTriggerTrading,
     isOpened = false,
+    type = CoinRusNames.SpecialTriggerTrading,
     value,
 }: CreateSpecialTriggerTradingCoinFromData): SpecialTriggerTradingCoin => ({
-    type,
     isOpened,
+    type,
     value,
 });

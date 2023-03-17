@@ -37,6 +37,7 @@ export const AddCardToPlayerBoardCards = ({ G, ctx, myPlayerID, ...rest }, card)
     }
     let _exhaustiveCheck;
     if (G.expansions.Idavoll.active) {
+        // TODO Add Enum PlayerBoardCardTypeRusNames
         // TODO Fix it both time!
         switch (card.type) {
             case CardTypeRusNames.DwarfPlayerCard:

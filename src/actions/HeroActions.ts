@@ -8,7 +8,7 @@ import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, HeroCard, HeroRankType, MultiSuitCard, MultiSuitRankType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import type { AllHeroesForPlayerOrSoloBotAddToPlayerBoardPossibleCardIdType, CanBeUndefType, HeroCard, HeroRankType, MultiSuitCard, MultiSuitRankType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>
@@ -22,8 +22,8 @@ import type { CanBeUndefType, HeroCard, HeroRankType, MultiSuitCard, MultiSuitRa
  * @param heroId Id героя.
  * @returns
  */
-export const AddHeroToPlayerCardsAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, heroId: number):
-    void => {
+export const AddHeroToPlayerCardsAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
+    heroId: AllHeroesForPlayerOrSoloBotAddToPlayerBoardPossibleCardIdType): void => {
     const hero: CanBeUndefType<HeroCard> = G.heroes[heroId];
     if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
@@ -130,7 +130,7 @@ export const PlaceMultiSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
     multiSuitCard.rank = playerVariants[suit].rank;
     multiSuitCard.points = playerVariants[suit].points;
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, multiSuitCard);
-    // TODO Move all such logs o AddAnyCardToPlayerActions!
+    // TODO Move all such logs to AddAnyCardToPlayerActions!
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' добавил карту '${multiSuitCard.type}' '${name}' во фракцию '${suitsConfig[suit].suitName}'.`);
     if (stack.pickedSuit === undefined && name === MultiSuitCardNames.OlwinsDouble) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },

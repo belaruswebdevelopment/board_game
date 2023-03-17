@@ -1,6 +1,5 @@
 import { AssertStrengthTokenNotchLongMax, AssertStrengthTokenNotchShortMax } from "../is_helpers/AssertionTypeHelpers";
 // TODO Add strengthTokenNotch type and do it can't be more then max strengthTokenNotch value!
-// TODO Add all types here as 0 | 3 | 6 | 10 | 16 ...?
 /**
  * <h3>Получение победных очков по мифическому существу Brynhildr.</h3>
  * <p>Применения:</p>

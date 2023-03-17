@@ -1,24 +1,24 @@
-// import type { Game } from "boardgame.io";
-// import { Client } from "boardgame.io/react";
-// import { BoardGame } from "./Game";
-// import { GameBoard } from "./GameBoard";
+import type { Game } from "boardgame.io";
+import { Client } from "boardgame.io/react";
+import { BoardGame } from "./Game";
+import { GameBoard } from "./GameBoard";
 
-// /**
-//  * <h3>Игровой клиент.</h3>
-//  * <p>Применения:</p>
-//  * <ol>
-//  * <li>Используется при создании игры.</li>
-//  * </ol>
-//  */
-// const App = Client({
-//     // debug: false,
-//     game: BoardGame as Game,
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     board: GameBoard as React.ComponentType<any>,
-//     numPlayers: 5,
-// });
+/**
+ * <h3>Игровой клиент.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при создании игры.</li>
+ * </ol>
+ */
+const App = Client({
+    // debug: false,
+    game: BoardGame as Game,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    board: GameBoard as React.ComponentType<any>,
+    numPlayers: 5,
+});
 
-// export default App;
+export default App;
 
 /*import React from "react";
 import {Client} from "boardgame.io/react";
@@ -129,7 +129,7 @@ render(<App/>, document.getElementById("root"));
 export default App;
 */
 
-import React from "react";
+/* import React from "react";
 import LobbyClient from "./LobbyClient";
 
 class App extends React.Component {
@@ -142,4 +142,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default App; */

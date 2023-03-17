@@ -1,8 +1,7 @@
 import { BrynhildrScoring, HildrScoring, OlrunScoring, SigrdrifaScoring, SvafaScoring } from "../score_helpers/ValkyryScoringHelpers";
 import { ValkyryScoringFunctionNames } from "../typescript/enums";
-import type { Action, ScoringArgsType, ValkyryScoringFunction } from "../typescript/interfaces";
+import type { Action, ScoringArgsType, ValkyryScoringFunction, ValkyryScoringType } from "../typescript/interfaces";
 
-// TODO Can add type to number here!
 /**
  * <h3>Начинает действие по получению победных очков по Валькирии.</h3>
  * <p>Применения:</p>
@@ -14,7 +13,8 @@ import type { Action, ScoringArgsType, ValkyryScoringFunction } from "../typescr
  * @param params Параметры действия.
  * @returns Количество победных очков по Валькирии.
  */
-export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>, params: ScoringArgsType): number => {
+export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>, params: ScoringArgsType):
+    ValkyryScoringType => {
     const actionDispatcher: ValkyryScoringFunction = ValkyryScoringDispatcherSwitcher(action.name);
     if (params === undefined) {
         throw new Error(`Отсутствует обязательный параметр функции 'params'.`);

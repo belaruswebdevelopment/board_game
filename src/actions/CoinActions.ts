@@ -3,11 +3,11 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCoinFromMarket } from "../helpers/DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
-import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCoinUpgradePossibleMaxValue, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinCanBeUpgradedByValueType, CoinType, MyFnContextWithMyPlayerID, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, RoyalCoin, UpgradableCoinType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinCanBeUpgradedByValueType, CoinType, CoinUpgradeBuffValue, MyFnContextWithMyPlayerID, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, RoyalCoin, UpgradableCoinType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
@@ -79,11 +79,10 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
             return _exhaustiveCheck;
     }
     // TODO Split into different functions!?
-    // TODO Move 0 | 2 in type!?
-    const buffValue: 0 | 2 =
+    const buffValue: CoinUpgradeBuffValue =
         CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.UpgradeCoin) ? 2 : 0,
-        // TODO Add type for newValue = by 51 max (25 coin+24 second coin + 2 max buf value)!
         newValue: number = upgradingCoin.value + value + buffValue;
+    AssertCoinUpgradePossibleMaxValue(newValue);
     let upgradedCoin: CoinType = null;
     if (G.royalCoins.length) {
         const lastRoyalCoin: CanBeUndefType<RoyalCoin> = G.royalCoins[G.royalCoins.length - 1];
@@ -179,6 +178,9 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         }
         G.royalCoins.splice(returningIndex, 0, upgradingCoin);
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
+    }
+    if (player.currentMaxCoinValue === upgradingCoin.value && upgradedCoin.value > player.currentMaxCoinValue) {
+        player.currentMaxCoinValue = upgradedCoin.value;
     }
     player.currentCoinsScore += upgradedCoin.value - upgradingCoin.value;
 };

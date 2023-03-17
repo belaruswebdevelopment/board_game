@@ -115,7 +115,7 @@ export const PlaceMultiSuitCardAction = ({ G, ctx, myPlayerID, ...rest }, suit) 
     multiSuitCard.rank = playerVariants[suit].rank;
     multiSuitCard.points = playerVariants[suit].points;
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, multiSuitCard);
-    // TODO Move all such logs o AddAnyCardToPlayerActions!
+    // TODO Move all such logs to AddAnyCardToPlayerActions!
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' добавил карту '${multiSuitCard.type}' '${name}' во фракцию '${suitsConfig[suit].suitName}'.`);
     if (stack.pickedSuit === undefined && name === MultiSuitCardNames.OlwinsDouble) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeMultiSuitsCards(MultiSuitCardNames.OlwinsDouble, suit, 3)]);

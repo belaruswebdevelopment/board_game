@@ -14,9 +14,9 @@ export const AddMultiSuitCardToPlayerCards = (card) => {
     if (card.playerSuit !== null && card.rank !== null) {
         return CreateMultiSuitPlayerCard({
             name: card.name,
-            suit: card.playerSuit,
-            rank: card.rank,
             points: card.points,
+            rank: card.rank,
+            suit: card.playerSuit,
         });
     }
     throw new Error(`Карта '${card.type}' '${card.name}' должна иметь параметры 'playerSuit' и 'rank'.`);

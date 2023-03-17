@@ -26,16 +26,16 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
             || ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
                 && configOptions.includes(heroData.game))) {
             const hero: HeroCard = CreateHero({
-                name: heroData.name,
+                actions: heroData.actions,
+                buff: heroData.buff,
                 description: heroData.description,
+                name: heroData.name,
                 playerSuit: heroData.playerSuit,
                 points: heroData.points,
                 rank: heroData.rank,
-                buff: heroData.buff,
                 pickValidators: heroData.pickValidators,
-                validators: heroData.validators,
-                actions: heroData.actions,
                 stack: heroData.stack,
+                validators: heroData.validators,
             });
             if ((mode === GameModeNames.Basic || mode === GameModeNames.Multiplayer)
                 || (mode === GameModeNames.Solo && heroName in soloGameHeroesForPlayerConfig)
@@ -88,46 +88,46 @@ export const BuildHeroes = (configOptions: GameNamesKeyofTypeofType[], mode: Gam
  * <li>Происходит при создании всех карт героев при инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param name Название.
+ * @param actions Действия.
+ * @param active Взят ли герой.
+ * @param buff Баф.
  * @param description Описание.
+ * @param name Название.
+ * @param pickValidators Валидаторы выбора карты.
  * @param playerSuit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
- * @param active Взят ли герой.
- * @param buff Баф.
- * @param pickValidators Валидаторы выбора карты.
- * @param validators Валидаторы карты.
- * @param actions Действия.
  * @param stack Стек действий.
+ * @param type Тип.
+ * @param validators Валидаторы карты.
  * @returns Карта героя.
  */
 const CreateHero = ({
-    type = CardTypeRusNames.HeroCard,
-    name,
+    actions,
+    active = true,
+    buff,
     description,
+    name,
+    pickValidators,
     playerSuit = null,
     points = null,
     rank = null,
-    active = true,
-    buff,
-    pickValidators,
-    validators,
-    actions,
     stack,
+    type = CardTypeRusNames.HeroCard,
+    validators,
 }: CreateHeroCardFromData): HeroCard => ({
-    type,
-    name,
+    actions,
+    active,
+    buff,
     description,
+    name,
+    pickValidators,
     playerSuit,
     points,
     rank,
-    active,
-    buff,
-    pickValidators,
-    validators,
-    actions,
     stack,
+    type,
+    validators,
 });
 
 /**
@@ -137,26 +137,26 @@ const CreateHero = ({
  * <li>Происходит при создании конкретной карты героя на поле игрока.</li>
  * </ol>
  *
- * @param type Тип.
- * @param name Название.
  * @param description Описание.
- * @param suit Название фракции дворфов.
+ * @param name Название.
  * @param points Очки.
  * @param rank Шевроны.
+ * @param suit Название фракции дворфов.
+ * @param type Тип.
  * @returns Карта героя на поле игрока.
  */
 export const CreateHeroPlayerCard = ({
-    type = CardTypeRusNames.HeroPlayerCard,
-    name,
     description,
-    suit,
+    name,
     points = null,
     rank = 1,
-}: CreateHeroPlayerCardFromData): HeroPlayerCard => ({
-    type,
-    name,
-    description,
     suit,
+    type = CardTypeRusNames.HeroPlayerCard,
+}: CreateHeroPlayerCardFromData): HeroPlayerCard => ({
+    description,
+    name,
     points,
     rank,
+    suit,
+    type,
 });

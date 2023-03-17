@@ -70,8 +70,7 @@ export const GetSuitValueWithMaxRanksValue = ({ G, ctx, myPlayerID, ...rest }: M
         }
     }
     if (suitWithMaxRanks === undefined) {
-        // TODO Duplicated error
-        throw new Error(`Должна быть хотя бы одна фракция с максимальным количеством шевронов.`);
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.MustBeSuitWithMaxRanksValue);
     }
     return suitWithMaxRanks;
 };

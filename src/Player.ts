@@ -18,8 +18,8 @@ export const BuildPlayer = (): PrivatePlayer => {
     const boardCoins: null[] = Array(initialCoinsConfig.length).fill(null);
     AssertPrivateBoardCoins(boardCoins);
     return CreatePrivatePlayer({
-        handCoins: BuildInitialCoins(),
         boardCoins,
+        handCoins: BuildInitialCoins(),
     });
 };
 
@@ -88,18 +88,20 @@ export const CreatePrivatePlayer = ({
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param nickname Никнейм.
- * @param cards Массив карт.
- * @param giantTokenSuits Состояние токенов Гигантов.
- * @param heroes Массив героев.
- * @param campCards Массив карт лагеря.
- * @param mythologicalCreatureCards Массив карт мифических существ.
- * @param handCoins Массив монет в руке.
  * @param boardCoins Массив монет на столе.
- * @param stack Стек действий.
- * @param priority Кристалл.
  * @param buffs Бафы.
+ * @param campCards Массив карт лагеря.
+ * @param cards Массив карт.
+ * @param currentCoinsScore Текущий счёт монет.
+ * @param currentMaxCoinValue Текущее значение максимальной монеты.
+ * @param giantTokenSuits Состояние токенов Гигантов.
+ * @param handCoins Массив монет в руке.
+ * @param heroes Массив героев.
+ * @param mythologicalCreatureCards Массив карт мифических существ.
+ * @param nickname Никнейм.
+ * @param priority Кристалл.
  * @param selectedCoin Выбранная монета.
+ * @param stack Стек действий.
  * @returns Публичные данные игрока.
  */
 export const CreatePublicPlayer = ({
@@ -108,6 +110,7 @@ export const CreatePublicPlayer = ({
     campCards = [],
     cards,
     currentCoinsScore = 14,
+    currentMaxCoinValue = 5,
     giantTokenSuits,
     handCoins,
     heroes = [],
@@ -122,6 +125,7 @@ export const CreatePublicPlayer = ({
     campCards,
     cards,
     currentCoinsScore,
+    currentMaxCoinValue,
     giantTokenSuits,
     handCoins,
     heroes,

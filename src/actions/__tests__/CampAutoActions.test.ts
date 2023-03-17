@@ -882,7 +882,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
     });
 });
 
-// TODO Can't be discarded coin but can be 1 trading coin on the pouch for Uline an no Uline.
+// TODO Can't be discarded coin but can be 1 trading coin on the pouch for Uline and no Uline.
 describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
     it(`should start VidofnirVedrfolnir action for 2 coins isOpened=true value=3 (multiplayer=false)`, (): void => {
         const G = {

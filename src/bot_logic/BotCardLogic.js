@@ -2,33 +2,31 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { AssertAllDwarfPlayersAmount, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GameModeNames } from "../typescript/enums";
 // Check all number types here!
 // Check all types in this file!
-// TODO Add type for -1 | 0 | 1!
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Сравнивает значения очков основной карт из таверны с остальными картами.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При вычислении сравнения значений карт для ботов.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
- * @param card1 Первая карта.
- * @param card2 Вторая карта.
+ * @param compareCard Основная сравниваемая карта.
+ * @param card2 Остальная карта в таверне для сравнения.
  * @returns Сравнительное значение.
  */
-export const CompareTavernCards = (card1, card2) => {
+export const CompareTavernCards = (compareCard, card2) => {
     var _a, _b;
-    if (card1 === null || card2 === null) {
+    if (compareCard === null || card2 === null) {
         return 0;
     }
     // TODO If Mythological Creatures cards!?
-    if (card1.type === CardTypeRusNames.DwarfCard && card2.type === CardTypeRusNames.DwarfCard) {
-        if (card1.playerSuit === card2.playerSuit) {
-            const result = ((_a = card1.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
+    if (compareCard.type === CardTypeRusNames.DwarfCard && card2.type === CardTypeRusNames.DwarfCard) {
+        if (compareCard.playerSuit === card2.playerSuit) {
+            const result = ((_a = compareCard.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
             if (result === 0) {
                 return result;
             }
@@ -37,7 +35,6 @@ export const CompareTavernCards = (card1, card2) => {
     }
     return 0;
 };
-// TODO cardId => tavernCardId(Type)
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -90,21 +87,19 @@ export const EvaluateTavernCard = ({ G, ctx, ...rest }, compareCard, cardId, tav
     return 0;
 };
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Определяет "среднюю карту" в конкретной фракции, определяющую сколько в среднем очков она приносит.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При инициализации игры для каждой фракции.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
  * @param suit Фракция дворфов.
- * @param data ????????????????????????????????????????????????????????????????????
+ * @param data Данные о количестве игроков и эпохах.
  * @returns "Средняя" карта дворфа.
  */
 export const GetAverageSuitCard = (suit, data) => {
     let totalPoints = 0;
     const pointsValuesPlayers = suitsConfig[suit].pointsValues()[data.players], points = pointsValuesPlayers[data.tier], count = Array.isArray(points) ? points.length : points;
-    AssertAllDwarfPlayersAmount(count);
     for (let i = 0; i < count; i++) {
         if (Array.isArray(points)) {
             const pointsValue = points[i];
@@ -120,26 +115,26 @@ export const GetAverageSuitCard = (suit, data) => {
     totalPoints /= count;
     // TODO Rework it to non-dwarf card?
     return CreateDwarfCard({
+        name: `Average card`,
         playerSuit: suitsConfig[suit].suit,
         // TODO Can i add type!?
         points: totalPoints,
-        name: `Average card`,
     });
 };
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Определяет сколько очков принесёт выбор конкретной карты из таверны.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При необходимости выбора ботом карты из таверны.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
  * @param context
  * @param card Карта.
- * @returns Потенциальное значение.
+ * @returns Потенциальное значение очков после выбора конкретной карты.
  */
 const PotentialTavernCardScoring = ({ G, ctx, myPlayerID, ...rest }, card) => {
     var _a;
+    // TODO How it play with Idavoll!?
     const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);

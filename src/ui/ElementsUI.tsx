@@ -135,6 +135,7 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }: FnContext, data: BoardP
  * @returns
  */
 export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
+    // TODO Can add type to id?
     card: AllCardType, id: number, player: CanBeNullType<PublicPlayer>, suit: CanBeNullType<SuitNames>,
     moveName?: CardMoveNames, ...args: ArgsType): void => {
     let styles: Background = { background: `` },
@@ -330,6 +331,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
  * @returns
  */
 export const DrawEmptyCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
+    // TODO Can add type to id?
     cardType: CardTypeRusNames, id: number, player: CanBeNullType<PublicPlayer>, suit: CanBeNullType<SuitNames>,
     moveName?: EmptyCardMoveNames, ...args: ArgsType): void => {
     let tdClasses = ``,
@@ -407,6 +409,7 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, 
  * @returns
  */
 export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
+    // TODO Can add type to id?
     type: DrawCoinTypeNames, coin: PublicPlayerCoinType, id: number, player: CanBeNullType<PublicPlayer>,
     coinClasses?: CanBeNullType<string>, additionalParam?: CanBeNullType<number> /* IndexOf<TavernsType> */, moveName?: CoinMoveNames,
     ...args: ArgsType): void => {

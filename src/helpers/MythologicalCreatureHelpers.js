@@ -44,8 +44,7 @@ export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }, buffNam
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, buffName)) {
-        let valkyryName;
-        // TODO Add _exhaustiveCheck and rework all buffs for diff ValkyryBuffNames etc.!
+        let valkyryName, _exhaustiveCheck;
         switch (buffName) {
             case ValkyryBuffNames.CountBidWinnerAmount:
                 valkyryName = ValkyryNames.Brynhildr;
@@ -63,7 +62,9 @@ export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }, buffNam
                 valkyryName = ValkyryNames.Svafa;
                 break;
             default:
+                _exhaustiveCheck = buffName;
                 throw new Error(`Нет такого бафа '${buffName}' у мифических существ типа '${CardTypeRusNames.ValkyryCard}}'.`);
+                return _exhaustiveCheck;
         }
         const valkyryCard = player.mythologicalCreatureCards.find((card) => card.name === valkyryName);
         if (valkyryCard === undefined) {

@@ -34,6 +34,8 @@ export const ThrowMyError = ({ G, ctx }, error, ...errorArgs) => {
             throw new Error(`Функция должна возвращать значение.`);
         case ErrorNames.FunctionParamIsUndefined:
             throw new Error(`Отсутствует необходимый параметр функции '${errorArgs[0]}'.`);
+        case ErrorNames.MustBeSuitWithMaxRanksValue:
+            throw new Error(`Должна быть хотя бы одна фракция с максимальным количеством шевронов.`);
         case ErrorNames.NoAddedValidator:
             throw new Error(`Не добавлен валидатор.`);
         case ErrorNames.NoCardsToDiscardWhenNoWinnerInExplorerDistinction:
@@ -48,8 +50,6 @@ export const ThrowMyError = ({ G, ctx }, error, ...errorArgs) => {
             throw new Error(`Должны быть карты во фракции '${errorArgs[0]}' хотя бы у одного игрока.`);
         case ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount:
             throw new Error(`Должен быть хотя бы один игрок с максимальным количеством шевронов '${errorArgs[0]}' по фракции '${errorArgs[1]}'.`);
-        case ErrorNames.PossibleMoveArgumentsIsUndefined:
-            throw new Error(`Не заданы возможные аргумента мува.`);
         case ErrorNames.PrivatePlayerWithCurrentIdIsUndefined:
             throw new Error(`В массиве приватных игроков отсутствует ${errorArgs[0] === ctx.currentPlayer ? `текущий ` : ``}${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === `1` ? `соло бот` : `игрок`} с id '${errorArgs[0]}'.`);
         case ErrorNames.PublicPlayerWithCurrentIdIsUndefined:

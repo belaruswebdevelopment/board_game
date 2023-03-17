@@ -1,5 +1,4 @@
 import { suitsConfig } from "./data/SuitData";
-import { AssertAllDwarfPlayersAmount } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -16,14 +15,13 @@ export const BuildDwarfCards = (data) => {
     let suit;
     for (suit in suitsConfig) {
         const pointValuesPlayers = suitsConfig[suit].pointsValues()[data.players], points = pointValuesPlayers[data.tier];
-        let count = 0;
+        let count;
         if (Array.isArray(points)) {
             count = points.length;
         }
         else {
             count = points;
         }
-        AssertAllDwarfPlayersAmount(count);
         for (let j = 0; j < count; j++) {
             let currentPoints;
             if (Array.isArray(points)) {
@@ -34,9 +32,9 @@ export const BuildDwarfCards = (data) => {
                 currentPoints = cardPoints;
             }
             cards.push(CreateDwarfCard({
+                name: `(фракция: ${suitsConfig[suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
                 playerSuit: suitsConfig[suit].suit,
                 points: currentPoints,
-                name: `(фракция: ${suitsConfig[suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
             }));
         }
     }
@@ -56,12 +54,12 @@ export const BuildDwarfCards = (data) => {
  * @param rank Шевроны.
  * @returns Карта дворфа.
  */
-export const CreateDwarfCard = ({ type = CardTypeRusNames.DwarfCard, name, playerSuit, points = null, rank = 1, }) => ({
-    type,
+export const CreateDwarfCard = ({ name, playerSuit, points = null, rank = 1, type = CardTypeRusNames.DwarfCard, }) => ({
     name,
     playerSuit,
     points,
     rank,
+    type,
 });
 /**
  * <h3>Создание карты дворфа на поле игрока.</h3>
@@ -70,18 +68,18 @@ export const CreateDwarfCard = ({ type = CardTypeRusNames.DwarfCard, name, playe
  * <li>Происходит при создании конкретной карты дворфа на поле игрока.</li>
  * </ol>
  *
- * @param type Тип.
  * @param name Название.
- * @param suit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
+ * @param suit Название фракции дворфов.
+ * @param type Тип.
  * @returns Карта дворфа на поле игрока.
  */
-export const CreateDwarfPlayerCard = ({ type = CardTypeRusNames.DwarfPlayerCard, name, suit, points = null, rank = 1, }) => ({
-    type,
+export const CreateDwarfPlayerCard = ({ name, points = null, rank = 1, suit, type = CardTypeRusNames.DwarfPlayerCard, }) => ({
     name,
-    suit,
     points,
     rank,
+    suit,
+    type,
 });
 //# sourceMappingURL=Dwarf.js.map

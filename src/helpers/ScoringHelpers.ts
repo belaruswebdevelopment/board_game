@@ -10,15 +10,14 @@ import { StartMythicalAnimalScoring } from "../dispatchers/MythicalAnimalDispatc
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { StartValkyryScoring } from "../dispatchers/ValkyryScoringDispatcherHelpers";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertDwergBrothersScoringArrayIndex, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertDwergBrothersScoringArrayIndex, AssertMinerDistinctionsScoring, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsMythicalAnimalPlayerCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckCurrentSuitDistinctionPlayers } from "../TroopEvaluation";
 import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, MythicalAnimalBuffNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { AllCoinsValueType, CampCardType, CanBeUndefType, DwergBrothersScoreValue, DwergBrothersScoringArray, GiantData, GodData, HeroCard, HeroCardData, MyFnContextWithMyPlayerID, MythicalAnimalData, MythicalAnimalPlayerCard, MythologicalCreatureCommandZoneCardType, PublicPlayer, PublicPlayerCoinType, ValkyryData } from "../typescript/interfaces";
+import type { AllCoinsValueType, CampCardType, CanBeUndefType, DwergBrothersScoreValue, DwergBrothersScoringArray, GiantData, GodData, HeroCard, HeroCardData, MinerDistinctionsScoringType, MyFnContextWithMyPlayerID, MythicalAnimalData, MythicalAnimalPlayerCard, MythologicalCreatureCommandZoneCardType, PublicPlayer, PublicPlayerCoinType, ValkyryData } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
-import { GetMaxCoinValue } from "./CoinHelpers";
 import { GetMinerDistinctionsScore } from "./DistinctionAwardingHelpers";
 
 export const CurrentAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
@@ -35,11 +34,16 @@ export const CurrentPotentialMinerDistinctionsScoring = ({ G, ctx, myPlayerID, .
 
 export const CurrentPotentialWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => {
+    const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+            myPlayerID);
+    }
     let totalScore = 0;
     const warriorDistinctions: number[] =
         CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior);
     if (warriorDistinctions.length && warriorDistinctions.includes(Number(myPlayerID))) {
-        totalScore += GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
+        totalScore += player.currentMaxCoinValue;
     }
     return totalScore;
 };
@@ -264,8 +268,8 @@ export const FinalAllBoardCoinsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnC
     return totalScore;
 };
 
-// TODO Return 0 | 3!
-export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): number => {
+export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    MinerDistinctionsScoringType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -276,7 +280,7 @@ export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }: M
     if (totalScore) {
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
     }
-    // TODO Check assertion AllCoinsValueType => 0 | 3 not AllCoinsValueType!
+    AssertMinerDistinctionsScoring(totalScore);
     return totalScore;
 };
 

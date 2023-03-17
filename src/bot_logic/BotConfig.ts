@@ -1,3 +1,4 @@
+import { AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
 import type { AICardCharacteristics, AIHeuristic, CanBeUndefType, FnContext, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 
@@ -15,27 +16,30 @@ import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
  */
 export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext): number[] => {
     const taverns: TavernsType = G.taverns,
-        temp: number[] = taverns.map((tavern: TavernAllCardType): number =>
+        // TODO -100 | 0 === number in current only 1 heuristic
+        tavernsHeuristicArray: number[] = taverns.map((tavern: TavernAllCardType): number =>
             absoluteHeuristicsForTradingCoin.reduce((acc: number, item: AIHeuristic<TavernAllCardType>):
                 number => acc + (item.heuristic(tavern) ? item.weight : 0), 0)),
         result: number[] =
             Array(taverns.length).fill(0).map((value: number, index: number):
                 number => {
-                const num: CanBeUndefType<number> = temp[index];
+                const num: CanBeUndefType<number> = tavernsHeuristicArray[index];
                 if (num === undefined) {
                     throw new Error(`Отсутствует значение с id '${index}'.`);
                 }
                 return value + num;
             }),
         tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
-            tavern.map((card: TavernCardType, index: number, arr: TavernAllCardType): number =>
-                EvaluateTavernCard({ G, ctx, ...rest }, card, index, arr))),
+            tavern.map((card: TavernCardType, index: number, tavern: TavernAllCardType): number => {
+                AssertTavernCardId(index);
+                return EvaluateTavernCard({ G, ctx, ...rest }, card, index, tavern);
+            })),
         tempChars: AICardCharacteristics[] = tempNumbers.map((element: number[]): AICardCharacteristics =>
             GetCharacteristics(element))/*,
         averageCards: ICard[] = G.averageCards*/;
     let maxIndex = 0,
         minIndex: number = tempChars.length - 1;
-    for (let i = 1; i < temp.length; i++) {
+    for (let i = 1; i < tavernsHeuristicArray.length; i++) {
         const maxCard: CanBeUndefType<AICardCharacteristics> = tempChars[maxIndex],
             tempCard1: CanBeUndefType<AICardCharacteristics> = tempChars[i];
         if (maxCard === undefined) {

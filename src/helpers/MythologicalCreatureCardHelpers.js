@@ -13,11 +13,11 @@ import { CreateMythicalAnimalPlayerCard } from "../MythologicalCreature";
 export const AddMythicalAnimalToPlayerCards = (card) => {
     if (card.playerSuit !== null && card.rank !== null) {
         return CreateMythicalAnimalPlayerCard({
-            name: card.name,
             description: card.description,
-            suit: card.playerSuit,
+            name: card.name,
             points: card.points,
             rank: card.rank,
+            suit: card.playerSuit,
         });
     }
     throw new Error(`Карта '${card.type}' '${card.name}' должна иметь параметры 'playerSuit' и 'rank'.`);

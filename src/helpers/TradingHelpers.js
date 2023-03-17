@@ -109,7 +109,6 @@ export const StartTrading = ({ G, ctx, myPlayerID, ...rest }, isSoloBotEndRound 
  * @returns
  */
 const Trading = ({ G, ctx, myPlayerID, ...rest }, tradingCoins, soloBotOnlyOneCoinTrading = false) => {
-    // TODO Move to type!?
     const length = tradingCoins.length;
     if (!soloBotOnlyOneCoinTrading && length !== 2) {
         throw new Error(`В массиве обменных монет игрока с id '${myPlayerID}' должно быть ровно '2' монеты, а не '${length}'.`);

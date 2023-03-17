@@ -855,7 +855,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
         }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
     });
 });
-// TODO Can't be discarded coin but can be 1 trading coin on the pouch for Uline an no Uline.
+// TODO Can't be discarded coin but can be 1 trading coin on the pouch for Uline and no Uline.
 describe(`Test StartVidofnirVedrfolnirAction method`, () => {
     it(`should start VidofnirVedrfolnir action for 2 coins isOpened=true value=3 (multiplayer=false)`, () => {
         const G = {

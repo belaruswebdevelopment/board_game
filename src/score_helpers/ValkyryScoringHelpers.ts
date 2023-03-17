@@ -1,8 +1,7 @@
 import { AssertStrengthTokenNotchLongMax, AssertStrengthTokenNotchShortMax } from "../is_helpers/AssertionTypeHelpers";
-import type { StrengthTokenFiveNotchPointsType, StrengthTokenFourNotchPointsType, ValkyryScoringFunction } from "../typescript/interfaces";
+import type { StrengthTokenFiveNotchPointsType, StrengthTokenFourNotchPointsType, ValkyryScoringFunction, ValkyryScoringType } from "../typescript/interfaces";
 
 // TODO Add strengthTokenNotch type and do it can't be more then max strengthTokenNotch value!
-// TODO Add all types here as 0 | 3 | 6 | 10 | 16 ...?
 /**
  * <h3>Получение победных очков по мифическому существу Brynhildr.</h3>
  * <p>Применения:</p>
@@ -13,7 +12,7 @@ import type { StrengthTokenFiveNotchPointsType, StrengthTokenFourNotchPointsType
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Brynhildr.
  */
-export const BrynhildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+export const BrynhildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number): ValkyryScoringType => {
     const strengthTokenNotchPoints: StrengthTokenFiveNotchPointsType = [0, 3, 6, 10, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
@@ -31,7 +30,7 @@ export const BrynhildrScoring: ValkyryScoringFunction = (strengthTokenNotch: num
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Hildr.
  */
-export const HildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+export const HildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number): ValkyryScoringType => {
     const strengthTokenNotchPoints: StrengthTokenFourNotchPointsType = [0, 8, 16, 0],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
@@ -49,7 +48,7 @@ export const HildrScoring: ValkyryScoringFunction = (strengthTokenNotch: number)
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Olrun.
  */
-export const OlrunScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+export const OlrunScoring: ValkyryScoringFunction = (strengthTokenNotch: number): ValkyryScoringType => {
     const strengthTokenNotchPoints: StrengthTokenFiveNotchPointsType = [0, 3, 6, 10, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
@@ -67,7 +66,7 @@ export const OlrunScoring: ValkyryScoringFunction = (strengthTokenNotch: number)
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Sigrdrifa.
  */
-export const SigrdrifaScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+export const SigrdrifaScoring: ValkyryScoringFunction = (strengthTokenNotch: number): ValkyryScoringType => {
     const strengthTokenNotchPoints: StrengthTokenFourNotchPointsType = [0, 0, 8, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;
@@ -85,7 +84,7 @@ export const SigrdrifaScoring: ValkyryScoringFunction = (strengthTokenNotch: num
  * @param strengthTokenNotch Значение токена силы.
  * @returns Количество очков по мифическому существу Svafa.
  */
-export const SvafaScoring: ValkyryScoringFunction = (strengthTokenNotch: number): number => {
+export const SvafaScoring: ValkyryScoringFunction = (strengthTokenNotch: number): ValkyryScoringType => {
     const strengthTokenNotchPoints: StrengthTokenFourNotchPointsType = [0, 4, 8, 16],
         strengthTokenNotchFinalValue: number = strengthTokenNotch > (strengthTokenNotchPoints.length - 1) ?
             strengthTokenNotchPoints.length - 1 : strengthTokenNotch;

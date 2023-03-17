@@ -19,16 +19,16 @@ export const BuildCampCards = (tier) => {
         const artefactData = artefactsConfig[artefactName];
         if (artefactData.tier === tier) {
             campCards.push(CreateArtefactCard({
-                path: artefactData.name,
-                name: artefactData.name,
-                description: artefactData.description,
-                buff: artefactData.buff,
-                validators: artefactData.validators,
                 actions: artefactData.actions,
-                stack: artefactData.stack,
+                buff: artefactData.buff,
+                description: artefactData.description,
+                name: artefactData.name,
+                path: artefactData.name,
                 playerSuit: artefactData.playerSuit,
                 points: artefactData.points,
                 rank: artefactData.rank,
+                stack: artefactData.stack,
+                validators: artefactData.validators,
             }));
         }
     }
@@ -38,9 +38,8 @@ export const BuildCampCards = (tier) => {
         const mercenaryData = mercenariesConfigTier[i];
         let name = ``, path = ``, campMercenarySuit;
         for (campMercenarySuit in mercenaryData) {
-            path += `${campMercenarySuit} `;
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
-            // TODO Rework KeyofType<BasicSuitableNullableCardInfo>!?
+            path += `${campMercenarySuit} `;
             let campMercenaryCardProperty;
             for (campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
                 const mercenaryVariant = mercenaryData[campMercenarySuit];
@@ -49,15 +48,15 @@ export const BuildCampCards = (tier) => {
                         name += `шевронов: ${mercenaryVariant.rank}, `;
                     }
                     if (campMercenaryCardProperty === `points`) {
-                        path += mercenaryVariant.points ? `${mercenaryVariant.points} ` : ``;
                         name += `очков: ${mercenaryVariant.points ? `${mercenaryVariant.points}) ` : `нет) `}`;
+                        path += mercenaryVariant.points ? `${mercenaryVariant.points} ` : ``;
                     }
                 }
             }
         }
         campCards.push(CreateMercenaryCard({
-            path: path.trim(),
             name: name.trim(),
+            path: path.trim(),
             variants: mercenaryData,
         }));
     }
@@ -70,31 +69,31 @@ export const BuildCampCards = (tier) => {
  * <li>Происходит при создании всех карт артефактов во время инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param name Название.
- * @param path URL путь.
- * @param description Описание.
- * @param buff Баф.
- * @param validators Валидаторы карты.
  * @param actions Действия.
+ * @param buff Баф.
+ * @param description Описание.
+ * @param name Название.
+ * @param type Тип.
+ * @param path URL путь.
+ * @param validators Валидаторы карты.
  * @param stack Стек действий.
  * @param playerSuit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
  * @returns Карта артефакта.
  */
-const CreateArtefactCard = ({ type = CardTypeRusNames.ArtefactCard, name, path, description, buff, validators, actions, stack, playerSuit = null, points = null, rank = 1, }) => ({
-    type,
-    name,
-    path,
-    description,
-    buff,
-    validators,
+const CreateArtefactCard = ({ actions, buff, description, name, path, playerSuit = null, points = null, rank = 1, stack, type = CardTypeRusNames.ArtefactCard, validators, }) => ({
     actions,
-    stack,
+    buff,
+    description,
+    name,
+    type,
+    path,
     playerSuit,
     points,
     rank,
+    stack,
+    validators,
 });
 /**
  * <h3>Создание карты артефакта на поле игрока.</h3>
@@ -103,23 +102,23 @@ const CreateArtefactCard = ({ type = CardTypeRusNames.ArtefactCard, name, path, 
  * <li>Происходит при создании конкретной карты артефакта на поле игрока.</li>
  * </ol>
  *
- * @param type Тип.
+ * @param description Описание.
  * @param name Название.
  * @param path URL путь.
- * @param description Описание.
- * @param suit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
+ * @param suit Название фракции дворфов.
+ * @param type Тип.
  * @returns Карта артефакта на поле игрока.
  */
-export const CreateArtefactPlayerCard = ({ type = CardTypeRusNames.ArtefactPlayerCard, name, path, description, suit, points = null, rank = 1, }) => ({
-    type,
+export const CreateArtefactPlayerCard = ({ description, name, path, points = null, rank = 1, suit, type = CardTypeRusNames.ArtefactPlayerCard, }) => ({
+    description,
     name,
     path,
-    description,
-    suit,
     points,
     rank,
+    suit,
+    type,
 });
 /**
  * <h3>Создание карты наёмника.</h3>
@@ -128,23 +127,23 @@ export const CreateArtefactPlayerCard = ({ type = CardTypeRusNames.ArtefactPlaye
  * <li>Происходит при создании всех карт наёмников во время инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
  * @param name Название.
  * @param path URL путь.
- * @param variants Варианты расположения карты наёмника.
  * @param playerSuit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
+ * @param type Тип.
+ * @param variants Варианты расположения карты наёмника.
  * @returns Карта наёмника.
  */
-const CreateMercenaryCard = ({ type = CardTypeRusNames.MercenaryCard, name, path, variants, playerSuit = null, points = null, rank = null, }) => ({
-    type,
+const CreateMercenaryCard = ({ name, path, playerSuit = null, points = null, rank = null, type = CardTypeRusNames.MercenaryCard, variants, }) => ({
     name,
     path,
-    variants,
     playerSuit,
     points,
-    rank
+    rank,
+    type,
+    variants,
 });
 /**
  * <h3>Создание карты наёмника на поле игрока.</h3>
@@ -153,20 +152,20 @@ const CreateMercenaryCard = ({ type = CardTypeRusNames.MercenaryCard, name, path
  * <li>Происходит при создании конкретной карты наёмника на поле игрока.</li>
  * </ol>
  *
- * @param type Тип.
  * @param name Название.
  * @param path URL путь.
- * @param suit Название фракции дворфов.
  * @param points Очки.
  * @param rank Шевроны.
+ * @param suit Название фракции дворфов.
+ * @param type Тип.
  * @returns Карта наёмника на поле игрока.
  */
-export const CreateMercenaryPlayerCard = ({ type = CardTypeRusNames.MercenaryPlayerCard, name, path, suit, points = null, rank = 1, }) => ({
-    type,
+export const CreateMercenaryPlayerCard = ({ name, path, points = null, rank = 1, suit, type = CardTypeRusNames.MercenaryPlayerCard, }) => ({
     name,
     path,
-    suit,
     points,
     rank,
+    suit,
+    type,
 });
 //# sourceMappingURL=Camp.js.map

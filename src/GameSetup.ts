@@ -39,7 +39,6 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         soloGameAndvariStrategyLevel = null,
         soloGameAndvariStrategyVariantLevel = null,
         explorerDistinctionCardId = null,
-        // TODO Rework it!
         odroerirTheMythicCauldron = false,
         log = true,
         debug = false,

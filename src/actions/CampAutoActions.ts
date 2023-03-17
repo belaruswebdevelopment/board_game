@@ -80,15 +80,16 @@ export const StartDiscardSuitCardAction: ActionFunctionWithoutParams = ({ G, ctx
             }
         }
     }
-    // TODO Can 1 player pick all warriors cards!?
-    if (!results) {
-        throw new Error(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
+    if (results) {
+        events?.setActivePlayers({
+            value,
+            minMoves: 1,
+            maxMoves: 1,
+        });
+    } else {
+        // TODO Check it work ok if 1 player who pick Hofud has all warriors cards or all others warrior cards in discard!
+        AddDataToLog({ G, ctx, events, ...rest }, LogTypeNames.Game, `Нет игроков с картами во фракции '${SuitNames.warrior}'.`);
     }
-    events?.setActivePlayers({
-        value,
-        minMoves: 1,
-        maxMoves: 1,
-    });
 };
 
 /**

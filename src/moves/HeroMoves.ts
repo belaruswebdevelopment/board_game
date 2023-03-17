@@ -1,7 +1,8 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { IsValidMove } from "../MoveValidator";
 import { AddHeroToPlayerCardsAction, DiscardCardsFromPlayerBoardAction, PlaceMultiSuitCardAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
-import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
+import { AssertAllBasicHeroesPossibleCardId, AssertAllHeroesForPlayerSoloModeAndvariPossibleCardId, AssertAllHeroesForPlayerSoloModePossibleCardId, AssertAllHeroesPossibleCardId } from "../is_helpers/AssertionTypeHelpers";
+import { CardMoveNames, CommonStageNames, EmptyCardMoveNames, GameModeNames, PlaceYludDefaultStageNames, SuitNames } from "../typescript/enums";
 import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../typescript/interfaces";
 
 /**
@@ -17,6 +18,17 @@ import type { CanBeVoidType, InvalidMoveType, Move, MyFnContext } from "../types
  */
 export const ClickHeroCardMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, heroId: number):
     CanBeVoidType<InvalidMoveType> => {
+    if (G.mode === GameModeNames.Solo) {
+        AssertAllHeroesForPlayerSoloModePossibleCardId(heroId);
+    } else if (G.mode === GameModeNames.SoloAndvari) {
+        AssertAllHeroesForPlayerSoloModeAndvariPossibleCardId(heroId);
+    } else {
+        if (G.expansions.Basic && !G.expansions.Thingvellir) {
+            AssertAllBasicHeroesPossibleCardId(heroId);
+        } else {
+            AssertAllHeroesPossibleCardId(heroId);
+        }
+    }
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         CommonStageNames.ClickHeroCard, CardMoveNames.ClickHeroCardMove, heroId);
     if (!isValidMove) {

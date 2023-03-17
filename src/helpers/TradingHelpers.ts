@@ -6,7 +6,7 @@ import { AssertPlayerCoinId, AssertPlayerPouchCoinId, AssertTradingCoins, Assert
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
-import type { CanBeUndefType, CoinCanBeUpgradedByValueType, CoinType, MyFnContextWithMyPlayerID, PlayerPouchCoinIdType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TradingCoinsType, UpgradableCoinType, ZeroOrOneType } from "../typescript/interfaces";
+import type { CanBeUndefType, CoinCanBeUpgradedByValueType, CoinType, MyFnContextWithMyPlayerID, PlayerPouchCoinIdType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TradingCoinsArrayLength, TradingCoinsType, UpgradableCoinType, ZeroOrOneType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -120,8 +120,7 @@ export const StartTrading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyP
  */
 const Trading = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID, tradingCoins: TradingCoinsType,
     soloBotOnlyOneCoinTrading = false): void => {
-    // TODO Move to type!?
-    const length: 1 | 2 = tradingCoins.length;
+    const length: TradingCoinsArrayLength = tradingCoins.length;
     if (!soloBotOnlyOneCoinTrading && length !== 2) {
         throw new Error(`В массиве обменных монет игрока с id '${myPlayerID}' должно быть ровно '2' монеты, а не '${length}'.`);
     }

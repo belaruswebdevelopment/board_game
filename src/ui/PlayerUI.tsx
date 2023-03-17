@@ -13,7 +13,7 @@ import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUn
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
-// TODO Move strings coins names to enum!
+// TODO Move strings coins class names to enum!
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
  * <p>Применения:</p>
@@ -591,7 +591,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                     if (i === 0) {
                         AssertTavernIndex(t);
                         playerHeaders.push(
-                            <th key={`Tavern ${tavernsConfig[G.currentTavern].name}`}>
+                            <th key={`${player.nickname} tavern ${tavernsConfig[t].name} coin`}>
                                 <span style={ALlStyles.Tavern(t)}
                                     className="bg-tavern-icon"></span>
                             </th>
@@ -772,11 +772,9 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }: FnContext,
                                         DrawCoinTypeNames.BackTavernIcon, publicBoardCoin, id, player,
                                         null, id, moveName, id);
                                 } else {
-                                    DrawCoinTypeNames.BackTavernIcon, publicBoardCoin, id, player,
-                                        DrawCoin({ G, ctx, ...rest }, data, playerCells,
-                                            DrawCoinTypeNames.BackSmallMarketCoin, publicBoardCoin, id,
-                                            player, null, null,
-                                            moveName, id);
+                                    DrawCoin({ G, ctx, ...rest }, data, playerCells,
+                                        DrawCoinTypeNames.BackSmallMarketCoin, publicBoardCoin, id,
+                                        player, null, null, moveName, id);
                                 }
                             } else if (validatorName === BidsMoveValidatorNames.ClickBoardCoinMoveValidator) {
                                 (moveMainArgs as MoveArgumentsType<number[]>).push(id);

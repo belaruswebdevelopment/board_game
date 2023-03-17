@@ -2,8 +2,8 @@
 export var LobbyPhases;
 (function (LobbyPhases) {
     LobbyPhases["ENTER"] = "enter";
-    LobbyPhases["PLAY"] = "play";
     LobbyPhases["LIST"] = "list";
+    LobbyPhases["PLAY"] = "play";
 })(LobbyPhases || (LobbyPhases = {}));
 //End Lobby
 // Suit Start
@@ -418,8 +418,8 @@ export var ArtefactScoringFunctionNames;
  */
 export var HeroScoringFunctionNames;
 (function (HeroScoringFunctionNames) {
-    HeroScoringFunctionNames["BasicHeroScoring"] = "BasicHeroScoring";
     HeroScoringFunctionNames["AstridScoring"] = "AstridScoring";
+    HeroScoringFunctionNames["BasicHeroScoring"] = "BasicHeroScoring";
     HeroScoringFunctionNames["IdunnScoring"] = "IdunnScoring";
 })(HeroScoringFunctionNames || (HeroScoringFunctionNames = {}));
 /**
@@ -593,18 +593,18 @@ export var ButtonNames;
     ButtonNames["NotActivateGodAbility"] = "\u041D\u0435 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C \u043A\u0430\u0440\u0442\u044B \u0431\u043E\u0433\u0430";
     ButtonNames["NoHeroEasyStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
     ButtonNames["NoHeroHardStrategy"] = "\u0411\u0435\u0437 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0445 \u0433\u0435\u0440\u043E\u0435\u0432 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
-    ButtonNames["WithHeroEasyStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
-    ButtonNames["WithHeroHardStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
     ButtonNames["Pass"] = "\u041F\u0430\u0441";
     ButtonNames["Start"] = "\u0421\u0442\u0430\u0440\u0442";
+    ButtonNames["WithHeroEasyStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u043B\u0451\u0433\u043A\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
+    ButtonNames["WithHeroHardStrategy"] = "\u0421\u043E \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u043C\u0438 \u0433\u0435\u0440\u043E\u044F\u043C\u0438 (\u0441\u043B\u043E\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044F)";
 })(ButtonNames || (ButtonNames = {}));
 /**
  * <h3>Перечисление для названия типов монет.</h3>
  */
 export var CoinTypeNames;
 (function (CoinTypeNames) {
-    CoinTypeNames["Hand"] = "\u0420\u0443\u043A\u0430";
     CoinTypeNames["Board"] = "\u0421\u0442\u043E\u043B";
+    CoinTypeNames["Hand"] = "\u0420\u0443\u043A\u0430";
 })(CoinTypeNames || (CoinTypeNames = {}));
 /**
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
@@ -613,8 +613,8 @@ export var ConfigNames;
 (function (ConfigNames) {
     ConfigNames["ActivateGiantAbilityOrPickCard"] = "ActivateGiantAbilityOrPickCard";
     ConfigNames["ActivateGodAbilityOrNot"] = "ActivateGodAbilityOrNot";
-    ConfigNames["ChooseGetMythologyCard"] = "ChooseGetMythologyCard";
     ConfigNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "ChooseCoinValueForVidofnirVedrfolnirUpgrade";
+    ConfigNames["ChooseGetMythologyCard"] = "ChooseGetMythologyCard";
     ConfigNames["ChooseStrategyLevelForSoloModeAndvari"] = "ChooseStrategyLevelForSoloModeAndvari";
     ConfigNames["ChooseStrategyVariantLevelForSoloModeAndvari"] = "ChooseStrategyVariantLevelForSoloModeAndvari";
     ConfigNames["ExplorerDistinction"] = "ExplorerDistinction";
@@ -635,32 +635,32 @@ export var DrawNames;
     DrawNames["Bonfur"] = "Bonfur";
     DrawNames["Brisingamens"] = "Brisingamens";
     DrawNames["BrisingamensEndGame"] = "Brisingamens end game";
-    DrawNames["ChooseSuitOlrun"] = "Choose suit Olrun";
     DrawNames["ChooseStrategyLevelForSoloModeAndvari"] = "Choose strategy level for solo mode Andvari";
     DrawNames["ChooseStrategyVariantLevelForSoloModeAndvari"] = "Choose strategy variant level for solo mode Andvari";
+    DrawNames["ChooseSuitOlrun"] = "Choose suit Olrun";
     DrawNames["CrovaxTheDoppelganger"] = "Crovax the Doppelganger";
     DrawNames["Dagda"] = "Dagda";
     DrawNames["DiscardTavernCard"] = "Discard tavern card";
     DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
-    DrawNames["Mjollnir"] = "Mjollnir";
     DrawNames["GetDifficultyLevelForSoloMode"] = "Get difficulty level for Solo mode";
     DrawNames["GetMythologyCardSkymir"] = "Get Mythology card Skymir";
     DrawNames["GetHeroesForSoloMode"] = "Get heroes for Solo mode";
     DrawNames["GetMjollnirProfit"] = "Get Mjollnir profit";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";
-    DrawNames["PlaceMultiSuitsCards"] = "Place multi suits cards";
+    DrawNames["Mjollnir"] = "Mjollnir";
     DrawNames["PickCard"] = "Pick card or camp card";
-    DrawNames["PickCardSoloBot"] = "Pick card or camp card Solo Bot";
-    DrawNames["PickCardSoloBotAndvari"] = "Pick card or camp card Solo Bot Andvari";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
     DrawNames["PickCardByExplorerDistinctionSoloBot"] = "Pick card by Explorer distinction Solo Bot";
     DrawNames["PickCardByExplorerDistinctionSoloBotAndvari"] = "Pick card by Explorer distinction Solo Bot Andvari";
+    DrawNames["PickCardSoloBot"] = "Pick card or camp card Solo Bot";
+    DrawNames["PickCardSoloBotAndvari"] = "Pick card or camp card Solo Bot Andvari";
     DrawNames["PickConcreteCoinToUpgrade"] = "Pick concrete coin to upgrade";
     DrawNames["PickHero"] = "Pick hero card";
     DrawNames["PickHeroSoloBot"] = "Pick hero card Solo Bot";
     DrawNames["PickHeroSoloBotAndvari"] = "Pick hero card Solo Bot Andvari";
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
+    DrawNames["PlaceMultiSuitsCards"] = "Place multi suits cards";
     DrawNames["PlaceTradingCoinsUline"] = "Place Trading Coins Uline";
     DrawNames["PlaceYludHero"] = "Place Ylud";
     DrawNames["PlaceYludHeroSoloBot"] = "Place Ylud Solo Bot";
@@ -706,14 +706,14 @@ export var ErrorNames;
     ErrorNames["FirstStackActionForPlayerWithCurrentIdIsUndefined"] = "FirstStackActionIsUndefined";
     ErrorNames["FunctionMustHaveReturnValue"] = "FunctionMustHaveReturnValue";
     ErrorNames["FunctionParamIsUndefined"] = "FunctionParamIsUndefined";
-    ErrorNames["NoAddedValidator"] = "NoAddedValidatorWithCurrentName";
+    ErrorNames["MustBeSuitWithMaxRanksValue"] = "MustBeSuitWithMaxRanksValue";
+    ErrorNames["NoAddedValidator"] = "NoAddedValidator";
     ErrorNames["NoCardsToDiscardWhenNoWinnerInExplorerDistinction"] = "NoCardsToDiscardWhenNoWinnerInExplorerDistinction";
     ErrorNames["NoSuchGameMode"] = "NoSuchGameMode";
     ErrorNames["NoSuchMove"] = "NoSuchMove";
     ErrorNames["OnlyInSoloOrTwoPlayersGame"] = "OnlyInSoloOrTwoPlayersGame";
     ErrorNames["PlayersCurrentSuitCardsMustHaveCardsForDistinction"] = "PlayersCurrentSuitCardsMustHaveCardsForDistinction";
     ErrorNames["PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount"] = "PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount";
-    ErrorNames["PossibleMoveArgumentsIsUndefined"] = "PossibleMoveArgumentsIsUndefined";
     ErrorNames["PrivatePlayerWithCurrentIdIsUndefined"] = "PrivatePlayerWithCurrentIdIsUndefined";
     ErrorNames["PublicPlayerWithCurrentIdIsUndefined"] = "PublicPlayerWithCurrentIdIsUndefined";
     ErrorNames["SuitDistinctionMustBePresent"] = "SuitDistinctionMustBePresent";
@@ -766,20 +766,20 @@ export var DistinctionCardMoveNames;
 export var CardMoveNames;
 (function (CardMoveNames) {
     CardMoveNames["ActivateGodAbilityMove"] = "ActivateGodAbilityMove";
-    CardMoveNames["ClickCardNotGiantAbilityMove"] = "ClickCardNotGiantAbilityMove";
-    CardMoveNames["ClickGiantAbilityNotCardMove"] = "ClickGiantAbilityNotCardMove";
+    CardMoveNames["ClickCampCardMove"] = "ClickCampCardMove";
     CardMoveNames["ClickCardMove"] = "ClickCardMove";
     CardMoveNames["ClickCardToPickDistinctionMove"] = "ClickCardToPickDistinctionMove";
-    CardMoveNames["ClickCampCardMove"] = "ClickCampCardMove";
+    CardMoveNames["ClickCardNotGiantAbilityMove"] = "ClickCardNotGiantAbilityMove";
+    CardMoveNames["ClickGiantAbilityNotCardMove"] = "ClickGiantAbilityNotCardMove";
     CardMoveNames["DiscardCardFromPlayerBoardMove"] = "DiscardCardFromPlayerBoardMove";
     CardMoveNames["GetEnlistmentMercenariesMove"] = "GetEnlistmentMercenariesMove";
     CardMoveNames["GetMythologyCardMove"] = "GetMythologyCardMove";
     // start
     CardMoveNames["ClickCampCardHoldaMove"] = "ClickCampCardHoldaMove";
     CardMoveNames["ClickHeroCardMove"] = "ClickHeroCardMove";
-    CardMoveNames["DiscardTopCardFromSuitMove"] = "DiscardTopCardFromSuitMove";
     CardMoveNames["DiscardCard2PlayersMove"] = "DiscardCard2PlayersMove";
     CardMoveNames["DiscardSuitCardFromPlayerBoardMove"] = "DiscardSuitCardFromPlayerBoardMove";
+    CardMoveNames["DiscardTopCardFromSuitMove"] = "DiscardTopCardFromSuitMove";
     CardMoveNames["PickDiscardCardMove"] = "PickDiscardCardMove";
     // Solo Mode
     CardMoveNames["ChooseHeroForDifficultySoloModeMove"] = "ChooseHeroForDifficultySoloModeMove";
@@ -797,8 +797,8 @@ export var CardMoveNames;
  */
 export var CoinMoveNames;
 (function (CoinMoveNames) {
-    CoinMoveNames["ClickBoardCoinMove"] = "ClickBoardCoinMove";
     CoinMoveNames["ChooseCoinValueForHrungnirUpgradeMove"] = "ChooseCoinValueForHrungnirUpgradeMove";
+    CoinMoveNames["ClickBoardCoinMove"] = "ClickBoardCoinMove";
     CoinMoveNames["ClickHandCoinMove"] = "ClickHandCoinMove";
     CoinMoveNames["ClickHandCoinUlineMove"] = "ClickHandCoinUlineMove";
     CoinMoveNames["ClickHandTradingCoinUlineMove"] = "ClickHandTradingCoinUlineMove";
@@ -906,11 +906,11 @@ export var CardTypeRusNames;
     CardTypeRusNames["SpecialPlayerCard"] = "\u041E\u0441\u043E\u0431\u0430\u044F \u043A\u0430\u0440\u0442\u0430 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
     CardTypeRusNames["ValkyryCard"] = "\u0412\u0430\u043B\u044C\u043A\u0438\u0440\u0438\u044F";
     // Common
-    CardTypeRusNames["PlayerBoardCard"] = "\u041A\u0430\u0440\u0442\u0430 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
     CardTypeRusNames["CommandZoneHeroCard"] = "\u041A\u0430\u0440\u0442\u0430 \u0433\u0435\u0440\u043E\u044F \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u043E\u0439 \u0437\u043E\u043D\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
     CardTypeRusNames["CommandZoneCampCard"] = "\u041A\u0430\u0440\u0442\u0430 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u043E\u0439 \u0437\u043E\u043D\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
     CardTypeRusNames["CommandZoneMythologicalCreatureCard"] = "\u041A\u0430\u0440\u0442\u0430 \u043C\u0438\u0444\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u043E\u0439 \u0437\u043E\u043D\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
     CardTypeRusNames["DistinctionCard"] = "\u0417\u043D\u0430\u043A \u043E\u0442\u043B\u0438\u0447\u0438\u044F";
+    CardTypeRusNames["PlayerBoardCard"] = "\u041A\u0430\u0440\u0442\u0430 \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
 })(CardTypeRusNames || (CardTypeRusNames = {}));
 /**
  * <h3>Перечисление для суб стадий игры `ActivateGiantAbilityOrPickCard`.</h3>
@@ -947,19 +947,19 @@ export var ChooseDifficultySoloModeStageNames;
  */
 export var ChooseDifficultySoloModeAndvariDefaultStageNames;
 (function (ChooseDifficultySoloModeAndvariDefaultStageNames) {
-    ChooseDifficultySoloModeAndvariDefaultStageNames["ChooseStrategyVariantForSoloModeAndvari"] = "ChooseStrategyVariantForSoloModeAndvari";
     ChooseDifficultySoloModeAndvariDefaultStageNames["ChooseStrategyForSoloModeAndvari"] = "ChooseStrategyForSoloModeAndvari";
+    ChooseDifficultySoloModeAndvariDefaultStageNames["ChooseStrategyVariantForSoloModeAndvari"] = "ChooseStrategyVariantForSoloModeAndvari";
 })(ChooseDifficultySoloModeAndvariDefaultStageNames || (ChooseDifficultySoloModeAndvariDefaultStageNames = {}));
 /**
  * <h3>Перечисление для дефолтных стадий игры `Bids`.</h3>
  */
 export var BidsDefaultStageNames;
 (function (BidsDefaultStageNames) {
-    BidsDefaultStageNames["ClickHandCoin"] = "ClickHandCoin";
-    BidsDefaultStageNames["ClickBoardCoin"] = "ClickBoardCoin";
     BidsDefaultStageNames["BotsPlaceAllCoins"] = "BotsPlaceAllCoins";
-    BidsDefaultStageNames["SoloBotPlaceAllCoins"] = "SoloBotPlaceAllCoins";
+    BidsDefaultStageNames["ClickBoardCoin"] = "ClickBoardCoin";
+    BidsDefaultStageNames["ClickHandCoin"] = "ClickHandCoin";
     BidsDefaultStageNames["SoloBotAndvariPlaceAllCoins"] = "SoloBotAndvariPlaceAllCoins";
+    BidsDefaultStageNames["SoloBotPlaceAllCoins"] = "SoloBotPlaceAllCoins";
 })(BidsDefaultStageNames || (BidsDefaultStageNames = {}));
 /**
  * <h3>Перечисление для дефолтных стадий игры `BidUline`.</h3>
@@ -987,9 +987,9 @@ export var GetMjollnirProfitDefaultStageNames;
  */
 export var EnlistmentMercenariesDefaultStageNames;
 (function (EnlistmentMercenariesDefaultStageNames) {
-    EnlistmentMercenariesDefaultStageNames["StartEnlistmentMercenaries"] = "StartEnlistmentMercenaries";
-    EnlistmentMercenariesDefaultStageNames["PassEnlistmentMercenaries"] = "PassEnlistmentMercenaries";
     EnlistmentMercenariesDefaultStageNames["GetEnlistmentMercenaries"] = "GetEnlistmentMercenaries";
+    EnlistmentMercenariesDefaultStageNames["PassEnlistmentMercenaries"] = "PassEnlistmentMercenaries";
+    EnlistmentMercenariesDefaultStageNames["StartEnlistmentMercenaries"] = "StartEnlistmentMercenaries";
 })(EnlistmentMercenariesDefaultStageNames || (EnlistmentMercenariesDefaultStageNames = {}));
 /**
  * <h3>Перечисление для стадий игры `EnlistmentMercenaries`.</h3>
@@ -1004,8 +1004,8 @@ export var EnlistmentMercenariesStageNames;
 export var PlaceYludDefaultStageNames;
 (function (PlaceYludDefaultStageNames) {
     PlaceYludDefaultStageNames["PlaceYludHero"] = "PlaceYludHero";
-    PlaceYludDefaultStageNames["SoloBotPlaceYludHero"] = "SoloBotPlaceYludHero";
     PlaceYludDefaultStageNames["SoloBotAndvariPlaceYludHero"] = "SoloBotAndvariPlaceYludHero";
+    PlaceYludDefaultStageNames["SoloBotPlaceYludHero"] = "SoloBotPlaceYludHero";
 })(PlaceYludDefaultStageNames || (PlaceYludDefaultStageNames = {}));
 /**
  * <h3>Перечисление для дефолтных стадий игры `TroopEvaluation`.</h3>
@@ -1020,18 +1020,18 @@ export var TroopEvaluationDefaultStageNames;
 export var TroopEvaluationStageNames;
 (function (TroopEvaluationStageNames) {
     TroopEvaluationStageNames["ClickCardToPickDistinction"] = "ClickCardToPickDistinction";
-    TroopEvaluationStageNames["SoloBotClickCardToPickDistinction"] = "SoloBotClickCardToPickDistinction";
     TroopEvaluationStageNames["SoloBotAndvariClickCardToPickDistinction"] = "SoloBotAndvariClickCardToPickDistinction";
+    TroopEvaluationStageNames["SoloBotClickCardToPickDistinction"] = "SoloBotClickCardToPickDistinction";
 })(TroopEvaluationStageNames || (TroopEvaluationStageNames = {}));
 /**
  * <h3>Перечисление для дефолтных стадий игры `TavernsResolution`.</h3>
  */
 export var TavernsResolutionDefaultStageNames;
 (function (TavernsResolutionDefaultStageNames) {
-    TavernsResolutionDefaultStageNames["ClickCard"] = "ClickCard";
     TavernsResolutionDefaultStageNames["ClickCampCard"] = "ClickCampCard";
-    TavernsResolutionDefaultStageNames["SoloBotClickCard"] = "SoloBotClickCard";
+    TavernsResolutionDefaultStageNames["ClickCard"] = "ClickCard";
     TavernsResolutionDefaultStageNames["SoloBotAndvariClickCard"] = "SoloBotAndvariClickCard";
+    TavernsResolutionDefaultStageNames["SoloBotClickCard"] = "SoloBotClickCard";
 })(TavernsResolutionDefaultStageNames || (TavernsResolutionDefaultStageNames = {}));
 /**
  * <h3>Перечисление для стадий игры с суб стадиями `TavernsResolution`.</h3>
@@ -1048,9 +1048,9 @@ export var TavernsResolutionStageNames;
 (function (TavernsResolutionStageNames) {
     TavernsResolutionStageNames["ChooseCoinValueForHrungnirUpgrade"] = "ChooseCoinValueForHrungnirUpgrade";
     TavernsResolutionStageNames["ChooseSuitOlrun"] = "ChooseSuitOlrun";
+    TavernsResolutionStageNames["ClickHandTradingCoinUline"] = "ClickHandTradingCoinUline";
     TavernsResolutionStageNames["DiscardCard2Players"] = "DiscardCard2Players";
     TavernsResolutionStageNames["GetMythologyCard"] = "GetMythologyCard";
-    TavernsResolutionStageNames["ClickHandTradingCoinUline"] = "ClickHandTradingCoinUline";
 })(TavernsResolutionStageNames || (TavernsResolutionStageNames = {}));
 /**
  * <h3>Перечисление для общих стадий игры `SoloBotCommon`.</h3>
@@ -1072,9 +1072,9 @@ export var SoloBotCommonCoinUpgradeStageNames;
  */
 export var SoloBotAndvariCommonStageNames;
 (function (SoloBotAndvariCommonStageNames) {
+    SoloBotAndvariCommonStageNames["SoloBotAndvariClickCoinToUpgrade"] = "SoloBotAndvariClickCoinToUpgrade";
     SoloBotAndvariCommonStageNames["SoloBotAndvariClickHeroCard"] = "SoloBotAndvariClickHeroCard";
     SoloBotAndvariCommonStageNames["SoloBotAndvariPlaceThrudHero"] = "SoloBotAndvariPlaceThrudHero";
-    SoloBotAndvariCommonStageNames["SoloBotAndvariClickCoinToUpgrade"] = "SoloBotAndvariClickCoinToUpgrade";
 })(SoloBotAndvariCommonStageNames || (SoloBotAndvariCommonStageNames = {}));
 /**
  * <h3>Перечисление для общих стадий игры `Common`.</h3>
@@ -1083,15 +1083,15 @@ export var CommonStageNames;
 (function (CommonStageNames) {
     CommonStageNames["AddCoinToPouch"] = "AddCoinToPouch";
     CommonStageNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "ChooseCoinValueForVidofnirVedrfolnirUpgrade";
-    CommonStageNames["DiscardTopCardFromSuit"] = "DiscardTopCardFromSuit";
-    CommonStageNames["DiscardSuitCardFromPlayerBoard"] = "DiscardSuitCardFromPlayerBoard";
     CommonStageNames["ClickCampCardHolda"] = "ClickCampCardHolda";
+    CommonStageNames["ClickCoinToUpgrade"] = "ClickCoinToUpgrade";
+    CommonStageNames["ClickHeroCard"] = "ClickHeroCard";
+    CommonStageNames["DiscardSuitCardFromPlayerBoard"] = "DiscardSuitCardFromPlayerBoard";
+    CommonStageNames["DiscardTopCardFromSuit"] = "DiscardTopCardFromSuit";
     CommonStageNames["PickConcreteCoinToUpgrade"] = "PickConcreteCoinToUpgrade";
     CommonStageNames["PickDiscardCard"] = "PickDiscardCard";
-    CommonStageNames["ClickHeroCard"] = "ClickHeroCard";
     CommonStageNames["PlaceMultiSuitCard"] = "PlaceMultiSuitCard";
     CommonStageNames["PlaceThrudHero"] = "PlaceThrudHero";
-    CommonStageNames["ClickCoinToUpgrade"] = "ClickCoinToUpgrade";
     CommonStageNames["UpgradeCoinVidofnirVedrfolnir"] = "UpgradeCoinVidofnirVedrfolnir";
 })(CommonStageNames || (CommonStageNames = {}));
 /**
@@ -1102,32 +1102,32 @@ export var StageRusNames;
     StageRusNames["ActivateGiantAbilityOrPickCard"] = "ActivateGiantAbilityOrPickCard";
     StageRusNames["ActivateGodAbilityOrNot"] = "ActivateGodAbilityOrNot";
     StageRusNames["AddCoinToPouch"] = "AddCoinToPouch";
-    StageRusNames["ChooseSuitOlrun"] = "ChooseSuitOlrun";
+    StageRusNames["ChooseCoinValueForHrungnirUpgrade"] = "ChooseCoinValueForHrungnirUpgrade";
     StageRusNames["ChooseCoinValueForVidofnirVedrfolnirUpgrade"] = "ChooseCoinValueForVidofnirVedrfolnirUpgrade";
     StageRusNames["ChooseHeroForDifficultySoloMode"] = "ChooseHeroForDifficultySoloMode";
-    StageRusNames["ChooseCoinValueForHrungnirUpgrade"] = "ChooseCoinValueForHrungnirUpgrade";
-    StageRusNames["DiscardCard2Players"] = "DiscardCard2Players";
-    StageRusNames["DiscardTopCardFromSuit"] = "DiscardTopCardFromSuit";
-    StageRusNames["DiscardSuitCardFromPlayerBoard"] = "DiscardSuitCardFromPlayerBoard";
-    StageRusNames["GetMythologyCard"] = "GetMythologyCard";
+    StageRusNames["ChooseSuitOlrun"] = "ChooseSuitOlrun";
     StageRusNames["ClickCampCardHolda"] = "ClickCampCardHolda";
+    StageRusNames["ClickCardToPickDistinction"] = "ClickCardToPickDistinction";
+    StageRusNames["ClickCoinToUpgrade"] = "ClickCoinToUpgrade";
+    StageRusNames["ClickHandTradingCoinUline"] = "ClickHandTradingCoinUline";
+    StageRusNames["ClickHeroCard"] = "ClickHeroCard";
+    StageRusNames["DiscardCard2Players"] = "DiscardCard2Players";
+    StageRusNames["DiscardSuitCardFromPlayerBoard"] = "DiscardSuitCardFromPlayerBoard";
+    StageRusNames["DiscardTopCardFromSuit"] = "DiscardTopCardFromSuit";
+    StageRusNames["GetMythologyCard"] = "GetMythologyCard";
     StageRusNames["PickConcreteCoinToUpgrade"] = "PickConcreteCoinToUpgrade";
     StageRusNames["PickDiscardCard"] = "PickDiscardCard";
-    StageRusNames["ClickCardToPickDistinction"] = "ClickCardToPickDistinction";
-    StageRusNames["SoloBotClickCardToPickDistinction"] = "SoloBotClickCardToPickDistinction";
-    StageRusNames["SoloBotAndvariClickCardToPickDistinction"] = "SoloBotAndvariClickCardToPickDistinction";
-    StageRusNames["ClickHeroCard"] = "ClickHeroCard";
-    StageRusNames["SoloBotClickHeroCard"] = "SoloBotAndvariClickHeroCard";
-    StageRusNames["SoloBotAndvariClickHeroCard"] = "SoloBotAndvariClickHeroCard";
     StageRusNames["PlaceEnlistmentMercenaries"] = "PlaceEnlistmentMercenaries";
     StageRusNames["PlaceMultiSuitCard"] = "PlaceMultiSuitCard";
-    StageRusNames["ClickHandTradingCoinUline"] = "ClickHandTradingCoinUline";
     StageRusNames["PlaceThrudHero"] = "PlaceThrudHero";
-    StageRusNames["SoloBotPlaceThrudHero"] = "SoloBotPlaceThrudHero";
-    StageRusNames["SoloBotAndvariPlaceThrudHero"] = "SoloBotAndvariPlaceThrudHero";
-    StageRusNames["ClickCoinToUpgrade"] = "ClickCoinToUpgrade";
-    StageRusNames["SoloBotClickCoinToUpgrade"] = "SoloBotClickCoinToUpgrade";
+    StageRusNames["SoloBotAndvariClickCardToPickDistinction"] = "SoloBotAndvariClickCardToPickDistinction";
     StageRusNames["SoloBotAndvariClickCoinToUpgrade"] = "SoloBotAndvariClickCoinToUpgrade";
+    StageRusNames["SoloBotAndvariClickHeroCard"] = "SoloBotAndvariClickHeroCard";
+    StageRusNames["SoloBotAndvariPlaceThrudHero"] = "SoloBotAndvariPlaceThrudHero";
+    StageRusNames["SoloBotClickCardToPickDistinction"] = "SoloBotClickCardToPickDistinction";
+    StageRusNames["SoloBotClickCoinToUpgrade"] = "SoloBotClickCoinToUpgrade";
+    StageRusNames["SoloBotClickHeroCard"] = "SoloBotAndvariClickHeroCard";
+    StageRusNames["SoloBotPlaceThrudHero"] = "SoloBotPlaceThrudHero";
     StageRusNames["UpgradeCoinVidofnirVedrfolnir"] = "UpgradeCoinVidofnirVedrfolnir";
 })(StageRusNames || (StageRusNames = {}));
 /**
@@ -1153,24 +1153,24 @@ export var SoloGameAndvariStrategyNames;
  */
 export var PickCardValidatorNames;
 (function (PickCardValidatorNames) {
-    PickCardValidatorNames["pickDiscardCardToStack"] = "pickDiscardCardToStack";
     PickCardValidatorNames["pickCampCardToStack"] = "pickCampCardToStack";
+    PickCardValidatorNames["pickDiscardCardToStack"] = "pickDiscardCardToStack";
 })(PickCardValidatorNames || (PickCardValidatorNames = {}));
 /**
  * <h3>Перечисление для названия карт 'Королевская награда'.</h3>
  */
 export var RoyalOfferingNames;
 (function (RoyalOfferingNames) {
-    RoyalOfferingNames["PlusThree"] = "+3";
     RoyalOfferingNames["PlusFive"] = "+5";
+    RoyalOfferingNames["PlusThree"] = "+3";
 })(RoyalOfferingNames || (RoyalOfferingNames = {}));
 /**
  * <h3>Перечисление для названия таверн.</h3>
  */
 export var TavernNames;
 (function (TavernNames) {
-    TavernNames["LaughingGoblin"] = "\u00AB\u0412\u0435\u0441\u0451\u043B\u044B\u0439 \u0433\u043E\u0431\u043B\u0438\u043D\u00BB";
     TavernNames["DancingDragon"] = "\u00AB\u041F\u0430\u0440\u044F\u0449\u0438\u0439 \u0434\u0440\u0430\u043A\u043E\u043D\u00BB";
+    TavernNames["LaughingGoblin"] = "\u00AB\u0412\u0435\u0441\u0451\u043B\u044B\u0439 \u0433\u043E\u0431\u043B\u0438\u043D\u00BB";
     TavernNames["ShiningHorse"] = "\u00AB\u0413\u0430\u0440\u0446\u0443\u044E\u0449\u0438\u0439 \u043A\u043E\u043D\u044C\u00BB";
 })(TavernNames || (TavernNames = {}));
 /**
@@ -1231,8 +1231,8 @@ export var BidUlineMoveValidatorNames;
  */
 export var TavernsResolutionMoveValidatorNames;
 (function (TavernsResolutionMoveValidatorNames) {
-    TavernsResolutionMoveValidatorNames["ClickCardMoveValidator"] = "ClickCardMoveValidator";
     TavernsResolutionMoveValidatorNames["ClickCampCardMoveValidator"] = "ClickCampCardMoveValidator";
+    TavernsResolutionMoveValidatorNames["ClickCardMoveValidator"] = "ClickCardMoveValidator";
     // Solo Bot
     TavernsResolutionMoveValidatorNames["SoloBotClickCardMoveValidator"] = "SoloBotClickCardMoveValidator";
     // Solo Bot Andvari
@@ -1240,19 +1240,19 @@ export var TavernsResolutionMoveValidatorNames;
     // TODO Add `ChooseCoinValueForHrungnirUpgradeMoveValidator` to UI validate
     TavernsResolutionMoveValidatorNames["ChooseCoinValueForHrungnirUpgradeMoveValidator"] = "ChooseCoinValueForHrungnirUpgradeMoveValidator";
     TavernsResolutionMoveValidatorNames["ChooseSuitOlrunMoveValidator"] = "ChooseSuitOlrunMoveValidator";
+    TavernsResolutionMoveValidatorNames["ClickHandTradingCoinUlineMoveValidator"] = "ClickHandTradingCoinUlineMoveValidator";
     TavernsResolutionMoveValidatorNames["DiscardCard2PlayersMoveValidator"] = "DiscardCard2PlayersMoveValidator";
     TavernsResolutionMoveValidatorNames["GetMythologyCardMoveValidator"] = "GetMythologyCardMoveValidator";
-    TavernsResolutionMoveValidatorNames["ClickHandTradingCoinUlineMoveValidator"] = "ClickHandTradingCoinUlineMoveValidator";
 })(TavernsResolutionMoveValidatorNames || (TavernsResolutionMoveValidatorNames = {}));
 /**
  * <h3>Перечисление для названия валидаторов мувов в фазу 'EnlistmentMercenaries'.</h3>
  */
 export var EnlistmentMercenariesMoveValidatorNames;
 (function (EnlistmentMercenariesMoveValidatorNames) {
-    EnlistmentMercenariesMoveValidatorNames["StartEnlistmentMercenariesMoveValidator"] = "StartEnlistmentMercenariesMoveValidator";
-    EnlistmentMercenariesMoveValidatorNames["PassEnlistmentMercenariesMoveValidator"] = "PassEnlistmentMercenariesMoveValidator";
     EnlistmentMercenariesMoveValidatorNames["GetEnlistmentMercenariesMoveValidator"] = "GetEnlistmentMercenariesMoveValidator";
+    EnlistmentMercenariesMoveValidatorNames["PassEnlistmentMercenariesMoveValidator"] = "PassEnlistmentMercenariesMoveValidator";
     EnlistmentMercenariesMoveValidatorNames["PlaceEnlistmentMercenariesMoveValidator"] = "PlaceEnlistmentMercenariesMoveValidator";
+    EnlistmentMercenariesMoveValidatorNames["StartEnlistmentMercenariesMoveValidator"] = "StartEnlistmentMercenariesMoveValidator";
 })(EnlistmentMercenariesMoveValidatorNames || (EnlistmentMercenariesMoveValidatorNames = {}));
 /**
  * <h3>Перечисление для названия валидаторов мувов в фазу 'PlaceYlud'.</h3>
@@ -1270,8 +1270,8 @@ export var PlaceYludMoveValidatorNames;
  */
 export var TroopEvaluationMoveValidatorNames;
 (function (TroopEvaluationMoveValidatorNames) {
-    TroopEvaluationMoveValidatorNames["ClickDistinctionCardMoveValidator"] = "ClickDistinctionCardMoveValidator";
     TroopEvaluationMoveValidatorNames["ClickCardToPickDistinctionMoveValidator"] = "ClickCardToPickDistinctionMoveValidator";
+    TroopEvaluationMoveValidatorNames["ClickDistinctionCardMoveValidator"] = "ClickDistinctionCardMoveValidator";
     // Solo Bot
     TroopEvaluationMoveValidatorNames["SoloBotClickCardToPickDistinctionMoveValidator"] = "SoloBotClickCardToPickDistinctionMoveValidator";
     // Solo Bot Andvari
@@ -1300,10 +1300,10 @@ export var CommonMoveValidatorNames;
     CommonMoveValidatorNames["ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator"] = "ChooseCoinValueForVidofnirVedrfolnirUpgradeMoveValidator";
     CommonMoveValidatorNames["ClickCampCardHoldaMoveValidator"] = "ClickCampCardHoldaMoveValidator";
     CommonMoveValidatorNames["ClickCoinToUpgradeMoveValidator"] = "ClickCoinToUpgradeMoveValidator";
-    CommonMoveValidatorNames["PickConcreteCoinToUpgradeMoveValidator"] = "PickConcreteCoinToUpgradeMoveValidator";
     CommonMoveValidatorNames["ClickHeroCardMoveValidator"] = "ClickHeroCardMoveValidator";
-    CommonMoveValidatorNames["DiscardTopCardFromSuitMoveValidator"] = "DiscardTopCardFromSuitMoveValidator";
     CommonMoveValidatorNames["DiscardSuitCardFromPlayerBoardMoveValidator"] = "DiscardSuitCardFromPlayerBoardMoveValidator";
+    CommonMoveValidatorNames["DiscardTopCardFromSuitMoveValidator"] = "DiscardTopCardFromSuitMoveValidator";
+    CommonMoveValidatorNames["PickConcreteCoinToUpgradeMoveValidator"] = "PickConcreteCoinToUpgradeMoveValidator";
     CommonMoveValidatorNames["PickDiscardCardMoveValidator"] = "PickDiscardCardMoveValidator";
     CommonMoveValidatorNames["PlaceMultiSuitCardMoveValidator"] = "PlaceMultiSuitCardMoveValidator";
     CommonMoveValidatorNames["PlaceThrudHeroMoveValidator"] = "PlaceThrudHeroMoveValidator";
@@ -1329,8 +1329,8 @@ export var SoloBotCommonCoinUpgradeMoveValidatorNames;
  */
 export var SoloBotAndvariCommonMoveValidatorNames;
 (function (SoloBotAndvariCommonMoveValidatorNames) {
+    SoloBotAndvariCommonMoveValidatorNames["SoloBotAndvariClickCoinToUpgradeMoveValidator"] = "SoloBotAndvariClickCoinToUpgradeMoveValidator";
     SoloBotAndvariCommonMoveValidatorNames["SoloBotAndvariClickHeroCardMoveValidator"] = "SoloBotAndvariClickHeroCardMoveValidator";
     SoloBotAndvariCommonMoveValidatorNames["SoloBotAndvariPlaceThrudHeroMoveValidator"] = "SoloBotAndvariPlaceThrudHeroMoveValidator";
-    SoloBotAndvariCommonMoveValidatorNames["SoloBotAndvariClickCoinToUpgradeMoveValidator"] = "SoloBotAndvariClickCoinToUpgradeMoveValidator";
 })(SoloBotAndvariCommonMoveValidatorNames || (SoloBotAndvariCommonMoveValidatorNames = {}));
 //# sourceMappingURL=enums.js.map

@@ -4,8 +4,8 @@ import { IsValidMove } from "../MoveValidator";
 import { AllStackData } from "../data/StackData";
 import { AddHeroForDifficultyToSoloBotCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertAllHeroesForDifficultySoloModePossibleCardId } from "../is_helpers/AssertionTypeHelpers";
 import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeStageNames, ErrorNames } from "../typescript/enums";
-// TODO Move all playerID === `0` to validate!
 // TODO level: SoloGameAndvariStrategyNames => string and asserts it value if no other strings can be valid in moves!?
 /**
  * <h3>Выбор уровня сложности в режиме соло игры.</h3>
@@ -19,7 +19,7 @@ import { ButtonMoveNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultS
  * @returns
  */
 export const ChooseStrategyForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest }, level) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, level);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyForSoloModeAndvari, ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -38,7 +38,7 @@ export const ChooseStrategyForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest
  * @returns
  */
 export const ChooseStrategyVariantForSoloModeAndvariMove = ({ G, ctx, playerID, ...rest }, level) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari, ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, level);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeAndvariDefaultStageNames.ChooseStrategyVariantForSoloModeAndvari, ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -58,7 +58,7 @@ export const ChooseStrategyVariantForSoloModeAndvariMove = ({ G, ctx, playerID, 
  * @returns
  */
 export const ChooseDifficultyLevelForSoloModeMove = ({ G, ctx, playerID, ...rest }, level) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode, ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, level);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeDefaultStageNames.ChooseDifficultyLevelForSoloMode, ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove, level);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -77,7 +77,8 @@ export const ChooseDifficultyLevelForSoloModeMove = ({ G, ctx, playerID, ...rest
  * @returns
  */
 export const ChooseHeroForDifficultySoloModeMove = ({ G, ctx, playerID, ...rest }, heroId) => {
-    const isValidMove = playerID === `0` && IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode, CardMoveNames.ChooseHeroForDifficultySoloModeMove, heroId);
+    AssertAllHeroesForDifficultySoloModePossibleCardId(heroId);
+    const isValidMove = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest }, ChooseDifficultySoloModeStageNames.ChooseHeroForDifficultySoloMode, CardMoveNames.ChooseHeroForDifficultySoloModeMove, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

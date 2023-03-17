@@ -73,8 +73,8 @@ export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...r
         return ThrowMyError({ G, ctx, events, ...rest },
             ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, playerID);
     }
-    const stackCard: CanBeUndefType<StackCardType> = stack.card;
-    if (stackCard !== undefined && stackCard.type === CardTypeRusNames.MercenaryCard) {
+    const stackDwarfCard: CanBeUndefType<StackCardType> = stack.card;
+    if (stackDwarfCard !== undefined && stackDwarfCard.type === CardTypeRusNames.MercenaryCard) {
         throw new Error(`В стеке не может быть карта типа '${CardTypeRusNames.MercenaryCard}'.`);
     }
     let _exhaustiveCheck: never;
@@ -85,10 +85,10 @@ export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...r
                 [AllStackData.pickCard()]);
             break;
         case GodNames.Frigg:
-            if (stackCard === undefined) {
+            if (stackDwarfCard === undefined) {
                 throw new Error(`В стеке не может быть карты.`);
             }
-            AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, events, ...rest }, stackCard);
+            AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, events, ...rest }, stackDwarfCard);
             break;
         case GodNames.Odin:
             events.endTurn();
@@ -158,14 +158,14 @@ export const ChooseCoinValueForHrungnirUpgradeMove: Move = ({ G, ctx, playerID, 
  * </ol>
  *
  * @param context
- * @param card Карта Дворфа.
+ * @param dwarfCard Карта Дворфа.
  * @returns
  */
-export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, card: DwarfCard):
+export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }: MyFnContext, dwarfCard: DwarfCard):
     CanBeVoidType<InvalidMoveType> => {
     const isValidMove: boolean = IsValidMove({ G, ctx, myPlayerID: playerID, ...rest },
         TavernsResolutionWithSubStageNames.ActivateGiantAbilityOrPickCard,
-        CardMoveNames.ClickCardNotGiantAbilityMove, card);
+        CardMoveNames.ClickCardNotGiantAbilityMove, dwarfCard);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -190,7 +190,7 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
     }
     let buffName: GiantBuffNames,
         _exhaustiveCheck: never;
-    switch (card.playerSuit) {
+    switch (dwarfCard.playerSuit) {
         case SuitNames.blacksmith:
             if (CheckPlayerHasBuff({ G, ctx, myPlayerID: playerID, ...rest },
                 GiantBuffNames.PlayerHasActiveGiantThrivaldi)) {
@@ -232,12 +232,12 @@ export const ClickCardNotGiantAbilityMove: Move = ({ G, ctx, playerID, ...rest }
             }
             break;
         default:
-            _exhaustiveCheck = card.playerSuit;
+            _exhaustiveCheck = dwarfCard.playerSuit;
             throw new Error(`Карта имеющая принадлежность к фракции должна быть добавлена на стол игрока.`);
             return _exhaustiveCheck;
     }
     DeleteBuffFromPlayer({ G, ctx, myPlayerID: playerID, ...rest }, buffName);
-    AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, ...rest }, card);
+    AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, ...rest }, dwarfCard);
 };
 
 // TODO card: DwarfCard => ?? and asserts it value if no other cards can be valid in moves!?

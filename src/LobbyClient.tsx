@@ -225,7 +225,6 @@ function createMatchButtons(
             </div>
         );
     }
-    // TODO add spectate button
     return <div>Match In Progress...</div>;
 }
 

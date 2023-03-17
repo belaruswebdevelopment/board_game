@@ -10,14 +10,13 @@ import { StartMythicalAnimalScoring } from "../dispatchers/MythicalAnimalDispatc
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { StartValkyryScoring } from "../dispatchers/ValkyryScoringDispatcherHelpers";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertDwergBrothersScoringArrayIndex, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertDwergBrothersScoringArrayIndex, AssertMinerDistinctionsScoring, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsMythicalAnimalPlayerCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckCurrentSuitDistinctionPlayers } from "../TroopEvaluation";
 import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, MythicalAnimalBuffNames, SuitNames, SuitRusNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
-import { GetMaxCoinValue } from "./CoinHelpers";
 import { GetMinerDistinctionsScore } from "./DistinctionAwardingHelpers";
 export const CurrentAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     let totalScore = 0, suit;
@@ -28,10 +27,14 @@ export const CurrentAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
 };
 export const CurrentPotentialMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => GetMinerDistinctionsScore({ G, ctx, myPlayerID, ...rest });
 export const CurrentPotentialWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    const player = G.publicPlayers[Number(myPlayerID)];
+    if (player === undefined) {
+        return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
+    }
     let totalScore = 0;
     const warriorDistinctions = CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior);
     if (warriorDistinctions.length && warriorDistinctions.includes(Number(myPlayerID))) {
-        totalScore += GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
+        totalScore += player.currentMaxCoinValue;
     }
     return totalScore;
 };
@@ -219,7 +222,6 @@ export const FinalAllBoardCoinsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все монеты ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
     return totalScore;
 };
-// TODO Return 0 | 3!
 export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
@@ -229,7 +231,7 @@ export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) =
     if (totalScore) {
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
     }
-    // TODO Check assertion AllCoinsValueType => 0 | 3 not AllCoinsValueType!
+    AssertMinerDistinctionsScoring(totalScore);
     return totalScore;
 };
 export const FinalWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {

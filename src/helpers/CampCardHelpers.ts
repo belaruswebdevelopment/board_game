@@ -23,12 +23,12 @@ import { AddActionsToStack } from "./StackHelpers";
 export const AddArtefactToPlayerCards = (card: ArtefactCard): ArtefactPlayerCard => {
     if (card.playerSuit !== null && card.rank !== null) {
         return CreateArtefactPlayerCard({
+            description: card.description,
             name: card.name,
             path: card.path,
-            description: card.description,
-            suit: card.playerSuit,
             points: card.points,
             rank: card.rank,
+            suit: card.playerSuit,
         });
     }
     throw new Error(`Карта '${card.type}' '${card.name}' должна иметь параметры 'playerSuit' и 'rank'.`);
@@ -50,9 +50,9 @@ export const AddMercenaryToPlayerCards = (card: MercenaryCard): MercenaryPlayerC
         return CreateMercenaryPlayerCard({
             name: card.name,
             path: card.path,
-            suit: card.playerSuit,
             points: card.points,
             rank: card.rank,
+            suit: card.playerSuit,
         });
     }
     throw new Error(`Карта '${card.type}' '${card.name}' должна иметь параметры 'playerSuit' и 'rank'.`);
@@ -84,20 +84,24 @@ export const AddCampCardToCards = ({ G, ctx, myPlayerID, ...rest }: MyFnContextW
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.GoCampOneTime);
     }
-    if (!(card.type === CardTypeRusNames.MercenaryCard && card.playerSuit === null)) {
-        AddCampCardToPlayerCampCards({ G, ctx, myPlayerID, ...rest }, card);
-        if (G.odroerirTheMythicCauldron) {
-            AddCoinOnOdroerirTheMythicCauldronCampCard({ G, ctx, ...rest });
-        }
-        if (card.type === CardTypeRusNames.ArtefactCard) {
-            AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, card.buff);
+    if (G.odroerirTheMythicCauldron) {
+        AddCoinOnOdroerirTheMythicCauldronCampCard({ G, ctx, ...rest });
+    }
+    if (card.type === CardTypeRusNames.ArtefactCard) {
+        AddBuffToPlayer({ G, ctx, myPlayerID, ...rest }, card.buff);
+        if (card.playerSuit !== null && card.rank !== null) {
             return AddArtefactToPlayerCards(card);
         }
-        if (card.type === CardTypeRusNames.MercenaryCard && ctx.phase === PhaseNames.EnlistmentMercenaries) {
+    }
+    if (card.type === CardTypeRusNames.MercenaryCard) {
+        if (ctx.phase === PhaseNames.EnlistmentMercenaries) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeEnlistmentMercenaries(card)]);
         }
-        return AddMercenaryToPlayerCards(card);
+        if (card.playerSuit !== null && card.rank !== null) {
+            return AddMercenaryToPlayerCards(card);
+        }
     }
+    AddCampCardToPlayerCampCards({ G, ctx, myPlayerID, ...rest }, card);
     return card;
 };
 

@@ -113,7 +113,9 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }, data, playerCells, play
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, player, suit, moveName, ...args) => {
+export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, 
+// TODO Can add type to id?
+card, id, player, suit, moveName, ...args) => {
     let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, 
     // TODO Add type!?
     value = null, action;
@@ -297,7 +299,9 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawEmptyCard = ({ G, ctx, ...rest }, data, playerCells, cardType, id, player, suit, moveName, ...args) => {
+export const DrawEmptyCard = ({ G, ctx, ...rest }, data, playerCells, 
+// TODO Can add type to id?
+cardType, id, player, suit, moveName, ...args) => {
     let tdClasses = ``, action;
     if (suit !== null) {
         tdClasses += suitsConfig[suit].suitColor;
@@ -365,7 +369,9 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }, data, playerCells, cardType, 
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */, moveName, ...args) => {
+export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, 
+// TODO Can add type to id?
+type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */, moveName, ...args) => {
     let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action, _exhaustiveCheck;
     switch (moveName) {
         case CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove:

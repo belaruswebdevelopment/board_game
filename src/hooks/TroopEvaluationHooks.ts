@@ -8,7 +8,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, Distinctions, DwarfDeckCardType, FnContext, PlayerID, PublicPlayer } from "../typescript/interfaces";
+import type { CanBeUndefType, CanBeVoidType, Distinctions, DwarfDeckCardType, ExplorerDistinctionCardsLength, FnContext, PlayerID, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
@@ -113,8 +113,7 @@ export const OnTroopEvaluationMove = ({ G, ctx, ...rest }: FnContext): void => {
 export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
     AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
-        // TODO Move to type!?
-        let length: 1 | 3 | 6;
+        let length: ExplorerDistinctionCardsLength;
         if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
             length = 1;
         } else {

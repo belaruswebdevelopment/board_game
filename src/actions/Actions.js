@@ -148,16 +148,16 @@ export const PickDiscardCardAction = ({ G, ctx, myPlayerID, ...rest }, cardId) =
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    const card = G.discardCardsDeck.splice(cardId, 1)[0];
-    if (card === undefined) {
+    const cardFromDiscard = G.discardCardsDeck.splice(cardId, 1)[0];
+    if (cardFromDiscard === undefined) {
         throw new Error(`В массиве колоды сброса отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${card.type}' '${card.name}' из колоды сброса.`);
-    if (card.type === CardTypeRusNames.DwarfPlayerCard) {
-        AddCardToPlayerBoardCards({ G, ctx, myPlayerID, ...rest }, card);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' взял карту '${cardFromDiscard.type}' '${cardFromDiscard.name}' из колоды сброса.`);
+    if (cardFromDiscard.type === CardTypeRusNames.DwarfPlayerCard) {
+        AddCardToPlayerBoardCards({ G, ctx, myPlayerID, ...rest }, cardFromDiscard);
     }
     else {
-        AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, card);
+        AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, cardFromDiscard);
     }
 };
 /**
@@ -177,13 +177,13 @@ export const PickCardToPickDistinctionAction = ({ G, ctx, myPlayerID, ...rest },
     if (G.explorerDistinctionCards === null) {
         throw new Error(`В массиве карт для получения преимущества по фракции '${SuitRusNames.explorer}' не может не быть карт.`);
     }
-    const pickedCard = G.explorerDistinctionCards[cardId];
-    if (pickedCard === undefined) {
+    const explorerDistinctionCard = G.explorerDistinctionCards[cardId];
+    if (explorerDistinctionCard === undefined) {
         throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
     G.explorerDistinctionCards = null;
-    AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, pickedCard);
-    if (pickedCard.type === CardTypeRusNames.DwarfCard) {
+    AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, explorerDistinctionCard);
+    if (explorerDistinctionCard.type === CardTypeRusNames.DwarfCard) {
         G.distinctions[SuitNames.explorer] = undefined;
     }
     G.explorerDistinctionCardId = cardId;
@@ -229,7 +229,7 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }
     AddAnyCardToPlayerActions({ G, ctx, myPlayerID, ...rest }, mercenaryCard);
     const amount = 1, removedMercenaryCards = player.campCards.splice(cardIndex, amount);
     if (removedMercenaryCards.length !== amount) {
-        throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${amount}', в наличии - '${removedMercenaryCards.length}'.`);
+        throw new Error(`Недостаточно карт в массиве карт лагеря: требуется - '${amount}', в наличии - '${removedMercenaryCards.length}'.`);
     }
 };
 //# sourceMappingURL=Actions.js.map
