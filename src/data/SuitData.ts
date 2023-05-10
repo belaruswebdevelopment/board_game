@@ -1,4 +1,4 @@
-import { DistinctionAwardingFunctionNames, DistinctionDescriptionNames, SuitBGColorNames, SuitDescriptionNames, SuitNames, SuitRusNames, SuitScoringFunctionNames } from "../typescript/enums";
+import { DistinctionAwardingFunctionNames, DistinctionDescriptionNames, SuitCssBGColorClassNames, SuitDescriptionNames, SuitNames, SuitRusNames, SuitScoringFunctionNames } from "../typescript/enums";
 import type { PointsValues, Suit, SuitConfig } from "../typescript/interfaces";
 
 /**
@@ -12,7 +12,7 @@ import type { PointsValues, Suit, SuitConfig } from "../typescript/interfaces";
 const blacksmith: Suit = {
     suit: SuitNames.blacksmith,
     suitName: SuitRusNames.blacksmith,
-    suitColor: SuitBGColorNames.Blacksmith,
+    suitColor: SuitCssBGColorClassNames.Blacksmith,
     description: SuitDescriptionNames.Blacksmith,
     pointsValues: (): PointsValues => ({
         1: {
@@ -57,7 +57,7 @@ const blacksmith: Suit = {
 const explorer: Suit = {
     suit: SuitNames.explorer,
     suitName: SuitRusNames.explorer,
-    suitColor: SuitBGColorNames.Explorer,
+    suitColor: SuitCssBGColorClassNames.Explorer,
     description: SuitDescriptionNames.Explorer,
     pointsValues: (): PointsValues => ({
         1: {
@@ -102,7 +102,7 @@ const explorer: Suit = {
 const hunter: Suit = {
     suit: SuitNames.hunter,
     suitName: SuitRusNames.hunter,
-    suitColor: SuitBGColorNames.Hunter,
+    suitColor: SuitCssBGColorClassNames.Hunter,
     description: SuitDescriptionNames.Hunter,
     pointsValues: (): PointsValues => ({
         1: {
@@ -147,7 +147,7 @@ const hunter: Suit = {
 const miner: Suit = {
     suit: SuitNames.miner,
     suitName: SuitRusNames.miner,
-    suitColor: SuitBGColorNames.Miner,
+    suitColor: SuitCssBGColorClassNames.Miner,
     description: SuitDescriptionNames.Miner,
     pointsValues: (): PointsValues => ({
         1: {
@@ -192,7 +192,7 @@ const miner: Suit = {
 const warrior: Suit = {
     suit: SuitNames.warrior,
     suitName: SuitRusNames.warrior,
-    suitColor: SuitBGColorNames.Warrior,
+    suitColor: SuitCssBGColorClassNames.Warrior,
     description: SuitDescriptionNames.Warrior,
     pointsValues: (): PointsValues => ({
         1: {

@@ -2,7 +2,7 @@ import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GiantNames } from "../typescript/enums";
-import type { AllCoinsValueType, CanBeNullType, CanBeUndefType, DwarfCard, GiantScoringFunction, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer } from "../typescript/interfaces";
+import type { AllCoinsValueType, BasicGiantScoringType, CanBeNullType, CanBeUndefType, DwarfCard, GiantScoringFunction, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Получение победных очков по Гиганту, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -16,7 +16,7 @@ import type { AllCoinsValueType, CanBeNullType, CanBeUndefType, DwarfCard, Giant
  * @returns Количество очков по конкретному гиганту.
  */
 export const BasicGiantScoring: GiantScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
-    value?: number): number => {
+    value?: BasicGiantScoringType): BasicGiantScoringType => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }

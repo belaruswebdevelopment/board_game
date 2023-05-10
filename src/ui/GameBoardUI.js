@@ -4,9 +4,9 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
+import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -388,11 +388,10 @@ export const DrawMarketCoins = ({ G, ctx, ...rest }, data) => {
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
         for (let j = 0; j < drawData.boardCols; j++) {
-            const increment = i * drawData.boardCols + j, royalCoin = G.royalCoinsUnique[increment];
-            if (royalCoin === undefined) {
-                throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
-            }
-            const tempCoinValue = royalCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
+            const increment = i * drawData.boardCols + j;
+            AssertRoyalCoinsUniqueArrayIndex(increment);
+            const royalCoin = G.royalCoinsUnique[increment], tempCoinValue = royalCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0
+                ? CoinCssClassNames.NoAvailableMarketCoin : CoinCssClassNames.AvailableMarketCoin;
             DrawCoin({ G, ctx, ...rest }, data, boardCells, DrawCoinTypeNames.Market, royalCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue]);
             if (increment + 1 === G.royalCoinsUnique.length) {
                 break;

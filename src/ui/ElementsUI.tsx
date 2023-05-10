@@ -4,8 +4,8 @@ import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsRoyalCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, SuitMoveNames, SuitNames } from "../typescript/enums";
-import type { AllCardType, ArgsType, Background, BoardProps, ButtonNameType, CanBeNullType, FnContext, MoveFunctionType, MyFnContextWithMyPlayerID, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CardWithoutSuitAndWithActionCssTDClassNames, CoinCssClassNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, HeroCardCssSpanClassNames, SuitMoveNames, SuitNames } from "../typescript/enums";
+import type { AllCardsDescriptionNamesType, AllCardType, ArgsType, Background, BoardProps, ButtonNameType, CanBeNullType, CanBeUndefType, CardCssSpanClasses, CardCssTDClasses, CoinCssSpanClasses, CoinCssTDClasses, DistinctionCardCssTDClasses, DrawCoinAdditionalParamType, DrawCoinIdParamType, EmptyCardCssTDClasses, FnContext, MoveFunctionType, MyFnContextWithMyPlayerID, PublicPlayer, PublicPlayerCoinType, SuitCssClasses } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -61,7 +61,8 @@ export const DrawButton = ({ G, ctx, ...rest }: FnContext, data: BoardProps, boa
             return _exhaustiveCheck;
     }
     boardCells.push(
-        <td className="cursor-pointer" onClick={() => action?.(...args)}
+        <td className={CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}
+            onClick={() => action?.(...args)}
             key={`${player?.nickname ? `Player ${player.nickname} ` : ``}${name}`}>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {name}
@@ -89,7 +90,7 @@ export const DrawButton = ({ G, ctx, ...rest }: FnContext, data: BoardProps, boa
 export const DrawDistinctionCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
     player: CanBeNullType<PublicPlayer>, suit: SuitNames, moveName?: DistinctionCardMoveNames, ...args: ArgsType):
     void => {
-    let tdClasses = `bg-green-500`,
+    let tdClasses: DistinctionCardCssTDClasses = `bg-green-500`,
         action: MoveFunctionType;
     let _exhaustiveCheck: never;
     switch (moveName) {
@@ -105,7 +106,7 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }: FnContext, data: BoardP
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
     }
     playerCells.push(
         <td className={tdClasses} onClick={() => action?.(...args)}
@@ -135,21 +136,19 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }: FnContext, data: BoardP
  * @returns
  */
 export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
-    // TODO Can add type to id?
     card: AllCardType, id: number, player: CanBeNullType<PublicPlayer>, suit: CanBeNullType<SuitNames>,
     moveName?: CardMoveNames, ...args: ArgsType): void => {
-    let styles: Background = { background: `` },
-        tdClasses = ``,
-        spanClasses = ``,
-        description = ``,
-        // TODO Add type!?
+    let styles: Background = { background: ``, },
+        tdClasses: CardCssTDClasses = ``,
+        spanClasses: CardCssSpanClasses = ``,
+        description: CanBeUndefType<AllCardsDescriptionNamesType>,
         value: CanBeNullType<number> = null,
         action: MoveFunctionType;
     if (`description` in card) {
-        description += card.description;
+        description = card.description;
     }
     if (suit !== null) {
-        tdClasses += suitsConfig[suit].suitColor;
+        tdClasses = suitsConfig[suit].suitColor;
     }
     let _exhaustiveCheck: never;
     switch (moveName) {
@@ -232,19 +231,29 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        if (tdClasses === ``) {
+            tdClasses = CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer;
+        } else {
+            tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+        }
     }
     switch (card.type) {
         case CardTypeRusNames.HeroCard:
         case CardTypeRusNames.HeroPlayerCard:
             styles = ALlStyles.Hero(card.name);
             if (player === null && `active` in card && !card.active) {
-                spanClasses += `bg-hero-inactive`;
+                spanClasses = HeroCardCssSpanClassNames.InactiveHero;
             } else {
-                spanClasses += `bg-hero`;
+                spanClasses = HeroCardCssSpanClassNames.Hero;
             }
             if (suit === null) {
-                tdClasses += ` bg-gray-600`;
+                if (tdClasses === ``) {
+                    tdClasses = `bg-gray-600`;
+                } else if (tdClasses === CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer) {
+                    tdClasses = `bg-gray-600 ${tdClasses}`;
+                } else {
+                    throw new Error(`Стили 'tdClasses' не должны содержать классов 'SuitBGColorNames', т.к. 'suit === null'.`);
+                }
             }
             break;
         case CardTypeRusNames.MercenaryPlayerCard:
@@ -252,9 +261,15 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
         case CardTypeRusNames.ArtefactCard:
         case CardTypeRusNames.ArtefactPlayerCard:
             styles = ALlStyles.CampCard(card.path);
-            spanClasses += `bg-camp`;
+            spanClasses = `bg-camp`;
             if (suit === null) {
-                tdClasses += ` bg-yellow-200`;
+                if (tdClasses === ``) {
+                    tdClasses = `bg-yellow-200`;
+                } else if (tdClasses === CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer) {
+                    tdClasses = `bg-yellow-200 ${tdClasses}`;
+                } else {
+                    throw new Error(`Стили 'tdClasses' не должны содержать классов 'SuitBGColorNames', т.к. 'suit === null'.`);
+                }
                 if (card.type === CardTypeRusNames.ArtefactCard
                     && card.name === ArtefactNames.OdroerirTheMythicCauldron) {
                     value = GetOdroerirTheMythicCauldronCoinsValues({ G: data.G } as MyFnContextWithMyPlayerID);
@@ -267,7 +282,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
         case CardTypeRusNames.SpecialPlayerCard:
         case CardTypeRusNames.SpecialCard:
         case CardTypeRusNames.MultiSuitPlayerCard:
-            spanClasses += `bg-card`;
+            spanClasses = `bg-card`;
             if (`suit` in card) {
                 styles = ALlStyles.Card(card.suit, card.name, card.points);
             } else if (`playerSuit` in card && card.playerSuit !== null) {
@@ -275,7 +290,7 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
             }
             break;
         case CardTypeRusNames.RoyalOfferingCard:
-            spanClasses += `bg-royal-offering`;
+            spanClasses = `bg-royal-offering`;
             styles = ALlStyles.RoyalOffering(card.name);
             value = card.upgradeValue;
             break;
@@ -286,9 +301,9 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
         case CardTypeRusNames.ValkyryCard:
             if (`isActivated` in card && card.isActivated === true) {
                 // TODO Draw capturedCard for Giant if captured!
-                spanClasses += `bg-mythological-creature-inactive`;
+                spanClasses = `bg-mythological-creature-inactive`;
             } else {
-                spanClasses += `bg-mythological-creature`;
+                spanClasses = `bg-mythological-creature`;
             }
             // TODO Draw valkyry requirements!
             styles = ALlStyles.MythologicalCreature(card.name);
@@ -331,13 +346,12 @@ export const DrawCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
  * @returns
  */
 export const DrawEmptyCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
-    // TODO Can add type to id?
     cardType: CardTypeRusNames, id: number, player: CanBeNullType<PublicPlayer>, suit: CanBeNullType<SuitNames>,
     moveName?: EmptyCardMoveNames, ...args: ArgsType): void => {
-    let tdClasses = ``,
+    let tdClasses: EmptyCardCssTDClasses = ``,
         action: MoveFunctionType;
     if (suit !== null) {
-        tdClasses += suitsConfig[suit].suitColor;
+        tdClasses = suitsConfig[suit].suitColor;
     }
     let _exhaustiveCheck: never;
     switch (moveName) {
@@ -376,7 +390,11 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, 
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        if (tdClasses === ``) {
+            tdClasses = CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer;
+        } else {
+            tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+        }
     }
     // TODO Check colors of empty camp & others cards!
     playerCells.push(
@@ -387,7 +405,6 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, 
     );
 };
 
-// TODO Replace strings!?
 /**
  * <h3>Отрисовка монет.</h3>
  * <p>Применения:</p>
@@ -409,14 +426,13 @@ export const DrawEmptyCard = ({ G, ctx, ...rest }: FnContext, data: BoardProps, 
  * @returns
  */
 export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerCells: JSX.Element[],
-    // TODO Can add type to id?
-    type: DrawCoinTypeNames, coin: PublicPlayerCoinType, id: number, player: CanBeNullType<PublicPlayer>,
-    coinClasses?: CanBeNullType<string>, additionalParam?: CanBeNullType<number> /* IndexOf<TavernsType> */, moveName?: CoinMoveNames,
-    ...args: ArgsType): void => {
+    type: DrawCoinTypeNames, coin: PublicPlayerCoinType, id: DrawCoinIdParamType, player: CanBeNullType<PublicPlayer>,
+    coinClasses?: CanBeNullType<CoinCssClassNames>, additionalParam?: CanBeNullType<DrawCoinAdditionalParamType>,
+    moveName?: CoinMoveNames, ...args: ArgsType): void => {
     let styles: Background = { background: `` },
-        span: CanBeNullType<JSX.Element | number> = null,
-        tdClasses = `bg-yellow-300`,
-        spanClasses = ``,
+        span: CanBeNullType<JSX.Element> = null,
+        tdClasses: CoinCssTDClasses = `bg-yellow-300`,
+        spanClasses: CoinCssSpanClasses = ``,
         action: MoveFunctionType,
         _exhaustiveCheck: never;
     switch (moveName) {
@@ -465,7 +481,7 @@ export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
     }
     if (type === DrawCoinTypeNames.Market) {
         if (!IsCoin(coin)) {
@@ -475,14 +491,14 @@ export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
             throw new Error(`Монета на рынке не может не быть с типом '${CoinRusNames.Royal}'.`);
         }
         styles = ALlStyles.Coin(coin.value, false);
-        spanClasses += `bg-market-coin`;
+        spanClasses = `bg-market-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
             span = (<span className={coinClasses}>
                 {additionalParam}
             </span>);
         }
     } else if (type === DrawCoinTypeNames.HiddenCoin) {
-        spanClasses += `bg-coin`;
+        spanClasses = `bg-coin`;
         if (IsCoin(coin) && coinClasses !== null && coinClasses !== undefined) {
             styles = ALlStyles.CoinBack();
             let isInitial = false;
@@ -492,9 +508,9 @@ export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
             span = (<span style={ALlStyles.Coin(coin.value, isInitial)} className={coinClasses}></span>);
         }
     } else {
-        spanClasses += `bg-coin`;
+        spanClasses = `bg-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
-            spanClasses += ` ${coinClasses}`;
+            spanClasses = `${spanClasses} ${coinClasses}`;
         }
         if (type === DrawCoinTypeNames.Coin) {
             if (coin === null) {
@@ -547,7 +563,7 @@ export const DrawCoin = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
  */
 export const DrawSuit = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playerHeaders: JSX.Element[],
     suit: SuitNames, player?: PublicPlayer, moveName?: SuitMoveNames): void => {
-    let className = ``,
+    let className: SuitCssClasses = `${suitsConfig[suit].suitColor}`,
         action: MoveFunctionType,
         _exhaustiveCheck: never;
     switch (moveName) {
@@ -566,12 +582,11 @@ export const DrawSuit = ({ G, ctx, ...rest }: FnContext, data: BoardProps, playe
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        className += ` cursor-pointer`;
+        className = `${className} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
     }
     playerHeaders.push(
-        <th className={`${suitsConfig[suit].suitColor}${className}`}
-            key={`${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`}
-            onClick={() => action?.(suit)}>
+        <th className={`${className}`} onClick={() => action?.(suit)}
+            key={`${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`}>
             <span style={ALlStyles.Suit(suit)} className="bg-suit-icon"></span>
         </th>
     );

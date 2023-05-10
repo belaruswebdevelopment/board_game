@@ -3,9 +3,9 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, CardTypeRusNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
+import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinNumberValues, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MarketCoinNumberValuesType, MoveArgumentsType, MoveValidatorNamesTypes, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
@@ -465,14 +465,12 @@ export const DrawMarketCoins = ({ G, ctx, ...rest }: FnContext, data: BoardProps
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
-            const increment: number = i * drawData.boardCols + j,
-                royalCoin: CanBeUndefType<RoyalCoin> = G.royalCoinsUnique[increment];
-            if (royalCoin === undefined) {
-                throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
-            }
-            const tempCoinValue: AllCoinsValueType = royalCoin.value,
-                coinClassName: `text-red-500` | `text-blue-500` =
-                    countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
+            const increment: number = i * drawData.boardCols + j;
+            AssertRoyalCoinsUniqueArrayIndex(increment);
+            const royalCoin: RoyalCoin = G.royalCoinsUnique[increment],
+                tempCoinValue: AllCoinsValueType = royalCoin.value,
+                coinClassName: CoinCssClassNames = countMarketCoins[tempCoinValue] === 0
+                    ? CoinCssClassNames.NoAvailableMarketCoin : CoinCssClassNames.AvailableMarketCoin;
             DrawCoin({ G, ctx, ...rest }, data, boardCells, DrawCoinTypeNames.Market,
                 royalCoin, increment, null, coinClassName,
                 countMarketCoins[tempCoinValue]);

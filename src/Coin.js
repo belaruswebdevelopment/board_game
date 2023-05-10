@@ -1,5 +1,5 @@
 import { initialCoinsConfig, royalCoinsConfig } from "./data/CoinData";
-import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins, AssertMarketCoinNumberValues } from "./is_helpers/AssertionTypeHelpers";
+import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins, AssertMarketCoinNumberValues, AssertRoyalCoinsUniqueArrayIndex } from "./is_helpers/AssertionTypeHelpers";
 import { CoinRusNames } from "./typescript/enums";
 /**
  * <h3>Создание всех базовых монет игрока.</h3>
@@ -42,7 +42,7 @@ export const BuildInitialCoins = () => {
  * @returns Массив всех монет.
  */
 export const BuildRoyalCoins = (options) => {
-    const coins = [];
+    const royalCoins = [];
     for (let i = 0; i < royalCoinsConfig.length; i++) {
         AssertAllRoyalCoinConfigIndex(i);
         const config = royalCoinsConfig[i], count = config.count()[options.players], royalCoin = CreateRoyalCoin({
@@ -50,10 +50,10 @@ export const BuildRoyalCoins = (options) => {
         });
         options.count.push(royalCoin);
         for (let j = 0; j < count; j++) {
-            coins.push(royalCoin);
+            royalCoins.push(royalCoin);
         }
     }
-    return coins;
+    return royalCoins;
 };
 /**
  * <h3>Изменяет статус, который открывает или закрывает монету.</h3>
@@ -85,11 +85,8 @@ export const ChangeIsOpenedCoinStatus = (coin, status) => {
 export const CountRoyalCoins = ({ G }) => {
     const repeated = {};
     for (let i = 0; i < G.royalCoinsUnique.length; i++) {
-        const royalCoin = G.royalCoinsUnique[i];
-        if (royalCoin === undefined) {
-            throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
-        }
-        const temp = royalCoin.value, royalCoinsCount = G.royalCoins.filter((coin) => coin.value === temp).length;
+        AssertRoyalCoinsUniqueArrayIndex(i);
+        const royalCoin = G.royalCoinsUnique[i], temp = royalCoin.value, royalCoinsCount = G.royalCoins.filter((coin) => coin.value === temp).length;
         AssertMarketCoinNumberValues(royalCoinsCount);
         repeated[temp] = royalCoinsCount;
     }

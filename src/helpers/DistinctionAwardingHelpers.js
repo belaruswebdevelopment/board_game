@@ -194,7 +194,7 @@ export const GetMinerDistinctionsScore = ({ G, ctx, myPlayerID, ...rest }) => {
  * @returns
  */
 export const EndWarriorOrExplorerDistinctionIfCoinUpgraded = ({ G }) => {
-    // todo Move to distinction phase hook?
+    // TODO Move to distinction phase hook?
     if (Object.values(G.distinctions).length) {
         // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
         const isDistinctionWarrior = G.distinctions[SuitNames.warrior] !== undefined;

@@ -1,5 +1,17 @@
 import { CardTypeRusNames, GiantRusNames, SuitRusNames } from "../typescript/enums";
-import type { AllBasicHeroesPossibleCardIdType, AllCoinsValueType, AllHeroesForDifficultySoloModePossibleCardIdType, AllHeroesForPlayerSoloModeAndvariPossibleCardIdType, AllHeroesForPlayerSoloModePossibleCardIdType, AllHeroesForSoloBotAndvariPossibleCardIdType, AllHeroesForSoloBotPossibleCardIdType, AllHeroesPossibleCardIdType, AllInitialCoins, AllInitialTradingCoinConfig, AllPriorityValueType, AllRoyalCoinConfig, BasicVidofnirVedrfolnirUpgradeValueType, CampCardArray, CampCardType, CanBeNullType, CoinType, CoinUpgradePossibleMaxValue, DwarfDeckCardType, DwergBrothersScoringArray, ExplorerDistinctionCardIdType, ExplorerDistinctionCards, GeneralStrategyForSoloBotAndvariIdType, HeroCard, HeroesForSoloGameArrayType, HeroesForSoloGameForStrategyBotAndvariArray, HeroesInitialForSoloGameForBotAndvariArray, IndexOf, InitialCoinType, MarketCoinNumberValuesType, MercenariesConfigType, MinerDistinctionsScoringType, MythologicalCreatureCardType, MythologicalCreatureCardsForGiantSkymirArray, PlayerCoinIdType, PlayerCoinNumberValuesType, PlayerPouchCoinIdType, PlayerStack, PlayerTavernCoinIdType, PrioritiesAmountType, PrivatePlayerBoardCoins, PrivatePlayerHandCoins, PublicPlayerBoardCoins, PublicPlayerCoinType, PublicPlayerHandCoins, ReserveStrategyForSoloBotAndvariIdType, RoyalCoinValueType, RoyalOfferingsConfig, SecretAllCampDecks, SecretAllDwarfDecks, Stack, StrengthTokenNotchLongMaxType, StrengthTokenNotchShortMaxType, TavernCardIdPossibleType, TavernsType, TierType, TradingCoinsType, TradingCoinsValueType, UpgradableCoinType, UpgradableCoinValueType } from "../typescript/interfaces";
+import type { AllBasicHeroesPossibleCardIdType, AllCoinsValueType, AllHeroesForDifficultySoloModePossibleCardIdType, AllHeroesForPlayerSoloModeAndvariPossibleCardIdType, AllHeroesForPlayerSoloModePossibleCardIdType, AllHeroesForSoloBotAndvariPossibleCardIdType, AllHeroesForSoloBotPossibleCardIdType, AllHeroesPossibleCardIdType, AllInitialCoins, AllInitialTradingCoinConfig, AllPriorityValueType, AllRoyalCoinConfig, BasicVidofnirVedrfolnirUpgradeValueType, CampCardArray, CampCardType, CanBeNullType, CoinType, CoinUpgradePossibleMaxValue, DwarfDeckCardType, DwergBrothersScoringArray, ExplorerDistinctionCardIdType, ExplorerDistinctionCards, GeneralStrategyForSoloBotAndvariIdType, HeroCard, HeroesForSoloGameArrayType, HeroesForSoloGameForStrategyBotAndvariArray, HeroesInitialForSoloGameForBotAndvariArray, IndexOf, InitialCoinType, MarketCoinNumberValuesType, MercenariesConfigType, MinerDistinctionsScoringType, MythologicalCreatureCardType, MythologicalCreatureCardsForGiantSkymirArray, OneOrTwoType, PlayerCoinIdType, PlayerCoinNumberValuesType, PlayerPouchCoinIdType, PlayerStack, PlayerTavernCoinIdType, PrioritiesAmountType, PrivatePlayerBoardCoins, PrivatePlayerHandCoins, PublicPlayerBoardCoins, PublicPlayerCoinType, PublicPlayerHandCoins, ReserveStrategyForSoloBotAndvariIdType, RoyalCoin, RoyalCoinValueType, RoyalCoinsUniqueArray, RoyalOfferingsConfig, SecretAllCampDecks, SecretAllDwarfDecks, Stack, StrengthTokenNotchLongMaxType, StrengthTokenNotchShortMaxType, TavernCardIdPossibleType, TavernsType, TierType, TradingCoinsType, TradingCoinsValueType, UpgradableCoinType, UpgradableCoinValueType, ZeroOrOneType } from "../typescript/interfaces";
+
+export function AssertZeroOrOne(number: number): asserts number is ZeroOrOneType {
+    if (!(number === 0 || number === 1)) {
+        throw new Error(`No value '${number}' of ZeroOrOneType.`);
+    }
+}
+
+export function AssertOneOrTwo(number: number): asserts number is OneOrTwoType {
+    if (!(number === 1 || number === 2)) {
+        throw new Error(`No value '${number}' of OneOrTwoType.`);
+    }
+}
 
 export function AssertMinerDistinctionsScoring(number: number): asserts number is MinerDistinctionsScoringType {
     if (!(number === 0 || number === 3)) {
@@ -231,8 +243,14 @@ export function AssertAllInitialTradingCoinConfigIndex(number: number):
 }
 
 export function AssertAllRoyalCoinConfigIndex(number: number): asserts number is IndexOf<AllRoyalCoinConfig> {
-    if (!(number >= 0 || number <= 4)) {
+    if (!(number >= 0 || number <= 20)) {
         throw new Error(`No '${number}' in AllRoyalCoinConfig.`);
+    }
+}
+
+export function AssertRoyalCoinsUniqueArrayIndex(number: number): asserts number is IndexOf<RoyalCoinsUniqueArray> {
+    if (!(number >= 0 || number <= 20)) {
+        throw new Error(`No '${number}' in RoyalCoinsUniqueArray.`);
     }
 }
 
@@ -251,6 +269,13 @@ export function AssertPrivateBoardCoins(boardCoins: CoinType[]): asserts boardCo
 export function AssertPrivateHandCoins(handCoins: CoinType[]): asserts handCoins is PrivatePlayerHandCoins {
     if (!(handCoins.length === 5)) {
         throw new Error(`В массиве монет приватного игрока в руке должно быть ровно 5 монет.`);
+    }
+}
+
+export function AssertRoyalCoinsUnique(uniqueRoyalCoins: RoyalCoin[]):
+    asserts uniqueRoyalCoins is RoyalCoinsUniqueArray {
+    if (!(uniqueRoyalCoins.length === 21)) {
+        throw new Error(`В массиве уникальных монет на рынке должно быть ровно 21 монета.`);
     }
 }
 

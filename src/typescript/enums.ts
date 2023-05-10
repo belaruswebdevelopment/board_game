@@ -43,7 +43,7 @@ export const enum SuitDescriptionNames {
 /**
  * <h3>Перечисление для названия CSS класса для цветов фракции дворфов.</h3>
  */
-export const enum SuitBGColorNames {
+export const enum SuitCssBGColorClassNames {
     Blacksmith = `bg-purple-600`,
     Explorer = `bg-blue-500`,
     Hunter = `bg-green-600`,
@@ -539,6 +539,29 @@ export const enum DistinctionDescriptionNames {
     Warrior = `Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.`,
 }
 // Distinction End
+
+export const enum LogCssClassNames {
+    Game = `text-blue-500`,
+    Private = `text-black`,
+    Public = `text-green-500`,
+}
+
+export const enum CoinCssClassNames {
+    AvailableMarketCoin = `text-blue-500`,
+    BorderedCoin = `border-2`,
+    BorderedCoinPicked = `border-2 border-green-400`,
+    NoAvailableMarketCoin = `text-red-500`,
+    SmallCoinBG = `bg-small-coin`,
+}
+
+export const enum HeroCardCssSpanClassNames {
+    InactiveHero = `bg-hero-inactive`,
+    Hero = `bg-hero`,
+}
+
+export const enum CardWithoutSuitAndWithActionCssTDClassNames {
+    CursorPointer = `cursor-pointer`
+}
 
 /**
  * <h3>Перечисление для типов монет на русском.</h3>

@@ -4,11 +4,11 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertPlayerCoinId, AssertUpgradableCoinValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertOneOrTwo, AssertPlayerCoinId, AssertUpgradableCoinValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, AllCoinsType, AutoActionFunction, CanBeUndefType, MyFnContextWithMyPlayerID, OneOrTwoType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, UpgradableCoinType } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, AllCoinsType, AutoActionFunction, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, UpgradableCoinType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -24,6 +24,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  */
 export const AddPickHeroAction: AutoActionFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     priority: number /* OneOrTwoType */): void => {
+    AssertOneOrTwo(priority);
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -31,13 +32,13 @@ export const AddPickHeroAction: AutoActionFunction = ({ G, ctx, myPlayerID, ...r
     }
     if (G.mode === GameModeNames.Solo && myPlayerID === `1`) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-            [AllStackData.pickHeroSoloBot(priority as OneOrTwoType)]);
+            [AllStackData.pickHeroSoloBot(priority)]);
     } else if (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-            [AllStackData.pickHeroSoloBotAndvari(priority as OneOrTwoType)]);
+            [AllStackData.pickHeroSoloBotAndvari(priority)]);
     } else {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
-            [AllStackData.pickHero(priority as OneOrTwoType)]);
+            [AllStackData.pickHero(priority)]);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };

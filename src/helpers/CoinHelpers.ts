@@ -253,7 +253,6 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
                 }
             }
         }
-
     }
     const counts: CoinNumberValues<PlayerCoinNumberValuesType> = {};
     for (let i = 0; i < coinValues.length; i++) {

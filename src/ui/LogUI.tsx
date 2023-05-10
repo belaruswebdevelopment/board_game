@@ -1,4 +1,4 @@
-import { LogTypeNames } from "../typescript/enums";
+import { LogCssClassNames, LogTypeNames } from "../typescript/enums";
 import type { CanBeNullType, CanBeUndefType, FnContext, LogData } from "../typescript/interfaces";
 
 /**
@@ -17,17 +17,17 @@ export const DrawLogData = ({ G }: FnContext): CanBeNullType<JSX.Element> => {
         for (let i: number = G.logData.length - 1; i >= 0; i--) {
             const log: CanBeUndefType<LogData> = G.logData[i];
             if (log !== undefined) {
-                let className: string,
+                let className: LogCssClassNames,
                     _exhaustiveCheck: never;
                 switch (log.type) {
                     case LogTypeNames.Private:
-                        className = `text-black`;
+                        className = LogCssClassNames.Private;
                         break;
                     case LogTypeNames.Game:
-                        className = `text-blue-500`;
+                        className = LogCssClassNames.Game;
                         break;
                     case LogTypeNames.Public:
-                        className = `text-green-500`;
+                        className = LogCssClassNames.Public;
                         break;
                     default:
                         _exhaustiveCheck = log.type;

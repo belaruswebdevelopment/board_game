@@ -1,7 +1,7 @@
 import { initialCoinsConfig, royalCoinsConfig } from "./data/CoinData";
-import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins, AssertMarketCoinNumberValues } from "./is_helpers/AssertionTypeHelpers";
+import { AssertAllInitialTradingCoinConfigIndex, AssertAllRoyalCoinConfigIndex, AssertInitialCoins, AssertMarketCoinNumberValues, AssertRoyalCoinsUniqueArrayIndex } from "./is_helpers/AssertionTypeHelpers";
 import { CoinRusNames } from "./typescript/enums";
-import type { AllCoinsType, AllInitialCoins, BuildRoyalCoinsOptions, CanBeUndefType, CoinConfigType, CoinNumberValues, CreateInitialNotTradingCoinFromData, CreateInitialTradingCoinFromData, CreateRoyalCoinFromData, CreateSpecialTriggerTradingCoinFromData, FnContext, InitialCoinType, InitialNotTriggerTradingCoin, InitialTradingCoinConfigType, InitialTriggerTradingCoin, MarketCoinNumberValuesType, MarketCoinsAmountType, RoyalCoin, RoyalCoinValueType, SpecialTriggerTradingCoin } from "./typescript/interfaces";
+import type { AllCoinsType, AllInitialCoins, BuildRoyalCoinsOptions, CoinConfigType, CoinNumberValues, CreateInitialNotTradingCoinFromData, CreateInitialTradingCoinFromData, CreateRoyalCoinFromData, CreateSpecialTriggerTradingCoinFromData, FnContext, InitialCoinType, InitialNotTriggerTradingCoin, InitialTradingCoinConfigType, InitialTriggerTradingCoin, MarketCoinNumberValuesType, MarketCoinsAmountType, RoyalCoin, RoyalCoinValueType, SpecialTriggerTradingCoin } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех базовых монет игрока.</h3>
@@ -44,7 +44,7 @@ export const BuildInitialCoins = (): AllInitialCoins => {
  * @returns Массив всех монет.
  */
 export const BuildRoyalCoins = (options: BuildRoyalCoinsOptions): RoyalCoin[] => {
-    const coins: RoyalCoin[] = [];
+    const royalCoins: RoyalCoin[] = [];
     for (let i = 0; i < royalCoinsConfig.length; i++) {
         AssertAllRoyalCoinConfigIndex(i);
         const config: CoinConfigType = royalCoinsConfig[i],
@@ -54,10 +54,10 @@ export const BuildRoyalCoins = (options: BuildRoyalCoinsOptions): RoyalCoin[] =>
             });
         options.count.push(royalCoin);
         for (let j = 0; j < count; j++) {
-            coins.push(royalCoin);
+            royalCoins.push(royalCoin);
         }
     }
-    return coins;
+    return royalCoins;
 };
 
 /**
@@ -91,12 +91,11 @@ export const ChangeIsOpenedCoinStatus = (coin: AllCoinsType, status: boolean): v
 export const CountRoyalCoins = ({ G }: FnContext): CoinNumberValues<MarketCoinNumberValuesType> => {
     const repeated: CoinNumberValues<MarketCoinNumberValuesType> = {};
     for (let i = 0; i < G.royalCoinsUnique.length; i++) {
-        const royalCoin: CanBeUndefType<RoyalCoin> = G.royalCoinsUnique[i];
-        if (royalCoin === undefined) {
-            throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
-        }
-        const temp: RoyalCoinValueType = royalCoin.value,
-            royalCoinsCount = G.royalCoins.filter((coin: RoyalCoin): boolean => coin.value === temp).length;
+        AssertRoyalCoinsUniqueArrayIndex(i);
+        const royalCoin: RoyalCoin = G.royalCoinsUnique[i],
+            temp: RoyalCoinValueType = royalCoin.value,
+            royalCoinsCount: number =
+                G.royalCoins.filter((coin: RoyalCoin): boolean => coin.value === temp).length;
         AssertMarketCoinNumberValues(royalCoinsCount);
         repeated[temp] = royalCoinsCount;
     }

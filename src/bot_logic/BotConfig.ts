@@ -64,7 +64,7 @@ export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext)
         }
     }
     result[maxIndex] += 10;
-    result[minIndex] += -10;
+    result[minIndex] -= 10;
     return result;
 };
 

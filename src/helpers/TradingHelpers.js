@@ -2,7 +2,7 @@ import { UpgradeCoinAction } from "../actions/CoinActions";
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
-import { AssertPlayerCoinId, AssertPlayerPouchCoinId, AssertTradingCoins, AssertTradingCoinsValues, AssertUpgradableCoinValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertPlayerCoinId, AssertPlayerPouchCoinId, AssertTradingCoins, AssertTradingCoinsValues, AssertUpgradableCoinValue, AssertZeroOrOne } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
@@ -130,7 +130,7 @@ const Trading = ({ G, ctx, myPlayerID, ...rest }, tradingCoins, soloBotOnlyOneCo
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока`} '${player.nickname}'.`);
     }
     for (let i = 0; i < tradingCoins.length; i++) {
-        // TODO Add IndexOf<tradingCoins> - is it possible!?
+        AssertZeroOrOne(i);
         const tradingCoin = tradingCoins[i];
         if (tradingCoin === undefined) {
             throw new Error(`В массиве обменных монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока`} с id '${myPlayerID}' отсутствует монета с id '${i}'.`);
@@ -139,7 +139,6 @@ const Trading = ({ G, ctx, myPlayerID, ...rest }, tradingCoins, soloBotOnlyOneCo
             throw new Error(`Обменная монета игрока с id '${myPlayerID}' не может быть монетой, активирующей обмен монет.`);
         }
         if (tradingCoin.value === coinsMinValue && coinMinIndex === undefined) {
-            // TODO Fix types as IndexOf<pouch coins [AllCoinsValueType, AllCoinsValueType]>!?
             coinMinIndex = i;
             if (soloBotOnlyOneCoinTrading) {
                 break;

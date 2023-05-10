@@ -1,4 +1,4 @@
-import { DistinctionAwardingFunctionNames, DistinctionDescriptionNames, SuitBGColorNames, SuitDescriptionNames, SuitNames, SuitRusNames, SuitScoringFunctionNames } from "../typescript/enums";
+import { DistinctionAwardingFunctionNames, DistinctionDescriptionNames, SuitCssBGColorClassNames, SuitDescriptionNames, SuitNames, SuitRusNames, SuitScoringFunctionNames } from "../typescript/enums";
 /**
  * <h3>Фракция кузнецов.</h3>
  * <p>Применения:</p>
@@ -10,7 +10,7 @@ import { DistinctionAwardingFunctionNames, DistinctionDescriptionNames, SuitBGCo
 const blacksmith = {
     suit: SuitNames.blacksmith,
     suitName: SuitRusNames.blacksmith,
-    suitColor: SuitBGColorNames.Blacksmith,
+    suitColor: SuitCssBGColorClassNames.Blacksmith,
     description: SuitDescriptionNames.Blacksmith,
     pointsValues: () => ({
         1: {
@@ -54,7 +54,7 @@ const blacksmith = {
 const explorer = {
     suit: SuitNames.explorer,
     suitName: SuitRusNames.explorer,
-    suitColor: SuitBGColorNames.Explorer,
+    suitColor: SuitCssBGColorClassNames.Explorer,
     description: SuitDescriptionNames.Explorer,
     pointsValues: () => ({
         1: {
@@ -98,7 +98,7 @@ const explorer = {
 const hunter = {
     suit: SuitNames.hunter,
     suitName: SuitRusNames.hunter,
-    suitColor: SuitBGColorNames.Hunter,
+    suitColor: SuitCssBGColorClassNames.Hunter,
     description: SuitDescriptionNames.Hunter,
     pointsValues: () => ({
         1: {
@@ -142,7 +142,7 @@ const hunter = {
 const miner = {
     suit: SuitNames.miner,
     suitName: SuitRusNames.miner,
-    suitColor: SuitBGColorNames.Miner,
+    suitColor: SuitCssBGColorClassNames.Miner,
     description: SuitDescriptionNames.Miner,
     pointsValues: () => ({
         1: {
@@ -186,7 +186,7 @@ const miner = {
 const warrior = {
     suit: SuitNames.warrior,
     suitName: SuitRusNames.warrior,
-    suitColor: SuitBGColorNames.Warrior,
+    suitColor: SuitCssBGColorClassNames.Warrior,
     description: SuitDescriptionNames.Warrior,
     pointsValues: () => ({
         1: {

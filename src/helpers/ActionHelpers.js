@@ -25,14 +25,10 @@ export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }) => {
         StartOrEndActionStage({ G, ctx, myPlayerID, events, ...rest }, stack);
         if (stack.configName !== undefined) {
             G.drawProfit = stack.configName;
-        }
-        else {
-            G.drawProfit = null;
+            return;
         }
     }
-    else {
-        G.drawProfit = null;
-    }
+    G.drawProfit = null;
 };
 /**
  * <h3>Действия, связанные со стартом конкретной стадии.</h3>

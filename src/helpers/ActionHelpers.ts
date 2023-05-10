@@ -28,12 +28,10 @@ export const DrawCurrentProfit = ({ G, ctx, myPlayerID, events, ...rest }: MyFnC
         StartOrEndActionStage({ G, ctx, myPlayerID, events, ...rest }, stack);
         if (stack.configName !== undefined) {
             G.drawProfit = stack.configName;
-        } else {
-            G.drawProfit = null;
+            return;
         }
-    } else {
-        G.drawProfit = null;
     }
+    G.drawProfit = null;
 };
 
 /**

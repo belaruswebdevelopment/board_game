@@ -3,7 +3,7 @@ import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelp
 import { IsMercenaryPlayerCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CommonBuffNames, ErrorNames, SuitNames } from "../typescript/enums";
-import type { ArtefactScoringFunction, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBuffs, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
+import type { ArtefactScoringFunction, BasicArtefactScoringType, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBuffs, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
 
 /**
@@ -20,7 +20,7 @@ import { GetSuitValueWithMaxRanksValue, TotalRank } from "./ScoreHelpers";
  */
 export const BasicArtefactScoring: ArtefactScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isFinal = false, value?: number): number => {
+    isFinal = false, value?: BasicArtefactScoringType): BasicArtefactScoringType => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }

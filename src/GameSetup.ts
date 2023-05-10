@@ -6,7 +6,7 @@ import { initialCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { BuildDwarfCards } from "./Dwarf";
 import { BuildHeroes } from "./Hero";
-import { AssertCamp, AssertSecretAllCampDecksIndex, AssertSecretAllDwarfDecksIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
+import { AssertCamp, AssertRoyalCoinsUnique, AssertSecretAllCampDecksIndex, AssertSecretAllDwarfDecksIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
 import { BuildMultiSuitCards } from "./MultiSuitCard";
 import { BuildMythologicalCreatureCards, BuildMythologicalCreatureDecks } from "./MythologicalCreature";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
@@ -164,6 +164,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
             players: ctx.numPlayers,
         }),
         averageCards: SuitPropertyType<DwarfCard> = {} as SuitPropertyType<DwarfCard>;
+    AssertRoyalCoinsUnique(royalCoinsUnique);
     for (suit in suitsConfig) {
         averageCards[suit] = GetAverageSuitCard(suit, {
             players: ctx.numPlayers,

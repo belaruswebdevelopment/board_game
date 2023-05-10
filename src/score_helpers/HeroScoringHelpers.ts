@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { AllCoinsValueType, HeroScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { AllCoinsValueType, BasicHeroScoringType, HeroScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -15,8 +15,8 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @param value Значение.
  * @returns Количество очков по конкретному герою.
  */
-export const BasicHeroScoring: HeroScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID, value?: number):
-    number => {
+export const BasicHeroScoring: HeroScoringFunction = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
+    value?: BasicHeroScoringType): BasicHeroScoringType => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }

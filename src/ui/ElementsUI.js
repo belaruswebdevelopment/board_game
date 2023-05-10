@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { AssertTavernIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsRoyalCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, SuitMoveNames } from "../typescript/enums";
+import { ArtefactNames, ButtonMoveNames, CardMoveNames, CardTypeRusNames, CardWithoutSuitAndWithActionCssTDClassNames, CoinMoveNames, CoinRusNames, DistinctionCardMoveNames, DrawCoinTypeNames, EmptyCardMoveNames, ErrorNames, HeroCardCssSpanClassNames, SuitMoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -57,7 +57,7 @@ export const DrawButton = ({ G, ctx, ...rest }, data, boardCells, name, player, 
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.NoSuchMove);
             return _exhaustiveCheck;
     }
-    boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${name}`));
+    boardCells.push(_jsx("td", { className: CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${name}`));
 };
 /**
  * <h3>Отрисовка карт знаков отличия.</h3>
@@ -91,7 +91,7 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }, data, playerCells, play
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
     }
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: ALlStyles.Distinction(suit), title: suitsConfig[suit].distinction.description, className: "bg-suit-distinction" }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``} distinction ${suit} card`));
 };
@@ -113,17 +113,13 @@ export const DrawDistinctionCard = ({ G, ctx, ...rest }, data, playerCells, play
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, 
-// TODO Can add type to id?
-card, id, player, suit, moveName, ...args) => {
-    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, description = ``, 
-    // TODO Add type!?
-    value = null, action;
+export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, player, suit, moveName, ...args) => {
+    let styles = { background: ``, }, tdClasses = ``, spanClasses = ``, description, value = null, action;
     if (`description` in card) {
-        description += card.description;
+        description = card.description;
     }
     if (suit !== null) {
-        tdClasses += suitsConfig[suit].suitColor;
+        tdClasses = suitsConfig[suit].suitColor;
     }
     let _exhaustiveCheck;
     switch (moveName) {
@@ -206,20 +202,33 @@ card, id, player, suit, moveName, ...args) => {
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        if (tdClasses === ``) {
+            tdClasses = CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer;
+        }
+        else {
+            tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+        }
     }
     switch (card.type) {
         case CardTypeRusNames.HeroCard:
         case CardTypeRusNames.HeroPlayerCard:
             styles = ALlStyles.Hero(card.name);
             if (player === null && `active` in card && !card.active) {
-                spanClasses += `bg-hero-inactive`;
+                spanClasses = HeroCardCssSpanClassNames.InactiveHero;
             }
             else {
-                spanClasses += `bg-hero`;
+                spanClasses = HeroCardCssSpanClassNames.Hero;
             }
             if (suit === null) {
-                tdClasses += ` bg-gray-600`;
+                if (tdClasses === ``) {
+                    tdClasses = `bg-gray-600`;
+                }
+                else if (tdClasses === CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer) {
+                    tdClasses = `bg-gray-600 ${tdClasses}`;
+                }
+                else {
+                    throw new Error(`Стили 'tdClasses' не должны содержать классов 'SuitBGColorNames', т.к. 'suit === null'.`);
+                }
             }
             break;
         case CardTypeRusNames.MercenaryPlayerCard:
@@ -227,9 +236,17 @@ card, id, player, suit, moveName, ...args) => {
         case CardTypeRusNames.ArtefactCard:
         case CardTypeRusNames.ArtefactPlayerCard:
             styles = ALlStyles.CampCard(card.path);
-            spanClasses += `bg-camp`;
+            spanClasses = `bg-camp`;
             if (suit === null) {
-                tdClasses += ` bg-yellow-200`;
+                if (tdClasses === ``) {
+                    tdClasses = `bg-yellow-200`;
+                }
+                else if (tdClasses === CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer) {
+                    tdClasses = `bg-yellow-200 ${tdClasses}`;
+                }
+                else {
+                    throw new Error(`Стили 'tdClasses' не должны содержать классов 'SuitBGColorNames', т.к. 'suit === null'.`);
+                }
                 if (card.type === CardTypeRusNames.ArtefactCard
                     && card.name === ArtefactNames.OdroerirTheMythicCauldron) {
                     value = GetOdroerirTheMythicCauldronCoinsValues({ G: data.G });
@@ -242,7 +259,7 @@ card, id, player, suit, moveName, ...args) => {
         case CardTypeRusNames.SpecialPlayerCard:
         case CardTypeRusNames.SpecialCard:
         case CardTypeRusNames.MultiSuitPlayerCard:
-            spanClasses += `bg-card`;
+            spanClasses = `bg-card`;
             if (`suit` in card) {
                 styles = ALlStyles.Card(card.suit, card.name, card.points);
             }
@@ -251,7 +268,7 @@ card, id, player, suit, moveName, ...args) => {
             }
             break;
         case CardTypeRusNames.RoyalOfferingCard:
-            spanClasses += `bg-royal-offering`;
+            spanClasses = `bg-royal-offering`;
             styles = ALlStyles.RoyalOffering(card.name);
             value = card.upgradeValue;
             break;
@@ -262,10 +279,10 @@ card, id, player, suit, moveName, ...args) => {
         case CardTypeRusNames.ValkyryCard:
             if (`isActivated` in card && card.isActivated === true) {
                 // TODO Draw capturedCard for Giant if captured!
-                spanClasses += `bg-mythological-creature-inactive`;
+                spanClasses = `bg-mythological-creature-inactive`;
             }
             else {
-                spanClasses += `bg-mythological-creature`;
+                spanClasses = `bg-mythological-creature`;
             }
             // TODO Draw valkyry requirements!
             styles = ALlStyles.MythologicalCreature(card.name);
@@ -299,12 +316,10 @@ card, id, player, suit, moveName, ...args) => {
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawEmptyCard = ({ G, ctx, ...rest }, data, playerCells, 
-// TODO Can add type to id?
-cardType, id, player, suit, moveName, ...args) => {
+export const DrawEmptyCard = ({ G, ctx, ...rest }, data, playerCells, cardType, id, player, suit, moveName, ...args) => {
     let tdClasses = ``, action;
     if (suit !== null) {
-        tdClasses += suitsConfig[suit].suitColor;
+        tdClasses = suitsConfig[suit].suitColor;
     }
     let _exhaustiveCheck;
     switch (moveName) {
@@ -343,12 +358,16 @@ cardType, id, player, suit, moveName, ...args) => {
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        if (tdClasses === ``) {
+            tdClasses = CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer;
+        }
+        else {
+            tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+        }
     }
     // TODO Check colors of empty camp & others cards!
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} empty ${cardType} ${id}`));
 };
-// TODO Replace strings!?
 /**
  * <h3>Отрисовка монет.</h3>
  * <p>Применения:</p>
@@ -369,9 +388,7 @@ cardType, id, player, suit, moveName, ...args) => {
  * @param args Аргументы действия.
  * @returns
  */
-export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, 
-// TODO Can add type to id?
-type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */, moveName, ...args) => {
+export const DrawCoin = ({ G, ctx, ...rest }, data, playerCells, type, coin, id, player, coinClasses, additionalParam, moveName, ...args) => {
     let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action, _exhaustiveCheck;
     switch (moveName) {
         case CoinMoveNames.ChooseCoinValueForHrungnirUpgradeMove:
@@ -419,7 +436,7 @@ type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */,
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        tdClasses += ` cursor-pointer`;
+        tdClasses = `${tdClasses} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
     }
     if (type === DrawCoinTypeNames.Market) {
         if (!IsCoin(coin)) {
@@ -429,13 +446,13 @@ type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */,
             throw new Error(`Монета на рынке не может не быть с типом '${CoinRusNames.Royal}'.`);
         }
         styles = ALlStyles.Coin(coin.value, false);
-        spanClasses += `bg-market-coin`;
+        spanClasses = `bg-market-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
             span = (_jsx("span", { className: coinClasses, children: additionalParam }));
         }
     }
     else if (type === DrawCoinTypeNames.HiddenCoin) {
-        spanClasses += `bg-coin`;
+        spanClasses = `bg-coin`;
         if (IsCoin(coin) && coinClasses !== null && coinClasses !== undefined) {
             styles = ALlStyles.CoinBack();
             let isInitial = false;
@@ -446,9 +463,9 @@ type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */,
         }
     }
     else {
-        spanClasses += `bg-coin`;
+        spanClasses = `bg-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
-            spanClasses += ` ${coinClasses}`;
+            spanClasses = `${spanClasses} ${coinClasses}`;
         }
         if (type === DrawCoinTypeNames.Coin) {
             if (coin === null) {
@@ -494,7 +511,7 @@ type, coin, id, player, coinClasses, additionalParam /* IndexOf<TavernsType> */,
  * @returns
  */
 export const DrawSuit = ({ G, ctx, ...rest }, data, playerHeaders, suit, player, moveName) => {
-    let className = ``, action, _exhaustiveCheck;
+    let className = `${suitsConfig[suit].suitColor}`, action, _exhaustiveCheck;
     switch (moveName) {
         case SuitMoveNames.ChooseSuitOlrunMove:
             action = data.moves.ChooseSuitOlrunMove;
@@ -511,8 +528,8 @@ export const DrawSuit = ({ G, ctx, ...rest }, data, playerHeaders, suit, player,
             return _exhaustiveCheck;
     }
     if (action !== null) {
-        className += ` cursor-pointer`;
+        className = `${className} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
     }
-    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}${className}`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: ALlStyles.Suit(suit), className: "bg-suit-icon" }) }, `${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`));
+    playerHeaders.push(_jsx("th", { className: `${className}`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: ALlStyles.Suit(suit), className: "bg-suit-icon" }) }, `${player === undefined ? `` : `${player.nickname} `}${suitsConfig[suit].suitName} suit`));
 };
 //# sourceMappingURL=ElementsUI.js.map

@@ -156,7 +156,6 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: F
  */
 const RemoveOneCardFromTierTwoDeckIfNoExplorerDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames,
     result: Distinctions): void => {
-    // TODO if (suit === SuitNames.explorer) here or in CheckAllSuitsDistinctions?
     if (suit === SuitNames.explorer && result === undefined) {
         const discardedCard: CanBeUndefType<DwarfDeckCardType> =
             GetCardsFromSecretDwarfDeck({ G, ctx, ...rest }, 1, 0, 1)[0];

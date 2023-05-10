@@ -9,7 +9,7 @@ import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinCssClassNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 // TODO Check Solo Bot & multiplayer actions!
 // TODO Move strings coins class names to enum!
@@ -609,7 +609,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                 if (G.mode === GameModeNames.Multiplayer && !publicBoardCoin.isOpened) {
                                     throw new Error(`В массиве монет игрока на столе не может быть закрыта ранее открытая монета с id '${id}'.`);
                                 }
-                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.Coin, publicBoardCoin, id, player, `border-2`, null, moveName, id, CoinTypeNames.Board);
+                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.Coin, publicBoardCoin, id, player, CoinCssClassNames.BorderedCoin, null, moveName, id, CoinTypeNames.Board);
                             }
                             else if (validatorName === CommonMoveValidatorNames.ClickCoinToUpgradeMoveValidator
                                 || validatorName ===
@@ -653,7 +653,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                                 DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.Coin, publicBoardCoin, id, player);
                                             }
                                             else {
-                                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, publicBoardCoin, id, player, `bg-small-coin`);
+                                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, publicBoardCoin, id, player, CoinCssClassNames.SmallCoinBG);
                                             }
                                         }
                                     }
@@ -664,7 +664,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                                 || (stage === CommonStageNames.PickConcreteCoinToUpgrade
                                                     && ((_d = player.stack[0]) === null || _d === void 0 ? void 0 : _d.coinValue) === privateBoardCoin.value))) {
                                             if (data !== undefined) {
-                                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, privateBoardCoin, id, player, `bg-small-coin`, null, moveName, id, CoinTypeNames.Board);
+                                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, privateBoardCoin, id, player, CoinCssClassNames.SmallCoinBG, null, moveName, id, CoinTypeNames.Board);
                                             }
                                             else if (validatorName ===
                                                 CommonMoveValidatorNames.ClickCoinToUpgradeMoveValidator
@@ -685,7 +685,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                                 if (!IsCoin(privateBoardCoin)) {
                                                     throw new Error(`Монета с id '${id}' на столе текущего приватного игрока не может отсутствовать.`);
                                                 }
-                                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, privateBoardCoin, id, player, `bg-small-coin`);
+                                                DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, privateBoardCoin, id, player, CoinCssClassNames.SmallCoinBG);
                                             }
                                         }
                                     }
@@ -696,7 +696,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                             DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.Back, publicBoardCoin, id, player);
                                         }
                                         else if (publicBoardCoin.isOpened) {
-                                            DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, publicBoardCoin, id, player, `bg-small-coin`);
+                                            DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, publicBoardCoin, id, player, CoinCssClassNames.SmallCoinBG);
                                         }
                                     }
                                 }
@@ -844,9 +844,9 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
                         || ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
                             && (p === 0 || ctx.phase === PhaseNames.ChooseDifficultySoloMode)))
                         && IsCoin(publicHandCoin))) {
-                    let coinClasses = `border-2`;
+                    let coinClasses = CoinCssClassNames.BorderedCoin;
                     if (player.selectedCoin === j) {
-                        coinClasses = `border-2 border-green-400`;
+                        coinClasses = CoinCssClassNames.BorderedCoinPicked;
                     }
                     const handCoin = privateHandCoin !== null && privateHandCoin !== void 0 ? privateHandCoin : publicHandCoin;
                     if (!IsCoin(handCoin)) {
@@ -909,7 +909,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
                     || (G.mode === GameModeNames.Multiplayer && privateHandCoin === undefined))
                     && IsCoin(publicHandCoin) && publicHandCoin.isOpened) {
                     if (data !== undefined) {
-                        DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, publicHandCoin, j, player, `bg-small-coin`);
+                        DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.HiddenCoin, publicHandCoin, j, player, CoinCssClassNames.SmallCoinBG);
                     }
                 }
                 else {

@@ -50,7 +50,7 @@ averageCards: ICard[] = G.averageCards*/;
         }
     }
     result[maxIndex] += 10;
-    result[minIndex] += -10;
+    result[minIndex] -= 10;
     return result;
 };
 /**

@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { MyFnContextWithMyPlayerID, MythicalAnimalScoringFunction } from "../typescript/interfaces";
+import type { BasicMythicalAnimalScoringType, MyFnContextWithMyPlayerID, MythicalAnimalScoringFunction } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -15,7 +15,7 @@ import { GetRanksValueMultiplier } from "./ScoreHelpers";
  * @returns Количество очков по конкретному мифическому животному.
  */
 export const BasicMythicalAnimalScoring: MythicalAnimalScoringFunction = ({ G, ctx, ...rest }:
-    MyFnContextWithMyPlayerID, value?: number): number => {
+    MyFnContextWithMyPlayerID, value?: BasicMythicalAnimalScoringType): BasicMythicalAnimalScoringType => {
     if (value === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FunctionParamIsUndefined, `value`);
     }

@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { AllCoinsValueType, AllPriorityValueType, CanBeUndefType, DistinctionAwardingFunction, MyFnContextWithMyPlayerID, PlayerCoinIdType, PrivatePlayer, PublicPlayer, SpecialCard, SpecialTriggerTradingCoin } from "../typescript/interfaces";
+import type { AllCoinsValueType, AllPriorityValueType, CanBeUndefType, DistinctionAwardingFunction, MinerDistinctionsScoringType, MyFnContextWithMyPlayerID, PlayerCoinIdType, PrivatePlayer, PublicPlayer, SpecialCard, SpecialTriggerTradingCoin } from "../typescript/interfaces";
 import { AddAnyCardToPlayerActions } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -140,7 +140,7 @@ export const HunterDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx,
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const MinerDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
-    MyFnContextWithMyPlayerID): 0 | 3 => {
+    MyFnContextWithMyPlayerID): MinerDistinctionsScoringType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -193,7 +193,8 @@ export const WarriorDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx
     return 0;
 };
 
-export const GetMinerDistinctionsScore = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID): 0 | 3 => {
+export const GetMinerDistinctionsScore = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
+    MinerDistinctionsScoringType => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -217,7 +218,7 @@ export const GetMinerDistinctionsScore = ({ G, ctx, myPlayerID, ...rest }: MyFnC
  * @returns
  */
 export const EndWarriorOrExplorerDistinctionIfCoinUpgraded = ({ G }: MyFnContextWithMyPlayerID): void => {
-    // todo Move to distinction phase hook?
+    // TODO Move to distinction phase hook?
     if (Object.values(G.distinctions).length) {
         // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
         const isDistinctionWarrior: boolean = G.distinctions[SuitNames.warrior] !== undefined;

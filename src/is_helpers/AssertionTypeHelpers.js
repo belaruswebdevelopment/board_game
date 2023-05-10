@@ -1,4 +1,14 @@
 import { CardTypeRusNames, GiantRusNames, SuitRusNames } from "../typescript/enums";
+export function AssertZeroOrOne(number) {
+    if (!(number === 0 || number === 1)) {
+        throw new Error(`No value '${number}' of ZeroOrOneType.`);
+    }
+}
+export function AssertOneOrTwo(number) {
+    if (!(number === 1 || number === 2)) {
+        throw new Error(`No value '${number}' of OneOrTwoType.`);
+    }
+}
 export function AssertMinerDistinctionsScoring(number) {
     if (!(number === 0 || number === 3)) {
         throw new Error(`No value '${number}' of MinerDistinctionsScoringType.`);
@@ -181,8 +191,13 @@ export function AssertAllInitialTradingCoinConfigIndex(number) {
     }
 }
 export function AssertAllRoyalCoinConfigIndex(number) {
-    if (!(number >= 0 || number <= 4)) {
+    if (!(number >= 0 || number <= 20)) {
         throw new Error(`No '${number}' in AllRoyalCoinConfig.`);
+    }
+}
+export function AssertRoyalCoinsUniqueArrayIndex(number) {
+    if (!(number >= 0 || number <= 20)) {
+        throw new Error(`No '${number}' in RoyalCoinsUniqueArray.`);
     }
 }
 export function AssertHandCoins(handCoins) {
@@ -198,6 +213,11 @@ export function AssertPrivateBoardCoins(boardCoins) {
 export function AssertPrivateHandCoins(handCoins) {
     if (!(handCoins.length === 5)) {
         throw new Error(`В массиве монет приватного игрока в руке должно быть ровно 5 монет.`);
+    }
+}
+export function AssertRoyalCoinsUnique(uniqueRoyalCoins) {
+    if (!(uniqueRoyalCoins.length === 21)) {
+        throw new Error(`В массиве уникальных монет на рынке должно быть ровно 21 монета.`);
     }
 }
 export function AssertBoardCoins(boardCoins) {

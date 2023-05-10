@@ -1,6 +1,6 @@
 import { BrynhildrScoring, HildrScoring, OlrunScoring, SigrdrifaScoring, SvafaScoring } from "../score_helpers/ValkyryScoringHelpers";
 import { ValkyryScoringFunctionNames } from "../typescript/enums";
-import type { Action, ScoringArgsType, ValkyryScoringFunction, ValkyryScoringType } from "../typescript/interfaces";
+import type { Action, ValkyryScoringArgsType, ValkyryScoringFunction, ValkyryScoringType } from "../typescript/interfaces";
 
 /**
  * <h3>Начинает действие по получению победных очков по Валькирии.</h3>
@@ -13,7 +13,7 @@ import type { Action, ScoringArgsType, ValkyryScoringFunction, ValkyryScoringTyp
  * @param params Параметры действия.
  * @returns Количество победных очков по Валькирии.
  */
-export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>, params: ScoringArgsType):
+export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>, params: ValkyryScoringArgsType):
     ValkyryScoringType => {
     const actionDispatcher: ValkyryScoringFunction = ValkyryScoringDispatcherSwitcher(action.name);
     if (params === undefined) {

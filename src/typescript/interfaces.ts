@@ -11,7 +11,7 @@ import { ProcessGameConfig } from "boardgame.io/dist/types/src/core/game";
 import { GameComponent } from "boardgame.io/dist/types/src/lobby/connection";
 // eslint-disable-next-line import/no-unresolved
 import { MatchOpts } from "boardgame.io/dist/types/src/lobby/match-instance";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ActivateGodAbilityOrNotSubStageNames, ArtefactDescriptionNames, ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CoinMoveNames, CoinRusNames, CoinTypeNames, CommonBuffNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DistinctionCardMoveNames, DistinctionDescriptionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GiantBuffNames, GiantDescriptionNames, GiantNames, GiantScoringFunctionNames, GodBuffNames, GodDescriptionNames, GodNames, HeroBuffNames, HeroDescriptionNames, HeroNames, HeroScoringFunctionNames, LobbyPhases, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalDescriptionNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RoyalOfferingNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageRusNames, SuitBGColorNames, SuitDescriptionNames, SuitMoveNames, SuitNames, SuitRusNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryDescriptionNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubMoveValidatorNames, ActivateGodAbilityOrNotSubStageNames, ArtefactDescriptionNames, ArtefactNames, ArtefactScoringFunctionNames, AutoActionFunctionNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, ButtonNames, CampBuffNames, CardMoveNames, CardTypeRusNames, CardWithoutSuitAndWithActionCssTDClassNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeDefaultStageNames, ChooseDifficultySoloModeMoveValidatorNames, ChooseDifficultySoloModeStageNames, CoinCssClassNames, CoinMoveNames, CoinRusNames, CoinTypeNames, CommonBuffNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionAwardingFunctionNames, DistinctionCardMoveNames, DistinctionDescriptionNames, DrawNames, EmptyCardMoveNames, EnlistmentMercenariesDefaultStageNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, GameModeNames, GameNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GiantBuffNames, GiantDescriptionNames, GiantNames, GiantScoringFunctionNames, GodBuffNames, GodDescriptionNames, GodNames, HeroBuffNames, HeroCardCssSpanClassNames, HeroDescriptionNames, HeroNames, HeroScoringFunctionNames, LobbyPhases, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, MythicalAnimalDescriptionNames, MythicalAnimalNames, MythicalAnimalScoringFunctionNames, PhaseNames, PickCardValidatorNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, RoyalOfferingNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SoloGameAndvariStrategyNames, SpecialCardNames, StageRusNames, SuitCssBGColorClassNames, SuitDescriptionNames, SuitMoveNames, SuitNames, SuitRusNames, SuitScoringFunctionNames, TavernNames, TavernsResolutionDefaultStageNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames, TroopEvaluationMoveValidatorNames, TroopEvaluationStageNames, ValkyryBuffNames, ValkyryDescriptionNames, ValkyryNames, ValkyryScoringFunctionNames } from "./enums";
 // eslint-disable-next-line import/no-unresolved
 import { Client } from "boardgame.io/dist/types/packages/react";
 
@@ -183,7 +183,7 @@ export interface Suit {
     readonly distinction: Distinction;
     readonly scoringRule: Action<SuitScoringFunctionNames>;
     readonly suit: SuitNames;
-    readonly suitColor: SuitBGColorNames;
+    readonly suitColor: SuitCssBGColorClassNames;
     readonly suitName: SuitRusNames;
     readonly pointsValues: () => PointsValues;
 }
@@ -393,7 +393,7 @@ export type HeroConfig = {
  */
 export interface HeroCardData extends ExpansionCardInfo, PartialByType<Omit<HeroCard, `type` | `active`>,
     `playerSuit` | `rank` | `points` | `buff` | `actions` | `stack` | `pickValidators` | `validators`> {
-    readonly scoringRule: Action<HeroScoringFunctionNames, ScoringArgsCanBeUndefType>;
+    readonly scoringRule: Action<HeroScoringFunctionNames, HeroScoringArgsCanBeUndefType>;
 }
 
 /**
@@ -578,7 +578,7 @@ export type ArtefactConfig = {
  */
 export interface ArtefactCardData extends TierInfo, PartialByType<Omit<ArtefactCard, `type` | `path`>,
     `playerSuit` | `points` | `rank` | `actions` | `buff` | `stack` | `validators`> {
-    readonly scoringRule: Action<ArtefactScoringFunctionNames, ScoringArgsCanBeUndefType>;
+    readonly scoringRule: Action<ArtefactScoringFunctionNames, ArtefactScoringArgsCanBeUndefType>;
 }
 
 /**
@@ -722,7 +722,7 @@ export type GiantConfig = {
  * <h3>Данные карты гиганта.</h3>
  */
 export interface GiantData extends PartialByType<Omit<GiantCard, `type` | `capturedCard` | `isActivated`>, `actions`> {
-    readonly scoringRule: Action<GiantScoringFunctionNames, ScoringArgsCanBeUndefType>;
+    readonly scoringRule: Action<GiantScoringFunctionNames, GiantScoringArgsCanBeUndefType>;
 }
 
 /**
@@ -813,7 +813,7 @@ export type MythicalAnimalConfig = {
  */
 export interface MythicalAnimalData extends
     PartialByType<Omit<MythicalAnimalCard, `type`>, `rank` | `points` | `stack` | `buff`> {
-    readonly scoringRule: Action<MythicalAnimalScoringFunctionNames, ScoringArgsCanBeUndefType>;
+    readonly scoringRule: Action<MythicalAnimalScoringFunctionNames, MythicalAnimalScoringArgsCanBeUndefType>;
 }
 
 /**
@@ -1533,7 +1533,8 @@ type ActionNamesType = GiantScoringFunctionNames | MythicalAnimalScoringFunction
 /**
 * <h3>Тип для аргументов действий.</h3>
 */
-type ActionParamsType = CanBeUndefType<ScoringArgsType | ScoringArgsCanBeUndefType | AutoActionArgsType>;
+type ActionParamsType = CanBeUndefType<ValkyryScoringArgsType | HeroScoringArgsCanBeUndefType | AutoActionArgsType
+    | MythologicalCreatureScoringArgsCanBeUndefType | ArtefactScoringArgsCanBeUndefType>;
 
 /**
  * <h3>Интерфейс для автоматических действий с параметрами.</h3>
@@ -1554,7 +1555,15 @@ export interface ActionFunctionWithoutParams {
  */
 export type AutoActionFunctionType = ActionFunctionWithoutParams | AutoActionFunction;
 
-export type DwergBrothersScoreValue = 0 | 13 | 40 | 81 | 108 | 135;
+export type BasicArtefactScoringType = 0 | 24 | 28;
+
+export type BasicGiantScoringType = 0;
+
+export type BasicHeroScoringType = 0 | 1 | 4 | 7 | 8 | 9 | 10 | 12 | 13 | 17 | 25;
+
+export type BasicMythicalAnimalScoringType = 0;
+
+export type DwergBrothersScoringType = 0 | 13 | 40 | 81 | 108 | 135;
 
 export type DwergBrothersScoringArray = readonly [0, 13, 40, 81, 108, 135];
 
@@ -1572,36 +1581,36 @@ export type MinerDistinctionsScoringType = 0 | 3;
  * <h3>Интерфейс для функций подсчёта очков по артефактам.</h3>
  */
 export interface ArtefactScoringFunction {
-    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, isFinal?: boolean, ...params: ScoringArgsCanBeUndefType):
-        number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, isFinal?: boolean,
+        ...params: ArtefactScoringArgsCanBeUndefType): number;
 }
 
 /**
  * <h3>Интерфейс для функций подсчёта очков по героям.</h3>
  */
 export interface HeroScoringFunction {
-    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsCanBeUndefType): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: HeroScoringArgsCanBeUndefType): number;
 }
 
 /**
  * <h3>Интерфейс для функций подсчёта очков по мифическим животным.</h3>
  */
 export interface MythicalAnimalScoringFunction {
-    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsCanBeUndefType): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: MythicalAnimalScoringArgsCanBeUndefType): number;
 }
 
 /**
  * <h3>Интерфейс для функций подсчёта очков по гигантам.</h3>
  */
 export interface GiantScoringFunction {
-    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: ScoringArgsCanBeUndefType): number;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID, ...params: GiantScoringArgsCanBeUndefType): number;
 }
 
 /**
  * <h3>Интерфейс для функций подсчёта очков по валькириям.</h3>
  */
 export interface ValkyryScoringFunction {
-    (...params: ScoringArgsType): ValkyryScoringType;
+    (...params: ValkyryScoringArgsType): ValkyryScoringType;
 }
 
 export type ValkyryScoringType = 0 | 3 | 4 | 6 | 8 | 10 | 16;
@@ -1624,15 +1633,37 @@ export type ArgsType = readonly (CanBeNullType<CoinTypeNames | DwarfCard | SuitN
  */
 export type AutoActionArgsType = readonly [OneOrTwoType | UpgradableCoinValueType];
 
+// TODO  TODO Fix number (strengthTokenNotch...)
 /**
  * <h3>Типы данных для аргументов функций подсчёта очков.</h3>
  */
-export type ScoringArgsType = readonly [number];
+export type ValkyryScoringArgsType = readonly [number];
 
 /**
- * <h3>Типы данных для аргументов функций подсчёта очков, которые могут отсутствовать.</h3>
+ * <h3>Типы данных для аргументов функций подсчёта очков героев, которые могут отсутствовать.</h3>
  */
-export type ScoringArgsCanBeUndefType = readonly [number?];
+export type HeroScoringArgsCanBeUndefType = readonly [BasicHeroScoringType?];
+
+/**
+ * <h3>Типы данных для аргументов функций подсчёта очков артефактов, которые могут отсутствовать.</h3>
+ */
+export type ArtefactScoringArgsCanBeUndefType = readonly [BasicArtefactScoringType?];
+
+/**
+ * <h3>Типы данных для аргументов функций подсчёта очков гигантов, которые могут отсутствовать.</h3>
+ */
+export type GiantScoringArgsCanBeUndefType = readonly [BasicGiantScoringType?];
+
+/**
+ * <h3>Типы данных для аргументов функций подсчёта очков мифических животных, которые могут отсутствовать.</h3>
+ */
+export type MythicalAnimalScoringArgsCanBeUndefType = readonly [BasicMythicalAnimalScoringType?];
+
+/**
+ * <h3>Типы данных для аргументов функций подсчёта очков мифологических существ, которые могут отсутствовать.</h3>
+ */
+type MythologicalCreatureScoringArgsCanBeUndefType =
+    GiantScoringArgsCanBeUndefType | MythicalAnimalScoringArgsCanBeUndefType;
 
 /**
  * <h3>Типы данных для аргументов функций подсчёта очков по фракциям.</h3>
@@ -1716,6 +1747,39 @@ interface Expansion {
     readonly active: boolean;
 }
 
+export type HandBorderedCoinCssClasses = CoinCssClassNames.BorderedCoin | CoinCssClassNames.BorderedCoinPicked;
+
+export type SuitCssClasses = `${SuitCssBGColorClassNames}`
+    | `${SuitCssBGColorClassNames} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+
+// TODO Move all css classes to enums!
+export type DistinctionCardCssTDClasses =
+    `bg-green-500` | `bg-green-500 ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+
+export type CoinCssTDClasses =
+    `bg-yellow-300` | `bg-yellow-300 ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+
+export type CoinCssSpanClasses = `` | `bg-market-coin` | `bg-coin` | `bg-coin ${CoinCssClassNames}`;
+
+type CardWithSuitAndActionCssTDClasses = `${SuitCssBGColorClassNames}`
+    | `${SuitCssBGColorClassNames} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+
+export type EmptyCardCssTDClasses = `` | `${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`
+    | `${SuitCssBGColorClassNames} ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`
+    | `${SuitCssBGColorClassNames}`;
+
+export type CardCssTDClasses = `` | `${CardWithSuitAndActionCssTDClasses}` | `bg-gray-600` | `bg-yellow-200`
+    | `${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`
+    | `bg-gray-600 ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`
+    | `bg-yellow-200 ${CardWithoutSuitAndWithActionCssTDClassNames.CursorPointer}`;
+
+export type CardCssSpanClasses = `` | `${HeroCardCssSpanClassNames}` | `bg-camp` | `bg-card` | `bg-royal-offering`
+    | `bg-mythological-creature-inactive` | `bg-mythological-creature`;
+
+export type DrawCoinIdParamType = PlayerCoinIdType | IndexOf<RoyalCoinsUniqueArray>;
+
+export type DrawCoinAdditionalParamType = MarketCoinNumberValuesType | PlayerCoinIdType;
+
 /**
  * <h3>Интерфейс для логирования данных.</h3>
  */
@@ -1724,6 +1788,9 @@ export interface LogData {
     readonly text: string;
     readonly type: LogTypeNames;
 }
+
+export type AllCardsDescriptionNamesType = ArtefactDescriptionNames | HeroDescriptionNames
+    | MythicalAnimalDescriptionNames | GodDescriptionNames | GiantDescriptionNames | ValkyryDescriptionNames;
 
 type RoundType = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
@@ -1772,8 +1839,7 @@ export interface MyGameState {
     publicPlayersOrder: PlayerID[];
     round: RoundType;
     readonly royalCoins: RoyalCoin[];
-    // TODO Can it be fixed size Tuple?
-    readonly royalCoinsUnique: readonly RoyalCoin[];
+    readonly royalCoinsUnique: RoyalCoinsUniqueArray;
     readonly secret: AllSecretData;
     soloGameAndvariStrategyLevel: CanBeNullType<SoloGameAndvariStrategyNames>;
     soloGameAndvariStrategyVariantLevel: CanBeNullType<SoloGameAndvariStrategyVariantLevelType>;
@@ -1788,6 +1854,10 @@ export interface MyGameState {
     readonly totalScore: number[];
     readonly winner: number[];
 }
+
+export type RoyalCoinsUniqueArray = [RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin,
+    RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin,
+    RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin];
 
 /**
  * <h3>Интерфейс для стратегий соло бота Андвари.</h3>
@@ -2181,7 +2251,6 @@ export interface Styles {
     readonly Hero: (heroName: HeroNames) => Background;
     readonly HeroBack: () => Background;
     readonly MythologicalCreature: (name: MythologicalCreatureNameType) => Background;
-    // TODO Add type!
     readonly Priorities: (priority: AllPriorityValueType) => Background;
     readonly Priority: () => Background;
     readonly RoyalOffering: (name: RoyalOfferingNames) => Background;

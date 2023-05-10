@@ -16,7 +16,7 @@ import { IsMythicalAnimalPlayerCard } from "../is_helpers/IsMythologicalCreature
 import { AddDataToLog } from "../Logging";
 import { CheckCurrentSuitDistinctionPlayers } from "../TroopEvaluation";
 import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, MythicalAnimalBuffNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { AllCoinsValueType, CampCardType, CanBeUndefType, DwergBrothersScoreValue, DwergBrothersScoringArray, GiantData, GodData, HeroCard, HeroCardData, MinerDistinctionsScoringType, MyFnContextWithMyPlayerID, MythicalAnimalData, MythicalAnimalPlayerCard, MythologicalCreatureCommandZoneCardType, PublicPlayer, PublicPlayerCoinType, ValkyryData } from "../typescript/interfaces";
+import type { AllCoinsValueType, CampCardType, CanBeUndefType, DwergBrothersScoringArray, DwergBrothersScoringType, GiantData, GodData, HeroCard, HeroCardData, MinerDistinctionsScoringType, MyFnContextWithMyPlayerID, MythicalAnimalData, MythicalAnimalPlayerCard, MythologicalCreatureCommandZoneCardType, PublicPlayer, PublicPlayerCoinType, ValkyryData } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { GetMinerDistinctionsScore } from "./DistinctionAwardingHelpers";
 
@@ -30,7 +30,7 @@ export const CurrentAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnCont
 };
 
 export const CurrentPotentialMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    0 | 3 => GetMinerDistinctionsScore({ G, ctx, myPlayerID, ...rest });
+    MinerDistinctionsScoringType => GetMinerDistinctionsScore({ G, ctx, myPlayerID, ...rest });
 
 export const CurrentPotentialWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
     number => {
@@ -84,7 +84,7 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }: 
     if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
         || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo && myPlayerID === `1`))
         && dwergBrothersNum) {
-        const dwerg_brother_value: DwergBrothersScoreValue = dwerg_brothers_scoring[dwergBrothersNum];
+        const dwerg_brother_value: DwergBrothersScoringType = dwerg_brothers_scoring[dwergBrothersNum];
         heroesScore += dwerg_brother_value;
         if (isFinal) {
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за героев братьев Двергов (${dwergBrothersNum} шт.) ${G.mode === GameModeNames.Solo ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwergBrothersNum]}';`);

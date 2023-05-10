@@ -43,14 +43,14 @@ export var SuitDescriptionNames;
 /**
  * <h3>Перечисление для названия CSS класса для цветов фракции дворфов.</h3>
  */
-export var SuitBGColorNames;
-(function (SuitBGColorNames) {
-    SuitBGColorNames["Blacksmith"] = "bg-purple-600";
-    SuitBGColorNames["Explorer"] = "bg-blue-500";
-    SuitBGColorNames["Hunter"] = "bg-green-600";
-    SuitBGColorNames["Miner"] = "bg-yellow-600";
-    SuitBGColorNames["Warrior"] = "bg-red-600";
-})(SuitBGColorNames || (SuitBGColorNames = {}));
+export var SuitCssBGColorClassNames;
+(function (SuitCssBGColorClassNames) {
+    SuitCssBGColorClassNames["Blacksmith"] = "bg-purple-600";
+    SuitCssBGColorClassNames["Explorer"] = "bg-blue-500";
+    SuitCssBGColorClassNames["Hunter"] = "bg-green-600";
+    SuitCssBGColorClassNames["Miner"] = "bg-yellow-600";
+    SuitCssBGColorClassNames["Warrior"] = "bg-red-600";
+})(SuitCssBGColorClassNames || (SuitCssBGColorClassNames = {}));
 // Suit End
 // Giant Start
 /**
@@ -540,6 +540,29 @@ export var DistinctionDescriptionNames;
     DistinctionDescriptionNames["Warrior"] = "\u041F\u043E\u043B\u0443\u0447\u0438\u0432 \u0437\u043D\u0430\u043A \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u0432\u043E\u0438\u043D\u043E\u0432, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u0443\u043B\u0443\u0447\u0448\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u0438\u0437 \u0441\u0432\u043E\u0438\u0445 \u043C\u043E\u043D\u0435\u0442, \u0434\u043E\u0431\u0430\u0432\u0438\u0432 \u043A \u0435\u0451 \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u0443 +5.";
 })(DistinctionDescriptionNames || (DistinctionDescriptionNames = {}));
 // Distinction End
+export var LogCssClassNames;
+(function (LogCssClassNames) {
+    LogCssClassNames["Game"] = "text-blue-500";
+    LogCssClassNames["Private"] = "text-black";
+    LogCssClassNames["Public"] = "text-green-500";
+})(LogCssClassNames || (LogCssClassNames = {}));
+export var CoinCssClassNames;
+(function (CoinCssClassNames) {
+    CoinCssClassNames["AvailableMarketCoin"] = "text-blue-500";
+    CoinCssClassNames["BorderedCoin"] = "border-2";
+    CoinCssClassNames["BorderedCoinPicked"] = "border-2 border-green-400";
+    CoinCssClassNames["NoAvailableMarketCoin"] = "text-red-500";
+    CoinCssClassNames["SmallCoinBG"] = "bg-small-coin";
+})(CoinCssClassNames || (CoinCssClassNames = {}));
+export var HeroCardCssSpanClassNames;
+(function (HeroCardCssSpanClassNames) {
+    HeroCardCssSpanClassNames["InactiveHero"] = "bg-hero-inactive";
+    HeroCardCssSpanClassNames["Hero"] = "bg-hero";
+})(HeroCardCssSpanClassNames || (HeroCardCssSpanClassNames = {}));
+export var CardWithoutSuitAndWithActionCssTDClassNames;
+(function (CardWithoutSuitAndWithActionCssTDClassNames) {
+    CardWithoutSuitAndWithActionCssTDClassNames["CursorPointer"] = "cursor-pointer";
+})(CardWithoutSuitAndWithActionCssTDClassNames || (CardWithoutSuitAndWithActionCssTDClassNames = {}));
 /**
  * <h3>Перечисление для типов монет на русском.</h3>
  */
