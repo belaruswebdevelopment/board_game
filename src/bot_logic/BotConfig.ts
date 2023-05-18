@@ -1,5 +1,5 @@
-import { AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
-import type { AICardCharacteristics, AIHeuristic, CanBeUndefType, FnContext, TavernAllCardType, TavernCardType, TavernsType } from "../typescript/interfaces";
+import { AssertAICardCharacteristicsArray, AssertAICardCharacteristicsArrayIndex, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "../is_helpers/AssertionTypeHelpers";
+import type { AICardCharacteristics, AIHeuristic, CanBeUndefType, FnContext, NumPlayersType, TavernAllCardType, TavernCardType, TavernsHeuristicArray, TavernsHeuristicArrayIndex, TavernsNumType, TavernsType } from "../typescript/interfaces";
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 
 // TODO Check all number types here!
@@ -14,53 +14,49 @@ import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
  * @param context
  * @returns Результат эвристики.
  */
-export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext): number[] => {
+export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext): TavernsHeuristicArray => {
     const taverns: TavernsType = G.taverns,
+        // TODO If tavernsHeuristicArray & result === same logic!?
         // TODO -100 | 0 === number in current only 1 heuristic
         tavernsHeuristicArray: number[] = taverns.map((tavern: TavernAllCardType): number =>
             absoluteHeuristicsForTradingCoin.reduce((acc: number, item: AIHeuristic<TavernAllCardType>):
-                number => acc + (item.heuristic(tavern) ? item.weight : 0), 0)),
-        result: number[] =
-            Array(taverns.length).fill(0).map((value: number, index: number):
-                number => {
-                const num: CanBeUndefType<number> = tavernsHeuristicArray[index];
-                if (num === undefined) {
-                    throw new Error(`Отсутствует значение с id '${index}'.`);
-                }
-                return value + num;
-            }),
-        tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
-            tavern.map((card: TavernCardType, index: number, tavern: TavernAllCardType): number => {
-                AssertTavernCardId(index);
-                return EvaluateTavernCard({ G, ctx, ...rest }, card, index, tavern);
-            })),
+                number => acc + (item.heuristic(tavern) ? item.weight : 0), 0));
+    AssertTavernsHeuristicArray(tavernsHeuristicArray);
+    const result: number[] =
+        Array(taverns.length).fill(0).map((value: number, index: number):
+            number => {
+            AssertTavernsHeuristicArrayIndex(index);
+            const num: number = tavernsHeuristicArray[index];
+            return value + num;
+        });
+    AssertTavernsHeuristicArray(result);
+    // TODO Add types
+    const tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
+        tavern.map((card: TavernCardType, index: number, tavern: TavernAllCardType): number => {
+            AssertTavernCardId(index);
+            return EvaluateTavernCard({ G, ctx, ...rest }, card, index, tavern);
+        })),
         tempChars: AICardCharacteristics[] = tempNumbers.map((element: number[]): AICardCharacteristics =>
             GetCharacteristics(element))/*,
         averageCards: ICard[] = G.averageCards*/;
-    let maxIndex = 0,
+    AssertAICardCharacteristicsArray(tempChars);
+    let maxIndex: TavernsHeuristicArrayIndex = 0,
         minIndex: number = tempChars.length - 1;
+    AssertTavernsHeuristicArrayIndex(minIndex);
     for (let i = 1; i < tavernsHeuristicArray.length; i++) {
-        const maxCard: CanBeUndefType<AICardCharacteristics> = tempChars[maxIndex],
-            tempCard1: CanBeUndefType<AICardCharacteristics> = tempChars[i];
-        if (maxCard === undefined) {
-            throw new Error(`Отсутствует значение максимальной карты с id '${maxIndex}'.`);
-        }
-        if (tempCard1 === undefined) {
-            throw new Error(`Отсутствует значение '1' темп карты с id '${i}'.`);
-        }
+        AssertTavernsHeuristicArrayIndex(i);
+        const maxCard: AICardCharacteristics = tempChars[maxIndex],
+            tempCard1: AICardCharacteristics = tempChars[i];
         if (CompareCharacteristics(maxCard, tempCard1) < 0) {
             maxIndex = i;
         }
-        const minCard: CanBeUndefType<AICardCharacteristics> = tempChars[minIndex],
-            tempCard2: CanBeUndefType<AICardCharacteristics> = tempChars[tempChars.length - 1 - i];
-        if (minCard === undefined) {
-            throw new Error(`Отсутствует значение минимальной карты с id '${minIndex}'.`);
-        }
-        if (tempCard2 === undefined) {
-            throw new Error(`Отсутствует значение 2 темп карты с id '${tempChars.length - 1 - i}'.`);
-        }
+        const minCard: AICardCharacteristics = tempChars[minIndex],
+            tempCard2Num = tempChars.length - 1 - i;
+        AssertAICardCharacteristicsArrayIndex(tempCard2Num);
+        const tempCard2: AICardCharacteristics = tempChars[tempCard2Num];
         if (CompareCharacteristics(minCard, tempCard2) > 0) {
             minIndex = tempChars.length - 1 - i;
+            AssertTavernsHeuristicArrayIndex(minIndex);
         }
     }
     result[maxIndex] += 10;
@@ -100,7 +96,7 @@ const CompareCharacteristics = (stat1: AICardCharacteristics, stat2: AICardChara
  * @param playersNum Количество игроков.
  * @returns Перечень всех комбинаций взятия карт.
  */
-export const GetAllPicks = (tavernsNum: number, playersNum: number): number[][] => {
+export const GetAllPicks = (tavernsNum: TavernsNumType, playersNum: NumPlayersType): number[][] => {
     const temp: number[][] = [],
         cartesian = (...arrays: number[][]): number[][] =>
             arrays.reduce((accSets: number[][], set: number[]): number[][] =>

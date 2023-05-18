@@ -55,7 +55,7 @@ export const MinerScoring = (cards, potentialCardValue = 0, additionalScoring = 
         let zeroRankValue = 0;
         cards.forEach((card) => {
             if (card.points === 0) {
-                zeroRankValue += 1;
+                zeroRankValue++;
             }
             else if (card.name === HeroNames.Zoral) {
                 zeroRankValue += 2;

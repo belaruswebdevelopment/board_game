@@ -109,7 +109,7 @@ export const GetAverageSuitCard = (suit, data) => {
             totalPoints += pointsValue;
         }
         else {
-            totalPoints += 1;
+            totalPoints++;
         }
     }
     totalPoints /= count;

@@ -142,6 +142,7 @@ const Loki = {
         name: GodBuffNames.PlayerHasActiveGodLoki,
     },
 };
+// TODO If Odin swap Olwin which doubles on the player's table => next who pick it can't pick doubles!?
 // TODO Odin swap only neutral heroes!!!
 /**
  * <h3>Данные об Боге.</h3>

@@ -10,10 +10,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: true,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ],
                     buffs: [],
@@ -32,6 +34,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -55,10 +58,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: false,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ],
                     buffs: [],
@@ -77,6 +82,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -98,6 +104,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     boardCoins: [
                         {
+                            isOpened: false,
                             type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
@@ -107,6 +114,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {},
                     ],
@@ -130,6 +138,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -160,6 +169,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
                             value: 0,
@@ -185,6 +195,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -208,10 +219,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: true,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ],
                     buffs: [
@@ -234,6 +247,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -261,10 +275,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: false,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ],
                     buffs: [
@@ -287,6 +303,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -321,6 +338,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
                             value: 0,
@@ -350,6 +368,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -375,6 +394,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     boardCoins: [
                         {
+                            isOpened: false,
                             type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
@@ -384,6 +404,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {},
                     ],
@@ -411,6 +432,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ],
@@ -438,6 +460,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [],
                     handCoins: [
                         {
@@ -465,6 +488,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [],
                     handCoins: [
                         null,
@@ -491,6 +515,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                 0: {
                     handCoins: [
                         {
+                            isOpened: false,
                             type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
@@ -501,6 +526,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     handCoins: [
                         {},
                     ],
@@ -530,6 +556,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     handCoins: [
                         null,
                     ],
@@ -566,6 +593,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     handCoins: [
                         {
                             value: 0,
@@ -597,6 +625,651 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    handCoins: [
+                        null,
+                    ],
+                    boardCoins: [],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin isOpened=true from board (multiplayer=false)`, () => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: true,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin isOpened=false from board (multiplayer=false)`, () => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard closed special trading coin from board (multiplayer=true)`, () => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {},
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard opened special trading coin from board (multiplayer=true)`, () => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            value: 3,
+                        },
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin isOpened=true from board if player has Uline but trading coin on the board (multiplayer=false)`, () => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: true,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin isOpened=false from board if player has Uline but trading coin on the board (multiplayer=false)`, () => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin from board if player has Uline but trading coin on the board but opened (multiplayer=true)`, () => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            value: 3,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin from board if player has Uline but trading coin on the board but closed (multiplayer=true)`, () => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {},
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin from hand if player has Uline but trading coin in the hand (multiplayer=false)`, () => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [],
+                    handCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [],
+                    handCoins: [
+                        null,
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special closed trading coin from hand if player has Uline but trading coin in the hand (multiplayer=true)`, () => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                    boardCoins: [],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    handCoins: [
+                        {},
+                    ],
+                    boardCoins: [],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        null,
+                    ],
+                    boardCoins: [],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    handCoins: [
+                        null,
+                    ],
+                    boardCoins: [],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard special trading coin isOpened=true from hand if player has Uline but trading coin in the hand (multiplayer=true)`, () => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ],
+                    boardCoins: [],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    handCoins: [
+                        {
+                            value: 3,
+                        },
+                    ],
+                    boardCoins: [],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        }, ctx = {
+            currentPlayer: `0`,
+        };
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` });
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        null,
+                    ],
+                    boardCoins: [],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
                     handCoins: [
                         null,
                     ],
@@ -835,8 +1508,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
             numPlayers: 3,
         });
     });
-    // Unreal Errors to reproduce
-    it(`shouldn't add all active players without warriors cards to stage and must throw Error`, () => {
+    it(`should have 0 players without warriors cards and must log it`, () => {
         const G = {
             publicPlayers: {
                 0: {},
@@ -846,13 +1518,32 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
                     },
                 },
             },
+            logData: [],
         }, ctx = {
             currentPlayer: `0`,
             numPlayers: 2,
         };
-        expect(() => {
-            StartDiscardSuitCardAction({ G, ctx });
-        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
+        StartDiscardSuitCardAction({ G, ctx });
+        expect(G).toStrictEqual({
+            publicPlayers: {
+                0: {},
+                1: {
+                    cards: {
+                        warrior: [],
+                    },
+                },
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Нет игроков с картами во фракции '${SuitNames.warrior}'.`,
+                },
+            ],
+        });
+        expect(ctx).toStrictEqual({
+            currentPlayer: `0`,
+            numPlayers: 2,
+        });
     });
 });
 // TODO Can't be discarded coin but can be 1 trading coin on the pouch for Uline and no Uline.

@@ -20,9 +20,9 @@ import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, Player
  * @returns Индекс единственного игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
 const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames): Distinctions => {
-    const [playersRanks, max]: PlayerRanksAndMaxRanksForDistinctionsType =
+    const [playersRanks, maxRanks]: PlayerRanksAndMaxRanksForDistinctionsType =
         CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit),
-        maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max),
+        maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === maxRanks),
         suitName: SuitRusNames = suitsConfig[suit].suitName;
     if (maxPlayers.length === 1) {
         const maxPlayerIndex: CanBeUndefType<number> = maxPlayers[0];
@@ -33,7 +33,8 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitN
         const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayerIndex);
         if (playerDistinctionIndex === -1) {
             return ThrowMyError({ G, ctx, ...rest },
-                ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount, max, suit);
+                ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount, maxRanks,
+                suit);
         }
         const playerDist: CanBeUndefType<PublicPlayer> = G.publicPlayers[playerDistinctionIndex];
         if (playerDist === undefined) {
@@ -65,12 +66,12 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitN
  */
 export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }: FnContext, suit: SuitNames, isFinal = false):
     number[] => {
-    const [playersRanks, max]: PlayerRanksAndMaxRanksForDistinctionsType =
+    const [playersRanks, maxRanks]: PlayerRanksAndMaxRanksForDistinctionsType =
         CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal),
         maxPlayers: number[] = [],
         suitName: SuitRusNames = suitsConfig[suit].suitName;
     playersRanks.forEach((value: number, index: number): void => {
-        if (value === max) {
+        if (value === maxRanks) {
             maxPlayers.push(index);
             const playerIndex: CanBeUndefType<PublicPlayer> = G.publicPlayers[index];
             if (playerIndex === undefined) {
@@ -133,13 +134,13 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: F
         }
         playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
     }
-    const max: number = Math.max(...playersRanks);
-    if (isFinal && max === 0) {
+    const maxRanks: number = Math.max(...playersRanks);
+    if (isFinal && maxRanks === 0) {
         return ThrowMyError({ G, ctx, ...rest },
             ErrorNames.PlayersCurrentSuitCardsMustHaveCardsForDistinction,
             suitsConfig[suit].suitName);
     }
-    return [playersRanks, max];
+    return [playersRanks, maxRanks];
 };
 
 /**

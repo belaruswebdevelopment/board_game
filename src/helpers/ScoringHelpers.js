@@ -139,9 +139,7 @@ export const CurrentOrFinalAllMythologicalCreaturesScoring = ({ G, ctx, myPlayer
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту типа '${CardTypeRusNames.MythicalAnimalCard}' '${playerMythicalAnimalCard.name}' игрока '${player.nickname}': '${currentMythicalAnimalScore}';`);
         }
     }
-    totalScore += godsScore;
-    totalScore += giantsScore;
-    totalScore += valkyriesScore;
+    totalScore += godsScore + giantsScore + valkyriesScore;
     if (isFinal) {
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.GodCard}' игрока '${player.nickname}': '${godsScore}';`);
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.GiantCard}' игрока '${player.nickname}': '${giantsScore}';`);
@@ -173,7 +171,11 @@ export const CurrentOrFinalAllArtefactScoring = ({ G, ctx, myPlayerID, ...rest }
                 }
                 break;
             case CardTypeRusNames.MercenaryCard:
-                throw new Error(`В командной зоне карт лагеря игрока не может в конце игры быть карта c типом '${CardTypeRusNames.MercenaryCard}' с id '${i}'.`);
+                // TODO How potentially score not final mercenary card in command zone...!?
+                if (isFinal) {
+                    throw new Error(`В командной зоне карт лагеря игрока не может в конце игры быть карта c типом '${CardTypeRusNames.MercenaryCard}' с id '${i}'.`);
+                }
+                break;
             default:
                 _exhaustiveCheck = campCard;
                 throw new Error(`В командной зоне карт лагеря игрока не может быть карта запрещённого типа с id '${i}'.`);

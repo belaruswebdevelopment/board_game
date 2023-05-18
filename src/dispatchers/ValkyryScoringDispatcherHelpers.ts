@@ -14,13 +14,7 @@ import type { Action, ValkyryScoringArgsType, ValkyryScoringFunction, ValkyrySco
  * @returns Количество победных очков по Валькирии.
  */
 export const StartValkyryScoring = (action: Action<ValkyryScoringFunctionNames>, params: ValkyryScoringArgsType):
-    ValkyryScoringType => {
-    const actionDispatcher: ValkyryScoringFunction = ValkyryScoringDispatcherSwitcher(action.name);
-    if (params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
-    }
-    return actionDispatcher?.(...params);
-};
+    ValkyryScoringType => ValkyryScoringDispatcherSwitcher(action.name)?.(...params);
 
 /**
  * <h3>Диспетчер всех действий по получению победных очков по валькирии.</h3>

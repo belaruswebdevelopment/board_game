@@ -1,4 +1,4 @@
-import { AssertTavernCardId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAICardCharacteristicsArray, AssertAICardCharacteristicsArrayIndex, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "../is_helpers/AssertionTypeHelpers";
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 // TODO Check all number types here!
 /**
@@ -14,39 +14,37 @@ import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
  */
 export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }) => {
     const taverns = G.taverns, 
+    // TODO If tavernsHeuristicArray & result === same logic!?
     // TODO -100 | 0 === number in current only 1 heuristic
-    tavernsHeuristicArray = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0)), result = Array(taverns.length).fill(0).map((value, index) => {
+    tavernsHeuristicArray = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0));
+    AssertTavernsHeuristicArray(tavernsHeuristicArray);
+    const result = Array(taverns.length).fill(0).map((value, index) => {
+        AssertTavernsHeuristicArrayIndex(index);
         const num = tavernsHeuristicArray[index];
-        if (num === undefined) {
-            throw new Error(`Отсутствует значение с id '${index}'.`);
-        }
         return value + num;
-    }), tempNumbers = taverns.map((tavern) => tavern.map((card, index, tavern) => {
+    });
+    AssertTavernsHeuristicArray(result);
+    // TODO Add types
+    const tempNumbers = taverns.map((tavern) => tavern.map((card, index, tavern) => {
         AssertTavernCardId(index);
         return EvaluateTavernCard({ G, ctx, ...rest }, card, index, tavern);
     })), tempChars = tempNumbers.map((element) => GetCharacteristics(element)) /*,
 averageCards: ICard[] = G.averageCards*/;
+    AssertAICardCharacteristicsArray(tempChars);
     let maxIndex = 0, minIndex = tempChars.length - 1;
+    AssertTavernsHeuristicArrayIndex(minIndex);
     for (let i = 1; i < tavernsHeuristicArray.length; i++) {
+        AssertTavernsHeuristicArrayIndex(i);
         const maxCard = tempChars[maxIndex], tempCard1 = tempChars[i];
-        if (maxCard === undefined) {
-            throw new Error(`Отсутствует значение максимальной карты с id '${maxIndex}'.`);
-        }
-        if (tempCard1 === undefined) {
-            throw new Error(`Отсутствует значение '1' темп карты с id '${i}'.`);
-        }
         if (CompareCharacteristics(maxCard, tempCard1) < 0) {
             maxIndex = i;
         }
-        const minCard = tempChars[minIndex], tempCard2 = tempChars[tempChars.length - 1 - i];
-        if (minCard === undefined) {
-            throw new Error(`Отсутствует значение минимальной карты с id '${minIndex}'.`);
-        }
-        if (tempCard2 === undefined) {
-            throw new Error(`Отсутствует значение 2 темп карты с id '${tempChars.length - 1 - i}'.`);
-        }
+        const minCard = tempChars[minIndex], tempCard2Num = tempChars.length - 1 - i;
+        AssertAICardCharacteristicsArrayIndex(tempCard2Num);
+        const tempCard2 = tempChars[tempCard2Num];
         if (CompareCharacteristics(minCard, tempCard2) > 0) {
             minIndex = tempChars.length - 1 - i;
+            AssertTavernsHeuristicArrayIndex(minIndex);
         }
     }
     result[maxIndex] += 10;

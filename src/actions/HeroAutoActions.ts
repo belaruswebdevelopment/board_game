@@ -4,11 +4,11 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertOneOrTwo, AssertPlayerCoinId, AssertUpgradableCoinValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertOneOrTwo, AssertPlayerCoinId, AssertUpgradableCoinValue, AssertUpgradingCoinsArray } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, AllCoinsType, AutoActionFunction, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, UpgradableCoinType } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, AllCoinsType, AutoActionFunction, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, UpgradableCoinType, UpgradingCoinsArrayLengthType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
 /**
@@ -183,6 +183,7 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
             throw new Error(`Количество возможных монет для обмена не может быть меньше либо равно нулю.`);
         }
     } else {
+        // TODO Can i refactor `as`?
         const minCoinValue: number =
             Math.min(...(player.boardCoins.filter((coin: PublicPlayerCoinType): boolean =>
                 IsCoin(coin) && !IsTriggerTradingCoin(coin)) as UpgradableCoinType[])
@@ -194,9 +195,9 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
         // TODO Can i refactor `as`?
         const upgradingCoinsArray: UpgradableCoinType[] =
             player.boardCoins.filter((coin: PublicPlayerCoinType): boolean =>
-                coin?.value === minCoinValue) as UpgradableCoinType[],
-            // TODO Can add type!?
-            upgradingCoinsValue: number = upgradingCoinsArray.length;
+                IsCoin(coin) && coin.value === minCoinValue) as UpgradableCoinType[];
+        AssertUpgradingCoinsArray(upgradingCoinsArray);
+        const upgradingCoinsValue: UpgradingCoinsArrayLengthType = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
@@ -205,7 +206,7 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
         if (upgradingCoinsValue === 1 || ((upgradingCoinsValue > 1) && !isInitialInUpgradingCoinsValue)) {
             const upgradingCoinId: number =
                 player.boardCoins.findIndex((coin: PublicPlayerCoinType): boolean =>
-                    coin?.value === minCoinValue);
+                    IsCoin(coin) && coin.value === minCoinValue);
             if (upgradingCoinId === -1) {
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе нет минимальной монеты с значением '${minCoinValue}'.`);
             }

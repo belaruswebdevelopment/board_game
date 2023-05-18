@@ -64,7 +64,7 @@ export const MinerScoring: SuitScoringFunction = (cards: PlayerBoardCardType[], 
         let zeroRankValue = 0;
         cards.forEach((card: PlayerBoardCardType): void => {
             if (card.points === 0) {
-                zeroRankValue += 1;
+                zeroRankValue++;
             } else if (card.name === HeroNames.Zoral) {
                 zeroRankValue += 2;
             }

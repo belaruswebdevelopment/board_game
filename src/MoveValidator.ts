@@ -6,13 +6,13 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
-import { AssertPlayerCoinId, AssertTavernCardId } from "./is_helpers/AssertionTypeHelpers";
+import { AssertPlayerCoinId, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "./is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "./is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsDefaultStageNames, BidsMoveValidatorNames, BidUlineDefaultStageNames, BidUlineMoveValidatorNames, BrisingamensEndGameDefaultStageNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, GetMjollnirProfitMoveValidatorNames, GodNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludDefaultStageNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SoloGameAndvariStrategyNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
-import type { AllCoinsValueType, CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, DwarfCard, EnlistmentMercenariesAllStageNames, HeroCard, KeyofType, MoveArgumentsType, MoveBy, MoveCardIdType, MoveCardsArguments, MoveCoinsArguments, MoveNamesType, MoveSuitCardCurrentId, MoveValidator, MoveValidatorGetRangeStringArrayType, MoveValidatorGetRangeType, MoveValidators, MyFnContextWithMyPlayerID, PickHeroCardValidatorNamesKeyofTypeofType, PickValidatorsConfig, PlayerBoardCardType, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerBoardCoins, PublicPlayerCoinsType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardWithExpansionType, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType, ZeroOrOneType } from "./typescript/interfaces";
+import type { AllCoinsValueType, CanBeNullType, CanBeUndefType, ChooseDifficultySoloModeAllStageNames, DwarfCard, EnlistmentMercenariesAllStageNames, HeroCard, KeyofType, MoveArgumentsType, MoveBy, MoveCardIdType, MoveCardsArguments, MoveCoinsArguments, MoveNamesType, MoveSuitCardCurrentId, MoveValidator, MoveValidatorGetRangeStringArrayType, MoveValidatorGetRangeType, MoveValidators, MyFnContextWithMyPlayerID, PickHeroCardValidatorNamesKeyofTypeofType, PickValidatorsConfig, PlayerBoardCardType, PlayerBoardCoinsType, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerBoardCoins, PublicPlayerCoinsType, PublicPlayerCoinType, SoloGameAndvariStrategyVariantLevelType, SoloGameDifficultyLevelArgType, StageNames, SuitPropertyType, TavernAllCardType, TavernCardType, TavernCardWithExpansionType, TavernsHeuristicArray, TavernsResolutionAllStageNames, TroopEvaluationAllStageNames, ValidMoveIdParamType, ZeroOrOneType } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ui/ProfitUI";
@@ -683,10 +683,12 @@ export const moveValidators: MoveValidators = {
         getValue: ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
             currentMoveArguments: MoveArgumentsType<number[][]>): number[] => {
             const hasLowestPriority: boolean = HasLowestPriority({ G, ctx, myPlayerID, ...rest });
-            let resultsForCoins: number[] = CheckHeuristicsForCoinsPlacement({ G, ctx, ...rest });
+            let resultsForCoins: TavernsHeuristicArray = CheckHeuristicsForCoinsPlacement({ G, ctx, ...rest });
             if (hasLowestPriority) {
-                resultsForCoins = resultsForCoins.map((num: number, index: number): number =>
+                const results: number[] = resultsForCoins.map((num: number, index: number): number =>
                     index === 0 ? num - 20 : num);
+                AssertTavernsHeuristicArray(results);
+                resultsForCoins = results;
             }
             const minResultForCoins: number = Math.min(...resultsForCoins),
                 maxResultForCoins: number = Math.max(...resultsForCoins),
@@ -694,10 +696,14 @@ export const moveValidators: MoveValidators = {
             // TODO Is it number or PlayerCoinIdType | -1!?
             let [positionForMinCoin, positionForMaxCoin]: [number, number] = [-1, -1];
             if (minResultForCoins <= 0) {
-                positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
+                const minCoinPosition: number = resultsForCoins.indexOf(minResultForCoins);
+                AssertTavernsHeuristicArrayIndex(minCoinPosition);
+                positionForMinCoin = minCoinPosition;
             }
             if (maxResultForCoins >= 0) {
-                positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
+                const maxCoinPosition: number = resultsForCoins.indexOf(maxResultForCoins);
+                AssertTavernsHeuristicArrayIndex(maxCoinPosition);
+                positionForMaxCoin = maxCoinPosition;
             }
             // TODO Check it bot can't play in multiplayer now...
             const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)],
@@ -2019,7 +2025,7 @@ const ValidateObjectEqualValues = (value: DwarfCard, values: DwarfCard): boolean
     if (props1.length !== props2.length) {
         return false;
     }
-    for (let i = 0; i < props1.length; i += 1) {
+    for (let i = 0; i < props1.length; i++) {
         const prop: CanBeUndefType<KeyofType<DwarfCard>> = props1[i];
         if (prop === undefined) {
             throw new Error(`Не существует такого 'prop'.`);

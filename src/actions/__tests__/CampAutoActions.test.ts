@@ -12,10 +12,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: true,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
@@ -35,6 +37,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -58,10 +61,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: false,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ] as PublicPlayerCoinType[],
                     buffs: [] as PlayerBuffs[],
@@ -81,6 +86,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -102,6 +108,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     boardCoins: [
                         {
+                            isOpened: false,
                             type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
@@ -111,6 +118,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {},
                     ] as PublicPlayerCoinType[],
@@ -135,6 +143,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -165,6 +174,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
                             value: 0,
@@ -191,6 +201,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -214,10 +225,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: true,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ] as PublicPlayerCoinType[],
                     buffs: [
@@ -241,6 +254,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -268,10 +282,12 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
-                            type: CoinRusNames.InitialTriggerTrading,
                             isOpened: false,
+                            type: CoinRusNames.InitialTriggerTrading,
+                            value: 0,
                         },
                     ] as PublicPlayerCoinType[],
                     buffs: [
@@ -295,6 +311,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -329,6 +346,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {
                             value: 0,
@@ -359,6 +377,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -384,6 +403,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     boardCoins: [
                         {
+                            isOpened: false,
                             type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
@@ -393,6 +413,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         {},
                     ] as PublicPlayerCoinType[],
@@ -421,6 +442,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -448,6 +470,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [] as PublicPlayerCoinType[],
                     handCoins: [
                         {
@@ -476,6 +499,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     boardCoins: [] as PublicPlayerCoinType[],
                     handCoins: [
                         null,
@@ -502,6 +526,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
                 0: {
                     handCoins: [
                         {
+                            isOpened: false,
                             type: CoinRusNames.InitialTriggerTrading,
                             value: 0,
                         },
@@ -512,6 +537,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     handCoins: [
                         {},
                     ] as PublicPlayerCoinType[],
@@ -542,6 +568,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     handCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -578,6 +605,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
                     handCoins: [
                         {
                             value: 0,
@@ -610,6 +638,662 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    handCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    boardCoins: [] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin isOpened=true from board (multiplayer=false)`, (): void => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: true,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin isOpened=false from board (multiplayer=false)`, (): void => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard closed special trading coin from board (multiplayer=true)`, (): void => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {},
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard opened special trading coin from board (multiplayer=true)`, (): void => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [] as PlayerBuffs[],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin isOpened=true from board if player has Uline but trading coin on the board (multiplayer=false)`, (): void => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: true,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin isOpened=false from board if player has Uline but trading coin on the board (multiplayer=false)`, (): void => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin from board if player has Uline but trading coin on the board but opened (multiplayer=true)`, (): void => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin from board if player has Uline but trading coin on the board but closed (multiplayer=true)`, (): void => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [
+                        {},
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin from hand if player has Uline but trading coin in the hand (multiplayer=false)`, (): void => {
+        const G = {
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    boardCoins: [] as PublicPlayerCoinType[],
+                    handCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Basic,
+            players: {
+                0: {} as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    boardCoins: [] as PublicPlayerCoinType[],
+                    handCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special closed trading coin from hand if player has Uline but trading coin in the hand (multiplayer=true)`, (): void => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        {
+                            isOpened: false,
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    handCoins: [
+                        {},
+                    ] as PublicPlayerCoinType[],
+                    boardCoins: [] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        null,
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
+                    handCoins: [
+                        null,
+                    ] as PublicPlayerCoinType[],
+                    boardCoins: [] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>);
+    });
+    it(`should discard special trading coin isOpened=true from hand if player has Uline but trading coin in the hand (multiplayer=true)`, (): void => {
+        const G = {
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        {
+                            type: CoinRusNames.SpecialTriggerTrading,
+                            value: 3,
+                        },
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 35,
+                    handCoins: [
+                        {
+                            value: 3,
+                        },
+                    ] as PublicPlayerCoinType[],
+                    boardCoins: [] as PublicPlayerCoinType[],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                } as PublicPlayer,
+            },
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `players` | `mode` | `logData`>,
+            ctx = {
+                currentPlayer: `0`,
+            } as Ctx;
+        DiscardTradingCoinAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            mode: GameModeNames.Multiplayer,
+            players: {
+                0: {
+                    handCoins: [
+                        null,
+                    ] as CoinType[],
+                    boardCoins: [] as CoinType[],
+                } as PrivatePlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    currentCoinsScore: 32,
                     handCoins: [
                         null,
                     ] as PublicPlayerCoinType[],
@@ -860,8 +1544,7 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
             numPlayers: 3,
         } as Ctx);
     });
-    // Unreal Errors to reproduce
-    it(`shouldn't add all active players without warriors cards to stage and must throw Error`, (): void => {
+    it(`should have 0 players without warriors cards and must log it`, (): void => {
         const G = {
             publicPlayers: {
                 0: {} as PublicPlayer,
@@ -871,14 +1554,33 @@ describe(`Test StartDiscardSuitCardAction method`, (): void => {
                     },
                 } as PublicPlayer,
             },
-        } as Pick<MyGameState, `publicPlayers`>,
+            logData: [],
+        } as Pick<MyGameState, `publicPlayers` | `logData`>,
             ctx = {
                 currentPlayer: `0`,
                 numPlayers: 2,
             } as Ctx;
-        expect((): void => {
-            StartDiscardSuitCardAction({ G, ctx } as MyFnContextWithMyPlayerID);
-        }).toThrowError(`Должны быть игроки с картами в фракции '${SuitNames.warrior}'.`);
+        StartDiscardSuitCardAction({ G, ctx } as MyFnContextWithMyPlayerID);
+        expect(G).toStrictEqual({
+            publicPlayers: {
+                0: {} as PublicPlayer,
+                1: {
+                    cards: {
+                        warrior: [] as PlayerBoardCardType[],
+                    },
+                } as PublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypeNames.Game,
+                    text: `Нет игроков с картами во фракции '${SuitNames.warrior}'.`,
+                },
+            ],
+        } as Pick<MyGameState, `publicPlayers` | `logData`>);
+        expect(ctx).toStrictEqual({
+            currentPlayer: `0`,
+            numPlayers: 2,
+        } as Ctx);
     });
 });
 

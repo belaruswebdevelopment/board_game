@@ -18,7 +18,7 @@ import { ErrorNames, LogTypeNames, SuitNames, SuitRusNames, ValkyryBuffNames } f
  * @returns Индекс единственного игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
 const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
-    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit), maxPlayers = playersRanks.filter((count) => count === max), suitName = suitsConfig[suit].suitName;
+    const [playersRanks, maxRanks] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit), maxPlayers = playersRanks.filter((count) => count === maxRanks), suitName = suitsConfig[suit].suitName;
     if (maxPlayers.length === 1) {
         const maxPlayerIndex = maxPlayers[0];
         if (maxPlayerIndex === undefined) {
@@ -26,7 +26,7 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
         }
         const playerDistinctionIndex = playersRanks.indexOf(maxPlayerIndex);
         if (playerDistinctionIndex === -1) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount, max, suit);
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount, maxRanks, suit);
         }
         const playerDist = G.publicPlayers[playerDistinctionIndex];
         if (playerDist === undefined) {
@@ -54,9 +54,9 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
  * @returns Индексы игроков с преимуществом по количеству шевронов конкретной фракции.
  */
 export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }, suit, isFinal = false) => {
-    const [playersRanks, max] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal), maxPlayers = [], suitName = suitsConfig[suit].suitName;
+    const [playersRanks, maxRanks] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal), maxPlayers = [], suitName = suitsConfig[suit].suitName;
     playersRanks.forEach((value, index) => {
-        if (value === max) {
+        if (value === maxRanks) {
             maxPlayers.push(index);
             const playerIndex = G.publicPlayers[index];
             if (playerIndex === undefined) {
@@ -113,11 +113,11 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }, s
         }
         playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
     }
-    const max = Math.max(...playersRanks);
-    if (isFinal && max === 0) {
+    const maxRanks = Math.max(...playersRanks);
+    if (isFinal && maxRanks === 0) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PlayersCurrentSuitCardsMustHaveCardsForDistinction, suitsConfig[suit].suitName);
     }
-    return [playersRanks, max];
+    return [playersRanks, maxRanks];
 };
 /**
  * <h3>Удаляет одну карту из колоды карт второй эпохи, если никто из игроков не получил преимущество по фракции 'Разведчики' в фазе 'Смотр войск'.</h3>

@@ -98,10 +98,8 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, 
         if (currentMoveArgument === undefined) {
             throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
         }
-        let coin;
-        if (coin === undefined) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' $на столе отсутствует монета с id '${currentMoveArgument.coinId}'.`);
-        }
+        // TODO Check this line!
+        const coin = player.boardCoins[currentMoveArgument.coinId];
         if (coin === null) {
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' на столе не может не быть монеты с id '${currentMoveArgument.coinId}'.`);
         }

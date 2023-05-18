@@ -11,13 +11,7 @@ import { ValkyryScoringFunctionNames } from "../typescript/enums";
  * @param params Параметры действия.
  * @returns Количество победных очков по Валькирии.
  */
-export const StartValkyryScoring = (action, params) => {
-    const actionDispatcher = ValkyryScoringDispatcherSwitcher(action.name);
-    if (params === undefined) {
-        throw new Error(`Отсутствует обязательный параметр функции 'params'.`);
-    }
-    return actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(...params);
-};
+export const StartValkyryScoring = (action, params) => { var _a; return (_a = ValkyryScoringDispatcherSwitcher(action.name)) === null || _a === void 0 ? void 0 : _a(...params); };
 /**
  * <h3>Диспетчер всех действий по получению победных очков по валькирии.</h3>
  * <p>Применения:</p>

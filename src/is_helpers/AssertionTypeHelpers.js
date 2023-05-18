@@ -170,6 +170,11 @@ export function AssertTavernIndex(number) {
         throw new Error(`No index '${number}' of TavernsType.`);
     }
 }
+export function AssertTavernsHeuristicArrayIndex(number) {
+    if (!(number >= 0 || number <= 2)) {
+        throw new Error(`No index '${number}' of TavernsHeuristicArray.`);
+    }
+}
 export function AssertMercenariesConfigIndex(number) {
     if (!(number >= 0 || number <= 5)) {
         throw new Error(`No index '${number}' of MercenariesConfigType.`);
@@ -198,6 +203,31 @@ export function AssertAllRoyalCoinConfigIndex(number) {
 export function AssertRoyalCoinsUniqueArrayIndex(number) {
     if (!(number >= 0 || number <= 20)) {
         throw new Error(`No '${number}' in RoyalCoinsUniqueArray.`);
+    }
+}
+export function AssertAICardCharacteristicsArrayIndex(number) {
+    if (!(number >= 0 || number <= 2)) {
+        throw new Error(`No '${number}' in AICardCharacteristicsArray.`);
+    }
+}
+export function AssertTop1And2ScoreNumber(top1And2ScoreNumber) {
+    if (!(top1And2ScoreNumber === undefined)) {
+        throw new Error(`Топ 1 и 2 значения очков должны быть числовыми значениями.`);
+    }
+}
+export function AssertUpgradingCoinsArray(upgradingCoinsArray) {
+    if (!(upgradingCoinsArray.length > 0 || upgradingCoinsArray.length < 5)) {
+        throw new Error(`В массиве монет для обмена должно быть более 1 и менее 5 монет.`);
+    }
+}
+export function AssertAICardCharacteristicsArray(aiCardCharacteristicsArray) {
+    if (!(aiCardCharacteristicsArray.length === 3)) {
+        throw new Error(`В массиве эвристик таверн должно быть ровно 3 характеристики.`);
+    }
+}
+export function AssertTavernsHeuristicArray(tavernsHeuristicArray) {
+    if (!(tavernsHeuristicArray.length === 3)) {
+        throw new Error(`В массиве эвристик таверн должно быть ровно 3 эвристики.`);
     }
 }
 export function AssertHandCoins(handCoins) {

@@ -108,6 +108,12 @@ interface AIWeight {
     readonly weight: number;
 }
 
+export type TavernsHeuristicArrayIndex = IndexOf<TavernsHeuristicArray>;
+
+export type TavernsHeuristicArray = [number, number, number];
+
+export type AICardCharacteristicsArray = [AICardCharacteristics, AICardCharacteristics, AICardCharacteristics];
+
 /**
  * <h3>Эвристика для ботов.</h3>
  */
@@ -1372,6 +1378,12 @@ export type InitialCoinValueType = InitialTriggerTradingCoinValueType | InitialN
 export type RoyalCoinValueType =
     5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25;
 
+export type UpgradingCoinsArrayLengthType = UpgradingCoinsArrayType[`length`];
+
+export type UpgradingCoinsArrayType = [UpgradableCoinType] | [UpgradableCoinType, UpgradableCoinType]
+    | [UpgradableCoinType, UpgradableCoinType, UpgradableCoinType]
+    | [UpgradableCoinType, UpgradableCoinType, UpgradableCoinType, UpgradableCoinType];
+
 export type TradingCoinsValueType = [UpgradableCoinValueType] | [UpgradableCoinValueType, UpgradableCoinValueType];
 
 export type TradingCoinsArrayLength = 1 | 2;
@@ -1417,7 +1429,7 @@ export type CoinType = CanBeNullType<AllCoinsType>;
 /**
  * <h3>Типы данных для закрытых монет.</h3>
  */
-type ClosedCoinType = Record<PropertyKey, never>;
+type ClosedCoinType = Record<never, never>;
 
 // PublicPlayer Coins Start
 export type PublicPlayerBoardCoins =
@@ -1804,7 +1816,7 @@ export interface MyGameState {
     readonly campDecksLength: CampDecksLength;
     readonly campNum: 5;
     campPicked: boolean;
-    currentTavern: CurrentTavernType;
+    currentTavern: IndexOf<TavernsType>;
     readonly debug: boolean;
     readonly decksLength: DwarfDecksLength;
     readonly discardCampCardsDeck: DiscardCampCardType[];
@@ -1849,7 +1861,7 @@ export interface MyGameState {
     readonly suitsNum: 5;
     tavernCardDiscarded2Players: boolean;
     readonly taverns: TavernsType;
-    readonly tavernsNum: TavernsConfigType[`length`];
+    readonly tavernsNum: TavernsNumType;
     tierToEnd: TierToEndType;
     readonly totalScore: number[];
     readonly winner: number[];
@@ -2276,6 +2288,8 @@ export type MoveNamesType = ButtonMoveNames | CardMoveNames | EmptyCardMoveNames
  */
 export type TavernsConfigType = readonly [TavernInConfig, TavernInConfig, TavernInConfig];
 
+export type TavernsNumType = TavernsConfigType[`length`];
+
 /**
  * <h3>Типы данных для количества всех игроков.</h3>
  */
@@ -2405,11 +2419,6 @@ export type TavernCardWithExpansionType = TavernCardWithoutExpansionType | Mytho
 type TavernCardWithoutExpansionType = DwarfDeckCardType;
 
 /**
- * <h3>Типы данных для номера текущей таверны.</h3>
- */
-type CurrentTavernType = 0 | 1 | 2;
-
-/**
  * <h3>Типы данных для отрисовки количества карт в таверне.</h3>
  */
 export type DrawSizeType = 3 | 4 | 5;
@@ -2524,7 +2533,7 @@ export type ValidMoveIdParamType = CanBeNullType<DwarfCard | SuitNames | number[
  * <h3>Типы данных для конфига валидаторов карт.</h3>
  */
 export type ValidatorsConfigType = {
-    readonly [Property in KeyofType<typeof PickCardValidatorNames>]?: Record<PropertyKey, never>;
+    readonly [Property in KeyofType<typeof PickCardValidatorNames>]?: Record<never, never>;
 };
 
 /**

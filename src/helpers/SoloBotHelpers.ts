@@ -112,10 +112,8 @@ export const CheckMinCoinVisibleValueForSoloBotAndvari = ({ G, ctx, myPlayerID, 
         if (currentMoveArgument === undefined) {
             throw new Error(`Отсутствует необходимый аргумент мува для бота с id '${i}'.`);
         }
-        let coin: CanBeUndefType<PublicPlayerCoinType>;
-        if (coin === undefined) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' $на столе отсутствует монета с id '${currentMoveArgument.coinId}'.`);
-        }
+        // TODO Check this line!
+        const coin: PublicPlayerCoinType = player.boardCoins[currentMoveArgument.coinId];
         if (coin === null) {
             throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло бота Андвари` : `игрока`} с id '${myPlayerID}' на столе не может не быть монеты с id '${currentMoveArgument.coinId}'.`);
         }
@@ -186,7 +184,7 @@ export const PlaceAllCoinsInCurrentOrderForSoloBot = ({ G, ctx, myPlayerID, ...r
     const handCoins: PrivatePlayerHandCoins = privatePlayer.handCoins;
     for (let i = 0; i < handCoins.length; i++) {
         AssertPlayerCoinId(i);
-        const handCoin: PublicPlayerCoinType = handCoins[i];
+        const handCoin: CoinType = handCoins[i];
         if (handCoin === null) {
             throw new Error(`В массиве монет соло бота с id '${myPlayerID}' в руке не может не быть монеты с id '${i}'.`);
         }
@@ -242,7 +240,7 @@ export const PlaceAllCoinsInOrderWithZeroNotOnThePouchForSoloBotAndvari = ({ G, 
     }
     for (let i = 0; i < handCoins.length; i++) {
         AssertPlayerCoinId(i);
-        const handCoin: PublicPlayerCoinType = handCoins[i];
+        const handCoin: CoinType = handCoins[i];
         if (handCoin === null) {
             throw new Error(`В массиве монет соло бота с id '${myPlayerID}' в руке не может не быть монеты с id '${i}'.`);
         }

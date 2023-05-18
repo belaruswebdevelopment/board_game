@@ -25,12 +25,12 @@ export const AllCurrentScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    let totalScore: number = CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
-    totalScore += player.currentCoinsScore;
-    totalScore += CurrentPotentialWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
-    totalScore += CurrentPotentialMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
-    // TODO Think about heros in players hands which can be deleted in end game scoring both suit and heroes!?
-    totalScore += CurrentOrFinalAllHeroesScoring({ G, ctx, myPlayerID, ...rest });
+    let totalScore: number = CurrentAllSuitsScoring({ G, ctx, myPlayerID, ...rest })
+        + player.currentCoinsScore
+        + CurrentPotentialWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest })
+        + CurrentPotentialMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest })
+        // TODO Think about heros in players hands which can be deleted in end game scoring both suit and heroes!?
+        + CurrentOrFinalAllHeroesScoring({ G, ctx, myPlayerID, ...rest });
     if (G.expansions.Thingvellir.active) {
         totalScore += CurrentOrFinalAllArtefactScoring({ G, ctx, myPlayerID, ...rest });
     }
@@ -57,11 +57,11 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID
             myPlayerID);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}:`);
-    let totalScore: number = FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest });
-    totalScore += FinalAllBoardCoinsScoring({ G, ctx, myPlayerID, ...rest });
-    totalScore += FinalWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
-    totalScore += FinalMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest });
-    totalScore += CurrentOrFinalAllHeroesScoring({ G, ctx, myPlayerID, ...rest }, true);
+    let totalScore: number = FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest })
+        + FinalAllBoardCoinsScoring({ G, ctx, myPlayerID, ...rest })
+        + FinalWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest })
+        + FinalMinerDistinctionsScoring({ G, ctx, myPlayerID, ...rest })
+        + CurrentOrFinalAllHeroesScoring({ G, ctx, myPlayerID, ...rest }, true);
     if (G.expansions.Thingvellir.active) {
         totalScore += CurrentOrFinalAllArtefactScoring({ G, ctx, myPlayerID, ...rest }, true);
     }

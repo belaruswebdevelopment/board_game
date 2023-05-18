@@ -76,7 +76,7 @@ export const CheckValkyryRequirement = ({ G, ctx, myPlayerID, ...rest }, buffNam
         if (valkyryCard.strengthTokenNotch === null) {
             throw new Error(`В массиве карт мифических существ игрока с id '${myPlayerID}' у карты типа '${CardTypeRusNames.ValkyryCard}' с названием '${valkyryCard.name}' не может не быть выставлен токен силы.`);
         }
-        valkyryCard.strengthTokenNotch += 1;
+        valkyryCard.strengthTokenNotch++;
     }
 };
 //# sourceMappingURL=MythologicalCreatureHelpers.js.map

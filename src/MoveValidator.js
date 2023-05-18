@@ -6,7 +6,7 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { CheckMinCoinIndexForSoloBotAndvari, CheckMinCoinVisibleIndexForSoloBot, CheckMinCoinVisibleValueForSoloBot, CheckMinCoinVisibleValueForSoloBotAndvari } from "./helpers/SoloBotHelpers";
-import { AssertPlayerCoinId, AssertTavernCardId } from "./is_helpers/AssertionTypeHelpers";
+import { AssertPlayerCoinId, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "./is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "./is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
@@ -550,16 +550,22 @@ export const moveValidators = {
             const hasLowestPriority = HasLowestPriority({ G, ctx, myPlayerID, ...rest });
             let resultsForCoins = CheckHeuristicsForCoinsPlacement({ G, ctx, ...rest });
             if (hasLowestPriority) {
-                resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
+                const results = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
+                AssertTavernsHeuristicArray(results);
+                resultsForCoins = results;
             }
             const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins), tradingProfit = G.secret.decks[1].length > 9 ? 1 : 0;
             // TODO Is it number or PlayerCoinIdType | -1!?
             let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
             if (minResultForCoins <= 0) {
-                positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
+                const minCoinPosition = resultsForCoins.indexOf(minResultForCoins);
+                AssertTavernsHeuristicArrayIndex(minCoinPosition);
+                positionForMinCoin = minCoinPosition;
             }
             if (maxResultForCoins >= 0) {
-                positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
+                const maxCoinPosition = resultsForCoins.indexOf(maxResultForCoins);
+                AssertTavernsHeuristicArrayIndex(maxCoinPosition);
+                positionForMaxCoin = maxCoinPosition;
             }
             // TODO Check it bot can't play in multiplayer now...
             const player = G.publicPlayers[Number(myPlayerID)], privatePlayer = G.players[Number(myPlayerID)];
@@ -1668,7 +1674,7 @@ const ValidateObjectEqualValues = (value, values) => {
     if (props1.length !== props2.length) {
         return false;
     }
-    for (let i = 0; i < props1.length; i += 1) {
+    for (let i = 0; i < props1.length; i++) {
         const prop = props1[i];
         if (prop === undefined) {
             throw new Error(`Не существует такого 'prop'.`);

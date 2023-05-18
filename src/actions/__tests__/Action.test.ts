@@ -1,6 +1,6 @@
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactDescriptionNames, ArtefactNames, CampBuffNames, CardTypeRusNames, CommonBuffNames, CommonStageNames, DrawNames, EnlistmentMercenariesStageNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, SuitNames, SuitRusNames, TavernNames } from "../../typescript/enums";
-import type { CampCardType, CanBeNullType, Ctx, DiscardCampCardType, DiscardDeckCardType, DwarfDeckCardType, ExpansionsType, HeroCard, MyFnContextWithMyPlayerID, MyGameState, PlayerBoardCardType, PlayerBuffs, PlayerStack, PublicPlayer, PublicPlayers, SuitPropertyType } from "../../typescript/interfaces";
+import type { CampDeckCardType, CanBeNullType, Ctx, DiscardCampCardType, DiscardDeckCardType, DwarfDeckCardType, ExpansionsType, HeroCard, MyFnContextWithMyPlayerID, MyGameState, PlayerBoardCardType, PlayerBuffs, PlayerStack, PublicPlayer, PublicPlayers, SuitPropertyType } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -454,7 +454,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
-                    campCards: [] as CampCardType[],
+                    campCards: [] as CampDeckCardType[],
                 } as PublicPlayer,
             },
         } as Pick<MyGameState, `publicPlayers`>,
@@ -982,28 +982,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    campCards: [
-                        {
-                            name: `Test`,
-                            path: ``,
-                            playerSuit: SuitNames.blacksmith,
-                            points: null,
-                            rank: 1,
-                            type: CardTypeRusNames.MercenaryCard,
-                            variants: {
-                                blacksmith: {
-                                    points: null,
-                                    rank: 1,
-                                    suit: SuitNames.blacksmith,
-                                },
-                                warrior: {
-                                    points: 6,
-                                    rank: 1,
-                                    suit: SuitNames.warrior,
-                                },
-                            },
-                        },
-                    ],
+                    campCards: [] as CampDeckCardType[],
                     stack: [
                         {
                             priority: 0,
@@ -1077,10 +1056,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                 },
             } as ExpansionsType,
             logData: [
-                {
-                    type: LogTypeNames.Public,
-                    text: `Игрок 'Dan' выбрал карту лагеря '${CardTypeRusNames.MercenaryCard}' 'Test'.`,
-                },
                 {
                     type: LogTypeNames.Public,
                     text: `Игрок 'Dan' выбрал карту '${CardTypeRusNames.MercenaryPlayerCard}' 'Test' во фракцию '${suitsConfig[SuitNames.blacksmith].suitName}'.`,
@@ -1164,28 +1139,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    campCards: [
-                        {
-                            name: `Test`,
-                            path: ``,
-                            playerSuit: SuitNames.warrior,
-                            points: 6,
-                            rank: 1,
-                            type: CardTypeRusNames.MercenaryCard,
-                            variants: {
-                                blacksmith: {
-                                    points: null,
-                                    rank: 1,
-                                    suit: SuitNames.blacksmith,
-                                },
-                                warrior: {
-                                    points: 6,
-                                    rank: 1,
-                                    suit: SuitNames.warrior,
-                                },
-                            },
-                        },
-                    ] as CampCardType[],
+                    campCards: [] as CampDeckCardType[],
                     stack: [
                         {
                             priority: 0,
@@ -1267,10 +1221,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                 },
             } as ExpansionsType,
             logData: [
-                {
-                    type: LogTypeNames.Public,
-                    text: `Игрок 'Dan' выбрал карту лагеря '${CardTypeRusNames.MercenaryCard}' 'Test'.`,
-                },
                 {
                     type: LogTypeNames.Public,
                     text: `Игрок 'Dan' выбрал карту '${CardTypeRusNames.MercenaryPlayerCard}' 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,

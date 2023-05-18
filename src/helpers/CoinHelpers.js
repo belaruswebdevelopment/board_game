@@ -57,7 +57,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
         AssertPlayerCoinId(tradingCoinIndex);
         RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, handCoins, tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, player.handCoins, tradingCoinIndex);
+            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, player.handCoins, tradingCoinIndex, true);
         }
     }
     else {
@@ -66,7 +66,7 @@ export const DiscardTradingCoin = ({ G, ctx, myPlayerID, ...rest }) => {
         }
         AssertPlayerCoinId(tradingCoinIndex);
         if (G.mode === GameModeNames.Multiplayer) {
-            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, privatePlayer.boardCoins, tradingCoinIndex);
+            RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, privatePlayer.boardCoins, tradingCoinIndex, true);
         }
         RemoveCoinFromPlayer({ G, ctx, myPlayerID, ...rest }, player.boardCoins, tradingCoinIndex);
     }

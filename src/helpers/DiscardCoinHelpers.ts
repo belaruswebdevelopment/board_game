@@ -32,26 +32,27 @@ export const RemoveCoinFromMarket = ({ G }: FnContext, coinId: number): RoyalCoi
  * @param context
  * @param coins Массив монет игрока, откуда убирается монета.
  * @param coinId Id убираемой монеты.
+ * @param isMultiplayer Является ли мультиплеером.
  * @returns Убираемая монета у игрока.
  */
 export const RemoveCoinFromPlayer = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    coins: PublicPlayerCoinsType, coinId: PlayerCoinIdType): void => {
+    coins: PublicPlayerCoinsType, coinId: PlayerCoinIdType, isMultiplayer = false): void => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const amount = 1,
-        removedCoinsArray: PublicPlayerCoinType[] = coins.splice(coinId, 1, null);
-    if (amount !== removedCoinsArray.length) {
-        throw new Error(`Недостаточно монет в массиве монет игрока: требуется - '${amount}', в наличии - '${removedCoinsArray.length}'.`);
-    }
-    const removedCoin: CanBeUndefType<PublicPlayerCoinType> = removedCoinsArray[0];
+    const removedCoin: CanBeUndefType<PublicPlayerCoinType> =
+        coins.splice(coinId, 1, null)[0];
     if (removedCoin === undefined) {
-        throw new Error(`Не может отсутствовать сброшенная монета.`);
+        throw new Error(`В массиве монет игрока не может отсутствовать монета для сброса с id '${coinId}'.`);
     }
     if (removedCoin === null) {
-        throw new Error(`Не может не быть монеты для сброса.`);
+        throw new Error(`В массиве монет игрока не может не быть монеты для сброса с id '${coinId}'.`);
     }
-    player.currentCoinsScore -= removedCoin.value;
+    if (`value` in removedCoin) {
+        if (!(isMultiplayer && removedCoin.isOpened)) {
+            player.currentCoinsScore -= removedCoin.value;
+        }
+    }
 };

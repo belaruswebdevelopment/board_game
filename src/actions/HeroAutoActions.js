@@ -4,7 +4,7 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertOneOrTwo, AssertPlayerCoinId, AssertUpgradableCoinValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertOneOrTwo, AssertPlayerCoinId, AssertUpgradableCoinValue, AssertUpgradingCoinsArray } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
@@ -168,6 +168,7 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value /* U
         }
     }
     else {
+        // TODO Can i refactor `as`?
         const minCoinValue = Math.min(...player.boardCoins.filter((coin) => IsCoin(coin) && !IsTriggerTradingCoin(coin))
             .map((coin) => coin.value));
         AssertUpgradableCoinValue(minCoinValue);
@@ -175,16 +176,16 @@ export const UpgradeMinCoinAction = ({ G, ctx, myPlayerID, ...rest }, value /* U
             throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
         }
         // TODO Can i refactor `as`?
-        const upgradingCoinsArray = player.boardCoins.filter((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue), 
-        // TODO Can add type!?
-        upgradingCoinsValue = upgradingCoinsArray.length;
+        const upgradingCoinsArray = player.boardCoins.filter((coin) => IsCoin(coin) && coin.value === minCoinValue);
+        AssertUpgradingCoinsArray(upgradingCoinsArray);
+        const upgradingCoinsValue = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =
                 upgradingCoinsArray.some((coin) => IsInitialCoin(coin));
         }
         if (upgradingCoinsValue === 1 || ((upgradingCoinsValue > 1) && !isInitialInUpgradingCoinsValue)) {
-            const upgradingCoinId = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue);
+            const upgradingCoinId = player.boardCoins.findIndex((coin) => IsCoin(coin) && coin.value === minCoinValue);
             if (upgradingCoinId === -1) {
                 throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе нет минимальной монеты с значением '${minCoinValue}'.`);
             }

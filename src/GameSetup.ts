@@ -14,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames, SuitNames } from "./typescript/enums";
-import type { AIBotData, AllSecretData, BuildHeroesArray, CampDecksLength, CanBeUndefType, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalCoin, RoyalOfferingCard, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, SuitPropertyType, TavernsType } from "./typescript/interfaces";
+import type { AIBotData, AllSecretData, BuildHeroesArray, CampDecksLength, CanBeUndefType, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalCoin, RoyalOfferingCard, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, SuitPropertyType, TavernsNumType, TavernsType } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -122,7 +122,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         heroesForSoloGameForStrategyBotAndvari = null,
         multiCardsDeck: MultiSuitCard[] = BuildMultiSuitCards(configOptions),
         taverns: TavernsType = [[], [], []],
-        tavernsNum = 3,
+        tavernsNum: TavernsNumType = 3,
         currentTavern = 0;
     decksLength[0] = secret.decks[0].length;
     let mythologicalCreatureDeckLength = 0,

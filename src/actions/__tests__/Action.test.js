@@ -943,28 +943,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    campCards: [
-                        {
-                            name: `Test`,
-                            path: ``,
-                            playerSuit: SuitNames.blacksmith,
-                            points: null,
-                            rank: 1,
-                            type: CardTypeRusNames.MercenaryCard,
-                            variants: {
-                                blacksmith: {
-                                    points: null,
-                                    rank: 1,
-                                    suit: SuitNames.blacksmith,
-                                },
-                                warrior: {
-                                    points: 6,
-                                    rank: 1,
-                                    suit: SuitNames.warrior,
-                                },
-                            },
-                        },
-                    ],
+                    campCards: [],
                     stack: [
                         {
                             priority: 0,
@@ -1038,10 +1017,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                 },
             },
             logData: [
-                {
-                    type: LogTypeNames.Public,
-                    text: `Игрок 'Dan' выбрал карту лагеря '${CardTypeRusNames.MercenaryCard}' 'Test'.`,
-                },
                 {
                     type: LogTypeNames.Public,
                     text: `Игрок 'Dan' выбрал карту '${CardTypeRusNames.MercenaryPlayerCard}' 'Test' во фракцию '${suitsConfig[SuitNames.blacksmith].suitName}'.`,
@@ -1123,28 +1098,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
-                    campCards: [
-                        {
-                            name: `Test`,
-                            path: ``,
-                            playerSuit: SuitNames.warrior,
-                            points: 6,
-                            rank: 1,
-                            type: CardTypeRusNames.MercenaryCard,
-                            variants: {
-                                blacksmith: {
-                                    points: null,
-                                    rank: 1,
-                                    suit: SuitNames.blacksmith,
-                                },
-                                warrior: {
-                                    points: 6,
-                                    rank: 1,
-                                    suit: SuitNames.warrior,
-                                },
-                            },
-                        },
-                    ],
+                    campCards: [],
                     stack: [
                         {
                             priority: 0,
@@ -1226,10 +1180,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                 },
             },
             logData: [
-                {
-                    type: LogTypeNames.Public,
-                    text: `Игрок 'Dan' выбрал карту лагеря '${CardTypeRusNames.MercenaryCard}' 'Test'.`,
-                },
                 {
                     type: LogTypeNames.Public,
                     text: `Игрок 'Dan' выбрал карту '${CardTypeRusNames.MercenaryPlayerCard}' 'Test' во фракцию '${suitsConfig[SuitNames.warrior].suitName}'.`,

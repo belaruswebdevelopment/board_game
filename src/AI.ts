@@ -1,6 +1,7 @@
 import { CompareTavernCards } from "./bot_logic/BotCardLogic";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
+import { AssertTop1And2ScoreNumber } from "./is_helpers/AssertionTypeHelpers";
 import { GetValidator } from "./MoveValidator";
 import { AllCurrentScoring } from "./Score";
 import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
@@ -352,6 +353,8 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
                 totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
+                AssertTop1And2ScoreNumber(top1);
+                AssertTop1And2ScoreNumber(top2);
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
@@ -386,6 +389,8 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
                 totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
+                AssertTop1And2ScoreNumber(top1);
+                AssertTop1And2ScoreNumber(top2);
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
@@ -420,6 +425,8 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
                 totalScoreCurPlayer: CanBeUndef<number> = totalScore[Number(ctx.currentPlayer)];
+                AssertTop1And2ScoreNumber(top1);
+                AssertTop1And2ScoreNumber(top2);
             if (totalScoreCurPlayer === undefined) {
                 throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
@@ -454,13 +461,12 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
                 const [top1, top2]: number[] =
                     totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
                     totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
+                AssertTop1And2ScoreNumber(top1);
+                AssertTop1And2ScoreNumber(top2);
                 if (totalScoreCurPlayer === undefined) {
                     throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
                 }
                 if (totalScoreCurPlayer === top1) {
-                    if (top2 === undefined) {
-                        throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
-                    }
                     return totalScoreCurPlayer >= Math.floor(1.05 * top2);
                 }
             }
@@ -491,13 +497,12 @@ export const objectives = (G: MyGameState, ctx: Ctx, playerID?: PlayerID): AIAll
                 const [top1, top2]: number[] =
                     totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
                     totalScoreCurPlayer: CanBeUndefType<number> = totalScore[Number(ctx.currentPlayer)];
+                AssertTop1And2ScoreNumber(top1);
+                AssertTop1And2ScoreNumber(top2);
                 if (totalScoreCurPlayer === undefined) {
                     throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
                 }
                 if (totalScoreCurPlayer === top1) {
-                    if (top2 === undefined) {
-                        throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
-                    }
                     return totalScoreCurPlayer >= Math.floor(1.10 * top2);
                 }
             }

@@ -120,7 +120,7 @@ export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardD
             }
             totalPoints += pointsValue;
         } else {
-            totalPoints += 1;
+            totalPoints++;
         }
     }
     totalPoints /= count;
