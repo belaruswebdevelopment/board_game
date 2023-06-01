@@ -3,8 +3,8 @@ import { AllStackData } from "../data/StackData";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { AllCoinsValueType, AllPriorityValueType, CanBeUndefType, DistinctionAwardingFunction, MinerDistinctionsScoringType, MyFnContextWithMyPlayerID, PlayerCoinIdType, PrivatePlayer, PublicPlayer, SpecialCard, SpecialTriggerTradingCoin } from "../typescript/interfaces";
+import { CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, PlayerIdForSoloGameNames, SpecialCardNames, SuitNames } from "../typescript/enums";
+import type { AllPriorityValueType, CanBeUndefType, DistinctionAwardingFunction, MinerDistinctionsScoringType, MyFnContextWithMyPlayerID, PlayerCoinIdType, PossibleReturnMaxCoinValue, PrivatePlayer, PublicPlayer, SpecialCard, SpecialTriggerTradingCoin } from "../typescript/interfaces";
 import { AddAnyCardToPlayerActions } from "./CardHelpers";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
@@ -60,9 +60,10 @@ export const ExplorerDistinctionAwarding: DistinctionAwardingFunction = ({ G, ct
             myPlayerID);
     }
     if (G.tierToEnd !== 0) {
-        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.pickDistinctionCardSoloBot()]);
-        } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        } else if (G.mode === GameModeNames.SoloAndvari
+            && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                 [AllStackData.pickDistinctionCardSoloBotAndvari()]);
         } else {
@@ -170,17 +171,18 @@ export const MinerDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, 
  * @returns Количество очков по преимуществу по конкретной фракции.
  */
 export const WarriorDistinctionAwarding: DistinctionAwardingFunction = ({ G, ctx, myPlayerID, ...rest }:
-    MyFnContextWithMyPlayerID): AllCoinsValueType => {
+    MyFnContextWithMyPlayerID): PossibleReturnMaxCoinValue => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
     if (G.tierToEnd !== 0) {
-        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                 [AllStackData.upgradeCoinWarriorDistinctionSoloBot()]);
-        } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        } else if (G.mode === GameModeNames.SoloAndvari
+            && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest },
                 [AllStackData.upgradeCoinWarriorDistinctionSoloBotAndvari()]);
         } else {

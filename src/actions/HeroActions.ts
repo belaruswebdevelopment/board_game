@@ -7,7 +7,7 @@ import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards } from "../helpe
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
 import type { AllHeroesForPlayerOrSoloBotAddToPlayerBoardPossibleCardIdType, CanBeUndefType, HeroCard, HeroRankType, MultiSuitCard, MultiSuitRankType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
@@ -159,7 +159,7 @@ export const PlaceThrudAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWit
     }
     const stack: CanBeUndefType<PlayerStack> = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `текущего игрока`} с id '${myPlayerID}' отсутствует '0' действие.`);
+        throw new Error(`В массиве стека действий ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `текущего игрока`} с id '${myPlayerID}' отсутствует '0' действие.`);
     }
     const thrudHeroCard: CanBeUndefType<HeroCard> =
         player.heroes.find((hero: HeroCard): boolean => hero.name === HeroNames.Thrud);

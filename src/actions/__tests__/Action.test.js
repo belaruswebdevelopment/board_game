@@ -223,9 +223,11 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                         name: `Test`,
                         playerSuit: SuitNames.warrior,
                     },
+                    null,
+                    null,
                 ],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [],
             tavernCardDiscarded2Players: false,
@@ -242,9 +244,9 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             },
             currentTavern: 0,
             taverns: [
-                [null],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [
                 {
@@ -281,9 +283,11 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                         name: `Test`,
                         playerSuit: SuitNames.warrior,
                     },
+                    null,
+                    null,
                 ],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [],
             tavernCardDiscarded2Players: false,
@@ -301,9 +305,9 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             },
             currentTavern: 0,
             taverns: [
-                [null],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [
                 {
@@ -334,9 +338,9 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             },
             currentTavern: 0,
             taverns: [
-                [null],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             logData: [],
         }, ctx = {
@@ -355,9 +359,9 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             },
             currentTavern: 0,
             taverns: [
-                [],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             logData: [],
         }, ctx = {

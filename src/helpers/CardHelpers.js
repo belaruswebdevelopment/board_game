@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { StartAutoAction } from "../dispatchers/AutoActionDispatcher";
 import { ThrowMyError } from "../Error";
 import { AddDataToLog } from "../Logging";
-import { CardTypeRusNames, ErrorNames, GameModeNames, GiantBuffNames, GiantNames, GodNames, HeroNames, LogTypeNames, MythicalAnimalBuffNames, PhaseNames, SuitNames, ValkyryBuffNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames, GiantBuffNames, GiantNames, GodNames, HeroNames, LogTypeNames, MythicalAnimalBuffNames, PhaseNames, PlayerIdForSoloGameNames, SuitNames, ValkyryBuffNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { AddCampCardToCards } from "./CampCardHelpers";
 import { DiscardCurrentCard } from "./DiscardCardHelpers";
@@ -229,10 +229,10 @@ export const AddAnyCardToPlayerActions = ({ G, ctx, myPlayerID, ...rest }, picke
         AddCardToPlayerBoardCards({ G, ctx, myPlayerID, ...rest }, finalPickedCard);
     }
     if (`stack` in pickedCard && pickedCard.stack !== undefined) {
-        if (G.mode === GameModeNames.Solo && myPlayerID === `1`) {
+        if (G.mode === GameModeNames.Solo && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_a = pickedCard.stack.soloBot) !== null && _a !== void 0 ? _a : pickedCard.stack.player, pickedCard);
         }
-        else if (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`) {
+        else if (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             AddActionsToStack({ G, ctx, myPlayerID, ...rest }, (_b = pickedCard.stack.soloBotAndvari) !== null && _b !== void 0 ? _b : pickedCard.stack.player, pickedCard);
         }
         else {

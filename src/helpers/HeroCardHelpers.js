@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { CreateHeroPlayerCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, PlayerIdForSoloGameNames, ValkyryBuffNames } from "../typescript/enums";
 import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
 /**
@@ -46,7 +46,7 @@ const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }, hero) => 
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     if (!hero.active) {
-        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
+        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло ботом` : `каким-то игроком`}.`);
     }
     hero.active = false;
     player.heroes.push(hero);
@@ -54,7 +54,7 @@ const AddHeroCardToPlayerHeroCards = ({ G, ctx, myPlayerID, ...rest }, hero) => 
         // TODO Add Odin ability not trigger this!!!!!!
         CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest }, ValkyryBuffNames.CountPickedHeroAmount);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 /**
  * <h3>Действия, связанные с добавлением карты героя в массив карт игрока.</li>

@@ -1,6 +1,6 @@
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactDescriptionNames, ArtefactNames, CampBuffNames, CardTypeRusNames, CommonBuffNames, CommonStageNames, DrawNames, EnlistmentMercenariesStageNames, HeroNames, LogTypeNames, PhaseNames, RoyalOfferingNames, SuitNames, SuitRusNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardType, CanBeNullType, Ctx, DiscardCampCardType, DiscardDeckCardType, DwarfDeckCardType, ExpansionsType, HeroCard, MyFnContextWithMyPlayerID, MyGameState, PlayerBoardCardType, PlayerBuffs, PlayerStack, PublicPlayer, PublicPlayers, SuitPropertyType } from "../../typescript/interfaces";
+import type { CampDeckCardType, Ctx, DiscardCampCardType, DiscardDeckCardType, ExpansionsType, HeroCard, MyFnContextWithMyPlayerID, MyGameState, PlayerBoardCardType, PlayerBuffs, PlayerStack, PublicPlayer, PublicPlayers, SuitPropertyType, TavernWithoutExpansionArray } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -237,9 +237,11 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                         name: `Test`,
                         playerSuit: SuitNames.warrior,
                     },
-                ] as CanBeNullType<DwarfDeckCardType>[],
-                [],
-                [],
+                    null,
+                    null,
+                ] as TavernWithoutExpansionArray,
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [],
             tavernCardDiscarded2Players: false,
@@ -258,9 +260,9 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             },
             currentTavern: 0,
             taverns: [
-                [null],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [
                 {
@@ -297,9 +299,11 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                         name: `Test`,
                         playerSuit: SuitNames.warrior,
                     },
-                ] as CanBeNullType<DwarfDeckCardType>[],
-                [],
-                [],
+                    null,
+                    null,
+                ] as TavernWithoutExpansionArray,
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [],
             tavernCardDiscarded2Players: false,
@@ -319,9 +323,9 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             },
             currentTavern: 0,
             taverns: [
-                [null],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             discardCardsDeck: [
                 {
@@ -352,9 +356,9 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             },
             currentTavern: 0,
             taverns: [
-                [null],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `taverns` | `logData`>,
@@ -374,9 +378,9 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             },
             currentTavern: 0,
             taverns: [
-                [],
-                [],
-                [],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
             ],
             logData: [],
         } as Pick<MyGameState, `publicPlayers` | `currentTavern` | `taverns` | `logData`>,

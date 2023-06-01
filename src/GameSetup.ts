@@ -14,7 +14,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { BuildRoyalOfferingCards } from "./RoyalOffering";
 import { BuildSpecialCards } from "./SpecialCard";
 import { GameModeNames, SuitNames } from "./typescript/enums";
-import type { AIBotData, AllSecretData, BuildHeroesArray, CampDecksLength, CanBeUndefType, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalCoin, RoyalOfferingCard, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, SuitPropertyType, TavernsNumType, TavernsType } from "./typescript/interfaces";
+import type { AIBotData, AllSecretData, BuildHeroesArray, CampDecksLength, CanBeNullType, CanBeUndefType, DiscardCampCardType, DiscardDeckCardType, DiscardMythologicalCreatureCardType, Distinctions, DrawSizeType, DwarfCard, DwarfDecksLength, ExpansionsType, GameNamesKeyofTypeofType, GameSetupDataType, LogData, MultiSuitCard, MultiSuitPlayerCard, MyGameState, MythologicalCreatureCardType, PlayerID, Players, PlayersNumberTierCardData, Priority, PublicPlayers, RoyalCoin, RoyalOfferingCard, SecretCampDeckType, SecretDwarfDeckType, SpecialCard, SpecialPlayerCard, SuitPropertyType, TavernsArray, TavernsNumType, TotalScoreArray, WinnerArray } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -56,7 +56,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
                 active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : false,
             },
         },
-        totalScore: number[] = [],
+        totalScore: CanBeNullType<TotalScoreArray> = null,
         logData: LogData[] = [],
         odroerirTheMythicCauldronCoins: RoyalCoin[] = [],
         specialCardsDeck: SpecialCard[] = BuildSpecialCards(),
@@ -75,7 +75,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
-    const winner: number[] = [],
+    const winner: CanBeNullType<WinnerArray> = null,
         campPicked = false,
         mustDiscardTavernCardJarnglofi = null,
         discardCampCardsDeck: DiscardCampCardType[] = [],
@@ -121,7 +121,8 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         BuildHeroesArray = BuildHeroes(configOptions, mode),
         heroesForSoloGameForStrategyBotAndvari = null,
         multiCardsDeck: MultiSuitCard[] = BuildMultiSuitCards(configOptions),
-        taverns: TavernsType = [[], [], []],
+        // TODO Fix it!
+        taverns: [null[], null[], null[]] = [[], [], []],
         tavernsNum: TavernsNumType = 3,
         currentTavern = 0;
     decksLength[0] = secret.decks[0].length;
@@ -236,7 +237,8 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
         royalCoinsUnique,
         round,
         suitsNum,
-        taverns,
+        // TODO Fix it!
+        taverns: taverns as TavernsArray,
         tavernsNum,
         tierToEnd,
         totalScore,

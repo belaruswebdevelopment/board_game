@@ -4,7 +4,7 @@ import { DiscardCurrentCard, RemoveCardFromTavern } from "./helpers/DiscardCardH
 import { AssertTavernCardId, AssertTavernIndex, AssertTierIndex } from "./is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "./Logging";
 import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescript/enums";
-import type { FnContext, TavernAllCardType, TavernCardIdPossibleType, TavernCardType, TavernCardWithExpansionType, TavernsConfigType } from "./typescript/interfaces";
+import type { FnContext, RefillDeckCardsType, TavernAllCardsArray, TavernCardIdPossibleType, TavernCardType, TavernCardWithExpansionType, TavernsConfigType } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет не осталось ли карт в текущей таверне.</h1>
@@ -19,10 +19,8 @@ import type { FnContext, TavernAllCardType, TavernCardIdPossibleType, TavernCard
  * @param context
  * @returns Нет ли карт в текущей таверне.
  */
-export const CheckIfCurrentTavernEmpty = ({ G }: FnContext): boolean => {
-    const currentTavern: TavernCardType[] = G.taverns[G.currentTavern];
-    return currentTavern.every((card: TavernCardType): boolean => card === null);
-};
+export const CheckIfCurrentTavernEmpty = ({ G }: FnContext): boolean =>
+    G.taverns[G.currentTavern].every((card: TavernCardType): boolean => card === null);
 
 /**
  * <h3>Сбрасывает одну лишнюю карту из таверны в стопку сброса при игре на двух игроков или в соло режиме.</h3>
@@ -55,7 +53,8 @@ export const DiscardCardIfTavernHasCardFor2Players = ({ G, ctx, ...rest }: FnCon
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = ({ G, ctx, ...rest }: FnContext): void => {
-    const tavernCardId: number = G.taverns[G.currentTavern].findIndex((card: TavernCardType): boolean => card !== null);
+    const tavernCardId: number =
+        G.taverns[G.currentTavern].findIndex((card: TavernCardType): boolean => card !== null);
     if (tavernCardId === -1) {
         return ThrowMyError({ G, ctx, ...rest },
             ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern, G.currentTavern);
@@ -95,7 +94,7 @@ export const DiscardConcreteCardFromTavern = ({ G, ctx, ...rest }: FnContext, ta
  */
 export const RefillTaverns = ({ G, ctx, ...rest }: FnContext): void => {
     for (let t = 0; t < G.tavernsNum; t++) {
-        let refillDeck: TavernAllCardType;
+        let refillDeck: RefillDeckCardsType;
         if (G.expansions.Idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
             refillDeck = GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck({ G, ctx, ...rest }, 0,
                 G.drawSize);
@@ -109,7 +108,7 @@ export const RefillTaverns = ({ G, ctx, ...rest }: FnContext): void => {
                 t);
         }
         AssertTavernIndex(t);
-        const tavern: TavernCardType[] = G.taverns[t],
+        const tavern: TavernAllCardsArray = G.taverns[t],
             removedCardsFromTavern: TavernCardType[] =
                 tavern.splice(0, tavern.length, ...refillDeck);
         if (tavern.length !== removedCardsFromTavern.length) {

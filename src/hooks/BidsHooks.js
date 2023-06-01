@@ -5,7 +5,7 @@ import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/Co
 import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { RefillTaverns } from "../Tavern";
-import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroBuffNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
  * <p>Применения:</p>
@@ -64,8 +64,8 @@ export const CheckEndBidsTurn = ({ G, ctx, ...rest }) => {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, ctx.currentPlayer);
     }
     let handCoins;
-    if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
-        || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
+    if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId)
+        || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId)
         || G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     }

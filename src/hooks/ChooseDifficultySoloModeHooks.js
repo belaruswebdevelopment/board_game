@@ -5,7 +5,7 @@ import { AddBuffToPlayer } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { ErrorNames, GameModeNames, HeroNames, PhaseNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroNames, PhaseNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'chooseDifficultySoloMode'.</h3>
  * <p>Применения:</p>
@@ -30,12 +30,12 @@ export const CheckChooseDifficultySoloModeOrder = ({ G, ctx, ...rest }) => {
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }) => {
-    if (ctx.currentPlayer === `0`) {
+    if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
         if (G.mode !== GameModeNames.Solo) {
             return true;
         }
     }
-    else if (ctx.currentPlayer === `1`) {
+    else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         const soloBotPublicPlayer = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);
@@ -54,7 +54,7 @@ export const CheckEndChooseDifficultySoloModePhase = ({ G, ctx, ...rest }) => {
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseDifficultySoloModeTurn = ({ G, ctx }) => {
-    if (ctx.currentPlayer === `0`) {
+    if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
         return G.soloGameDifficultyLevel !== null && G.soloGameDifficultyLevel === 0;
     }
 };
@@ -95,11 +95,11 @@ export const OnChooseDifficultySoloModeMove = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnChooseDifficultySoloModeTurnBegin = ({ G, ctx, ...rest }) => {
-    if (ctx.currentPlayer === `0`) {
+    if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDifficultyLevelForSoloMode()]);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest });
     }
-    else if (ctx.currentPlayer === `1`) {
+    else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         const soloBotPublicPlayer = G.publicPlayers[1];
         if (soloBotPublicPlayer === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, 1);

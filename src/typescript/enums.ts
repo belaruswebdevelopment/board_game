@@ -723,7 +723,6 @@ export const enum ErrorNames {
     CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard = `CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard`,
     CurrentTavernCardWithCurrentIdIsNull = `CurrentTavernCardWithCurrentIdIsNull`,
     CurrentTavernCardWithCurrentIdIsUndefined = `CurrentTavernCardWithCurrentIdIsUndefined`,
-    CurrentSuitDistinctionPlayerIndexIsUndefined = `CurrentSuitDistinctionPlayerIndexIsUndefined`,
     DoNotDiscardCardFromCurrentTavernIfNoCardInTavern = `DoNotDiscardCardFromCurrentTavernIfNoCardInTavern`,
     FirstStackActionForPlayerWithCurrentIdIsUndefined = `FirstStackActionIsUndefined`,
     FunctionMustHaveReturnValue = `FunctionMustHaveReturnValue`,
@@ -1358,4 +1357,9 @@ export const enum SoloBotAndvariCommonMoveValidatorNames {
     SoloBotAndvariClickCoinToUpgradeMoveValidator = `SoloBotAndvariClickCoinToUpgradeMoveValidator`,
     SoloBotAndvariClickHeroCardMoveValidator = `SoloBotAndvariClickHeroCardMoveValidator`,
     SoloBotAndvariPlaceThrudHeroMoveValidator = `SoloBotAndvariPlaceThrudHeroMoveValidator`,
+}
+
+export const enum PlayerIdForSoloGameNames {
+    HumanPlayerId = `0`,
+    SoloBotPlayerId = `1`,
 }

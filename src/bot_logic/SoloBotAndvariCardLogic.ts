@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { AssertGeneralStrategyForSoloBotAndvariId } from "../is_helpers/AssertionTypeHelpers";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { CardTypeRusNames, ErrorNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernWithoutExpansionArray } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты из таверны соло ботом Андвари.</h3>
@@ -63,8 +63,8 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
     const suit: CanBeUndefType<SuitNames> = CheckSoloBotAndvariCanPickHero({ G, ctx, myPlayerID, ...rest }),
         availableMoveArguments: MoveArgumentsType<number[]> = [];
     if (suit !== undefined) {
-        const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-            G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+        const currentTavern: TavernWithoutExpansionArray =
+            G.taverns[G.currentTavern] as TavernWithoutExpansionArray;
         for (let i = 0; i < moveArguments.length; i++) {
             const moveArgument: CanBeUndefType<number> = moveArguments[i];
             if (moveArgument === undefined) {
@@ -109,8 +109,7 @@ export const CheckSoloBotAndvariMustTakeCardToPickHero = ({ G, ctx, myPlayerID, 
  */
 const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): number => {
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+    const currentTavern: TavernWithoutExpansionArray = G.taverns[G.currentTavern] as TavernWithoutExpansionArray;
     let maxValue = 0,
         index = 0;
     for (let i = 0; i < moveArguments.length; i++) {
@@ -163,14 +162,13 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }: My
 const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>, suit: SuitNames): MoveArgumentsType<number[]> => {
     // TODO Move same code here and for reserve strategy to one helper function
-    // TODO Check myPlayerID === `1`?
+    // TODO Check myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId?
     const soloBotPublicPlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[],
+    const currentTavern: TavernWithoutExpansionArray = G.taverns[G.currentTavern] as TavernWithoutExpansionArray,
         strategyArguments: MoveArgumentsType<number[]> = [];
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument: CanBeUndefType<number> = moveArguments[i];
@@ -294,8 +292,7 @@ export const SoloBotMustTakeCardFromReserveStrategy = ({ G, ctx, myPlayerID, ...
 export const CheckSoloBotAndvariMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
     // TODO Move code here and for solo bot royal to one helper function
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+    const currentTavern: TavernWithoutExpansionArray = G.taverns[G.currentTavern] as TavernWithoutExpansionArray;
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument: CanBeUndefType<number> = moveArguments[i];
         if (moveArgument === undefined) {

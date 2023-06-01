@@ -1,4 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
+import { AssertAllNumberValuesArraysLengthType } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -25,14 +26,14 @@ export const BuildDwarfCards = (data) => {
         for (let j = 0; j < count; j++) {
             let currentPoints;
             if (Array.isArray(points)) {
-                const cardPoints = points[j];
-                if (cardPoints === undefined) {
+                AssertAllNumberValuesArraysLengthType(j);
+                currentPoints = points[j];
+                if (currentPoints === undefined) {
                     throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                 }
-                currentPoints = cardPoints;
             }
             cards.push(CreateDwarfCard({
-                name: `(фракция: ${suitsConfig[suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${points[j]})` : `нет)`}`,
+                name: `(фракция: ${suitsConfig[suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? `${currentPoints})` : `нет)`}`,
                 playerSuit: suitsConfig[suit].suit,
                 points: currentPoints,
             }));

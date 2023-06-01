@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames } from "../typescript/enums";
+import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, Move, MyFnContext, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // TODO Rework Move to local interface!
@@ -70,7 +70,7 @@ export const BotsPlaceAllCoinsMove: Move = ({ G, ctx, playerID, ...rest }: MyFnC
                 player.handCoins[i] = null;
             } else {
                 if (handCoin !== null && (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
-                    && playerID === `0`) {
+                    && playerID === PlayerIdForSoloGameNames.HumanPlayerId) {
                     ChangeIsOpenedCoinStatus(handCoin, true);
                 }
                 player.boardCoins[i] = handCoin;

@@ -6,7 +6,7 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
+import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, PlayerIdForSoloGameNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
@@ -571,10 +571,11 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                                                 moveName = CardMoveNames.ClickCardMove;
                                                 break;
                                             case GameModeNames.Solo:
-                                                if (ctx.currentPlayer === `0`) {
+                                                if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                     moveName = CardMoveNames.ClickCardMove;
                                                 }
-                                                else if (ctx.currentPlayer === `1`) {
+                                                else if (ctx.currentPlayer ===
+                                                    PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                     moveName = CardMoveNames.SoloBotClickCardMove;
                                                 }
                                                 else {
@@ -582,10 +583,11 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
                                                 }
                                                 break;
                                             case GameModeNames.SoloAndvari:
-                                                if (ctx.currentPlayer === `0`) {
+                                                if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                     moveName = CardMoveNames.ClickCardMove;
                                                 }
-                                                else if (ctx.currentPlayer === `1`) {
+                                                else if (ctx.currentPlayer ===
+                                                    PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                     moveName = CardMoveNames.SoloBotAndvariClickCardMove;
                                                 }
                                                 else {
@@ -669,31 +671,25 @@ export const DrawTierCards = ({ G }) => {
 export const DrawWinner = ({ G, ctx }) => {
     let winner;
     if (ctx.gameover !== undefined) {
-        if (G.winner !== undefined) {
-            if (G.winner.length === 1) {
-                const winnerIndex = G.winner[0];
-                if (winnerIndex === undefined) {
-                    throw new Error(`Отсутствует индекс игрока победителя.`);
-                }
-                const winnerPlayer = G.publicPlayers[winnerIndex];
-                if (winnerPlayer === undefined) {
-                    throw new Error(`Отсутствует игрок победитель с id '${winnerIndex}'.`);
-                }
-                winner = `Winner: Player ${winnerPlayer.nickname}`;
+        if (G.winner === null) {
+            throw new Error(`В игре должен быть хотя бы 1 победитель.`);
+        }
+        if (G.winner.length === 1) {
+            const winnerIndex = G.winner[0], winnerPlayer = G.publicPlayers[winnerIndex];
+            if (winnerPlayer === undefined) {
+                throw new Error(`Отсутствует игрок победитель с id '${winnerIndex}'.`);
             }
-            else {
-                winner = "Winners: ";
-                G.winner.forEach((playerId, index) => {
-                    const winnerPlayerI = G.publicPlayers[playerId];
-                    if (winnerPlayerI === undefined) {
-                        throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
-                    }
-                    winner += `${index + 1}) Player '${winnerPlayerI.nickname}'; `;
-                });
-            }
+            winner = `Winner: Player ${winnerPlayer.nickname}`;
         }
         else {
-            winner = `Draw!`;
+            winner = "Winners: ";
+            G.winner.forEach((playerId, index) => {
+                const winnerPlayerI = G.publicPlayers[playerId];
+                if (winnerPlayerI === undefined) {
+                    throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
+                }
+                winner += `${index + 1}) Player '${winnerPlayerI.nickname}'; `;
+            });
         }
     }
     else {

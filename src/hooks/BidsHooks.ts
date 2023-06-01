@@ -5,7 +5,7 @@ import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/Co
 import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { RefillTaverns } from "../Tavern";
-import { ErrorNames, GameModeNames, HeroBuffNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroBuffNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, CoinType, FnContext, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 /**
@@ -75,8 +75,8 @@ export const CheckEndBidsTurn = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<
             ctx.currentPlayer);
     }
     let handCoins: PlayerHandCoinsType;
-    if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
-        || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
+    if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId)
+        || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId)
         || G.mode === GameModeNames.Multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {

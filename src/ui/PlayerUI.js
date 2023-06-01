@@ -9,7 +9,7 @@ import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinCssClassNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinCssClassNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, PlayerIdForSoloGameNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 // TODO Check Solo Bot & multiplayer actions!
 // TODO Move strings coins class names to enum!
@@ -235,19 +235,25 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, p);
                     }
                     let cardVariants;
-                    if (ctx.phase === PhaseNames.EnlistmentMercenaries && IsMercenaryCampCard(stack.card)
+                    if (ctx.phase === PhaseNames.EnlistmentMercenaries
                         && ((_e = ctx.activePlayers) === null || _e === void 0 ? void 0 : _e[Number(ctx.currentPlayer)]) ===
                             EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries) {
-                        cardVariants = stack.card.variants[suit];
-                        if (cardVariants !== undefined && cardVariants.suit !== suit) {
-                            throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
+                        if (IsMercenaryCampCard(stack.card)) {
+                            cardVariants = stack.card.variants[suit];
+                            if (cardVariants !== undefined && cardVariants.suit !== suit) {
+                                throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
+                            }
+                        }
+                        else {
+                            throw new Error(`Выбранная карта должна быть с типом '${CardTypeRusNames.MercenaryCard}'.`);
                         }
                     }
                     if (data !== undefined) {
                         // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
                         // TODO Can Ylud be placed in old place because of "suit !== pickedCard.suit"? Thrud can be placed same suit in solo game!
                         let cardType, moveName;
-                        if (((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
+                        if (((G.mode === GameModeNames.Solo
+                            && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId)
                             || G.mode === GameModeNames.SoloAndvari
                             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                                 && (stack.name !== MultiSuitCardNames.OlwinsDouble
@@ -262,10 +268,10 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                                             moveName = EmptyCardMoveNames.PlaceThrudHeroMove;
                                             break;
                                         case GameModeNames.Solo:
-                                            if (ctx.currentPlayer === `0`) {
+                                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                 moveName = EmptyCardMoveNames.PlaceThrudHeroMove;
                                             }
-                                            else if (ctx.currentPlayer === `1`) {
+                                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                 moveName = EmptyCardMoveNames.SoloBotPlaceThrudHeroMove;
                                             }
                                             else {
@@ -273,10 +279,11 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                                             }
                                             break;
                                         case GameModeNames.SoloAndvari:
-                                            if (ctx.currentPlayer === `0`) {
+                                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                 moveName = EmptyCardMoveNames.PlaceThrudHeroMove;
                                             }
-                                            else if (p === 1 && ctx.currentPlayer === `1`) {
+                                            else if (p === 1
+                                                && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                 moveName = EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove;
                                             }
                                             else {
@@ -297,10 +304,10 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                                             moveName = EmptyCardMoveNames.PlaceYludHeroMove;
                                             break;
                                         case GameModeNames.Solo:
-                                            if (ctx.currentPlayer === `0`) {
+                                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                 moveName = EmptyCardMoveNames.PlaceYludHeroMove;
                                             }
-                                            else if (ctx.currentPlayer === `1`) {
+                                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                 moveName = EmptyCardMoveNames.SoloBotPlaceYludHeroMove;
                                             }
                                             else {
@@ -308,10 +315,11 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
                                             }
                                             break;
                                         case GameModeNames.SoloAndvari:
-                                            if (ctx.currentPlayer === `0`) {
+                                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                 moveName = EmptyCardMoveNames.PlaceYludHeroMove;
                                             }
-                                            else if (p === 1 && ctx.currentPlayer === `1`) {
+                                            else if (p === 1
+                                                && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                 moveName = EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove;
                                             }
                                             else {
@@ -458,7 +466,21 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }, validatorName, playerId =
             }
         }
         if (data !== undefined) {
-            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : AllCurrentScoring({ G, ctx, myPlayerID: String(p), ...rest }), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
+            let scoreText = ``;
+            if (G.winner) {
+                if (G.totalScore === null) {
+                    throw new Error(`В массиве итоговых очков игроков должны быть значения.`);
+                }
+                const finalTotalScore = G.totalScore[p];
+                if (finalTotalScore === undefined) {
+                    throw new Error(`В массиве итоговых очков игроков должно быть значение игрока с id ${p}.`);
+                }
+                scoreText = `Final: ${finalTotalScore}`;
+            }
+            else {
+                scoreText = `${AllCurrentScoring({ G, ctx, myPlayerID: String(p), ...rest })}`;
+            }
+            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", scoreText, " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
         }
     }
     if (data !== undefined) {
@@ -505,10 +527,10 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                             moveName = CoinMoveNames.ClickCoinToUpgradeMove;
                             break;
                         case GameModeNames.Solo:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 moveName = CoinMoveNames.ClickCoinToUpgradeMove;
                             }
-                            else if (ctx.currentPlayer === `1`) {
+                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                 moveName = CoinMoveNames.SoloBotClickCoinToUpgradeMove;
                             }
                             else {
@@ -516,10 +538,10 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                             }
                             break;
                         case GameModeNames.SoloAndvari:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 moveName = CoinMoveNames.ClickCoinToUpgradeMove;
                             }
-                            else if (p === 1 && ctx.currentPlayer === `1`) {
+                            else if (p === 1 && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                 moveName = CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove;
                             }
                             else {
@@ -629,7 +651,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                             }
                         }
                         else {
-                            if (G.winner.length || ((G.mode === GameModeNames.Solo)
+                            if (G.winner || ((G.mode === GameModeNames.Solo)
                                 || (G.mode === GameModeNames.SoloAndvari) && p === 0)
                                 || (ctx.phase !== PhaseNames.Bids && i === 0 && G.currentTavern >= t)) {
                                 if (data !== undefined) {
@@ -709,7 +731,7 @@ export const DrawPlayersBoardsCoins = ({ G, ctx, ...rest }, validatorName, data)
                                 || (G.mode === GameModeNames.Multiplayer
                                     && (Number(ctx.currentPlayer) === p))
                                 || ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
-                                    && ctx.currentPlayer === `0`))) {
+                                    && ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId))) {
                             if (data !== undefined) {
                                 if (i === 0) {
                                     DrawCoin({ G, ctx, ...rest }, data, playerCells, DrawCoinTypeNames.BackTavernIcon, publicBoardCoin, id, player, null, id, moveName, id);
@@ -795,10 +817,10 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
                             moveName = CoinMoveNames.ClickCoinToUpgradeMove;
                             break;
                         case GameModeNames.Solo:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 moveName = CoinMoveNames.ClickCoinToUpgradeMove;
                             }
-                            else if (ctx.currentPlayer === `1`) {
+                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                 moveName = CoinMoveNames.SoloBotClickCoinToUpgradeMove;
                             }
                             else {
@@ -806,7 +828,7 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
                             }
                             break;
                         case GameModeNames.SoloAndvari:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 moveName = CoinMoveNames.ClickCoinToUpgradeMove;
                             }
                             break;
@@ -876,7 +898,8 @@ export const DrawPlayersHandsCoins = ({ G, ctx, ...rest }, validatorName, data) 
                         && Number(ctx.currentPlayer) === p
                         && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(p), ...rest }, HeroBuffNames.EveryTurn))
                         || ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
-                            && Number(ctx.currentPlayer) === p && ctx.currentPlayer === `1`
+                            && Number(ctx.currentPlayer) === p
+                            && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId
                             && ctx.phase === PhaseNames.ChooseDifficultySoloMode))
                         && (stage === CommonStageNames.ClickCoinToUpgrade
                             || stage === SoloBotCommonCoinUpgradeStageNames.SoloBotClickCoinToUpgrade

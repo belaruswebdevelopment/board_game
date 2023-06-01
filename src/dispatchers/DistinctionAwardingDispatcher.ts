@@ -14,11 +14,8 @@ import type { Action, AllCoinsValueType, DistinctionAwardingFunction, MyFnContex
  * @returns Количество очков по преимуществу по фракции.
  */
 export const StartDistinctionAwarding = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    action: Action<DistinctionAwardingFunctionNames>): AllCoinsValueType => {
-    const actionDispatcher: DistinctionAwardingFunction =
-        DistinctionAwardingDispatcherSwitcher(action.name);
-    return actionDispatcher?.({ G, ctx, myPlayerID, ...rest });
-};
+    action: Action<DistinctionAwardingFunctionNames>): AllCoinsValueType =>
+    DistinctionAwardingDispatcherSwitcher(action.name)?.({ G, ctx, myPlayerID, ...rest });
 
 /**
 * <h3>Диспетчер всех действий по получению преимущества по фракции дворфов.</h3>

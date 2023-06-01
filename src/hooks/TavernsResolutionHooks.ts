@@ -10,13 +10,13 @@ import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { IsLastRound } from "../helpers/RoundHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
-import { AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertSecretAllDwarfDecksArrayIndex, AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
-import type { CanBeUndefType, CanBeVoidType, FnContext, IndexOf, MythologicalCreatureCardType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins, SecretAllDwarfDecks, SecretDwarfDeckType, TavernInConfig } from "../typescript/interfaces";
+import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames, PlayerIdForSoloGameNames } from "../typescript/enums";
+import type { CanBeUndefType, CanBeVoidType, FnContext, MythologicalCreatureCardType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins, SecretDwarfDeckType, TavernInConfig } from "../typescript/interfaces";
 import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastActions } from "./NextPhaseHooks";
 
 /**
@@ -31,9 +31,9 @@ import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastAc
  */
 const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }: FnContext): CanBeVoidType<PhaseNames> => {
     const isLastRound: boolean = IsLastRound({ G, ctx, ...rest }),
-        currentDeck: SecretDwarfDeckType =
-            G.secret.decks[(G.secret.decks.length - G.tierToEnd - Number(isLastRound)) as
-            IndexOf<SecretAllDwarfDecks>];
+        index: number = G.secret.decks.length - G.tierToEnd - Number(isLastRound);
+    AssertSecretAllDwarfDecksArrayIndex(index);
+    const currentDeck: SecretDwarfDeckType = G.secret.decks[index];
     if (currentDeck.length === 0) {
         if (G.expansions.Thingvellir.active) {
             return CheckEnlistmentMercenaries({ G, ctx, ...rest });
@@ -282,10 +282,10 @@ export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }: FnContext):
  * @returns
  */
 export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }: FnContext): void => {
-    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
             [AllStackData.pickCardSoloBot()]);
-    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest },
             [AllStackData.pickCardSoloBotAndvari()]);
     } else {

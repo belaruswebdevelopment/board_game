@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
  * <p>Применения:</p>
@@ -139,10 +139,10 @@ export const OnPlaceYludMove = ({ G, ctx, ...rest }) => {
  * @returns
  */
 export const OnPlaceYludTurnBegin = ({ G, ctx, events, ...rest }) => {
-    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.placeYludHeroSoloBot()]);
     }
-    else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+    else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest }, [AllStackData.placeYludHeroSoloBotAndvari()]);
     }
     else {

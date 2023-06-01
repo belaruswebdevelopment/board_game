@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff, GetBuffValue } from "../helpers/BuffHelpers";
 import { TotalRank, TotalRankWithoutThrud } from "../score_helpers/ScoreHelpers";
 import { CardTypeRusNames, ErrorNames, HeroBuffNames, SuitNames } from "../typescript/enums";
-import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, HeroCard, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
+import type { CanBeNullType, CanBeUndefType, DwarfDeckCardType, HeroCard, MoveArgumentsType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernWithoutExpansionArray } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет возможность получения нового героя при выборе карты конкретной фракции из таверны соло ботом.</h3>
@@ -105,8 +105,7 @@ export const CheckSoloBotMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest
         availableMoveArguments: MoveArgumentsType<number[]> = [],
         availableThrudArguments: MoveArgumentsType<number[]> = [];
     if (suit !== undefined) {
-        const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-            G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+        const currentTavern: TavernWithoutExpansionArray = G.taverns[G.currentTavern] as TavernWithoutExpansionArray;
         for (let i = 0; i < moveArguments.length; i++) {
             const moveArgument: CanBeUndefType<number> = moveArguments[i];
             if (moveArgument === undefined) {
@@ -164,8 +163,7 @@ export const CheckSoloBotMustTakeCardToPickHero = ({ G, ctx, myPlayerID, ...rest
  */
 export const CheckSoloBotMustTakeCardWithHighestValue = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): number => {
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+    const currentTavern: TavernWithoutExpansionArray = G.taverns[G.currentTavern] as TavernWithoutExpansionArray;
     let maxValue = 0,
         index = 0;
     for (let i = 0; i < moveArguments.length; i++) {
@@ -222,8 +220,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = ({ G, 
         throw new Error(`Недопустимое количество фракций с минимальным количеством карт.`);
     }
     if (!minLengthCount || minLengthCount !== ctx.numPlayers) {
-        const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-            G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[],
+        const currentTavern: TavernWithoutExpansionArray = G.taverns[G.currentTavern] as TavernWithoutExpansionArray,
             soloBotHasThrud: boolean =
                 CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.MoveThrud);
         let thrudSuit: CanBeUndefType<SuitNames>;
@@ -283,8 +280,7 @@ export const CheckSoloBotMustTakeCardWithSuitsLeastPresentOnPlayerBoard = ({ G, 
  */
 export const CheckSoloBotMustTakeRoyalOfferingCard = ({ G, ctx, ...rest }: MyFnContextWithMyPlayerID,
     moveArguments: MoveArgumentsType<number[]>): CanBeUndefType<number> => {
-    const currentTavern: CanBeNullType<DwarfDeckCardType>[] =
-        G.taverns[G.currentTavern] as CanBeNullType<DwarfDeckCardType>[];
+    const currentTavern: TavernWithoutExpansionArray = G.taverns[G.currentTavern] as TavernWithoutExpansionArray;
     for (let i = 0; i < moveArguments.length; i++) {
         const moveArgument: CanBeUndefType<number> = moveArguments[i];
         if (moveArgument === undefined) {

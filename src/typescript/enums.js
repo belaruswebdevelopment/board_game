@@ -724,7 +724,6 @@ export var ErrorNames;
     ErrorNames["CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard"] = "CurrentTavernCardWithCurrentIdCanNotBeRoyalOfferingCard";
     ErrorNames["CurrentTavernCardWithCurrentIdIsNull"] = "CurrentTavernCardWithCurrentIdIsNull";
     ErrorNames["CurrentTavernCardWithCurrentIdIsUndefined"] = "CurrentTavernCardWithCurrentIdIsUndefined";
-    ErrorNames["CurrentSuitDistinctionPlayerIndexIsUndefined"] = "CurrentSuitDistinctionPlayerIndexIsUndefined";
     ErrorNames["DoNotDiscardCardFromCurrentTavernIfNoCardInTavern"] = "DoNotDiscardCardFromCurrentTavernIfNoCardInTavern";
     ErrorNames["FirstStackActionForPlayerWithCurrentIdIsUndefined"] = "FirstStackActionIsUndefined";
     ErrorNames["FunctionMustHaveReturnValue"] = "FunctionMustHaveReturnValue";
@@ -1356,4 +1355,9 @@ export var SoloBotAndvariCommonMoveValidatorNames;
     SoloBotAndvariCommonMoveValidatorNames["SoloBotAndvariClickHeroCardMoveValidator"] = "SoloBotAndvariClickHeroCardMoveValidator";
     SoloBotAndvariCommonMoveValidatorNames["SoloBotAndvariPlaceThrudHeroMoveValidator"] = "SoloBotAndvariPlaceThrudHeroMoveValidator";
 })(SoloBotAndvariCommonMoveValidatorNames || (SoloBotAndvariCommonMoveValidatorNames = {}));
+export var PlayerIdForSoloGameNames;
+(function (PlayerIdForSoloGameNames) {
+    PlayerIdForSoloGameNames["HumanPlayerId"] = "0";
+    PlayerIdForSoloGameNames["SoloBotPlayerId"] = "1";
+})(PlayerIdForSoloGameNames || (PlayerIdForSoloGameNames = {}));
 //# sourceMappingURL=enums.js.map

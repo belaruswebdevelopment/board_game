@@ -136,7 +136,7 @@ const CheckSoloBotAndvariMustTakeCardWithHighestValue = ({ G, ctx, ...rest }, mo
  */
 const CheckSoloBotAndvariMustTakeCardFromCurrentStrategy = ({ G, ctx, myPlayerID, ...rest }, moveArguments, suit) => {
     // TODO Move same code here and for reserve strategy to one helper function
-    // TODO Check myPlayerID === `1`?
+    // TODO Check myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId?
     const soloBotPublicPlayer = G.publicPlayers[Number(myPlayerID)];
     if (soloBotPublicPlayer === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);

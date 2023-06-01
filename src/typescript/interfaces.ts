@@ -22,7 +22,7 @@ import { Client } from "boardgame.io/dist/types/packages/react";
  */
 export interface AllSecretData {
     readonly campDecks: SecretAllCampDecks;
-    readonly decks: SecretAllDwarfDecks;
+    readonly decks: SecretAllDwarfDecksArray;
     mythologicalCreatureDeck: SecretMythologicalCreatureDeck;
     mythologicalCreatureNotInGameDeck: SecretMythologicalCreatureNotInGameDeck;
 }
@@ -50,7 +50,9 @@ export type SecretCampDeckType = SecretCampDeckTier0 | SecretCampDeckTier1;
 /**
  * <h3>Скрытые от всех игроков данные всех колод карт дворфов со всех эпох в `G`.</h3>
  */
-export type SecretAllDwarfDecks = [SecretDwarfDeckTier0, SecretDwarfDeckTier1];
+export type SecretAllDwarfDecksArray = [SecretDwarfDeckTier0, SecretDwarfDeckTier1];
+
+export type SecretAllDwarfDecksArrayIndex = IndexOf<SecretAllDwarfDecksArray>;
 
 /**
  * <h3>Скрытые от всех игроков данные колоды карт дворфов 1 эпохи в `G`.</h3>
@@ -117,7 +119,7 @@ export type AICardCharacteristicsArray = [AICardCharacteristics, AICardCharacter
 /**
  * <h3>Эвристика для ботов.</h3>
  */
-export interface AIHeuristic<T extends unknown[]> extends AIWeight {
+export interface AIHeuristic<T extends readonly unknown[]> extends AIWeight {
     readonly heuristic: (array: T) => boolean;
 }
 
@@ -565,6 +567,8 @@ export type CampCreatureCommandZoneCardType = CampDeckCardType;
 export type CampCardArray = [CanBeNullType<CampCardType>, CanBeNullType<CampCardType>,
     CanBeNullType<CampCardType>, CanBeNullType<CampCardType>, CanBeNullType<CampCardType>];
 
+export type CampCardArrayIndex = IndexOf<CampCardArray>;
+
 // Artefact Cards Start
 /**
  * <h3>Типы данных для ключей перечислений названий артефактов.</h3>
@@ -627,6 +631,8 @@ export type CreateArtefactPlayerCardFromData = PartialByType<ArtefactPlayerCard,
  * <h3>Конфиг всех карт наёмников по каждой эпохе.</h3>
  */
 export type MercenariesConfig = readonly [MercenariesConfigTier0, MercenariesConfigTier1];
+
+export type MercenariesConfigIndex = IndexOf<MercenariesConfig>;
 
 /**
  * <h3>Данные конфига карт наёмников 1 эпохи.</h3>
@@ -1138,10 +1144,48 @@ export type ExplorerDistinctionCardsLength = 1 | 3 | 6;
 
 export type ExplorerDistinctionCardIdType = 0 | 1 | 2 | 3 | 4 | 5;
 
+export type PlayerRanksForDistinctionsArray = [number] | [number, number]
+    | [number, number, number] | [number, number, number, number]
+    | [number, number, number, number, number];
+
+export type MaxCurrentSuitDistinctionPlayersType = 0 | 1 | 2 | 3 | 4;
+
+export type MaxCurrentSuitDistinctionPlayersArray = Permutation<MaxCurrentSuitDistinctionPlayersType>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 2>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 1>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 2>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1 | 2>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1 | 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 2 | 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 2 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 3 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 1 | 2>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 1 | 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 1 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 2 | 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 2 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 3 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1 | 2 | 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1 | 2 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1 | 3 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 2 | 3 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 1 | 2 | 3>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 1 | 2 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 1 | 3 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 0 | 2 | 3 | 4>>
+    | Permutation<Exclude<MaxCurrentSuitDistinctionPlayersType, 1 | 2 | 3 | 4>>;
+
 /**
 * <h3>Данные для количества и максимального значения шевронов для получения преимущества по знаку отличия фракции дворфов.</h3>
 */
-export type PlayerRanksAndMaxRanksForDistinctionsType = readonly [readonly number[], number];
+export type PlayerRanksAndMaxRanksForDistinctionsArray = readonly [PlayerRanksForDistinctionsArray, number];
 // Distinction End
 
 // Stack Start
@@ -1392,6 +1436,8 @@ export type BasicUpgradeCoinValueType = RoyalOfferingCardValueType | 7;
 
 export type CoinUpgradeBuffValue = 0 | 2;
 
+export type BettermentMinMaxType = -46 | -45 | -44 | -43 | -42 | 41 | -40 | -39 | -38 | -37 | -36 | -35 | -34 | -33 | -32 | -31 | -30 | -29 | -28 | -27 | -26 | -25 | -24 | -23 | -22 | -21 | -20 | -19 | -18 | -17 | -16 | -15 | -14 | -13 | -12 | -11 | -10 | -9 | -8 | -7 | -6 | -5 | -4 | -3 | -2 | -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
+
 export type CoinUpgradePossibleMaxValue = 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20
     | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42
     | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51;
@@ -1432,6 +1478,10 @@ export type CoinType = CanBeNullType<AllCoinsType>;
 type ClosedCoinType = Record<never, never>;
 
 // PublicPlayer Coins Start
+export type PlayerCoinsNumber = 0 | 1 | 2 | 3 | 4 | 5;
+
+export type NoCoinsOnPouchNumber = 0 | 1 | 2;
+
 export type PublicPlayerBoardCoins =
     [PublicPlayerCoinType, PublicPlayerCoinType, PublicPlayerCoinType, PublicPlayerCoinType, PublicPlayerCoinType];
 
@@ -1631,7 +1681,7 @@ export type ValkyryScoringType = 0 | 3 | 4 | 6 | 8 | 10 | 16;
  * <h3>Интерфейс для функций получения преимущества по фракциям дворфов.</h3>
  */
 export interface DistinctionAwardingFunction {
-    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID): AllCoinsValueType;
+    ({ G, ctx, myPlayerID }: MyFnContextWithMyPlayerID): MinerDistinctionsScoringType | RoyalCoinValueType;
 }
 
 /**
@@ -1691,6 +1741,8 @@ export type ErrorArgsType = readonly (string | number)[];
  * <h3>Типы данных для всех мувов.</h3>
  */
 export type MoveFunctionType = CanBeNullType<MoveFunction>;
+
+export type PossibleReturnMaxCoinValue = 0 | RoyalCoinValueType;
 
 /**
  * <h3>Интерфейс для функций мувов.</h3>
@@ -1816,7 +1868,7 @@ export interface MyGameState {
     readonly campDecksLength: CampDecksLength;
     readonly campNum: 5;
     campPicked: boolean;
-    currentTavern: IndexOf<TavernsType>;
+    currentTavern: TavernsArrayIndex;
     readonly debug: boolean;
     readonly decksLength: DwarfDecksLength;
     readonly discardCampCardsDeck: DiscardCampCardType[];
@@ -1860,12 +1912,20 @@ export interface MyGameState {
     strategyForSoloBotAndvari: CanBeNullType<StrategyForSoloBotAndvari>;
     readonly suitsNum: 5;
     tavernCardDiscarded2Players: boolean;
-    readonly taverns: TavernsType;
+    readonly taverns: TavernsArray;
     readonly tavernsNum: TavernsNumType;
     tierToEnd: TierToEndType;
-    readonly totalScore: number[];
-    readonly winner: number[];
+    totalScore: CanBeNullType<TotalScoreArray>;
+    winner: CanBeNullType<WinnerArray>;
 }
+
+export type TotalScoreArray = [number, number] | [number, number, number] | [number, number, number, number]
+    | [number, number, number, number, number];
+
+export type MaxPlyersWithTotalScoreType = TotalScoreArray[`length`];
+
+export type WinnerArray = [number] | [number, number] | [number, number, number] | [number, number, number, number]
+    | [number, number, number, number, number];
 
 export type RoyalCoinsUniqueArray = [RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin,
     RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin, RoyalCoin,
@@ -2193,6 +2253,8 @@ type AllNumberValuesArraysType = [NumberValuesForMinerArrayType, NumberValuesFor
     NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType, NumberValuesArrayType,
     NumberValuesArrayType];
 
+export type AllNumberValuesArraysLengthType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
 /**
  * <h3>Интерфейс для числовых индексов и массивов числовых значений.</h3>
  */
@@ -2267,7 +2329,7 @@ export interface Styles {
     readonly Priority: () => Background;
     readonly RoyalOffering: (name: RoyalOfferingNames) => Background;
     readonly Suit: (suit: SuitNames) => Background;
-    readonly Tavern: (tavernId: IndexOf<TavernsType>) => Background;
+    readonly Tavern: (tavernId: TavernsArrayIndex) => Background;
 }
 
 /**
@@ -2303,7 +2365,9 @@ export type NumPlayersWithBotType = 1 | 2 | 3 | 4 | 5;
 /**
  * <h3>Типы данных для всех таверн.</h3>
  */
-export type TavernsType = [CanBeNullType<DwarfDeckCardType>[], TavernAllCardType, CanBeNullType<DwarfDeckCardType>[]];
+export type TavernsArray = [TavernWithoutExpansionArray, TavernWithExpansionArray, TavernWithoutExpansionArray];
+
+export type TavernsArrayIndex = IndexOf<TavernsArray>;
 
 /**
  * <h3>Типы данных для базовых значений обмена монеты по артефакту 'Vidofnir Vedrfolnir'.</h3>
@@ -2383,6 +2447,8 @@ export type StrengthTokenNotchLongMaxType = 0 | 1 | 2 | 3 | 4;
 */
 export type PrioritiesAmountType = 0 | 1 | 2 | 3 | 4;
 
+export type VidofnirVedrfolnirCoinsValue = 1 | 2;
+
 // TODO Check and make normal numbers types!
 /**
  * <h3>Типы данных для 0 | 1.</h3>
@@ -2397,16 +2463,27 @@ export type TavernCardIdPossibleType = 0 | 1 | 2 | 3 | 4;
 export type PlayerBoardCardType = DwarfPlayerCard | SpecialPlayerCard | MultiSuitPlayerCard | ArtefactPlayerCard
     | HeroPlayerCard | MercenaryPlayerCard | MythicalAnimalPlayerCard;
 
-// TODO CanBeUndef<DeckCardType>[] and CanBeUndef<MythologicalCreatureDeckCardType>[]?
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
 export type TavernCardType = CanBeNullType<TavernCardWithExpansionType>;
 
-/**
-* <h3>Тип для всех карт таверн.</h3>
-*/
-export type TavernAllCardType = CanBeNullType<DwarfDeckCardType>[] | CanBeNullType<MythologicalCreatureCardType>[];
+type TavernWithExpansionArray = [TavernCardType, TavernCardType, TavernCardType]
+    | [TavernCardType, TavernCardType, TavernCardType, TavernCardType]
+    | [TavernCardType, TavernCardType, TavernCardType, TavernCardType, TavernCardType];
+
+export type TavernWithoutExpansionArray =
+    [CanBeNullType<TavernCardWithoutExpansionType>, CanBeNullType<TavernCardWithoutExpansionType>,
+        CanBeNullType<TavernCardWithoutExpansionType>]
+    | [CanBeNullType<TavernCardWithoutExpansionType>, CanBeNullType<TavernCardWithoutExpansionType>,
+        CanBeNullType<TavernCardWithoutExpansionType>, CanBeNullType<TavernCardWithoutExpansionType>]
+    | [CanBeNullType<TavernCardWithoutExpansionType>, CanBeNullType<TavernCardWithoutExpansionType>,
+        CanBeNullType<TavernCardWithoutExpansionType>, CanBeNullType<TavernCardWithoutExpansionType>,
+        CanBeNullType<TavernCardWithoutExpansionType>];
+
+export type TavernAllCardsArray = [TavernCardType, TavernCardType, TavernCardType]
+    | [TavernCardType, TavernCardType, TavernCardType, TavernCardType]
+    | [TavernCardType, TavernCardType, TavernCardType, TavernCardType, TavernCardType];
 
 /**
  * <h3>Типы данных для карт, которые должны быть в таверне.</h3>
@@ -2417,6 +2494,24 @@ export type TavernCardWithExpansionType = TavernCardWithoutExpansionType | Mytho
  * <h3>Типы данных для карт, которые должны быть в таверне.</h3>
  */
 type TavernCardWithoutExpansionType = DwarfDeckCardType;
+
+type RefillDeckCardType = TavernCardWithoutExpansionType | TavernCardWithExpansionType;
+
+export type RefillDeckCardsWithExpansionArray =
+    [MythologicalCreatureCardType, MythologicalCreatureCardType, MythologicalCreatureCardType]
+    | [MythologicalCreatureCardType, MythologicalCreatureCardType, MythologicalCreatureCardType,
+        MythologicalCreatureCardType] | [MythologicalCreatureCardType, MythologicalCreatureCardType,
+        MythologicalCreatureCardType, MythologicalCreatureCardType, MythologicalCreatureCardType];
+
+export type RefillDeckCardsWithoutExpansionArray =
+    [TavernCardWithoutExpansionType, TavernCardWithoutExpansionType, TavernCardWithoutExpansionType]
+    | [TavernCardWithoutExpansionType, TavernCardWithoutExpansionType, TavernCardWithoutExpansionType,
+        TavernCardWithoutExpansionType] | [TavernCardWithoutExpansionType, TavernCardWithoutExpansionType,
+        TavernCardWithoutExpansionType, TavernCardWithoutExpansionType, TavernCardWithoutExpansionType];
+
+export type RefillDeckCardsType = [RefillDeckCardType, RefillDeckCardType, RefillDeckCardType]
+    | [RefillDeckCardType, RefillDeckCardType, RefillDeckCardType, RefillDeckCardType]
+    | [RefillDeckCardType, RefillDeckCardType, RefillDeckCardType, RefillDeckCardType, RefillDeckCardType];
 
 /**
  * <h3>Типы данных для отрисовки количества карт в таверне.</h3>
@@ -2625,6 +2720,12 @@ type RequiredByType<T extends object, K extends KeyofType<T>> = Omit<T, K> & Req
  */
 export type IndexOf<T extends readonly unknown[], S extends number[] = []> =
     T[`length`] extends S[`length`] ? S[number] : IndexOf<T, [S[`length`], ...S]>;
+
+type Permutation<T, C = T> = [T] extends [never]
+    ? []
+    : C extends infer U
+    ? [U, ...Permutation<Exclude<T, U>>]
+    : [];
 // My Utilities End
 
 // My Implementations Start

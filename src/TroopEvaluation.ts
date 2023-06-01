@@ -3,10 +3,11 @@ import { ThrowMyError } from "./Error";
 import { GetCardsFromSecretDwarfDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard } from "./helpers/DiscardCardHelpers";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
+import { AssertMaxCurrentSuitDistinctionPlayersArray, AssertMaxCurrentSuitDistinctionPlayersType, AssertPlayerRanksForDistinctionsArray } from "./is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ErrorNames, LogTypeNames, SuitNames, SuitRusNames, ValkyryBuffNames } from "./typescript/enums";
-import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, PlayerRanksAndMaxRanksForDistinctionsType, PublicPlayer } from "./typescript/interfaces";
+import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, MaxCurrentSuitDistinctionPlayersArray, PlayerRanksAndMaxRanksForDistinctionsArray, PublicPlayer } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие единственного игрока с преимуществом по количеству шевронов в конкретной фракции в фазе 'Смотр войск'.</h3>
@@ -20,17 +21,14 @@ import type { CanBeUndefType, Distinctions, DwarfDeckCardType, FnContext, Player
  * @returns Индекс единственного игрока с преимуществом по количеству шевронов фракции, если имеется.
  */
 const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames): Distinctions => {
-    const [playersRanks, maxRanks]: PlayerRanksAndMaxRanksForDistinctionsType =
+    const [playersRanks, maxRanks]: PlayerRanksAndMaxRanksForDistinctionsArray =
         CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit),
         maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === maxRanks),
         suitName: SuitRusNames = suitsConfig[suit].suitName;
+    AssertPlayerRanksForDistinctionsArray(maxPlayers);
     if (maxPlayers.length === 1) {
-        const maxPlayerIndex: CanBeUndefType<number> = maxPlayers[0];
-        if (maxPlayerIndex === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentSuitDistinctionPlayerIndexIsUndefined,
-                suit);
-        }
-        const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayerIndex);
+        const maxPlayerIndex: number = maxPlayers[0],
+            playerDistinctionIndex: number = playersRanks.indexOf(maxPlayerIndex);
         if (playerDistinctionIndex === -1) {
             return ThrowMyError({ G, ctx, ...rest },
                 ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount, maxRanks,
@@ -65,12 +63,13 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitN
  * @returns Индексы игроков с преимуществом по количеству шевронов конкретной фракции.
  */
 export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }: FnContext, suit: SuitNames, isFinal = false):
-    number[] => {
-    const [playersRanks, maxRanks]: PlayerRanksAndMaxRanksForDistinctionsType =
+    MaxCurrentSuitDistinctionPlayersArray => {
+    const [playersRanks, maxRanks]: PlayerRanksAndMaxRanksForDistinctionsArray =
         CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal),
         maxPlayers: number[] = [],
         suitName: SuitRusNames = suitsConfig[suit].suitName;
     playersRanks.forEach((value: number, index: number): void => {
+        AssertMaxCurrentSuitDistinctionPlayersType(index);
         if (value === maxRanks) {
             maxPlayers.push(index);
             const playerIndex: CanBeUndefType<PublicPlayer> = G.publicPlayers[index];
@@ -83,6 +82,7 @@ export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }: FnContex
             }
         }
     });
+    AssertMaxCurrentSuitDistinctionPlayersArray(maxPlayers);
     if (isFinal && !maxPlayers.length) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.SuitDistinctionMustBePresent,
             suitName);
@@ -124,7 +124,7 @@ export const CheckAllSuitsDistinctions = ({ G, ctx, ...rest }: FnContext): void 
  * @returns [Количество шевронов каждого игрока конкретной фракции, Максимальное количество шевронов конкретной фракции].
  */
 const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: FnContext, suit: SuitNames,
-    isFinal = false): PlayerRanksAndMaxRanksForDistinctionsType => {
+    isFinal = false): PlayerRanksAndMaxRanksForDistinctionsArray => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
@@ -134,6 +134,7 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }: F
         }
         playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
     }
+    AssertPlayerRanksForDistinctionsArray(playersRanks);
     const maxRanks: number = Math.max(...playersRanks);
     if (isFinal && maxRanks === 0) {
         return ThrowMyError({ G, ctx, ...rest },

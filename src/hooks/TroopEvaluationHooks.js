@@ -7,7 +7,7 @@ import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
-import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'Смотр войск'.</h3>
  * <p>Применения:</p>
@@ -100,7 +100,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }) => {
     AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         let length;
-        if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             length = 1;
         }
         else {

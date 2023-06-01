@@ -117,7 +117,6 @@ export const GetAverageSuitCard = (suit, data) => {
     return CreateDwarfCard({
         name: `Average card`,
         playerSuit: suitsConfig[suit].suit,
-        // TODO Can i add type!?
         points: totalPoints,
     });
 };

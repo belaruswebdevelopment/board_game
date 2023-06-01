@@ -5,7 +5,7 @@ import { ThrowMyError } from "../Error";
 import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { AllDwarfPlayersAmountType, CanBeUndefType, CompareTavernCardsType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, NumberValuesArrayType, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardType, TavernCardIdPossibleType, TavernCardType } from "../typescript/interfaces";
+import type { AllDwarfPlayersAmountType, CanBeUndefType, CompareTavernCardsType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, NumberValuesArrayType, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardsArray, TavernCardIdPossibleType, TavernCardType } from "../typescript/interfaces";
 
 // Check all number types here!
 // Check all types in this file!
@@ -52,7 +52,7 @@ export const CompareTavernCards = (compareCard: TavernCardType, card2: TavernCar
  * @returns Сравнительное значение.
  */
 export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: TavernCardType,
-    cardId: TavernCardIdPossibleType, tavern: TavernAllCardType): number => {
+    cardId: TavernCardIdPossibleType, tavern: TavernAllCardsArray): number => {
     if (compareCard !== null && compareCard.type === CardTypeRusNames.DwarfCard) {
         if (G.secret.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareTavernCards(compareCard, G.averageCards[compareCard.playerSuit]);
@@ -128,7 +128,6 @@ export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardD
     return CreateDwarfCard({
         name: `Average card`,
         playerSuit: suitsConfig[suit].suit,
-        // TODO Can i add type!?
         points: totalPoints,
     });
 };

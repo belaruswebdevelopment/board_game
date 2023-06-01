@@ -7,7 +7,7 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AssertOneOrTwo, AssertPlayerCoinId, AssertUpgradableCoinValue, AssertUpgradingCoinsArray } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 import type { ActionFunctionWithoutParams, AllCoinsType, AutoActionFunction, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, UpgradableCoinType, UpgradingCoinsArrayLengthType } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
 
@@ -23,24 +23,24 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @returns
  */
 export const AddPickHeroAction: AutoActionFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    priority: number /* OneOrTwoType */): void => {
+    priority: number): void => {
     AssertOneOrTwo(priority);
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    if (G.mode === GameModeNames.Solo && myPlayerID === `1`) {
+    if (G.mode === GameModeNames.Solo && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
             [AllStackData.pickHeroSoloBot(priority)]);
-    } else if (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`) {
+    } else if (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
             [AllStackData.pickHeroSoloBotAndvari(priority)]);
     } else {
         AddActionsToStack({ G, ctx, myPlayerID, ...rest },
             [AllStackData.pickHero(priority)]);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
 };
 
 /**
@@ -56,8 +56,8 @@ export const AddPickHeroAction: AutoActionFunction = ({ G, ctx, myPlayerID, ...r
 export const GetClosedCoinIntoPlayerHandAction: ActionFunctionWithoutParams = ({ G, ctx, myPlayerID, ...rest }:
     MyFnContextWithMyPlayerID): void => {
     if (G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-        || (G.mode === GameModeNames.Solo && myPlayerID === `0`)
-        || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `0`)) {
+        || (G.mode === GameModeNames.Solo && myPlayerID === PlayerIdForSoloGameNames.HumanPlayerId)
+        || (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.HumanPlayerId)) {
         const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
         if (player === undefined) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
@@ -90,7 +90,7 @@ export const GetClosedCoinIntoPlayerHandAction: ActionFunctionWithoutParams = ({
  * @returns
  */
 export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    value: number/* UpgradableCoinValueType */): void => {
+    value: number): void => {
     AssertUpgradableCoinValue(value);
     // TODO Check it `G.mode === GameModeNames.Solo1 ? 1 : Number(ctx.currentPlayer)` and rework to `Number(ctx.currentPlayer)` if bot always upgrade Grid `2` in his turn during setup!
     const currentPlayer: number = G.mode === GameModeNames.Solo ? 1 : Number(myPlayerID),
@@ -135,9 +135,9 @@ export const UpgradeMinCoinAction: AutoActionFunction = ({ G, ctx, myPlayerID, .
             !IsTriggerTradingCoin(coin)).map((coin: AllCoinsType): number => coin.value));
         AssertUpgradableCoinValue(minCoinValue);
         const upgradingCoinsArray: UpgradableCoinType[] = allCoins.filter((coin: AllCoinsType): boolean =>
-            coin.value === minCoinValue) as UpgradableCoinType[],
-            // TODO Can add type!?
-            upgradingCoinsValue: number = upgradingCoinsArray.length;
+            coin.value === minCoinValue) as UpgradableCoinType[];
+        AssertUpgradingCoinsArray(upgradingCoinsArray);
+        const upgradingCoinsValue: UpgradingCoinsArrayLengthType = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
             isInitialInUpgradingCoinsValue =

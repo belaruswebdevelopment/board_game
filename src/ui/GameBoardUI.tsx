@@ -5,8 +5,8 @@ import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
-import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
-import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinNumberValues, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MarketCoinNumberValuesType, MoveArgumentsType, MoveValidatorNamesTypes, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardType, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
+import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, PlayerIdForSoloGameNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
+import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinNumberValues, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MarketCoinNumberValuesType, MoveArgumentsType, MoveValidatorNamesTypes, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardsArray, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ProfitUI";
 
@@ -662,7 +662,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
-                const tavern: TavernAllCardType = G.taverns[t],
+                const tavern: TavernAllCardsArray = G.taverns[t],
                     tavernCard: CanBeUndefType<TavernCardType> = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
@@ -707,9 +707,10 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
                                                 moveName = CardMoveNames.ClickCardMove;
                                                 break;
                                             case GameModeNames.Solo:
-                                                if (ctx.currentPlayer === `0`) {
+                                                if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                     moveName = CardMoveNames.ClickCardMove;
-                                                } else if (ctx.currentPlayer === `1`) {
+                                                } else if (ctx.currentPlayer ===
+                                                    PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                     moveName = CardMoveNames.SoloBotClickCardMove;
                                                 } else {
                                                     return ThrowMyError({ G, ctx, ...rest },
@@ -717,9 +718,10 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
                                                 }
                                                 break;
                                             case GameModeNames.SoloAndvari:
-                                                if (ctx.currentPlayer === `0`) {
+                                                if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                                     moveName = CardMoveNames.ClickCardMove;
-                                                } else if (ctx.currentPlayer === `1`) {
+                                                } else if (ctx.currentPlayer ===
+                                                    PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                                     moveName = CardMoveNames.SoloBotAndvariClickCardMove;
                                                 } else {
                                                     return ThrowMyError({ G, ctx, ...rest },
@@ -818,29 +820,25 @@ export const DrawTierCards = ({ G }: FnContext): JSX.Element => {
 export const DrawWinner = ({ G, ctx }: FnContext): JSX.Element => {
     let winner: string;
     if (ctx.gameover !== undefined) {
-        if (G.winner !== undefined) {
-            if (G.winner.length === 1) {
-                const winnerIndex: CanBeUndefType<number> = G.winner[0];
-                if (winnerIndex === undefined) {
-                    throw new Error(`Отсутствует индекс игрока победителя.`);
-                }
-                const winnerPlayer = G.publicPlayers[winnerIndex];
-                if (winnerPlayer === undefined) {
-                    throw new Error(`Отсутствует игрок победитель с id '${winnerIndex}'.`);
-                }
-                winner = `Winner: Player ${winnerPlayer.nickname}`;
-            } else {
-                winner = "Winners: ";
-                G.winner.forEach((playerId: number, index: number): void => {
-                    const winnerPlayerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[playerId];
-                    if (winnerPlayerI === undefined) {
-                        throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
-                    }
-                    winner += `${index + 1}) Player '${winnerPlayerI.nickname}'; `;
-                });
+        if (G.winner === null) {
+            throw new Error(`В игре должен быть хотя бы 1 победитель.`);
+        }
+        if (G.winner.length === 1) {
+            const winnerIndex: number = G.winner[0],
+                winnerPlayer = G.publicPlayers[winnerIndex];
+            if (winnerPlayer === undefined) {
+                throw new Error(`Отсутствует игрок победитель с id '${winnerIndex}'.`);
             }
+            winner = `Winner: Player ${winnerPlayer.nickname}`;
         } else {
-            winner = `Draw!`;
+            winner = "Winners: ";
+            G.winner.forEach((playerId: number, index: number): void => {
+                const winnerPlayerI: CanBeUndefType<PublicPlayer> = G.publicPlayers[playerId];
+                if (winnerPlayerI === undefined) {
+                    throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
+                }
+                winner += `${index + 1}) Player '${winnerPlayerI.nickname}'; `;
+            });
         }
     } else {
         winner = `Game is started`;

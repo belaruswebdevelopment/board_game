@@ -3,10 +3,10 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCoinFromMarket } from "../helpers/DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
-import { AssertCoinUpgradePossibleMaxValue, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertBettermentMinMaxType, AssertCoinUpgradePossibleMaxValue, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PlayerIdForSoloGameNames, ValkyryBuffNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
  * <p>Применения:</p>
@@ -30,7 +30,8 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let handCoins, boardCoins;
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.SoloAndvari
+        && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     }
@@ -96,8 +97,8 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
                     upgradedCoin = royalCoin;
                     RemoveCoinFromMarket({ G, ctx, ...rest }, i);
                     if (G.expansions.Idavoll.active) {
-                        // TODO Can add type for min/max betterment!?
                         const betterment = royalCoin.value - newValue;
+                        AssertBettermentMinMaxType(betterment);
                         if (betterment > 0) {
                             for (let j = 0; j < betterment; j++) {
                                 CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest }, ValkyryBuffNames.CountBettermentAmount);
@@ -119,15 +120,17 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${IsInitialCoin(upgradingCoin) ? true : false}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
     // TODO Check it && check is it need for solo bot Andvari?!
     if (!upgradedCoin.isOpened
-        && !(G.mode === GameModeNames.Solo && myPlayerID === `1` && upgradingCoin.value === 2)) {
+        && !(G.mode === GameModeNames.Solo && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId
+            && upgradingCoin.value === 2)) {
         ChangeIsOpenedCoinStatus(upgradedCoin, true);
     }
     // TODO Check it && check is it need for solo bot Andvari?!
     if ((((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-        || (G.mode === GameModeNames.Solo && myPlayerID === `1` && upgradingCoin.value === 2))
-        && type === CoinTypeNames.Hand) || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
-        && CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)
-        && type === CoinTypeNames.Board && isTrading)) {
+        || (G.mode === GameModeNames.Solo && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId
+            && upgradingCoin.value === 2)) && type === CoinTypeNames.Hand)
+        || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
+            && CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)
+            && type === CoinTypeNames.Board && isTrading)) {
         if (isTrading) {
             const handCoinId = player.handCoins.indexOf(null);
             if (handCoinId === -1) {
@@ -151,7 +154,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
     }
     else if (type === CoinTypeNames.Board) {
         if (G.mode === GameModeNames.Multiplayer
-            || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
+            || (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)) {
             boardCoins[upgradingCoinId] = upgradedCoin;
         }
         player.boardCoins[upgradingCoinId] = upgradedCoin;

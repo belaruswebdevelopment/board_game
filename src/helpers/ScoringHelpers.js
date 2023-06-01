@@ -10,12 +10,12 @@ import { StartMythicalAnimalScoring } from "../dispatchers/MythicalAnimalDispatc
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { StartValkyryScoring } from "../dispatchers/ValkyryScoringDispatcherHelpers";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertDwergBrothersScoringArrayIndex, AssertMinerDistinctionsScoring, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCurrentPlayerCoinsScore, AssertDwergBrothersScoringArrayIndex, AssertMaxCurrentSuitDistinctionPlayersType, AssertMinerDistinctionsScoring, AssertPlayerCoinId, AssertRoyalCoinValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsMythicalAnimalPlayerCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckCurrentSuitDistinctionPlayers } from "../TroopEvaluation";
-import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, MythicalAnimalBuffNames, SuitNames, SuitRusNames } from "../typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames, LogTypeNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, SuitNames, SuitRusNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { GetMinerDistinctionsScore } from "./DistinctionAwardingHelpers";
 export const CurrentAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -27,13 +27,15 @@ export const CurrentAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
 };
 export const CurrentPotentialMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => GetMinerDistinctionsScore({ G, ctx, myPlayerID, ...rest });
 export const CurrentPotentialWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    // TODO Have same logic as FinalWarriorDistinctionsScoring
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let totalScore = 0;
-    const warriorDistinctions = CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior);
-    if (warriorDistinctions.length && warriorDistinctions.includes(Number(myPlayerID))) {
+    const warriorDistinctions = CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior), currentPlayerId = Number(myPlayerID);
+    AssertMaxCurrentSuitDistinctionPlayersType(currentPlayerId);
+    if (warriorDistinctions.some((playerId) => playerId === currentPlayerId)) {
         totalScore += player.currentMaxCoinValue;
     }
     return totalScore;
@@ -52,7 +54,8 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }, 
         }
         const heroData = heroesConfig[hero.name];
         if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-            || G.mode === GameModeNames.SoloAndvari) || G.mode === GameModeNames.Solo && myPlayerID === `1`)
+            || G.mode === GameModeNames.SoloAndvari) || G.mode === GameModeNames.Solo
+            && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)
             && hero.name.startsWith(`Dwerg`)) {
             dwergBrothersNum +=
                 StartHeroScoring({ G, ctx, myPlayerID: myPlayerID, ...rest }, heroData.scoringRule);
@@ -61,14 +64,14 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }, 
             const currentHeroScore = StartHeroScoring({ G, ctx, myPlayerID: myPlayerID, ...rest }, heroData.scoringRule);
             heroesScore += currentHeroScore;
             if (isFinal) {
-                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${CardTypeRusNames.HeroCard}' '${hero.name}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}': '${currentHeroScore}';`);
+                AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Private, `Очки за карту '${CardTypeRusNames.HeroCard}' '${hero.name}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}': '${currentHeroScore}';`);
             }
         }
     }
     AssertDwergBrothersScoringArrayIndex(dwergBrothersNum);
     if (((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-        || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo && myPlayerID === `1`))
-        && dwergBrothersNum) {
+        || G.mode === GameModeNames.SoloAndvari) || (G.mode === GameModeNames.Solo &&
+        myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)) && dwergBrothersNum) {
         const dwerg_brother_value = dwerg_brothers_scoring[dwergBrothersNum];
         heroesScore += dwerg_brother_value;
         if (isFinal) {
@@ -77,7 +80,7 @@ export const CurrentOrFinalAllHeroesScoring = ({ G, ctx, myPlayerID, ...rest }, 
     }
     totalScore += heroesScore;
     if (isFinal) {
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.HeroCard}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты типа '${CardTypeRusNames.HeroCard}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}: ;${heroesScore};'`);
     }
     return totalScore;
 };
@@ -196,10 +199,10 @@ export const FinalAllSuitsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     let totalScore = 0, suitScore = 0, suit;
     for (suit in suitsConfig) {
         suitScore += GetCurrentSuitTotalScore({ G, ctx, myPlayerID, ...rest }, suit);
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты '${CardTypeRusNames.DwarfCard}' фракции '${SuitRusNames[suit]}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ${suitScore}`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за карты '${CardTypeRusNames.DwarfCard}' фракции '${SuitRusNames[suit]}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}: ${suitScore}`);
         totalScore += suitScore;
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все карты '${CardTypeRusNames.DwarfCard}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: ${totalScore}`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все карты '${CardTypeRusNames.DwarfCard}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}: ${totalScore}`);
     return totalScore;
 };
 export const FinalAllBoardCoinsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -212,16 +215,17 @@ export const FinalAllBoardCoinsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
         AssertPlayerCoinId(i);
         const boardCoin = player.boardCoins[i];
         if (boardCoin !== null && !IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`} с id '${myPlayerID}' на столе не может не быть монеты с id '${i}'.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`} с id '${myPlayerID}' на столе не может не быть монеты с id '${i}'.`);
         }
         if (IsCoin(boardCoin) && !boardCoin.isOpened) {
-            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`} с id '${myPlayerID}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
+            throw new Error(`В массиве монет ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`} с id '${myPlayerID}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
         }
         if (IsCoin(boardCoin)) {
             totalScore += boardCoin.value;
         }
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все монеты ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
+    AssertCurrentPlayerCoinsScore(totalScore);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за все монеты ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
     return totalScore;
 };
 export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
@@ -231,25 +235,27 @@ export const FinalMinerDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) =
     }
     const totalScore = StartDistinctionAwarding({ G, ctx, myPlayerID: myPlayerID, ...rest }, suitsConfig[SuitNames.miner].distinction.awarding);
     if (totalScore) {
-        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за кристалл преимущества по горнякам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
+        AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за кристалл преимущества по фракции '${SuitRusNames.miner}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
     }
     AssertMinerDistinctionsScoring(totalScore);
     return totalScore;
 };
 export const FinalWarriorDistinctionsScoring = ({ G, ctx, myPlayerID, ...rest }) => {
+    // TODO Have same logic as CurrentPotentialWarriorDistinctionsScoring
     const player = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let totalScore = 0;
-    const warriorDistinctions = CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior, true);
-    if (warriorDistinctions.length && warriorDistinctions.includes(Number(myPlayerID))) {
+    const warriorDistinctions = CheckCurrentSuitDistinctionPlayers({ G, ctx, ...rest }, SuitNames.warrior, true), currentPlayerId = Number(myPlayerID);
+    AssertMaxCurrentSuitDistinctionPlayersType(currentPlayerId);
+    if (warriorDistinctions.some((playerId) => playerId === currentPlayerId)) {
         totalScore += StartDistinctionAwarding({ G, ctx, myPlayerID: myPlayerID, ...rest }, suitsConfig[SuitNames.warrior].distinction.awarding);
         if (totalScore) {
-            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за преимущество по воинам ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
+            AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Очки за преимущество по фракции '${SuitRusNames.warrior}' ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}';`);
         }
     }
-    AssertAllCoinsValue(totalScore);
+    AssertRoyalCoinValue(totalScore);
     return totalScore;
 };
 const GetCurrentSuitTotalScore = ({ G, ctx, myPlayerID, ...rest }, suit) => {

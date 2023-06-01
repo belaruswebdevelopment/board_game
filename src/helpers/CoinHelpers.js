@@ -1,9 +1,9 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertAllPriorityValue, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertAllPriorityValue, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins, AssertRoyalCoinValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, ValkyryBuffNames } from "../typescript/enums";
+import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PlayerIdForSoloGameNames, ValkyryBuffNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { RemoveCoinFromPlayer } from "./DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -94,7 +94,7 @@ export const GetMaxCoinValue = ({ G, ctx, myPlayerID, ...rest }) => {
         }
         return coin.value;
     }));
-    AssertAllCoinsValue(coinMaxValue);
+    AssertRoyalCoinValue(coinMaxValue);
     return coinMaxValue;
 };
 /**
@@ -408,8 +408,9 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }, coinId,
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PrivatePlayerWithCurrentIdIsUndefined, myPlayerID);
     }
     let handCoins;
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
-        || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo
+        && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)
+        || (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -422,8 +423,9 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }, coinId,
     AssertPlayerCoinId(tempCoinId);
     const coin = player.boardCoins[coinId];
     if (IsCoin(coin)) {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
-            || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo
+            && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)
+            || (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)) {
             if (!coin.isOpened) {
                 throw new Error(`В массиве монет игрока с id '${myPlayerID}' на поле не может быть ранее не открыта монета с id '${coinId}'.`);
             }
@@ -434,8 +436,9 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }, coinId,
         handCoins[tempCoinId] = coin;
     }
     else {
-        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
-            || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
+        if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo
+            && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)
+            || (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)) {
             const privateBoardCoin = privatePlayer.boardCoins[coinId];
             if (IsCoin(privateBoardCoin)) {
                 if (close && privateBoardCoin.isOpened) {
@@ -445,8 +448,9 @@ export const ReturnCoinToPlayerHands = ({ G, ctx, myPlayerID, ...rest }, coinId,
             }
         }
     }
-    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo && myPlayerID === `1`)
-        || (G.mode === GameModeNames.SoloAndvari && myPlayerID === `1`)) {
+    if (G.mode === GameModeNames.Multiplayer || (G.mode === GameModeNames.Solo
+        && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)
+        || (G.mode === GameModeNames.SoloAndvari && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId)) {
         if (close) {
             player.handCoins[tempCoinId] = {};
         }

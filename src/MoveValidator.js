@@ -11,7 +11,7 @@ import { IsMercenaryCampCard } from "./is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "./is_helpers/IsCoinTypeHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludMoveValidatorNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubMoveValidatorNames, ActivateGodAbilityOrNotSubMoveValidatorNames, AutoBotsMoveNames, BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, ButtonMoveNames, CampBuffNames, CardMoveNames, ChooseDifficultySoloModeAndvariMoveValidatorNames, ChooseDifficultySoloModeMoveValidatorNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, DistinctionCardMoveNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, PhaseNames, PickHeroCardValidatorNames, PlaceYludMoveValidatorNames, PlayerIdForSoloGameNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonMoveValidatorNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TroopEvaluationMoveValidatorNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ActivateGiantAbilityOrPickCardProfit, ActivateGodAbilityOrNotProfit, ChooseCoinValueForVidofnirVedrfolnirUpgradeProfit, ChooseDifficultyLevelForSoloModeProfit, ChooseGetMythologyCardProfit, ChooseStrategyForSoloModeAndvariProfit, ChooseStrategyVariantForSoloModeAndvariProfit, ExplorerDistinctionProfit, PickHeroesForSoloModeProfit, StartOrPassEnlistmentMercenariesProfit } from "./ui/ProfitUI";
@@ -697,7 +697,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: AutoBotsMoveNames.SoloBotPlaceAllCoinsMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawTaverns({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.SoloBotClickCardMoveValidator),
@@ -718,7 +718,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotClickCardMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawHeroesForSoloBotUI({ G, ctx, ...rest }, SoloBotCommonMoveValidatorNames.SoloBotClickHeroCardMoveValidator),
@@ -730,7 +730,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotClickHeroCardMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ExplorerDistinctionProfit({ G, ctx, ...rest }, TroopEvaluationMoveValidatorNames.SoloBotClickCardToPickDistinctionMoveValidator),
@@ -742,7 +742,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotClickCardToPickDistinctionMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotPlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, SoloBotCommonMoveValidatorNames.SoloBotPlaceThrudHeroMoveValidator),
@@ -777,7 +777,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotPlaceThrudHeroMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotPlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, PlaceYludMoveValidatorNames.SoloBotPlaceYludHeroMoveValidator),
@@ -790,7 +790,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotPlaceYludHeroMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, SoloBotCommonCoinUpgradeMoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins({ G, ctx, ...rest }, SoloBotCommonCoinUpgradeMoveValidatorNames.SoloBotClickCoinToUpgradeMoveValidator)),
@@ -819,7 +819,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.SoloBotClickCoinToUpgradeMove,
-        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId
             && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id),
     },
     // Solo Mode
@@ -833,7 +833,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: ButtonMoveNames.ChooseDifficultyLevelForSoloModeMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `0`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.HumanPlayerId,
     },
     ChooseHeroForDifficultySoloModeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => PickHeroesForSoloModeProfit({ G, ctx, ...rest }, ChooseDifficultySoloModeMoveValidatorNames.ChooseHeroForDifficultySoloModeMoveValidator),
@@ -845,7 +845,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.ChooseHeroForDifficultySoloModeMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `0`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.HumanPlayerId,
     },
     // Solo Mode Andvari
     ChooseStrategyVariantForSoloModeAndvariMoveValidator: {
@@ -858,7 +858,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: ButtonMoveNames.ChooseStrategyVariantForSoloModeAndvariMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `0`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.HumanPlayerId,
     },
     ChooseStrategyForSoloModeAndvariMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ChooseStrategyForSoloModeAndvariProfit({ G, ctx, ...rest }, ChooseDifficultySoloModeAndvariMoveValidatorNames.ChooseStrategyForSoloModeAndvariMoveValidator),
@@ -870,7 +870,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: ButtonMoveNames.ChooseStrategyForSoloModeAndvariMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `0`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.HumanPlayerId,
     },
     SoloBotAndvariPlaceAllCoinsMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersHandsCoins({ G, ctx, ...rest }, BidsMoveValidatorNames.SoloBotAndvariPlaceAllCoinsMoveValidator),
@@ -882,7 +882,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: AutoBotsMoveNames.SoloBotAndvariPlaceAllCoinsMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotAndvariClickCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawTaverns({ G, ctx, ...rest }, TavernsResolutionMoveValidatorNames.SoloBotAndvariClickCardMoveValidator),
@@ -900,7 +900,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotAndvariClickCardMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotAndvariClickHeroCardMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawHeroes({ G, ctx, ...rest }, SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariClickHeroCardMoveValidator),
@@ -919,7 +919,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotAndvariClickHeroCardMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotAndvariClickCardToPickDistinctionMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => ExplorerDistinctionProfit({ G, ctx, ...rest }, TroopEvaluationMoveValidatorNames.SoloBotAndvariClickCardToPickDistinctionMoveValidator),
@@ -931,7 +931,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CardMoveNames.SoloBotAndvariClickCardToPickDistinctionMove,
-        validate: ({ ctx, myPlayerID }, id) => myPlayerID === ctx.currentPlayer && myPlayerID === `1` && id === 0,
+        validate: ({ ctx, myPlayerID }, id) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId && id === 0,
     },
     SoloBotAndvariPlaceThrudHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariPlaceThrudHeroMoveValidator),
@@ -957,7 +957,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotAndvariPlaceThrudHeroMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotAndvariPlaceYludHeroMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoards({ G, ctx, ...rest }, PlaceYludMoveValidatorNames.SoloBotAndvariPlaceYludHeroMoveValidator),
@@ -982,7 +982,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: EmptyCardMoveNames.SoloBotAndvariPlaceYludHeroMove,
-        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`,
+        validate: ({ ctx, myPlayerID }) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId,
     },
     SoloBotAndvariClickCoinToUpgradeMoveValidator: {
         getRange: ({ G, ctx, ...rest }) => DrawPlayersBoardsCoins({ G, ctx, ...rest }, SoloBotAndvariCommonMoveValidatorNames.SoloBotAndvariClickCoinToUpgradeMoveValidator),
@@ -1002,7 +1002,7 @@ export const moveValidators = {
             return moveArgument;
         },
         moveName: CoinMoveNames.SoloBotAndvariClickCoinToUpgradeMove,
-        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && myPlayerID === `1`
+        validate: ({ G, ctx, myPlayerID, ...rest }, id) => myPlayerID === ctx.currentPlayer && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId
             && CoinUpgradeValidation({ G, ctx, myPlayerID, ...rest }, id),
     },
     // start

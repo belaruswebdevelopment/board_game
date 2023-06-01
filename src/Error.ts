@@ -1,4 +1,4 @@
-import { CardTypeRusNames, ErrorNames, GameModeNames } from "./typescript/enums";
+import { CardTypeRusNames, ErrorNames, GameModeNames, PlayerIdForSoloGameNames } from "./typescript/enums";
 import type { ErrorArgsType, FnContext } from "./typescript/interfaces";
 
 /**
@@ -26,12 +26,10 @@ export const ThrowMyError = ({ G, ctx }: FnContext, error: ErrorNames, ...errorA
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' не может не быть карты с id '${errorArgs[0]}'.`);
         case ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined:
             throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${errorArgs[0]}'.`);
-        case ErrorNames.CurrentSuitDistinctionPlayerIndexIsUndefined:
-            throw new Error(`Отсутствует игрок с максимальным количеством шевронов в фракции '${errorArgs[0]}'.`);
         case ErrorNames.DoNotDiscardCardFromCurrentTavernIfNoCardInTavern:
             throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${errorArgs[0]}' из-за её отсутствия в таверне.`);
         case ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined:
-            throw new Error(`В массиве стека действий ${errorArgs[0] === ctx.currentPlayer ? `текущий ` : ``}${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === `1` ? `соло бота` : `игрока`} с id '${errorArgs[0]}' отсутствует '0' действие.`);
+            throw new Error(`В массиве стека действий ${errorArgs[0] === ctx.currentPlayer ? `текущий ` : ``}${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока`} с id '${errorArgs[0]}' отсутствует '0' действие.`);
         case ErrorNames.FunctionMustHaveReturnValue:
             throw new Error(`Функция должна возвращать значение.`);
         case ErrorNames.FunctionParamIsUndefined:
@@ -53,9 +51,9 @@ export const ThrowMyError = ({ G, ctx }: FnContext, error: ErrorNames, ...errorA
         case ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount:
             throw new Error(`Должен быть хотя бы один игрок с максимальным количеством шевронов '${errorArgs[0]}' по фракции '${errorArgs[1]}'.`);
         case ErrorNames.PrivatePlayerWithCurrentIdIsUndefined:
-            throw new Error(`В массиве приватных игроков отсутствует ${errorArgs[0] === ctx.currentPlayer ? `текущий ` : ``}${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === `1` ? `соло бот` : `игрок`} с id '${errorArgs[0]}'.`);
+            throw new Error(`В массиве приватных игроков отсутствует ${errorArgs[0] === ctx.currentPlayer ? `текущий ` : ``}${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бот` : `игрок`} с id '${errorArgs[0]}'.`);
         case ErrorNames.PublicPlayerWithCurrentIdIsUndefined:
-            throw new Error(`В массиве публичных игроков отсутствует ${errorArgs[0] === ctx.currentPlayer ? `текущий ` : ``}${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === `1` ? `соло бот` : `игрок`} с id '${errorArgs[0]}'.`);
+            throw new Error(`В массиве публичных игроков отсутствует ${errorArgs[0] === ctx.currentPlayer ? `текущий ` : ``}${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && errorArgs[0] === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бот` : `игрок`} с id '${errorArgs[0]}'.`);
         case ErrorNames.SuitDistinctionMustBePresent:
             throw new Error(`Преимущество по фракции '${errorArgs[0]}' должно быть хотя бы у одного игрока.`);
         case ErrorNames.TavernCanNotBeRefilledBecauseNotEnoughCards:

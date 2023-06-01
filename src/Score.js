@@ -2,8 +2,9 @@ import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsFromPlayerHandsToPlayerBoard } from "./helpers/CoinHelpers";
 import { CurrentAllSuitsScoring, CurrentOrFinalAllArtefactScoring, CurrentOrFinalAllHeroesScoring, CurrentOrFinalAllMythologicalCreaturesScoring, CurrentPotentialMinerDistinctionsScoring, CurrentPotentialWarriorDistinctionsScoring, FinalAllBoardCoinsScoring, FinalAllSuitsScoring, FinalMinerDistinctionsScoring, FinalWarriorDistinctionsScoring } from "./helpers/ScoringHelpers";
+import { AssertMaxPlyersWithTotalScore, AssertTotalScoreArray, AssertWinnerArray } from "./is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "./Logging";
-import { ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames } from "./typescript/enums";
+import { ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PlayerIdForSoloGameNames } from "./typescript/enums";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>
@@ -51,7 +52,7 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, myPlayerID);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}:`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Результаты игры ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}:`);
     let totalScore = FinalAllSuitsScoring({ G, ctx, myPlayerID, ...rest })
         + FinalAllBoardCoinsScoring({ G, ctx, myPlayerID, ...rest })
         + FinalWarriorDistinctionsScoring({ G, ctx, myPlayerID, ...rest })
@@ -63,7 +64,7 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }) => {
     if (G.expansions.Idavoll.active) {
         totalScore += CurrentOrFinalAllMythologicalCreaturesScoring({ G, ctx, myPlayerID, ...rest }, true);
     }
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Итоговый счёт ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === `1` ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Public, `Итоговый счёт ${(G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && myPlayerID === PlayerIdForSoloGameNames.SoloBotPlayerId ? `соло бота` : `игрока '${player.nickname}'`}: '${totalScore}'.`);
     return totalScore;
 };
 /**
@@ -78,10 +79,11 @@ const FinalScoring = ({ G, ctx, myPlayerID, ...rest }) => {
  */
 export const ScoreWinner = ({ G, ctx, ...rest }) => {
     Object.values(G.publicPlayers).forEach((player, index) => {
-        if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`)
-            || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`)
+        if ((G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId)
+            || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId)
             || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer
-                || (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `0`))
+                || (G.mode === GameModeNames.SoloAndvari
+                    && ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId))
                 && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(index), ...rest }, HeroBuffNames.EveryTurn))) {
             ReturnCoinsFromPlayerHandsToPlayerBoard({ G, ctx, myPlayerID: String(index), ...rest });
         }
@@ -89,10 +91,15 @@ export const ScoreWinner = ({ G, ctx, ...rest }) => {
     });
     G.drawProfit = null;
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Финальные результаты игры:`);
+    const totalScore = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        G.totalScore.push(FinalScoring({ G, ctx, myPlayerID: String(i), ...rest }));
+        totalScore.push(FinalScoring({ G, ctx, myPlayerID: String(i), ...rest }));
     }
-    const maxScore = Math.max(...G.totalScore), maxPlayers = G.totalScore.filter((score) => score === maxScore).length;
+    AssertTotalScoreArray(totalScore);
+    G.totalScore = totalScore;
+    const maxScore = Math.max(...G.totalScore), maxPlayers = G.totalScore.filter((score) => score === maxScore).length, winnerArray = [];
+    AssertMaxPlyersWithTotalScore(maxPlayers);
+    // TODO Add type!?
     let winners = 0;
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
@@ -100,7 +107,7 @@ export const ScoreWinner = ({ G, ctx, ...rest }) => {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, i);
         }
         if (maxScore === G.totalScore[i] && maxPlayers > winners) {
-            G.winner.push(i);
+            winnerArray.push(i);
             winners++;
             AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Определился победитель: игрок '${player.nickname}'.`);
             if (maxPlayers === winners) {
@@ -108,8 +115,8 @@ export const ScoreWinner = ({ G, ctx, ...rest }) => {
             }
         }
     }
-    if (G.winner.length) {
-        return G;
-    }
+    AssertWinnerArray(winnerArray);
+    G.winner = winnerArray;
+    return G;
 };
 //# sourceMappingURL=Score.js.map

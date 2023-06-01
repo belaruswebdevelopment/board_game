@@ -6,7 +6,7 @@ import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/Distin
 import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CommonStageNames, ErrorNames, GameModeNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CommonStageNames, ErrorNames, GameModeNames, PlayerIdForSoloGameNames, TavernsResolutionStageNames } from "../typescript/enums";
 // Move all coinId to MarketCoinId types?!
 // TODO Check moves with solo mode!
 /**
@@ -76,7 +76,8 @@ export const ClickBoardCoinMove = ({ G, ctx, playerID, ...rest }, coinId) => {
             player.handCoins[tempSelectedId] = null;
         }
         else {
-            if ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerID === `0`) {
+            if ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
+                && playerID === PlayerIdForSoloGameNames.HumanPlayerId) {
                 ChangeIsOpenedCoinStatus(handCoin, true);
             }
             player.boardCoins[coinId] = handCoin;

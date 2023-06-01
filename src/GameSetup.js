@@ -38,7 +38,7 @@ export const SetupGame = ({ ctx, random }) => {
         Idavoll: {
             active: mode === GameModeNames.Solo || mode === GameModeNames.SoloAndvari ? false : false,
         },
-    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = null, strategyForSoloBotAndvari = null, distinctions = {}, secret = {
+    }, totalScore = null, logData = [], odroerirTheMythicCauldronCoins = [], specialCardsDeck = BuildSpecialCards(), configOptions = [], discardCardsDeck = [], explorerDistinctionCards = null, strategyForSoloBotAndvari = null, distinctions = {}, secret = {
         campDecks: [[], []],
         decks: [[], []],
         mythologicalCreatureDeck: [],
@@ -48,7 +48,7 @@ export const SetupGame = ({ ctx, random }) => {
     for (suit in suitsConfig) {
         distinctions[suit] = null;
     }
-    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDecksLength = [0, 0], camp = Array(campNum).fill(null), decksLength = [0, 0], mythologicalCreatureDeckForSkymir = null;
+    const winner = null, campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], discardMythologicalCreaturesCards = [], discardMultiCards = [], discardSpecialCards = [], campDecksLength = [0, 0], camp = Array(campNum).fill(null), decksLength = [0, 0], mythologicalCreatureDeckForSkymir = null;
     AssertCamp(camp);
     for (let i = 0; i < tierToEnd; i++) {
         AssertTierIndex(i);
@@ -78,7 +78,9 @@ export const SetupGame = ({ ctx, random }) => {
             configOptions.push(expansion);
         }
     }
-    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari] = BuildHeroes(configOptions, mode), heroesForSoloGameForStrategyBotAndvari = null, multiCardsDeck = BuildMultiSuitCards(configOptions), taverns = [[], [], []], tavernsNum = 3, currentTavern = 0;
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel, heroesInitialForSoloGameForBotAndvari] = BuildHeroes(configOptions, mode), heroesForSoloGameForStrategyBotAndvari = null, multiCardsDeck = BuildMultiSuitCards(configOptions), 
+    // TODO Fix it!
+    taverns = [[], [], []], tavernsNum = 3, currentTavern = 0;
     decksLength[0] = secret.decks[0].length;
     let mythologicalCreatureDeckLength = 0, mythologicalCreatureNotInGameDeckLength = 0;
     if (expansions.Idavoll.active) {
@@ -180,7 +182,8 @@ export const SetupGame = ({ ctx, random }) => {
         royalCoinsUnique,
         round,
         suitsNum,
-        taverns,
+        // TODO Fix it!
+        taverns: taverns,
         tavernsNum,
         tierToEnd,
         totalScore,

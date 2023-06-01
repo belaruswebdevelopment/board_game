@@ -1,4 +1,4 @@
-import { AssertAICardCharacteristicsArray, AssertAICardCharacteristicsArrayIndex, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAICardCharacteristicsArray, AssertAICardCharacteristicsArrayIndex, AssertTavernAllCardsArray, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "../is_helpers/AssertionTypeHelpers";
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 // TODO Check all number types here!
 /**
@@ -27,6 +27,7 @@ export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }) => {
     // TODO Add types
     const tempNumbers = taverns.map((tavern) => tavern.map((card, index, tavern) => {
         AssertTavernCardId(index);
+        AssertTavernAllCardsArray(tavern);
         return EvaluateTavernCard({ G, ctx, ...rest }, card, index, tavern);
     })), tempChars = tempNumbers.map((element) => GetCharacteristics(element)) /*,
 averageCards: ICard[] = G.averageCards*/;

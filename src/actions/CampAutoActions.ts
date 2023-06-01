@@ -5,10 +5,10 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertNoCoinsOnPouchNumber, AssertPlayerCoinId, AssertPlayerCoinsNumber, AssertVidofnirVedrfolnirCoinsValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
-import { ArtefactNames, CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
+import { CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
 import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, Stack, StageArg } from "../typescript/interfaces";
 
 /**
@@ -123,11 +123,11 @@ export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, 
     let isStart = true;
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
         const noCoinsOnPouchNumber: number =
-            // TODO Add type for noCoinsOnPouchNumber
             player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
-                index >= G.tavernsNum && coin === null).length,
-            // TODO Can add type for handCoinsNumber!?
-            handCoinsNumber: number = handCoins.filter(IsCoin).length;
+                index >= G.tavernsNum && coin === null).length;
+        AssertNoCoinsOnPouchNumber(noCoinsOnPouchNumber);
+        const handCoinsNumber: number = handCoins.filter(IsCoin).length;
+        AssertPlayerCoinsNumber(handCoinsNumber);
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {
             for (let i = 0; i < noCoinsOnPouchNumber; i++) {
                 AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.addCoinToPouch()]);
@@ -165,12 +165,11 @@ export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, 
                 coinsValue++;
             }
         }
+        AssertVidofnirVedrfolnirCoinsValue(coinsValue);
         if (coinsValue === 1) {
             stack = [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([5])];
         } else if (coinsValue === 2) {
             stack = [AllStackData.startChooseCoinValueForVidofnirVedrfolnirUpgrade([2, 3])];
-        } else {
-            throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}', а не '${coinsValue}' монет(ы).`);
         }
         AddActionsToStack({ G, ctx, myPlayerID, ...rest }, stack);
     }

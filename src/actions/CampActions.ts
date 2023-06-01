@@ -9,7 +9,7 @@ import { AssertBasicVidofnirVedrfolnirUpgradeValue, AssertPlayerCoinId, AssertPl
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CardTypeRusNames, CoinTypeNames, ErrorNames, GameModeNames, LogTypeNames, SuitNames } from "../typescript/enums";
-import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArray, CampCardType, CanBeUndefType, IndexOf, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerCoinIdType, PlayerHandCoinsType, PlayerPouchCoinIdType, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, UpgradableCoinValueType } from "../typescript/interfaces";
+import type { BasicVidofnirVedrfolnirUpgradeValueType, CampCardArrayIndex, CampCardType, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerCoinIdType, PlayerHandCoinsType, PlayerPouchCoinIdType, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, UpgradableCoinValueType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -135,7 +135,7 @@ export const DiscardSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnConte
  * @returns
  */
 export const PickCampCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID,
-    campCardId: IndexOf<CampCardArray>): void => {
+    campCardId: CampCardArrayIndex): void => {
     const campCard: CampCardType = G.camp[campCardId];
     if (campCard === null) {
         throw new Error(`Не существует кликнутая карта лагеря с id '${campCardId}'.`);

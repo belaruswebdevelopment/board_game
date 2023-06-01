@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
 import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, HeroCard, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -161,10 +161,10 @@ export const OnPlaceYludMove = ({ G, ctx, ...rest }: FnContext): void => {
  * @returns
  */
 export const OnPlaceYludTurnBegin = ({ G, ctx, events, ...rest }: FnContext): void => {
-    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
             [AllStackData.placeYludHeroSoloBot()]);
-    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+    } else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, events, ...rest },
             [AllStackData.placeYludHeroSoloBotAndvari()]);
     } else {

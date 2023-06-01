@@ -3,6 +3,7 @@ import { ThrowMyError } from "./Error";
 import { GetCardsFromSecretDwarfDeck } from "./helpers/DecksHelpers";
 import { DiscardCurrentCard } from "./helpers/DiscardCardHelpers";
 import { CheckValkyryRequirement } from "./helpers/MythologicalCreatureHelpers";
+import { AssertMaxCurrentSuitDistinctionPlayersArray, AssertMaxCurrentSuitDistinctionPlayersType, AssertPlayerRanksForDistinctionsArray } from "./is_helpers/AssertionTypeHelpers";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ErrorNames, LogTypeNames, SuitNames, SuitRusNames, ValkyryBuffNames } from "./typescript/enums";
@@ -19,12 +20,9 @@ import { ErrorNames, LogTypeNames, SuitNames, SuitRusNames, ValkyryBuffNames } f
  */
 const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
     const [playersRanks, maxRanks] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit), maxPlayers = playersRanks.filter((count) => count === maxRanks), suitName = suitsConfig[suit].suitName;
+    AssertPlayerRanksForDistinctionsArray(maxPlayers);
     if (maxPlayers.length === 1) {
-        const maxPlayerIndex = maxPlayers[0];
-        if (maxPlayerIndex === undefined) {
-            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentSuitDistinctionPlayerIndexIsUndefined, suit);
-        }
-        const playerDistinctionIndex = playersRanks.indexOf(maxPlayerIndex);
+        const maxPlayerIndex = maxPlayers[0], playerDistinctionIndex = playersRanks.indexOf(maxPlayerIndex);
         if (playerDistinctionIndex === -1) {
             return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PlayersCurrentSuitRanksArrayMustHavePlayerWithMostRankCount, maxRanks, suit);
         }
@@ -56,6 +54,7 @@ const CheckCurrentSuitDistinction = ({ G, ctx, ...rest }, suit) => {
 export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }, suit, isFinal = false) => {
     const [playersRanks, maxRanks] = CountPlayerRanksAndMaxRanksForCurrentDistinction({ G, ctx, ...rest }, suit, isFinal), maxPlayers = [], suitName = suitsConfig[suit].suitName;
     playersRanks.forEach((value, index) => {
+        AssertMaxCurrentSuitDistinctionPlayersType(index);
         if (value === maxRanks) {
             maxPlayers.push(index);
             const playerIndex = G.publicPlayers[index];
@@ -67,6 +66,7 @@ export const CheckCurrentSuitDistinctionPlayers = ({ G, ctx, ...rest }, suit, is
             }
         }
     });
+    AssertMaxCurrentSuitDistinctionPlayersArray(maxPlayers);
     if (isFinal && !maxPlayers.length) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.SuitDistinctionMustBePresent, suitName);
     }
@@ -113,6 +113,7 @@ const CountPlayerRanksAndMaxRanksForCurrentDistinction = ({ G, ctx, ...rest }, s
         }
         playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
     }
+    AssertPlayerRanksForDistinctionsArray(playersRanks);
     const maxRanks = Math.max(...playersRanks);
     if (isFinal && maxRanks === 0) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PlayersCurrentSuitCardsMustHaveCardsForDistinction, suitsConfig[suit].suitName);

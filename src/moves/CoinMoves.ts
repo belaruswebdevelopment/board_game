@@ -6,7 +6,7 @@ import { EndWarriorOrExplorerDistinctionIfCoinUpgraded } from "../helpers/Distin
 import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, TavernsResolutionStageNames } from "../typescript/enums";
+import { BidsDefaultStageNames, BidUlineDefaultStageNames, CoinMoveNames, CoinTypeNames, CommonStageNames, ErrorNames, GameModeNames, PlayerIdForSoloGameNames, TavernsResolutionStageNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, InvalidMoveType, Move, MyFnContext, PlayerCoinIdType, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType } from "../typescript/interfaces";
 
 // Move all coinId to MarketCoinId types?!
@@ -81,7 +81,8 @@ export const ClickBoardCoinMove: Move = ({ G, ctx, playerID, ...rest }: MyFnCont
             player.boardCoins[coinId] = {};
             player.handCoins[tempSelectedId] = null;
         } else {
-            if ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari) && playerID === `0`) {
+            if ((G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
+                && playerID === PlayerIdForSoloGameNames.HumanPlayerId) {
                 ChangeIsOpenedCoinStatus(handCoin, true);
             }
             player.boardCoins[coinId] = handCoin;

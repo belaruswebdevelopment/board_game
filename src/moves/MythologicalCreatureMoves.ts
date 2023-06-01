@@ -74,8 +74,9 @@ export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...r
             ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, playerID);
     }
     const stackDwarfCard: CanBeUndefType<StackCardType> = stack.card;
-    if (stackDwarfCard !== undefined && stackDwarfCard.type === CardTypeRusNames.MercenaryCard) {
-        throw new Error(`В стеке не может быть карта типа '${CardTypeRusNames.MercenaryCard}'.`);
+    if (stackDwarfCard !== undefined && !(stackDwarfCard.type === CardTypeRusNames.DwarfCard
+        || stackDwarfCard.type === CardTypeRusNames.RoyalOfferingCard)) {
+        throw new Error(`В стеке должна быть карта типа '${CardTypeRusNames.DwarfCard}' или '${CardTypeRusNames.RoyalOfferingCard}', а не '${stackDwarfCard.type}'.`);
     }
     let _exhaustiveCheck: never;
     switch (godName) {
@@ -86,7 +87,7 @@ export const NotActivateGodAbilityMove: Move = ({ G, ctx, playerID, events, ...r
             break;
         case GodNames.Frigg:
             if (stackDwarfCard === undefined) {
-                throw new Error(`В стеке не может быть карты.`);
+                throw new Error(`В стеке не может не быть карты.`);
             }
             AddAnyCardToPlayerActions({ G, ctx, myPlayerID: playerID, events, ...rest }, stackDwarfCard);
             break;

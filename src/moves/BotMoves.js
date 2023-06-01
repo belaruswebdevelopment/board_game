@@ -4,7 +4,7 @@ import { ThrowMyError } from "../Error";
 import { IsValidMove } from "../MoveValidator";
 import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
-import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames } from "../typescript/enums";
+import { AutoBotsMoveNames, BidsDefaultStageNames, ErrorNames, GameModeNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 // TODO Rework Move to local interface!
 // TODO Add Bot place all coins for human player opened in solo game
 /**
@@ -65,7 +65,7 @@ export const BotsPlaceAllCoinsMove = ({ G, ctx, playerID, ...rest }, coinsOrder)
             }
             else {
                 if (handCoin !== null && (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari)
-                    && playerID === `0`) {
+                    && playerID === PlayerIdForSoloGameNames.HumanPlayerId) {
                     ChangeIsOpenedCoinStatus(handCoin, true);
                 }
                 player.boardCoins[i] = handCoin;

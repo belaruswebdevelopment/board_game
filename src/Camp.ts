@@ -2,7 +2,7 @@ import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
 import { AssertMercenariesConfigIndex } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames, SuitNames } from "./typescript/enums";
-import type { ArtefactCard, ArtefactCardData, ArtefactNamesKeyofTypeofType, ArtefactPlayerCard, BasicSuitableNullableCardInfo, CampDeckCardType, CanBeUndefType, CreateArtefactCardFromData, CreateArtefactPlayerCardFromData, CreateMercenaryCardFromData, CreateMercenaryPlayerCardFromData, IndexOf, KeyofType, MercenariesConfig, MercenariesConfigType, MercenaryCard, MercenaryData, MercenaryPlayerCard, MercenaryRankType, TierType, VariantType } from "./typescript/interfaces";
+import type { ArtefactCard, ArtefactCardData, ArtefactNamesKeyofTypeofType, ArtefactPlayerCard, BasicSuitableNullableCardInfo, CampDeckCardType, CanBeUndefType, CreateArtefactCardFromData, CreateArtefactPlayerCardFromData, CreateMercenaryCardFromData, CreateMercenaryPlayerCardFromData, KeyofType, MercenariesConfigType, MercenaryCard, MercenaryData, MercenaryPlayerCard, MercenaryRankType, TierType, VariantType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря конкретной эпохи из конфига.</h3>
@@ -34,7 +34,7 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
             }));
         }
     }
-    const mercenariesConfigTier: MercenariesConfigType = mercenariesConfig[tier satisfies IndexOf<MercenariesConfig>];
+    const mercenariesConfigTier: MercenariesConfigType = mercenariesConfig[tier];
     for (let i = 0; i < mercenariesConfigTier.length; i++) {
         AssertMercenariesConfigIndex(i);
         const mercenaryData: MercenaryData = mercenariesConfigTier[i];

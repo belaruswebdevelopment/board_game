@@ -1,5 +1,5 @@
-import { AssertAICardCharacteristicsArray, AssertAICardCharacteristicsArrayIndex, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "../is_helpers/AssertionTypeHelpers";
-import type { AICardCharacteristics, AIHeuristic, CanBeUndefType, FnContext, NumPlayersType, TavernAllCardType, TavernCardType, TavernsHeuristicArray, TavernsHeuristicArrayIndex, TavernsNumType, TavernsType } from "../typescript/interfaces";
+import { AssertAICardCharacteristicsArray, AssertAICardCharacteristicsArrayIndex, AssertTavernAllCardsArray, AssertTavernCardId, AssertTavernsHeuristicArray, AssertTavernsHeuristicArrayIndex } from "../is_helpers/AssertionTypeHelpers";
+import type { AICardCharacteristics, AIHeuristic, CanBeUndefType, FnContext, NumPlayersType, TavernAllCardsArray, TavernCardType, TavernsArray, TavernsHeuristicArray, TavernsHeuristicArrayIndex, TavernsNumType } from "../typescript/interfaces";
 import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
 
 // TODO Check all number types here!
@@ -15,11 +15,11 @@ import { CompareTavernCards, EvaluateTavernCard } from "./BotCardLogic";
  * @returns Результат эвристики.
  */
 export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext): TavernsHeuristicArray => {
-    const taverns: TavernsType = G.taverns,
+    const taverns: TavernsArray = G.taverns,
         // TODO If tavernsHeuristicArray & result === same logic!?
         // TODO -100 | 0 === number in current only 1 heuristic
-        tavernsHeuristicArray: number[] = taverns.map((tavern: TavernAllCardType): number =>
-            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: AIHeuristic<TavernAllCardType>):
+        tavernsHeuristicArray: number[] = taverns.map((tavern: TavernAllCardsArray): number =>
+            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: AIHeuristic<TavernAllCardsArray>):
                 number => acc + (item.heuristic(tavern) ? item.weight : 0), 0));
     AssertTavernsHeuristicArray(tavernsHeuristicArray);
     const result: number[] =
@@ -31,9 +31,10 @@ export const CheckHeuristicsForCoinsPlacement = ({ G, ctx, ...rest }: FnContext)
         });
     AssertTavernsHeuristicArray(result);
     // TODO Add types
-    const tempNumbers: number[][] = taverns.map((tavern: TavernAllCardType): number[] =>
-        tavern.map((card: TavernCardType, index: number, tavern: TavernAllCardType): number => {
+    const tempNumbers: number[][] = taverns.map((tavern: TavernAllCardsArray): number[] =>
+        tavern.map((card: TavernCardType, index: number, tavern: TavernCardType[]): number => {
             AssertTavernCardId(index);
+            AssertTavernAllCardsArray(tavern);
             return EvaluateTavernCard({ G, ctx, ...rest }, card, index, tavern);
         })),
         tempChars: AICardCharacteristics[] = tempNumbers.map((element: number[]): AICardCharacteristics =>
@@ -145,7 +146,7 @@ const GetCharacteristics = (array: number[]): AICardCharacteristics => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: AIHeuristic<TavernAllCardType> = {
+const isAllCardsEqual: AIHeuristic<TavernAllCardsArray> = {
     // TODO Add errors for undefined
     heuristic: (cards: TavernCardType[]): boolean => cards.every((card: TavernCardType): boolean =>
         (cards[0] !== undefined && CompareTavernCards(card, cards[0]) === 0)),
@@ -310,7 +311,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: AIHeuristic<TavernAllCardType>[] = [isAllCardsEqual];
+const absoluteHeuristicsForTradingCoin: AIHeuristic<TavernAllCardsArray>[] = [isAllCardsEqual];
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

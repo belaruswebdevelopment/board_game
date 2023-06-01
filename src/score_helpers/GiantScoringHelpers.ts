@@ -2,7 +2,7 @@ import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { IsGiantCard } from "../is_helpers/IsMythologicalCreatureTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GiantNames } from "../typescript/enums";
-import type { AllCoinsValueType, BasicGiantScoringType, CanBeNullType, CanBeUndefType, DwarfCard, GiantScoringFunction, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PublicPlayer } from "../typescript/interfaces";
+import type { BasicGiantScoringType, CanBeNullType, CanBeUndefType, DwarfCard, GiantScoringFunction, MyFnContextWithMyPlayerID, MythologicalCreatureCommandZoneCardType, PossibleReturnMaxCoinValue, PublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Получение победных очков по Гиганту, не имеющим специфических вариантов подсчёта очков.</h3>
@@ -70,7 +70,7 @@ export const GymirScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest
  * @returns Количество очков по конкретному гиганту.
  */
 export const SurtScoring: GiantScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    AllCoinsValueType => {
+    PossibleReturnMaxCoinValue => {
     const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(myPlayerID)];
     if (player === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,

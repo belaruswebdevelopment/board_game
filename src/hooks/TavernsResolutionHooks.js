@@ -10,12 +10,12 @@ import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { IsLastRound } from "../helpers/RoundHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
-import { AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertSecretAllDwarfDecksArrayIndex, AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
-import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, PhaseNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastActions } from "./NextPhaseHooks";
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -28,7 +28,9 @@ import { StartBidUlineOrTavernsResolutionPhase, StartEndTierPhaseOrEndGameLastAc
  * @returns Фаза игры.
  */
 const AfterLastTavernEmptyActions = ({ G, ctx, ...rest }) => {
-    const isLastRound = IsLastRound({ G, ctx, ...rest }), currentDeck = G.secret.decks[(G.secret.decks.length - G.tierToEnd - Number(isLastRound))];
+    const isLastRound = IsLastRound({ G, ctx, ...rest }), index = G.secret.decks.length - G.tierToEnd - Number(isLastRound);
+    AssertSecretAllDwarfDecksArrayIndex(index);
+    const currentDeck = G.secret.decks[index];
     if (currentDeck.length === 0) {
         if (G.expansions.Thingvellir.active) {
             return CheckEnlistmentMercenaries({ G, ctx, ...rest });
@@ -258,10 +260,10 @@ export const OnTavernsResolutionMove = ({ G, ctx, events, ...rest }) => {
  * @returns
  */
 export const OnTavernsResolutionTurnBegin = ({ G, ctx, ...rest }) => {
-    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`) {
+    if (G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCardSoloBot()]);
     }
-    else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+    else if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.pickCardSoloBotAndvari()]);
     }
     else {

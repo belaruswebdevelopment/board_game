@@ -2,7 +2,7 @@ import { AssertCampIndex, AssertSecretAllCampDecksIndex, AssertTierIndex } from 
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { ArtefactNames, LogTypeNames } from "../typescript/enums";
-import type { CampCardArray, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, IndexOf, SecretCampDeckTier1, SecretCampDeckType } from "../typescript/interfaces";
+import type { CampCardArrayIndex, CampCardType, CampDeckCardType, CanBeNullType, CanBeUndefType, FnContext, SecretCampDeckTier1, SecretCampDeckType } from "../typescript/interfaces";
 import { GetCampCardsFromSecretCampDeck } from "./DecksHelpers";
 import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIfNeeded } from "./DiscardCardHelpers";
 
@@ -18,7 +18,7 @@ import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIf
 * @param cardId Индекс карты.
 * @returns
 */
-const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: IndexOf<CampCardArray>): void => {
+const AddCardToCamp = ({ G, ctx, ...rest }: FnContext, cardId: CampCardArrayIndex): void => {
     const tier: number = G.secret.campDecks.length - G.tierToEnd;
     AssertTierIndex(tier);
     const newCampCard: CanBeUndefType<CampDeckCardType> =

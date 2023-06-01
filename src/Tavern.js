@@ -17,10 +17,7 @@ import { ErrorNames, GameModeNames, LogTypeNames, TavernNames } from "./typescri
  * @param context
  * @returns Нет ли карт в текущей таверне.
  */
-export const CheckIfCurrentTavernEmpty = ({ G }) => {
-    const currentTavern = G.taverns[G.currentTavern];
-    return currentTavern.every((card) => card === null);
-};
+export const CheckIfCurrentTavernEmpty = ({ G }) => G.taverns[G.currentTavern].every((card) => card === null);
 /**
  * <h3>Сбрасывает одну лишнюю карту из таверны в стопку сброса при игре на двух игроков или в соло режиме.</h3>
  * <p>Применения:</p>

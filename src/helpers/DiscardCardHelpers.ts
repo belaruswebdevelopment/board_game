@@ -1,6 +1,6 @@
 import { ThrowMyError } from "../Error";
 import { CardTypeRusNames, ErrorNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { AllDiscardCardType, CampCardArray, CampCardType, CampDeckCardType, CanBeUndefType, FnContext, IndexOf, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernAllCardType, TavernCardIdPossibleType, TavernCardType, TavernCardWithExpansionType } from "../typescript/interfaces";
+import type { AllDiscardCardType, CampCardArrayIndex, CampCardType, CampDeckCardType, CanBeUndefType, FnContext, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, TavernAllCardsArray, TavernCardIdPossibleType, TavernCardType, TavernCardWithExpansionType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с убиранием фракционной карты со стола игрока.</h3>
@@ -44,7 +44,7 @@ export const RemoveCardFromPlayerBoardSuitCards = ({ G, ctx, myPlayerID, ...rest
  */
 export const RemoveCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardId: TavernCardIdPossibleType):
     TavernCardWithExpansionType => {
-    const currentTavern: TavernAllCardType = G.taverns[G.currentTavern],
+    const currentTavern: TavernAllCardsArray = G.taverns[G.currentTavern],
         removedTavernCard: CanBeUndefType<TavernCardType> = currentTavern[tavernCardId];
     if (removedTavernCard === undefined) {
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined,
@@ -70,7 +70,7 @@ export const RemoveCardFromTavern = ({ G, ctx, ...rest }: FnContext, tavernCardI
  * @param addToCampArray Массив добавляемых в лагерь элементов.
  * @returns Убранная карта из лагеря.
  */
-export const RemoveCardsFromCampAndAddIfNeeded = ({ G }: FnContext, campCardId: IndexOf<CampCardArray>,
+export const RemoveCardsFromCampAndAddIfNeeded = ({ G }: FnContext, campCardId: CampCardArrayIndex,
     addToCampArray: CampCardType[]): CampCardType => {
     const removedCampCard: CanBeUndefType<CampCardType> =
         G.camp.splice(campCardId, 1, ...addToCampArray)[0];

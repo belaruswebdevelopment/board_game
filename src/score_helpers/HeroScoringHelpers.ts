@@ -1,7 +1,7 @@
 import { ThrowMyError } from "../Error";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { ErrorNames, SuitNames } from "../typescript/enums";
-import type { AllCoinsValueType, BasicHeroScoringType, HeroScoringFunction, MyFnContextWithMyPlayerID } from "../typescript/interfaces";
+import type { BasicHeroScoringType, HeroScoringFunction, MyFnContextWithMyPlayerID, RoyalCoinValueType } from "../typescript/interfaces";
 import { GetRanksValueMultiplier } from "./ScoreHelpers";
 
 /**
@@ -34,7 +34,7 @@ export const BasicHeroScoring: HeroScoringFunction = ({ G, ctx, ...rest }: MyFnC
  * @returns Количество очков по конкретному герою.
  */
 export const AstridScoring: HeroScoringFunction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMyPlayerID):
-    AllCoinsValueType => GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
+    RoyalCoinValueType => GetMaxCoinValue({ G, ctx, myPlayerID, ...rest });
 
 /**
  * <h3>Получение победных очков по герою Idunn.</h3>

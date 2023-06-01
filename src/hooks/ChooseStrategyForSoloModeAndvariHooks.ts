@@ -7,7 +7,7 @@ import { AddHeroToPlayerCards } from "../helpers/HeroCardHelpers";
 import { CheckPlayersBasicOrder } from "../helpers/PlayerHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AssertGeneralStrategyForSoloBotAndvariId, AssertHeroesForSoloGameForStrategyBotAndvari, AssertHeroesForSoloGameForStrategyBotAndvariIndex, AssertReserveStrategyForSoloBotAndvariId } from "../is_helpers/AssertionTypeHelpers";
-import { CardTypeRusNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
+import { CardTypeRusNames, PlayerIdForSoloGameNames, SoloGameAndvariStrategyNames, SuitNames } from "../typescript/enums";
 import type { AllHeroCardType, CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, HeroCard, HeroNamesForEasyStrategyAndvariKeyofTypeofType, HeroNamesForHardStrategyAndvariKeyofTypeofType } from "../typescript/interfaces";
 
 /**
@@ -35,7 +35,7 @@ export const CheckChooseStrategyForSoloModeAndvariOrder = ({ G, ctx, ...rest }: 
  * @returns Необходимость завершения текущей фазы.
  */
 export const CheckChooseStrategyForSoloModeAndvariPhase = ({ G, ctx }: FnContext): CanBeVoidType<boolean> => {
-    if (ctx.currentPlayer === `1`) {
+    if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         return G.heroesForSoloGameForStrategyBotAndvari !== null
             && G.heroesForSoloGameForStrategyBotAndvari.length === 5
             && G.heroesInitialForSoloGameForBotAndvari === null;
@@ -53,7 +53,7 @@ export const CheckChooseStrategyForSoloModeAndvariPhase = ({ G, ctx }: FnContext
  * @returns Необходимость завершения текущего хода.
  */
 export const CheckEndChooseStrategyForSoloModeAndvariTurn = ({ G, ctx }: FnContext): CanBeVoidType<boolean> => {
-    if (ctx.currentPlayer === `0`) {
+    if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
         return G.soloGameAndvariStrategyVariantLevel !== null && G.soloGameAndvariStrategyLevel !== null;
     }
 };
@@ -97,11 +97,11 @@ export const OnChooseStrategyForSoloModeAndvariMove = ({ G, ctx, ...rest }: FnCo
  * @returns
  */
 export const OnChooseStrategyForSoloModeAndvariTurnBegin = ({ G, ctx, random, ...rest }: FnContext): void => {
-    if (ctx.currentPlayer === `0`) {
+    if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
         AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest },
             [AllStackData.chooseStrategyVariantLevelForSoloModeAndvari()]);
         DrawCurrentProfit({ G, ctx, myPlayerID: ctx.currentPlayer, random, ...rest });
-    } else if (ctx.currentPlayer === `1`) {
+    } else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
         if (G.heroesInitialForSoloGameForBotAndvari === null) {
             throw new Error(`Набор стартовых героев и героев для стратегии соло бота Андвари не может быть ранее использован.`);
         }

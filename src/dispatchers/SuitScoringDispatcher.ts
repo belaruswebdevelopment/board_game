@@ -13,10 +13,8 @@ import type { Action, SuitScoringArgsType, SuitScoringFunction } from "../typesc
  * @param params Параметры действия.
  * @returns Количество победных очков по фракции дворфа.
  */
-export const StartSuitScoring = (action: Action<SuitScoringFunctionNames>, params: SuitScoringArgsType): number => {
-    const actionDispatcher: SuitScoringFunction = SuitScoringDispatcherSwitcher(action.name);
-    return actionDispatcher?.(...params);
-};
+export const StartSuitScoring = (action: Action<SuitScoringFunctionNames>, params: SuitScoringArgsType): number =>
+    SuitScoringDispatcherSwitcher(action.name)?.(...params);
 
 /**
 * <h3>Диспетчер всех действий по получению победных очков по фракции дворфа.</h3>

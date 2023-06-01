@@ -7,7 +7,7 @@ import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
-import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, SuitNames } from "../typescript/enums";
+import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, Distinctions, DwarfDeckCardType, ExplorerDistinctionCardsLength, FnContext, PlayerID, PublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -114,7 +114,7 @@ export const OnTroopEvaluationTurnBegin = ({ G, ctx, ...rest }: FnContext): void
     AddActionsToStack({ G, ctx, myPlayerID: ctx.currentPlayer, ...rest }, [AllStackData.getDistinctions()]);
     if (G.distinctions[SuitNames.explorer] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
         let length: ExplorerDistinctionCardsLength;
-        if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === `1`) {
+        if (G.mode === GameModeNames.SoloAndvari && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
             length = 1;
         } else {
             const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[Number(ctx.currentPlayer)];

@@ -1,10 +1,10 @@
 import { CompareTavernCards } from "./bot_logic/BotCardLogic";
 import { ThrowMyError } from "./Error";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { AssertTop1And2ScoreNumber } from "./is_helpers/AssertionTypeHelpers";
+import { AssertTavernCardId, AssertTop1And2ScoreNumber } from "./is_helpers/AssertionTypeHelpers";
 import { GetValidator } from "./MoveValidator";
 import { AllCurrentScoring } from "./Score";
-import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
+import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, PlayerIdForSoloGameNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
 // TODO Check all number type here!
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -53,10 +53,10 @@ export const enumerate = (G, ctx, playerID) => {
                             activeStageOfCurrentPlayer = BidsDefaultStageNames.BotsPlaceAllCoins;
                             break;
                         case GameModeNames.Solo:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.BotsPlaceAllCoins;
                             }
-                            else if (ctx.currentPlayer === `1`) {
+                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotPlaceAllCoins;
                             }
                             else {
@@ -64,10 +64,10 @@ export const enumerate = (G, ctx, playerID) => {
                             }
                             break;
                         case GameModeNames.SoloAndvari:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.BotsPlaceAllCoins;
                             }
-                            else if (ctx.currentPlayer === `1`) {
+                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                 activeStageOfCurrentPlayer = BidsDefaultStageNames.SoloBotAndvariPlaceAllCoins;
                             }
                             else {
@@ -103,10 +103,10 @@ export const enumerate = (G, ctx, playerID) => {
                             }
                             break;
                         case GameModeNames.Solo:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.ClickCard;
                             }
-                            else if (ctx.currentPlayer === `1`) {
+                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotClickCard;
                             }
                             else {
@@ -114,10 +114,10 @@ export const enumerate = (G, ctx, playerID) => {
                             }
                             break;
                         case GameModeNames.SoloAndvari:
-                            if (ctx.currentPlayer === `0`) {
+                            if (ctx.currentPlayer === PlayerIdForSoloGameNames.HumanPlayerId) {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.ClickCard;
                             }
-                            else if (ctx.currentPlayer === `1`) {
+                            else if (ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId) {
                                 activeStageOfCurrentPlayer = TavernsResolutionDefaultStageNames.SoloBotAndvariClickCard;
                             }
                             else {
@@ -261,7 +261,9 @@ export const iterations = (G, ctx, playerID) => {
         if (currentTavern.filter((card) => card !== null).length === 1) {
             return 1;
         }
-        const cardIndex = currentTavern.findIndex((card) => card !== null), tavernNotNullCard = currentTavern[cardIndex];
+        const cardIndex = currentTavern.findIndex((card) => card !== null);
+        AssertTavernCardId(cardIndex);
+        const tavernNotNullCard = currentTavern[cardIndex];
         if (tavernNotNullCard === undefined) {
             return ThrowMyError({ G, ctx }, ErrorNames.CurrentTavernCardWithCurrentIdIsUndefined, cardIndex);
         }
@@ -273,9 +275,10 @@ export const iterations = (G, ctx, playerID) => {
         }
         let efficientMovesCount = 0;
         for (let i = 0; i < currentTavern.length; i++) {
+            AssertTavernCardId(i);
             const tavernCard = currentTavern[i];
             if (tavernCard === undefined) {
-                throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '2'.`);
+                throw new Error(`Отсутствует карта с id '${i}' в текущей таверне '2'.`);
             }
             if (tavernCard === null) {
                 continue;
@@ -327,11 +330,11 @@ export const objectives = (G, ctx, playerID) => ({
     /* isWeaker: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase === Phases.PlaceCoins) {
-            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
+            const tavern0: TavernWithoutExpansionArray = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<DwarfDeckCardType>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
@@ -363,11 +366,11 @@ export const objectives = (G, ctx, playerID) => ({
     /* isSecond: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase === Phases.PlaceCoins) {
-            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
+            const tavern0: TavernWithoutExpansionArray = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<DwarfDeckCardType>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
@@ -399,11 +402,11 @@ export const objectives = (G, ctx, playerID) => ({
     /* isEqual: {
         checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase === Phases.PlaceCoins) {
-            const tavern0: CanBeNullType<TavernCardType>[] = G.taverns[0];
+            const tavern0: TavernWithoutExpansionArray = G.taverns[0];
             if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
+            if (tavern0.some((card: CanBeNullType<DwarfDeckCardType>): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];

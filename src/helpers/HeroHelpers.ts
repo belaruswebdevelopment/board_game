@@ -1,7 +1,7 @@
 import { AddPickHeroAction } from "../actions/HeroAutoActions";
 import { ThrowMyError } from "../Error";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { CampBuffNames, CommonBuffNames, CommonStageNames, ErrorNames, GameModeNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
+import { CampBuffNames, CommonBuffNames, CommonStageNames, ErrorNames, GameModeNames, PlayerIdForSoloGameNames, SoloGameAndvariStrategyNames } from "../typescript/enums";
 import type { CanBeUndefType, HeroCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PublicPlayer, Stack } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
@@ -30,12 +30,12 @@ export const CheckPickHero = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWithMy
             CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, CommonBuffNames.HasOneNotCountHero),
             playerCards: PlayerBoardCardType[][] = Object.values(player.cards),
             heroesLength: number =
-                G.mode === GameModeNames.Solo && ctx.currentPlayer === `1`
+                G.mode === GameModeNames.Solo && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId
                     ? player.heroes.filter((hero: HeroCard): boolean =>
                         hero.name.startsWith(`Dwerg`)).length : player.heroes.length -
                     ((G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroEasyStrategy
                         || G.soloGameAndvariStrategyLevel === SoloGameAndvariStrategyNames.WithHeroHardStrategy)
-                        && ctx.currentPlayer === `1` ? 5 : 0),
+                        && ctx.currentPlayer === PlayerIdForSoloGameNames.SoloBotPlayerId ? 5 : 0),
             isCanPickHero: boolean =
                 (Math.min(...playerCards.map((item: PlayerBoardCardType[]): number =>
                     item.reduce(TotalRank, 0))) -
