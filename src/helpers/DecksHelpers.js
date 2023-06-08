@@ -1,5 +1,4 @@
 import { AssertRefillDeckCardsWithExpansionArray, AssertRefillDeckCardsWithoutExpansionArray } from "../is_helpers/AssertionTypeHelpers";
-//TODO Rework it in one func with switch!?
 export const GetCardsFromSecretDwarfDeck = ({ G }, tier, start, amount) => {
     const currentDeck = G.secret.decks[tier], cards = currentDeck.splice(start, amount);
     if (amount !== cards.length) {
@@ -9,18 +8,18 @@ export const GetCardsFromSecretDwarfDeck = ({ G }, tier, start, amount) => {
     AssertRefillDeckCardsWithoutExpansionArray(cards);
     return cards;
 };
-export const GetCampCardsFromSecretCampDeck = ({ G }, tier, start, amount) => {
-    const campDeck = G.secret.campDecks[tier], campCards = campDeck.splice(start, amount);
+export const GetCampCardsFromSecretCampDeck = ({ G }, tier, amount) => {
+    const campDeck = G.secret.campDecks[tier], campCards = campDeck.splice(0, amount);
     if (amount !== campCards.length) {
         throw new Error(`Недостаточно карт в массиве карт лагеря конкретной эпохи: требуется - '${amount}', в наличии - '${campCards.length}'.`);
     }
     G.campDecksLength[tier] = campDeck.length;
     return campCards;
 };
-export const GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck = ({ G }, start, amount) => {
-    const currentCampDeck = G.secret.mythologicalCreatureDeck, mythologicalCreatureCards = currentCampDeck.splice(start, amount);
-    if (amount !== mythologicalCreatureCards.length) {
-        throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${amount}', в наличии - '${mythologicalCreatureCards.length}'.`);
+export const GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck = ({ G }) => {
+    const currentCampDeck = G.secret.mythologicalCreatureDeck, mythologicalCreatureCards = currentCampDeck.splice(0, G.drawSize);
+    if (G.drawSize !== mythologicalCreatureCards.length) {
+        throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${G.drawSize}', в наличии - '${mythologicalCreatureCards.length}'.`);
     }
     G.mythologicalCreatureDeckLength = currentCampDeck.length;
     AssertRefillDeckCardsWithExpansionArray(mythologicalCreatureCards);

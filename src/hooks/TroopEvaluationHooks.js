@@ -5,7 +5,7 @@ import { RefillCamp } from "../helpers/CampHelpers";
 import { GetCardsFromSecretDwarfDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
+import { AssertDistinctionsPlayersOrderArray, AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
 /**
@@ -21,9 +21,8 @@ import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, PlayerIdForSoloGame
 export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }) => {
     CheckAllSuitsDistinctions({ G, ctx, ...rest });
     const distinctions = Object.values(G.distinctions).filter((distinction) => distinction !== null && distinction !== undefined);
-    if (distinctions.every((distinction) => distinction !== null && distinction !== undefined)) {
-        G.publicPlayersOrder = distinctions;
-    }
+    AssertDistinctionsPlayersOrderArray(distinctions);
+    G.publicPlayersOrder = distinctions;
 };
 /**
  * <h3>Проверяет необходимость завершения фазы 'Смотр войск'.</h3>

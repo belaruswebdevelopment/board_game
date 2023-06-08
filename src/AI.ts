@@ -5,7 +5,7 @@ import { AssertTavernCardId, AssertTop1And2ScoreNumber } from "./is_helpers/Asse
 import { GetValidator } from "./MoveValidator";
 import { AllCurrentScoring } from "./Score";
 import { ActivateGiantAbilityOrPickCardSubStageNames, ActivateGodAbilityOrNotSubStageNames, BidsDefaultStageNames, BidUlineDefaultStageNames, BrisingamensEndGameDefaultStageNames, CampBuffNames, CardTypeRusNames, ChooseDifficultySoloModeAndvariDefaultStageNames, ChooseDifficultySoloModeDefaultStageNames, CommonStageNames, ConfigNames, EnlistmentMercenariesDefaultStageNames, ErrorNames, GameModeNames, GetMjollnirProfitDefaultStageNames, PhaseNames, PlaceYludDefaultStageNames, PlayerIdForSoloGameNames, TavernsResolutionDefaultStageNames, TavernsResolutionWithSubStageNames, TroopEvaluationDefaultStageNames } from "./typescript/enums";
-import type { ActiveStageNames, AIAllObjectives, CanBeNullType, CanBeUndefType, Ctx, DwarfDeckCardType, FnContext, GetValidatorStageNames, MoveArgsType, MoveNamesType, Moves, MoveValidator, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, MyGameState, PlayerID, PublicPlayer, SecretDwarfDeckTier0, StageNames, TavernAllCardsArray, TavernCardType, TavernWithoutExpansionArray, ValidMoveIdParamType } from "./typescript/interfaces";
+import type { ActiveStageNames, AIActivateGiantAbilityOrPickCard, AIActivateGodAbilityOrPickCard, AIAllObjectives, AIPickCardOrCampCard, CanBeNullType, CanBeUndefType, Ctx, DwarfDeckCardType, FnContext, GetValidatorStageNames, MoveArgsType, MoveNamesType, Moves, MoveValidator, MoveValidatorGetRangeType, MyFnContextWithMyPlayerID, MyGameState, PlayerID, PublicPlayer, SecretDwarfDeckTier0, StageNames, TavernAllCardsArray, TavernCardType, TavernWithoutExpansionArray, ValidMoveIdParamType } from "./typescript/interfaces";
 
 // TODO Check all number type here!
 /**
@@ -90,7 +90,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): Moves[]
                         case GameModeNames.Basic:
                         case GameModeNames.Multiplayer:
                             if (ctx.activePlayers === null) {
-                                let pickCardOrCampCard: `card` | `camp` = `card`;
+                                let pickCardOrCampCard: AIPickCardOrCampCard = `card`;
                                 if (G.expansions.Thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                                     || (!G.campPicked && CheckPlayerHasBuff({ G, ctx, myPlayerID: playerID } as
                                         MyFnContextWithMyPlayerID, CampBuffNames.GoCamp)))) {
@@ -176,7 +176,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): Moves[]
             }
         }
         if (activeStageOfCurrentPlayer === TavernsResolutionWithSubStageNames.ActivateGiantAbilityOrPickCard) {
-            const activateGiantAbilityOrPickCard: `ability` | `card` =
+            const activateGiantAbilityOrPickCard: AIActivateGiantAbilityOrPickCard =
                 Math.floor(Math.random() * 2) ? `ability` : `card`;
             if (activateGiantAbilityOrPickCard === `ability`) {
                 type = ActivateGiantAbilityOrPickCardSubStageNames.ClickGiantAbilityNotCard;
@@ -184,7 +184,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx, playerID: PlayerID): Moves[]
                 type = ActivateGiantAbilityOrPickCardSubStageNames.ClickCardNotGiantAbility;
             }
         } else if (activeStageOfCurrentPlayer === TavernsResolutionWithSubStageNames.ActivateGodAbilityOrNot) {
-            const activateGodAbilityOrPickCard: `ability` | `not` =
+            const activateGodAbilityOrPickCard: AIActivateGodAbilityOrPickCard =
                 Math.floor(Math.random() * 2) ? `ability` : `not`;
             if (activateGodAbilityOrPickCard === `ability`) {
                 type = ActivateGodAbilityOrNotSubStageNames.ActivateGodAbility;

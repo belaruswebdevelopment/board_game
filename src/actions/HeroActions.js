@@ -144,7 +144,7 @@ export const PlaceThrudAction = ({ G, ctx, myPlayerID, ...rest }, suit) => {
     }
     const thrudHeroCard = player.heroes.find((hero) => hero.name === HeroNames.Thrud);
     if (thrudHeroCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта героя '${HeroNames.Thrud}'.`);
+        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта '${CardTypeRusNames.HeroPlayerCard}' '${HeroNames.Thrud}'.`);
     }
     thrudHeroCard.playerSuit = suit;
     ChangeBuffValue({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.MoveThrud, suit);
@@ -199,7 +199,7 @@ export const PlaceYludAction = ({ G, ctx, myPlayerID, ...rest }, suit) => {
         },
     }, yludHeroCard = player.heroes.find((hero) => hero.name === HeroNames.Ylud);
     if (yludHeroCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта героя '${HeroNames.Ylud}'.`);
+        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта '${CardTypeRusNames.HeroPlayerCard}' '${HeroNames.Ylud}'.`);
     }
     yludHeroCard.playerSuit = suit;
     yludHeroCard.rank = playerVariants[suit].rank;

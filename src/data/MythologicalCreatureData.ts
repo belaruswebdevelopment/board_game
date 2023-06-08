@@ -152,6 +152,7 @@ const Loki: GodData = {
     },
 };
 
+// TODO Remove all swapped hero's buffs and for Uline!
 // TODO If Odin swap Olwin which doubles on the player's table => next who pick it can't pick doubles!?
 // TODO Odin swap only neutral heroes!!!
 /**

@@ -7,8 +7,8 @@ import { DiscardCurrentCard, RemoveCardFromPlayerBoardSuitCards } from "../helpe
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
-import type { AllHeroesForPlayerOrSoloBotAddToPlayerBoardPossibleCardIdType, CanBeUndefType, HeroCard, HeroRankType, MultiSuitCard, MultiSuitRankType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import { CardTypeRusNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, HeroNames, LogTypeNames, MultiSuitCardNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, RankVariantsNames, SuitNames } from "../typescript/enums";
+import type { AllHeroesForPlayerOrSoloBotAddToPlayerBoardPossibleCardIdType, CanBeUndefType, HeroCard, MultiSuitCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, StackNamesType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с добавлениям героя игроку или соло боту.</h3>
@@ -90,7 +90,7 @@ export const PlaceMultiSuitCardAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCo
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const playerVariants: SuitPropertyType<VariantType<MultiSuitRankType>> = {
+    const playerVariants: SuitPropertyType<VariantType<RankVariantsNames.MultiSuitRankType>> = {
         blacksmith: {
             suit: SuitNames.blacksmith,
             rank: 1,
@@ -164,7 +164,7 @@ export const PlaceThrudAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWit
     const thrudHeroCard: CanBeUndefType<HeroCard> =
         player.heroes.find((hero: HeroCard): boolean => hero.name === HeroNames.Thrud);
     if (thrudHeroCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта героя '${HeroNames.Thrud}'.`);
+        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта '${CardTypeRusNames.HeroPlayerCard}' '${HeroNames.Thrud}'.`);
     }
     thrudHeroCard.playerSuit = suit;
     ChangeBuffValue({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.MoveThrud, suit);
@@ -194,7 +194,7 @@ export const PlaceYludAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
         return ThrowMyError({ G, ctx, ...rest }, ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined,
             myPlayerID);
     }
-    const playerVariants: SuitPropertyType<VariantType<HeroRankType>> = {
+    const playerVariants: SuitPropertyType<VariantType<RankVariantsNames.HeroRankType>> = {
         blacksmith: {
             suit: SuitNames.blacksmith,
             rank: 1,
@@ -224,7 +224,7 @@ export const PlaceYludAction = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWith
         yludHeroCard: CanBeUndefType<HeroCard> =
             player.heroes.find((hero: HeroCard): boolean => hero.name === HeroNames.Ylud);
     if (yludHeroCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта героя '${HeroNames.Ylud}'.`);
+        throw new Error(`В массиве карт игрока с id '${myPlayerID}' отсутствует карта '${CardTypeRusNames.HeroPlayerCard}' '${HeroNames.Ylud}'.`);
     }
     yludHeroCard.playerSuit = suit;
     yludHeroCard.rank = playerVariants[suit].rank;

@@ -5,6 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerId } from "../is_helpers/AssertionTypeHelpers";
 import { CampBuffNames, ErrorNames, GodNames, PhaseNames } from "../typescript/enums";
 /**
  * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
@@ -21,7 +22,9 @@ export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }) => {
     if (brisingamensPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф '${CampBuffNames.DiscardCardEndGame}'.`);
     }
-    G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
+    const brisingamensPlayerId = String(brisingamensPlayerIndex);
+    AssertPlayerId(brisingamensPlayerId);
+    G.publicPlayersOrder.push(String(brisingamensPlayerId));
 };
 /**
  * <h3>Начинает фазу 'getMjollnirProfit'.</h3>

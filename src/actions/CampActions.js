@@ -30,7 +30,7 @@ export const AddCoinToPouchAction = ({ G, ctx, myPlayerID, ...rest }, coinId) =>
     }
     const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
     if (tempId === -1) {
-        throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.VidofnirVedrfolnir}'.`);
+        throw new Error(`В массиве монет игрока с id '${myPlayerID}' на столе отсутствует место для добавления в кошель для действия карты '${CardTypeRusNames.ArtefactCard}' '${ArtefactNames.VidofnirVedrfolnir}'.`);
     }
     AssertPlayerCoinId(tempId);
     let handCoins;

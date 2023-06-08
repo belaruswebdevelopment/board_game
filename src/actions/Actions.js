@@ -90,7 +90,7 @@ export const GetEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }, 
         throw new Error(`Выбранная карта должна быть с типом '${CardTypeRusNames.MercenaryCard}'.`);
     }
     AddActionsToStack({ G, ctx, myPlayerID, ...rest }, [AllStackData.placeEnlistmentMercenaries(pickedCard)]);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал карту '${CardTypeRusNames.MercenaryCard}' '${pickedCard.name}'.`);
 };
 /**
  * <h3>Выбор фракции для применения финального эффекта артефакта Mjollnir.</h3>
@@ -112,7 +112,7 @@ export const GetMjollnirProfitAction = ({ G, ctx, myPlayerID, ...rest }, suit) =
         name: CommonBuffNames.SuitIdForMjollnir,
     }, suit);
     DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, CampBuffNames.GetMjollnirProfit);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта карты карту '${CardTypeRusNames.ArtefactCard}' '${ArtefactNames.Mjollnir}'.`);
 };
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>
@@ -217,7 +217,7 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }
     }
     const cardVariants = mercenaryCard.variants[suit];
     if (cardVariants === undefined) {
-        throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
+        throw new Error(`У выбранной карты '${CardTypeRusNames.MercenaryCard}' отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }
     mercenaryCard.playerSuit = suit;
     mercenaryCard.points = cardVariants.points;

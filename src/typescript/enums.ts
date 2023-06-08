@@ -1363,3 +1363,9 @@ export const enum PlayerIdForSoloGameNames {
     HumanPlayerId = `0`,
     SoloBotPlayerId = `1`,
 }
+
+export const enum RankVariantsNames {
+    HeroRankType = `HeroRankType`,
+    MercenaryRankType = `MercenaryRankType`,
+    MultiSuitRankType = `MultiSuitRankType`,
+}

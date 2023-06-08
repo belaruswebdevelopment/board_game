@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, MultiSuitCardNames, RoyalOfferingNames, SpecialCardNames, SuitNames } from "../typescript/enums";
-import type { AllCoinsValueType, AllPriorityValueType, Background, CanBeNullType, CardNamesForStylesType, MythologicalCreatureNameType, Styles, TavernsArrayIndex, TierType } from "../typescript/interfaces";
+import type { AllCoinsValueType, AllDrawCardPointsType, AllPriorityValueType, Background, CardNamesForStylesType, MythologicalCreatureNameType, Styles, TavernsArrayIndex, TierType } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -150,8 +150,7 @@ export const ALlStyles: Styles = {
                 throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
         }
     },
-    // TODO Add type to number 0-12!
-    Card: (suit: SuitNames, name: CardNamesForStylesType, points: CanBeNullType<number>): Background => {
+    Card: (suit: SuitNames, name: CardNamesForStylesType, points: AllDrawCardPointsType): Background => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             // TODO Fix it to use _exhaustiveCheck!
             switch (name) {

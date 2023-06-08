@@ -5,6 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerId } from "../is_helpers/AssertionTypeHelpers";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, PlayerIdForSoloGameNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'Ставки'.</h3>
@@ -87,7 +88,9 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }) => {
             }
         }
     }
-    G.publicPlayersOrder.push(String(yludIndex));
+    const yludPlayerId = String(yludIndex);
+    AssertPlayerId(yludPlayerId);
+    G.publicPlayersOrder.push(yludPlayerId);
 };
 /**
  * <h3>Проверяет необходимость завершения хода в фазе 'Поместить Труд'.</h3>

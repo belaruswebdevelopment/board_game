@@ -626,9 +626,9 @@ export const moveValidators: MoveValidators = {
                 return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
                     myPlayerID);
             }
-            const mercenariesCount: number = player.campCards.filter(IsMercenaryCampCard).length;
             return myPlayerID === ctx.currentPlayer && ctx.playOrderPos === 0
-                && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && mercenariesCount > 0;
+                && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
+                && player.campCards.filter(IsMercenaryCampCard).length > 0;
         },
     },
     PlaceEnlistmentMercenariesMoveValidator: {

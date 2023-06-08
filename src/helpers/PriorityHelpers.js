@@ -31,16 +31,20 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }) => {
  * @returns
  */
 export const ChangePlayersPriorities = ({ G, ctx, ...rest }) => {
+    if (G.exchangeOrder === null) {
+        throw new Error(`В массиве изменения порядка хода игроков не может не быть значений.`);
+    }
     const tempPriorities = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder = G.exchangeOrder[i];
-        if (exchangeOrder !== undefined) {
-            const exchangePlayer = G.publicPlayers[exchangeOrder];
-            if (exchangePlayer === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, exchangeOrder);
-            }
-            tempPriorities[i] = exchangePlayer.priority;
+        if (exchangeOrder === undefined) {
+            throw new Error(`В массиве порядка хода игроков отсутствует текущий с id '${i}'.`);
         }
+        const exchangePlayer = G.publicPlayers[exchangeOrder];
+        if (exchangePlayer === undefined) {
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined, exchangeOrder);
+        }
+        tempPriorities[i] = exchangePlayer.priority;
     }
     if (tempPriorities.length) {
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Обмен кристаллами между игроками:`);

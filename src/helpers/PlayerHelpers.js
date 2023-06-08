@@ -1,3 +1,4 @@
+import { AssertPlayerId } from "../is_helpers/AssertionTypeHelpers";
 import { GameModeNames, HeroBuffNames, PhaseNames } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 /**
@@ -18,13 +19,17 @@ export const CheckPlayersBasicOrder = ({ G, ctx, ...rest }) => {
             if (G.mode === GameModeNames.Solo || G.mode === GameModeNames.SoloAndvari
                 || ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                     && !CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest }, HeroBuffNames.EveryTurn))) {
-                G.publicPlayersOrder.push(String(i));
+                const playerId = String(i);
+                AssertPlayerId(playerId);
+                G.publicPlayersOrder.push(playerId);
             }
         }
         else {
             if ((G.mode === GameModeNames.Basic || G.mode === GameModeNames.Multiplayer)
                 && CheckPlayerHasBuff({ G, ctx, myPlayerID: String(i), ...rest }, HeroBuffNames.EveryTurn)) {
-                G.publicPlayersOrder.push(String(i));
+                const playerId = String(i);
+                AssertPlayerId(playerId);
+                G.publicPlayersOrder.push(playerId);
             }
         }
     }

@@ -5,7 +5,7 @@ import { RefillCamp } from "../helpers/CampHelpers";
 import { GetCardsFromSecretDwarfDeck } from "../helpers/DecksHelpers";
 import { EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
+import { AssertDistinctionsPlayersOrderArray, AssertExplorerDistinctionCards } from "../is_helpers/AssertionTypeHelpers";
 import { CheckAllSuitsDistinctions } from "../TroopEvaluation";
 import { ErrorNames, GameModeNames, MythicalAnimalBuffNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, Distinctions, DwarfDeckCardType, ExplorerDistinctionCardsLength, FnContext, PlayerID, PublicPlayer } from "../typescript/interfaces";
@@ -25,10 +25,8 @@ export const CheckAndResolveTroopEvaluationOrders = ({ G, ctx, ...rest }: FnCont
     const distinctions: PlayerID[] =
         Object.values(G.distinctions).filter((distinction: Distinctions): boolean =>
             distinction !== null && distinction !== undefined) as PlayerID[];
-    if (distinctions.every((distinction: Distinctions): boolean =>
-        distinction !== null && distinction !== undefined)) {
-        G.publicPlayersOrder = distinctions;
-    }
+    AssertDistinctionsPlayersOrderArray(distinctions);
+    G.publicPlayersOrder = distinctions;
 };
 
 /**

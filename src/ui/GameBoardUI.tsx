@@ -3,7 +3,7 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernCardId, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, PlayerIdForSoloGameNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import type { ActiveStageNames, AllCoinsValueType, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinNumberValues, DiscardDeckCardType, DrawBoardOptions, DrawProfitType, FnContext, HeroCard, MarketCoinNumberValuesType, MoveArgumentsType, MoveValidatorNamesTypes, PublicPlayer, RoyalCoin, SoloGameAndvariStrategyVariantLevelType, StageNameTextType, TavernAllCardsArray, TavernCardType, TavernInConfig, TierType } from "../typescript/interfaces";
@@ -662,6 +662,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }: FnContext,
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
             for (let j = 0; j < G.drawSize; j++) {
+                AssertTavernCardId(j);
                 const tavern: TavernAllCardsArray = G.taverns[t],
                     tavernCard: CanBeUndefType<TavernCardType> = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {

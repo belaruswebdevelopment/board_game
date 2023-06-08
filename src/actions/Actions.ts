@@ -8,8 +8,8 @@ import { AddActionsToStack } from "../helpers/StackHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardConcreteCardFromTavern } from "../Tavern";
-import { ArtefactNames, CampBuffNames, CardTypeRusNames, CommonBuffNames, ErrorNames, LogTypeNames, SuitNames, SuitRusNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, CampCardType, CampCreatureCommandZoneCardType, CanBeUndefType, DiscardDeckCardType, DwarfDeckCardType, ExplorerDistinctionCardIdType, MercenaryCard, MercenaryRankType, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, TavernCardIdPossibleType, TavernCardWithExpansionType, VariantType } from "../typescript/interfaces";
+import { ArtefactNames, CampBuffNames, CardTypeRusNames, CommonBuffNames, ErrorNames, LogTypeNames, RankVariantsNames, SuitNames, SuitRusNames } from "../typescript/enums";
+import type { ActionFunctionWithoutParams, CampCardType, CampCreatureCommandZoneCardType, CanBeUndefType, DiscardDeckCardType, DwarfDeckCardType, ExplorerDistinctionCardIdType, MercenaryCard, MyFnContextWithMyPlayerID, PlayerBoardCardType, PlayerStack, PublicPlayer, TavernCardIdPossibleType, TavernCardWithExpansionType, VariantType } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с выбором карты из таверны.</h3>
@@ -103,7 +103,7 @@ export const GetEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }: 
     }
     AddActionsToStack({ G, ctx, myPlayerID, ...rest },
         [AllStackData.placeEnlistmentMercenaries(pickedCard)]);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' во время фазы '${ctx.phase}' выбрал карту '${CardTypeRusNames.MercenaryCard}' '${pickedCard.name}'.`);
 };
 
 /**
@@ -128,7 +128,7 @@ export const GetMjollnirProfitAction = ({ G, ctx, myPlayerID, ...rest }: MyFnCon
         name: CommonBuffNames.SuitIdForMjollnir,
     }, suit);
     DeleteBuffFromPlayer({ G, ctx, myPlayerID, ...rest }, CampBuffNames.GetMjollnirProfit);
-    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`);
+    AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Игрок '${player.nickname}' выбрал фракцию '${suitsConfig[suit].suitName}' для эффекта карты карту '${CardTypeRusNames.ArtefactCard}' '${ArtefactNames.Mjollnir}'.`);
 };
 
 /**
@@ -243,9 +243,9 @@ export const PlaceEnlistmentMercenariesAction = ({ G, ctx, myPlayerID, ...rest }
     if (mercenaryCard === undefined) {
         throw new Error(`В стеке отсутствует 'card'.`);
     }
-    const cardVariants: CanBeUndefType<VariantType<MercenaryRankType>> = mercenaryCard.variants[suit];
+    const cardVariants: CanBeUndefType<VariantType<RankVariantsNames.MercenaryRankType>> = mercenaryCard.variants[suit];
     if (cardVariants === undefined) {
-        throw new Error(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${suit}'.`);
+        throw new Error(`У выбранной карты '${CardTypeRusNames.MercenaryCard}' отсутствует принадлежность к выбранной фракции '${suit}'.`);
     }
     mercenaryCard.playerSuit = suit;
     mercenaryCard.points = cardVariants.points;

@@ -449,7 +449,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypeNames.Game,
-                    text: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' выбрал наёмника 'Test'.`,
+                    text: `Игрок 'Dan' во время фазы '${PhaseNames.EnlistmentMercenaries}' выбрал карту '${CardTypeRusNames.MercenaryCard}' 'Test'.`,
                 },
             ],
         } as Pick<MyGameState, `publicPlayers` | `logData`>);
@@ -1337,6 +1337,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
         expect((): void => {
             PlaceEnlistmentMercenariesAction({ G, ctx, myPlayerID: `0` } as MyFnContextWithMyPlayerID,
                 SuitNames.hunter);
-        }).toThrowError(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${SuitNames.hunter}'.`);
+        }).toThrowError(`У выбранной карты '${CardTypeRusNames.MercenaryCard}' отсутствует принадлежность к выбранной фракции '${SuitNames.hunter}'.`);
     });
 });

@@ -39,17 +39,21 @@ export const HasLowestPriority = ({ G, ctx, myPlayerID, ...rest }: MyFnContextWi
  * @returns
  */
 export const ChangePlayersPriorities = ({ G, ctx, ...rest }: FnContext): void => {
+    if (G.exchangeOrder === null) {
+        throw new Error(`В массиве изменения порядка хода игроков не может не быть значений.`);
+    }
     const tempPriorities: CanBeUndefType<Priority>[] = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder: CanBeUndefType<number> = G.exchangeOrder[i];
-        if (exchangeOrder !== undefined) {
-            const exchangePlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[exchangeOrder];
-            if (exchangePlayer === undefined) {
-                return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
-                    exchangeOrder);
-            }
-            tempPriorities[i] = exchangePlayer.priority;
+        if (exchangeOrder === undefined) {
+            throw new Error(`В массиве порядка хода игроков отсутствует текущий с id '${i}'.`);
         }
+        const exchangePlayer: CanBeUndefType<PublicPlayer> = G.publicPlayers[exchangeOrder];
+        if (exchangePlayer === undefined) {
+            return ThrowMyError({ G, ctx, ...rest }, ErrorNames.PublicPlayerWithCurrentIdIsUndefined,
+                exchangeOrder);
+        }
+        tempPriorities[i] = exchangePlayer.priority;
     }
     if (tempPriorities.length) {
         AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Обмен кристаллами между игроками:`);

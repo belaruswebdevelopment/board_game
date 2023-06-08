@@ -1,6 +1,6 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertAllPriorityValue, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins, AssertRoyalCoinValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertAllPriorityValue, AssertExchangeOrderArray, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins, AssertResolvedPlayersOrderArray, AssertRoyalCoinValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PlayerIdForSoloGameNames, ValkyryBuffNames } from "../typescript/enums";
@@ -280,13 +280,12 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }) => {
         }
     }
     const playersOrder = playersOrderNumbers.map((index) => String(index));
+    AssertResolvedPlayersOrderArray(playersOrder);
     if (G.expansions.Idavoll.active) {
         const firstPlayer = playersOrder[0];
-        if (firstPlayer === undefined) {
-            throw new Error(`В массиве порядка хода игроков не может отсутствовать победивший первый игрок.`);
-        }
         CheckValkyryRequirement({ G, ctx, myPlayerID: firstPlayer, ...rest }, ValkyryBuffNames.CountBidWinnerAmount);
     }
+    AssertExchangeOrderArray(exchangeOrder);
     return {
         playersOrder,
         exchangeOrder,

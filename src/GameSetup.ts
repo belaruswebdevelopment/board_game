@@ -143,7 +143,7 @@ export const SetupGame = ({ ctx, random }: GameSetupDataType): MyGameState => {
     const players: Players = {},
         publicPlayers: PublicPlayers = {},
         publicPlayersOrder: PlayerID[] = [],
-        exchangeOrder: number[] = [],
+        exchangeOrder = null,
         priorities: Priority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers, mode === GameModeNames.Solo);
     for (let i = 0; i < ctx.numPlayers; i++) {
         // TODO Move Generate & Randomize Priority in one place or different functions!?

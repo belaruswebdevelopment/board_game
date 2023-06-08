@@ -1,9 +1,15 @@
 import { CardTypeRusNames, GiantRusNames, SuitRusNames } from "../typescript/enums";
-import type { AICardCharacteristics, AICardCharacteristicsArray, AllBasicHeroesPossibleCardIdType, AllCoinsValueType, AllHeroesForDifficultySoloModePossibleCardIdType, AllHeroesForPlayerSoloModeAndvariPossibleCardIdType, AllHeroesForPlayerSoloModePossibleCardIdType, AllHeroesForSoloBotAndvariPossibleCardIdType, AllHeroesForSoloBotPossibleCardIdType, AllHeroesPossibleCardIdType, AllInitialCoins, AllInitialTradingCoinConfig, AllNumberValuesArraysLengthType, AllPriorityValueType, AllRoyalCoinConfig, BasicVidofnirVedrfolnirUpgradeValueType, BettermentMinMaxType, CampCardArray, CampCardArrayIndex, CampCardType, CanBeNullType, CanBeUndefType, CoinType, CoinUpgradePossibleMaxValue, CurrentPlayerCoinsScoreType, DwarfDeckCardType, DwergBrothersScoringArray, ExplorerDistinctionCardIdType, ExplorerDistinctionCards, GeneralStrategyForSoloBotAndvariIdType, HeroCard, HeroesForSoloGameArrayType, HeroesForSoloGameForStrategyBotAndvariArray, HeroesInitialForSoloGameForBotAndvariArray, IndexOf, InitialCoinType, MarketCoinNumberValuesType, MaxCurrentSuitDistinctionPlayersArray, MaxCurrentSuitDistinctionPlayersType, MaxPlyersWithTotalScoreType, MercenariesConfigType, MinerDistinctionsScoringType, MythologicalCreatureCardType, MythologicalCreatureCardsForGiantSkymirArray, NoCoinsOnPouchNumber, OneOrTwoType, PlayerCoinIdType, PlayerCoinNumberValuesType, PlayerCoinsNumber, PlayerPouchCoinIdType, PlayerRanksForDistinctionsArray, PlayerStack, PlayerTavernCoinIdType, PrioritiesAmountType, PrivatePlayerBoardCoins, PrivatePlayerHandCoins, PublicPlayerBoardCoins, PublicPlayerCoinType, PublicPlayerHandCoins, RefillDeckCardsWithExpansionArray, RefillDeckCardsWithoutExpansionArray, ReserveStrategyForSoloBotAndvariIdType, RoyalCoin, RoyalCoinValueType, RoyalCoinsUniqueArray, RoyalOfferingsConfig, SecretAllCampDecks, SecretAllDwarfDecksArray, SecretAllDwarfDecksArrayIndex, Stack, StrengthTokenNotchLongMaxType, StrengthTokenNotchShortMaxType, TavernAllCardsArray, TavernCardIdPossibleType, TavernCardType, TavernsArrayIndex, TavernsHeuristicArray, TierType, TotalScoreArray, TradingCoinsType, TradingCoinsValueType, UpgradableCoinType, UpgradableCoinValueType, UpgradingCoinsArrayType, VidofnirVedrfolnirCoinsValue, WinnerArray, ZeroOrOneType } from "../typescript/interfaces";
+import type { AICardCharacteristics, AICardCharacteristicsArray, AllBasicHeroesPossibleCardIdType, AllCoinsValueType, AllDwarfPlayersAmountIdType, AllHeroesForDifficultySoloModePossibleCardIdType, AllHeroesForPlayerSoloModeAndvariPossibleCardIdType, AllHeroesForPlayerSoloModePossibleCardIdType, AllHeroesForSoloBotAndvariPossibleCardIdType, AllHeroesForSoloBotPossibleCardIdType, AllHeroesPossibleCardIdType, AllInitialCoins, AllInitialTradingCoinConfig, AllNumberValuesArraysLengthType, AllPriorityValueType, AllRoyalCoinConfig, BasicVidofnirVedrfolnirUpgradeValueType, BettermentMinMaxType, CampCardArray, CampCardArrayIndex, CampCardType, CanBeNegativeDwarfCardPointsType, CanBeNullType, CanBeUndefType, CoinType, CoinUpgradePossibleMaxValue, CoinsOnPouchNumber, CurrentPlayerCoinsScoreType, DistinctionsPlayersOrderArray, DwarfDeckCardType, DwergBrothersScoringArray, ExchangeOrderArray, ExplorerDistinctionCardIdType, ExplorerDistinctionCards, GeneralStrategyForSoloBotAndvariIdType, HeroCard, HeroesForSoloGameArrayType, HeroesForSoloGameForStrategyBotAndvariArray, HeroesInitialForSoloGameForBotAndvariArray, IndexOf, InitialCoinType, MarketCoinNumberValuesType, MaxCurrentSuitDistinctionPlayersArray, MaxCurrentSuitDistinctionPlayersType, MaxPlyersWithTotalScoreType, MercenariesConfigType, MinerDistinctionsScoringType, MythologicalCreatureCardType, MythologicalCreatureCardsForGiantSkymirArray, OneOrTwoType, PlayerCoinIdType, PlayerCoinNumberValuesType, PlayerCoinsNumber, PlayerID, PlayerPouchCoinIdType, PlayerRanksForDistinctionsArray, PlayerStack, PlayerTavernCoinIdType, PrioritiesAmountType, PrivatePlayerBoardCoins, PrivatePlayerHandCoins, PublicPlayerBoardCoins, PublicPlayerCoinType, PublicPlayerHandCoins, RefillDeckCardsWithExpansionArray, RefillDeckCardsWithoutExpansionArray, ReserveStrategyForSoloBotAndvariIdType, ResolvedPlayersOrderArray, RoyalCoin, RoyalCoinValueType, RoyalCoinsUniqueArray, RoyalOfferingsConfig, SecretAllCampDecks, SecretAllDwarfDecksArray, SecretAllDwarfDecksArrayIndex, Stack, StrengthTokenNotchLongMaxType, StrengthTokenNotchShortMaxType, TavernAllCardsArray, TavernCardIdPossibleType, TavernCardType, TavernsArrayIndex, TavernsHeuristicArray, TierType, TotalScoreArray, TradingCoinsType, TradingCoinsValueType, UpgradableCoinType, UpgradableCoinValueType, UpgradingCoinsArrayType, VidofnirVedrfolnirCoinsValue, WinnerArray, ZeroOrOneType } from "../typescript/interfaces";
 
 export function AssertZeroOrOne(number: number): asserts number is ZeroOrOneType {
     if (!(number === 0 || number === 1)) {
         throw new Error(`No value '${number}' of ZeroOrOneType.`);
+    }
+}
+
+export function AssertPlayerId(playerId: string): asserts playerId is PlayerID {
+    if (!(playerId === `0` || playerId === `1` || playerId === `2` || playerId === `3` || playerId === `4`)) {
+        throw new Error(`No value '${playerId}' of PlayerID.`);
     }
 }
 
@@ -26,9 +32,15 @@ export function AssertBasicVidofnirVedrfolnirUpgradeValue(number: number):
     }
 }
 
-export function AssertBettermentMinMaxType(number: number): asserts number is BettermentMinMaxType {
+export function AssertBettermentMinMax(number: number): asserts number is BettermentMinMaxType {
     if (!(number >= -46 || number <= 20)) {
         throw new Error(`No value '${number}' of BettermentMinMaxType.`);
+    }
+}
+
+export function AssertCanBeNegativeDwarfCardPoints(number: number): asserts number is CanBeNegativeDwarfCardPointsType {
+    if (!(number >= -12 || number <= 12)) {
+        throw new Error(`No value '${number}' of CanBeNegativeDwarfCardPointsType.`);
     }
 }
 
@@ -154,15 +166,21 @@ export function AssertMaxPlyersWithTotalScore(number: number): asserts number is
     }
 }
 
-export function AssertNoCoinsOnPouchNumber(number: number): asserts number is NoCoinsOnPouchNumber {
+export function AssertCoinsOnPouchNumber(number: number): asserts number is CoinsOnPouchNumber {
     if (!(number >= 0 || number <= 2)) {
-        throw new Error(`No value '${number}' of NoCoinsOnPouchNumber.`);
+        throw new Error(`No value '${number}' of CoinsOnPouchNumber.`);
     }
 }
 
 export function AssertStrengthTokenNotchShortMax(number: number): asserts number is StrengthTokenNotchShortMaxType {
     if (!(number >= 0 || number <= 3)) {
         throw new Error(`No value '${number}' of StrengthTokenNotchShortMaxType.`);
+    }
+}
+
+export function AssertAllDwarfPlayersAmountId(number: number): asserts number is AllDwarfPlayersAmountIdType {
+    if (!(number >= 0 || number <= 7)) {
+        throw new Error(`No value '${number}' of AllDwarfPlayersAmountIdType.`);
     }
 }
 
@@ -357,6 +375,27 @@ export function AssertMaxCurrentSuitDistinctionPlayersArray(maxCurrentSuitDistin
     asserts maxCurrentSuitDistinctionPlayersArray is MaxCurrentSuitDistinctionPlayersArray {
     if (!(maxCurrentSuitDistinctionPlayersArray.length > 0 || maxCurrentSuitDistinctionPlayersArray.length < 6)) {
         throw new Error(`В массиве индексов игроков с максимальным количеством шевронов для преимущества по фракции должно быть более 0 и менее 6 значений.`);
+    }
+}
+
+export function AssertExchangeOrderArray(exchangeOrderArray: number[]):
+    asserts exchangeOrderArray is ExchangeOrderArray {
+    if (!(exchangeOrderArray.length > 1 || exchangeOrderArray.length < 6)) {
+        throw new Error(`В массиве изменения порядка хода игроков игроков должно быть более 1 и менее 6 значений.`);
+    }
+}
+
+export function AssertResolvedPlayersOrderArray(resolvedPlayersOrderArray: PlayerID[]):
+    asserts resolvedPlayersOrderArray is ResolvedPlayersOrderArray {
+    if (!(resolvedPlayersOrderArray.length > 0 || resolvedPlayersOrderArray.length < 6)) {
+        throw new Error(`В массиве нового порядка хода игроков должно быть более 0 и менее 6 значений.`);
+    }
+}
+
+export function AssertDistinctionsPlayersOrderArray(distinctionsPlayersOrderArray: PlayerID[]):
+    asserts distinctionsPlayersOrderArray is DistinctionsPlayersOrderArray {
+    if (!(distinctionsPlayersOrderArray.length >= 0 || distinctionsPlayersOrderArray.length < 6)) {
+        throw new Error(`В массиве порядка хода игроков по преимуществам по фракции должно быть более 0 и менее 6 значений.`);
     }
 }
 

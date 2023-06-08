@@ -5,11 +5,11 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertNoCoinsOnPouchNumber, AssertPlayerCoinId, AssertPlayerCoinsNumber, AssertVidofnirVedrfolnirCoinsValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCoinsOnPouchNumber, AssertPlayerCoinId, AssertPlayerCoinsNumber, AssertPlayerId, AssertVidofnirVedrfolnirCoinsValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
-import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, Stack, StageArg } from "../typescript/interfaces";
+import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, PlayerHandCoinsType, PlayerID, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, Stack, StageArg } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
@@ -59,7 +59,7 @@ export const FinishOdroerirTheMythicCauldronAction: ActionFunctionWithoutParams 
  */
 export const StartDiscardSuitCardAction: ActionFunctionWithoutParams = ({ G, ctx, myPlayerID, events, ...rest }:
     MyFnContextWithMyPlayerID): void => {
-    const value: Record<string, StageArg> = {};
+    const value: Record<PlayerID, StageArg> = {};
     let results = 0;
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: CanBeUndefType<PublicPlayer> = G.publicPlayers[i];
@@ -71,11 +71,13 @@ export const StartDiscardSuitCardAction: ActionFunctionWithoutParams = ({ G, ctx
             if (!(G.expansions.Idavoll.active
                 && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: String(i), events, ...rest },
                     GodNames.Thor))) {
-                value[i] = {
+                const playerID = String(i);
+                AssertPlayerId(playerID);
+                value[playerID] = {
                     stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
                 };
                 AddActionsToStack({ G, ctx, myPlayerID, events, ...rest },
-                    [AllStackData.discardSuitCard(String(i))]);
+                    [AllStackData.discardSuitCard(playerID)]);
                 results++;
             }
         }
@@ -125,7 +127,7 @@ export const StartVidofnirVedrfolnirAction: ActionFunctionWithoutParams = ({ G, 
         const noCoinsOnPouchNumber: number =
             player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
                 index >= G.tavernsNum && coin === null).length;
-        AssertNoCoinsOnPouchNumber(noCoinsOnPouchNumber);
+        AssertCoinsOnPouchNumber(noCoinsOnPouchNumber);
         const handCoinsNumber: number = handCoins.filter(IsCoin).length;
         AssertPlayerCoinsNumber(handCoinsNumber);
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {

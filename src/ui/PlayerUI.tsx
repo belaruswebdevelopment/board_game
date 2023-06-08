@@ -8,8 +8,8 @@ import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AllCurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinCssClassNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, PlayerIdForSoloGameNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
-import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HandBorderedCoinCssClasses, HeroCard, MercenaryRankType, MoveArgumentsType, MoveCardsArguments, MoveCoinsArguments, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, PlayerBoardCardType, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, SuitPropertyType, VariantType } from "../typescript/interfaces";
+import { BidsMoveValidatorNames, BidUlineMoveValidatorNames, BrisingamensEndGameMoveValidatorNames, CardMoveNames, CardTypeRusNames, CoinCssClassNames, CoinMoveNames, CoinTypeNames, CommonMoveValidatorNames, CommonStageNames, DrawCoinTypeNames, EmptyCardMoveNames, EnlistmentMercenariesMoveValidatorNames, EnlistmentMercenariesStageNames, ErrorNames, GameModeNames, GetMjollnirProfitMoveValidatorNames, HeroBuffNames, HeroNames, MultiSuitCardNames, PhaseNames, PlaceYludMoveValidatorNames, PlayerIdForSoloGameNames, RankVariantsNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonCoinUpgradeMoveValidatorNames, SoloBotCommonCoinUpgradeStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, SuitMoveNames, SuitNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames } from "../typescript/enums";
+import type { ActiveStageNames, BoardProps, CampCardType, CanBeNullType, CanBeUndefType, CoinType, FnContext, HandBorderedCoinCssClasses, HeroCard, MoveArgumentsType, MoveCardsArguments, MoveCoinsArguments, MoveValidatorNamesTypes, MythologicalCreatureCommandZoneCardType, PlayerBoardCardType, PlayerStack, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, SuitPropertyType, VariantType } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawEmptyCard, DrawSuit } from "./ElementsUI";
 
 // TODO Check Solo Bot & multiplayer actions!
@@ -259,7 +259,7 @@ export const DrawPlayersBoards = ({ G, ctx, ...rest }: FnContext,
                         return ThrowMyError({ G, ctx, ...rest },
                             ErrorNames.FirstStackActionForPlayerWithCurrentIdIsUndefined, p);
                     }
-                    let cardVariants: CanBeUndefType<VariantType<MercenaryRankType>>;
+                    let cardVariants: CanBeUndefType<VariantType<RankVariantsNames.MercenaryRankType>>;
                     if (ctx.phase === PhaseNames.EnlistmentMercenaries
                         && ctx.activePlayers?.[Number(ctx.currentPlayer)] ===
                         EnlistmentMercenariesStageNames.PlaceEnlistmentMercenaries) {

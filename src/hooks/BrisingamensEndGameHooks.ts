@@ -5,6 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerId } from "../is_helpers/AssertionTypeHelpers";
 import { CampBuffNames, ErrorNames, GodNames, PhaseNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, FnContext, PublicPlayer } from "../typescript/interfaces";
 
@@ -26,7 +27,9 @@ export const CheckBrisingamensEndGameOrder = ({ G, ctx, ...rest }: FnContext): v
     if (brisingamensPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф '${CampBuffNames.DiscardCardEndGame}'.`);
     }
-    G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
+    const brisingamensPlayerId = String(brisingamensPlayerIndex);
+    AssertPlayerId(brisingamensPlayerId);
+    G.publicPlayersOrder.push(String(brisingamensPlayerId));
 };
 
 /**

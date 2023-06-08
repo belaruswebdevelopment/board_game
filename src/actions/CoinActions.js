@@ -3,7 +3,7 @@ import { ThrowMyError } from "../Error";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCoinFromMarket } from "../helpers/DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "../helpers/MythologicalCreatureHelpers";
-import { AssertBettermentMinMaxType, AssertCoinUpgradePossibleMaxValue, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertBettermentMinMax, AssertCoinUpgradePossibleMaxValue, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsInitialCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PlayerIdForSoloGameNames, ValkyryBuffNames } from "../typescript/enums";
@@ -98,7 +98,7 @@ export const UpgradeCoinAction = ({ G, ctx, myPlayerID, ...rest }, isTrading, va
                     RemoveCoinFromMarket({ G, ctx, ...rest }, i);
                     if (G.expansions.Idavoll.active) {
                         const betterment = royalCoin.value - newValue;
-                        AssertBettermentMinMaxType(betterment);
+                        AssertBettermentMinMax(betterment);
                         if (betterment > 0) {
                             for (let j = 0; j < betterment; j++) {
                                 CheckValkyryRequirement({ G, ctx, myPlayerID, ...rest }, ValkyryBuffNames.CountBettermentAmount);

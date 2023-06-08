@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { CheckIsStartUseGodAbility } from "../helpers/GodAbilityHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AssertNoCoinsOnPouchNumber, AssertPlayerCoinId, AssertPlayerCoinsNumber, AssertVidofnirVedrfolnirCoinsValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCoinsOnPouchNumber, AssertPlayerCoinId, AssertPlayerCoinsNumber, AssertPlayerId, AssertVidofnirVedrfolnirCoinsValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CommonStageNames, ErrorNames, GameModeNames, GodNames, HeroBuffNames, LogTypeNames, SuitNames } from "../typescript/enums";
@@ -61,10 +61,12 @@ export const StartDiscardSuitCardAction = ({ G, ctx, myPlayerID, events, ...rest
         if (i !== Number(ctx.currentPlayer) && player.cards[SuitNames.warrior].length) {
             if (!(G.expansions.Idavoll.active
                 && CheckIsStartUseGodAbility({ G, ctx, myPlayerID: String(i), events, ...rest }, GodNames.Thor))) {
-                value[i] = {
+                const playerID = String(i);
+                AssertPlayerId(playerID);
+                value[playerID] = {
                     stage: CommonStageNames.DiscardSuitCardFromPlayerBoard,
                 };
-                AddActionsToStack({ G, ctx, myPlayerID, events, ...rest }, [AllStackData.discardSuitCard(String(i))]);
+                AddActionsToStack({ G, ctx, myPlayerID, events, ...rest }, [AllStackData.discardSuitCard(playerID)]);
                 results++;
             }
         }
@@ -109,7 +111,7 @@ export const StartVidofnirVedrfolnirAction = ({ G, ctx, myPlayerID, ...rest }) =
     let isStart = true;
     if (CheckPlayerHasBuff({ G, ctx, myPlayerID, ...rest }, HeroBuffNames.EveryTurn)) {
         const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
-        AssertNoCoinsOnPouchNumber(noCoinsOnPouchNumber);
+        AssertCoinsOnPouchNumber(noCoinsOnPouchNumber);
         const handCoinsNumber = handCoins.filter(IsCoin).length;
         AssertPlayerCoinsNumber(handCoinsNumber);
         if (noCoinsOnPouchNumber > 0 && noCoinsOnPouchNumber < 3 && handCoinsNumber >= noCoinsOnPouchNumber) {

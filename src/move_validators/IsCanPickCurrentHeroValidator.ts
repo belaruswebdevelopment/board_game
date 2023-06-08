@@ -74,7 +74,7 @@ export const IsCanPickHeroWithConditionsValidator = ({ G, ctx, myPlayerID, ...re
     for (condition in conditions) {
         if (condition === `suitCountMin`) {
             let ranks = 0,
-                conditionRanks: CanBeNullType<number> = null,
+                conditionRanks: CanBeNullType<5> = null,
                 key: KeyofType<Condition>;
             for (key in conditions[condition]) {
                 if (key === `suit`) {

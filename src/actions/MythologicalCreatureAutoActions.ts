@@ -1,4 +1,5 @@
 import { AssertMythologicalCreatureCardsForGiantSkymir } from "../is_helpers/AssertionTypeHelpers";
+import { GiantRusNames } from "../typescript/enums";
 import type { ActionFunctionWithoutParams, CanBeUndefType, MyFnContextWithMyPlayerID, MythologicalCreatureCardType } from "../typescript/interfaces";
 
 /**
@@ -21,7 +22,7 @@ export const AddMythologyCreatureCardsSkymirAction: ActionFunctionWithoutParams 
             throw new Error(`В массиве карт Мифических существ не в игре отсутствует карта с id '${j}'.`);
         }
         if (G.mythologicalCreatureDeckForSkymir === null) {
-            throw new Error(`Массив всех карт мифических существ для Skymir не может не быть заполнен картами.`);
+            throw new Error(`Массив всех карт мифических существ для '${GiantRusNames.Skymir}' не может не быть заполнен картами.`);
         }
         mythologyCreatureCardsSkymir.push(mythologyCreatureCard);
     }

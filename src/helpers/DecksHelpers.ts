@@ -1,9 +1,8 @@
 import { AssertRefillDeckCardsWithExpansionArray, AssertRefillDeckCardsWithoutExpansionArray } from "../is_helpers/AssertionTypeHelpers";
-import type { CampDeckCardType, DwarfDeckCardType, FnContext, MythologicalCreatureCardType, RefillDeckCardsWithExpansionArray, RefillDeckCardsWithoutExpansionArray, SecretCampDeckType, SecretDwarfDeckType, SecretMythologicalCreatureDeck, TierType } from "../typescript/interfaces";
+import type { CampDeckCardType, DrawSizeType, DwarfDeckCardType, ExplorerDistinctionCardIdType, FnContext, MythologicalCreatureCardType, RefillDeckCardsWithExpansionArray, RefillDeckCardsWithoutExpansionArray, SecretCampDeckType, SecretDwarfDeckType, SecretMythologicalCreatureDeck, TierType } from "../typescript/interfaces";
 
-//TODO Rework it in one func with switch!?
-export const GetCardsFromSecretDwarfDeck = ({ G }: FnContext, tier: TierType, start: number, amount?: number):
-    RefillDeckCardsWithoutExpansionArray => {
+export const GetCardsFromSecretDwarfDeck = ({ G }: FnContext, tier: TierType, start: ExplorerDistinctionCardIdType,
+    amount: 1 | DrawSizeType): RefillDeckCardsWithoutExpansionArray => {
     const currentDeck: SecretDwarfDeckType = G.secret.decks[tier],
         cards: DwarfDeckCardType[] = currentDeck.splice(start, amount);
     if (amount !== cards.length) {
@@ -14,10 +13,10 @@ export const GetCardsFromSecretDwarfDeck = ({ G }: FnContext, tier: TierType, st
     return cards;
 };
 
-export const GetCampCardsFromSecretCampDeck = ({ G }: FnContext, tier: TierType, start: number, amount?: number):
+export const GetCampCardsFromSecretCampDeck = ({ G }: FnContext, tier: TierType, amount?: TierType):
     CampDeckCardType[] => {
     const campDeck: SecretCampDeckType = G.secret.campDecks[tier],
-        campCards: CampDeckCardType[] = campDeck.splice(start, amount);
+        campCards: CampDeckCardType[] = campDeck.splice(0, amount);
     if (amount !== campCards.length) {
         throw new Error(`Недостаточно карт в массиве карт лагеря конкретной эпохи: требуется - '${amount}', в наличии - '${campCards.length}'.`);
     }
@@ -25,13 +24,13 @@ export const GetCampCardsFromSecretCampDeck = ({ G }: FnContext, tier: TierType,
     return campCards;
 };
 
-export const GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck = ({ G }: FnContext, start: number,
-    amount?: number): RefillDeckCardsWithExpansionArray => {
+export const GetMythologicalCreatureCardsFromSecretMythologicalCreatureDeck = ({ G }: FnContext):
+    RefillDeckCardsWithExpansionArray => {
     const currentCampDeck: SecretMythologicalCreatureDeck = G.secret.mythologicalCreatureDeck,
         mythologicalCreatureCards: MythologicalCreatureCardType[] =
-            currentCampDeck.splice(start, amount);
-    if (amount !== mythologicalCreatureCards.length) {
-        throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${amount}', в наличии - '${mythologicalCreatureCards.length}'.`);
+            currentCampDeck.splice(0, G.drawSize);
+    if (G.drawSize !== mythologicalCreatureCards.length) {
+        throw new Error(`Недостаточно карт в массиве карт мифических существ: требуется - '${G.drawSize}', в наличии - '${mythologicalCreatureCards.length}'.`);
     }
     G.mythologicalCreatureDeckLength = currentCampDeck.length;
     AssertRefillDeckCardsWithExpansionArray(mythologicalCreatureCards);

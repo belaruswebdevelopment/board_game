@@ -5,6 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RemoveCardFromPlayerBoardSuitCards } from "../helpers/DiscardCardHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerId } from "../is_helpers/AssertionTypeHelpers";
 import { ErrorNames, GameModeNames, HeroBuffNames, HeroNames, PlayerIdForSoloGameNames, SuitNames } from "../typescript/enums";
 import type { CanBeNullType, CanBeUndefType, CanBeVoidType, FnContext, HeroCard, PlayerBoardCardType, PublicPlayer } from "../typescript/interfaces";
 
@@ -104,7 +105,9 @@ export const CheckPlaceYludOrder = ({ G, ctx, ...rest }: FnContext): void => {
             }
         }
     }
-    G.publicPlayersOrder.push(String(yludIndex));
+    const yludPlayerId = String(yludIndex);
+    AssertPlayerId(yludPlayerId);
+    G.publicPlayersOrder.push(yludPlayerId);
 };
 
 /**

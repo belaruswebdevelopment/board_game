@@ -1,10 +1,10 @@
 import { ChangeIsOpenedCoinStatus } from "../Coin";
 import { ThrowMyError } from "../Error";
-import { AssertAllCoinsValue, AssertAllPriorityValue, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins, AssertRoyalCoinValue } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllCoinsValue, AssertAllPriorityValue, AssertExchangeOrderArray, AssertPlayerCoinId, AssertPlayerCoinNumberValues, AssertPrivateHandCoins, AssertResolvedPlayersOrderArray, AssertRoyalCoinValue } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
 import { CoinTypeNames, ErrorNames, GameModeNames, HeroBuffNames, LogTypeNames, PlayerIdForSoloGameNames, ValkyryBuffNames } from "../typescript/enums";
-import type { AllCoinsType, AllCoinsValueType, CanBeUndefType, CoinNumberValues, CoinType, FnContext, MyFnContextWithMyPlayerID, PlayerCoinIdType, PlayerCoinNumberValuesType, PlayerHandCoinsType, PlayerID, Priority, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins, RoyalCoinValueType } from "../typescript/interfaces";
+import type { AllCoinsType, AllCoinsValueType, CanBeUndefType, CanBeZeroPlayerCoinNumberValuesType, CoinNumberValues, CoinType, FnContext, MyFnContextWithMyPlayerID, PlayerCoinIdType, PlayerCoinNumberValuesType, PlayerHandCoinsType, PlayerID, Priority, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, ResolveBoardCoins, RoyalCoinValueType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { RemoveCoinFromPlayer } from "./DiscardCoinHelpers";
 import { CheckValkyryRequirement } from "./MythologicalCreatureHelpers";
@@ -259,7 +259,7 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
     for (let i = 0; i < coinValues.length; i++) {
         const coinValue: CanBeUndefType<AllCoinsValueType> = coinValues[i];
         if (coinValue !== undefined) {
-            const value: 0 | PlayerCoinNumberValuesType = counts[coinValue] ?? 0,
+            const value: CanBeZeroPlayerCoinNumberValuesType = counts[coinValue] ?? 0,
                 newValue: number = 1 + value;
             AssertPlayerCoinNumberValues(newValue);
             counts[coinValue] = newValue;
@@ -323,14 +323,13 @@ export const ResolveAllBoardCoins = ({ G, ctx, ...rest }: FnContext): ResolveBoa
     }
     const playersOrder: PlayerID[] =
         playersOrderNumbers.map((index: number): PlayerID => String(index));
+    AssertResolvedPlayersOrderArray(playersOrder);
     if (G.expansions.Idavoll.active) {
-        const firstPlayer: CanBeUndefType<PlayerID> = playersOrder[0];
-        if (firstPlayer === undefined) {
-            throw new Error(`В массиве порядка хода игроков не может отсутствовать победивший первый игрок.`);
-        }
+        const firstPlayer: PlayerID = playersOrder[0];
         CheckValkyryRequirement({ G, ctx, myPlayerID: firstPlayer, ...rest },
             ValkyryBuffNames.CountBidWinnerAmount);
     }
+    AssertExchangeOrderArray(exchangeOrder);
     return {
         playersOrder,
         exchangeOrder,

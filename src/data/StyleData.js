@@ -141,7 +141,6 @@ export const ALlStyles = {
                 throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
         }
     },
-    // TODO Add type to number 0-12!
     Card: (suit, name, points) => {
         if (name === SpecialCardNames.ChiefBlacksmith || name === MultiSuitCardNames.OlwinsDouble) {
             // TODO Fix it to use _exhaustiveCheck!

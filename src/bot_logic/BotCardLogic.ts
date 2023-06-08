@@ -2,10 +2,10 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllDwarfPlayersAmountId, AssertCanBeNegativeDwarfCardPoints, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GameModeNames, SuitNames } from "../typescript/enums";
-import type { AllDwarfPlayersAmountType, CanBeUndefType, CompareTavernCardsType, DwarfCard, FnContext, MyFnContextWithMyPlayerID, NumberValuesArrayType, PlayerHandCoinsType, PlayersNumberTierCardData, PointsType, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardsArray, TavernCardIdPossibleType, TavernCardType } from "../typescript/interfaces";
+import type { AllDwarfPlayersAmountType, CanBeUndefType, CompareTavernCardsType, DwarfCard, DwarfPointsType, FnContext, MyFnContextWithMyPlayerID, NumberValuesArrayType, PlayerHandCoinsType, PlayersNumberTierCardData, PointsValuesType, PrivatePlayer, PublicPlayer, PublicPlayerCoinType, TavernAllCardsArray, TavernCardIdPossibleType, TavernCardType } from "../typescript/interfaces";
 
 // Check all number types here!
 // Check all types in this file!
@@ -28,6 +28,7 @@ export const CompareTavernCards = (compareCard: TavernCardType, card2: TavernCar
     if (compareCard.type === CardTypeRusNames.DwarfCard && card2.type === CardTypeRusNames.DwarfCard) {
         if (compareCard.playerSuit === card2.playerSuit) {
             const result: number = (compareCard.points ?? 1) - (card2.points ?? 1);
+            AssertCanBeNegativeDwarfCardPoints(result);
             if (result === 0) {
                 return result;
             }
@@ -110,10 +111,11 @@ export const EvaluateTavernCard = ({ G, ctx, ...rest }: FnContext, compareCard: 
 export const GetAverageSuitCard = (suit: SuitNames, data: PlayersNumberTierCardData): DwarfCard => {
     let totalPoints = 0;
     const pointsValuesPlayers: PointsValuesType = suitsConfig[suit].pointsValues()[data.players],
-        points: PointsType = pointsValuesPlayers[data.tier],
+        points: DwarfPointsType = pointsValuesPlayers[data.tier],
         count: AllDwarfPlayersAmountType = Array.isArray(points) ? points.length : points;
     for (let i = 0; i < count; i++) {
         if (Array.isArray(points)) {
+            AssertAllDwarfPlayersAmountId(i);
             const pointsValue: CanBeUndefType<NumberValuesArrayType> = points[i];
             if (pointsValue === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}' в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);

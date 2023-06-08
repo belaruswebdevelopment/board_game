@@ -4,6 +4,7 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerId } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { ErrorNames, HeroBuffNames } from "../typescript/enums";
 import type { CanBeUndefType, CanBeVoidType, FnContext, PlayerID, PublicPlayer, Stack } from "../typescript/interfaces";
@@ -187,6 +188,8 @@ export const PrepareMercenaryPhaseOrders = ({ G }: FnContext): void => {
         if (playerIndex === undefined) {
             throw new Error(`В массиве индексов игроков отсутствует индекс '0'.`);
         }
-        G.publicPlayersOrder.push(playerIndex);
+        const playerId = String(playerIndex);
+        AssertPlayerId(playerId);
+        G.publicPlayersOrder.push(playerId);
     }
 };

@@ -19,7 +19,7 @@ import { DiscardAllCurrentCards, DiscardCurrentCard, RemoveCardsFromCampAndAddIf
 const AddCardToCamp = ({ G, ctx, ...rest }, cardId) => {
     const tier = G.secret.campDecks.length - G.tierToEnd;
     AssertTierIndex(tier);
-    const newCampCard = GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, tier, 0, 1)[0];
+    const newCampCard = GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, tier, 1)[0];
     if (newCampCard === undefined) {
         throw new Error(`Отсутствует карта лагеря в колоде карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
     }
@@ -54,7 +54,7 @@ const AddRemainingCampCardsToDiscard = ({ G, ctx, ...rest }) => {
     if (discardedCardsArray.length) {
         DiscardAllCurrentCards({ G, ctx, ...rest }, discardedCardsArray);
         AssertTierIndex(currentTier);
-        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, currentTier, 0);
+        GetCampCardsFromSecretCampDeck({ G, ctx, ...rest }, currentTier);
     }
     AddDataToLog({ G, ctx, ...rest }, LogTypeNames.Game, `Оставшиеся карты лагеря сброшены.`);
 };

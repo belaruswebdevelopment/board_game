@@ -4,7 +4,7 @@ import { ALlStyles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ThrowMyError } from "../Error";
 import { DrawBoard } from "../helpers/DrawHelpers";
-import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllHeroesForSoloBotPossibleCardId, AssertCampIndex, AssertGeneralStrategyForSoloBotAndvariId, AssertRoyalCoinsUniqueArrayIndex, AssertTavernCardId, AssertTavernIndex, AssertTierIndex } from "../is_helpers/AssertionTypeHelpers";
 import { tavernsConfig } from "../Tavern";
 import { CardMoveNames, CardTypeRusNames, CoinCssClassNames, CommonMoveValidatorNames, CommonStageNames, ConfigNames, DistinctionCardMoveNames, DrawCoinTypeNames, ErrorNames, GameModeNames, PhaseNames, PhaseRusNames, PlayerIdForSoloGameNames, SoloBotAndvariCommonMoveValidatorNames, SoloBotAndvariCommonStageNames, SoloBotCommonMoveValidatorNames, SoloBotCommonStageNames, StageRusNames, TavernsResolutionMoveValidatorNames, TavernsResolutionStageNames, TroopEvaluationMoveValidatorNames } from "../typescript/enums";
 import { DrawCard, DrawCoin, DrawDistinctionCard, DrawSuit } from "./ElementsUI";
@@ -534,6 +534,7 @@ export const DrawTaverns = ({ G, ctx, ...rest }, validatorName, data, gridClass)
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
             for (let j = 0; j < G.drawSize; j++) {
+                AssertTavernCardId(j);
                 const tavern = G.taverns[t], tavernCard = tavern[j];
                 if (G.round !== -1 && tavernCard === undefined) {
                     throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);

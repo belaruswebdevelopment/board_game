@@ -231,8 +231,8 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
                 }
             }
             break;
-        case CardTypeRusNames.MercenaryPlayerCard:
         case CardTypeRusNames.MercenaryCard:
+        case CardTypeRusNames.MercenaryPlayerCard:
         case CardTypeRusNames.ArtefactCard:
         case CardTypeRusNames.ArtefactPlayerCard:
             styles = ALlStyles.CampCard(card.path);
@@ -253,12 +253,12 @@ export const DrawCard = ({ G, ctx, ...rest }, data, playerCells, card, id, playe
                 }
             }
             break;
-        case CardTypeRusNames.MultiSuitCard:
         case CardTypeRusNames.DwarfCard:
         case CardTypeRusNames.DwarfPlayerCard:
-        case CardTypeRusNames.SpecialPlayerCard:
-        case CardTypeRusNames.SpecialCard:
+        case CardTypeRusNames.MultiSuitCard:
         case CardTypeRusNames.MultiSuitPlayerCard:
+        case CardTypeRusNames.SpecialCard:
+        case CardTypeRusNames.SpecialPlayerCard:
             spanClasses = `bg-card`;
             if (`suit` in card) {
                 styles = ALlStyles.Card(card.suit, card.name, card.points);

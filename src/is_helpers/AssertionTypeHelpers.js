@@ -4,6 +4,11 @@ export function AssertZeroOrOne(number) {
         throw new Error(`No value '${number}' of ZeroOrOneType.`);
     }
 }
+export function AssertPlayerId(playerId) {
+    if (!(playerId === `0` || playerId === `1` || playerId === `2` || playerId === `3` || playerId === `4`)) {
+        throw new Error(`No value '${playerId}' of PlayerID.`);
+    }
+}
 export function AssertOneOrTwo(number) {
     if (!(number === 1 || number === 2)) {
         throw new Error(`No value '${number}' of OneOrTwoType.`);
@@ -19,9 +24,14 @@ export function AssertBasicVidofnirVedrfolnirUpgradeValue(number) {
         throw new Error(`No value '${number}' of BasicVidofnirVedrfolnirUpgradeValueType.`);
     }
 }
-export function AssertBettermentMinMaxType(number) {
+export function AssertBettermentMinMax(number) {
     if (!(number >= -46 || number <= 20)) {
         throw new Error(`No value '${number}' of BettermentMinMaxType.`);
+    }
+}
+export function AssertCanBeNegativeDwarfCardPoints(number) {
+    if (!(number >= -12 || number <= 12)) {
+        throw new Error(`No value '${number}' of CanBeNegativeDwarfCardPointsType.`);
     }
 }
 export function AssertCoinUpgradePossibleMaxValue(number) {
@@ -120,14 +130,19 @@ export function AssertMaxPlyersWithTotalScore(number) {
         throw new Error(`No value '${number}' of MaxPlyersWithTotalScoreType.`);
     }
 }
-export function AssertNoCoinsOnPouchNumber(number) {
+export function AssertCoinsOnPouchNumber(number) {
     if (!(number >= 0 || number <= 2)) {
-        throw new Error(`No value '${number}' of NoCoinsOnPouchNumber.`);
+        throw new Error(`No value '${number}' of CoinsOnPouchNumber.`);
     }
 }
 export function AssertStrengthTokenNotchShortMax(number) {
     if (!(number >= 0 || number <= 3)) {
         throw new Error(`No value '${number}' of StrengthTokenNotchShortMaxType.`);
+    }
+}
+export function AssertAllDwarfPlayersAmountId(number) {
+    if (!(number >= 0 || number <= 7)) {
+        throw new Error(`No value '${number}' of AllDwarfPlayersAmountIdType.`);
     }
 }
 export function AssertStrengthTokenNotchLongMax(number) {
@@ -278,6 +293,21 @@ export function AssertRefillDeckCardsWithoutExpansionArray(refillDeckCardsWithou
 export function AssertMaxCurrentSuitDistinctionPlayersArray(maxCurrentSuitDistinctionPlayersArray) {
     if (!(maxCurrentSuitDistinctionPlayersArray.length > 0 || maxCurrentSuitDistinctionPlayersArray.length < 6)) {
         throw new Error(`В массиве индексов игроков с максимальным количеством шевронов для преимущества по фракции должно быть более 0 и менее 6 значений.`);
+    }
+}
+export function AssertExchangeOrderArray(exchangeOrderArray) {
+    if (!(exchangeOrderArray.length > 1 || exchangeOrderArray.length < 6)) {
+        throw new Error(`В массиве изменения порядка хода игроков игроков должно быть более 1 и менее 6 значений.`);
+    }
+}
+export function AssertResolvedPlayersOrderArray(resolvedPlayersOrderArray) {
+    if (!(resolvedPlayersOrderArray.length > 0 || resolvedPlayersOrderArray.length < 6)) {
+        throw new Error(`В массиве нового порядка хода игроков должно быть более 0 и менее 6 значений.`);
+    }
+}
+export function AssertDistinctionsPlayersOrderArray(distinctionsPlayersOrderArray) {
+    if (!(distinctionsPlayersOrderArray.length >= 0 || distinctionsPlayersOrderArray.length < 6)) {
+        throw new Error(`В массиве порядка хода игроков по преимуществам по фракции должно быть более 0 и менее 6 значений.`);
     }
 }
 export function AssertPlayerRanksForDistinctionsArray(playerRanksForDistinctionsArray) {

@@ -4,6 +4,7 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AssertPlayerId } from "../is_helpers/AssertionTypeHelpers";
 import { CampBuffNames, CommonBuffNames, ErrorNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
@@ -41,7 +42,9 @@ export const CheckGetMjollnirProfitOrder = ({ G, ctx, ...rest }) => {
     if (mjollnirPlayerIndex === -1) {
         throw new Error(`У игроков отсутствует обязательный баф '${CampBuffNames.GetMjollnirProfit}'.`);
     }
-    G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+    const mjollnirPlayerId = String(mjollnirPlayerIndex);
+    AssertPlayerId(mjollnirPlayerId);
+    G.publicPlayersOrder.push(String(mjollnirPlayerId));
 };
 /**
  * <h3>Действия при завершении мува в фазе 'getMjollnirProfit'.</h3>

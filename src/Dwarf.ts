@@ -1,7 +1,7 @@
 import { suitsConfig } from "./data/SuitData";
 import { AssertAllNumberValuesArraysLengthType } from "./is_helpers/AssertionTypeHelpers";
 import { CardTypeRusNames, SuitNames } from "./typescript/enums";
-import type { AllDwarfPlayersAmountType, CanBeUndefType, CreateDwarfCardFromData, CreateDwarfPlayerCardFromData, DwarfCard, DwarfPlayerCard, NumberValuesArrayType, PlayersNumberTierCardData, PointsType, PointsValuesType } from "./typescript/interfaces";
+import type { AllDwarfPlayersAmountType, CanBeUndefType, CreateDwarfCardFromData, CreateDwarfPlayerCardFromData, DwarfCard, DwarfPlayerCard, DwarfPointsType, NumberValuesArrayType, PlayersNumberTierCardData, PointsValuesType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты дворфов.</h3>
@@ -18,7 +18,7 @@ export const BuildDwarfCards = (data: PlayersNumberTierCardData): DwarfCard[] =>
     let suit: SuitNames;
     for (suit in suitsConfig) {
         const pointValuesPlayers: PointsValuesType = suitsConfig[suit].pointsValues()[data.players],
-            points: PointsType = pointValuesPlayers[data.tier];
+            points: DwarfPointsType = pointValuesPlayers[data.tier];
         let count: AllDwarfPlayersAmountType;
         if (Array.isArray(points)) {
             count = points.length;

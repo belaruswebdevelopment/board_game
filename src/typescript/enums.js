@@ -1360,4 +1360,10 @@ export var PlayerIdForSoloGameNames;
     PlayerIdForSoloGameNames["HumanPlayerId"] = "0";
     PlayerIdForSoloGameNames["SoloBotPlayerId"] = "1";
 })(PlayerIdForSoloGameNames || (PlayerIdForSoloGameNames = {}));
+export var RankVariantsNames;
+(function (RankVariantsNames) {
+    RankVariantsNames["HeroRankType"] = "HeroRankType";
+    RankVariantsNames["MercenaryRankType"] = "MercenaryRankType";
+    RankVariantsNames["MultiSuitRankType"] = "MultiSuitRankType";
+})(RankVariantsNames || (RankVariantsNames = {}));
 //# sourceMappingURL=enums.js.map

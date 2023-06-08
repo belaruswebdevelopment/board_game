@@ -2,7 +2,7 @@ import { suitsConfig } from "../data/SuitData";
 import { StartSuitScoring } from "../dispatchers/SuitScoringDispatcher";
 import { CreateDwarfCard } from "../Dwarf";
 import { ThrowMyError } from "../Error";
-import { AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
+import { AssertAllDwarfPlayersAmountId, AssertCanBeNegativeDwarfCardPoints, AssertPlayerCoinId } from "../is_helpers/AssertionTypeHelpers";
 import { IsCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { CardTypeRusNames, ErrorNames, GameModeNames } from "../typescript/enums";
 // Check all number types here!
@@ -27,6 +27,7 @@ export const CompareTavernCards = (compareCard, card2) => {
     if (compareCard.type === CardTypeRusNames.DwarfCard && card2.type === CardTypeRusNames.DwarfCard) {
         if (compareCard.playerSuit === card2.playerSuit) {
             const result = ((_a = compareCard.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
+            AssertCanBeNegativeDwarfCardPoints(result);
             if (result === 0) {
                 return result;
             }
@@ -102,6 +103,7 @@ export const GetAverageSuitCard = (suit, data) => {
     const pointsValuesPlayers = suitsConfig[suit].pointsValues()[data.players], points = pointsValuesPlayers[data.tier], count = Array.isArray(points) ? points.length : points;
     for (let i = 0; i < count; i++) {
         if (Array.isArray(points)) {
+            AssertAllDwarfPlayersAmountId(i);
             const pointsValue = points[i];
             if (pointsValue === undefined) {
                 throw new Error(`Отсутствует значение с id '${i}' в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);

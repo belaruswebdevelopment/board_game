@@ -1,8 +1,8 @@
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
 import { AssertMercenariesConfigIndex } from "./is_helpers/AssertionTypeHelpers";
-import { CardTypeRusNames, SuitNames } from "./typescript/enums";
-import type { ArtefactCard, ArtefactCardData, ArtefactNamesKeyofTypeofType, ArtefactPlayerCard, BasicSuitableNullableCardInfo, CampDeckCardType, CanBeUndefType, CreateArtefactCardFromData, CreateArtefactPlayerCardFromData, CreateMercenaryCardFromData, CreateMercenaryPlayerCardFromData, KeyofType, MercenariesConfigType, MercenaryCard, MercenaryData, MercenaryPlayerCard, MercenaryRankType, TierType, VariantType } from "./typescript/interfaces";
+import { CardTypeRusNames, RankVariantsNames, SuitNames } from "./typescript/enums";
+import type { ArtefactCard, ArtefactCardData, ArtefactNamesKeyofTypeofType, ArtefactPlayerCard, CampDeckCardType, CanBeUndefType, CreateArtefactCardFromData, CreateArtefactPlayerCardFromData, CreateMercenaryCardFromData, CreateMercenaryPlayerCardFromData, KeyofType, MercenariesConfigType, MercenaryCard, MercenaryData, MercenaryPlayerCard, TierType, VariantType } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря конкретной эпохи из конфига.</h3>
@@ -44,9 +44,9 @@ export const BuildCampCards = (tier: TierType): CampDeckCardType[] => {
         for (campMercenarySuit in mercenaryData) {
             name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
             path += `${campMercenarySuit} `;
-            let campMercenaryCardProperty: KeyofType<BasicSuitableNullableCardInfo<MercenaryRankType>>;
+            let campMercenaryCardProperty: KeyofType<VariantType<RankVariantsNames.MercenaryRankType>>;
             for (campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
-                const mercenaryVariant: CanBeUndefType<VariantType<MercenaryRankType>> =
+                const mercenaryVariant: CanBeUndefType<VariantType<RankVariantsNames.MercenaryRankType>> =
                     mercenaryData[campMercenarySuit];
                 if (mercenaryVariant !== undefined) {
                     if (campMercenaryCardProperty === `rank`) {

@@ -10,7 +10,7 @@ import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { IsLastRound } from "../helpers/RoundHelpers";
 import { AddActionsToStack } from "../helpers/StackHelpers";
 import { ActivateTrading, StartTrading } from "../helpers/TradingHelpers";
-import { AssertSecretAllDwarfDecksArrayIndex, AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
+import { AssertCoinsOnPouchNumber, AssertPlayerCoinsNumber, AssertSecretAllDwarfDecksArrayIndex, AssertSecretAllDwarfDecksIndex } from "../is_helpers/AssertionTypeHelpers";
 import { IsMercenaryCampCard } from "../is_helpers/IsCampTypeHelpers";
 import { IsCoin, IsTriggerTradingCoin } from "../is_helpers/IsCoinTypeHelpers";
 import { AddDataToLog } from "../Logging";
@@ -80,10 +80,14 @@ const CheckAndStartUlineActionsOrContinue = ({ G, ctx, events, ...rest }: FnCont
         const tradingCoinPlacesLength: number =
             player.boardCoins.filter((coin: PublicPlayerCoinType, index: number): boolean =>
                 index >= G.tavernsNum && coin === null).length;
+        AssertCoinsOnPouchNumber(tradingCoinPlacesLength);
         if (tradingCoinPlacesLength > 0) {
-            const handCoinsLength: number = handCoins.filter(IsCoin).length,
-                actionsNum: number =
-                    G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
+            // TODO Add types!?
+            const handCoinsLength: number = handCoins.filter(IsCoin).length;
+            AssertPlayerCoinsNumber(handCoinsLength);
+            const actionsNum: number =
+                G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
+            AssertCoinsOnPouchNumber(actionsNum);
             if (actionsNum > handCoinsLength) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть меньше монет, чем нужно положить в кошель - '${handCoinsLength}'.`);
             }
